@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝藏猎人 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #555;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: #2d5a3d;
+            padding: 15px;
+            border-radius: 12px;
+            aspect-ratio: 1;
+        }
+
+        .map-cell {
+            background: #8bc34a;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .map-cell.start {
+            background: #ffc107;
+        }
+
+        .map-cell.treasure {
+            background: #ff5722;
+        }
+
+        .map-cell.resource {
+            background: #4fc3f7;
+        }
+
+        .map-cell.trap {
+            background: #e53935;
+        }
+
+        .map-cell.path {
+            background: #c0ca33;
+        }
+
+        .cell-label {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 10px;
+            color: rgba(0,0,0,0.5);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-icon {
+            font-size: 28px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        .card-footer {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .card.resource {
+            border-color: #4fc3f7;
+        }
+
+        .card.tool {
+            border-color: #8bc34a;
+        }
+
+        .card.trap {
+            border-color: #e53935;
+        }
+
+        .card.treasure {
+            border-color: #ff5722;
+        }
+
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 3px solid #333;
+        }
+
+        .piece-circle.blue {
+            background: #2196f3;
+        }
+
+        .piece-circle.red {
+            background: #f44336;
+        }
+
+        .piece-circle.green {
+            background: #4caf50;
+        }
+
+        .piece-circle.yellow {
+            background: #ffeb3b;
+        }
+
+        .piece-label {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dice-template {
+            display: flex;
+            gap: 20px;
+        }
+
+        .dice {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #37474f;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .print-hint {
+                display: none;
+            }
+            .section {
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏴‍☠️ 宝藏猎人 - 打印文档</h1>
+        
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可以使用普通纸张打印</li>
+                <li>打印后按虚线裁剪使用</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ 游戏地图</h2>
+            <div class="game-map">
+                <div class="map-cell start">🚶<span class="cell-label">起点</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🌲<span class="cell-label">木材</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🪨<span class="cell-label">石头</span></div>
+                
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🍎<span class="cell-label">食物</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🪨<span class="cell-label">石头</span></div>
+                <div class="map-cell path">⬛</div>
+                
+                <div class="map-cell resource">🌲<span class="cell-label">木材</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🍎<span class="cell-label">食物</span></div>
+                
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🪨<span class="cell-label">石头</span></div>
+                <div class="map-cell resource">🌲<span class="cell-label">木材</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🍎<span class="cell-label">食物</span></div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬛</div>
+                
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🌲<span class="cell-label">木材</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🪨<span class="cell-label">石头</span></div>
+                <div class="map-cell path">⬛</div>
+                
+                <div class="map-cell resource">🍎<span class="cell-label">食物</span></div>
+                <div class="map-cell resource">🪨<span class="cell-label">石头</span></div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🌲<span class="cell-label">木材</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🍎<span class="cell-label">食物</span></div>
+                <div class="map-cell resource">🪨<span class="cell-label">石头</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">💎<span class="cell-label">宝藏</span></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🃏 资源卡片</h2>
+            <div class="cards-grid">
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🌲</span>
+                        <span class="card-title">木材</span>
+                    </div>
+                    <div class="card-description">基础资源，用于建造工具</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🌲</span>
+                        <span class="card-title">木材</span>
+                    </div>
+                    <div class="card-description">基础资源，用于建造工具</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🌲</span>
+                        <span class="card-title">木材</span>
+                    </div>
+                    <div class="card-description">基础资源，用于建造工具</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🪨</span>
+                        <span class="card-title">石头</span>
+                    </div>
+                    <div class="card-description">坚固的建筑材料</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🪨</span>
+                        <span class="card-title">石头</span>
+                    </div>
+                    <div class="card-description">坚固的建筑材料</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🪨</span>
+                        <span class="card-title">石头</span>
+                    </div>
+                    <div class="card-description">坚固的建筑材料</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🍎</span>
+                        <span class="card-title">食物</span>
+                    </div>
+                    <div class="card-description">维持探险的能量来源</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🍎</span>
+                        <span class="card-title">食物</span>
+                    </div>
+                    <div class="card-description">维持探险的能量来源</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header">
+                        <span class="card-icon">🍎</span>
+                        <span class="card-title">食物</span>
+                    </div>
+                    <div class="card-description">维持探险的能量来源</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⛏️ 工具卡片</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">⛏️</span>
+                        <span class="card-title">铲子</span>
+                    </div>
+                    <div class="card-description">木材x2 + 石头x1<br>可清除一个陷阱</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">🏮</span>
+                        <span class="card-title">灯笼</span>
+                    </div>
+                    <div class="card-description">木材x1 + 石头x2<br>照亮前方，查看下一张陷阱卡</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">🧵</span>
+                        <span class="card-title">绳索</span>
+                    </div>
+                    <div class="card-description">木材x3<br>跳过障碍物，直接移动到相邻位置</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ 陷阱卡片</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🕳️</span>
+                        <span class="card-title">陷阱</span>
+                    </div>
+                    <div class="card-description">后退3步</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🐍</span>
+                        <span class="card-title">蛇</span>
+                    </div>
+                    <div class="card-description">失去1张资源卡</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🌫️</span>
+                        <span class="card-title">迷雾</span>
+                    </div>
+                    <div class="card-description">暂停一回合</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💎 宝藏卡片</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header">
+                        <span class="card-icon">💎</span>
+                        <span class="card-title">宝藏</span>
+                    </div>
+                    <div class="card-description">恭喜！你找到了传说中的宝藏！</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece">
+                    <div class="piece-circle blue">1</div>
+                    <div class="piece-label">玩家1</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle red">2</div>
+                    <div class="piece-label">玩家2</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle green">3</div>
+                    <div class="piece-label">玩家3</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle yellow">4</div>
+                    <div class="piece-label">玩家4</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎲 骰子模板</h2>
+            <div class="dice-template">
+                <div class="dice">🎲</div>
+                <div class="dice">🎲</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏地图打印出来，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子：</strong>裁剪玩家棋子，或者使用硬币/小物件代替</li>
+                <li><strong>骰子：</strong>如果没有骰子，可以使用手机骰子应用或打印的骰子模板</li>
+                <li><strong>开始游戏：</strong>每位玩家选择一个棋子放在起点，分发初始资源卡</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
