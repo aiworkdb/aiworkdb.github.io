@@ -2,19 +2,25 @@
 
 本目录用于存放桌游相关的资料和信息。
 
+📖 **开发规范**：请参考 [development-guide.md](development-guide.md) 了解完整的开发流程和规范。
+
 ## 目录结构
 
 ```
 boardgames/
-├── README.md          # 本文件，桌游索引目录
-├── category/          # 按类别分类的桌游
-│   ├── strategy/      # 策略类桌游
-│   ├── party/         # 派对类桌游
-│   ├── card/          # 卡牌类桌游
-│   └── cooperative/   # 合作类桌游
-└── resources/         # 资源文件
-    ├── images/        # 桌游图片
-    └── rules/         # 规则说明
+├── README.md                # 本文件，桌游索引目录
+├── development-guide.md     # 开发规范文档（必读）
+├── category/                # 按类别分类的桌游
+│   ├── strategy/            # 策略类桌游
+│   ├── party/               # 派对类桌游
+│   ├── card/                # 卡牌类桌游
+│   └── cooperative/         # 合作类桌游
+├── tools/                   # 工具集
+│   ├── README.md            # 工具说明文档
+│   └── *.html               # 工具文件
+└── resources/               # 资源文件（可选）
+    ├── images/              # 桌游图片
+    └── rules/               # 规则说明
 ```
 
 ## 桌游索引
@@ -23,6 +29,7 @@ boardgames/
 | :--- | :--- | :--- | :--- | :--- |
 | 示例游戏 | 策略 | 2-4人 | 30-60分钟 | 中等 |
 | [宝藏猎人](category/strategy/treasure-hunter/README.md) | 策略 | 2-4人 | 45-60分钟 | 中等 |
+| [魔法学院](category/cooperative/magic-academy/README.md) | 合作 | 2-4人 | 45-60分钟 | 中等 |
 
 ## 添加新桌游
 
