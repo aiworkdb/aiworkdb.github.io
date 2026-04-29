@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间特工 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #555;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .timeline-board {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+        }
+
+        .timeline-header {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .era-cell {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+
+        .era-icon {
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+
+        .era-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .era-year {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .timeline-track {
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            margin: 10px 0;
+        }
+
+        .timeline-events {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .event-slot {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .event-slot h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 10px 0;
+        }
+
+        .status-stable {
+            background: #22c55e;
+            color: white;
+        }
+
+        .status-chaos {
+            background: #eab308;
+            color: white;
+        }
+
+        .status-crash {
+            background: #ef4444;
+            color: white;
+        }
+
+        .event-description {
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .causal-chain {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .chain-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .chain-arrow {
+            text-align: center;
+            font-size: 20px;
+            color: #667eea;
+            margin: 5px 0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-icon {
+            font-size: 28px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        .card-footer {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .card.ancient {
+            border-color: #d4a373;
+        }
+
+        .card.medieval {
+            border-color: #8b5cf6;
+        }
+
+        .card.industrial {
+            border-color: #3b82f6;
+        }
+
+        .card.modern {
+            border-color: #22c55e;
+        }
+
+        .card.future {
+            border-color: #ef4444;
+        }
+
+        .card.guardian {
+            border-color: #22c55e;
+        }
+
+        .card.saboteur {
+            border-color: #ef4444;
+        }
+
+        .card.info {
+            border-color: #3b82f6;
+        }
+
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 3px solid #333;
+        }
+
+        .piece-circle.guardian {
+            background: #22c55e;
+        }
+
+        .piece-circle.saboteur {
+            background: #ef4444;
+        }
+
+        .piece-label {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .timers {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timer-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #ef4444;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .timer-label {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #37474f;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .print-hint {
+                display: none;
+            }
+            .section {
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏰ 时间特工 - 打印文档</h1>
+        
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>时间线版图可以使用普通纸张打印</li>
+                <li>身份卡建议使用<strong>厚卡纸</strong>打印，防止透光查看身份</li>
+                <li>打印后按虚线裁剪使用</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>⏳ 时间线版图</h2>
+            <div class="timeline-board">
+                <div class="timeline-header">
+                    <div class="era-cell">
+                        <div class="era-icon">🏛️</div>
+                        <div class="era-name">古代</div>
+                        <div class="era-year">-3000 BC</div>
+                    </div>
+                    <div class="era-cell">
+                        <div class="era-icon">⚔️</div>
+                        <div class="era-name">中世纪</div>
+                        <div class="era-year">500-1500</div>
+                    </div>
+                    <div class="era-cell">
+                        <div class="era-icon">🏭</div>
+                        <div class="era-name">工业革命</div>
+                        <div class="era-year">1750-1900</div>
+                    </div>
+                    <div class="era-cell">
+                        <div class="era-icon">🏙️</div>
+                        <div class="era-name">现代</div>
+                        <div class="era-year">1900-2000</div>
+                    </div>
+                    <div class="era-cell">
+                        <div class="era-icon">🚀</div>
+                        <div class="era-name">未来</div>
+                        <div class="era-year">2000-2147</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-track"></div>
+                
+                <div class="timeline-events">
+                    <div class="event-slot">
+                        <h3>事件1</h3>
+                        <div class="status-indicator status-stable">🟢</div>
+                        <div class="event-description">放置古代事件卡<br>初始：混乱状态</div>
+                    </div>
+                    <div class="event-slot">
+                        <h3>事件2</h3>
+                        <div class="status-indicator status-stable">🟢</div>
+                        <div class="event-description">放置中世纪事件卡<br>初始：混乱状态</div>
+                    </div>
+                    <div class="event-slot">
+                        <h3>事件3</h3>
+                        <div class="status-indicator status-stable">🟢</div>
+                        <div class="event-description">放置工业革命事件卡<br>初始：混乱状态</div>
+                    </div>
+                    <div class="event-slot">
+                        <h3>事件4</h3>
+                        <div class="status-indicator status-stable">🟢</div>
+                        <div class="event-description">放置现代事件卡<br>初始：混乱状态</div>
+                    </div>
+                    <div class="event-slot">
+                        <h3>事件5</h3>
+                        <div class="status-indicator status-stable">🟢</div>
+                        <div class="event-description">放置未来事件卡<br>初始：混乱状态</div>
+                    </div>
+                </div>
+                
+                <div class="causal-chain">
+                    <div class="chain-title">🔗 因果链规则</div>
+                    <div style="text-align: center;">
+                        <div>调整【古代】事件</div>
+                        <div class="chain-arrow">⬇️ 影响</div>
+                        <div>【中世纪】【工业革命】【现代】【未来】</div>
+                        <div class="chain-arrow">⬇️ 可能影响</div>
+                        <div>后续所有事件</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏛️ 古代事件卡片</h2>
+            <div class="cards-grid">
+                <div class="card ancient">
+                    <div class="card-header">
+                        <span class="card-icon">🔺</span>
+                        <span class="card-title">金字塔建成</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>文明发展顺利<br>
+                        <strong>崩溃：</strong>古埃及文明衰落
+                    </div>
+                    <div class="card-footer">古代事件</div>
+                </div>
+                <div class="card ancient">
+                    <div class="card-header">
+                        <span class="card-icon">🏛️</span>
+                        <span class="card-title">罗马建国</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>西方文明兴起<br>
+                        <strong>崩溃：</strong>欧洲陷入混乱
+                    </div>
+                    <div class="card-footer">古代事件</div>
+                </div>
+                <div class="card ancient">
+                    <div class="card-header">
+                        <span class="card-icon">🐪</span>
+                        <span class="card-title">丝绸之路开通</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>东西方交流繁荣<br>
+                        <strong>崩溃：</strong>贸易中断
+                    </div>
+                    <div class="card-footer">古代事件</div>
+                </div>
+                <div class="card ancient">
+                    <div class="card-header">
+                        <span class="card-icon">📜</span>
+                        <span class="card-title">造纸术发明</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>知识传播加速<br>
+                        <strong>崩溃：</strong>文化发展停滞
+                    </div>
+                    <div class="card-footer">古代事件</div>
+                </div>
+                <div class="card ancient">
+                    <div class="card-header">
+                        <span class="card-icon">🧱</span>
+                        <span class="card-title">长城建成</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>中原文明保护<br>
+                        <strong>崩溃：</strong>边疆战乱不断
+                    </div>
+                    <div class="card-footer">古代事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚔️ 中世纪事件卡片</h2>
+            <div class="cards-grid">
+                <div class="card medieval">
+                    <div class="card-header">
+                        <span class="card-icon">📜</span>
+                        <span class="card-title">大宪章签署</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>民主制度萌芽<br>
+                        <strong>崩溃：</strong>专制统治延续
+                    </div>
+                    <div class="card-footer">中世纪事件</div>
+                </div>
+                <div class="card medieval">
+                    <div class="card-header">
+                        <span class="card-icon">💀</span>
+                        <span class="card-title">黑死病结束</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>人口恢复增长<br>
+                        <strong>崩溃：</strong>社会持续动荡
+                    </div>
+                    <div class="card-footer">中世纪事件</div>
+                </div>
+                <div class="card medieval">
+                    <div class="card-header">
+                        <span class="card-icon">📚</span>
+                        <span class="card-title">印刷术普及</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>文艺复兴兴起<br>
+                        <strong>崩溃：</strong>知识垄断持续
+                    </div>
+                    <div class="card-footer">中世纪事件</div>
+                </div>
+                <div class="card medieval">
+                    <div class="card-header">
+                        <span class="card-icon">🧭</span>
+                        <span class="card-title">指南针应用</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>大航海时代开启<br>
+                        <strong>崩溃：</strong>地理探索停滞
+                    </div>
+                    <div class="card-footer">中世纪事件</div>
+                </div>
+                <div class="card medieval">
+                    <div class="card-header">
+                        <span class="card-icon">💣</span>
+                        <span class="card-title">火药武器化</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>军事技术革新<br>
+                        <strong>崩溃：</strong>战争规模扩大
+                    </div>
+                    <div class="card-footer">中世纪事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏭 工业革命事件卡片</h2>
+            <div class="cards-grid">
+                <div class="card industrial">
+                    <div class="card-header">
+                        <span class="card-icon">🚂</span>
+                        <span class="card-title">蒸汽机发明</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>生产力大幅提升<br>
+                        <strong>崩溃：</strong>工业发展缓慢
+                    </div>
+                    <div class="card-footer">工业革命事件</div>
+                </div>
+                <div class="card industrial">
+                    <div class="card-header">
+                        <span class="card-icon">💡</span>
+                        <span class="card-title">电力应用</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>第二次工业革命<br>
+                        <strong>崩溃：</strong>能源技术停滞
+                    </div>
+                    <div class="card-footer">工业革命事件</div>
+                </div>
+                <div class="card industrial">
+                    <div class="card-header">
+                        <span class="card-icon">📡</span>
+                        <span class="card-title">电报发明</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>全球通信建立<br>
+                        <strong>崩溃：</strong>信息传递缓慢
+                    </div>
+                    <div class="card-footer">工业革命事件</div>
+                </div>
+                <div class="card industrial">
+                    <div class="card-header">
+                        <span class="card-icon">💉</span>
+                        <span class="card-title">现代医学起步</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>人类寿命延长<br>
+                        <strong>崩溃：</strong>疾病肆虐
+                    </div>
+                    <div class="card-footer">工业革命事件</div>
+                </div>
+                <div class="card industrial">
+                    <div class="card-header">
+                        <span class="card-icon">🏭</span>
+                        <span class="card-title">工厂制度确立</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>大规模生产<br>
+                        <strong>崩溃：</strong>手工业维持
+                    </div>
+                    <div class="card-footer">工业革命事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏙️ 现代事件卡片</h2>
+            <div class="cards-grid">
+                <div class="card modern">
+                    <div class="card-header">
+                        <span class="card-icon">🌐</span>
+                        <span class="card-title">互联网诞生</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>信息时代到来<br>
+                        <strong>崩溃：</strong>数字鸿沟扩大
+                    </div>
+                    <div class="card-footer">现代事件</div>
+                </div>
+                <div class="card modern">
+                    <div class="card-header">
+                        <span class="card-icon">🌙</span>
+                        <span class="card-title">人类登月</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>太空探索开启<br>
+                        <strong>崩溃：</strong>地球资源枯竭
+                    </div>
+                    <div class="card-footer">现代事件</div>
+                </div>
+                <div class="card modern">
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <span class="card-title">基因工程突破</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>医学革命<br>
+                        <strong>崩溃：</strong>生物伦理危机
+                    </div>
+                    <div class="card-footer">现代事件</div>
+                </div>
+                <div class="card modern">
+                    <div class="card-header">
+                        <span class="card-icon">☮️</span>
+                        <span class="card-title">冷战结束</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>世界和平发展<br>
+                        <strong>崩溃：</strong>地区冲突不断
+                    </div>
+                    <div class="card-footer">现代事件</div>
+                </div>
+                <div class="card modern">
+                    <div class="card-header">
+                        <span class="card-icon">🌍</span>
+                        <span class="card-title">全球化加速</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>经济一体化<br>
+                        <strong>崩溃：</strong>贸易保护主义
+                    </div>
+                    <div class="card-footer">现代事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚀 未来事件卡片</h2>
+            <div class="cards-grid">
+                <div class="card future">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-title">人工智能普及</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>社会效率提升<br>
+                        <strong>崩溃：</strong>人机冲突加剧
+                    </div>
+                    <div class="card-footer">未来事件</div>
+                </div>
+                <div class="card future">
+                    <div class="card-header">
+                        <span class="card-icon">🔴</span>
+                        <span class="card-title">火星殖民</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>人类多星球生存<br>
+                        <strong>崩溃：</strong>地球资源危机
+                    </div>
+                    <div class="card-footer">未来事件</div>
+                </div>
+                <div class="card future">
+                    <div class="card-header">
+                        <span class="card-icon">⚛️</span>
+                        <span class="card-title">可控核聚变</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>能源无限供应<br>
+                        <strong>崩溃：</strong>能源战争持续
+                    </div>
+                    <div class="card-footer">未来事件</div>
+                </div>
+                <div class="card future">
+                    <div class="card-header">
+                        <span class="card-icon">🧠</span>
+                        <span class="card-title">意识上传</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>人类永生可能<br>
+                        <strong>崩溃：</strong>身份认同危机
+                    </div>
+                    <div class="card-footer">未来事件</div>
+                </div>
+                <div class="card future">
+                    <div class="card-header">
+                        <span class="card-icon">⏰</span>
+                        <span class="card-title">时间旅行发明</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>稳定：</strong>历史可以被修复<br>
+                        <strong>崩溃：</strong>时间线混乱
+                    </div>
+                    <div class="card-footer">未来事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🛡️ 守护者身份卡片</h2>
+            <div class="cards-grid">
+                <div class="card guardian">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-title">时间守护者</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>阵营：</strong>正义<br>
+                        <strong>胜利条件：</strong>事件全部稳定 + 找出破坏者
+                    </div>
+                    <div class="card-footer">守护者</div>
+                </div>
+                <div class="card guardian">
+                    <div class="card-header">
+                        <span class="card-icon">📚</span>
+                        <span class="card-title">历史学者</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>特殊能力：</strong>可以查看任意1个事件的完整信息
+                    </div>
+                    <div class="card-footer">守护者</div>
+                </div>
+                <div class="card guardian">
+                    <div class="card-header">
+                        <span class="card-icon">🔗</span>
+                        <span class="card-title">因果分析师</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>特殊能力：</strong>调整事件时可以预知变化
+                    </div>
+                    <div class="card-footer">守护者</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💀 破坏者身份卡片</h2>
+            <div class="cards-grid">
+                <div class="card saboteur">
+                    <div class="card-header">
+                        <span class="card-icon">💀</span>
+                        <span class="card-title">时间破坏者</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>阵营：</strong>邪恶<br>
+                        <strong>胜利条件：</strong>3个以上事件崩溃
+                    </div>
+                    <div class="card-footer">破坏者</div>
+                </div>
+                <div class="card saboteur">
+                    <div class="card-header">
+                        <span class="card-icon">🎭</span>
+                        <span class="card-title">伪装大师</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>特殊能力：</strong>被调查时显示守护者身份
+                    </div>
+                    <div class="card-footer">破坏者</div>
+                </div>
+                <div class="card saboteur">
+                    <div class="card-header">
+                        <span class="card-icon">🌪️</span>
+                        <span class="card-title">混乱使者</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>特殊能力：</strong>调整事件时影响范围+1
+                    </div>
+                    <div class="card-footer">破坏者</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📄 信息碎片卡片</h2>
+            <div class="cards-grid">
+                <div class="card info">
+                    <div class="card-header">
+                        <span class="card-icon">📄</span>
+                        <span class="card-title">事件碎片</span>
+                    </div>
+                    <div class="card-description">"古代事件当前处于混乱状态"</div>
+                    <div class="card-footer">信息碎片</div>
+                </div>
+                <div class="card info">
+                    <div class="card-header">
+                        <span class="card-icon">🔍</span>
+                        <span class="card-title">身份碎片</span>
+                    </div>
+                    <div class="card-description">"玩家A知道中世纪事件的真相"</div>
+                    <div class="card-footer">信息碎片</div>
+                </div>
+                <div class="card info">
+                    <div class="card-header">
+                        <span class="card-icon">⏳</span>
+                        <span class="card-title">因果碎片</span>
+                    </div>
+                    <div class="card-description">"调整古代事件会影响未来3个事件"</div>
+                    <div class="card-footer">信息碎片</div>
+                </div>
+                <div class="card info">
+                    <div class="card-header">
+                        <span class="card-icon">👁️</span>
+                        <span class="card-title">行为碎片</span>
+                    </div>
+                    <div class="card-description">"上一轮有人故意让事件崩溃"</div>
+                    <div class="card-footer">信息碎片</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece">
+                    <div class="piece-circle guardian">守</div>
+                    <div class="piece-label">守护者1</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle guardian">守</div>
+                    <div class="piece-label">守护者2</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle guardian">守</div>
+                    <div class="piece-label">守护者3</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle saboteur">破</div>
+                    <div class="piece-label">破坏者</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⏱️ 计时器模板</h2>
+            <div class="timers">
+                <div class="timer">
+                    <div class="timer-circle">60</div>
+                    <div class="timer-label">讨论时间</div>
+                </div>
+                <div class="timer">
+                    <div class="timer-circle">30</div>
+                    <div class="timer-label">投票时间</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印时间线：</strong>将时间线版图打印出来，放在桌面中央</li>
+                <li><strong>准备身份卡：</strong>使用厚卡纸打印，防止透光查看身份</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备计时器：</strong>使用手机计时器，设置60秒倒计时</li>
+                <li><strong>开始游戏：</strong>抽取身份卡，分发信息碎片，选择时间领航员</li>
+                <li><strong>诚信游戏：</strong>破坏者要尽力伪装，守护者要仔细推理！</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
