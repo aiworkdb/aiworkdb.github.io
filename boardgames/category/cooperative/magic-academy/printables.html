@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔法学院 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #555;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: #2d1b69;
+            padding: 15px;
+            border-radius: 12px;
+            aspect-ratio: 1;
+        }
+
+        .map-cell {
+            background: #8b5cf6;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .map-cell.start {
+            background: #f59e0b;
+        }
+
+        .map-cell.treasure {
+            background: #f59e0b;
+        }
+
+        .map-cell.spell {
+            background: #a855f7;
+        }
+
+        .map-cell.material {
+            background: #22c55e;
+        }
+
+        .map-cell.event {
+            background: #eab308;
+        }
+
+        .map-cell.dark {
+            background: #1e1b4b;
+        }
+
+        .map-cell.path {
+            background: #7c3aed;
+        }
+
+        .map-cell.floor {
+            background: #ec4899;
+        }
+
+        .cell-label {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-icon {
+            font-size: 28px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        .card-footer {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .card.spell {
+            border-color: #a855f7;
+        }
+
+        .card.material {
+            border-color: #22c55e;
+        }
+
+        .card.event {
+            border-color: #eab308;
+        }
+
+        .card.dark {
+            border-color: #1e1b4b;
+        }
+
+        .card.treasure {
+            border-color: #f59e0b;
+        }
+
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 3px solid #333;
+        }
+
+        .piece-circle.fire {
+            background: #ef4444;
+        }
+
+        .piece-circle.water {
+            background: #3b82f6;
+        }
+
+        .piece-circle.earth {
+            background: #22c55e;
+        }
+
+        .piece-circle.wind {
+            background: #f59e0b;
+        }
+
+        .piece-label {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #37474f;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .print-hint {
+                display: none;
+            }
+            .section {
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏰 魔法学院 - 打印文档</h1>
+        
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可以使用普通纸张打印</li>
+                <li>打印后按虚线裁剪使用</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ 游戏地图</h2>
+            <div class="game-map">
+                <div class="map-cell treasure">🏰<span class="cell-label">塔顶</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">💎<span class="cell-label">宝藏</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell spell">🔮<span class="cell-label">法术</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell event">📜<span class="cell-label">事件</span></div>
+                
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell floor">🌟<span class="cell-label">第三层</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell material">🌿<span class="cell-label">材料</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell spell">🔮<span class="cell-label">法术</span></div>
+                <div class="map-cell path">⬛</div>
+                
+                <div class="map-cell material">🌿<span class="cell-label">材料</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell dark">💀<span class="cell-label">黑暗</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell floor">🌟<span class="cell-label">第二层</span></div>
+                
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell material">🌿<span class="cell-label">材料</span></div>
+                <div class="map-cell start">🚪<span class="cell-label">起点</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell material">🌿<span class="cell-label">材料</span></div>
+                <div class="map-cell dark">💀<span class="cell-label">黑暗</span></div>
+                <div class="map-cell path">⬛</div>
+                
+                <div class="map-cell event">📜<span class="cell-label">事件</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell material">🌿<span class="cell-label">材料</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell spell">🔮<span class="cell-label">法术</span></div>
+                
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell dark">💀<span class="cell-label">黑暗</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell event">📜<span class="cell-label">事件</span></div>
+                <div class="map-cell material">🌿<span class="cell-label">材料</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell dark">💀<span class="cell-label">黑暗</span></div>
+                
+                <div class="map-cell floor">🌲<span class="cell-label">第一层</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell material">🌿<span class="cell-label">材料</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell spell">🔮<span class="cell-label">法术</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔮 法术卡片</h2>
+            <div class="cards-grid">
+                <div class="card spell">
+                    <div class="card-header">
+                        <span class="card-icon">🔥</span>
+                        <span class="card-title">火球术</span>
+                    </div>
+                    <div class="card-description">火焰花×2<br>消除一个黑暗点</div>
+                    <div class="card-footer">法术卡</div>
+                </div>
+                <div class="card spell">
+                    <div class="card-header">
+                        <span class="card-icon">💚</span>
+                        <span class="card-title">治愈术</span>
+                    </div>
+                    <div class="card-description">月光草×1<br>恢复1点生命值</div>
+                    <div class="card-footer">法术卡</div>
+                </div>
+                <div class="card spell">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-title">护盾术</span>
+                    </div>
+                    <div class="card-description">龙鳞×1 + 月光草×1<br>本回合免疫黑暗效果</div>
+                    <div class="card-footer">法术卡</div>
+                </div>
+                <div class="card spell">
+                    <div class="card-header">
+                        <span class="card-icon">🌀</span>
+                        <span class="card-title">传送术</span>
+                    </div>
+                    <div class="card-description">星光尘×2<br>直接移动到任意位置</div>
+                    <div class="card-footer">法术卡</div>
+                </div>
+                <div class="card spell">
+                    <div class="card-header">
+                        <span class="card-icon">🔮</span>
+                        <span class="card-title">预言术</span>
+                    </div>
+                    <div class="card-description">星光尘×1<br>查看下一张黑暗卡</div>
+                    <div class="card-footer">法术卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🌿 材料卡片</h2>
+            <div class="cards-grid">
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🌺</span>
+                        <span class="card-title">火焰花</span>
+                    </div>
+                    <div class="card-description">普通材料<br>用于火系法术</div>
+                    <div class="card-footer">材料卡</div>
+                </div>
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🌙</span>
+                        <span class="card-title">月光草</span>
+                    </div>
+                    <div class="card-description">普通材料<br>用于治疗法术</div>
+                    <div class="card-footer">材料卡</div>
+                </div>
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <span class="card-title">龙鳞</span>
+                    </div>
+                    <div class="card-description">稀有材料<br>用于防护法术</div>
+                    <div class="card-footer">材料卡</div>
+                </div>
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">✨</span>
+                        <span class="card-title">星光尘</span>
+                    </div>
+                    <div class="card-description">稀有材料<br>用于高级法术</div>
+                    <div class="card-footer">材料卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📜 事件卡片</h2>
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🌪️</span>
+                        <span class="card-title">魔法风暴</span>
+                    </div>
+                    <div class="card-description">所有玩家后退2步</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">📚</span>
+                        <span class="card-title">智慧祝福</span>
+                    </div>
+                    <div class="card-description">所有玩家获得1张法术卡</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🌿</span>
+                        <span class="card-title">材料丰饶</span>
+                    </div>
+                    <div class="card-description">所有玩家获得1张材料卡</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">💀</span>
+                        <span class="card-title">黑暗渗透</span>
+                    </div>
+                    <div class="card-description">黑暗计量表+1</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💀 黑暗卡片</h2>
+            <div class="cards-grid">
+                <div class="card dark">
+                    <div class="card-header">
+                        <span class="card-icon">💀</span>
+                        <span class="card-title">黑暗蔓延</span>
+                    </div>
+                    <div class="card-description">黑暗计量表+1</div>
+                    <div class="card-footer">黑暗卡</div>
+                </div>
+                <div class="card dark">
+                    <div class="card-header">
+                        <span class="card-icon">🚫</span>
+                        <span class="card-title">魔法干扰</span>
+                    </div>
+                    <div class="card-description">本回合无法使用法术</div>
+                    <div class="card-footer">黑暗卡</div>
+                </div>
+                <div class="card dark">
+                    <div class="card-header">
+                        <span class="card-icon">⚠️</span>
+                        <span class="card-title">陷阱触发</span>
+                    </div>
+                    <div class="card-description">失去1张材料卡</div>
+                    <div class="card-footer">黑暗卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💎 宝藏卡片</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header">
+                        <span class="card-icon">🏆</span>
+                        <span class="card-title">魔法圣杯</span>
+                    </div>
+                    <div class="card-description">所有法术消耗-1材料</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header">
+                        <span class="card-icon">🪄</span>
+                        <span class="card-title">远古法杖</span>
+                    </div>
+                    <div class="card-description">每回合额外获得1次行动</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header">
+                        <span class="card-icon">🧚</span>
+                        <span class="card-title">精灵盟约</span>
+                    </div>
+                    <div class="card-description">可以与其他玩家交换手牌</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece">
+                    <div class="piece-circle fire">火</div>
+                    <div class="piece-label">火系学徒</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle water">水</div>
+                    <div class="piece-label">水系学徒</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle earth">土</div>
+                    <div class="piece-label">土系学徒</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle wind">风</div>
+                    <div class="piece-label">风系学徒</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏地图打印出来，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子：</strong>裁剪玩家棋子，或者使用硬币/纽扣代替</li>
+                <li><strong>骰子：</strong>如果没有骰子，可以使用手机骰子应用或打印的骰子模板</li>
+                <li><strong>开始游戏：</strong>每位玩家选择一个角色，放在起点，分发初始手牌</li>
+                <li><strong>合作精神：</strong>记住这是合作游戏，所有玩家共同对抗黑暗势力！</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
