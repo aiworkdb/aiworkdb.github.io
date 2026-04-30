@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>疯狂厨房 Crazy Kitchen - 可打印道具</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;700;900&display=swap');
+
+  :root {
+    --orange-50: #fff8f0;
+    --orange-100: #ffedd5;
+    --orange-200: #fed7aa;
+    --orange-300: #fdba74;
+    --orange-400: #fb923c;
+    --orange-500: #f97316;
+    --orange-600: #ea580c;
+    --orange-700: #c2410c;
+    --red-500: #ef4444;
+    --red-600: #dc2626;
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --green-500: #22c55e;
+    --green-600: #16a34a;
+    --blue-500: #3b82f6;
+    --purple-500: #a855f7;
+    --yellow-400: #facc15;
+    --yellow-500: #eab308;
+    --brown-400: #a16207;
+    --brown-500: #92400e;
+    --pink-400: #f472b6;
+    --teal-500: #14b8a6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    line-height: 1.5;
+  }
+
+  .print-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--orange-500), var(--orange-600));
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(249, 115, 22, 0.4);
+    z-index: 1000;
+    max-width: 320px;
+    font-size: 14px;
+  }
+  .print-hint h3 { font-size: 16px; margin-bottom: 6px; }
+  .print-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 20px;
+    background: white;
+    color: var(--orange-600);
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .print-btn:hover { transform: scale(1.05); }
+
+  .page-title {
+    text-align: center;
+    padding: 32px 16px 16px;
+    background: linear-gradient(135deg, var(--orange-400), var(--orange-600));
+    color: white;
+    margin-bottom: 24px;
+  }
+  .page-title h1 {
+    font-size: 36px;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  }
+  .page-title p {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+
+  .section {
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    padding: 0 16px;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--orange-700);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid var(--orange-300);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-note {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 12px;
+  }
+
+  /* ---- 厨房地图 ---- */
+  .kitchen-map {
+    background: white;
+    border-radius: 16px;
+    border: 3px solid var(--orange-400);
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(249,115,22,0.12);
+    page-break-inside: avoid;
+  }
+  .map-command {
+    background: linear-gradient(135deg, var(--orange-400), var(--orange-600));
+    color: white;
+    text-align: center;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .map-command span { font-size: 14px; font-weight: 400; opacity: 0.9; }
+  .map-stations {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .station {
+    border: 2px dashed var(--orange-300);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    background: var(--orange-50);
+  }
+  .station-icon { font-size: 36px; display: block; margin-bottom: 6px; }
+  .station-name { font-weight: 700; font-size: 16px; color: var(--orange-700); }
+  .station-en { font-size: 12px; color: var(--gray-500); }
+  .station-detail { font-size: 12px; color: var(--gray-700); margin-top: 6px; }
+  .map-serving {
+    grid-column: 1 / 4;
+    border: 2px dashed var(--green-500);
+    background: #f0fdf4;
+  }
+  .map-serving .station-name { color: var(--green-600); }
+  .map-warehouse {
+    grid-column: 1 / 4;
+    border: 2px dashed var(--blue-500);
+    background: #eff6ff;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    color: var(--blue-500);
+    font-size: 15px;
+  }
+
+  /* ---- 通用卡牌网格 ---- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  /* ---- 食材卡 ---- */
+  .ingredient-card {
+    background: white;
+    border: 2px solid var(--orange-200);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    page-break-inside: avoid;
+    transition: box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .ingredient-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .ingredient-card.cat-meat::before { background: linear-gradient(90deg, #ef4444, #f97316); }
+  .ingredient-card.cat-veg::before { background: linear-gradient(90deg, #22c55e, #84cc16); }
+  .ingredient-card.cat-staple::before { background: linear-gradient(90deg, #f59e0b, #eab308); }
+  .ingredient-card.cat-cheese::before { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+  .ingredient-card.cat-sauce::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
+  .ingredient-card.cat-dessert::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+
+  .ingredient-card .card-emoji { font-size: 36px; display: block; margin: 6px 0; }
+  .ingredient-card .card-name { font-weight: 700; font-size: 15px; color: var(--gray-800); }
+  .ingredient-card .card-cat { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+  .ingredient-card .card-qty {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 10px;
+    background: var(--orange-100);
+    color: var(--orange-700);
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* ---- 订单卡 ---- */
+  .order-card {
+    background: white;
+    border: 2px solid var(--yellow-400);
+    border-radius: 12px;
+    padding: 14px;
+    page-break-inside: avoid;
+    position: relative;
+    overflow: hidden;
+  }
+  .order-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .order-card.type-main::before { background: linear-gradient(90deg, var(--orange-500), var(--red-500)); }
+  .order-card.type-light::before { background: linear-gradient(90deg, var(--green-500), var(--teal-500)); }
+  .order-card.type-dessert::before { background: linear-gradient(90deg, var(--pink-400), var(--purple-500)); }
+
+  .order-card .order-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .order-card .order-emoji { font-size: 28px; }
+  .order-card .order-name { font-weight: 700; font-size: 16px; }
+  .order-card .order-type-badge {
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .type-main .order-type-badge { background: #fef2f2; color: var(--red-500); }
+  .type-light .order-type-badge { background: #f0fdf4; color: var(--green-600); }
+  .type-dessert .order-type-badge { background: #fdf2f8; color: var(--purple-500); }
+
+  .order-card .order-needs {
+    font-size: 13px;
+    color: var(--gray-700);
+    margin-bottom: 6px;
+  }
+  .order-card .order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+  .order-card .order-score {
+    font-weight: 700;
+    color: var(--orange-600);
+    font-size: 14px;
+  }
+
+  /* ---- 事故卡 ---- */
+  .accident-card {
+    background: white;
+    border: 2px solid var(--red-400);
+    border-radius: 12px;
+    padding: 14px;
+    page-break-inside: avoid;
+    position: relative;
+    overflow: hidden;
+  }
+  .accident-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--red-500), var(--orange-500));
+  }
+  .accident-card .acc-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .accident-card .acc-emoji { font-size: 28px; }
+  .accident-card .acc-name { font-weight: 700; font-size: 15px; color: var(--red-600); }
+  .accident-card .acc-effect {
+    font-size: 13px;
+    color: var(--gray-700);
+    margin-bottom: 4px;
+    padding: 6px 10px;
+    background: #fef2f2;
+    border-radius: 8px;
+  }
+  .accident-card .acc-duration {
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+
+  /* ---- 角色卡 ---- */
+  .role-card {
+    background: white;
+    border: 2px solid var(--orange-300);
+    border-radius: 14px;
+    padding: 16px;
+    page-break-inside: avoid;
+    position: relative;
+    overflow: hidden;
+  }
+  .role-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--orange-400), var(--orange-600));
+  }
+  .role-card .role-header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .role-card .role-emoji { font-size: 40px; display: block; margin-bottom: 4px; }
+  .role-card .role-name { font-weight: 900; font-size: 18px; color: var(--orange-700); }
+  .role-card .role-skill-name {
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--orange-600);
+    margin-bottom: 4px;
+  }
+  .role-card .role-skill-desc {
+    font-size: 13px;
+    color: var(--gray-700);
+    text-align: center;
+    padding: 6px 10px;
+    background: var(--orange-50);
+    border-radius: 8px;
+    margin-bottom: 6px;
+  }
+  .role-card .role-strategy {
+    font-size: 12px;
+    color: var(--gray-500);
+    text-align: center;
+  }
+
+  /* ---- 棋子 & 标记 ---- */
+  .tokens-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .token-group {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    border: 2px solid var(--orange-200);
+    page-break-inside: avoid;
+  }
+  .token-group h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--orange-700);
+    margin-bottom: 10px;
+  }
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .token-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    border: 2px solid rgba(0,0,0,0.1);
+    flex-shrink: 0;
+  }
+  .token-sq {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    color: white;
+    border: 2px solid rgba(0,0,0,0.1);
+    flex-shrink: 0;
+  }
+  .token-label { font-size: 13px; color: var(--gray-700); }
+
+  /* ---- 快速参考卡 ---- */
+  .ref-card {
+    background: white;
+    border-radius: 14px;
+    border: 3px solid var(--orange-400);
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(249,115,22,0.12);
+    page-break-inside: avoid;
+  }
+  .ref-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--orange-700);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .ref-table th {
+    background: var(--orange-500);
+    color: white;
+    padding: 8px 10px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .ref-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .ref-table tr:nth-child(even) td { background: var(--orange-50); }
+  .ref-divider {
+    border: none;
+    border-top: 2px dashed var(--orange-200);
+    margin: 14px 0;
+  }
+  .ref-section-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--orange-600);
+    margin-bottom: 6px;
+  }
+  .ref-bullets {
+    list-style: none;
+    padding: 0;
+  }
+  .ref-bullets li {
+    font-size: 13px;
+    padding: 3px 0;
+    color: var(--gray-700);
+  }
+  .ref-bullets li::before {
+    content: '>';
+    font-weight: 700;
+    color: var(--orange-500);
+    margin-right: 6px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+    color: var(--gray-500);
+  }
+
+  /* ---- 打印样式 ---- */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    .print-hint { display: none !important; }
+    .print-btn { display: none !important; }
+    body { background: white; }
+    .page-title { background: var(--orange-500) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section { break-inside: avoid; }
+    .kitchen-map, .ingredient-card, .order-card, .accident-card, .role-card, .ref-card, .token-group {
+      break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+  <h3>🖨️ 打印提示</h3>
+  <p>建议使用<strong>200g卡纸</strong>打印，并配合<strong>0.3mm塑封膜</strong>保护卡牌。推荐颜色打印以获得最佳体验。</p>
+  <button class="print-btn" onclick="window.print()">开始打印</button>
+</div>
+
+<!-- 页面标题 -->
+<div class="page-title">
+  <h1>🍳 疯狂厨房 Crazy Kitchen</h1>
+  <p>可打印道具 - Print & Play Components</p>
+</div>
+
+<!-- ==================== 厨房布局地图 ==================== -->
+<div class="section">
+  <div class="section-title">🗺️ 厨房布局地图</div>
+  <p class="section-note">打印后平铺于桌面中央，作为游戏主区域。建议打印在A3或更大尺寸纸张上。</p>
+  <div class="kitchen-map">
+    <div class="map-command">
+      🏆 厨房指挥台 🏆<br>
+      <span>订单卡展示区 + 计分区</span>
+    </div>
+    <div class="map-stations">
+      <div class="station">
+        <span class="station-icon">🔥</span>
+        <div class="station-name">灶台区</div>
+        <div class="station-en">COOKING STATION</div>
+        <div class="station-detail">完成热菜类订单的主战场<br>可使用"大火"技能加速<br>容纳 1-2 名玩家</div>
+      </div>
+      <div class="station">
+        <span class="station-icon">🥗</span>
+        <div class="station-name">备菜台</div>
+        <div class="station-en">PREP STATION</div>
+        <div class="station-detail">处理冷食和简单菜品<br>可进行食材预处理<br>容纳 1-2 名玩家</div>
+      </div>
+      <div class="station">
+        <span class="station-icon">🧽</span>
+        <div class="station-name">洗碗区</div>
+        <div class="station-en">DISHWASH STATION</div>
+        <div class="station-detail">清理"打翻"事故<br>洗碗技能效果翻倍<br>容纳 1 名玩家</div>
+      </div>
+      <div class="station map-serving">
+        <span class="station-icon">🚪</span>
+        <div class="station-name">出餐口</div>
+        <div class="station-en">SERVING WINDOW</div>
+        <div class="station-detail">将完成的菜品交给顾客 · 必须经过此区域才能计分 · 容纳 1 名玩家</div>
+      </div>
+      <div class="map-warehouse">
+        📦 食材仓库 — 公共食材卡放置区
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 食材卡 ==================== -->
+<div class="section">
+  <div class="section-title">🥬 食材卡 (60张)</div>
+  <p class="section-note">每类10张，共6类60张。玩家每回合可从仓库拿取最多2张，手牌上限8张。</p>
+  <div class="card-grid">
+    <!-- 肉类 -->
+    <div class="ingredient-card cat-meat">
+      <span class="card-emoji">🥩</span>
+      <div class="card-name">牛肉</div>
+      <div class="card-cat">🍖 肉类</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-meat">
+      <span class="card-emoji">🥩</span>
+      <div class="card-name">猪肉</div>
+      <div class="card-cat">🍖 肉类</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-meat">
+      <span class="card-emoji">🍗</span>
+      <div class="card-name">鸡肉</div>
+      <div class="card-cat">🍖 肉类</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-meat">
+      <span class="card-emoji">🍖</span>
+      <div class="card-name">羊肉</div>
+      <div class="card-cat">🍖 肉类</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-meat">
+      <span class="card-emoji">🦐</span>
+      <div class="card-name">海鲜</div>
+      <div class="card-cat">🍖 肉类</div>
+      <div class="card-qty">×2张</div>
+    </div>
+
+    <!-- 蔬菜 -->
+    <div class="ingredient-card cat-veg">
+      <span class="card-emoji">🍅</span>
+      <div class="card-name">西红柿</div>
+      <div class="card-cat">🥬 蔬菜</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-veg">
+      <span class="card-emoji">🥒</span>
+      <div class="card-name">黄瓜</div>
+      <div class="card-cat">🥬 蔬菜</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-veg">
+      <span class="card-emoji">🥕</span>
+      <div class="card-name">胡萝卜</div>
+      <div class="card-cat">🥬 蔬菜</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-veg">
+      <span class="card-emoji">🧅</span>
+      <div class="card-name">洋葱</div>
+      <div class="card-cat">🥬 蔬菜</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-veg">
+      <span class="card-emoji">🥔</span>
+      <div class="card-name">土豆</div>
+      <div class="card-cat">🥬 蔬菜</div>
+      <div class="card-qty">×2张</div>
+    </div>
+
+    <!-- 主食 -->
+    <div class="ingredient-card cat-staple">
+      <span class="card-emoji">🍚</span>
+      <div class="card-name">米饭</div>
+      <div class="card-cat">🍚 主食</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-staple">
+      <span class="card-emoji">🍜</span>
+      <div class="card-name">面条</div>
+      <div class="card-cat">🍚 主食</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-staple">
+      <span class="card-emoji">🍞</span>
+      <div class="card-name">面包</div>
+      <div class="card-cat">🍚 主食</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-staple">
+      <span class="card-emoji">🥟</span>
+      <div class="card-name">饺子</div>
+      <div class="card-cat">🍚 主食</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-staple">
+      <span class="card-emoji">🍕</span>
+      <div class="card-name">披萨</div>
+      <div class="card-cat">🍚 主食</div>
+      <div class="card-qty">×2张</div>
+    </div>
+
+    <!-- 奶酪 -->
+    <div class="ingredient-card cat-cheese">
+      <span class="card-emoji">🧀</span>
+      <div class="card-name">切达奶酪</div>
+      <div class="card-cat">🧀 奶酪</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-cheese">
+      <span class="card-emoji">🧀</span>
+      <div class="card-name">马苏里拉</div>
+      <div class="card-cat">🧀 奶酪</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-cheese">
+      <span class="card-emoji">🧀</span>
+      <div class="card-name">帕尔马</div>
+      <div class="card-cat">🧀 奶酪</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-cheese">
+      <span class="card-emoji">🧀</span>
+      <div class="card-name">蓝纹奶酪</div>
+      <div class="card-cat">🧀 奶酪</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-cheese">
+      <span class="card-emoji">🧀</span>
+      <div class="card-name">布里奶酪</div>
+      <div class="card-cat">🧀 奶酪</div>
+      <div class="card-qty">×2张</div>
+    </div>
+
+    <!-- 酱料 -->
+    <div class="ingredient-card cat-sauce">
+      <span class="card-emoji">🍅</span>
+      <div class="card-name">番茄酱</div>
+      <div class="card-cat">🍅 酱料</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-sauce">
+      <span class="card-emoji">🥫</span>
+      <div class="card-name">沙拉酱</div>
+      <div class="card-cat">🍅 酱料</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-sauce">
+      <span class="card-emoji">🫙</span>
+      <div class="card-name">烧烤酱</div>
+      <div class="card-cat">🍅 酱料</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-sauce">
+      <span class="card-emoji">🍛</span>
+      <div class="card-name">咖喱</div>
+      <div class="card-cat">🍅 酱料</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-sauce">
+      <span class="card-emoji">🟡</span>
+      <div class="card-name">芥末</div>
+      <div class="card-cat">🍅 酱料</div>
+      <div class="card-qty">×2张</div>
+    </div>
+
+    <!-- 甜点 -->
+    <div class="ingredient-card cat-dessert">
+      <span class="card-emoji">🎂</span>
+      <div class="card-name">蛋糕</div>
+      <div class="card-cat">🍰 甜点</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-dessert">
+      <span class="card-emoji">🍪</span>
+      <div class="card-name">饼干</div>
+      <div class="card-cat">🍰 甜点</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-dessert">
+      <span class="card-emoji">🍦</span>
+      <div class="card-name">冰淇淋</div>
+      <div class="card-cat">🍰 甜点</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-dessert">
+      <span class="card-emoji">🍫</span>
+      <div class="card-name">巧克力</div>
+      <div class="card-cat">🍰 甜点</div>
+      <div class="card-qty">×2张</div>
+    </div>
+    <div class="ingredient-card cat-dessert">
+      <span class="card-emoji">🍓</span>
+      <div class="card-name">水果</div>
+      <div class="card-cat">🍰 甜点</div>
+      <div class="card-qty">×2张</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 订单卡 ==================== -->
+<div class="section">
+  <div class="section-title">📋 订单卡 (30张)</div>
+  <p class="section-note">主菜12张、轻食10张、甜点8张。同时最多展示4张活跃订单。</p>
+  <div class="card-grid">
+    <!-- 主菜 (12张) -->
+    <div class="order-card type-main">
+      <div class="order-header">
+        <span class="order-emoji">🍝</span>
+        <span class="order-name">意面</span>
+        <span class="order-type-badge">主菜</span>
+      </div>
+      <div class="order-needs">需要：面条 + 番茄酱 + 奶酪</div>
+      <div class="order-footer"><span>×3张</span><span class="order-score">3分</span></div>
+    </div>
+    <div class="order-card type-main">
+      <div class="order-header">
+        <span class="order-emoji">🥩</span>
+        <span class="order-name">牛排</span>
+        <span class="order-type-badge">主菜</span>
+      </div>
+      <div class="order-needs">需要：牛肉 + 土豆 + 烧烤酱</div>
+      <div class="order-footer"><span>×3张</span><span class="order-score">3分</span></div>
+    </div>
+    <div class="order-card type-main">
+      <div class="order-header">
+        <span class="order-emoji">🍛</span>
+        <span class="order-name">炒饭</span>
+        <span class="order-type-badge">主菜</span>
+      </div>
+      <div class="order-needs">需要：米饭 + 鸡肉 + 洋葱 + 胡萝卜</div>
+      <div class="order-footer"><span>×2张</span><span class="order-score">3分</span></div>
+    </div>
+    <div class="order-card type-main">
+      <div class="order-header">
+        <span class="order-emoji">🍔</span>
+        <span class="order-name">汉堡</span>
+        <span class="order-type-badge">主菜</span>
+      </div>
+      <div class="order-needs">需要：面包 + 牛肉 + 番茄酱 + 洋葱</div>
+      <div class="order-footer"><span>×2张</span><span class="order-score">3分</span></div>
+    </div>
+    <div class="order-card type-main">
+      <div class="order-header">
+        <span class="order-emoji">🍢</span>
+        <span class="order-name">烤肉</span>
+        <span class="order-type-badge">主菜</span>
+      </div>
+      <div class="order-needs">需要：羊肉 + 咖喱 + 土豆</div>
+      <div class="order-footer"><span>×2张</span><span class="order-score">3分</span></div>
+    </div>
+
+    <!-- 轻食 (10张) -->
+    <div class="order-card type-light">
+      <div class="order-header">
+        <span class="order-emoji">🥗</span>
+        <span class="order-name">沙拉</span>
+        <span class="order-type-badge">轻食</span>
+      </div>
+      <div class="order-needs">需要：黄瓜 + 西红柿 + 沙拉酱</div>
+      <div class="order-footer"><span>×3张</span><span class="order-score">1分</span></div>
+    </div>
+    <div class="order-card type-light">
+      <div class="order-header">
+        <span class="order-emoji">🥪</span>
+        <span class="order-name">三明治</span>
+        <span class="order-type-badge">轻食</span>
+      </div>
+      <div class="order-needs">需要：面包 + 鸡肉 + 芝麻菜</div>
+      <div class="order-footer"><span>×2张</span><span class="order-score">2分</span></div>
+    </div>
+    <div class="order-card type-light">
+      <div class="order-header">
+        <span class="order-emoji">🍣</span>
+        <span class="order-name">寿司</span>
+        <span class="order-type-badge">轻食</span>
+      </div>
+      <div class="order-needs">需要：米饭 + 海鲜 + 芥末</div>
+      <div class="order-footer"><span>×2张</span><span class="order-score">2分</span></div>
+    </div>
+    <div class="order-card type-light">
+      <div class="order-header">
+        <span class="order-emoji">🍲</span>
+        <span class="order-name">汤品</span>
+        <span class="order-type-badge">轻食</span>
+      </div>
+      <div class="order-needs">需要：土豆 + 胡萝卜 + 洋葱</div>
+      <div class="order-footer"><span>×3张</span><span class="order-score">1分</span></div>
+    </div>
+
+    <!-- 甜点 (8张) -->
+    <div class="order-card type-dessert">
+      <div class="order-header">
+        <span class="order-emoji">🎂</span>
+        <span class="order-name">蛋糕</span>
+        <span class="order-type-badge">甜点</span>
+      </div>
+      <div class="order-needs">需要：蛋糕 + 巧克力 + 水果</div>
+      <div class="order-footer"><span>×3张</span><span class="order-score">2分</span></div>
+    </div>
+    <div class="order-card type-dessert">
+      <div class="order-header">
+        <span class="order-emoji">🍨</span>
+        <span class="order-name">冰淇淋</span>
+        <span class="order-type-badge">甜点</span>
+      </div>
+      <div class="order-needs">需要：冰淇淋 + 水果 + 饼干</div>
+      <div class="order-footer"><span>×2张</span><span class="order-score">2分</span></div>
+    </div>
+    <div class="order-card type-dessert">
+      <div class="order-header">
+        <span class="order-emoji">🍪</span>
+        <span class="order-name">饼干拼盘</span>
+        <span class="order-type-badge">甜点</span>
+      </div>
+      <div class="order-needs">需要：饼干 + 巧克力 + 水果</div>
+      <div class="order-footer"><span>×3张</span><span class="order-score">1分</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 事故卡 ==================== -->
+<div class="section">
+  <div class="section-title">⚠️ 事故卡 (20张)</div>
+  <p class="section-note">厨房压力每达到3级时翻开1张。效果可叠加。</p>
+  <div class="card-grid">
+    <div class="accident-card">
+      <div class="acc-header">
+        <span class="acc-emoji">🔥</span>
+        <span class="acc-name">厨房起火</span>
+      </div>
+      <div class="acc-effect">灶台区停用1回合</div>
+      <div class="acc-duration">持续：1回合 · ×4张</div>
+    </div>
+    <div class="accident-card">
+      <div class="acc-header">
+        <span class="acc-emoji">💥</span>
+        <span class="acc-name">打翻酱料</span>
+      </div>
+      <div class="acc-effect">必须清理才能使用备菜台</div>
+      <div class="acc-duration">持续：清理完成 · ×4张</div>
+    </div>
+    <div class="accident-card">
+      <div class="acc-header">
+        <span class="acc-emoji">⚡</span>
+        <span class="acc-name">突然停电</span>
+      </div>
+      <div class="acc-effect">所有玩家蒙眼操作30秒</div>
+      <div class="acc-duration">持续：30秒 · ×3张</div>
+    </div>
+    <div class="accident-card">
+      <div class="acc-header">
+        <span class="acc-emoji">🤮</span>
+        <span class="acc-name">食材变质</span>
+      </div>
+      <div class="acc-effect">丢弃所有手中的指定食材</div>
+      <div class="acc-duration">持续：即时 · ×3张</div>
+    </div>
+    <div class="accident-card">
+      <div class="acc-header">
+        <span class="acc-emoji">🚰</span>
+        <span class="acc-name">水管爆裂</span>
+      </div>
+      <div class="acc-effect">洗碗区无法使用2回合</div>
+      <div class="acc-duration">持续：2回合 · ×3张</div>
+    </div>
+    <div class="accident-card">
+      <div class="acc-header">
+        <span class="acc-emoji">🍳</span>
+        <span class="acc-name">锅烧糊了</span>
+      </div>
+      <div class="acc-effect">当前订单失败，扣1分</div>
+      <div class="acc-duration">持续：即时 · ×3张</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 角色卡 ==================== -->
+<div class="section">
+  <div class="section-title">🎭 角色卡 (8张)</div>
+  <p class="section-note">随机抽取1张，技能可公开声明。大部分技能每回合限用1次。</p>
+  <div class="card-grid">
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">👨‍🍳</span>
+        <div class="role-name">主厨</div>
+      </div>
+      <div class="role-skill-name">🏆 权威指挥</div>
+      <div class="role-skill-desc">指定一名玩家本回合多行动一次</div>
+      <div class="role-strategy">适合：领导型玩家 — 先观察全局，再指挥协调</div>
+    </div>
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">👩‍🍳</span>
+        <div class="role-name">帮厨A</div>
+      </div>
+      <div class="role-skill-name">🔪 快手切菜</div>
+      <div class="role-skill-desc">每回合可多拿1张食材卡</div>
+      <div class="role-strategy">适合：收集型玩家 — 保持手牌4-6张效率最高</div>
+    </div>
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">🧹</span>
+        <div class="role-name">洗碗工</div>
+      </div>
+      <div class="role-skill-name">💦 极速清洗</div>
+      <div class="role-skill-desc">洗碗区工作速度×2</div>
+      <div class="role-strategy">适合：清理型玩家 — 前两轮收集，后专注清理事故</div>
+    </div>
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">🏃</span>
+        <div class="role-name">跑堂</div>
+      </div>
+      <div class="role-skill-name">⚡ 闪电传菜</div>
+      <div class="role-skill-desc">传递卡牌无需等待</div>
+      <div class="role-strategy">适合：传递型玩家 — 站在地图中央保持移动</div>
+    </div>
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">👩‍🍳</span>
+        <div class="role-name">帮厨B</div>
+      </div>
+      <div class="role-skill-name">👁️ 火眼金睛</div>
+      <div class="role-skill-desc">可查看一张事故卡的背面</div>
+      <div class="role-strategy">适合：信息型玩家 — 提前预判事故做好准备</div>
+    </div>
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">🧑‍🍳</span>
+        <div class="role-name">调味师</div>
+      </div>
+      <div class="role-skill-name">✨ 调味大师</div>
+      <div class="role-skill-desc">可用任意食材替代缺少的1种</div>
+      <div class="role-strategy">适合：补救型玩家 — 手牌多样化，关键时刻替代食材</div>
+    </div>
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">👴</span>
+        <div class="role-name">老前辈</div>
+      </div>
+      <div class="role-skill-name">🏅 老练经验</div>
+      <div class="role-skill-desc">每成功完成1单额外+1分</div>
+      <div class="role-strategy">适合：得分型玩家 — 专注完成高分订单</div>
+    </div>
+    <div class="role-card">
+      <div class="role-header">
+        <span class="role-emoji">🎪</span>
+        <div class="role-name">实习生</div>
+      </div>
+      <div class="role-skill-name">🍀 新手运气</div>
+      <div class="role-skill-desc">可重投1次计时沙漏</div>
+      <div class="role-strategy">适合：运气型玩家 — 保存次数用于最后3轮</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 玩家棋子 & 标记物 ==================== -->
+<div class="section">
+  <div class="section-title">🎯 玩家棋子 & 标记物</div>
+  <p class="section-note">沿虚线剪裁。棋子2.5cm圆形，标记1-1.5cm。</p>
+  <div class="tokens-section">
+    <div class="token-group">
+      <h3>棋 玩家棋子 (8个)</h3>
+      <div class="token-row">
+        <div class="token-circle" style="background:#ef4444;">1</div>
+        <div class="token-circle" style="background:#f97316;">2</div>
+        <div class="token-circle" style="background:#eab308;">3</div>
+        <div class="token-circle" style="background:#22c55e;">4</div>
+      </div>
+      <div class="token-row">
+        <div class="token-circle" style="background:#3b82f6;">5</div>
+        <div class="token-circle" style="background:#8b5cf6;">6</div>
+        <div class="token-circle" style="background:#ec4899;">7</div>
+        <div class="token-circle" style="background:#14b8a6;">8</div>
+      </div>
+    </div>
+    <div class="token-group">
+      <h3>🪙 金币指示物 (30个)</h3>
+      <div class="token-row">
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+      </div>
+      <div class="token-row">
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+      </div>
+      <div class="token-row">
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+      </div>
+      <div class="token-row">
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+      </div>
+      <div class="token-row">
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+      </div>
+      <div class="token-row">
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+        <div class="token-circle" style="background:#eab308;font-size:10px;">金</div>
+      </div>
+    </div>
+    <div class="token-group">
+      <h3>🔴 压力指示物 (10个)</h3>
+      <div class="token-row">
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">1</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">2</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">3</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">4</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">5</div>
+      </div>
+      <div class="token-row">
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">6</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">7</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">8</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">9</div>
+        <div class="token-circle" style="background:#dc2626;font-size:11px;">10</div>
+      </div>
+    </div>
+    <div class="token-group">
+      <h3>✅ 订单标记指示物 (20个)</h3>
+      <div class="token-row">
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+      </div>
+      <div class="token-row">
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+      </div>
+      <div class="token-row">
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+      </div>
+      <div class="token-row">
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+        <div class="token-sq" style="background:#22c55e;">✓</div>
+      </div>
+    </div>
+    <div class="token-group" style="grid-column: 1 / 3;">
+      <h3>🔺 起始玩家标记 (1个)</h3>
+      <div class="token-row">
+        <div style="width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:52px solid var(--orange-600);display:inline-block;"></div>
+        <span class="token-label">起始玩家标记 — 放在灶台区标记当前厨师长</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 快速参考卡 ==================== -->
+<div class="section">
+  <div class="section-title">📖 快速参考卡</div>
+  <p class="section-note">打印后裁切，发给每位玩家一份便于快速查阅规则。</p>
+  <div class="ref-card">
+    <h3>🍳 疯狂厨房 — 快速参考卡</h3>
+
+    <div class="ref-section-title">每轮游戏流程</div>
+    <table class="ref-table">
+      <thead>
+        <tr><th>阶段</th><th>时间</th><th>内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. 订单阶段</td><td>30秒</td><td>翻开新订单卡，补充至3张</td></tr>
+        <tr><td>2. 行动阶段</td><td>30秒/人</td><td>拿食材、做菜、传菜、应对事故</td></tr>
+        <tr><td>3. 结算阶段</td><td>—</td><td>验证完成订单、计分、压力+1</td></tr>
+        <tr><td>4. 事故检查</td><td>—</td><td>压力每3级触发事故卡</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="ref-divider">
+
+    <div class="ref-section-title">玩家可选动作</div>
+    <ul class="ref-bullets">
+      <li><strong>拿取食材：</strong>从仓库拿1-2张（手牌上限8张）</li>
+      <li><strong>完成订单：</strong>放置正确食材到订单旁，喊"上菜！"</li>
+      <li><strong>传递食材：</strong>给相邻玩家（需对方同意，跑堂例外）</li>
+      <li><strong>使用技能：</strong>消耗金币激活角色技能</li>
+      <li><strong>应对事故：</strong>前往事故区域执行清理</li>
+    </ul>
+
+    <hr class="ref-divider">
+
+    <div class="ref-section-title">计时规则</div>
+    <table class="ref-table">
+      <thead>
+        <tr><th>场景</th><th>时长</th><th>超时惩罚</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>每回合行动</td><td>30秒/玩家</td><td>跳过该回合</td></tr>
+        <tr><td>紧急订单</td><td>15秒</td><td>订单自动失败</td></tr>
+        <tr><td>事故响应</td><td>60秒</td><td>事故效果加深</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="ref-divider">
+
+    <div class="ref-section-title">胜利 / 失败</div>
+    <ul class="ref-bullets">
+      <li><strong>胜利：</strong>10轮内完成目标分值 = 20 + (人数 x 3)</li>
+      <li><strong>失败：</strong>压力达10级 / 时间结束未达标 / 3次重大事故</li>
+    </ul>
+
+    <hr class="ref-divider">
+
+    <div class="ref-section-title">按人数配置</div>
+    <table class="ref-table">
+      <thead>
+        <tr><th>人数</th><th>食材卡</th><th>订单卡</th><th>事故卡</th><th>目标分</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>3人</td><td>全部60张</td><td>15张</td><td>10张</td><td>29分</td></tr>
+        <tr><td>4人</td><td>全部60张</td><td>20张</td><td>12张</td><td>32分</td></tr>
+        <tr><td>5人</td><td>全部60张</td><td>25张</td><td>15张</td><td>35分</td></tr>
+        <tr><td>6人</td><td>全部60张</td><td>全部30张</td><td>15张</td><td>38分</td></tr>
+        <tr><td>7人</td><td>全部60张</td><td>全部30张</td><td>18张</td><td>41分</td></tr>
+        <tr><td>8人</td><td>全部60张</td><td>全部30张</td><td>全部20张</td><td>44分</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  疯狂厨房 Crazy Kitchen v1.0 · Print & Play · 游戏设计：疯狂厨房团队
+</div>
+
+</body>
+</html>

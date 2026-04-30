@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>妖怪公寓 - 打印资源 | Yokai Apartments Printables</title>
+    <style>
+        :root {
+            --primary-purple: #6B2D5C;
+            --deep-purple: #4A1942;
+            --accent-gold: #D4AF37;
+            --light-gold: #F5DEB3;
+            --dark-bg: #1A0A1F;
+            --card-red: #8B0000;
+            --card-green: #228B22;
+            --card-gray: #4A4A4A;
+            --yokai-card-bg: linear-gradient(135deg, #2D1B3D 0%, #1A0A2E 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Serif JP', 'SimSun', serif;
+            background: var(--dark-bg);
+            color: #FFF;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 打印提示样式 */
+        .print-hint {
+            background: linear-gradient(135deg, var(--primary-purple), var(--deep-purple));
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .print-hint h1 {
+            color: var(--accent-gold);
+            font-size: 2em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .print-hint p {
+            margin: 10px 0;
+            color: #DDD;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: var(--dark-bg);
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-print, .print-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-print:hover, .print-btn:hover {
+            background: #45a049;
+        }
+
+        /* 导航标签 */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .nav-tab {
+            background: var(--primary-purple);
+            color: var(--accent-gold);
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            border: 1px solid var(--accent-gold);
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: var(--accent-gold);
+            color: var(--dark-bg);
+        }
+
+        /* 章节样式 */
+        .section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background: linear-gradient(180deg, rgba(107,45,92,0.3) 0%, rgba(26,10,31,0.8) 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 15px;
+        }
+
+        .section h2 {
+            color: var(--accent-gold);
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        /* 卡牌基础样式 */
+        .card {
+            display: inline-block;
+            width: 120px;
+            height: 170px;
+            margin: 8px;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            vertical-align: top;
+            page-break-inside: avoid;
+        }
+
+        .card-front {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            text-align: center;
+            border: 3px solid;
+            border-radius: 10px;
+        }
+
+        .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 5px;
+        }
+
+        .card-name {
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #FFF;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .card-name-jp {
+            font-size: 0.65em;
+            color: var(--light-gold);
+            margin-top: 2px;
+        }
+
+        .card-desc {
+            font-size: 0.6em;
+            color: #CCC;
+            margin-top: 5px;
+        }
+
+        .card-count {
+            position: absolute;
+            bottom: 5px;
+            right: 8px;
+            font-size: 0.7em;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* 妖怪租客卡 */
+        .yokai-card .card-front {
+            background: var(--yokai-card-bg);
+            border-color: #9B59B6;
+        }
+
+        .yokai-card .card-back {
+            background: linear-gradient(135deg, #2D1B3D 0%, #1A0A2E 100%);
+            border: 3px solid #9B59B6;
+        }
+
+        .yokai-card .card-back::after {
+            content: '👹';
+            font-size: 3em;
+            opacity: 0.3;
+        }
+
+        /* 伪装妖怪卡 */
+        .camouflage-card .card-front {
+            background: linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%);
+            border-color: #888;
+        }
+
+        .camouflage-card .card-back {
+            background: linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%);
+            border: 3px solid #666;
+        }
+
+        /* 房间卡 */
+        .room-card .card-front {
+            background: linear-gradient(135deg, var(--accent-gold), var(--light-gold));
+            border-color: var(--accent-gold);
+        }
+
+        .room-card .card-name, .room-card .card-name-jp {
+            color: var(--dark-bg);
+        }
+
+        .room-card .card-desc {
+            color: #555;
+        }
+
+        /* 任务卡 */
+        .quest-card .card-front {
+            background: linear-gradient(135deg, #8B0000 0%, #4A0000 100%);
+            border-color: #FF6B6B;
+        }
+
+        .quest-card .card-back {
+            background: linear-gradient(135deg, #8B0000 0%, #4A0000 100%);
+            border: 3px solid #FF6B6B;
+        }
+
+        .quest-card .card-points {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            background: var(--accent-gold);
+            color: var(--dark-bg);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        /* 事件卡 */
+        .event-card .card-front {
+            background: linear-gradient(135deg, #1A1A1A 0%, #000 100%);
+            border-color: #FF4444;
+        }
+
+        .event-card .card-icon {
+            color: #FF4444;
+        }
+
+        /* 道具卡 */
+        .item-card .card-front {
+            background: linear-gradient(135deg, #228B22 0%, #006400 100%);
+            border-color: #90EE90;
+        }
+
+        .item-card .card-icon {
+            color: #90EE90;
+        }
+
+        /* 卡牌网格 */
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        /* 公寓地图 */
+        .apartment-map {
+            background: linear-gradient(180deg, #2D1B3D 0%, #1A0A2E 100%);
+            border: 4px solid var(--accent-gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+
+        .floor {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .floor-label {
+            background: var(--accent-gold);
+            color: var(--dark-bg);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .room {
+            background: linear-gradient(135deg, var(--light-gold), var(--accent-gold));
+            border: 2px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            text-align: center;
+        }
+
+        .room-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .room-name {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .room-num {
+            font-size: 0.7em;
+            color: #555;
+        }
+
+        .lobby {
+            background: linear-gradient(135deg, #6B2D5C, #4A1942);
+            border: 3px solid var(--accent-gold);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: var(--accent-gold);
+        }
+
+        .lobby-icon {
+            font-size: 3em;
+        }
+
+        /* 玩家棋子 */
+        .player-pawn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            margin: 10px;
+            border: 3px solid;
+        }
+
+        .pawn-red { background: #E74C3C; border-color: #C0392B; }
+        .pawn-blue { background: #3498DB; border-color: #2980B9; }
+        .pawn-green { background: #27AE60; border-color: #1E8449; }
+        .pawn-yellow { background: #F1C40F; border-color: #D4AC0D; }
+        .pawn-purple { background: #9B59B6; border-color: #7D3C98; }
+
+        /* 入住标记 */
+        .入住标记 {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            border: 2px solid #FFF;
+            margin: 5px;
+        }
+
+        .marker-red { background: rgba(231, 76, 60, 0.8); }
+        .marker-blue { background: rgba(52, 152, 219, 0.8); }
+        .marker-green { background: rgba(39, 174, 96, 0.8); }
+        .marker-yellow { background: rgba(241, 196, 15, 0.8); }
+        .marker-purple { background: rgba(155, 89, 182, 0.8); }
+
+        /* 快速参考卡 */
+        .quick-ref {
+            background: linear-gradient(135deg, #FFF 0%, #F5F5F5 100%);
+            color: var(--dark-bg);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 3px solid var(--accent-gold);
+        }
+
+        .quick-ref h3 {
+            color: var(--primary-purple);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .quick-ref-section {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(107, 45, 92, 0.1);
+            border-radius: 8px;
+        }
+
+        .quick-ref-section h4 {
+            color: var(--primary-purple);
+            margin-bottom: 8px;
+        }
+
+        .quick-ref p, .quick-ref li {
+            font-size: 0.9em;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        /* 标记和棋子网格 */
+        .pawn-grid, .marker-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .print-hint {
+                display: none !important;
+            }
+
+            .print-btn {
+                display: none !important;
+            }
+
+            .nav-tabs {
+                display: none !important;
+            }
+
+            .section {
+                background: white;
+                border: 2px solid #333;
+                page-break-inside: avoid;
+                margin: 20px 0;
+            }
+
+            .card {
+                margin: 5px;
+                page-break-inside: avoid;
+            }
+
+            .apartment-map {
+                page-break-inside: avoid;
+            }
+
+            .floor {
+                page-break-inside: avoid;
+            }
+
+            .quick-ref {
+                background: white;
+                border: 2px solid #333;
+            }
+        }
+
+        /* 页面分隔 */
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+    <!-- 打印提示区域 -->
+    <div class="print-hint">
+        <h1>👹 妖怪公寓 · 打印资源包 👹</h1>
+        <p>本页包含所有可打印的游戏配件，请使用浏览器的打印功能（Crtl+P / Cmd+P）进行打印。</p>
+        <p>建议使用A4纸打印，彩色打印效果最佳。如需单面打印，请选择"手动双面打印"。</p>
+        <button class="btn btn-print print-btn" onclick="window.print()">🖨️ 打印全部</button>
+        <button class="btn" onclick="window.close()">❌ 关闭</button>
+    </div>
+
+    <!-- 导航标签 -->
+    <nav class="nav-tabs">
+        <a href="#apartment-map" class="nav-tab">🏠 公寓地图</a>
+        <a href="#yokai-cards" class="nav-tab">👹 妖怪租客卡</a>
+        <a href="#room-cards" class="nav-tab">🚪 房间卡</a>
+        <a href="#quest-cards" class="nav-tab">📜 任务卡</a>
+        <a href="#event-cards" class="nav-tab">⚡ 事件卡</a>
+        <a href="#item-cards" class="nav-tab">🎴 道具卡</a>
+        <a href="#camouflage-cards" class="nav-tab">🎭 伪装卡</a>
+        <a href="#pawns-markers" class="nav-tab">👤 棋子标记</a>
+        <a href="#quick-ref" class="nav-tab">📋 快速参考</a>
+    </nav>
+
+    <!-- 公寓地图 -->
+    <section id="apartment-map" class="section">
+        <h2>🏯 妖怪公寓楼地图</h2>
+        <div class="apartment-map">
+            <div class="floor">
+                <div class="floor-label">第5层 - 天狗特区 (SKY GOD FLOOR)</div>
+                <div class="room">
+                    <div class="room-icon">👃</div>
+                    <div class="room-name">天狗套房</div>
+                    <div class="room-num">501</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">👃</div>
+                    <div class="room-name">天狗雅间</div>
+                    <div class="room-num">502</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">👃</div>
+                    <div class="room-name">天狗客房</div>
+                    <div class="room-num">503</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">👃</div>
+                    <div class="room-name">天狗阁楼</div>
+                    <div class="room-num">504</div>
+                </div>
+            </div>
+
+            <div class="floor">
+                <div class="floor-label">第4层 - 水妖楼层 (AQUATIC FLOOR)</div>
+                <div class="room">
+                    <div class="room-icon">💧</div>
+                    <div class="room-name">河童浴室</div>
+                    <div class="room-num">401</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">💧</div>
+                    <div class="room-name">河童泳池</div>
+                    <div class="room-num">402</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">💧</div>
+                    <div class="room-name">河童茶室</div>
+                    <div class="room-num">403</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">💧</div>
+                    <div class="room-name">河童仓库</div>
+                    <div class="room-num">404</div>
+                </div>
+            </div>
+
+            <div class="floor">
+                <div class="floor-label">第3层 - 幻妖楼层 (ILLUSION FLOOR)</div>
+                <div class="room">
+                    <div class="room-icon">🦊</div>
+                    <div class="room-name">狐狸窝</div>
+                    <div class="room-num">301</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">🎭</div>
+                    <div class="room-name">变身房</div>
+                    <div class="room-num">302</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">✨</div>
+                    <div class="room-name">幻术厅</div>
+                    <div class="room-num">303</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">🎭</div>
+                    <div class="room-name">伪装阁</div>
+                    <div class="room-num">304</div>
+                </div>
+            </div>
+
+            <div class="floor">
+                <div class="floor-label">第2层 - 温情楼层 (WARM HEART FLOOR)</div>
+                <div class="room">
+                    <div class="room-icon">😊</div>
+                    <div class="room-name">座敷房</div>
+                    <div class="room-num">201</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">❄️</div>
+                    <div class="room-name">雪女套房</div>
+                    <div class="room-num">202</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">🛏️</div>
+                    <div class="room-name">温情卧室</div>
+                    <div class="room-num">203</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">🛋️</div>
+                    <div class="room-name">温馨客厅</div>
+                    <div class="room-num">204</div>
+                </div>
+            </div>
+
+            <div class="floor">
+                <div class="floor-label">第1层 - 公共楼层 (COMMON FLOOR)</div>
+                <div class="room">
+                    <div class="room-icon">🏮</div>
+                    <div class="room-name">大厅</div>
+                    <div class="room-num">101</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">🍳</div>
+                    <div class="room-name">厨房</div>
+                    <div class="room-num">102</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">📦</div>
+                    <div class="room-name">仓库</div>
+                    <div class="room-num">103</div>
+                </div>
+                <div class="room">
+                    <div class="room-icon">🦒</div>
+                    <div class="room-name">值班室</div>
+                    <div class="room-num">104</div>
+                </div>
+            </div>
+
+            <div class="lobby">
+                <div class="lobby-icon">🌙</div>
+                <h3>一楼大堂 · LOBBY</h3>
+                <p>公共区域 | 任务公告栏</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 妖怪租客卡 -->
+    <section id="yokai-cards" class="section">
+        <h2>👹 妖怪租客卡（50张）</h2>
+        
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">河童 Kappa（6张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card">
+                <div class="card-front">
+                    <div class="card-icon">💧</div>
+                    <div class="card-name">河童</div>
+                    <div class="card-name-jp">カッパ</div>
+                    <div class="card-desc">喜欢黄瓜的浅水妖怪</div>
+                    <div class="card-count">x6</div>
+                </div>
+            </div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童</div><div class="card-name-jp">カッパ</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童</div><div class="card-name-jp">カッパ</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童</div><div class="card-name-jp">カッパ</div><div class="card-count">3</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童</div><div class="card-name-jp">カッパ</div><div class="card-count">4</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童</div><div class="card-name-jp">カッパ</div><div class="card-count">5</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">天狗 Tengu（5张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗</div><div class="card-name-jp">テング</div><div class="card-desc">住在深山的长鼻妖怪</div><div class="card-count">x5</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗</div><div class="card-name-jp">テング</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗</div><div class="card-name-jp">テング</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗</div><div class="card-name-jp">テング</div><div class="card-count">3</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗</div><div class="card-name-jp">テング</div><div class="card-count">4</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">狐狸 Kitsune（6张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">狐狸</div><div class="card-name-jp">キツネ</div><div class="card-desc">擅长变化的妖狐</div><div class="card-count">x6</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">狐狸</div><div class="card-name-jp">キツネ</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">狐狸</div><div class="card-name-jp">キツネ</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">狐狸</div><div class="card-name-jp">キツネ</div><div class="card-count">3</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">狐狸</div><div class="card-name-jp">キツネ</div><div class="card-count">4</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">狐狸</div><div class="card-name-jp">キツネ</div><div class="card-count">5</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">独眼小僧 Hitodama（4张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👁️</div><div class="card-name">独眼小僧</div><div class="card-name-jp">ヒトコエセン</div><div class="card-desc">漂浮的单眼妖怪</div><div class="card-count">x4</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👁️</div><div class="card-name">独眼小僧</div><div class="card-name-jp">ヒトコエセン</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👁️</div><div class="card-name">独眼小僧</div><div class="card-name-jp">ヒトコエセン</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👁️</div><div class="card-name">独眼小僧</div><div class="card-name-jp">ヒトコエセン</div><div class="card-count">3</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">雪女 Yukionna（4张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">❄️</div><div class="card-name">雪女</div><div class="card-name-jp">ユキジョウ</div><div class="card-desc">美丽的冰雪妖怪</div><div class="card-count">x4</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">❄️</div><div class="card-name">雪女</div><div class="card-name-jp">ユキジョウ</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">❄️</div><div class="card-name">雪女</div><div class="card-name-jp">ユキジョウ</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">❄️</div><div class="card-name">雪女</div><div class="card-name-jp">ユキジョウ</div><div class="card-count">3</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">座敷童子 Zashiki-warashi（5张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">😊</div><div class="card-name">座敷童子</div><div class="card-name-jp">ザシキワラシ</div><div class="card-desc">带来好运的家神</div><div class="card-count">x5</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">😊</div><div class="card-name">座敷童子</div><div class="card-name-jp">ザシキワラシ</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">😊</div><div class="card-name">座敷童子</div><div class="card-name-jp">ザシキワラシ</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">😊</div><div class="card-name">座敷童子</div><div class="card-name-jp">ザシキワラシ</div><div class="card-count">3</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">😊</div><div class="card-name">座敷童子</div><div class="card-name-jp">ザシキワラシ</div><div class="card-count">4</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">辘轳首 Nurikabi（4张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦒</div><div class="card-name">辘轳首</div><div class="card-name-jp">ニュルクリ</div><div class="card-desc">脖子超长的妖怪</div><div class="card-count">x4</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦒</div><div class="card-name">辘轳首</div><div class="card-name-jp">ニュルクリ</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦒</div><div class="card-name">辘轳首</div><div class="card-name-jp">ニュルクリ</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🦒</div><div class="card-name">辘轳首</div><div class="card-name-jp">ニュルクリ</div><div class="card-count">3</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">狸猫 Tanuki（5张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🎴</div><div class="card-name">狸猫</div><div class="card-name-jp">タヌキ</div><div class="card-desc">会变身的可爱狸妖</div><div class="card-count">x5</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🎴</div><div class="card-name">狸猫</div><div class="card-name-jp">タヌキ</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🎴</div><div class="card-name">狸猫</div><div class="card-name-jp">タヌキ</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🎴</div><div class="card-name">狸猫</div><div class="card-name-jp">タヌキ</div><div class="card-count">3</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🎴</div><div class="card-name">狸猫</div><div class="card-name-jp">タヌキ</div><div class="card-count">4</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">灯笼妖怪 Hitodama Light（4张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🏮</div><div class="card-name">灯笼妖怪</div><div class="card-name-jp">ポチリカ</div><div class="card-desc">会飘浮的灯笼鬼</div><div class="card-count">x4</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🏮</div><div class="card-name">灯笼妖怪</div><div class="card-name-jp">ポチリカ</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🏮</div><div class="card-name">灯笼妖怪</div><div class="card-name-jp">ポチリカ</div><div class="card-count">2</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">🏮</div><div class="card-name">灯笼妖怪</div><div class="card-name-jp">ポチリカ</div><div class="card-count">3</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">河童大王 Kappa King（3张）</h3>
+        <div class="card-grid">
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👑</div><div class="card-name">河童大王</div><div class="card-name-jp">カッパ大王</div><div class="card-desc">河童族群的王者</div><div class="card-count">x3</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👑</div><div class="card-name">河童大王</div><div class="card-name-jp">カッパ大王</div><div class="card-count">1</div></div></div>
+            <div class="card yokai-card"><div class="card-front"><div class="card-icon">👑</div><div class="card-name">河童大王</div><div class="card-name-jp">カッパ大王</div><div class="card-count">2</div></div></div>
+        </div>
+    </section>
+
+    <!-- 伪装妖怪卡 -->
+    <section id="camouflage-cards" class="section page-break">
+        <h2>🎭 伪装妖怪卡（8张）</h2>
+        <p style="text-align: center; color: #AAA; margin-bottom: 20px;">
+            这些卡片可以伪装成任意妖怪，欺骗其他玩家。使用后可声明扮演任何妖怪。
+        </p>
+        <div class="card-grid">
+            <div class="card camouflage-card">
+                <div class="card-front">
+                    <div class="card-icon">🎭</div>
+                    <div class="card-name">伪装妖怪</div>
+                    <div class="card-name-jp">的正体</div>
+                    <div class="card-desc">可伪装成任意妖怪</div>
+                    <div class="card-count">x8</div>
+                </div>
+            </div>
+            <div class="card camouflage-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装妖怪</div><div class="card-name-jp">的正体</div><div class="card-count">1</div></div></div>
+            <div class="card camouflage-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装妖怪</div><div class="card-name-jp">的正体</div><div class="card-count">2</div></div></div>
+            <div class="card camouflage-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装妖怪</div><div class="card-name-jp">的正体</div><div class="card-count">3</div></div></div>
+            <div class="card camouflage-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装妖怪</div><div class="card-name-jp">的正体</div><div class="card-count">4</div></div></div>
+            <div class="card camouflage-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装妖怪</div><div class="card-name-jp">的正体</div><div class="card-count">5</div></div></div>
+            <div class="card camouflage-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装妖怪</div><div class="card-name-jp">的正体</div><div class="card-count">6</div></div></div>
+            <div class="card camouflage-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装妖怪</div><div class="card-name-jp">的正体</div><div class="card-count">7</div></div></div>
+        </div>
+    </section>
+
+    <!-- 房间卡 -->
+    <section id="room-cards" class="section">
+        <h2>🚪 房间卡（20张）</h2>
+        <div class="card-grid">
+            <!-- 第5层 -->
+            <div class="card room-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗套房</div><div class="card-name-jp">501</div><div class="card-desc">入住天狗+1分</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗雅间</div><div class="card-name-jp">502</div><div class="card-desc">入住天狗+1分</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗客房</div><div class="card-name-jp">503</div><div class="card-desc">入住天狗+1分</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">天狗阁楼</div><div class="card-name-jp">504</div><div class="card-desc">入住天狗+1分</div></div></div>
+            <!-- 第4层 -->
+            <div class="card room-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童浴室</div><div class="card-name-jp">401</div><div class="card-desc">可交换入住妖怪</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童泳池</div><div class="card-name-jp">402</div><div class="card-desc">可交换入住妖怪</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童茶室</div><div class="card-name-jp">403</div><div class="card-desc">可交换入住妖怪</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">河童仓库</div><div class="card-name-jp">404</div><div class="card-desc">可交换入住妖怪</div></div></div>
+            <!-- 第3层 -->
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">狐狸窝</div><div class="card-name-jp">301</div><div class="card-desc">更易隐藏伪装</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">变身房</div><div class="card-name-jp">302</div><div class="card-desc">更易隐藏伪装</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">✨</div><div class="card-name">幻术厅</div><div class="card-name-jp">303</div><div class="card-desc">更易隐藏伪装</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🎭</div><div class="card-name">伪装阁</div><div class="card-name-jp">304</div><div class="card-desc">更易隐藏伪装</div></div></div>
+            <!-- 第2层 -->
+            <div class="card room-card"><div class="card-front"><div class="card-icon">😊</div><div class="card-name">座敷房</div><div class="card-name-jp">201</div><div class="card-desc">任务完成+1</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">❄️</div><div class="card-name">雪女套房</div><div class="card-name-jp">202</div><div class="card-desc">任务完成+1</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🛏️</div><div class="card-name">温情卧室</div><div class="card-name-jp">203</div><div class="card-desc">任务完成+1</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🛋️</div><div class="card-name">温馨客厅</div><div class="card-name-jp">204</div><div class="card-desc">任务完成+1</div></div></div>
+            <!-- 第1层 -->
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🏮</div><div class="card-name">大厅</div><div class="card-name-jp">101</div><div class="card-desc">公共交换区</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🍳</div><div class="card-name">厨房</div><div class="card-name-jp">102</div><div class="card-desc">公共交换区</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">📦</div><div class="card-name">仓库</div><div class="card-name-jp">103</div><div class="card-desc">公共交换区</div></div></div>
+            <div class="card room-card"><div class="card-front"><div class="card-icon">🦒</div><div class="card-name">值班室</div><div class="card-name-jp">104</div><div class="card-desc">公共交换区</div></div></div>
+        </div>
+    </section>
+
+    <!-- 任务卡 -->
+    <section id="quest-cards" class="section page-break">
+        <h2>📜 任务卡（24张）</h2>
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">简单任务（8张，1-2分）</h3>
+        <div class="card-grid">
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">收集2只河童</div><div class="card-name-jp">简单</div><div class="card-points">1</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">收集2只狐狸</div><div class="card-name-jp">简单</div><div class="card-points">1</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">👃</div><div class="card-name">入住1只天狗</div><div class="card-name-jp">简单</div><div class="card-points">1</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">😊</div><div class="card-name">入住1只座敷</div><div class="card-name-jp">简单</div><div class="card-points">1</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">💧</div><div class="card-name">入住3只河童</div><div class="card-name-jp">普通</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🦊</div><div class="card-name">入住3只狐狸</div><div class="card-name-jp">普通</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">❄️</div><div class="card-name">入住2只雪女</div><div class="card-name-jp">普通</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🎴</div><div class="card-name">入住2只狸猫</div><div class="card-name-jp">普通</div><div class="card-points">2</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">普通任务（10张，2-3分）</h3>
+        <div class="card-grid">
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🏠</div><div class="card-name">第4层入住3只</div><div class="card-name-jp">楼层</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🏠</div><div class="card-name">第5层入住2只</div><div class="card-name-jp">楼层</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🦊💧</div><div class="card-name">狐狸+河童同层</div><div class="card-name-jp">配对</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">😊❄️</div><div class="card-name">座敷+雪女同层</div><div class="card-name-jp">配对</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">👁️</div><div class="card-name">收集2只独眼</div><div class="card-name-jp">普通</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🦒</div><div class="card-name">收集2只辘轳首</div><div class="card-name-jp">普通</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🏮</div><div class="card-name">收集2只灯笼</div><div class="card-name-jp">普通</div><div class="card-points">2</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">👑</div><div class="card-name">入住河童大王</div><div class="card-name-jp">稀有</div><div class="card-points">3</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">💧❄️</div><div class="card-name">入住3种不同</div><div class="card-name-jp">收集</div><div class="card-points">3</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">👃😊</div><div class="card-name">入住3种不同</div><div class="card-name-jp">收集</div><div class="card-points">3</div></div></div>
+        </div>
+
+        <h3 style="color: var(--accent-gold); margin: 20px 0;">困难任务（6张，4-5分）</h3>
+        <div class="card-grid">
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">⭐</div><div class="card-name">收集4种不同</div><div class="card-name-jp">困难</div><div class="card-points">4</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">⭐</div><div class="card-name">收集5种不同</div><div class="card-name-jp">困难</div><div class="card-points">5</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🏠</div><div class="card-name">5层入住4只</div><div class="card-name-jp">困难</div><div class="card-points">4</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🏠</div><div class="card-name">4层入住4只</div><div class="card-name-jp">困难</div><div class="card-points">4</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">🦊💧❄️</div><div class="card-name">3层各住1只</div><div class="card-name-jp">困难</div><div class="card-points">5</div></div></div>
+            <div class="card quest-card"><div class="card-front"><div class="card-icon">👑💧</div><div class="card-name">河童大王+3河童</div><div class="card-name-jp">困难</div><div class="card-points">5</div></div></div>
+        </div>
+    </section>
+
+    <!-- 事件卡 -->
+    <section id="event-cards" class="section page-break">
+        <h2>⚡ 事件卡（16张）</h2>
+        <div class="card-grid">
+            <div class="card event-card"><div class="card-front"><div class="card-icon">👻</div><div class="card-name">骚灵作乱</div><div class="card-name-jp">骚霊作乱</div><div class="card-desc">所有玩家将1张手牌放回公共区</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">👻</div><div class="card-name">骚灵作乱</div><div class="card-name-jp">骚霊作乱</div><div class="card-desc">所有玩家将1张手牌放回公共区</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🔥</div><div class="card-name">妖怪暴走</div><div class="card-name-jp">妖怪暴走</div><div class="card-desc">指定一名玩家丢弃2张手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🔥</div><div class="card-name">妖怪暴走</div><div class="card-name-jp">妖怪暴走</div><div class="card-desc">指定一名玩家丢弃2张手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">💫</div><div class="card-name">破魔结界</div><div class="card-name-jp">破魔結界</div><div class="card-desc">废除所有道具卡效果</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🔄</div><div class="card-name">搬家热潮</div><div class="card-name-jp">搬家热潮</div><div class="card-desc">所有玩家顺时针交换手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🔄</div><div class="card-name">搬家热潮</div><div class="card-name-jp">搬家热潮</div><div class="card-desc">所有玩家顺时针交换手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🎉</div><div class="card-name">意外访客</div><div class="card-name-jp">意外来客</div><div class="card-desc">从公共区抽2张卡加入手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🎉</div><div class="card-name">意外访客</div><div class="card-name-jp">意外来客</div><div class="card-desc">从公共区抽2张卡加入手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">👀</div><div class="card-name">误会解除</div><div class="card-name-jp">誤解解除</div><div class="card-desc">指定一名玩家展示所有手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">👀</div><div class="card-name">误会解除</div><div class="card-name-jp">誤解解除</div><div class="card-desc">指定一名玩家展示所有手牌</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🎊</div><div class="card-name">妖怪祭典</div><div class="card-name-jp">妖怪祭典</div><div class="card-desc">所有玩家从公共区各抽1张</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">🎊</div><div class="card-name">妖怪祭典</div><div class="card-name-jp">妖怪祭典</div><div class="card-desc">所有玩家从公共区各抽1张</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">💨</div><div class="card-name">神秘消失</div><div class="card-name-jp">神秘消失</div><div class="card-desc">选择1只入住妖怪移回公共区</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">💨</div><div class="card-name">神秘消失</div><div class="card-name-jp">神秘消失</div><div class="card-desc">选择1只入住妖怪移回公共区</div></div></div>
+            <div class="card event-card"><div class="card-front"><div class="card-icon">💨</div><div class="card-name">神秘消失</div><div class="card-name-jp">神秘消失</div><div class="card-desc">选择1只入住妖怪移回公共区</div></div></div>
+        </div>
+    </section>
+
+    <!-- 道具卡 -->
+    <section id="item-cards" class="section page-break">
+        <h2>🎴 道具卡（10张）</h2>
+        <div class="card-grid">
+            <div class="card item-card"><div class="card-front"><div class="card-icon">📜</div><div class="card-name">驱魔符</div><div class="card-name-jp">お札</div><div class="card-desc">确认1张卡是否为伪装妖怪</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">📜</div><div class="card-name">驱魔符</div><div class="card-name-jp">お札</div><div class="card-desc">确认1张卡是否为伪装妖怪</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">🔮</div><div class="card-name">灵媒镜</div><div class="card-name-jp">霊媒鏡</div><div class="card-desc">窥视1名玩家的手牌</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">🔮</div><div class="card-name">灵媒镜</div><div class="card-name-jp">霊媒鏡</div><div class="card-desc">窥视1名玩家的手牌</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">♨️</div><div class="card-name">温泉券</div><div class="card-name-jp">温泉券</div><div class="card-desc">将任意妖怪移回公共区</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">♨️</div><div class="card-name">温泉券</div><div class="card-name-jp">温泉券</div><div class="card-desc">将任意妖怪移回公共区</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">🛡️</div><div class="card-name">护身符</div><div class="card-name-jp">お守り</div><div class="card-desc">免受1次事件卡影响</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">🛡️</div><div class="card-name">护身符</div><div class="card-name-jp">お守り</div><div class="card-desc">免受1次事件卡影响</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">📋</div><div class="card-name">占卜签</div><div class="card-name-jp">おみくじ</div><div class="card-desc">从任务堆抽一张替换</div></div></div>
+            <div class="card item-card"><div class="card-front"><div class="card-icon">📋</div><div class="card-name">占卜签</div><div class="card-name-jp">おみくじ</div><div class="card-desc">从任务堆抽一张替换</div></div></div>
+        </div>
+    </section>
+
+    <!-- 玩家棋子 -->
+    <section id="pawns-markers" class="section page-break">
+        <h2>👤 玩家棋子（5枚）</h2>
+        <div class="pawn-grid">
+            <div style="text-align: center; margin: 20px;">
+                <div class="player-pawn pawn-red">🔴</div>
+                <p>玩家1</p>
+            </div>
+            <div style="text-align: center; margin: 20px;">
+                <div class="player-pawn pawn-blue">🔵</div>
+                <p>玩家2</p>
+            </div>
+            <div style="text-align: center; margin: 20px;">
+                <div class="player-pawn pawn-green">🟢</div>
+                <p>玩家3</p>
+            </div>
+            <div style="text-align: center; margin: 20px;">
+                <div class="player-pawn pawn-yellow">🟡</div>
+                <p>玩家4</p>
+            </div>
+            <div style="text-align: center; margin: 20px;">
+                <div class="player-pawn pawn-purple">🟣</div>
+                <p>玩家5</p>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 40px;">🏷️ 入住标记（20枚）</h2>
+        <div class="marker-grid">
+            <div class="入住标记 marker-red">1</div>
+            <div class="入住标记 marker-red">2</div>
+            <div class="入住标记 marker-red">3</div>
+            <div class="入住标记 marker-red">4</div>
+            <div class="入住标记 marker-blue">1</div>
+            <div class="入住标记 marker-blue">2</div>
+            <div class="入住标记 marker-blue">3</div>
+            <div class="入住标记 marker-blue">4</div>
+            <div class="入住标记 marker-green">1</div>
+            <div class="入住标记 marker-green">2</div>
+            <div class="入住标记 marker-green">3</div>
+            <div class="入住标记 marker-green">4</div>
+            <div class="入住标记 marker-yellow">1</div>
+            <div class="入住标记 marker-yellow">2</div>
+            <div class="入住标记 marker-yellow">3</div>
+            <div class="入住标记 marker-yellow">4</div>
+            <div class="入住标记 marker-purple">1</div>
+            <div class="入住标记 marker-purple">2</div>
+            <div class="入住标记 marker-purple">3</div>
+            <div class="入住标记 marker-purple">4</div>
+        </div>
+    </section>
+
+    <!-- 快速参考卡 -->
+    <section id="quick-ref" class="section page-break">
+        <h2>📋 快速参考卡</h2>
+        
+        <div class="quick-ref">
+            <h3>👹 妖怪公寓 · 快速参考</h3>
+            
+            <div class="quick-ref-section">
+                <h4>🎯 游戏目标</h4>
+                <p>完成个人秘密任务，获得最高分数</p>
+            </div>
+            
+            <div class="quick-ref-section">
+                <h4>📦 游戏配件</h4>
+                <ul style="text-align: left; padding-left: 20px;">
+                    <li>妖怪租客卡 50张</li>
+                    <li>房间卡 20张</li>
+                    <li>任务卡 24张</li>
+                    <li>事件卡 16张</li>
+                    <li>道具卡 10张</li>
+                    <li>伪装妖怪卡 8张</li>
+                </ul>
+            </div>
+            
+            <div class="quick-ref-section">
+                <h4>🎮 游戏流程（每回合）</h4>
+                <ol style="text-align: left; padding-left: 20px;">
+                    <li><b>抽牌阶段</b>：抽2张手牌，补充公共区至5张</li>
+                    <li><b>行动阶段</b>：每玩家最多2个行动</li>
+                    <li><b>事件阶段</b>：翻开1张事件卡</li>
+                </ol>
+            </div>
+            
+            <div class="quick-ref-section">
+                <h4>⚡ 可用行动</h4>
+                <ul style="text-align: left; padding-left: 20px;">
+                    <li>🏠 <b>入住</b>：将妖怪放入空房间</li>
+                    <li>🔄 <b>交换</b>：与其他玩家交换手牌</li>
+                    <li>🎴 <b>道具</b>：使用道具卡效果</li>
+                    <li>⚡ <b>事件</b>：打出手中事件卡</li>
+                    <li>🔍 <b>调查</b>：验证妖怪真伪</li>
+                </ul>
+            </div>
+            
+            <div class="quick-ref-section">
+                <h4>🏆 计分方式</h4>
+                <ul style="text-align: left; padding-left: 20px;">
+                    <li>完成任务卡 → 任务标注分数</li>
+                    <li>多余同种妖怪 → 每只+1分</li>
+                    <li>剩余道具卡 → 每张+1分</li>
+                    <li>识破伪装妖怪 → 每只+2分</li>
+                </ul>
+            </div>
+            
+            <div class="quick-ref-section">
+                <h4>🎴 道具卡效果</h4>
+                <ul style="text-align: left; padding-left: 20px;">
+                    <li>📜 驱魔符：确认妖怪真伪</li>
+                    <li>🔮 灵媒镜：窥视手牌</li>
+                    <li>♨️ 温泉券：移回妖怪</li>
+                    <li>🛡️ 护身符：免疫事件</li>
+                    <li>📋 占卜签：更换任务</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; color: #666;">
+                <small>妖怪公寓 · Yokai Apartments · 2-5人 · 25-40分钟</small>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 打印功能
+        function printSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>妖怪公寓 - 打印</title>
+                    <style>
+                        ${document.querySelector('style').innerHTML}
+                        body { background: white; }
+                        .print-hint { display: none; }
+                        .nav-tabs { display: none; }
+                        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    </style>
+                </head>
+                <body>
+                    ${section.outerHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+</body>
+</html>

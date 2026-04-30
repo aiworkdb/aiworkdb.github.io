@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深海探险 Abyss Dive - 打印素材</title>
+    <style>
+        :root {
+            --deep-blue: #0a1628;
+            --mid-blue: #0d2847;
+            --light-blue: #1a4a7a;
+            --cyan: #00d4ff;
+            --cyan-light: #7eeaff;
+            --dark-cyan: #0891b2;
+            --white: #ffffff;
+            --gray: #94a3b8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(180deg, var(--deep-blue) 0%, var(--mid-blue) 50%, #0f3557 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--white);
+        }
+        .print-hint {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 212, 255, 0.05) 100%);
+            border: 2px solid var(--cyan);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .print-hint h2 { color: var(--cyan); margin-bottom: 10px; font-size: 1.5em; }
+        .print-hint p { color: var(--gray); margin-bottom: 15px; }
+        .print-btn {
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--dark-cyan) 100%);
+            color: var(--deep-blue);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            color: var(--cyan);
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+        .ocean-depth-map {
+            background: linear-gradient(180deg, #87CEEB 0%, #4169E1 15%, #00008B 30%, #000033 50%, #000022 70%, #0a0a14 100%);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .depth-layer { border: 2px solid rgba(0, 212, 255, 0.4); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .depth-layer.level-1 { background: rgba(135, 206, 235, 0.3); }
+        .depth-layer.level-2 { background: rgba(65, 105, 225, 0.4); }
+        .depth-layer.level-3 { background: rgba(0, 0, 139, 0.5); }
+        .depth-layer.level-4 { background: rgba(0, 0, 51, 0.6); }
+        .depth-layer.level-5 { background: rgba(10, 10, 20, 0.8); }
+        .depth-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .depth-name { font-size: 1.2em; font-weight: bold; }
+        .depth-info { font-size: 0.9em; color: var(--gray); }
+        .depth-areas { display: flex; flex-wrap: wrap; gap: 10px; }
+        .area-box { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; padding: 10px 15px; min-width: 100px; text-align: center; }
+        .area-icon { font-size: 1.5em; margin-bottom: 5px; }
+        .area-name { font-size: 0.85em; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: linear-gradient(145deg, rgba(13, 40, 71, 0.9) 0%, rgba(10, 22, 40, 0.95) 100%); border: 2px solid var(--cyan); border-radius: 12px; padding: 15px; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--cyan), var(--cyan-light), var(--cyan)); }
+        .card.equipment { border-color: #22c55e; }
+        .card.equipment::before { background: #22c55e; }
+        .card.creature { border-color: #ef4444; }
+        .card.creature::before { background: #ef4444; }
+        .card.relic { border-color: #f59e0b; }
+        .card.relic::before { background: #f59e0b; }
+        .card.environment { border-color: #8b5cf6; }
+        .card.environment::before { background: #8b5cf6; }
+        .card.character { border-color: #ec4899; }
+        .card.character::before { background: #ec4899; }
+        .card-icon { font-size: 2.5em; text-align: center; margin-bottom: 10px; }
+        .card-name { font-size: 1.1em; font-weight: bold; text-align: center; margin-bottom: 8px; color: var(--white); }
+        .card-type { font-size: 0.8em; color: var(--gray); text-align: center; margin-bottom: 10px; }
+        .card-desc { font-size: 0.9em; color: var(--gray); line-height: 1.5; }
+        .card-stats { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .stat { font-size: 0.85em; color: var(--cyan); }
+        .token-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .token { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2em; border: 3px solid var(--cyan); background: linear-gradient(145deg, var(--mid-blue), var(--deep-blue)); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); }
+        .token-label { text-align: center; margin-top: 10px; font-size: 0.9em; color: var(--gray); }
+        .marker-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+        .marker { background: linear-gradient(145deg, var(--mid-blue), var(--deep-blue)); border: 2px solid var(--cyan); border-radius: 8px; padding: 15px 25px; display: flex; align-items: center; gap: 10px; }
+        .marker-icon { font-size: 1.5em; }
+        .marker-info h4 { font-size: 1em; margin-bottom: 3px; }
+        .marker-info p { font-size: 0.8em; color: var(--gray); }
+        .quick-ref { background: linear-gradient(145deg, rgba(13, 40, 71, 0.95) 0%, rgba(10, 22, 40, 0.98) 100%); border: 2px solid var(--cyan); border-radius: 12px; padding: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .ref-section h4 { color: var(--cyan); font-size: 1.1em; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid rgba(0, 212, 255, 0.3); }
+        .ref-section ul { list-style: none; font-size: 0.9em; color: var(--gray); }
+        .ref-section li { padding: 5px 0; padding-left: 15px; position: relative; }
+        .ref-section li::before { content: '>'; position: absolute; left: 0; color: var(--cyan); }
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .print-hint { display: none !important; }
+            .print-btn { display: none !important; }
+            body { background: white !important; color: black !important; padding: 0; }
+            .section { background: white !important; border: 1px solid #ccc !important; page-break-inside: avoid; margin-bottom: 20px; }
+            .card { background: white !important; border: 2px solid #333 !important; color: black !important; }
+            .card-name, .card-desc, .card-stats, .stat { color: black !important; }
+            .section-title { color: #0a1628 !important; }
+            .token, .marker { border-color: #333 !important; }
+            .quick-ref { background: white !important; border: 2px solid #333 !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>深海探险 Abyss Dive - 打印素材</h2>
+        <p>本页面包含游戏所需的所有可打印素材，包括地图、卡牌、标记等。点击下方按钮可直接打印。</p>
+        <button class="print-btn" onclick="window.print()">打印全部素材</button>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">深海垂直地图（5层深度）</h2>
+        <div class="ocean-depth-map">
+            <div class="depth-layer level-1">
+                <div class="depth-header">
+                    <span class="depth-name">第1层：浅海区 - 阳光带（0-200m）</span>
+                    <span class="depth-info">氧气消耗x1 | 威胁 ★☆☆☆☆</span>
+                </div>
+                <div class="depth-areas">
+                    <div class="area-box"><div class="area-icon">🪸</div><div class="area-name">珊瑚礁</div></div>
+                    <div class="area-box"><div class="area-icon">🐠</div><div class="area-name">鱼群区</div></div>
+                    <div class="area-box"><div class="area-icon">🌿</div><div class="area-name">海藻林</div></div>
+                    <div class="area-box"><div class="area-icon">🐚</div><div class="area-name">贝壳滩</div></div>
+                </div>
+                <div style="margin-top:10px; color: #f59e0b;">遗物: 光之水晶</div>
+            </div>
+            <div class="depth-layer level-2">
+                <div class="depth-header">
+                    <span class="depth-name">第2层：中层海域 - 暮光带（200-1000m）</span>
+                    <span class="depth-info">氧气消耗x1 | 威胁 ★★☆☆☆</span>
+                </div>
+                <div class="depth-areas">
+                    <div class="area-box"><div class="area-icon">🐬</div><div class="area-name">海豚湾</div></div>
+                    <div class="area-box"><div class="area-icon">⚓</div><div class="area-name">沉船墟</div></div>
+                    <div class="area-box"><div class="area-icon">🦈</div><div class="area-name">鲨鱼区</div></div>
+                    <div class="area-box"><div class="area-icon">🪨</div><div class="area-name">岩礁带</div></div>
+                </div>
+                <div style="margin-top:10px; color: #f59e0b;">遗物: 古代罗盘</div>
+            </div>
+            <div class="depth-layer level-3">
+                <div class="depth-header">
+                    <span class="depth-name">第3层：深海带 - 午夜带（1000-4000m）</span>
+                    <span class="depth-info">氧气消耗x2 | 威胁 ★★★☆☆ | 需探照灯</span>
+                </div>
+                <div class="depth-areas">
+                    <div class="area-box"><div class="area-icon">🐙</div><div class="area-name">章鱼巢</div></div>
+                    <div class="area-box"><div class="area-icon">🌀</div><div class="area-name">深海涡</div></div>
+                    <div class="area-box"><div class="area-icon">💀</div><div class="area-name">巨鲸骸</div></div>
+                    <div class="area-box"><div class="area-icon">🫧</div><div class="area-name">热液喷口</div></div>
+                </div>
+                <div style="margin-top:10px; color: #f59e0b;">遗物: 珊瑚王冠</div>
+            </div>
+            <div class="depth-layer level-4">
+                <div class="depth-header">
+                    <span class="depth-name">第4层：深渊带 - 超深渊（4000-6000m）</span>
+                    <span class="depth-info">氧气消耗x3 | 威胁 ★★★★☆ | 不可逃逸</span>
+                </div>
+                <div class="depth-areas">
+                    <div class="area-box"><div class="area-icon">🦑</div><div class="area-name">大王乌贼巢穴</div></div>
+                    <div class="area-box"><div class="area-icon">💎</div><div class="area-name">遗物殿</div></div>
+                    <div class="area-box"><div class="area-icon">⚡</div><div class="area-name">电磁区</div></div>
+                    <div class="area-box"><div class="area-icon">🕳️</div><div class="area-name">深渊裂缝</div></div>
+                </div>
+                <div style="margin-top:10px; color: #f59e0b;">遗物: 深渊之眼</div>
+            </div>
+            <div class="depth-layer level-5">
+                <div class="depth-header">
+                    <span class="depth-name">第5层：超深渊带 - 海底之心（6000m+）</span>
+                    <span class="depth-info">氧气消耗x4 | 威胁 ★★★★★ | BOSS战</span>
+                </div>
+                <div style="text-align: center; padding: 30px;">
+                    <div style="font-size: 3em;">💠</div>
+                    <div style="font-size: 1.3em; font-weight: bold; margin: 10px 0;">深海之心</div>
+                    <div style="color: #94a3b8;">需要3件遗物激活 | 击败守护者获得</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">装备卡（35张）</h2>
+        <div class="card-grid">
+            <div class="card equipment"><div class="card-icon">🤿</div><div class="card-name">潜水头盔</div><div class="card-type">装备</div><div class="card-desc">每回合额外+1氧气回复</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card equipment"><div class="card-icon">🔦</div><div class="card-name">深海探照灯</div><div class="card-type">装备</div><div class="card-desc">无视「黑暗」惩罚（第3层及以上）</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+            <div class="card equipment"><div class="card-icon">🫧</div><div class="card-name">氧气瓶（小）</div><div class="card-type">装备</div><div class="card-desc">使用后恢复3点氧气</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card equipment"><div class="card-icon">🫧</div><div class="card-name">氧气瓶（大）</div><div class="card-type">装备</div><div class="card-desc">使用后恢复6点氧气</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card equipment"><div class="card-icon">🔧</div><div class="card-name">修理工具箱</div><div class="card-type">装备</div><div class="card-desc">修复2点设备损坏</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card equipment"><div class="card-icon">💊</div><div class="card-name">医疗急救包</div><div class="card-type">装备</div><div class="card-desc">任意玩家恢复1点生命</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card equipment"><div class="card-icon">🧲</div><div class="card-name">磁力抓钩</div><div class="card-type">装备</div><div class="card-desc">可从远处拾取遗物</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">深海生物卡（25张）</h2>
+        <div class="card-grid">
+            <div class="card creature"><div class="card-icon">🪼</div><div class="card-name">热带水母群</div><div class="card-type">生物</div><div class="card-desc">战力1 | 造成1点毒素伤害</div><div class="card-stats"><span class="stat">战力: 1</span><span class="stat">数量: 3张</span></div></div>
+            <div class="card creature"><div class="card-icon">🦈</div><div class="card-name">珊瑚礁鲨</div><div class="card-type">生物</div><div class="card-desc">战力2 | 攻击后玩家后退1格</div><div class="card-stats"><span class="stat">战力: 2</span><span class="stat">数量: 3张</span></div></div>
+            <div class="card creature"><div class="card-icon">🐙</div><div class="card-name">巨型章鱼</div><div class="card-type">生物</div><div class="card-desc">战力3 | 缠绕1名玩家1回合</div><div class="card-stats"><span class="stat">战力: 3</span><span class="stat">数量: 3张</span></div></div>
+            <div class="card creature"><div class="card-icon">🦑</div><div class="card-name">大王乌贼</div><div class="card-type">生物</div><div class="card-desc">战力4 | 全队各受1点伤害</div><div class="card-stats"><span class="stat">战力: 4</span><span class="stat">数量: 2张</span></div></div>
+            <div class="card creature"><div class="card-icon">🐋</div><div class="card-name">深海守护者</div><div class="card-type">BOSS</div><div class="card-desc">战力7 | 全队需合力战斗</div><div class="card-stats"><span class="stat">战力: 7</span><span class="stat">数量: 2张</span></div></div>
+            <div class="card creature"><div class="card-icon">🐲</div><div class="card-name">深海龙鱼</div><div class="card-type">生物</div><div class="card-desc">战力5 | 击败后获得1件装备</div><div class="card-stats"><span class="stat">战力: 5</span><span class="stat">数量: 2张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">遗物卡（20张）</h2>
+        <div class="card-grid">
+            <div class="card relic"><div class="card-icon">💎</div><div class="card-name">光之水晶</div><div class="card-type">能源</div><div class="card-desc">持续：全队每回合+1氧气恢复</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+            <div class="card relic"><div class="card-icon">🔱</div><div class="card-name">海神三叉戟</div><div class="card-type">武器</div><div class="card-desc">持续：战斗检定+1骰值</div><div class="card-stats"><span class="stat">数量: 1张</span></div></div>
+            <div class="card relic"><div class="card-icon">🧭</div><div class="card-name">古代罗盘</div><div class="card-type">导航</div><div class="card-desc">持续：团队可忽略1次洋流事件</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+            <div class="card relic"><div class="card-icon">👁️</div><div class="card-name">深渊之眼</div><div class="card-type">神器</div><div class="card-desc">持续：可查看生物堆顶2张</div><div class="card-stats"><span class="stat">数量: 1张</span></div></div>
+            <div class="card relic"><div class="card-icon">💠</div><div class="card-name">深海之心碎片</div><div class="card-type">核心</div><div class="card-desc">持续：集齐3件遗物时激活深海之心</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+            <div class="card relic"><div class="card-icon">📿</div><div class="card-name">深海珠串</div><div class="card-type">护符</div><div class="card-desc">持续：持有者免疫毒素伤害</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">环境卡（30张）</h2>
+        <div class="card-grid">
+            <div class="card environment"><div class="card-icon">🌊</div><div class="card-name">温暖洋流</div><div class="card-type">利好</div><div class="card-desc">团队+2氧气</div><div class="card-stats"><span class="stat">难度: ★☆☆☆☆</span><span class="stat">数量: 3张</span></div></div>
+            <div class="card environment"><div class="card-icon">📉</div><div class="card-name">水压波动</div><div class="card-type">负面</div><div class="card-desc">团队氧气-2（所有层级）</div><div class="card-stats"><span class="stat">难度: ★★☆☆☆</span><span class="stat">数量: 4张</span></div></div>
+            <div class="card environment"><div class="card-icon">🌀</div><div class="card-name">暗流涌动</div><div class="card-type">负面</div><div class="card-desc">全队被推向随机方向（深度+/-1层）</div><div class="card-stats"><span class="stat">难度: ★★☆☆☆</span><span class="stat">数量: 3张</span></div></div>
+            <div class="card environment"><div class="card-icon">⚠️</div><div class="card-name">氧气泄漏</div><div class="card-type">危险</div><div class="card-desc">团队氧气-4</div><div class="card-stats"><span class="stat">难度: ★★★☆☆</span><span class="stat">数量: 3张</span></div></div>
+            <div class="card environment"><div class="card-icon">🌑</div><div class="card-name">完全黑暗</div><div class="card-type">危险</div><div class="card-desc">无探照灯的玩家移动无效</div><div class="card-stats"><span class="stat">难度: ★★★☆☆</span><span class="stat">数量: 2张</span></div></div>
+            <div class="card environment"><div class="card-icon">🦑</div><div class="card-name">生物潮涌</div><div class="card-type">危机</div><div class="card-desc">立即触发1次生物遭遇</div><div class="card-stats"><span class="stat">难度: ★★★★☆</span><span class="stat">数量: 2张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">角色卡（5张）</h2>
+        <div class="card-grid">
+            <div class="card character"><div class="card-icon">🧑‍🚀</div><div class="card-name">潜航员</div><div class="card-type">角色</div><div class="card-desc">生命3 | 被动: 移动+1区域<br>主动: 紧急下潜(3次)</div><div class="card-stats"><span class="stat">生命: 3</span><span class="stat">技能: 3次</span></div></div>
+            <div class="card character"><div class="card-icon">🔧</div><div class="card-name">工程师</div><div class="card-type">角色</div><div class="card-desc">生命3 | 被动: 修理+1效果<br>主动: 紧急修复(2次)</div><div class="card-stats"><span class="stat">生命: 3</span><span class="stat">技能: 2次</span></div></div>
+            <div class="card character"><div class="card-icon">🔬</div><div class="card-name">生物学家</div><div class="card-type">角色</div><div class="card-desc">生命4 | 被动: 战斗+1骰值<br>主动: 生物安抚(3次)</div><div class="card-stats"><span class="stat">生命: 4</span><span class="stat">技能: 3次</span></div></div>
+            <div class="card character"><div class="card-icon">🧭</div><div class="card-name">导航员</div><div class="card-type">角色</div><div class="card-desc">生命3 | 被动: 可选暗流方向<br>主动: 精确导航(2次)</div><div class="card-stats"><span class="stat">生命: 3</span><span class="stat">技能: 2次</span></div></div>
+            <div class="card character"><div class="card-icon">💊</div><div class="card-name">医官</div><div class="card-type">角色</div><div class="card-desc">生命3 | 被动: 每回合恢复1生命<br>主动: 紧急抢救(2次)</div><div class="card-stats"><span class="stat">生命: 3</span><span class="stat">技能: 2次</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">玩家棋子与标记</h2>
+        <div class="token-grid">
+            <div><div class="token" style="background: linear-gradient(145deg, #ef4444, #b91c1c);">🧑‍🚀</div><div class="token-label">玩家1</div></div>
+            <div><div class="token" style="background: linear-gradient(145deg, #3b82f6, #1d4ed8);">🧑‍🔧</div><div class="token-label">玩家2</div></div>
+            <div><div class="token" style="background: linear-gradient(145deg, #22c55e, #15803d);">🧑‍🔬</div><div class="token-label">玩家3</div></div>
+            <div><div class="token" style="background: linear-gradient(145deg, #f59e0b, #d97706);">🧑‍✈️</div><div class="token-label">玩家4</div></div>
+            <div><div class="token" style="background: linear-gradient(145deg, #8b5cf6, #6d28d9);">🧑‍⚕️</div><div class="token-label">玩家5</div></div>
+        </div>
+        <h3 style="color: var(--cyan); margin: 30px 0 20px; text-align: center;">资源标记</h3>
+        <div class="marker-grid">
+            <div class="marker"><div class="marker-icon">🫧</div><div class="marker-info"><h4>氧气标记</h4><p>40枚 | 团队共享</p></div></div>
+            <div class="marker"><div class="marker-icon">💠</div><div class="marker-info"><h4>深海之心</h4><p>1枚 | 目标物品</p></div></div>
+            <div class="marker"><div class="marker-icon">⬇️</div><div class="marker-info"><h4>深度指示器</h4><p>1枚 | 标记当前深度</p></div></div>
+            <div class="marker"><div class="marker-icon">⚠️</div><div class="marker-info"><h4>威胁指示器</h4><p>1枚 | 1-5级</p></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">快速参考卡</h2>
+        <div class="quick-ref">
+            <div class="ref-section">
+                <h4>回合流程</h4>
+                <ul>
+                    <li>A. 回合开始 - 检查氧气、恢复效果</li>
+                    <li>B. 玩家行动 - 3行动点自由分配</li>
+                    <li>C. 氧气消耗 - 根据深度扣除</li>
+                    <li>D. 环境事件 - 抽1张执行效果</li>
+                    <li>E. 回合结束 - 传递给下一玩家</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>行动类型</h4>
+                <ul>
+                    <li>移动(1点) - 移动到相邻区域</li>
+                    <li>探索(1点) - 抽取生物卡或遗物卡</li>
+                    <li>修理(1点) - 修复1件损坏装备</li>
+                    <li>交换(1点) - 与队友交换装备</li>
+                    <li>补给(1点) - 恢复2点氧气</li>
+                    <li>战斗(1点) - 与生物战斗</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>氧气消耗表</h4>
+                <ul>
+                    <li>第1层: 1点/回合</li>
+                    <li>第2层: 1点/回合</li>
+                    <li>第3层: 2点/回合</li>
+                    <li>第4层: 3点/回合</li>
+                    <li>第5层: 4点/回合</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>胜利条件</h4>
+                <ul>
+                    <li>收集任意3件遗物</li>
+                    <li>携带遗物抵达第5层</li>
+                    <li>激活深海之心</li>
+                    <li>安全返回水面</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>失败条件</h4>
+                <ul>
+                    <li>全员阵亡</li>
+                    <li>氧气耗尽超过3回合</li>
+                    <li>威胁等级达到6</li>
+                    <li>时间耗尽(40回合)</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>战斗检定</h4>
+                <ul>
+                    <li>掷2d6 + 装备加成 + 角色加成</li>
+                    <li>结果 >= 生物战力 = 击败</li>
+                    <li>结果 < 生物战力 = 受伤</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
