@@ -31,6 +31,7 @@ boardgames/
 | [宝藏猎人](category/strategy/treasure-hunter/README.md) | 策略 | 2-4人 | 45-60分钟 | 中等 |
 | [魔法学院](category/cooperative/magic-academy/README.md) | 合作 | 2-4人 | 45-60分钟 | 中等 |
 | [时间特工](category/party/time-agents/README.md) | 派对 | 4-8人 | 20-40分钟 | 中等 |
+| [星际贸易站](category/strategy/starport-trader/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等/困难 |
 
 ## 添加新桌游
 

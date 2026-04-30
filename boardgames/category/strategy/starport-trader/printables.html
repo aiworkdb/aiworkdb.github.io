@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际贸易站 - 打印文档</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; font-size: 2em; }
+        h2 { color: #555; margin: 25px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #ddd; }
+        .section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .print-hint { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-size: 14px; color: #856404; }
+        @media print { * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
+        
+        .trade-board { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-radius: 12px; padding: 20px; color: white; margin-bottom: 20px; }
+        .board-header { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        .board-areas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+        .area { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 15px; text-align: center; }
+        .area-icon { font-size: 32px; margin-bottom: 8px; }
+        .area-name { font-weight: bold; font-size: 14px; }
+        .area-desc { font-size: 11px; opacity: 0.9; margin-top: 5px; }
+        
+        .market-prices { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 15px; display: flex; justify-content: space-around; }
+        .price-item { text-align: center; }
+        .price-resource { font-size: 24px; }
+        .price-value { font-size: 18px; font-weight: bold; margin-top: 5px; }
+        
+        .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .card { background: white; border: 2px solid #ddd; border-radius: 10px; padding: 15px; min-height: 140px; display: flex; flex-direction: column; break-inside: avoid; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .card-icon { font-size: 28px; }
+        .card-title { font-weight: bold; font-size: 16px; }
+        .card-description { flex: 1; font-size: 12px; line-height: 1.5; color: #666; }
+        .card-footer { margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; font-size: 11px; color: #888; }
+        
+        .card.energy { border-color: #f59e0b; }
+        .card.mineral { border-color: #6b7280; }
+        .card.food { border-color: #22c55e; }
+        .card.data { border-color: #3b82f6; }
+        .card.processed { border-color: #f59e0b; }
+        .card.hightech { border-color: #8b5cf6; }
+        .card.build { border-color: #22c55e; }
+        .card.ship { border-color: #3b82f6; }
+        .card.contract { border-color: #f59e0b; }
+        .card.event { border-color: #ef4444; }
+        
+        .player-panels { display: flex; gap: 20px; flex-wrap: wrap; }
+        .panel { background: white; border: 2px solid #ddd; border-radius: 10px; padding: 15px; min-width: 200px; }
+        .panel-header { font-weight: bold; font-size: 16px; margin-bottom: 10px; text-align: center; }
+        .panel-resources { display: flex; flex-wrap: wrap; gap: 10px; }
+        .resource-item { display: flex; align-items: center; gap: 5px; }
+        .resource-icon { font-size: 20px; }
+        
+        .instructions { background: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .instructions h3 { color: #1565c0; margin-bottom: 15px; }
+        .instructions ul { margin-left: 20px; line-height: 1.8; color: #37474f; }
+
+        @media print {
+            body { background: white; }
+            .print-hint { display: none; }
+            .section { box-shadow: none; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 星际贸易站 - 打印文档</h1>
+        
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>贸易站版图可以使用普通纸张打印</li>
+                <li>打印后按虚线裁剪使用</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🚀 贸易站版图</h2>
+            <div class="trade-board">
+                <div class="board-header">🌌 星际贸易站 🌌</div>
+                
+                <div class="board-areas">
+                    <div class="area">
+                        <div class="area-icon">💰</div>
+                        <div class="area-name">资源市场</div>
+                        <div class="area-desc">买卖基础资源<br>影响市场价格</div>
+                    </div>
+                    <div class="area">
+                        <div class="area-icon">⚙️</div>
+                        <div class="area-name">加工中心</div>
+                        <div class="area-desc">加工资源<br>生产高级产品</div>
+                    </div>
+                    <div class="area">
+                        <div class="area-icon">🔬</div>
+                        <div class="area-name">科技实验室</div>
+                        <div class="area-desc">研发高科技<br>生产价值产品</div>
+                    </div>
+                    <div class="area">
+                        <div class="area-icon">🚀</div>
+                        <div class="area-name">船坞</div>
+                        <div class="area-desc">运输货物<br>交付合同获奖赏</div>
+                    </div>
+                </div>
+                
+                <div class="board-areas">
+                    <div class="area">
+                        <div class="area-icon">👷</div>
+                        <div class="area-name">招聘中心</div>
+                        <div class="area-desc">雇佣工人<br>增加行动能力</div>
+                    </div>
+                    <div class="area">
+                        <div class="area-icon">📋</div>
+                        <div class="area-name">合同发布</div>
+                        <div class="area-desc">获取新合同<br>完成任务获奖励</div>
+                    </div>
+                    <div class="area">
+                        <div class="area-icon">🏦</div>
+                        <div class="area-name">星际银行</div>
+                        <div class="area-desc">贷款或储蓄<br>管理现金流</div>
+                    </div>
+                    <div class="area">
+                        <div class="area-icon">🎲</div>
+                        <div class="area-name">事件区</div>
+                        <div class="area-desc">触发随机事件<br>影响全局市场</div>
+                    </div>
+                </div>
+                
+                <div class="market-prices">
+                    <div class="price-item">
+                        <div class="price-resource">⚡</div>
+                        <div>能源</div>
+                        <div class="price-value">3💰</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-resource">⛏️</div>
+                        <div>矿物</div>
+                        <div class="price-value">4💰</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-resource">🍎</div>
+                        <div>食物</div>
+                        <div class="price-value">2💰</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-resource">💾</div>
+                        <div>数据</div>
+                        <div class="price-value">5💰</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚡ 基础资源卡</h2>
+            <div class="cards-grid">
+                <div class="card energy">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">能源</span>
+                    </div>
+                    <div class="card-description">基础资源<br>用于驱动加工设施</div>
+                    <div class="card-footer">基础资源</div>
+                </div>
+                <div class="card mineral">
+                    <div class="card-header">
+                        <span class="card-icon">⛏️</span>
+                        <span class="card-title">矿物</span>
+                    </div>
+                    <div class="card-description">基础资源<br>用于制造硬件产品</div>
+                    <div class="card-footer">基础资源</div>
+                </div>
+                <div class="card food">
+                    <div class="card-header">
+                        <span class="card-icon">🍎</span>
+                        <span class="card-title">食物</span>
+                    </div>
+                    <div class="card-description">基础资源<br>维持工人、交易</div>
+                    <div class="card-footer">基础资源</div>
+                </div>
+                <div class="card data">
+                    <div class="card-header">
+                        <span class="card-icon">💾</span>
+                        <span class="card-title">数据</span>
+                    </div>
+                    <div class="card-description">基础资源<br>研发科技产品</div>
+                    <div class="card-footer">基础资源</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔩 加工产品卡</h2>
+            <div class="cards-grid">
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">🔩</span>
+                        <span class="card-title">合金</span>
+                    </div>
+                    <div class="card-description">🔩 = ⛏️×2 + ⚡×1<br>价值：8💰</div>
+                    <div class="card-footer">加工产品</div>
+                </div>
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">🥫</span>
+                        <span class="card-title">合成食品</span>
+                    </div>
+                    <div class="card-description">🥫 = 🍎×2 + ⚡×1<br>价值：6💰</div>
+                    <div class="card-footer">加工产品</div>
+                </div>
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">🔐</span>
+                        <span class="card-title">加密数据</span>
+                    </div>
+                    <div class="card-description">🔐 = 💾×2 + ⚡×1<br>价值：12💰</div>
+                    <div class="card-footer">加工产品</div>
+                </div>
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">💻</span>
+                        <span class="card-title">电子元件</span>
+                    </div>
+                    <div class="card-description">💻 = ⛏️×1 + 💾×1 + ⚡×1<br>价值：10💰</div>
+                    <div class="card-footer">加工产品</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔬 高科技产品卡</h2>
+            <div class="cards-grid">
+                <div class="card hightech">
+                    <div class="card-header">
+                        <span class="card-icon">⚛️</span>
+                        <span class="card-title">量子芯片</span>
+                    </div>
+                    <div class="card-description">⚛️ = 💻×2 + 🔐×1<br>价值：25💰</div>
+                    <div class="card-footer">高科技产品</div>
+                </div>
+                <div class="card hightech">
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <span class="card-title">生物制剂</span>
+                    </div>
+                    <div class="card-description">🧬 = 🥫×2 + 💾×1<br>价值：20💰</div>
+                    <div class="card-footer">高科技产品</div>
+                </div>
+                <div class="card hightech">
+                    <div class="card-header">
+                        <span class="card-icon">🚀</span>
+                        <span class="card-title">星际引擎</span>
+                    </div>
+                    <div class="card-description">🚀 = 🔩×2 + 💻×1<br>价值：22💰</div>
+                    <div class="card-footer">高科技产品</div>
+                </div>
+                <div class="card hightech">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-title">AI核心</span>
+                    </div>
+                    <div class="card-description">🤖 = ⚛️×1 + 🔐×2<br>价值：35💰</div>
+                    <div class="card-footer">高科技产品</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏭 基础生产建筑卡</h2>
+            <div class="cards-grid">
+                <div class="card build">
+                    <div class="card-header">
+                        <span class="card-icon">⚡🏭</span>
+                        <span class="card-title">能源矿场</span>
+                    </div>
+                    <div class="card-description">成本：5💰<br>效果：每轮生产1个⚡</div>
+                    <div class="card-footer">基础建筑</div>
+                </div>
+                <div class="card build">
+                    <div class="card-header">
+                        <span class="card-icon">⛏️🏭</span>
+                        <span class="card-title">采矿站</span>
+                    </div>
+                    <div class="card-description">成本：6💰<br>效果：每轮生产1个⛏️</div>
+                    <div class="card-footer">基础建筑</div>
+                </div>
+                <div class="card build">
+                    <div class="card-header">
+                        <span class="card-icon">🍎🏭</span>
+                        <span class="card-title">生态农场</span>
+                    </div>
+                    <div class="card-description">成本：4💰<br>效果：每轮生产1个🍎</div>
+                    <div class="card-footer">基础建筑</div>
+                </div>
+                <div class="card build">
+                    <div class="card-header">
+                        <span class="card-icon">💾🏭</span>
+                        <span class="card-title">数据中心</span>
+                    </div>
+                    <div class="card-description">成本：8💰<br>效果：每轮生产1个💾</div>
+                    <div class="card-footer">基础建筑</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ 加工厂卡</h2>
+            <div class="cards-grid">
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">🔩⚙️</span>
+                        <span class="card-title">冶炼厂</span>
+                    </div>
+                    <div class="card-description">成本：10💰<br>效果：⛏️×2+⚡×1→🔩</div>
+                    <div class="card-footer">加工厂</div>
+                </div>
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">🥫⚙️</span>
+                        <span class="card-title">食品工厂</span>
+                    </div>
+                    <div class="card-description">成本：8💰<br>效果：🍎×2+⚡×1→🥫</div>
+                    <div class="card-footer">加工厂</div>
+                </div>
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">🔐⚙️</span>
+                        <span class="card-title">加密中心</span>
+                    </div>
+                    <div class="card-description">成本：12💰<br>效果：💾×2+⚡×1→🔐</div>
+                    <div class="card-footer">加工厂</div>
+                </div>
+                <div class="card processed">
+                    <div class="card-header">
+                        <span class="card-icon">💻⚙️</span>
+                        <span class="card-title">电子工厂</span>
+                    </div>
+                    <div class="card-description">成本：15💰<br>效果：⛏️×1+💾×1+⚡×1→💻</div>
+                    <div class="card-footer">加工厂</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚀 运输船卡</h2>
+            <div class="cards-grid">
+                <div class="card ship">
+                    <div class="card-header">
+                        <span class="card-icon">📦🚀</span>
+                        <span class="card-title">货船</span>
+                    </div>
+                    <div class="card-description">成本：8💰<br>效果：每轮多交付1个合同</div>
+                    <div class="card-footer">运输船</div>
+                </div>
+                <div class="card ship">
+                    <div class="card-header">
+                        <span class="card-icon">⚡🚀</span>
+                        <span class="card-title">快速舰</span>
+                    </div>
+                    <div class="card-description">成本：12💰<br>效果：交付合同+2💰奖励</div>
+                    <div class="card-footer">运输船</div>
+                </div>
+                <div class="card ship">
+                    <div class="card-header">
+                        <span class="card-icon">🏋️🚀</span>
+                        <span class="card-title">重型运输舰</span>
+                    </div>
+                    <div class="card-description">成本：15💰<br>效果：同时交付2个合同</div>
+                    <div class="card-footer">运输船</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 基础合同卡</h2>
+            <div class="cards-grid">
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">能源供应</span>
+                    </div>
+                    <div class="card-description">需求：⚡×3<br>奖励：12💰</div>
+                    <div class="card-footer">基础合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">⛏️</span>
+                        <span class="card-title">矿物采购</span>
+                    </div>
+                    <div class="card-description">需求：⛏️×2<br>奖励：10💰</div>
+                    <div class="card-footer">基础合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">🍎</span>
+                        <span class="card-title">食品配送</span>
+                    </div>
+                    <div class="card-description">需求：🍎×4<br>奖励：10💰</div>
+                    <div class="card-footer">基础合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">💾</span>
+                        <span class="card-title">数据传输</span>
+                    </div>
+                    <div class="card-description">需求：💾×2<br>奖励：12💰</div>
+                    <div class="card-footer">基础合同</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📜 高级合同卡</h2>
+            <div class="cards-grid">
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">🔩</span>
+                        <span class="card-title">合金订单</span>
+                    </div>
+                    <div class="card-description">需求：🔩×2<br>奖励：20💰</div>
+                    <div class="card-footer">高级合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">💻</span>
+                        <span class="card-title">军需供应</span>
+                    </div>
+                    <div class="card-description">需求：💻×2<br>奖励：25💰</div>
+                    <div class="card-footer">高级合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">🔐</span>
+                        <span class="card-title">科研支持</span>
+                    </div>
+                    <div class="card-description">需求：🔐×2<br>奖励：28💰</div>
+                    <div class="card-footer">高级合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">🥫</span>
+                        <span class="card-title">殖民补给</span>
+                    </div>
+                    <div class="card-description">需求：🥫×3<br>奖励：22💰</div>
+                    <div class="card-footer">高级合同</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏆 史诗合同卡</h2>
+            <div class="cards-grid">
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">⚛️</span>
+                        <span class="card-title">量子计算</span>
+                    </div>
+                    <div class="card-description">需求：⚛️×1<br>奖励：30💰</div>
+                    <div class="card-footer">史诗合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">🚀</span>
+                        <span class="card-title">星际舰队</span>
+                    </div>
+                    <div class="card-description">需求：🚀×2<br>奖励：50💰</div>
+                    <div class="card-footer">史诗合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <span class="card-title">生物工程</span>
+                    </div>
+                    <div class="card-description">需求：🧬×2<br>奖励：45💰</div>
+                    <div class="card-footer">史诗合同</div>
+                </div>
+                <div class="card contract">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-title">AI革命</span>
+                    </div>
+                    <div class="card-description">需求：🤖×1<br>奖励：40💰</div>
+                    <div class="card-footer">史诗合同</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📈 市场事件卡</h2>
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">📈</span>
+                        <span class="card-title">能源危机</span>
+                    </div>
+                    <div class="card-description">效果：能源价格+2</div>
+                    <div class="card-footer">市场事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">⛏️</span>
+                        <span class="card-title">矿产发现</span>
+                    </div>
+                    <div class="card-description">效果：矿物价格-2</div>
+                    <div class="card-footer">市场事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🍎</span>
+                        <span class="card-title">食品丰收</span>
+                    </div>
+                    <div class="card-description">效果：食物价格-1</div>
+                    <div class="card-footer">市场事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">💾</span>
+                        <span class="card-title">数据泄露</span>
+                    </div>
+                    <div class="card-description">效果：数据价格+3</div>
+                    <div class="card-footer">市场事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🌌 星际事件卡</h2>
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">⭐</span>
+                        <span class="card-title">新星发现</span>
+                    </div>
+                    <div class="card-description">效果：所有玩家获得1个免费资源</div>
+                    <div class="card-footer">星际事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">👽</span>
+                        <span class="card-title">外星贸易</span>
+                    </div>
+                    <div class="card-description">效果：本回合合同奖励+5💰</div>
+                    <div class="card-footer">星际事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🔬</span>
+                        <span class="card-title">科技突破</span>
+                    </div>
+                    <div class="card-description">效果：科技建筑建造成本-5💰</div>
+                    <div class="card-footer">星际事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🤝</span>
+                        <span class="card-title">星际会议</span>
+                    </div>
+                    <div class="card-description">效果：所有玩家可额外放置1个工人</div>
+                    <div class="card-footer">星际事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ 灾难事件卡</h2>
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">☀️</span>
+                        <span class="card-title">太阳风暴</span>
+                    </div>
+                    <div class="card-description">效果：所有能源资源损失一半</div>
+                    <div class="card-footer">灾难事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">☄️</span>
+                        <span class="card-title">小行星撞击</span>
+                    </div>
+                    <div class="card-description">效果：随机1个建筑损坏，需5💰修复</div>
+                    <div class="card-footer">灾难事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">📉</span>
+                        <span class="card-title">市场崩溃</span>
+                    </div>
+                    <div class="card-description">效果：所有资源价格降至1💰</div>
+                    <div class="card-footer">灾难事件</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🏴‍☠️</span>
+                        <span class="card-title">海盗袭击</span>
+                    </div>
+                    <div class="card-description">效果：手牌最多的玩家损失3个资源</div>
+                    <div class="card-footer">灾难事件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👤 玩家面板</h2>
+            <div class="player-panels">
+                <div class="panel">
+                    <div class="panel-header">玩家1 - 红色</div>
+                    <div class="panel-resources">
+                        <div class="resource-item"><span class="resource-icon">⚡</span><span>3</span></div>
+                        <div class="resource-item"><span class="resource-icon">⛏️</span><span>2</span></div>
+                        <div class="resource-item"><span class="resource-icon">🍎</span><span>1</span></div>
+                        <div class="resource-item"><span class="resource-icon">💾</span><span>2</span></div>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;">信用点：15💰 | 工人：5个</div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header">玩家2 - 蓝色</div>
+                    <div class="panel-resources">
+                        <div class="resource-item"><span class="resource-icon">⚡</span><span>2</span></div>
+                        <div class="resource-item"><span class="resource-icon">⛏️</span><span>3</span></div>
+                        <div class="resource-item"><span class="resource-icon">🍎</span><span>2</span></div>
+                        <div class="resource-item"><span class="resource-icon">💾</span><span>1</span></div>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;">信用点：12💰 | 工人：5个</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印版图：</strong>将贸易站版图打印出来，放在桌面中央</li>
+                <li><strong>准备卡牌：</strong>将建筑卡、合同卡、事件卡分别洗混，放在版图旁</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备资源：</strong>使用卡纸打印资源标记，或使用硬币/方块代替</li>
+                <li><strong>开始游戏：</strong>每位玩家获得起始资源、工人和面板，选择起始建筑</li>
+                <li><strong>策略核心：</strong>建立高效的资源生产链，把握市场时机，完成高价值合同！</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
