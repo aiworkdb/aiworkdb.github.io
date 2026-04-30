@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>法庭风云 Courtroom Drama - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        h2 {
+            color: #1a237e;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #c5cae9;
+            font-size: 1.5em;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffeeba;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+            font-size: 15px;
+            color: #856404;
+            line-height: 1.8;
+        }
+
+        .print-hint strong {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .print-btn {
+            display: block;
+            width: 200px;
+            margin: 0 auto 25px;
+            padding: 12px 30px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .print-btn:hover {
+            background: #283593;
+        }
+
+        /* ===== Card Styles ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 180px;
+            position: relative;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            font-size: 2em;
+            line-height: 1;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 0.75em;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .card-desc {
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .card-footer {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-size: 0.7em;
+            opacity: 0.5;
+        }
+
+        .card-count {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: rgba(0,0,0,0.08);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        /* Role Cards */
+        .card-role-prosecutor {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-color: #7986cb;
+        }
+
+        .card-role-prosecutor .card-title { color: #283593; }
+
+        .card-role-defender {
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+            border-color: #4db6ac;
+        }
+
+        .card-role-defender .card-title { color: #00695c; }
+
+        .card-role-witness {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-color: #ffd54f;
+        }
+
+        .card-role-witness .card-title { color: #f57f17; }
+
+        .card-role-judge {
+            background: linear-gradient(135deg, #fbe9e7 0%, #ffccbc 100%);
+            border-color: #ff8a65;
+        }
+
+        .card-role-judge .card-title { color: #bf360c; }
+
+        .card-role-jury {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-color: #ba68c8;
+        }
+
+        .card-role-jury .card-title { color: #6a1b9a; }
+
+        /* Case Cards */
+        .card-case-daily {
+            background: linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%);
+            border-color: #aed581;
+        }
+
+        .card-case-daily .card-title { color: #33691e; }
+
+        .card-case-fantasy {
+            background: linear-gradient(135deg, #ede7f6 0%, #d1c4e9 100%);
+            border-color: #9575cd;
+        }
+
+        .card-case-fantasy .card-title { color: #4527a0; }
+
+        .card-case-work {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-color: #64b5f6;
+        }
+
+        .card-case-work .card-title { color: #1565c0; }
+
+        /* Evidence Cards */
+        .card-evidence-physical-prosecutor {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-color: #ef5350;
+        }
+
+        .card-evidence-physical-prosecutor .card-title { color: #b71c1c; }
+
+        .card-evidence-physical-defender {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-color: #66bb6a;
+        }
+
+        .card-evidence-physical-defender .card-title { color: #1b5e20; }
+
+        .card-evidence-witness-prosecutor {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-color: #ffa726;
+        }
+
+        .card-evidence-witness-prosecutor .card-title { color: #e65100; }
+
+        .card-evidence-witness-defender {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            border-color: #26c6da;
+        }
+
+        .card-evidence-witness-defender .card-title { color: #006064; }
+
+        .card-evidence-expert-prosecutor {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+            border-color: #ec407a;
+        }
+
+        .card-evidence-expert-prosecutor .card-title { color: #880e4f; }
+
+        .card-evidence-expert-defender {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-color: #5c6bc0;
+        }
+
+        .card-evidence-expert-defender .card-title { color: #1a237e; }
+
+        /* Reversal Cards */
+        .card-reversal-good {
+            background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
+            border-color: #ffee58;
+        }
+
+        .card-reversal-good .card-title { color: #f9a825; }
+
+        .card-reversal-bad {
+            background: linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%);
+            border-color: #8d6e63;
+        }
+
+        .card-reversal-bad .card-title { color: #3e2723; }
+
+        /* Tokens / Markers */
+        .token-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .token {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            border: 3px solid #333;
+            break-inside: avoid;
+        }
+
+        .token-guilty {
+            background: #ef5350;
+            color: white;
+            border-color: #b71c1c;
+        }
+
+        .token-innocent {
+            background: #66bb6a;
+            color: white;
+            border-color: #1b5e20;
+        }
+
+        .token-role-prosecutor {
+            background: linear-gradient(135deg, #7986cb, #3f51b5);
+            color: white;
+            border-color: #1a237e;
+        }
+
+        .token-role-defender {
+            background: linear-gradient(135deg, #4db6ac, #00897b);
+            color: white;
+            border-color: #004d40;
+        }
+
+        .token-role-witness {
+            background: linear-gradient(135deg, #ffd54f, #ffc107);
+            color: #333;
+            border-color: #ff8f00;
+        }
+
+        .token-role-judge {
+            background: linear-gradient(135deg, #ff8a65, #f4511e);
+            color: white;
+            border-color: #bf360c;
+        }
+
+        .token-role-jury {
+            background: linear-gradient(135deg, #ba68c8, #8e24aa);
+            color: white;
+            border-color: #4a148c;
+        }
+
+        .token-label {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        /* Quick Reference */
+        .quick-ref {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .quick-ref h3 {
+            color: #1a237e;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+
+        .quick-ref table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .quick-ref th, .quick-ref td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        .quick-ref th {
+            background: #e8eaf6;
+            color: #1a237e;
+            font-weight: 600;
+        }
+
+        .quick-ref .phase-list {
+            counter-reset: phase;
+            list-style: none;
+            padding: 0;
+        }
+
+        .quick-ref .phase-list li {
+            counter-increment: phase;
+            padding: 8px 0 8px 35px;
+            position: relative;
+            border-bottom: 1px dotted #ccc;
+            font-size: 0.9em;
+        }
+
+        .quick-ref .phase-list li::before {
+            content: counter(phase);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: #1a237e;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .scoring-table {
+            margin-top: 15px;
+        }
+
+        /* Back side templates */
+        .back-template {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            padding: 15px 0;
+        }
+
+        .card-back {
+            width: 160px;
+            height: 100px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            break-inside: avoid;
+        }
+
+        .back-role { background: linear-gradient(135deg, #3949ab, #1a237e); }
+        .back-case { background: linear-gradient(135deg, #43a047, #2e7d32); }
+        .back-evidence { background: linear-gradient(135deg, #fb8c00, #e65100); }
+        .back-reversal { background: linear-gradient(135deg, #8e24aa, #6a1b9a); }
+
+        /* ===== Print Styles ===== */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .print-hint {
+                display: none !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+            h2 {
+                page-break-after: avoid;
+            }
+            .card {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            h1 { font-size: 1.6em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚖️ 法庭风云 Courtroom Drama</h1>
+        <p class="subtitle">打印文档 — 卡牌 · 标记 · 快速参考表</p>
+
+        <!-- Print Hint -->
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul>
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（否则彩色卡牌会变成白底）</li>
+                <li>卡牌和棋子建议使用<strong>200g以上卡纸</strong>打印，增加耐用性</li>
+                <li>打印后用剪刀或切纸刀裁剪，有条件可塑封</li>
+                <li>建议双面打印卡牌：正面为卡牌内容，背面为统一样式</li>
+            </ul>
+        </div>
+
+        <!-- Print Button -->
+        <button class="print-btn" onclick="window.print()">🖨️ 打印全部内容</button>
+
+        <!-- ============================================ -->
+        <!-- SECTION 1: Role Cards -->
+        <!-- ============================================ -->
+        <h2>🎭 角色卡（18张）</h2>
+        <div class="section">
+            <div class="card-grid cols-2">
+                <!-- Prosecutor 1 -->
+                <div class="card card-role-prosecutor">
+                    <span class="card-count">x4</span>
+                    <div class="card-header">
+                        <span class="card-icon">⚖️→</span>
+                        <div>
+                            <div class="card-title">控方律师（检察官）</div>
+                            <div class="card-subtitle">Prosecutor</div>
+                        </div>
+                    </div>
+                    <div class="card-desc">
+                        开场陈述60秒 → 传唤证人提问60秒 → 出示证据卡 → 总结陈词60秒<br><br>
+                        <strong>特殊技能：</strong>交叉质询——打断证人发言一次<br>
+                        <strong>目标：</strong>说服陪审团判定有罪
+                    </div>
+                    <div class="card-footer">控方阵营 · 每回合抽取</div>
+                </div>
+
+                <!-- Defender 1 -->
+                <div class="card card-role-defender">
+                    <span class="card-count">x4</span>
+                    <div class="card-header">
+                        <span class="card-icon">⚖️←</span>
+                        <div>
+                            <div class="card-title">辩方律师</div>
+                            <div class="card-subtitle">Defense Attorney</div>
+                        </div>
+                    </div>
+                    <div class="card-desc">
+                        反驳陈述60秒 → 传唤己方证人提问60秒 → 出示证据卡 → 总结陈词60秒<br><br>
+                        <strong>特殊技能：</strong>反对——驳回控方证据一次<br>
+                        <strong>目标：</strong>说服陪审团判定无罪
+                    </div>
+                    <div class="card-footer">辩方阵营 · 每回合抽取</div>
+                </div>
+
+                <!-- Witness 1 -->
+                <div class="card card-role-witness">
+                    <span class="card-count">x6</span>
+                    <div class="card-header">
+                        <span class="card-icon">👤</span>
+                        <div>
+                            <div class="card-title">证人</div>
+                            <div class="card-subtitle">Witness</div>
+                        </div>
+                    </div>
+                    <div class="card-desc">
+                        被传唤时即兴作证（每人60秒），可编造证词但须与案件主题相关。<br><br>
+                        <strong>特殊技能：</strong>可使用反转卡改变庭审走向<br>
+                        <strong>目标：</strong>获得"最佳证人"称号
+                    </div>
+                    <div class="card-footer">中立 · 每回合抽取</div>
+                </div>
+
+                <!-- Judge 1 -->
+                <div class="card card-role-judge">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">👨‍⚖️</span>
+                        <div>
+                            <div class="card-title">法官</div>
+                            <div class="card-subtitle">Judge</div>
+                        </div>
+                    </div>
+                    <div class="card-desc">
+                        敲槌控制流程、计时、裁定"反对"是否有效、评定"最佳证人"。<br><br>
+                        <strong>特殊技能：</strong>法庭令——强制证人回答特定问题<br>
+                        <strong>目标：</strong>确保庭审公正，获得"最佳法官"积分
+                    </div>
+                    <div class="card-footer">主持 · 每回合抽取</div>
+                </div>
+
+                <!-- Jury 1 -->
+                <div class="card card-role-jury">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">🏛️</span>
+                        <div>
+                            <div class="card-title">陪审员</div>
+                            <div class="card-subtitle">Juror</div>
+                        </div>
+                    </div>
+                    <div class="card-desc">
+                        聆听全部辩论，最终投票裁决有罪/无罪。<br><br>
+                        <strong>特殊技能：</strong>尖锐提问——向任一方律师提一个问题<br>
+                        <strong>目标：</strong>投票与多数一致则获得积分
+                    </div>
+                    <div class="card-footer">裁决 · 每回合抽取</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 2: Case Cards -->
+        <!-- ============================================ -->
+        <h2>📁 案件卡（20张）</h2>
+        <div class="section">
+            <h3 style="color:#33691e; margin-bottom:12px;">日常案件（8张）</h3>
+            <div class="card-grid">
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">吃掉室友蛋糕案</div>
+                    </div>
+                    <div class="card-desc">被告在凌晨2点偷吃了室友精心准备的生日蛋糕，室友要求赔偿精神损失费。</div>
+                    <div class="card-footer">日常 · 关键词：偷吃 · 精神损失</div>
+                </div>
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">公共洗衣机霸占案</div>
+                    </div>
+                    <div class="card-desc">被告连续霸占公共洗衣机3天不取衣服，导致整栋楼无法洗衣。</div>
+                    <div class="card-footer">日常 · 关键词：霸占 · 公共资源</div>
+                </div>
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">宠物美容纠纷案</div>
+                    </div>
+                    <div class="card-desc">宠物店将一只金毛犬剪成了"狮子"，主人要求赔偿并公开道歉。</div>
+                    <div class="card-footer">日常 · 关键词：宠物 · 美容事故</div>
+                </div>
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">外卖差评风波案</div>
+                    </div>
+                    <div class="card-desc">餐厅老板因一条差评找到顾客家门口理论，双方各执一词。</div>
+                    <div class="card-footer">日常 · 关键词：差评 · 上门理论</div>
+                </div>
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">合伙做饭跑路案</div>
+                    </div>
+                    <div class="card-desc">说好AA制做年夜饭，结果一个人吃完就消失了。</div>
+                    <div class="card-footer">日常 · 关键词：AA制 · 跑路</div>
+                </div>
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">熊孩子损坏手办案</div>
+                    </div>
+                    <div class="card-desc">亲戚家的孩子在聚会上摔碎了价值3000元的手办。</div>
+                    <div class="card-footer">日常 · 关键词：熊孩子 · 高额赔偿</div>
+                </div>
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">WiFi密码泄露案</div>
+                    </div>
+                    <div class="card-desc">邻居破解了WiFi密码并分享给了整栋楼，导致网速极慢。</div>
+                    <div class="card-footer">日常 · 关键词：WiFi · 密码泄露</div>
+                </div>
+                <div class="card card-case-daily">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📁</span>
+                        <div class="card-title">减肥餐偷换案</div>
+                    </div>
+                    <div class="card-desc">被告偷偷把室友的减肥餐换成了炸鸡，室友一周胖了5斤。</div>
+                    <div class="card-footer">日常 · 关键词：减肥 · 恶作剧</div>
+                </div>
+            </div>
+
+            <h3 style="color:#4527a0; margin: 20px 0 12px;">奇幻案件（6张）</h3>
+            <div class="card-grid">
+                <div class="card card-case-fantasy">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <div class="card-title">龙偷了村民的羊案</div>
+                    </div>
+                    <div class="card-desc">一条自称"素食主义"的龙被指控偷了村民的羊，龙辩称自己只是想跟羊做朋友。</div>
+                    <div class="card-footer">奇幻 · 关键词：龙 · 素食主义</div>
+                </div>
+                <div class="card card-case-fantasy">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <div class="card-title">巫师施错咒案</div>
+                    </div>
+                    <div class="card-desc">巫师本想给公主施"变美咒"，结果不小心把公主变成了青蛙。</div>
+                    <div class="card-footer">奇幻 · 关键词：巫师 · 施错咒</div>
+                </div>
+                <div class="card card-case-fantasy">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <div class="card-title">精灵拖欠房租案</div>
+                    </div>
+                    <div class="card-desc">一名精灵在人类世界租房住，用"时间变慢"术拖欠了200年房租。</div>
+                    <div class="card-footer">奇幻 · 关键词：精灵 · 拖欠房租</div>
+                </div>
+                <div class="card card-case-fantasy">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <div class="card-title">独角兽撞车案</div>
+                    </div>
+                    <div class="card-desc">一匹独角兽被指控用角戳破了8辆停在路边的自行车。</div>
+                    <div class="card-footer">奇幻 · 关键词：独角兽 · 撞车</div>
+                </div>
+                <div class="card card-case-fantasy">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <div class="card-title">海盗遗嘱案</div>
+                    </div>
+                    <div class="card-desc">海盗船长去世后留下遗嘱"把宝藏留给最勇敢的人"，三个手下都声称自己最勇敢。</div>
+                    <div class="card-footer">奇幻 · 关键词：海盗 · 遗嘱纠纷</div>
+                </div>
+                <div class="card card-case-fantasy">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <div class="card-title">美人鱼噪音扰民案</div>
+                    </div>
+                    <div class="card-desc">一群美人鱼每晚在港口唱歌，居民投诉歌声太大影响睡眠。</div>
+                    <div class="card-footer">奇幻 · 关键词：美人鱼 · 噪音扰民</div>
+                </div>
+            </div>
+
+            <h3 style="color:#1565c0; margin: 20px 0 12px;">职场案件（6张）</h3>
+            <div class="card-grid">
+                <div class="card card-case-work">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💼</span>
+                        <div class="card-title">摸鱼被抓案</div>
+                    </div>
+                    <div class="card-desc">员工被发现在工作时间偷偷网购，公司以"严重违纪"为由要开除。</div>
+                    <div class="card-footer">职场 · 关键词：摸鱼 · 开除</div>
+                </div>
+                <div class="card card-case-work">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💼</span>
+                        <div class="card-title">加班费计算案</div>
+                    </div>
+                    <div class="card-desc">员工声称加班200小时，但公司表示"加班是自愿学习"。</div>
+                    <div class="card-footer">职场 · 关键词：加班费 · 劳动纠纷</div>
+                </div>
+                <div class="card card-case-work">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💼</span>
+                        <div class="card-title">公司零食偷吃案</div>
+                    </div>
+                    <div class="card-desc">被告偷偷把公司茶水间的高级零食带回了家。</div>
+                    <div class="card-footer">职场 · 关键词：零食 · 公司财产</div>
+                </div>
+                <div class="card card-case-work">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💼</span>
+                        <div class="card-title">摸鱼群管理员案</div>
+                    </div>
+                    <div class="card-desc">员工建了一个"上班摸鱼群"并担任群主，被公司发现。</div>
+                    <div class="card-footer">职场 · 关键词：摸鱼群 · 群主</div>
+                </div>
+                <div class="card card-case-work">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💼</span>
+                        <div class="card-title">代打卡团伙案</div>
+                    </div>
+                    <div class="card-desc">三名员工互相代打卡长达半年，HR终于发现猫腻。</div>
+                    <div class="card-footer">职场 · 关键词：代打卡 · 作弊</div>
+                </div>
+                <div class="card card-case-work">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💼</span>
+                        <div class="card-title">年会节目侵权案</div>
+                    </div>
+                    <div class="card-desc">部门年会上表演的改编歌曲被原唱发现并投诉。</div>
+                    <div class="card-footer">职场 · 关键词：年会 · 侵权</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 3: Evidence Cards -->
+        <!-- ============================================ -->
+        <h2>🔍 证据卡（48张）</h2>
+        <div class="section">
+            <h3 style="color:#b71c1c; margin-bottom:12px;">实物证据 · 控方有利（8张）</h3>
+            <div class="card-grid">
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📹</span>
+                        <div class="card-title">监控录像</div>
+                    </div>
+                    <div class="card-desc">一段模糊不清的监控画面，"显示"被告的可疑行为。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💔</span>
+                        <div class="card-title">破损物品</div>
+                    </div>
+                    <div class="card-desc">被害人展示的"证据"，上面有明显损坏痕迹。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📱</span>
+                        <div class="card-title">手机短信</div>
+                    </div>
+                    <div class="card-desc">一段断章取义的聊天记录截图，内容对被告极为不利。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📦</span>
+                        <div class="card-title">快递单</div>
+                    </div>
+                    <div class="card-desc">一份显示被告购买了"可疑物品"的快递单。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🗝️</span>
+                        <div class="card-title">门禁记录</div>
+                    </div>
+                    <div class="card-desc">系统记录显示被告在案发时间段多次出入现场。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🧤</span>
+                        <div class="card-title">遗留手套</div>
+                    </div>
+                    <div class="card-desc">现场发现的一只手套，与被告平时佩戴的款式相同。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🧾</span>
+                        <div class="card-title">消费记录</div>
+                    </div>
+                    <div class="card-desc">银行流水显示被告在案发前有大额可疑消费。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-physical-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📍</span>
+                        <div class="card-title">GPS定位</div>
+                    </div>
+                    <div class="card-desc">手机GPS数据显示被告在案发时位于现场附近100米内。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 控方</div>
+                </div>
+            </div>
+
+            <h3 style="color:#1b5e20; margin: 20px 0 12px;">实物证据 · 辩方有利（8张）</h3>
+            <div class="card-grid">
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🏠</span>
+                        <div class="card-title">不在场证明</div>
+                    </div>
+                    <div class="card-desc">证明确案发时被告在其他地方的证明材料。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🗣️</span>
+                        <div class="card-title">邻居证词</div>
+                    </div>
+                    <div class="card-desc">邻居声称看到另一个人在现场附近徘徊。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌧️</span>
+                        <div class="card-title">天气记录</div>
+                    </div>
+                    <div class="card-desc">案发当天暴雨，现场不可能留下控方描述的痕迹。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🏥</span>
+                        <div class="card-title">体检报告</div>
+                    </div>
+                    <div class="card-desc">证明被告身体条件不可能完成被指控的行为。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🎫</span>
+                        <div class="card-title">机票订单</div>
+                    </div>
+                    <div class="card-desc">被告持有案发当天的机票，证明其不在本地。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📸</span>
+                        <div class="card-title">自拍照片</div>
+                    </div>
+                    <div class="card-desc">被告在案发时间段发布的带时间戳的自拍照片。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🔒</span>
+                        <div class="card-title">门锁记录</div>
+                    </div>
+                    <div class="card-desc">智能门锁记录显示被告在案发时未离开住所。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-physical-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📊</span>
+                        <div class="card-title">数据报告</div>
+                    </div>
+                    <div class="card-desc">第三方数据报告显示控方证据存在明显的时间矛盾。对手须在10秒内回应。</div>
+                    <div class="card-footer">实物证据 · 辩方</div>
+                </div>
+            </div>
+
+            <h3 style="color:#e65100; margin: 20px 0 12px;">人证证据 · 控方有利（8张）</h3>
+            <div class="card-grid">
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">👀</span>
+                        <div class="card-title">目击者证词</div>
+                    </div>
+                    <div class="card-desc">一位"目击者"声称看到了被告的可疑举动。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🤫</span>
+                        <div class="card-title">知情人爆料</div>
+                    </div>
+                    <div class="card-desc">一位匿名"知情人"提供了内幕消息。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">👉</span>
+                        <div class="card-title">共犯指认</div>
+                    </div>
+                    <div class="card-desc">另一位涉案者指认被告是主谋。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">😢</span>
+                        <div class="card-title">受害者陈述</div>
+                    </div>
+                    <div class="card-desc">受害者声泪俱下地描述"惨痛经历"。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📝</span>
+                        <div class="card-title">日记记录</div>
+                    </div>
+                    <div class="card-desc">被告的日记中写有"计划"相关内容。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📞</span>
+                        <div class="card-title">通话录音</div>
+                    </div>
+                    <div class="card-desc">一段录音显示被告在案发前与同伙通话。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🐙</span>
+                        <div class="card-title">前科记录</div>
+                    </div>
+                    <div class="card-desc">被告有类似行为的"前科"被曝光。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-witness-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🤝</span>
+                        <div class="card-title">利益冲突证词</div>
+                    </div>
+                    <div class="card-desc">证人揭露被告与受害者之间存在利益冲突。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 控方</div>
+                </div>
+            </div>
+
+            <h3 style="color:#006064; margin: 20px 0 12px;">人证证据 · 辩方有利（8张）</h3>
+            <div class="card-grid">
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌟</span>
+                        <div class="card-title">品行证明</div>
+                    </div>
+                    <div class="card-desc">社区邻居称赞被告是"好人"。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🔄</span>
+                        <div class="card-title">临时证词</div>
+                    </div>
+                    <div class="card-desc">一位临时证人推翻了控方的关键证词。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🚫</span>
+                        <div class="card-title">动机反驳</div>
+                    </div>
+                    <div class="card-desc">证明被告完全没有作案动机。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🧠</span>
+                        <div class="card-title">精神鉴定</div>
+                    </div>
+                    <div class="card-desc">证明被告"当时精神状态不稳定"。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">👨‍👩‍👧</span>
+                        <div class="card-title">家庭证明</div>
+                    </div>
+                    <div class="card-desc">家人证明被告当晚在家中。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🕵️</span>
+                        <div class="card-title">真凶线索</div>
+                    </div>
+                    <div class="card-desc">有人发现了指向另一个嫌疑人的线索。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📜</span>
+                        <div class="card-title">合同证据</div>
+                    </div>
+                    <div class="card-desc">一份合同证明被告的行为是经过授权的。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-witness-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">😌</span>
+                        <div class="card-title">受害人撤诉</div>
+                    </div>
+                    <div class="card-desc">受害人突然表示"不想追究了"。证人需按此方向编造证词。</div>
+                    <div class="card-footer">人证证据 · 辩方</div>
+                </div>
+            </div>
+
+            <h3 style="color:#880e4f; margin: 20px 0 12px;">专家证据 · 控方有利（8张）</h3>
+            <div class="card-grid">
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <div class="card-title">DNA鉴定</div>
+                    </div>
+                    <div class="card-desc">"权威"法医报告声称在现场发现了被告的DNA。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">👆</span>
+                        <div class="card-title">指纹比对</div>
+                    </div>
+                    <div class="card-desc">案发现场发现了与被告"匹配"的指纹。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📊</span>
+                        <div class="card-title">财务审计</div>
+                    </div>
+                    <div class="card-desc">审计报告"揭示"了被告的资金异常流动。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📝</span>
+                        <div class="card-title">心理评估</div>
+                    </div>
+                    <div class="card-desc">心理专家认为被告具有"典型犯罪人格特征"。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">💻</span>
+                        <div class="card-title">数字取证</div>
+                    </div>
+                    <div class="card-desc">网络取证专家发现被告在案发前搜索过"如何…"。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🔬</span>
+                        <div class="card-title">化学分析</div>
+                    </div>
+                    <div class="card-desc">化学专家证实现场残留物与被告常接触的化学物质一致。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📷</span>
+                        <div class="card-title">影像增强</div>
+                    </div>
+                    <div class="card-desc">影像专家对模糊监控进行AI增强后"识别"出被告的面部。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+                <div class="card card-evidence-expert-prosecutor">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🗣️</span>
+                        <div class="card-title">声纹鉴定</div>
+                    </div>
+                    <div class="card-desc">语音专家分析确认录音中的声音与被告声纹匹配。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 控方</div>
+                </div>
+            </div>
+
+            <h3 style="color:#1a237e; margin: 20px 0 12px;">专家证据 · 辩方有利（8张）</h3>
+            <div class="card-grid">
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🔫</span>
+                        <div class="card-title">弹道分析</div>
+                    </div>
+                    <div class="card-desc">专家证明现场弹道方向与被告位置不符。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">⏰</span>
+                        <div class="card-title">时间线重建</div>
+                    </div>
+                    <div class="card-desc">技术分析证明案发时间与控方描述不一致。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🎙️</span>
+                        <div class="card-title">声纹反证</div>
+                    </div>
+                    <div class="card-desc">语音专家证明录音中的声音不是被告的。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📐</span>
+                        <div class="card-title">物理模拟</div>
+                    </div>
+                    <div class="card-desc">物理模型证明按控方描述，某些事件"不可能发生"。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🧪</span>
+                        <div class="card-title">毒理报告</div>
+                    </div>
+                    <div class="card-desc">毒理学专家证明现场残留物与被告无关。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌐</span>
+                        <div class="card-title">IP追踪</div>
+                    </div>
+                    <div class="card-desc">网络安全专家证明涉案操作来自另一个IP地址。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">👁️</span>
+                        <div class="card-title">视力鉴定</div>
+                    </div>
+                    <div class="card-desc">眼科专家证明控方目击证人的视力不足以辨认被告。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+                <div class="card card-evidence-expert-defender">
+                    <span class="card-count">x1</span>
+                    <div class="card-header">
+                        <span class="card-icon">📉</span>
+                        <div class="card-title">统计学反驳</div>
+                    </div>
+                    <div class="card-desc">统计学家证明控方证据的"巧合"概率高达95%。对手必须用证据卡回应。</div>
+                    <div class="card-footer">专家证据 · 辩方</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 4: Reversal Cards -->
+        <!-- ============================================ -->
+        <h2>💫 反转卡（24张）</h2>
+        <div class="section">
+            <h3 style="color:#f9a825; margin-bottom:12px;">有利反转卡（12张）</h3>
+            <div class="card-grid">
+                <div class="card card-reversal-good">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌟</span>
+                        <div class="card-title">关键证人现身</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>己方陈述阶段<br><strong>效果：</strong>额外获得60秒陈述时间</div>
+                    <div class="card-footer">有利反转 · 对己方有利</div>
+                </div>
+                <div class="card card-reversal-good">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌟</span>
+                        <div class="card-title">铁证如山</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>出示证据时<br><strong>效果：</strong>对手的下一张证据卡无效</div>
+                    <div class="card-footer">有利反转 · 对己方有利</div>
+                </div>
+                <div class="card card-reversal-good">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌟</span>
+                        <div class="card-title">证人翻供</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>对方证人作证后<br><strong>效果：</strong>强制对方证人改变立场</div>
+                    <div class="card-footer">有利反转 · 对己方有利</div>
+                </div>
+                <div class="card card-reversal-good">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌟</span>
+                        <div class="card-title">媒体曝光</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>任意时刻<br><strong>效果：</strong>所有陪审员必须公开投票倾向</div>
+                    <div class="card-footer">有利反转 · 对己方有利</div>
+                </div>
+                <div class="card card-reversal-good">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌟</span>
+                        <div class="card-title">法官偏心</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>法官裁定前<br><strong>效果：</strong>法官的下一次裁定必须偏向己方</div>
+                    <div class="card-footer">有利反转 · 对己方有利</div>
+                </div>
+                <div class="card card-reversal-good">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">🌟</span>
+                        <div class="card-title">舆论逆转</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>投票阶段前<br><strong>效果：</strong>反转一张已投的票</div>
+                    <div class="card-footer">有利反转 · 对己方有利</div>
+                </div>
+            </div>
+
+            <h3 style="color:#3e2723; margin: 20px 0 12px;">不利反转卡（12张）</h3>
+            <div class="card-grid">
+                <div class="card card-reversal-bad">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">💣</span>
+                        <div class="card-title">证据造假</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>对方出示证据时<br><strong>效果：</strong>作废对方的证据卡</div>
+                    <div class="card-footer">不利反转 · 对他人使用</div>
+                </div>
+                <div class="card card-reversal-bad">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">💣</span>
+                        <div class="card-title">证人晕倒</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>证人发言时<br><strong>效果：</strong>当前证人立即停止发言，换下一位</div>
+                    <div class="card-footer">不利反转 · 对他人使用</div>
+                </div>
+                <div class="card card-reversal-bad">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">💣</span>
+                        <div class="card-title">法庭停电</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>任意时刻<br><strong>效果：</strong>所有人闭眼10秒，期间可偷偷换一张手牌</div>
+                    <div class="card-footer">不利反转 · 全场效果</div>
+                </div>
+                <div class="card card-reversal-bad">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">💣</span>
+                        <div class="card-title">突发新闻</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>任意时刻<br><strong>效果：</strong>抽取一张新案件卡，当前案件作废</div>
+                    <div class="card-footer">不利反转 · 全场效果</div>
+                </div>
+                <div class="card card-reversal-bad">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">💣</span>
+                        <div class="card-title">律师掉链子</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>律师发言时<br><strong>效果：</strong>该律师必须用单手比划来辅助发言</div>
+                    <div class="card-footer">不利反转 · 对他人使用</div>
+                </div>
+                <div class="card card-reversal-bad">
+                    <span class="card-count">x2</span>
+                    <div class="card-header">
+                        <span class="card-icon">💣</span>
+                        <div class="card-title">陪审团哗变</div>
+                    </div>
+                    <div class="card-desc"><strong>时机：</strong>投票前<br><strong>效果：</strong>投票改为举手公开投票</div>
+                    <div class="card-footer">不利反转 · 全场效果</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 5: Tokens and Markers -->
+        <!-- ============================================ -->
+        <h2>🎯 裁决标记与玩家棋子</h2>
+        <div class="section">
+            <h3>裁决标记（打印10组，每组含有罪+无罪）</h3>
+            <div class="token-section">
+                <div>
+                    <div class="token token-guilty">有罪</div>
+                    <div class="token-label">有罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-innocent">无罪</div>
+                    <div class="token-label">无罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-guilty">有罪</div>
+                    <div class="token-label">有罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-innocent">无罪</div>
+                    <div class="token-label">无罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-guilty">有罪</div>
+                    <div class="token-label">有罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-innocent">无罪</div>
+                    <div class="token-label">无罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-guilty">有罪</div>
+                    <div class="token-label">有罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-innocent">无罪</div>
+                    <div class="token-label">无罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-guilty">有罪</div>
+                    <div class="token-label">有罪投票</div>
+                </div>
+                <div>
+                    <div class="token token-innocent">无罪</div>
+                    <div class="token-label">无罪投票</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top:25px;">玩家角色棋子（按最大8人打印）</h3>
+            <div class="token-section">
+                <div>
+                    <div class="token token-role-prosecutor">⚖️</div>
+                    <div class="token-label">控方律师</div>
+                </div>
+                <div>
+                    <div class="token token-role-defender">⚖️</div>
+                    <div class="token-label">辩方律师</div>
+                </div>
+                <div>
+                    <div class="token token-role-witness">👤</div>
+                    <div class="token-label">证人</div>
+                </div>
+                <div>
+                    <div class="token token-role-witness">👤</div>
+                    <div class="token-label">证人</div>
+                </div>
+                <div>
+                    <div class="token token-role-witness">👤</div>
+                    <div class="token-label">证人</div>
+                </div>
+                <div>
+                    <div class="token token-role-judge">👨‍⚖️</div>
+                    <div class="token-label">法官</div>
+                </div>
+                <div>
+                    <div class="token token-role-jury">🏛️</div>
+                    <div class="token-label">陪审员</div>
+                </div>
+                <div>
+                    <div class="token token-role-jury">🏛️</div>
+                    <div class="token-label">陪审员</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 6: Card Back Templates -->
+        <!-- ============================================ -->
+        <h2>🎴 卡牌背面模板（双面打印用）</h2>
+        <div class="section">
+            <p style="margin-bottom:15px; color:#666;">双面打印时，将以下背面放在卡牌内容页的对应背面。每张背面模板打印足够数量。</p>
+            <div class="back-template">
+                <div class="card-back back-role">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">🎭</div>
+                        <div>角色卡</div>
+                    </div>
+                </div>
+                <div class="card-back back-case">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">📁</div>
+                        <div>案件卡</div>
+                    </div>
+                </div>
+                <div class="card-back back-evidence">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">🔍</div>
+                        <div>证据卡</div>
+                    </div>
+                </div>
+                <div class="card-back back-reversal">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">💫</div>
+                        <div>反转卡</div>
+                    </div>
+                </div>
+                <div class="card-back back-role">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">🎭</div>
+                        <div>角色卡</div>
+                    </div>
+                </div>
+                <div class="card-back back-case">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">📁</div>
+                        <div>案件卡</div>
+                    </div>
+                </div>
+                <div class="card-back back-evidence">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">🔍</div>
+                        <div>证据卡</div>
+                    </div>
+                </div>
+                <div class="card-back back-reversal">
+                    <div style="text-align:center;">
+                        <div style="font-size:1.8em;">💫</div>
+                        <div>反转卡</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 7: Quick Reference -->
+        <!-- ============================================ -->
+        <h2>📖 快速参考表</h2>
+        <div class="section">
+            <div class="quick-ref">
+                <h3>📋 每回合庭审流程（7个阶段）</h3>
+                <ol class="phase-list">
+                    <li><strong>分配角色（1分钟）</strong>——法官秘密发放角色卡，控辩各1人 + 证人1-3人 + 法官1人 + 陪审员</li>
+                    <li><strong>宣读案件（1分钟）</strong>——法官抽取并大声朗读案件卡内容</li>
+                    <li><strong>控方开庭（2分钟）</strong>——控方开场陈述60秒 + 传唤证人提问60秒 + 出示证据卡</li>
+                    <li><strong>辩方答辩（2分钟）</strong>——辩方反驳陈述60秒 + 传唤证人提问60秒 + 出示证据卡</li>
+                    <li><strong>自由辩论（3分钟）</strong>——所有律师和证人自由交锋，可使用反转卡，辩方可"反对"</li>
+                    <li><strong>总结陈词（2分钟）</strong>——控方60秒总结 → 辩方60秒总结，不可使用反转卡和证据卡</li>
+                    <li><strong>投票裁决（2分钟）</strong>——陪审员+法官秘密投票（有罪/无罪），法官宣布结果</li>
+                </ol>
+
+                <h3 style="margin-top:20px;">🏆 积分规则</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>结果</th>
+                            <th>获得积分的玩家</th>
+                            <th>积分</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>判决有罪</td><td>控方律师</td><td>+3</td></tr>
+                        <tr><td>判决无罪</td><td>辩方律师</td><td>+3</td></tr>
+                        <tr><td>判决与己方立场一致</td><td>每位陪审员</td><td>+1</td></tr>
+                        <tr><td>最佳证人（法官评定）</td><td>被选中的证人</td><td>+2</td></tr>
+                        <tr><td>使用反转卡成功影响结果</td><td>反转卡使用者</td><td>+1</td></tr>
+                        <tr><td>出示证据被法官驳回</td><td>证据出示方</td><td>-1</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top:20px;">⏱️ 时间参考</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>环节</th>
+                            <th>时间限制</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>开庭/反驳陈述</td><td>60秒/人</td><td>超时法官敲槌终止</td></tr>
+                        <tr><td>传唤证人提问</td><td>60秒/人</td><td>超时法官敲槌终止</td></tr>
+                        <tr><td>证人作证</td><td>60秒/人</td><td>可编造，需与案件相关</td></tr>
+                        <tr><td>自由辩论</td><td>30秒/次</td><td>可多次轮流发言</td></tr>
+                        <tr><td>总结陈词</td><td>60秒/方</td><td>不可使用卡牌</td></tr>
+                        <tr><td>总回合时长</td><td>约13分钟</td><td>含所有7个阶段</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top:20px;">🎴 卡牌总览（共110张）</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>卡牌类型</th>
+                            <th>数量</th>
+                            <th>图示</th>
+                            <th>分发方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>角色卡</td><td>18张</td><td>🎭</td><td>每回合随机抽取</td></tr>
+                        <tr><td>案件卡</td><td>20张</td><td>📁</td><td>每回合抽1张</td></tr>
+                        <tr><td>证据卡</td><td>48张</td><td>🔍</td><td>每回合控辩各抽4张</td></tr>
+                        <tr><td>反转卡</td><td>24张</td><td>💫</td><td>每回合每人抽1-2张</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align:center; margin-top:30px; padding:20px; color:#999; font-size:0.9em;">
+            <p>法庭风云 Courtroom Drama &copy; 2026 | 桌游设计文档</p>
+            <p>返回规则说明：<a href="README.md">README.md</a></p>
+        </div>
+    </div>
+</body>
+</html>

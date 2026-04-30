@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>岛屿求生 Island Survival - 打印素材</title>
+    <style>
+        :root {
+            --ocean-blue: #0ea5e9;
+            --sky-blue: #38bdf8;
+            --jungle-green: #22c55e;
+            --sand-gold: #fbbf24;
+            --earth-brown: #92400e;
+            --sun-yellow: #facc15;
+            --white: #ffffff;
+            --gray: #64748b;
+            --dark: #1e293b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #0ea5e9 50%, #22c55e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--white);
+        }
+        .print-hint {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(14, 165, 233, 0.2) 100%);
+            border: 2px solid var(--jungle-green);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .print-hint h2 { color: var(--jungle-green); margin-bottom: 10px; font-size: 1.5em; }
+        .print-hint p { color: var(--dark); margin-bottom: 15px; }
+        .print-btn {
+            background: linear-gradient(135deg, var(--jungle-green) 0%, var(--ocean-blue) 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--dark);
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--jungle-green);
+        }
+        /* 岛屿地图 */
+        .island-map {
+            background: linear-gradient(180deg, #87CEEB 0%, #38bdf8 30%, #22c55e 50%, #15803d 100%);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            min-height: 400px;
+        }
+        .island-map::before {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            left: 10%;
+            right: 10%;
+            height: 50%;
+            background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            border-radius: 50% 50% 40% 40%;
+        }
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 100px);
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .map-zone {
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid var(--jungle-green);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .map-zone.ocean { grid-column: 1 / -1; background: linear-gradient(180deg, rgba(14, 165, 233, 0.8), rgba(56, 189, 248, 0.8)); border-color: var(--ocean-blue); }
+        .map-zone.beach { background: linear-gradient(180deg, #fef3c7, #fde68a); border-color: var(--sand-gold); color: var(--earth-brown); }
+        .map-zone.jungle { background: linear-gradient(180deg, #bbf7d0, #86efac); border-color: var(--jungle-green); }
+        .map-zone.cave { background: linear-gradient(180deg, #6b7280, #4b5563); border-color: #374151; color: white; }
+        .map-zone.waterfall { background: linear-gradient(180deg, #a5f3fc, #67e8f9); border-color: var(--sky-blue); }
+        .zone-icon { font-size: 2em; margin-bottom: 5px; }
+        .zone-name { font-size: 1em; font-weight: bold; }
+        .zone-res { font-size: 0.8em; color: var(--gray); }
+        /* 卡牌样式 */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .card {
+            background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+            border: 2px solid var(--ocean-blue);
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+            color: var(--dark);
+        }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+        .card.resource::before { background: var(--jungle-green); }
+        .card.building::before { background: var(--sand-gold); }
+        .card.exploration::before { background: var(--earth-brown); }
+        .card.weather::before { background: var(--sky-blue); }
+        .card.danger::before { background: #ef4444; }
+        .card.event::before { background: #a855f7; }
+        .card-icon { font-size: 2.5em; text-align: center; margin-bottom: 10px; }
+        .card-name { font-size: 1.1em; font-weight: bold; text-align: center; margin-bottom: 8px; color: var(--dark); }
+        .card-type { font-size: 0.8em; color: var(--gray); text-align: center; margin-bottom: 10px; }
+        .card-desc { font-size: 0.9em; color: var(--gray); line-height: 1.5; }
+        .card-stats { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; }
+        .stat { font-size: 0.85em; color: var(--ocean-blue); font-weight: bold; }
+        /* 棋子 */
+        .token-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .token {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            border: 3px solid var(--dark);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .token-label { text-align: center; margin-top: 10px; font-size: 0.9em; color: var(--dark); }
+        /* 天气指示器 */
+        .weather-indicator {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: linear-gradient(135deg, #fef9c3, #fef08a);
+            border-radius: 12px;
+        }
+        .weather-type {
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 100px;
+            border: 2px solid;
+        }
+        .weather-type.sunny { background: #fef3c7; border-color: var(--sun-yellow); }
+        .weather-type.rain { background: #bae6fd; border-color: var(--sky-blue); }
+        .weather-type.storm { background: #6b7280; border-color: #374151; color: white; }
+        .weather-icon { font-size: 2em; }
+        .weather-name { font-size: 0.9em; font-weight: bold; margin: 5px 0; }
+        .weather-effect { font-size: 0.8em; color: var(--gray); }
+        /* 进度条 */
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 25px;
+            padding: 5px;
+            display: flex;
+            gap: 5px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .progress-segment {
+            flex: 1;
+            height: 30px;
+            border-radius: 20px;
+            background: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+        }
+        .progress-segment.filled { background: var(--jungle-green); }
+        /* 快速参考 */
+        .quick-ref {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid var(--jungle-green);
+            border-radius: 12px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .ref-section h4 { color: var(--jungle-green); font-size: 1.1em; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #e2e8f0; }
+        .ref-section ul { list-style: none; font-size: 0.9em; color: var(--gray); }
+        .ref-section li { padding: 5px 0; padding-left: 15px; position: relative; }
+        .ref-section li::before { content: '>'; position: absolute; left: 0; color: var(--jungle-green); font-weight: bold; }
+        /* 资源标记 */
+        .resource-markers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .resource-marker {
+            background: white;
+            border: 2px solid var(--ocean-blue);
+            border-radius: 8px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .marker-icon { font-size: 1.5em; }
+        .marker-info h4 { font-size: 1em; margin-bottom: 3px; color: var(--dark); }
+        .marker-info p { font-size: 0.8em; color: var(--gray); }
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .print-hint { display: none !important; }
+            .print-btn { display: none !important; }
+            body { background: white !important; padding: 0; }
+            .section { background: white !important; border: 1px solid #ccc !important; page-break-inside: avoid; margin-bottom: 20px; }
+            .card { background: white !important; color: black !important; }
+            .quick-ref { background: white !important; border: 2px solid #333 !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>岛屿求生 Island Survival - 打印素材</h2>
+        <p>本页面包含游戏所需的所有可打印素材，包括地图、卡牌、标记等。点击下方按钮可直接打印。</p>
+        <button class="print-btn" onclick="window.print()">打印全部素材</button>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">岛屿地图</h2>
+        <div class="island-map">
+            <div class="map-grid">
+                <div class="map-zone ocean"><div class="zone-icon">🌊</div><div class="zone-name">海洋</div></div>
+                <div class="map-zone cave"><div class="zone-icon">🕳️</div><div class="zone-name">山洞</div><div class="zone-res">石头/金属</div></div>
+                <div class="map-zone cave"><div class="zone-icon">🏔️</div><div class="zone-name">山顶</div><div class="zone-res">挑战区域</div></div>
+                <div class="map-zone ocean"><div class="zone-icon">🌊</div><div class="zone-name">海洋</div></div>
+                <div class="map-zone jungle"><div class="zone-icon">🌲</div><div class="zone-name">丛林</div><div class="zone-res">香蕉/木材</div></div>
+                <div class="map-zone jungle"><div class="zone-icon">🌴</div><div class="zone-name">密林</div><div class="zone-res">藤蔓</div></div>
+                <div class="map-zone jungle"><div class="zone-icon">🦜</div><div class="zone-name">林间</div><div class="zone-res">野果</div></div>
+                <div class="map-zone beach"><div class="zone-icon">🏖️</div><div class="zone-name">海滩</div><div class="zone-res">椰子/漂流木</div></div>
+                <div class="map-zone beach"><div class="zone-icon">⛵</div><div class="zone-name">沉船</div><div class="zone-res">金属/布料</div></div>
+                <div class="map-zone beach"><div class="zone-icon">🦀</div><div class="zone-name">礁石</div><div class="zone-res">贝壳</div></div>
+                <div class="map-zone waterfall"><div class="zone-icon">💧</div><div class="zone-name">瀑布</div><div class="zone-res">淡水/鲜鱼</div></div>
+                <div class="map-zone waterfall"><div class="zone-icon">🌈</div><div class="zone-name">彩虹潭</div><div class="zone-res">稀有资源</div></div>
+                <div class="map-zone ocean"><div class="zone-icon">🌅</div><div class="zone-name">海岸</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">天气指示器</h2>
+        <div class="weather-indicator">
+            <div class="weather-type sunny">
+                <div class="weather-icon">☀️</div>
+                <div class="weather-name">晴天</div>
+                <div class="weather-effect">探索+2</div>
+            </div>
+            <div class="weather-type rain">
+                <div class="weather-icon">🌧️</div>
+                <div class="weather-name">小雨</div>
+                <div class="weather-effect">淡水+3</div>
+            </div>
+            <div class="weather-type rain">
+                <div class="weather-icon">⛈️</div>
+                <div class="weather-name">大雨</div>
+                <div class="weather-effect">淡水+5</div>
+            </div>
+            <div class="weather-type storm">
+                <div class="weather-icon">🌪️</div>
+                <div class="weather-name">暴风雨</div>
+                <div class="weather-effect">无法探索</div>
+            </div>
+            <div class="weather-type rain">
+                <div class="weather-icon">☁️</div>
+                <div class="weather-name">多云</div>
+                <div class="weather-effect">无效果</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">求救进度条</h2>
+        <div class="progress-bar">
+            <div class="progress-segment filled">1</div>
+            <div class="progress-segment filled">2</div>
+            <div class="progress-segment filled">3</div>
+            <div class="progress-segment filled">4</div>
+            <div class="progress-segment filled">5</div>
+            <div class="progress-segment filled">6</div>
+            <div class="progress-segment filled">7</div>
+            <div class="progress-segment filled">8</div>
+            <div class="progress-segment filled">9</div>
+            <div class="progress-segment filled">10</div>
+        </div>
+        <p style="text-align: center; margin-top: 15px; color: var(--gray);">目标：收集10点救援进度即可获救</p>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">资源卡（40张）</h2>
+        <div class="card-grid">
+            <div class="card resource"><div class="card-icon">🍌</div><div class="card-name">香蕉</div><div class="card-type">食物</div><div class="card-desc">每采集+2食物</div><div class="card-stats"><span class="stat">数量: 5张</span></div></div>
+            <div class="card resource"><div class="card-icon">🥥</div><div class="card-name">椰子</div><div class="card-type">食物/淡水</div><div class="card-desc">+2淡水</div><div class="card-stats"><span class="stat">数量: 5张</span></div></div>
+            <div class="card resource"><div class="card-icon">🐟</div><div class="card-name">鲜鱼</div><div class="card-type">食物</div><div class="card-desc">+2食物</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card resource"><div class="card-icon">🍎</div><div class="card-name">野果</div><div class="card-type">食物</div><div class="card-desc">+1食物</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card resource"><div class="card-icon">💧</div><div class="card-name">淡水</div><div class="card-type">资源</div><div class="card-desc">+3淡水</div><div class="card-stats"><span class="stat">数量: 6张</span></div></div>
+            <div class="card resource"><div class="card-icon">🪵</div><div class="card-name">木材</div><div class="card-type">建筑材料</div><div class="card-desc">+2木材</div><div class="card-stats"><span class="stat">数量: 5张</span></div></div>
+            <div class="card resource"><div class="card-icon">🪨</div><div class="card-name">石头</div><div class="card-type">建筑材料</div><div class="card-desc">+2石头</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card resource"><div class="card-icon">🔩</div><div class="card-name">金属</div><div class="card-type">稀有材料</div><div class="card-desc">+1金属</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card resource"><div class="card-icon">🧵</div><div class="card-name">藤蔓</div><div class="card-type">布料</div><div class="card-desc">+2布料</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">建造卡（25张）</h2>
+        <div class="card-grid">
+            <div class="card building"><div class="card-icon">🏕️</div><div class="card-name">简易庇护所</div><div class="card-type">建筑</div><div class="card-desc">木材x5 | 提供基本保护</div><div class="card-stats"><span class="stat">难度: 简单</span></div></div>
+            <div class="card building"><div class="card-icon">🛡️</div><div class="card-name">坚固庇护所</div><div class="card-type">建筑</div><div class="card-desc">木材x8, 石头x4 | 抵御暴风雨</div><div class="card-stats"><span class="stat">难度: 中等</span></div></div>
+            <div class="card building"><div class="card-icon">🔨</div><div class="card-name">石斧</div><div class="card-type">工具</div><div class="card-desc">木材x2, 石头x2 | 采集效率+1</div><div class="card-stats"><span class="stat">难度: 简单</span></div></div>
+            <div class="card building"><div class="card-icon">🪓</div><div class="card-name">铁斧</div><div class="card-type">工具</div><div class="card-desc">木材x3, 金属x2 | 采集效率+2</div><div class="card-stats"><span class="stat">难度: 中等</span></div></div>
+            <div class="card building"><div class="card-icon">🏺</div><div class="card-name">储水器</div><div class="card-type">设施</div><div class="card-desc">石头x3, 布x2 | 雨天额外+1淡水</div><div class="card-stats"><span class="stat">难度: 简单</span></div></div>
+            <div class="card building"><div class="card-icon">📡</div><div class="card-name">信号塔</div><div class="card-type">胜利</div><div class="card-desc">木材x10, 金属x5, 布x3 | 胜利条件</div><div class="card-stats"><span class="stat">难度: 困难</span></div></div>
+            <div class="card building"><div class="card-icon">🔥</div><div class="card-name">求救火堆</div><div class="card-type">胜利</div><div class="card-desc">木材x6, 布x2 | 胜利条件</div><div class="card-stats"><span class="stat">难度: 中等</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">探索卡（30张）</h2>
+        <div class="card-grid">
+            <div class="card exploration"><div class="card-icon">🔍</div><div class="card-name">发现淡水泉</div><div class="card-type">探索</div><div class="card-desc">永久增加淡水来源</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card exploration"><div class="card-icon">🌴</div><div class="card-name">找到果树</div><div class="card-type">探索</div><div class="card-desc">每回合+1食物</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card exploration"><div class="card-icon">💎</div><div class="card-name">发现宝石</div><div class="card-type">探索</div><div class="card-desc">获得3金属</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card exploration"><div class="card-icon">📦</div><div class="card-name">找到物资箱</div><div class="card-type">探索</div><div class="card-desc">随机获得2种资源各2个</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card exploration"><div class="card-icon">⚠️</div><div class="card-name">遭遇野兽</div><div class="card-type">危险</div><div class="card-desc">必须战斗或逃跑</div><div class="card-stats"><span class="stat">数量: 5张</span></div></div>
+            <div class="card exploration"><div class="card-icon">🕳️</div><div class="card-name">发现隐蔽洞穴</div><div class="card-type">探索</div><div class="card-desc">解锁山洞特殊探索</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card exploration"><div class="card-icon">🌺</div><div class="card-name">发现草药</div><div class="card-type">探索</div><div class="card-desc">治疗1点伤害</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card exploration"><div class="card-icon">❓</div><div class="card-name">神秘遗迹</div><div class="card-type">特殊</div><div class="card-desc">触发特殊事件</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">天气卡（20张）</h2>
+        <div class="card-grid">
+            <div class="card weather"><div class="card-icon">☀️</div><div class="card-name">晴天</div><div class="card-type">天气</div><div class="card-desc">探索效率+2，可探索2个区域</div><div class="card-stats"><span class="stat">数量: 6张</span></div></div>
+            <div class="card weather"><div class="card-icon">🌧️</div><div class="card-name">小雨</div><div class="card-type">天气</div><div class="card-desc">淡水收集+3，无法探索</div><div class="card-stats"><span class="stat">数量: 5张</span></div></div>
+            <div class="card weather"><div class="card-icon">⛈️</div><div class="card-name">大雨</div><div class="card-type">天气</div><div class="card-desc">淡水收集+5，庇护所受损风险</div><div class="card-stats"><span class="stat">数量: 4张</span></div></div>
+            <div class="card weather"><div class="card-icon">🌪️</div><div class="card-name">暴风雨</div><div class="card-type">天气</div><div class="card-desc">无法探索，50%庇护所损坏</div><div class="card-stats"><span class="stat">数量: 3张</span></div></div>
+            <div class="card weather"><div class="card-icon">☁️</div><div class="card-name">多云</div><div class="card-type">天气</div><div class="card-desc">中立天气，无特殊效果</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">危险卡（10张）</h2>
+        <div class="card-grid">
+            <div class="card danger"><div class="card-icon">🐍</div><div class="card-name">毒蛇咬伤</div><div class="card-type">危险</div><div class="card-desc">失去1生命值</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+            <div class="card danger"><div class="card-icon">🦁</div><div class="card-name">野兽袭击</div><div class="card-type">危险</div><div class="card-desc">消耗2食物或失去1生命</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+            <div class="card danger"><div class="card-icon">🌊</div><div class="card-name">海浪卷走</div><div class="card-type">危险</div><div class="card-desc">随机丢失1种资源</div><div class="card-stats"><span class="stat">数量: 1张</span></div></div>
+            <div class="card danger"><div class="card-icon">🦟</div><div class="card-name">瘴气</div><div class="card-type">危险</div><div class="card-desc">本回合无法采集丛林资源</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+            <div class="card danger"><div class="card-icon">⚡</div><div class="card-name">雷击</div><div class="card-type">危险</div><div class="card-desc">随机损坏1个建筑物</div><div class="card-stats"><span class="stat">数量: 1张</span></div></div>
+            <div class="card danger"><div class="card-icon">🌿</div><div class="card-name">植物过敏</div><div class="card-type">危险</div><div class="card-desc">本回合采集效率-1</div><div class="card-stats"><span class="stat">数量: 2张</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">特殊事件卡（5张）</h2>
+        <div class="card-grid">
+            <div class="card event"><div class="card-icon">🚢</div><div class="card-name">远方船只</div><div class="card-type">事件</div><div class="card-desc">救援进度+1</div><div class="card-stats"><span class="stat">效果: +1进度</span></div></div>
+            <div class="card event"><div class="card-icon">🌈</div><div class="card-name">好运降临</div><div class="card-type">事件</div><div class="card-desc">任意选择+3资源</div><div class="card-stats"><span class="stat">效果: +3资源</span></div></div>
+            <div class="card event"><div class="card-icon">🎋</div><div class="card-name">神秘援助</div><div class="card-type">事件</div><div class="card-desc">获得1张额外建造卡</div><div class="card-stats"><span class="stat">效果: +1建造卡</span></div></div>
+            <div class="card event"><div class="card-icon">⏰</div><div class="card-name">潮汐变化</div><div class="card-type">事件</div><div class="card-desc">重置当前天气</div><div class="card-stats"><span class="stat">效果: 重置天气</span></div></div>
+            <div class="card event"><div class="card-icon">📢</div><div class="card-name">获救希望</div><div class="card-type">事件</div><div class="card-desc">救援进度+2</div><div class="card-stats"><span class="stat">效果: +2进度</span></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">玩家棋子</h2>
+        <div class="token-grid">
+            <div><div class="token" style="background: linear-gradient(145deg, #ef4444, #dc2626);">🏃</div><div class="token-label">玩家1 - 红色</div></div>
+            <div><div class="token" style="background: linear-gradient(145deg, #3b82f6, #2563eb);">🏃</div><div class="token-label">玩家2 - 蓝色</div></div>
+            <div><div class="token" style="background: linear-gradient(145deg, #22c55e, #16a34a);">🏃</div><div class="token-label">玩家3 - 绿色</div></div>
+            <div><div class="token" style="background: linear-gradient(145deg, #f59e0b, #d97706);">🏃</div><div class="token-label">玩家4 - 黄色</div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">资源标记</h2>
+        <div class="resource-markers">
+            <div class="resource-marker"><div class="marker-icon">🍌</div><div class="marker-info"><h4>食物</h4><p>每回合消耗1</p></div></div>
+            <div class="resource-marker"><div class="marker-icon">💧</div><div class="marker-info"><h4>淡水</h4><p>每回合消耗1</p></div></div>
+            <div class="resource-marker"><div class="marker-icon">🪵</div><div class="marker-info"><h4>木材</h4><p>建造材料</p></div></div>
+            <div class="resource-marker"><div class="marker-icon">🪨</div><div class="marker-info"><h4>石头</h4><p>建造材料</p></div></div>
+            <div class="resource-marker"><div class="marker-icon">🔩</div><div class="marker-info"><h4>金属</h4><p>稀有材料</p></div></div>
+            <div class="resource-marker"><div class="marker-icon">🧵</div><div class="marker-info"><h4>布料</h4><p>绳索和帆布</p></div></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">快速参考卡</h2>
+        <div class="quick-ref">
+            <div class="ref-section">
+                <h4>每日流程</h4>
+                <ul>
+                    <li>黎明: 抽取天气卡，应用效果</li>
+                    <li>行动: 玩家依次执行行动</li>
+                    <li>黄昏: 消耗食物和淡水</li>
+                    <li>夜晚: 处理事件，推进进度</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>行动类型</h4>
+                <ul>
+                    <li>移动: 移动到相邻区域</li>
+                    <li>采集: 根据区域和天气获取资源</li>
+                    <li>探索: 抽取探索卡</li>
+                    <li>建造: 使用建造卡</li>
+                    <li>休整: 恢复1点疲劳</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>天气效果</h4>
+                <ul>
+                    <li>晴天: 探索+2，采集+1</li>
+                    <li>小雨: 淡水+3，禁止探索</li>
+                    <li>大雨: 淡水+5，损坏风险</li>
+                    <li>暴风雨: 禁止外出，50%损坏</li>
+                    <li>多云: 无特殊效果</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>胜利条件</h4>
+                <ul>
+                    <li>建造信号塔</li>
+                    <li>点燃求救火堆</li>
+                    <li>火堆燃烧完整1天</li>
+                    <li>救援进度达到10</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>失败条件</h4>
+                <ul>
+                    <li>食物和淡水耗尽</li>
+                    <li>全员死亡</li>
+                    <li>3次暴风雨毁所有建筑</li>
+                    <li>第20天未完成胜利条件</li>
+                </ul>
+            </div>
+            <div class="ref-section">
+                <h4>资源需求速查</h4>
+                <ul>
+                    <li>简易庇护所: 木5</li>
+                    <li>坚固庇护所: 木8, 石4</li>
+                    <li>信号塔: 木10, 金5, 布3</li>
+                    <li>求救火堆: 木6, 布2</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

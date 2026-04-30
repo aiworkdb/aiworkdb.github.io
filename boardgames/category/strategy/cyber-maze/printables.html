@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赛博迷宫 Cyber Maze - 打印资源</title>
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-cyan: #00ffff;
+            --neon-purple: #bf00ff;
+            --neon-blue: #0080ff;
+            --neon-green: #00ff80;
+            --neon-yellow: #ffff00;
+            --neon-orange: #ff8000;
+            --dark-bg: #0a0a1a;
+            --dark-secondary: #151530;
+            --grid-color: rgba(0, 255, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--dark-bg);
+            color: var(--neon-cyan);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .print-hint {
+            background: linear-gradient(135deg, var(--dark-secondary), var(--dark-bg));
+            border: 2px solid var(--neon-pink);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+
+        .print-hint h2 {
+            color: var(--neon-pink);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .print-hint ul {
+            list-style: none;
+            padding-left: 10px;
+        }
+
+        .print-hint li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .print-hint li:last-child {
+            border-bottom: none;
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px 10px 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+        }
+
+        .section {
+            background: var(--dark-secondary);
+            border: 1px solid var(--grid-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .section h2 {
+            color: var(--neon-cyan);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-shadow: 0 0 15px var(--neon-cyan);
+            border-bottom: 2px solid var(--neon-cyan);
+            padding-bottom: 15px;
+        }
+
+        /* ========== 游戏地图 ========== */
+        .map-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .hex-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hex-row {
+            display: flex;
+            gap: 5px;
+        }
+
+        .hex-row.offset {
+            margin-left: 32px;
+        }
+
+        .hex {
+            width: 60px;
+            height: 52px;
+            background: linear-gradient(135deg, #1a1a3a, #2a2a5a);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: none;
+            position: relative;
+        }
+
+        .hex.start { background: linear-gradient(135deg, #00aa00, #006600); }
+        .hex.data { background: linear-gradient(135deg, #aa00aa, #660066); }
+        .hex.firewall { background: linear-gradient(135deg, #ff8800, #cc4400); }
+        .hex.virus { background: linear-gradient(135deg, #ff0044, #aa0022); }
+        .hex.core { background: linear-gradient(135deg, #ffdd00, #ffaa00); }
+        .hex.normal { background: linear-gradient(135deg, #1a1a3a, #2a2a5a); }
+
+        .hex span {
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        .hex-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        .legend-hex {
+            width: 30px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* ========== 卡牌样式 ========== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1a1a3a, #0a0a2a);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            page-break-inside: avoid;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .card-name {
+            color: var(--neon-pink);
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .card-desc {
+            color: #aaa;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .card-points {
+            color: var(--neon-yellow);
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .card.firewall { border-color: var(--neon-orange); }
+        .card.firewall .card-name { color: var(--neon-orange); }
+
+        .card.boost { border-color: var(--neon-green); }
+        .card.boost .card-name { color: var(--neon-green); }
+
+        .card.virus { border-color: var(--neon-purple); }
+        .card.virus .card-name { color: var(--neon-purple); }
+
+        .card.data { border-color: var(--neon-blue); }
+        .card.data .card-name { color: var(--neon-blue); }
+
+        .card.special { border-color: var(--neon-yellow); }
+        .card.special .card-name { color: var(--neon-yellow); }
+
+        /* ========== 棋子样式 ========== */
+        .tokens-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .token {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .token.red { background: #ff3333; color: #ff3333; }
+        .token.blue { background: #3333ff; color: #3333ff; }
+        .token.yellow { background: #ffff33; color: #ffff33; }
+        .token.green { background: #33ff33; color: #33ff33; }
+
+        .token-label {
+            color: white;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .token-wrapper {
+            text-align: center;
+        }
+
+        /* ========== 数据标记 ========== */
+        .markers-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .marker {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .marker-sheet {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            gap: 5px;
+            justify-content: center;
+        }
+
+        /* ========== 快速参考卡 ========== */
+        .quick-ref {
+            background: linear-gradient(135deg, #1a0a2a, #0a0a1a);
+            border: 3px solid var(--neon-pink);
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .quick-ref h3 {
+            color: var(--neon-pink);
+            margin: 15px 0 10px;
+            font-size: 18px;
+        }
+
+        .quick-ref p, .quick-ref li {
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .quick-ref ul {
+            padding-left: 20px;
+        }
+
+        /* ========== 回合流程 ========== */
+        .turn-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .turn-step {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .turn-step-num {
+            background: var(--neon-cyan);
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+
+        .turn-step-title {
+            color: var(--neon-cyan);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .turn-step-desc {
+            color: #888;
+            font-size: 11px;
+        }
+
+        /* ========== 打印样式 ========== */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-hint, .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+                padding: 10px;
+            }
+
+            .section {
+                background: white;
+                border: 2px solid #333;
+                box-shadow: none;
+                margin-bottom: 20px;
+                page-break-inside: avoid;
+            }
+
+            .section h2 {
+                color: #333;
+                text-shadow: none;
+                border-bottom: 2px solid #333;
+            }
+
+            .card {
+                background: white;
+                border: 2px solid #333;
+                box-shadow: none;
+            }
+
+            .card-name, .card-points {
+                color: #333;
+            }
+
+            .card-desc {
+                color: #666;
+            }
+
+            .hex {
+                background: #ddd !important;
+            }
+
+            .hex span {
+                text-shadow: none;
+            }
+
+            .token {
+                border: 2px solid #333;
+                box-shadow: none;
+            }
+
+            .marker {
+                background: #ffd700 !important;
+            }
+
+            .quick-ref {
+                background: white;
+                border: 2px solid #333;
+            }
+
+            .quick-ref h3, .quick-ref p, .quick-ref li {
+                color: #333;
+            }
+
+            .turn-step {
+                background: white;
+                border: 1px solid #333;
+            }
+
+            .turn-step-num {
+                background: #333;
+                color: white;
+            }
+
+            .turn-step-title {
+                color: #333;
+            }
+
+            .turn-step-desc {
+                color: #666;
+            }
+        }
+
+        /* ========== 页面分隔 ========== */
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* ========== 打印数量表 ========== */
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .print-table th, .print-table td {
+            border: 1px solid var(--neon-cyan);
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .print-table th {
+            background: var(--neon-cyan);
+            color: #000;
+        }
+
+        .print-table td {
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        @media print {
+            .print-table th, .print-table td {
+                border-color: #333;
+            }
+            .print-table th {
+                background: #333;
+                color: white;
+            }
+            .print-table td {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 打印提示 -->
+        <div class="print-hint">
+            <h2>⚠️ 重要打印提示</h2>
+            <ul>
+                <li>📄 使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>🖨️ 在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+                <li>🃏 卡牌和棋子建议使用<strong>卡纸</strong>打印</li>
+                <li>✂️ 打印后请裁剪并塑封（可选），增加耐用性</li>
+                <li>💡 建议先打印1份测试，确认颜色和布局正确后再批量打印</li>
+            </ul>
+            <button class="print-btn" onclick="window.print()">🖨️ 打印全部资源</button>
+        </div>
+
+        <!-- 第一节：游戏地图 -->
+        <section class="section">
+            <h2>🗺️ 赛博空间地图</h2>
+            <div class="map-container">
+                <div class="hex-grid">
+                    <div class="hex-row">
+                        <div class="hex core"><span>⭐</span></div>
+                    </div>
+                    <div class="hex-row">
+                        <div class="hex data"><span>💎</span></div>
+                        <div class="hex data"><span>💎</span></div>
+                        <div class="hex data"><span>💎</span></div>
+                    </div>
+                    <div class="hex-row offset">
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                    </div>
+                    <div class="hex-row">
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex firewall"><span>🧱</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                    </div>
+                    <div class="hex-row offset">
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex data"><span>💎</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex virus"><span>🦠</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex data"><span>💎</span></div>
+                    </div>
+                    <div class="hex-row">
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                    </div>
+                    <div class="hex-row offset">
+                        <div class="hex data"><span>💎</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex firewall"><span>🧱</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex data"><span>💎</span></div>
+                    </div>
+                    <div class="hex-row">
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                    </div>
+                    <div class="hex-row offset">
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex virus"><span>🦠</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                        <div class="hex normal"><span>⬡</span></div>
+                    </div>
+                    <div class="hex-row">
+                        <div class="hex start"><span>🚀</span></div>
+                        <div class="hex start"><span>🚀</span></div>
+                        <div class="hex start"><span>🚀</span></div>
+                        <div class="hex start"><span>🚀</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="hex-legend">
+                <div class="legend-item">
+                    <div class="hex hex start"><span>🚀</span></div>
+                    <div>起点 - 玩家初始位置</div>
+                </div>
+                <div class="legend-item">
+                    <div class="hex hex normal"><span>⬡</span></div>
+                    <div>普通节点 - 安全通道</div>
+                </div>
+                <div class="legend-item">
+                    <div class="hex hex data"><span>💎</span></div>
+                    <div>数据节点 - 可破解得分</div>
+                </div>
+                <div class="legend-item">
+                    <div class="hex hex firewall"><span>🧱</span></div>
+                    <div>防火墙节点 - 可放置阻挡</div>
+                </div>
+                <div class="legend-item">
+                    <div class="hex hex virus"><span>🦠</span></div>
+                    <div>病毒节点 - 危险区域</div>
+                </div>
+                <div class="legend-item">
+                    <div class="hex hex core"><span>⭐</span></div>
+                    <div>数据核心 - 终点！50分</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二节：防火墙卡 -->
+        <section class="section page-break">
+            <h2>🧱 防火墙卡 (Firewall Cards)</h2>
+            <div class="cards-grid">
+                <div class="card firewall">
+                    <div class="card-icon">🧱</div>
+                    <div class="card-name">标准防火墙</div>
+                    <div class="card-desc">阻挡1格移动，可放置在任意空节点</div>
+                    <div class="card-points">×20</div>
+                </div>
+                <div class="card firewall">
+                    <div class="card-icon">🔐</div>
+                    <div class="card-name">加密防火墙</div>
+                    <div class="card-desc">阻挡2格移动，更强的封锁效果</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card firewall">
+                    <div class="card-icon">🧠</div>
+                    <div class="card-name">智能防火墙</div>
+                    <div class="card-desc">阻挡1格，被攻击时可转移位置</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card firewall">
+                    <div class="card-icon">⏰</div>
+                    <div class="card-name">时间锁定墙</div>
+                    <div class="card-desc">阻挡移动并延迟对手1回合</div>
+                    <div class="card-points">×2</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 28 张防火墙卡 | 建议使用橙色边框卡纸打印</p>
+        </section>
+
+        <!-- 第三节：加速程序卡 -->
+        <section class="section">
+            <h2>⚡ 加速程序卡 (Boost Programs)</h2>
+            <div class="cards-grid">
+                <div class="card boost">
+                    <div class="card-icon">→</div>
+                    <div class="card-name">微型加速</div>
+                    <div class="card-desc">额外移动1步</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card boost">
+                    <div class="card-icon">↣</div>
+                    <div class="card-name">短程加速</div>
+                    <div class="card-desc">额外移动2步</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card boost">
+                    <div class="card-icon">↝</div>
+                    <div class="card-name">远程加速</div>
+                    <div class="card-desc">额外移动3步</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card boost">
+                    <div class="card-icon">⚛️</div>
+                    <div class="card-name">量子跳跃</div>
+                    <div class="card-desc">传送到任意同色节点</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card boost">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-name">闪断攻击</div>
+                    <div class="card-desc">跳过1个阻挡物</div>
+                    <div class="card-points">×2</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 16 张加速程序卡 | 建议使用绿色边框卡纸打印</p>
+        </section>
+
+        <!-- 第四节：病毒卡 -->
+        <section class="section">
+            <h2>🦠 病毒卡 (Virus Cards)</h2>
+            <div class="cards-grid">
+                <div class="card virus">
+                    <div class="card-icon">🐴</div>
+                    <div class="card-name">木马病毒</div>
+                    <div class="card-desc">目标后退2步</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card virus">
+                    <div class="card-icon">🔒</div>
+                    <div class="card-name">勒索病毒</div>
+                    <div class="card-desc">目标冻结1回合</div>
+                    <div class="card-points">×3</div>
+                </div>
+                <div class="card virus">
+                    <div class="card-icon">🐛</div>
+                    <div class="card-name">蠕虫病毒</div>
+                    <div class="card-desc">目标手牌减半</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card virus">
+                    <div class="card-icon">💀</div>
+                    <div class="card-name">DDOS攻击</div>
+                    <div class="card-desc">目标跳过下回合</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card virus">
+                    <div class="card-icon">🧬</div>
+                    <div class="card-name">自我复制</div>
+                    <div class="card-desc">复制1张病毒卡到手牌</div>
+                    <div class="card-points">×1</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 12 张病毒卡 | 建议使用紫色边框卡纸打印</p>
+        </section>
+
+        <!-- 第五节：数据卡 -->
+        <section class="section page-break">
+            <h2>💎 数据卡 (Data Cards)</h2>
+            <div class="cards-grid">
+                <div class="card data">
+                    <div class="card-icon">📄</div>
+                    <div class="card-name">普通数据</div>
+                    <div class="card-desc">破解普通节点获得</div>
+                    <div class="card-points">10分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">📄</div>
+                    <div class="card-name">普通数据</div>
+                    <div class="card-desc">破解普通节点获得</div>
+                    <div class="card-points">10分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">📄</div>
+                    <div class="card-name">普通数据</div>
+                    <div class="card-desc">破解普通节点获得</div>
+                    <div class="card-points">10分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">🔑</div>
+                    <div class="card-name">加密数据</div>
+                    <div class="card-desc">破解加密节点获得</div>
+                    <div class="card-points">20分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">🔑</div>
+                    <div class="card-name">加密数据</div>
+                    <div class="card-desc">破解加密节点获得</div>
+                    <div class="card-points">20分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">🔑</div>
+                    <div class="card-name">加密数据</div>
+                    <div class="card-desc">破解加密节点获得</div>
+                    <div class="card-points">20分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">💎</div>
+                    <div class="card-name">核心数据</div>
+                    <div class="card-desc">破解核心节点获得</div>
+                    <div class="card-points">30分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">💎</div>
+                    <div class="card-name">核心数据</div>
+                    <div class="card-desc">破解核心节点获得</div>
+                    <div class="card-points">30分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">🪞</div>
+                    <div class="card-name">镜像数据</div>
+                    <div class="card-desc">复制对手最近得分</div>
+                    <div class="card-points">15分</div>
+                </div>
+                <div class="card data">
+                    <div class="card-icon">🪞</div>
+                    <div class="card-name">镜像数据</div>
+                    <div class="card-desc">复制对手最近得分</div>
+                    <div class="card-points">15分</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 20 张数据卡 | 建议使用蓝色边框卡纸打印</p>
+        </section>
+
+        <!-- 第六节：特殊功能卡 -->
+        <section class="section">
+            <h2>🎯 特殊功能卡 (Special Cards)</h2>
+            <div class="cards-grid">
+                <div class="card special">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-name">系统扫描</div>
+                    <div class="card-desc">查看牌堆顶3张卡</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">🔓</div>
+                    <div class="card-name">防火墙破解</div>
+                    <div class="card-desc">移除任意1个防火墙</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">🔧</div>
+                    <div class="card-name">紧急修复</div>
+                    <div class="card-desc">清除自身1个病毒状态</div>
+                    <div class="card-points">×4</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">📡</div>
+                    <div class="card-name">数据包追踪</div>
+                    <div class="card-desc">标记任意对手位置</div>
+                    <div class="card-points">×3</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 15 张特殊功能卡 | 建议使用黄色边框卡纸打印</p>
+        </section>
+
+        <!-- 第七节：迷宫变化卡 -->
+        <section class="section">
+            <h2>🌀 迷宫变化卡 (Maze Mutation Cards)</h2>
+            <div class="cards-grid">
+                <div class="card special">
+                    <div class="card-icon">💨</div>
+                    <div class="card-name">节点消失</div>
+                    <div class="card-desc">1-2个普通节点消失</div>
+                    <div class="card-points">×3</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">✨</div>
+                    <div class="card-name">节点出现</div>
+                    <div class="card-desc">1-2个新节点出现在边缘</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">📈</div>
+                    <div class="card-name">节点升级</div>
+                    <div class="card-desc">1个节点升级为高价值</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">📉</div>
+                    <div class="card-name">节点降级</div>
+                    <div class="card-desc">1个高价值节点降级</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">🧹</div>
+                    <div class="card-name">防火墙清除</div>
+                    <div class="card-desc">清除场上50%防火墙</div>
+                    <div class="card-points">×2</div>
+                </div>
+                <div class="card special">
+                    <div class="card-icon">☣️</div>
+                    <div class="card-name">病毒爆发</div>
+                    <div class="card-desc">所有玩家受1级病毒影响</div>
+                    <div class="card-points">×1</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 12 张迷宫变化卡 | 建议使用深色边框卡纸打印</p>
+        </section>
+
+        <!-- 第八节：玩家棋子 -->
+        <section class="section page-break">
+            <h2>🎮 玩家棋子 (Player Tokens)</h2>
+            <div class="tokens-grid">
+                <div class="token-wrapper">
+                    <div class="token red">🔴</div>
+                    <div class="token-label">玩家 1</div>
+                </div>
+                <div class="token-wrapper">
+                    <div class="token blue">🔵</div>
+                    <div class="token-label">玩家 2</div>
+                </div>
+                <div class="token-wrapper">
+                    <div class="token yellow">🟡</div>
+                    <div class="token-label">玩家 3</div>
+                </div>
+                <div class="token-wrapper">
+                    <div class="token green">🟢</div>
+                    <div class="token-label">玩家 4</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 4 个玩家棋子 | 建议使用对应颜色卡纸打印并覆膜</p>
+        </section>
+
+        <!-- 第九节：数据标记 -->
+        <section class="section">
+            <h2>🏅 数据标记 (Score Markers)</h2>
+            <p style="margin-bottom: 20px; text-align: center; color: #888;">每位玩家需要 10 个数据标记用于记录分数</p>
+            <div class="markers-container">
+                <div>
+                    <p style="text-align: center; margin-bottom: 10px; color: var(--neon-yellow);">玩家 1 标记组</p>
+                    <div class="marker-sheet">
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                        <div class="marker">1</div>
+                    </div>
+                </div>
+                <div>
+                    <p style="text-align: center; margin-bottom: 10px; color: var(--neon-yellow);">玩家 2 标记组</p>
+                    <div class="marker-sheet">
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                        <div class="marker">5</div>
+                    </div>
+                </div>
+                <div>
+                    <p style="text-align: center; margin-bottom: 10px; color: var(--neon-yellow);">玩家 3 标记组</p>
+                    <div class="marker-sheet">
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                        <div class="marker">10</div>
+                    </div>
+                </div>
+                <div>
+                    <p style="text-align: center; margin-bottom: 10px; color: var(--neon-yellow);">玩家 4 标记组</p>
+                    <div class="marker-sheet">
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                        <div class="marker">25</div>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: center; color: #888;">共 40 个数据标记 | 建议使用金色卡纸打印并覆膜</p>
+        </section>
+
+        <!-- 第十节：快速参考卡 -->
+        <section class="section page-break">
+            <h2>📋 快速参考卡 (Quick Reference)</h2>
+            <div class="quick-ref">
+                <h3>🎮 游戏设置</h3>
+                <ul>
+                    <li>将地图展开在桌面中央，数据核心放在终点位置</li>
+                    <li>随机放置20张数据节点卡在各数据节点上</li>
+                    <li>每位玩家选择1个棋子放在起点</li>
+                    <li>洗混程序卡，每位玩家发5张作为起始手牌</li>
+                    <li>单独洗混迷宫变化卡放在一旁</li>
+                </ul>
+
+                <h3>⚡ 每回合流程</h3>
+                <div class="turn-flow">
+                    <div class="turn-step">
+                        <div class="turn-step-num">1</div>
+                        <div class="turn-step-title">准备阶段</div>
+                        <div class="turn-step-desc">抽2张程序卡，翻开迷宫变化卡处理地图变化</div>
+                    </div>
+                    <div class="turn-step">
+                        <div class="turn-step-num">2</div>
+                        <div class="turn-step-title">移动阶段</div>
+                        <div class="turn-step-desc">移动到相邻节点（1个行动点）</div>
+                    </div>
+                    <div class="turn-step">
+                        <div class="turn-step-num">3</div>
+                        <div class="turn-step-title">行动阶段</div>
+                        <div class="turn-step-desc">使用卡牌（最多2张）、破解节点或移除防火墙</div>
+                    </div>
+                    <div class="turn-step">
+                        <div class="turn-step-num">4</div>
+                        <div class="turn-step-title">结算阶段</div>
+                        <div class="turn-step-desc">检查病毒状态，计算得分，轮换起始玩家</div>
+                    </div>
+                </div>
+
+                <h3>🏆 胜利条件</h3>
+                <p>6轮结束后获得最高分的玩家获胜。如有平分，最后到达数据核心的玩家获胜。</p>
+
+                <h3>💡 得分方式</h3>
+                <ul>
+                    <li>到达新节点：+5分</li>
+                    <li>破解普通数据节点：+10分</li>
+                    <li>破解加密数据节点：+20分</li>
+                    <li>破解核心数据节点：+30分 +5分额外奖励</li>
+                    <li>到达数据核心：+50分</li>
+                    <li>阻止对手移动：+3分</li>
+                </ul>
+
+                <h3>🧱 卡牌类型速查</h3>
+                <ul>
+                    <li>🧱 防火墙卡 - 阻挡对手移动</li>
+                    <li>⚡ 加速卡 - 增加移动步数</li>
+                    <li>🦠 病毒卡 - 攻击对手</li>
+                    <li>💎 数据卡 - 获得分数</li>
+                    <li>🎯 功能卡 - 特殊效果</li>
+                    <li>🌀 迷宫卡 - 地图变化</li>
+                </ul>
+
+                <h3>⚠️ 重要规则</h3>
+                <ul>
+                    <li>无法移动到被防火墙阻挡的节点</li>
+                    <li>无法移动到已消失的节点</li>
+                    <li>破解节点需要停留1回合准备</li>
+                    <li>手牌上限为7张</li>
+                    <li>累计获得150分可提前获胜</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 第十一节：打印数量总表 -->
+        <section class="section">
+            <h2>📊 打印数量总表</h2>
+            <table class="print-table">
+                <thead>
+                    <tr>
+                        <th>卡牌类型</th>
+                        <th>2人游戏</th>
+                        <th>3人游戏</th>
+                        <th>4人游戏</th>
+                        <th>边框颜色</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🧱 标准防火墙</td>
+                        <td>16张</td>
+                        <td>18张</td>
+                        <td>20张</td>
+                        <td>橙色</td>
+                    </tr>
+                    <tr>
+                        <td>🔐 加密防火墙</td>
+                        <td colspan="3">各4张（固定）</td>
+                        <td>深橙</td>
+                    </tr>
+                    <tr>
+                        <td>🧠 智能防火墙</td>
+                        <td colspan="3">各2张（固定）</td>
+                        <td>深橙</td>
+                    </tr>
+                    <tr>
+                        <td>⏰ 时间锁定墙</td>
+                        <td colspan="3">各2张（固定）</td>
+                        <td>深橙</td>
+                    </tr>
+                    <tr>
+                        <td>⚡ 加速卡合计</td>
+                        <td>12张</td>
+                        <td>14张</td>
+                        <td>16张</td>
+                        <td>绿色</td>
+                    </tr>
+                    <tr>
+                        <td>🦠 病毒卡合计</td>
+                        <td>8张</td>
+                        <td>10张</td>
+                        <td>12张</td>
+                        <td>紫色</td>
+                    </tr>
+                    <tr>
+                        <td>💎 数据卡合计</td>
+                        <td>16张</td>
+                        <td>18张</td>
+                        <td>20张</td>
+                        <td>蓝色</td>
+                    </tr>
+                    <tr>
+                        <td>🎯 功能卡合计</td>
+                        <td colspan="3">15张（固定）</td>
+                        <td>黄色</td>
+                    </tr>
+                    <tr>
+                        <td>🌀 迷宫变化卡</td>
+                        <td colspan="3">12张（固定）</td>
+                        <td>深灰</td>
+                    </tr>
+                    <tr>
+                        <td><strong>总计卡牌数</strong></td>
+                        <td><strong>85张</strong></td>
+                        <td><strong>93张</strong></td>
+                        <td><strong>101张</strong></td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>🎮 玩家棋子</td>
+                        <td colspan="3">4个</td>
+                        <td>各色</td>
+                    </tr>
+                    <tr>
+                        <td>🏅 数据标记</td>
+                        <td colspan="3">40个（每人10个）</td>
+                        <td>金色</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div style="text-align: center; padding: 30px; color: #666;">
+            <p>《赛博迷宫 Cyber Maze》打印资源</p>
+            <p style="font-size: 12px; margin-top: 10px;">适合2-4人 | 游戏时长40-60分钟 | 10岁以上</p>
+        </div>
+    </div>
+
+    <script>
+        // 打印按钮功能
+        function printSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>打印 - ${section.querySelector('h2').textContent}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        ${document.querySelector('style').textContent}
+                        .print-hint { display: none; }
+                        @media print {
+                            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                        }
+                    </style>
+                </head>
+                <body>${section.outerHTML}</body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+</body>
+</html>

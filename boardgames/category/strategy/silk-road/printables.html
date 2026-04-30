@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>丝绸之路 Silk Road - 打印道具</title>
+    <style>
+        /* === 全局样式 === */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+        :root {
+            --gold: #C8A951;
+            --gold-light: #E8D48B;
+            --gold-dark: #8B6914;
+            --brown: #5C3A1E;
+            --brown-light: #8B6F47;
+            --brown-dark: #3D2510;
+            --cream: #FFF8E7;
+            --parchment: #F5E6C8;
+            --red-accent: #B8432F;
+            --blue-water: #2E86AB;
+            --green-oasis: #4A8C5C;
+            --sand: #D4A76A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--parchment);
+            color: var(--brown-dark);
+            line-height: 1.6;
+        }
+
+        /* === 打印提示 === */
+        .print-hint {
+            background: linear-gradient(135deg, var(--gold-light), var(--sand));
+            border: 3px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px auto;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .print-hint h2 {
+            color: var(--brown-dark);
+            font-family: 'Noto Serif SC', serif;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            text-align: left;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .print-hint li {
+            margin-bottom: 5px;
+        }
+
+        .print-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 40px;
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            color: var(--gold-light);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .print-btn:hover {
+            background: linear-gradient(135deg, var(--brown-dark), #2A1A08);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* === 页面标题 === */
+        .page-title {
+            text-align: center;
+            padding: 30px 20px 10px;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .page-title h1 {
+            font-size: 36px;
+            color: var(--brown-dark);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: 4px;
+        }
+
+        .page-title .subtitle {
+            font-size: 16px;
+            color: var(--brown-light);
+            margin-top: 5px;
+        }
+
+        .divider {
+            width: 300px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 15px auto;
+        }
+
+        /* === 章节标题 === */
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            color: var(--brown-dark);
+            text-align: center;
+            margin: 30px 0 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gold);
+            display: inline-block;
+            min-width: 300px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+
+        /* === 地图样式 === */
+        .map-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: linear-gradient(180deg, #FFF8E7, #F0DDB8, #E8D0A0);
+            border: 4px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 15 L30 12 L25 15 Z' fill='%23C8A95120'/%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+        }
+
+        .map-title {
+            text-align: center;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 22px;
+            color: var(--brown-dark);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .map-board {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 10px;
+            position: relative;
+        }
+
+        .city-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .city-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 3px solid var(--gold-dark);
+            margin-bottom: 5px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        .city-changan { background: linear-gradient(135deg, #FF6B6B, #CC4444); }
+        .city-dunhuang { background: linear-gradient(135deg, #D4A76A, #B8864E); }
+        .city-gaochang { background: linear-gradient(135deg, #7CB342, #558B2F); }
+        .city-yutian { background: linear-gradient(135deg, #AB47BC, #7B1FA2); }
+        .city-samarkand { background: linear-gradient(135deg, #42A5F5, #1E88E5); }
+        .city-persia { background: linear-gradient(135deg, #FFA726, #FB8C00); }
+        .city-baghdad { background: linear-gradient(135deg, #26A69A, #00897B); }
+        .city-rome { background: linear-gradient(135deg, #EF5350, #C62828); }
+
+        .city-name {
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--brown-dark);
+        }
+
+        .city-name-en {
+            font-size: 9px;
+            color: var(--brown-light);
+        }
+
+        .route-line {
+            flex: 1;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-light));
+            margin: 0 5px;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .route-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--brown-light);
+            white-space: nowrap;
+            background: var(--cream);
+            padding: 1px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--gold);
+        }
+
+        .branch-section {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .branch-path {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .branch-label {
+            font-size: 11px;
+            color: var(--brown);
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .branch-north { background: #E8F5E9; border: 1px solid #4CAF50; }
+        .branch-south { background: #FFF3E0; border: 1px solid #FF9800; }
+
+        /* === 卡牌通用样式 === */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid var(--gold-dark);
+            position: relative;
+            overflow: hidden;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+
+        .card-icon {
+            font-size: 28px;
+        }
+
+        .card-content {
+            font-size: 13px;
+            color: var(--brown);
+        }
+
+        .card-footer {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--gold);
+            font-size: 11px;
+            color: var(--brown-light);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* === 商品卡样式 === */
+        .card-silk {
+            background: linear-gradient(135deg, #FFF0F0, #FFE0E0);
+        }
+        .card-silk .card-icon { filter: drop-shadow(0 0 4px rgba(200, 50, 50, 0.3)); }
+
+        .card-spice {
+            background: linear-gradient(135deg, #FFF8E1, #FFECB3);
+        }
+        .card-spice .card-icon { filter: drop-shadow(0 0 4px rgba(200, 150, 0, 0.3)); }
+
+        .card-gem {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+        }
+        .card-gem .card-icon { filter: drop-shadow(0 0 4px rgba(50, 150, 50, 0.3)); }
+
+        .card-tea {
+            background: linear-gradient(135deg, #E0F2F1, #B2DFDB);
+        }
+        .card-tea .card-icon { filter: drop-shadow(0 0 4px rgba(0, 120, 120, 0.3)); }
+
+        .quality-stars {
+            color: var(--gold);
+            font-size: 14px;
+            margin-left: 4px;
+        }
+
+        .price-tag {
+            display: inline-block;
+            background: var(--brown);
+            color: var(--gold-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .transport-info {
+            font-size: 11px;
+            color: var(--brown-light);
+            margin-top: 5px;
+        }
+
+        /* === 城市卡样式 === */
+        .city-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .city-card {
+            background: linear-gradient(135deg, var(--cream), #F5ECD8);
+            border: 2px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 18px;
+            page-break-inside: avoid;
+        }
+
+        .city-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .city-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid var(--gold-dark);
+        }
+
+        .city-card-name {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+
+        .city-card-type {
+            font-size: 12px;
+            color: var(--brown-light);
+        }
+
+        .city-market {
+            margin: 8px 0;
+        }
+
+        .city-market-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--brown);
+            margin-bottom: 6px;
+        }
+
+        .market-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            background: rgba(200, 169, 81, 0.1);
+            border-radius: 4px;
+            margin-bottom: 3px;
+            font-size: 12px;
+        }
+
+        .city-special {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: linear-gradient(90deg, rgba(200, 169, 81, 0.2), transparent);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 6px 6px 0;
+            font-size: 12px;
+        }
+
+        .city-special-label {
+            font-weight: 700;
+            color: var(--gold-dark);
+        }
+
+        /* === 事件卡样式 === */
+        .event-card {
+            border: 2px solid;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .event-negative {
+            background: linear-gradient(135deg, #FFF0F0, #FFE8E8);
+            border-color: var(--red-accent);
+        }
+        .event-negative::before {
+            background: linear-gradient(90deg, var(--red-accent), #E57373, var(--red-accent));
+        }
+
+        .event-positive {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-color: var(--green-oasis);
+        }
+        .event-positive::before {
+            background: linear-gradient(90deg, var(--green-oasis), #81C784, var(--green-oasis));
+        }
+
+        .event-icon {
+            font-size: 36px;
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        .event-effect {
+            background: rgba(255,255,255,0.6);
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .event-counter {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .counter-negative {
+            background: #FFEBEE;
+            color: var(--red-accent);
+            border: 1px solid var(--red-accent);
+        }
+
+        .counter-positive {
+            background: #E8F5E9;
+            color: var(--green-oasis);
+            border: 1px solid var(--green-oasis);
+        }
+
+        /* === 商队卡样式 === */
+        .caravan-card {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            border-color: #1565C0;
+            page-break-inside: avoid;
+        }
+        .caravan-card::before {
+            background: linear-gradient(90deg, #1565C0, #42A5F5, #1565C0);
+        }
+
+        .caravan-icon {
+            font-size: 36px;
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        .caravan-effect {
+            background: rgba(255,255,255,0.6);
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .caravan-cost {
+            display: inline-block;
+            background: #1565C0;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* === 标记样式 === */
+        .tokens-section {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .tokens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 16px;
+        }
+
+        .token {
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .token-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 8px;
+            border: 3px solid var(--gold-dark);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        .token-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+
+        .token-count {
+            font-size: 11px;
+            color: var(--brown-light);
+        }
+
+        /* === 玩家棋子 === */
+        .player-pawns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        .pawn {
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .pawn-piece {
+            width: 50px;
+            height: 65px;
+            border-radius: 8px 8px 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 5px;
+            border: 2px solid rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .pawn-piece::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .pawn-red { background: linear-gradient(180deg, #EF5350, #C62828); }
+        .pawn-blue { background: linear-gradient(180deg, #42A5F5, #1565C0); }
+        .pawn-green { background: linear-gradient(180deg, #66BB6A, #2E7D32); }
+        .pawn-yellow { background: linear-gradient(180deg, #FFEE58, #F9A825); }
+        .pawn-purple { background: linear-gradient(180deg, #AB47BC, #6A1B9A); }
+
+        /* === 金币标记 === */
+        .coins-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .coin-token {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--brown-dark);
+            border: 2px solid var(--gold-dark);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* === 骆驼标记 === */
+        .camel-tokens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .camel-token {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--sand), var(--brown-light));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 2px solid var(--brown);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        /* === 快速参考卡 === */
+        .quick-ref {
+            max-width: 700px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, var(--cream), #F0E4CC);
+            border: 3px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 25px;
+            page-break-inside: avoid;
+        }
+
+        .quick-ref-title {
+            text-align: center;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            color: var(--brown-dark);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .ref-section {
+            margin-bottom: 15px;
+        }
+
+        .ref-section-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--brown);
+            margin-bottom: 8px;
+            padding-left: 8px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .ref-table th {
+            background: var(--brown);
+            color: var(--gold-light);
+            padding: 6px 8px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .ref-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .ref-table tr:nth-child(even) {
+            background: rgba(200, 169, 81, 0.1);
+        }
+
+        .ref-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .flow-step {
+            background: var(--brown);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            color: var(--gold-dark);
+            font-size: 18px;
+        }
+
+        /* === 卡牌背面 === */
+        .card-back-section {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .card-back {
+            width: 220px;
+            height: 160px;
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            border: 3px solid var(--gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-back::before {
+            content: '';
+            position: absolute;
+            top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+        }
+
+        .card-back-pattern {
+            font-size: 48px;
+            color: var(--gold);
+            opacity: 0.4;
+        }
+
+        .card-back-text {
+            position: absolute;
+            bottom: 15px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 14px;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+        }
+
+        /* === 页面间距 === */
+        .page-break {
+            page-break-before: always;
+            break-before: page;
+        }
+
+        /* === 打印支持 === */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-hint {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .card, .city-card, .event-card, .caravan-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .map-container, .quick-ref {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+    <h2>丝绸之路 - 打印指南</h2>
+    <p>请按照以下说明打印游戏道具，确保最佳效果：</p>
+    <ul>
+        <li>使用 <strong>A4纸张</strong> 打印，建议设置<strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+        <li>卡牌和棋子建议使用<strong>卡纸</strong>打印（200g以上推荐）</li>
+        <li>打印后沿裁切线剪裁，可塑封增加耐用性</li>
+        <li>商品卡建议打印 <strong>3份</strong>，事件卡打印 <strong>1份</strong>，商队卡打印 <strong>1份</strong></li>
+    </ul>
+    <button class="print-btn" onclick="window.print()">🖨️ 开始打印</button>
+</div>
+
+<!-- 页面标题 -->
+<div class="page-title">
+    <h1>丝绸之路 Silk Road</h1>
+    <div class="subtitle">策略桌游 | 道具打印版</div>
+    <div class="divider"></div>
+</div>
+
+<!-- ==================== 游戏地图 ==================== -->
+<div class="section-header">
+    <div class="section-title">丝绸之路路线地图</div>
+</div>
+
+<div class="map-container">
+    <div class="map-title">丝绸之路全图（公元二世纪）</div>
+    
+    <!-- 主路线 -->
+    <div class="map-board">
+        <div class="city-node">
+            <div class="city-icon city-changan">🏯</div>
+            <div class="city-name">长安</div>
+            <div class="city-name-en">Chang'an</div>
+            <div style="font-size:10px;color:var(--red-accent)">起点</div>
+        </div>
+        <div class="route-line">
+            <div class="route-label">主路 2回合 | 水2</div>
+        </div>
+        <div class="city-node">
+            <div class="city-icon city-dunhuang">🏜️</div>
+            <div class="city-name">敦煌</div>
+            <div class="city-name-en">Dunhuang</div>
+            <div style="font-size:10px;color:var(--brown-light)">前哨</div>
+        </div>
+        <div class="route-line" style="height:2px;border-style:dashed;background:var(--sand);"></div>
+        <div class="city-node" style="opacity:0.6">
+            <div style="font-size:11px;color:var(--brown-light);font-weight:600;margin-bottom:10px">北路/南路<br>分岔 ↓</div>
+        </div>
+        <div class="route-line" style="height:2px;border-style:dashed;background:var(--sand);"></div>
+        <div class="city-node">
+            <div class="city-icon city-samarkand">🏔️</div>
+            <div class="city-name">撒马尔罕</div>
+            <div class="city-name-en">Samarkand</div>
+            <div style="font-size:10px;color:var(--brown-light)">中转</div>
+        </div>
+        <div class="route-line">
+            <div class="route-label">西段 2回合 | 水2</div>
+        </div>
+        <div class="city-node">
+            <div class="city-icon city-persia">🏜️</div>
+            <div class="city-name">波斯波利斯</div>
+            <div class="city-name-en">Persepolis</div>
+            <div style="font-size:10px;color:var(--brown-light)">贸易</div>
+        </div>
+        <div class="route-line">
+            <div class="route-label">沙漠道 2回合 | 水2</div>
+        </div>
+        <div class="city-node">
+            <div class="city-icon city-baghdad">🕌</div>
+            <div class="city-name">巴格达</div>
+            <div class="city-name-en">Baghdad</div>
+            <div style="font-size:10px;color:var(--brown-light)">集散</div>
+        </div>
+        <div class="route-line">
+            <div class="route-label">终程 2回合 | 水1</div>
+        </div>
+        <div class="city-node">
+            <div class="city-icon city-rome">🏛️</div>
+            <div class="city-name">罗马</div>
+            <div class="city-name-en">Roma</div>
+            <div style="font-size:10px;color:var(--red-accent)">终点</div>
+        </div>
+    </div>
+
+    <!-- 分岔路线 -->
+    <div class="branch-section">
+        <div class="branch-path">
+            <span class="branch-label branch-north">⛰️ 北路</span>
+            <span style="font-size:12px">敦煌 → 高昌 → 撒马尔罕</span>
+            <span style="font-size:11px;color:var(--brown-light)">3回合 | 风险中 | 水2/回</span>
+        </div>
+        <div class="branch-path">
+            <span class="branch-label branch-south">🏜️ 南路</span>
+            <span style="font-size:12px">敦煌 → 于阗 → 撒马尔罕</span>
+            <span style="font-size:11px;color:var(--brown-light)">3回合 | 风险高 | 水2/回</span>
+        </div>
+    </div>
+</div>
+
+<!-- 高昌和于阗节点 -->
+<div class="map-container" style="margin-top:10px;padding:20px;">
+    <div class="branch-section" style="gap:60px;margin:0">
+        <div class="city-node">
+            <div class="city-icon city-gaochang" style="width:55px;height:55px;font-size:24px">🏔️</div>
+            <div class="city-name">高昌</div>
+            <div class="city-name-en">Gaochang</div>
+            <div style="font-size:10px;color:var(--green-oasis)">绿洲 | 北路</div>
+            <div style="font-size:10px;color:var(--brown-light);margin-top:2px">特殊：拒绝1张重抽</div>
+        </div>
+        <div class="city-node">
+            <div class="city-icon city-yutian" style="width:55px;height:55px;font-size:24px">🏜️</div>
+            <div class="city-name">于阗</div>
+            <div class="city-name-en">Yutian</div>
+            <div style="font-size:10px;color:#AB47BC">玉石 | 南路</div>
+            <div style="font-size:10px;color:var(--brown-light);margin-top:2px">特殊：宝石卖出+2金</div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 商品卡 ==================== -->
+<div class="page-break"></div>
+<div class="section-header">
+    <div class="section-title">商品卡（120张）</div>
+</div>
+
+<!-- 丝绸卡 -->
+<div class="cards-grid">
+    <div class="card card-silk">
+        <div class="card-header">
+            <span class="card-title">丝绸🧣</span>
+            <span class="card-icon">🧣</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★</span></div>
+            <div style="margin-top:6px">长安买入：<span class="price-tag">3金</span></div>
+            <div style="margin-top:4px">罗马卖出：<span class="price-tag">15金</span></div>
+            <div class="transport-info">🐫 每骆驼运载 2 件</div>
+        </div>
+        <div class="card-footer">
+            <span>东方珍品</span>
+            <span>×18张</span>
+        </div>
+    </div>
+
+    <div class="card card-silk">
+        <div class="card-header">
+            <span class="card-title">丝绸🧣</span>
+            <span class="card-icon">🧣</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★</span></div>
+            <div style="margin-top:6px">长安买入：<span class="price-tag">4金</span></div>
+            <div style="margin-top:4px">罗马卖出：<span class="price-tag">15金</span> +1加成</div>
+            <div class="transport-info">🐫 每骆驼运载 2 件</div>
+        </div>
+        <div class="card-footer">
+            <span>优质丝绸</span>
+            <span>×10张</span>
+        </div>
+    </div>
+
+    <div class="card card-silk">
+        <div class="card-header">
+            <span class="card-title">丝绸🧣</span>
+            <span class="card-icon">🧣</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★★</span></div>
+            <div style="margin-top:6px">长安买入：<span class="price-tag">5金</span></div>
+            <div style="margin-top:4px">罗马卖出：<span class="price-tag">15金</span> +3加成</div>
+            <div class="transport-info">🐫 每骆驼运载 2 件</div>
+        </div>
+        <div class="card-footer">
+            <span>极品蜀锦</span>
+            <span>×7张</span>
+        </div>
+    </div>
+
+    <div class="card card-spice">
+        <div class="card-header">
+            <span class="card-title">香料🌶️</span>
+            <span class="card-icon">🌶️</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★</span></div>
+            <div style="margin-top:6px">敦煌买入：<span class="price-tag">2金</span></div>
+            <div style="margin-top:4px">巴格达卖出：<span class="price-tag">10金</span></div>
+            <div class="transport-info">🐫 每骆驼运载 3 件</div>
+        </div>
+        <div class="card-footer">
+            <span>西域香料</span>
+            <span>×15张</span>
+        </div>
+    </div>
+
+    <div class="card card-spice">
+        <div class="card-header">
+            <span class="card-title">香料🌶️</span>
+            <span class="card-icon">🌶️</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★</span></div>
+            <div style="margin-top:6px">敦煌买入：<span class="price-tag">3金</span></div>
+            <div style="margin-top:4px">巴格达卖出：<span class="price-tag">10金</span> +1加成</div>
+            <div class="transport-info">🐫 每骆驼运载 3 件</div>
+        </div>
+        <div class="card-footer">
+            <span>上等胡椒</span>
+            <span>×9张</span>
+        </div>
+    </div>
+
+    <div class="card card-spice">
+        <div class="card-header">
+            <span class="card-title">香料🌶️</span>
+            <span class="card-icon">🌶️</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★★</span></div>
+            <div style="margin-top:6px">敦煌买入：<span class="price-tag">4金</span></div>
+            <div style="margin-top:4px">巴格达卖出：<span class="price-tag">10金</span> +3加成</div>
+            <div class="transport-info">🐫 每骆驼运载 3 件</div>
+        </div>
+        <div class="card-footer">
+            <span>龙涎香</span>
+            <span>×6张</span>
+        </div>
+    </div>
+
+    <div class="card card-gem">
+        <div class="card-header">
+            <span class="card-title">宝石💎</span>
+            <span class="card-icon">💎</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★</span></div>
+            <div style="margin-top:6px">高昌买入：<span class="price-tag">4金</span></div>
+            <div style="margin-top:4px">波斯卖出：<span class="price-tag">8金</span></div>
+            <div class="transport-info">🐫 每骆驼运载 1 件</div>
+        </div>
+        <div class="card-footer">
+            <span>普通玉石</span>
+            <span>×15张</span>
+        </div>
+    </div>
+
+    <div class="card card-gem">
+        <div class="card-header">
+            <span class="card-title">宝石💎</span>
+            <span class="card-icon">💎</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★</span></div>
+            <div style="margin-top:6px">高昌买入：<span class="price-tag">5金</span></div>
+            <div style="margin-top:4px">波斯卖出：<span class="price-tag">8金</span> +1加成</div>
+            <div class="transport-info">🐫 每骆驼运载 1 件</div>
+        </div>
+        <div class="card-footer">
+            <span>翡翠</span>
+            <span>×9张</span>
+        </div>
+    </div>
+
+    <div class="card card-gem">
+        <div class="card-header">
+            <span class="card-title">宝石💎</span>
+            <span class="card-icon">💎</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★★</span></div>
+            <div style="margin-top:6px">高昌买入：<span class="price-tag">6金</span></div>
+            <div style="margin-top:4px">波斯卖出：<span class="price-tag">8金</span> +3加成</div>
+            <div class="transport-info">🐫 每骆驼运载 1 件</div>
+        </div>
+        <div class="card-footer">
+            <span>和田美玉</span>
+            <span>×6张</span>
+        </div>
+    </div>
+
+    <div class="card card-tea">
+        <div class="card-header">
+            <span class="card-title">茶叶🍵</span>
+            <span class="card-icon">🍵</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★</span></div>
+            <div style="margin-top:6px">长安买入：<span class="price-tag">2金</span></div>
+            <div style="margin-top:4px">撒马尔罕卖出：<span class="price-tag">7金</span></div>
+            <div class="transport-info">🐫 每骆驼运载 3 件</div>
+        </div>
+        <div class="card-footer">
+            <span>普通砖茶</span>
+            <span>×12张</span>
+        </div>
+    </div>
+
+    <div class="card card-tea">
+        <div class="card-header">
+            <span class="card-title">茶叶🍵</span>
+            <span class="card-icon">🍵</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★</span></div>
+            <div style="margin-top:6px">长安买入：<span class="price-tag">3金</span></div>
+            <div style="margin-top:4px">撒马尔罕卖出：<span class="price-tag">7金</span> +1加成</div>
+            <div class="transport-info">🐫 每骆驼运载 3 件</div>
+        </div>
+        <div class="card-footer">
+            <span>龙井新茶</span>
+            <span>×8张</span>
+        </div>
+    </div>
+
+    <div class="card card-tea">
+        <div class="card-header">
+            <span class="card-title">茶叶🍵</span>
+            <span class="card-icon">🍵</span>
+        </div>
+        <div class="card-content">
+            <div>品质：<span class="quality-stars">★★★</span></div>
+            <div style="margin-top:6px">长安买入：<span class="price-tag">3金</span></div>
+            <div style="margin-top:4px">撒马尔罕卖出：<span class="price-tag">7金</span> +3加成</div>
+            <div class="transport-info">🐫 每骆驼运载 3 件</div>
+        </div>
+        <div class="card-footer">
+            <span>御贡贡茶</span>
+            <span>×5张</span>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 城市卡 ==================== -->
+<div class="page-break"></div>
+<div class="section-header">
+    <div class="section-title">城市卡（8张）</div>
+</div>
+
+<div class="city-card-grid">
+    <!-- 长安 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-changan">🏯</div>
+            <div>
+                <div class="city-card-name">长安</div>
+                <div class="city-card-type">起点城市 | 东方之都</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>🧣 丝绸</span><span>买入 3-5金</span></div>
+            <div class="market-item"><span>🍵 茶叶</span><span>买入 2-3金</span></div>
+            <div class="market-item"><span>💎 宝石</span><span>买入 4金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>每位玩家出发时额外获得1枚水源。长安不出售商品。
+        </div>
+    </div>
+
+    <!-- 敦煌 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-dunhuang">🏜️</div>
+            <div>
+                <div class="city-card-name">敦煌</div>
+                <div class="city-card-type">前哨城市 | 丝路咽喉</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>🧣 丝绸</span><span>买3金 / 卖4金</span></div>
+            <div class="market-item"><span>🌶️ 香料</span><span>买2金 / 卖3金</span></div>
+            <div class="market-item"><span>🍵 茶叶</span><span>买3金 / 卖4金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>可花费2金币招募1名护卫。市场容量3张。
+        </div>
+    </div>
+
+    <!-- 高昌 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-gaochang">🏔️</div>
+            <div>
+                <div class="city-card-name">高昌</div>
+                <div class="city-card-type">绿洲城市 | 北路节点</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>💎 宝石</span><span>买4-6金</span></div>
+            <div class="market-item"><span>🍵 茶叶</span><span>买5金 / 卖7金</span></div>
+            <div class="market-item"><span>🧣 丝绸</span><span>买5金 / 卖6金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>购买商品时可选择拒绝1张并抽取新卡。市场容量3张。
+        </div>
+    </div>
+
+    <!-- 于阗 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-yutian">🏜️</div>
+            <div>
+                <div class="city-card-name">于阗</div>
+                <div class="city-card-type">玉石之城 | 南路节点</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>💎 宝石</span><span>买5-7金</span></div>
+            <div class="market-item"><span>🧣 丝绸</span><span>买5金 / 卖6金</span></div>
+            <div class="market-item"><span>🌶️ 香料</span><span>买4金 / 卖5金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>宝石类商品在此卖出时额外+2金币。市场容量3张。
+        </div>
+    </div>
+
+    <!-- 撒马尔罕 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-samarkand">🏔️</div>
+            <div>
+                <div class="city-card-name">撒马尔罕</div>
+                <div class="city-card-type">中转城市 | 东西交汇</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>🌶️ 香料</span><span>买6金 / 卖8金</span></div>
+            <div class="market-item"><span>🍵 茶叶</span><span>买7金 / 卖9金</span></div>
+            <div class="market-item"><span>💎 宝石</span><span>买7金 / 卖9金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>可免费修复1张因事件损坏的商品卡（每回合限1次）。市场容量3张。
+        </div>
+    </div>
+
+    <!-- 波斯波利斯 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-persia">🏜️</div>
+            <div>
+                <div class="city-card-name">波斯波利斯</div>
+                <div class="city-card-type">贸易城市 | 波斯古都</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>💎 宝石</span><span>买8金 / 卖11金</span></div>
+            <div class="market-item"><span>🧣 丝绸</span><span>买9金 / 卖12金</span></div>
+            <div class="market-item"><span>🌶️ 香料</span><span>买8金 / 卖10金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>所有商品在此城市卖出价格+1金币。市场容量4张。
+        </div>
+    </div>
+
+    <!-- 巴格达 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-baghdad">🕌</div>
+            <div>
+                <div class="city-card-name">巴格达</div>
+                <div class="city-card-type">集散城市 | 贸易中心</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>🌶️ 香料</span><span>买10金 / 卖13金</span></div>
+            <div class="market-item"><span>💎 宝石</span><span>买11金 / 卖14金</span></div>
+            <div class="market-item"><span>🧣 丝绸</span><span>买12金 / 卖14金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>可一次卖出最多6张商品（其他城市上限4张）。市场容量4张。
+        </div>
+    </div>
+
+    <!-- 罗马 -->
+    <div class="city-card">
+        <div class="city-card-header">
+            <div class="city-card-icon city-rome">🏛️</div>
+            <div>
+                <div class="city-card-name">罗马</div>
+                <div class="city-card-type">终点城市 | 西方帝都</div>
+            </div>
+        </div>
+        <div class="city-market">
+            <div class="city-market-title">商品价格</div>
+            <div class="market-item"><span>🧣 丝绸</span><span>卖出 15金</span></div>
+            <div class="market-item"><span>🍵 茶叶</span><span>卖出 12金</span></div>
+            <div class="market-item"><span>💎 宝石</span><span>卖出 11金</span></div>
+        </div>
+        <div class="city-special">
+            <span class="city-special-label">🎯 特殊能力：</span>每张卖出商品额外获得1金币奖励。罗马不提供买入。市场容量5张。返回长安需花费5金币。
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 事件卡 ==================== -->
+<div class="page-break"></div>
+<div class="section-header">
+    <div class="section-title">事件卡 - 负面事件（15张）</div>
+</div>
+
+<div class="cards-grid">
+    <div class="card event-negative">
+        <div class="card-header">
+            <span class="card-title">沙暴来袭</span>
+        </div>
+        <div class="event-icon">🌪️</div>
+        <div class="event-effect">
+            <strong>效果：</strong>回合跳过1次，损失1水源。商队被迫停下等待沙暴过去。
+        </div>
+        <div class="event-counter counter-negative">应对：有护卫减免为仅损失1水源</div>
+        <div class="card-footer"><span>负面事件</span><span>×4张</span></div>
+    </div>
+
+    <div class="card event-negative">
+        <div class="card-header">
+            <span class="card-title">强盗袭击</span>
+        </div>
+        <div class="event-icon">🗡️</div>
+        <div class="event-effect">
+            <strong>效果：</strong>失去运输中随机1张商品，或支付5金币保住货物。
+        </div>
+        <div class="event-counter counter-negative">应对：有2名护卫可击退强盗</div>
+        <div class="card-footer"><span>负面事件</span><span>×4张</span></div>
+    </div>
+
+    <div class="card event-negative">
+        <div class="card-header">
+            <span class="card-title">疾病传播</span>
+        </div>
+        <div class="event-icon">🤒</div>
+        <div class="event-effect">
+            <strong>效果：</strong>损失2水源，下回合移动距离-1。商队中有人生病需要休整。
+        </div>
+        <div class="event-counter counter-negative">应对：在绿洲城市可免除</div>
+        <div class="card-footer"><span>负面事件</span><span>×3张</span></div>
+    </div>
+
+    <div class="card event-negative">
+        <div class="card-header">
+            <span class="card-title">商品变质</span>
+        </div>
+        <div class="event-icon">📦</div>
+        <div class="event-effect">
+            <strong>效果：</strong>运输中随机1张★或★★品质商品作废（放入弃牌堆）。
+        </div>
+        <div class="event-counter counter-negative">应对：★★★品质和宝石类免疫</div>
+        <div class="card-footer"><span>负面事件</span><span>×2张</span></div>
+    </div>
+
+    <div class="card event-negative">
+        <div class="card-header">
+            <span class="card-title">迷路</span>
+        </div>
+        <div class="event-icon">🧭</div>
+        <div class="event-effect">
+            <strong>效果：</strong>多花1回合才能到达目的地，额外消耗1水源。
+        </div>
+        <div class="event-counter counter-negative">应对：无法减免，硬抗</div>
+        <div class="card-footer"><span>负面事件</span><span>×2张</span></div>
+    </div>
+</div>
+
+<div class="section-header">
+    <div class="section-title">事件卡 - 正面事件（15张）</div>
+</div>
+
+<div class="cards-grid">
+    <div class="card event-positive">
+        <div class="card-header">
+            <span class="card-title">绿洲发现</span>
+        </div>
+        <div class="event-icon">🌴</div>
+        <div class="event-effect">
+            <strong>效果：</strong>获得3水源，恢复补给！在沙漠中找到一处清泉。
+        </div>
+        <div class="event-counter counter-positive">水源补给事件</div>
+        <div class="card-footer"><span>正面事件</span><span>×4张</span></div>
+    </div>
+
+    <div class="card event-positive">
+        <div class="card-header">
+            <span class="card-title">商旅相遇</span>
+        </div>
+        <div class="event-icon">🤝</div>
+        <div class="event-effect">
+            <strong>效果：</strong>从其他任意1名玩家处以半价购买1张手牌商品（卖家获得半价金币）。
+        </div>
+        <div class="event-counter counter-positive">贸易事件</div>
+        <div class="card-footer"><span>正面事件</span><span>×3张</span></div>
+    </div>
+
+    <div class="card event-positive">
+        <div class="card-header">
+            <span class="card-title">王室使者</span>
+        </div>
+        <div class="event-icon">👑</div>
+        <div class="event-effect">
+            <strong>效果：</strong>下次卖出商品时价格翻倍（仅限一次，不叠加）。
+        </div>
+        <div class="event-counter counter-positive">保留至使用</div>
+        <div class="card-footer"><span>正面事件</span><span>×2张</span></div>
+    </div>
+
+    <div class="card event-positive">
+        <div class="card-header">
+            <span class="card-title">货币兑换</span>
+        </div>
+        <div class="event-icon">💱</div>
+        <div class="event-effect">
+            <strong>效果：</strong>额外获得3金币。在沿途驿站兑换了当地货币。
+        </div>
+        <div class="event-counter counter-positive">即时获得</div>
+        <div class="card-footer"><span>正面事件</span><span>×2张</span></div>
+    </div>
+
+    <div class="card event-positive">
+        <div class="card-header">
+            <span class="card-title">驿站歇息</span>
+        </div>
+        <div class="event-icon">🏨</div>
+        <div class="event-effect">
+            <strong>效果：</strong>免费获得1名护卫。在官方驿站遇到了愿意随行的武士。
+        </div>
+        <div class="event-counter counter-positive">护卫招募</div>
+        <div class="card-footer"><span>正面事件</span><span>×2张</span></div>
+    </div>
+
+    <div class="card event-positive">
+        <div class="card-header">
+            <span class="card-title">矿石发现</span>
+        </div>
+        <div class="event-icon">⛏️</div>
+        <div class="event-effect">
+            <strong>效果：</strong>从宝石牌堆中免费抽取1张随机宝石商品卡。
+        </div>
+        <div class="event-counter counter-positive">获得商品</div>
+        <div class="card-footer"><span>正面事件</span><span>×1张</span></div>
+    </div>
+
+    <div class="card event-positive">
+        <div class="card-header">
+            <span class="card-title">香料集市</span>
+        </div>
+        <div class="event-icon">🧺</div>
+        <div class="event-effect">
+            <strong>效果：</strong>免费从香料牌堆中抽取2张香料商品卡。
+        </div>
+        <div class="event-counter counter-positive">获得商品</div>
+        <div class="card-footer"><span>正面事件</span><span>×1张</span></div>
+    </div>
+</div>
+
+<!-- ==================== 商队卡 ==================== -->
+<div class="page-break"></div>
+<div class="section-header">
+    <div class="section-title">商队卡（10张）</div>
+</div>
+
+<div class="cards-grid">
+    <div class="card caravan-card">
+        <div class="card-header">
+            <span class="card-title">额外骆驼</span>
+        </div>
+        <div class="caravan-icon">🐪</div>
+        <div class="caravan-effect">
+            <strong>效果：</strong>运输容量永久+2。购买2头骆驼加入商队。
+        </div>
+        <div class="caravan-cost">💰 6金币</div>
+        <div class="card-footer"><span>运输升级</span><span>×3张</span></div>
+    </div>
+
+    <div class="card caravan-card">
+        <div class="card-header">
+            <span class="card-title">骆驼车队</span>
+        </div>
+        <div class="caravan-icon">🐪🫏</div>
+        <div class="caravan-effect">
+            <strong>效果：</strong>运输容量永久+4。组建了一支大型运输车队。
+        </div>
+        <div class="caravan-cost">💰 10金币</div>
+        <div class="card-footer"><span>运输升级</span><span>×2张</span></div>
+    </div>
+
+    <div class="card caravan-card">
+        <div class="card-header">
+            <span class="card-title">武装护卫</span>
+        </div>
+        <div class="caravan-icon">⚔️</div>
+        <div class="caravan-effect">
+            <strong>效果：</strong>立即获得2名护卫。护卫可抵御强盗、减免沙暴。
+        </div>
+        <div class="caravan-cost">💰 8金币</div>
+        <div class="card-footer"><span>安全升级</span><span>×2张</span></div>
+    </div>
+
+    <div class="card caravan-card">
+        <div class="card-header">
+            <span class="card-title">驿站通行证</span>
+        </div>
+        <div class="caravan-icon">📜</div>
+        <div class="caravan-effect">
+            <strong>效果：</strong>移动时不消耗水源，持续2回合。持有官方通行凭证。
+        </div>
+        <div class="caravan-cost">💰 7金币</div>
+        <div class="card-footer"><span>消耗减免</span><span>×1张</span></div>
+    </div>
+
+    <div class="card caravan-card">
+        <div class="card-header">
+            <span class="card-title">快递马匹</span>
+        </div>
+        <div class="caravan-icon">🐎</div>
+        <div class="caravan-effect">
+            <strong>效果：</strong>移动速度永久+1，每回合可多走1段距离。
+        </div>
+        <div class="caravan-cost">💰 9金币</div>
+        <div class="card-footer"><span>速度升级</span><span>×1张</span></div>
+    </div>
+
+    <div class="card caravan-card">
+        <div class="card-header">
+            <span class="card-title">宝藏地图</span>
+        </div>
+        <div class="caravan-icon">🗺️</div>
+        <div class="caravan-effect">
+            <strong>效果：</strong>可查看事件牌堆顶部3张并自由重新排列顺序（使用后弃掉）。
+        </div>
+        <div class="caravan-cost">💰 8金币</div>
+        <div class="card-footer"><span>情报升级</span><span>×1张</span></div>
+    </div>
+</div>
+
+<!-- ==================== 玩家棋子 ==================== -->
+<div class="page-break"></div>
+<div class="section-header">
+    <div class="section-title">玩家棋子（5枚）</div>
+</div>
+
+<div class="player-pawns">
+    <div class="pawn">
+        <div class="pawn-piece pawn-red">🏯</div>
+        <div style="font-size:13px;font-weight:700;color:var(--brown-dark)">玩家1 - 红</div>
+    </div>
+    <div class="pawn">
+        <div class="pawn-piece pawn-blue">🏚️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--brown-dark)">玩家2 - 蓝</div>
+    </div>
+    <div class="pawn">
+        <div class="pawn-piece pawn-green">🌿</div>
+        <div style="font-size:13px;font-weight:700;color:var(--brown-dark)">玩家3 - 绿</div>
+    </div>
+    <div class="pawn">
+        <div class="pawn-piece pawn-yellow">☀️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--brown-dark)">玩家4 - 黄</div>
+    </div>
+    <div class="pawn">
+        <div class="pawn-piece pawn-purple">🌙</div>
+        <div style="font-size:13px;font-weight:700;color:var(--brown-dark)">玩家5 - 紫</div>
+    </div>
+</div>
+
+<!-- ==================== 金币标记 ==================== -->
+<div class="section-header">
+    <div class="section-title">金币标记（120枚）</div>
+</div>
+
+<div class="coins-grid">
+    <!-- 打印40个金币示例（建议打印3份=120枚） -->
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+    <div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div><div class="coin-token">1</div>
+</div>
+<p style="text-align:center;color:var(--brown-light);font-size:13px;margin-top:10px">（每枚 = 1金币，本页共40枚，建议打印3份共120枚）</p>
+
+<!-- ==================== 骆驼标记 ==================== -->
+<div class="section-header">
+    <div class="section-title">骆驼标记（20枚）</div>
+</div>
+
+<div class="camel-tokens">
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+    <div class="camel-token">🐪</div><div class="camel-token">🐪</div>
+</div>
+<p style="text-align:center;color:var(--brown-light);font-size:13px;margin-top:10px">（每枚代表1头骆驼的运输空间，建议打印1份=20枚）</p>
+
+<!-- ==================== 水源和护卫标记 ==================== -->
+<div class="tokens-section">
+    <div class="section-header">
+        <div class="section-title">水源标记（30枚）与 护卫标记（20枚）</div>
+    </div>
+
+    <div class="tokens-grid">
+        <!-- 水源标记 -->
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#81D4FA,#2E86AB)">💧</div>
+            <div class="token-label">水源</div>
+            <div class="token-count">×30枚</div>
+        </div>
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#81D4FA,#2E86AB)">💧</div>
+            <div class="token-label">水源</div>
+            <div class="token-count">×30枚</div>
+        </div>
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#81D4FA,#2E86AB)">💧</div>
+            <div class="token-label">水源</div>
+            <div class="token-count">×30枚</div>
+        </div>
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#81D4FA,#2E86AB)">💧</div>
+            <div class="token-label">水源</div>
+            <div class="token-count">×30枚</div>
+        </div>
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#81D4FA,#2E86AB)">💧</div>
+            <div class="token-label">水源</div>
+            <div class="token-count">×30枚</div>
+        </div>
+        <!-- 护卫标记 -->
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#A1887F,#5D4037)">🛡️</div>
+            <div class="token-label">护卫</div>
+            <div class="token-count">×20枚</div>
+        </div>
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#A1887F,#5D4037)">🛡️</div>
+            <div class="token-label">护卫</div>
+            <div class="token-count">×20枚</div>
+        </div>
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#A1887F,#5D4037)">🛡️</div>
+            <div class="token-label">护卫</div>
+            <div class="token-count">×20枚</div>
+        </div>
+        <div class="token">
+            <div class="token-circle" style="background:linear-gradient(135deg,#A1887F,#5D4037)">🛡️</div>
+            <div class="token-label">护卫</div>
+            <div class="token-count">×20枚</div>
+        </div>
+    </div>
+    <p style="text-align:center;color:var(--brown-light);font-size:13px;margin-top:15px">（上排：水源标记样式 | 下排：护卫标记样式。按数量打印即可）</p>
+</div>
+
+<!-- ==================== 卡牌背面 ==================== -->
+<div class="section-header">
+    <div class="section-title">卡牌背面（统一设计）</div>
+</div>
+
+<div class="card-back-section">
+    <div class="card-back">
+        <div class="card-back-pattern">🐪</div>
+        <div class="card-back-text">丝绸之路</div>
+    </div>
+    <p style="text-align:center;color:var(--brown-light);font-size:13px;margin-top:15px">（所有商品卡、城市卡、事件卡、商队卡统一使用此背面设计）</p>
+</div>
+
+<!-- ==================== 快速参考卡 ==================== -->
+<div class="page-break"></div>
+<div class="section-header">
+    <div class="section-title">快速参考卡</div>
+</div>
+
+<div class="quick-ref">
+    <div class="quick-ref-title">丝绸之路 - 快速参考</div>
+
+    <div class="ref-section">
+        <div class="ref-section-title">每回合流程</div>
+        <div class="ref-flow">
+            <div class="flow-step">阶段一<br>城市行动</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">阶段二<br>旅途移动</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">阶段三<br>回合结束</div>
+        </div>
+    </div>
+
+    <div class="ref-section">
+        <div class="ref-section-title">城市行动选项</div>
+        <table class="ref-table">
+            <tr><th>行动</th><th>说明</th><th>限制</th></tr>
+            <tr><td>🛒 交易</td><td>买入/卖出商品卡</td><td>每回合最多4张（巴格达6张）</td></tr>
+            <tr><td>🏗️ 商队</td><td>购买商队升级卡</td><td>每回合最多1张</td></tr>
+            <tr><td>📜 特殊</td><td>使用城市特殊能力</td><td>每回合限1次</td></tr>
+        </table>
+    </div>
+
+    <div class="ref-section">
+        <div class="ref-section-title">商品价格速查</div>
+        <table class="ref-table">
+            <tr><th>商品</th><th>长安买</th><th>敦煌</th><th>高昌</th><th>撒马尔罕</th><th>波斯</th><th>巴格达</th><th>罗马卖</th></tr>
+            <tr><td>🧣 丝绸</td><td>3-5</td><td>卖4</td><td>卖6</td><td>卖8</td><td>卖12</td><td>卖14</td><td>15</td></tr>
+            <tr><td>🌶️ 香料</td><td>—</td><td>买2</td><td>卖5</td><td>卖8</td><td>卖10</td><td>卖13</td><td>—</td></tr>
+            <tr><td>💎 宝石</td><td>4</td><td>—</td><td>买4</td><td>卖9</td><td>卖11</td><td>卖14</td><td>11</td></tr>
+            <tr><td>🍵 茶叶</td><td>2-3</td><td>卖4</td><td>买5</td><td>卖9</td><td>—</td><td>—</td><td>12</td></tr>
+        </table>
+    </div>
+
+    <div class="ref-section">
+        <div class="ref-section-title">品质加成</div>
+        <table class="ref-table">
+            <tr><th>品质</th><th>卖出加成</th><th>变质免疫</th></tr>
+            <tr><td>★ 普通</td><td>+0金币</td><td>否</td></tr>
+            <tr><td>★★ 优质</td><td>+1金币</td><td>否</td></tr>
+            <tr><td>★★★ 极品</td><td>+3金币</td><td>是</td></tr>
+        </table>
+    </div>
+
+    <div class="ref-section">
+        <div class="ref-section-title">路线风险与消耗</div>
+        <table class="ref-table">
+            <tr><th>路线</th><th>距离</th><th>风险</th><th>水源消耗</th></tr>
+            <tr><td>长安→敦煌（主路）</td><td>2回合</td><td>🟡 低</td><td>1/回合</td></tr>
+            <tr><td>敦煌→高昌→撒马尔罕（北路）</td><td>3回合</td><td>🟠 中</td><td>2/回合</td></tr>
+            <tr><td>敦煌→于阗→撒马尔罕（南路）</td><td>3回合</td><td>🔴 高</td><td>2/回合</td></tr>
+            <tr><td>撒马尔罕→波斯波利斯</td><td>2回合</td><td>🟠 中</td><td>1/回合</td></tr>
+            <tr><td>波斯波利斯→巴格达</td><td>2回合</td><td>🟠 中</td><td>2/回合</td></tr>
+            <tr><td>巴格达→罗马</td><td>2回合</td><td>🟢 低</td><td>1/回合</td></tr>
+        </table>
+    </div>
+
+    <div class="ref-section">
+        <div class="ref-section-title">胜利条件</div>
+        <table class="ref-table">
+            <tr><th>条件</th><th>说明</th></tr>
+            <tr><td>🏆 基本胜利</td><td>率先积累80金币</td></tr>
+            <tr><td>⏱️ 回合限制</td><td>15回合后金币最多者胜</td></tr>
+            <tr><td>🤝 大师商人</td><td>持有3张不同★★★商品直接获胜</td></tr>
+        </table>
+    </div>
+
+    <div class="ref-section">
+        <div class="ref-section-title">护卫应对表</div>
+        <table class="ref-table">
+            <tr><th>事件</th><th>无护卫</th><th>1名护卫</th><th>2名护卫</th></tr>
+            <tr><td>🌪️ 沙暴</td><td>跳过1回合+损失1水</td><td>损失1水</td><td>损失1水</td></tr>
+            <tr><td>🗡️ 强盗</td><td>失1商品或付5金</td><td>失1商品或付5金</td><td>击退！无损失</td></tr>
+            <tr><td>🤒 疾病</td><td>损失2水+移动-1</td><td>损失2水+移动-1</td><td>损失1水</td></tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

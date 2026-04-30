@@ -33,6 +33,16 @@ boardgames/
 | [时间特工](category/party/time-agents/README.md) | 派对 | 4-8人 | 20-40分钟 | 中等 |
 | [星际贸易站](category/strategy/starport-trader/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等/困难 |
 | [文明密语](category/card/civilization-cipher/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
+| [赛博迷宫](category/strategy/cyber-maze/README.md) | 策略 | 2-4人 | 40-60分钟 | 中等 |
+| [法庭风云](category/party/courtroom-drama/README.md) | 派对 | 2-8人 | 30-60分钟 | 简单 |
+| [疯狂厨房](category/party/crazy-kitchen/README.md) | 派对 | 3-8人 | 20-30分钟 | 简单 |
+| [植物大战](category/strategy/garden-wars/README.md) | 策略 | 2-4人 | 40-60分钟 | 中等 |
+| [魔法集市](category/card/magic-market/README.md) | 卡牌 | 2-4人 | 30-45分钟 | 中等 |
+| [星际矿工](category/cooperative/space-miners/README.md) | 合作 | 1-5人 | 45-60分钟 | 中等 |
+| [深海探险](category/cooperative/abyss-dive/README.md) | 合作 | 2-5人 | 45-60分钟 | 中等偏难 |
+| [丝绸之路](category/strategy/silk-road/README.md) | 策略 | 2-5人 | 60-90分钟 | 中等偏难 |
+| [岛屿求生](category/cooperative/island-survival/README.md) | 合作 | 1-4人 | 45-75分钟 | 中等 |
+| [妖怪公寓](category/card/yokai-apartments/README.md) | 卡牌 | 2-5人 | 25-40分钟 | 简单偏中 |
 
 ## 添加新桌游
 
