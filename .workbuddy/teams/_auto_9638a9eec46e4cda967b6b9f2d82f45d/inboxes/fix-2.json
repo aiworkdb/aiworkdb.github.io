@@ -1,0 +1,11 @@
+[
+  {
+    "id": "shutdown-1777559547364",
+    "from": "fix-2",
+    "to": "fix-2",
+    "type": "shutdown_request",
+    "content": "{\"type\":\"shutdown_request\",\"request_id\":\"shutdown-1777559547364\",\"reason\":\"任务完成，已向 team-lead 汇报结果。\",\"from\":\"fix-2\",\"timestamp\":\"2026-04-30T14:32:27.364Z\"}",
+    "timestamp": "2026-04-30T14:32:27.364Z",
+    "read": true
+  }
+]

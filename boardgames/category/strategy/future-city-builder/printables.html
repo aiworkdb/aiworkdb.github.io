@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>未来城市建造师 - 打印道具</title>
+<style>
+  body { font-family: sans-serif; background: #f0f8ff; padding: 20px; }
+  .page-header { text-align: center; padding: 20px; background: linear-gradient(135deg, #0040a0, #0080c0, #00c0e0); color: white; margin-bottom: 20px; border-radius: 12px; }
+  .print-hint { background: #f0f8ff; border: 2px solid #0080c0; padding: 15px; margin: 20px auto; max-width: 700px; border-radius: 8px; }
+  .section-title { text-align: center; font-size: 1.3em; font-weight: bold; margin: 25px 0 15px; border-bottom: 2px solid #0080c0; padding-bottom: 8px; color: #0040a0; }
+  .cards-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 15px 0; }
+  .tile { width: 100px; height: 100px; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 2px solid; cursor: default; }
+  .card { width: 120px; min-height: 140px; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 2px solid; }
+  .tile-home { background: #fff0f0; border-color: #ff4040; }
+  .tile-biz { background: #fff8f0; border-color: #ff8000; }
+  .tile-ind { background: #f0f0f0; border-color: #808080; }
+  .tile-park { background: #f0fff0; border-color: #00a000; }
+  .tile-trans { background: #f0f0ff; border-color: #4040ff; }
+  .card-tech { background: #fff0ff; border-color: #8000ff; }
+  .card-event { background: #fffff0; border-color: #c0a000; }
+  .emoji { font-size: 2em; }
+  .name { font-size: 0.7em; font-weight: bold; text-align: center; }
+  .desc { font-size: 0.6em; text-align: center; line-height: 1.3; }
+  .page-footer { text-align: center; padding: 20px; margin-top: 30px; background: #0040a0; color: white; border-radius: 12px; }
+  @media print { .print-hint { display: none; } * { -webkit-print-color-adjust: exact !important; } }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🏙️ 未来城市建造师</h1>
+  <div>Future City Builder — 打印道具合集</div>
+</div>
+
+<div class="print-hint">
+  <strong>重要打印提示</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置最小边距</li>
+    <li>打印时勾选"背景图形"，否则卡牌颜色不显示</li>
+    <li>区域板块建议使用厚卡纸打印</li>
+  </ul>
+  <button onclick="window.print()" style="padding: 8px 20px; background: #0080c0; color: white; border: none; border-radius: 6px; cursor: pointer;">立即打印</button>
+</div>
+
+<div class="section-title">🏠 区域板块（示例）</div>
+<div class="cards-grid">
+  <div class="tile tile-home">
+    <div class="emoji">🏠</div>
+    <div class="name">住宅区</div>
+    <div class="desc">产出：人才+1</div>
+  </div>
+  <div class="tile tile-biz">
+    <div class="emoji">🏢</div>
+    <div class="name">商业区</div>
+    <div class="desc">产出：资金+1</div>
+  </div>
+  <div class="tile tile-ind">
+    <div class="emoji">🏭</div>
+    <div class="name">工业区</div>
+    <div class="desc">产出：建材+1</div>
+  </div>
+  <div class="tile tile-park">
+    <div class="emoji">🌳</div>
+    <div class="name">公园区</div>
+    <div class="desc">宜居+1</div>
+  </div>
+  <div class="tile tile-trans">
+    <div class="emoji">🚇</div>
+    <div class="name">交通区</div>
+    <div class="desc">相邻+1</div>
+  </div>
+</div>
+
+<div class="section-title">🧠 科技升级卡（示例）</div>
+<div class="cards-grid">
+  <div class="card card-tech">
+    <div class="emoji">🧠</div>
+    <div class="name">智能化</div>
+    <div class="desc">区域效率+1<br>成本：资金3</div>
+  </div>
+  <div class="card card-tech">
+    <div class="emoji">💡</div>
+    <div class="name">绿色科技</div>
+    <div class="desc">环保指数+1<br>成本：资金2</div>
+  </div>
+  <div class="card card-tech">
+    <div class="emoji">🔋</div>
+    <div class="name">量子科技</div>
+    <div class="desc">产出翻倍<br>成本：资金5</div>
+  </div>
+</div>
+
+<div class="section-title">🌧️ 事件卡（示例）</div>
+<div class="cards-grid">
+  <div class="card card-event">
+    <div class="emoji">🌧️</div>
+    <div class="name">暴雨</div>
+    <div class="desc">工业区停产1回合</div>
+  </div>
+  <div class="card card-event">
+    <div class="emoji">🎉</div>
+    <div class="name">城市庆典</div>
+    <div class="desc">商业区资金+2</div>
+  </div>
+  <div class="card card-event">
+    <div class="emoji">📉</div>
+    <div class="name">经济衰退</div>
+    <div class="desc">所有资金-2</div>
+  </div>
+</div>
+
+<div class="page-footer">
+  🏙️ 未来城市建造师 Future City Builder | 打印道具 v1.0 | 2026-05-01
+</div>
+
+</body>
+</html>

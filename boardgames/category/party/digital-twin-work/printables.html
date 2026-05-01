@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数字分身上班记 - 打印道具</title>
+<style>
+  body { font-family: sans-serif; background: #f8f0ff; padding: 20px; }
+  .page-header { text-align: center; padding: 20px; background: linear-gradient(135deg, #4a0080, #8000c0); color: white; margin-bottom: 20px; border-radius: 12px; }
+  .print-hint { background: #fff0f8; border: 2px solid #8000c0; padding: 15px; margin: 20px auto; max-width: 700px; border-radius: 8px; }
+  .section-title { text-align: center; font-size: 1.3em; font-weight: bold; margin: 25px 0 15px; border-bottom: 2px solid #8000c0; padding-bottom: 8px; color: #4a0080; }
+  .cards-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 15px 0; }
+  .card { width: 120px; min-height: 140px; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 2px solid; }
+  .card-task { background: #fff8f0; border-color: #ff6000; }
+  .card-skill { background: #f0fff0; border-color: #00a000; }
+  .card-crash { background: #fff0f0; border-color: #dc143c; }
+  .card-emoji { font-size: 2em; margin-top: 8px; }
+  .card-name { font-size: 0.7em; font-weight: bold; text-align: center; }
+  .card-desc { font-size: 0.6em; text-align: center; line-height: 1.3; }
+  .page-footer { text-align: center; padding: 20px; margin-top: 30px; background: #4a0080; color: white; border-radius: 12px; }
+  @media print { .print-hint { display: none; } * { -webkit-print-color-adjust: exact !important; } }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🤖 数字分身上班记</h1>
+  <div>Digital Twin Work — 打印道具合集</div>
+</div>
+
+<div class="print-hint">
+  <strong>重要打印提示</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置最小边距</li>
+    <li>打印时勾选"背景图形"，否则卡牌颜色不显示</li>
+    <li>卡牌建议使用卡纸打印，更耐用</li>
+  </ul>
+  <button onclick="window.print()" style="padding: 8px 20px; background: #8000c0; color: white; border: none; border-radius: 6px; cursor: pointer;">立即打印</button>
+</div>
+
+<div class="section-title">📧 任务卡（示例）</div>
+<div class="cards-grid">
+  <div class="card card-task">
+    <div class="card-emoji">📧</div>
+    <div class="card-name">紧急邮件</div>
+    <div class="card-desc">时间成本：1<br>KPI：+1</div>
+  </div>
+  <div class="card card-task">
+    <div class="card-emoji">📅</div>
+    <div class="card-name">视频会议</div>
+    <div class="card-desc">时间成本：3<br>KPI：+2</div>
+  </div>
+  <div class="card card-task">
+    <div class="card-emoji">📊</div>
+    <div class="card-name">周报撰写</div>
+    <div class="card-desc">时间成本：2<br>KPI：+1</div>
+  </div>
+  <div class="card card-task">
+    <div class="card-emoji">💻</div>
+    <div class="card-name">代码审查</div>
+    <div class="card-desc">时间成本：4<br>KPI：+3</div>
+  </div>
+</div>
+
+<div class="section-title">⚡ 技能卡（示例）</div>
+<div class="cards-grid">
+  <div class="card card-skill">
+    <div class="card-emoji">⚡</div>
+    <div class="card-name">快捷键</div>
+    <div class="card-desc">任务时间-1</div>
+  </div>
+  <div class="card card-skill">
+    <div class="card-emoji">📋</div>
+    <div class="card-name">外包</div>
+    <div class="card-desc">任务直接完成</div>
+  </div>
+  <div class="card card-skill">
+    <div class="card-emoji">🕐</div>
+    <div class="card-name">加班</div>
+    <div class="card-desc">时间+2</div>
+  </div>
+</div>
+
+<div class="section-title">💥 崩溃卡（示例）</div>
+<div class="cards-grid">
+  <div class="card card-crash">
+    <div class="card-emoji">💥</div>
+    <div class="card-name">蓝屏死机</div>
+    <div class="card-desc">丢失1个任务</div>
+  </div>
+  <div class="card card-crash">
+    <div class="card-emoji">😵</div>
+    <div class="card-name">过热关机</div>
+    <div class="card-desc">本回合无法行动</div>
+  </div>
+  <div class="card card-crash">
+    <div class="card-emoji">🔌</div>
+    <div class="card-name">网络断开</div>
+    <div class="card-desc">任务时间+2</div>
+  </div>
+</div>
+
+<div class="page-footer">
+  🤖 数字分身上班记 Digital Twin Work | 打印道具 v1.0 | 2026-05-01
+</div>
+
+</body>
+</html>

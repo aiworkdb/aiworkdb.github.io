@@ -1,0 +1,88 @@
+{
+  "name": "_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+  "leadAgentId": "9638a9eec46e4cda967b6b9f2d82f45d",
+  "workspacePath": "d:\\mycode\\aiworkdb.github.io",
+  "createdAt": "2026-04-30T14:14:15.105Z",
+  "options": {
+    "workspacePath": "d:\\mycode\\aiworkdb.github.io",
+    "isAutoTeam": true
+  },
+  "members": [
+    {
+      "memberId": "team-lead@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "team-lead",
+      "role": "Team Lead - coordinates the team and interacts with the user"
+    },
+    {
+      "memberId": "worker-1@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-1",
+      "role": "创建桌游: 法庭风云"
+    },
+    {
+      "memberId": "worker-2@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-2",
+      "role": "创建桌游: 星际矿工"
+    },
+    {
+      "memberId": "worker-3@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-3",
+      "role": "创建桌游: 植物大战"
+    },
+    {
+      "memberId": "worker-4@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-4",
+      "role": "创建桌游: 魔法集市"
+    },
+    {
+      "memberId": "worker-5@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-5",
+      "role": "创建桌游: 深海探险"
+    },
+    {
+      "memberId": "worker-6@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-6",
+      "role": "创建桌游: 赛博迷宫"
+    },
+    {
+      "memberId": "worker-7@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-7",
+      "role": "创建桌游: 疯狂厨房"
+    },
+    {
+      "memberId": "worker-8@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-8",
+      "role": "创建桌游: 丝绸之路"
+    },
+    {
+      "memberId": "worker-9@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-9",
+      "role": "创建桌游: 岛屿求生"
+    },
+    {
+      "memberId": "worker-10@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "worker-10",
+      "role": "创建桌游: 妖怪公寓"
+    },
+    {
+      "memberId": "fix-1@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "fix-1",
+      "role": "补printables: 法庭风云"
+    },
+    {
+      "memberId": "fix-2@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "fix-2",
+      "role": "补printables: 疯狂厨房"
+    },
+    {
+      "memberId": "fix-3@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "fix-3",
+      "role": "补printables: 妖怪公寓"
+    },
+    {
+      "memberId": "fix-4@_auto_9638a9eec46e4cda967b6b9f2d82f45d",
+      "name": "fix-4",
+      "role": "补printables: 深海探险+岛屿+丝路"
+    }
+  ],
+  "isAutoTeam": true
+}
