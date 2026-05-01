@@ -54,6 +54,11 @@ boardgames/
 | [基因编辑实验室](category/cooperative/gene-lab/README.md) | 合作 | 1-4人 | 45-60分钟 | 中等 |
 | [数字分身上班记](category/party/digital-twin-work/README.md) | 派对 | 3-6人 | 20-30分钟 | 简单 |
 | [未来城市建造师](category/strategy/future-city-builder/README.md) | 策略 | 2-4人 | 45-60分钟 | 中等 |
+| [神魔封神录](category/card/myth-clash/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
+| [动物城大侦探](category/party/animal-detective/README.md) | 派对 | 3-6人 | 20-35分钟 | 简单 |
+| [恐龙领地](category/strategy/dino-territory/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
+| [绝密行动](category/cooperative/secret-mission/README.md) | 合作 | 1-5人 | 40-60分钟 | 中等偏难 |
+| [极速争霸](category/strategy/speed-rivals/README.md) | 策略 | 2-5人 | 40-60分钟 | 中等 |
 
 ## 添加新桌游
 
