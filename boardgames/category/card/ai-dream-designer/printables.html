@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI梦境设计师 - 打印道具</title>
+<style>
+  /* ============ 基础重置 ============ */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #0a0a2e;
+    color: #e0e0ff;
+    line-height: 1.5;
+  }
+
+  /* ============ 打印背景支持 ============ */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .print-hint {
+      display: none !important;
+    }
+    .section-title {
+      page-break-before: always;
+    }
+    .section-title:first-of-type {
+      page-break-before: avoid;
+    }
+    body {
+      background: white;
+    }
+    .page-header {
+      page-break-after: avoid;
+    }
+  }
+
+  /* ============ 页头 ============ */
+  .page-header {
+    text-align: center;
+    padding: 30px 20px 20px;
+    background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 40%, #2a2a6e 70%, #3a3a8e 100%);
+    color: #e0e0ff;
+    margin-bottom: 30px;
+    border-bottom: 4px solid #8b8bff;
+  }
+  .page-header h1 {
+    font-size: 2.4em;
+    letter-spacing: 0.08em;
+    text-shadow: 2px 2px 8px rgba(139,139,255,0.5);
+    margin-bottom: 8px;
+  }
+  .page-header .subtitle {
+    font-size: 1em;
+    opacity: 0.85;
+    letter-spacing: 0.12em;
+  }
+
+  /* ============ 打印提示 ============ */
+  .print-hint {
+    background: linear-gradient(135deg, #e0e0ff, #f0f0ff);
+    border: 2px solid #8b8bff;
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin: 0 auto 32px;
+    max-width: 760px;
+    box-shadow: 0 2px 12px rgba(139,139,255,0.2);
+    color: #1a1a4e;
+  }
+  .print-hint strong {
+    font-size: 1.05em;
+    color: #2a2a8e;
+  }
+  .print-hint ul {
+    margin-top: 10px;
+    padding-left: 24px;
+  }
+  .print-hint li {
+    margin-bottom: 6px;
+    font-size: 0.95em;
+  }
+  .print-hint .btn-print {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 28px;
+    background: linear-gradient(135deg, #2a2a8e, #8b8bff);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    box-shadow: 0 3px 8px rgba(42,42,142,0.35);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .print-hint .btn-print:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(42,42,142,0.45);
+  }
+
+  /* ============ 区块标题 ============ */
+  .section-title {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    padding: 14px 0 10px;
+    margin: 32px auto 20px;
+    max-width: 760px;
+    border-bottom: 3px solid currentColor;
+  }
+  .section-title.scene { color: #8b8bff; border-color: #8b8bff; }
+  .section-title.emotion { color: #ff8b8b; border-color: #ff8b8b; }
+  .section-title.element { color: #8bff8b; border-color: #8bff8b; }
+  .section-title.order { color: #ffff8b; border-color: #ffff8b; }
+  .section-title.special { color: #ff8bff; border-color: #ff8bff; }
+  .section-title.board { color: #8bffff; border-color: #8bffff; }
+  .section-title.token { color: #ffb88b; border-color: #ffb88b; }
+
+  /* ============ 卡牌网格 ============ */
+  .cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    max-width: 820px;
+    margin: 0 auto 12px;
+    padding: 0 16px;
+  }
+
+  /* ============ 场景卡通用 ============ */
+  .scene-card {
+    width: 110px;
+    min-height: 155px;
+    border-radius: 12px;
+    padding: 10px 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    position: relative;
+    border: 3px solid;
+    cursor: default;
+    transition: transform 0.15s;
+  }
+  .scene-card:hover { transform: translateY(-3px); }
+
+  /* 场景卡系列颜色 */
+  .card-nature {
+    background: linear-gradient(160deg, #e0f0e0 0%, #a0d0a0 60%, #60b060 100%);
+    border-color: #40a040;
+    color: #1a3a1a;
+  }
+  .card-urban {
+    background: linear-gradient(160deg, #e0e0f0 0%, #a0a0d0 60%, #6060a0 100%);
+    border-color: #404080;
+    color: #1a1a3a;
+  }
+  .card-fantasy {
+    background: linear-gradient(160deg, #f0e0ff 0%, #d0a0ff 60%, #9060d0 100%);
+    border-color: #7040b0;
+    color: #2a1a4a;
+  }
+
+  .card-type-badge {
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    font-size: 0.58em;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    border-radius: 6px;
+    color: white;
+    white-space: nowrap;
+  }
+  .badge-nature { background: #40a040; }
+  .badge-urban { background: #404080; }
+  .badge-fantasy { background: #7040b0; }
+
+  .card-rarity {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    font-size: 0.6em;
+    font-weight: bold;
+  }
+  .rarity-common { color: #808080; }
+  .rarity-rare { color: #ff8000; }
+  .rarity-legend { color: #ff0000; }
+
+  .card-emoji {
+    font-size: 2.6em;
+    margin-top: 18px;
+    filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.25));
+  }
+  .card-name {
+    font-size: 0.68em;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.3;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-mood {
+    font-size: 0.6em;
+    color: #4a4a4a;
+    text-align: center;
+  }
+
+  /* ============ 情绪卡 ============ */
+  .emotion-card {
+    width: 110px;
+    min-height: 155px;
+    border-radius: 12px;
+    padding: 10px 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    position: relative;
+    border: 3px solid;
+    cursor: default;
+    transition: transform 0.15s;
+  }
+  .emotion-card:hover { transform: translateY(-3px); }
+
+  .card-joy {
+    background: linear-gradient(160deg, #fff0e0 0%, #ffe0a0 60%, #ffc040 100%);
+    border-color: #ff8000;
+    color: #4a2800;
+  }
+  .card-calm {
+    background: linear-gradient(160deg, #e0fff0 0%, #a0ffe0 60%, #40ffc0 100%);
+    border-color: #00c080;
+    color: #004030;
+  }
+  .card-fear {
+    background: linear-gradient(160deg, #f0e0f0 0%, #e0a0e0 60%, #c040c0 100%);
+    border-color: #800080;
+    color: #2a002a;
+  }
+
+  .card-intensity {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    font-size: 0.65em;
+    font-weight: bold;
+    color: #800000;
+  }
+
+  .card-emotion-emoji {
+    font-size: 2.8em;
+    margin-top: 16px;
+    filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.25));
+  }
+  .card-emotion-name {
+    font-size: 0.72em;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .card-emotion-score {
+    font-size: 1.3em;
+    font-weight: 900;
+    margin-top: 2px;
+  }
+  .card-joy .card-emotion-score { color: #ff6000; }
+  .card-calm .card-emotion-score { color: #008060; }
+  .card-fear .card-emotion-score { color: #800060; }
+
+  /* ============ 元素卡 ============ */
+  .element-card {
+    width: 110px;
+    min-height: 155px;
+    border-radius: 12px;
+    padding: 10px 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    position: relative;
+    border: 3px solid;
+    cursor: default;
+    transition: transform 0.15s;
+  }
+  .element-card:hover { transform: translateY(-3px); }
+
+  .card-action {
+    background: linear-gradient(160deg, #fff8e0 0%, #ffe8a0 60%, #ffd040 100%);
+    border-color: #c0a000;
+    color: #4a3a00;
+  }
+  .card-magic {
+    background: linear-gradient(160deg, #f0e0ff 0%, #d0a0ff 60%, #a060e0 100%);
+    border-color: #8040c0;
+    color: #2a0040;
+  }
+  .card-narrative {
+    background: linear-gradient(160deg, #e0f0ff 0%, #a0d0ff 60%, #40a0e0 100%);
+    border-color: #0060c0;
+    color: #00204a;
+  }
+
+  .element-type-badge {
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    font-size: 0.58em;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    border-radius: 6px;
+    color: white;
+  }
+  .badge-action { background: #c0a000; }
+  .badge-magic { background: #8040c0; }
+  .badge-narrative { background: #0060c0; }
+
+  .card-element-emoji {
+    font-size: 2.6em;
+    margin-top: 18px;
+    filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.25));
+  }
+  .card-element-name {
+    font-size: 0.68em;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.3;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-element-desc {
+    font-size: 0.6em;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* ============ 订单卡 ============ */
+  .order-card {
+    width: 180px;
+    min-height: 200px;
+    border-radius: 12px;
+    background: linear-gradient(155deg, #fff8e0, #ffe8c0, #ffd8a0);
+    border: 3px solid #c0a040;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    position: relative;
+    color: #4a2800;
+  }
+  .order-header {
+    font-size: 0.72em;
+    font-weight: bold;
+    color: #c08000;
+    border-bottom: 1.5px dashed #c0a040;
+    padding-bottom: 4px;
+    text-align: center;
+  }
+  .order-client-type {
+    font-size: 0.85em;
+    font-weight: bold;
+    text-align: center;
+    color: #8b4513;
+  }
+  .order-req {
+    font-size: 0.62em;
+    line-height: 1.5;
+  }
+  .order-req strong {
+    color: #c08000;
+  }
+  .order-bonus {
+    font-size: 0.6em;
+    color: #008000;
+    line-height: 1.4;
+  }
+  .order-penalty {
+    font-size: 0.6em;
+    color: #c00000;
+    line-height: 1.4;
+  }
+  .order-base-score {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 900;
+    color: #c08000;
+    border-top: 1.5px dashed #c0a040;
+    padding-top: 4px;
+    margin-top: auto;
+  }
+
+  /* ============ 特效卡 ============ */
+  .special-card {
+    width: 110px;
+    min-height: 155px;
+    border-radius: 12px;
+    background: linear-gradient(155deg, #2a1a4a 0%, #4a2a7a 50%, #6a3a9a 100%);
+    border: 3px solid #a060ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 8px 12px;
+    gap: 6px;
+    box-shadow: 0 4px 18px rgba(100,0,200,0.4);
+    position: relative;
+    color: #e0d0ff;
+  }
+  .special-title {
+    font-size: 0.75em;
+    font-weight: bold;
+    color: #e0d0ff;
+    text-align: center;
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .special-emoji {
+    font-size: 2.5em;
+    filter: drop-shadow(0 0 8px rgba(160,96,255,0.7));
+  }
+  .special-desc {
+    font-size: 0.6em;
+    color: #c0a0ff;
+    text-align: center;
+    line-height: 1.4;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .special-badge {
+    font-size: 0.52em;
+    background: rgba(192,160,255,0.25);
+    color: #e0d0ff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ============ 设计师面板 ============ */
+  .designer-board {
+    width: 720px;
+    background: linear-gradient(155deg, #1a1a3e, #2a2a5e);
+    border: 3px solid #8b8bff;
+    border-radius: 16px;
+    padding: 18px 22px;
+    box-shadow: 0 4px 18px rgba(100,100,255,0.2);
+    margin: 0 auto 18px;
+    color: #e0e0ff;
+  }
+  .board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #8b8bff;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .board-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #c0c0ff;
+    letter-spacing: 0.06em;
+  }
+  .board-player-name {
+    font-size: 0.85em;
+    color: #8b8bff;
+    border-bottom: 1.5px solid #8b8bff;
+    min-width: 120px;
+    padding-bottom: 2px;
+  }
+  .board-slots {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    justify-content: center;
+  }
+  .board-slot {
+    width: 100px;
+    height: 90px;
+    border-radius: 8px;
+    border: 1.5px dashed #8b8bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.62em;
+    color: #8080c0;
+    text-align: center;
+    line-height: 1.3;
+    background: rgba(139,139,255,0.06);
+  }
+  .board-score-row {
+    border-top: 2px dashed #8b8bff;
+    padding-top: 10px;
+    margin-top: 8px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .score-box {
+    text-align: center;
+  }
+  .score-box-label {
+    font-size: 0.65em;
+    color: #8b8bff;
+  }
+  .score-box-value {
+    border-bottom: 1.5px solid #8b8bff;
+    min-width: 56px;
+    height: 28px;
+  }
+
+  /* ============ 满意度代币 ============ */
+  .token-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    max-width: 720px;
+    margin: 0 auto 12px;
+    padding: 0 16px;
+  }
+  .satisfaction-token {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffe8a0, #ffc040, #c08000);
+    border: 3px solid #c08000;
+    box-shadow: 0 3px 10px rgba(192,128,0,0.4), inset 0 1px 3px rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    font-weight: 900;
+    color: #4a2800;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+  }
+
+  /* ============ 页脚 ============ */
+  .page-footer {
+    text-align: center;
+    padding: 24px 20px;
+    margin-top: 32px;
+    background: linear-gradient(90deg, #0a0a2e, #1a1a4e, #0a0a2e);
+    color: #8b8bff;
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<!-- 页头 -->
+<div class="page-header">
+  <h1>🎨 AI梦境设计师</h1>
+  <div class="subtitle">AI Dream Designer — 打印道具合集 | Print-and-Play Components</div>
+</div>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong>以充分利用页面空间</li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"（Background Graphics）</strong>选项，否则卡牌颜色不显示</li>
+    <li>场景卡、情绪卡、元素卡建议使用<strong>卡纸</strong>打印，更耐用</li>
+    <li>打印后用剪刀或裁纸刀沿边框裁剪，可用透明胶袋套住保护</li>
+    <li>满意度代币建议打印后粘贴在厚纸板上再裁剪</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 立即打印</button>
+</div>
+
+<!-- ====== 场景卡 - 自然系列 ====== -->
+<div class="section-title scene">🌿 场景卡 - 自然系列（共 20 张）</div>
+<div class="cards-grid">
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🌲</div>
+    <div class="card-name">密林深处</div>
+    <div class="card-mood">适配：宁静/刺激</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🌊</div>
+    <div class="card-name">海底世界</div>
+    <div class="card-mood">适配：宁静/奇异</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🏔️</div>
+    <div class="card-name">雪山之巅</div>
+    <div class="card-mood">适配：宁静/刺激</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🏝️</div>
+    <div class="card-name">热带岛屿</div>
+    <div class="card-mood">适配：愉悦/宁静</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🌋</div>
+    <div class="card-name">火山内部</div>
+    <div class="card-mood">适配：刺激/奇异</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🌅</div>
+    <div class="card-name">日出云海</div>
+    <div class="card-mood">适配：愉悦/宁静</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🍄</div>
+    <div class="card-name">蘑菇森林</div>
+    <div class="card-mood">适配：愉悦/奇异</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🦋</div>
+    <div class="card-name">蝴蝶谷</div>
+    <div class="card-mood">适配：愉悦/宁静</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🐉</div>
+    <div class="card-name">龙息峡谷</div>
+    <div class="card-mood">适配：刺激/奇异</div>
+  </div>
+
+  <div class="scene-card card-nature">
+    <span class="card-type-badge badge-nature">自然</span>
+    <span class="card-rarity rarity-legend">●●● 传说</span>
+    <div class="card-emoji">🌈</div>
+    <div class="card-name">彩虹瀑布</div>
+    <div class="card-mood">适配：愉悦/奇异</div>
+  </div>
+
+</div>
+
+<!-- ====== 场景卡 - 都市系列 ====== -->
+<div class="section-title scene">🏙️ 场景卡 - 都市系列（共 20 张）</div>
+<div class="cards-grid">
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🏙️</div>
+    <div class="card-name">未来都市</div>
+    <div class="card-mood">适配：刺激/奇异</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🌉</div>
+    <div class="card-name">霓虹夜景</div>
+    <div class="card-mood">适配：愉悦/刺激</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🏰</div>
+    <div class="card-name">童话城堡</div>
+    <div class="card-mood">适配：愉悦/宁静</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🎡</div>
+    <div class="card-name">梦幻游乐园</div>
+    <div class="card-mood">适配：愉悦/刺激</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🏛️</div>
+    <div class="card-name">远古神庙</div>
+    <div class="card-mood">适配：宁静/刺激</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🗼</div>
+    <div class="card-name">天空之塔</div>
+    <div class="card-mood">适配：刺激/奇异</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🎪</div>
+    <div class="card-name">移动马戏团</div>
+    <div class="card-mood">适配：愉悦/奇异</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-rare">●● 稀有</span>
+    <div class="card-emoji">🏪</div>
+    <div class="card-name">魔法商店街</div>
+    <div class="card-mood">适配：愉悦/奇异</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-common">● 普通</span>
+    <div class="card-emoji">🚇</div>
+    <div class="card-name">地铁迷宫</div>
+    <div class="card-mood">适配：刺激/奇异</div>
+  </div>
+
+  <div class="scene-card card-urban">
+    <span class="card-type-badge badge-urban">都市</span>
+    <span class="card-rarity rarity-legend">●●● 传说</span>
+    <div class="card-emoji">🎢</div>
+    <div class="card-name">云端过山车</div>
+    <div class="card-mood">适配：刺激/愉悦</div>
+  </div>
+
+</div>
+
+<!-- ====== 情绪卡 - 愉悦系 ====== -->
+<div class="section-title emotion">😊 情绪卡 - 愉悦系（共 15 张）</div>
+<div class="cards-grid">
+
+  <div class="emotion-card card-joy">
+    <span class="card-intensity">★★★</span>
+    <div class="card-emotion-emoji">😊</div>
+    <div class="card-emotion-name">纯粹欢愉</div>
+    <div class="card-emotion-score">+3 分</div>
+  </div>
+
+  <div class="emotion-card card-joy">
+    <span class="card-intensity">★★★★</span>
+    <div class="card-emotion-emoji">😂</div>
+    <div class="card-emotion-name">爆笑狂欢</div>
+    <div class="card-emotion-score">+4 分</div>
+  </div>
+
+  <div class="emotion-card card-joy">
+    <span class="card-intensity">★★★★★</span>
+    <div class="card-emotion-emoji">🤩</div>
+    <div class="card-emotion-name">热恋状态</div>
+    <div class="card-emotion-score">+5 分</div>
+  </div>
+
+  <div class="emotion-card card-joy">
+    <span class="card-intensity">★★★</span>
+    <div class="card-emotion-emoji">🥰</div>
+    <div class="card-emotion-name">满足幸福</div>
+    <div class="card-emotion-score">+3 分</div>
+  </div>
+
+  <div class="emotion-card card-joy">
+    <span class="card-intensity">★★★★</span>
+    <div class="card-emotion-emoji">😍</div>
+    <div class="card-emotion-name">狂喜时刻</div>
+    <div class="card-emotion-score">+4 分</div>
+  </div>
+
+</div>
+
+<!-- ====== 情绪卡 - 宁静系 ====== -->
+<div class="section-title emotion">😌 情绪卡 - 宁静系（共 15 张）</div>
+<div class="cards-grid">
+
+  <div class="emotion-card card-calm">
+    <span class="card-intensity">★★★</span>
+    <div class="card-emotion-emoji">😌</div>
+    <div class="card-emotion-name">深度宁静</div>
+    <div class="card-emotion-score">+3 分</div>
+  </div>
+
+  <div class="emotion-card card-calm">
+    <span class="card-intensity">★★★</span>
+    <div class="card-emotion-emoji">🧘‍♀️</div>
+    <div class="card-emotion-name">冥想境界</div>
+    <div class="card-emotion-score">+3 分</div>
+  </div>
+
+  <div class="emotion-card card-calm">
+    <span class="card-intensity">★★★★</span>
+    <div class="card-emotion-emoji">🌿</div>
+    <div class="card-emotion-name">自然融合</div>
+    <div class="card-emotion-score">+4 分</div>
+  </div>
+
+  <div class="emotion-card card-calm">
+    <span class="card-intensity">★★★</span>
+    <div class="card-emotion-emoji">🍵</div>
+    <div class="card-emotion-name">茶道时光</div>
+    <div class="card-emotion-score">+3 分</div>
+  </div>
+
+  <div class="emotion-card card-calm">
+    <span class="card-intensity">★★★★★</span>
+    <div class="card-emotion-emoji">💤</div>
+    <div class="card-emotion-name">安眠深睡</div>
+    <div class="card-emotion-score">+5 分</div>
+  </div>
+
+</div>
+
+<!-- ====== 情绪卡 - 刺激系 ====== -->
+<div class="section-title emotion">😱 情绪卡 - 刺激系（共 10 张）</div>
+<div class="cards-grid">
+
+  <div class="emotion-card card-fear">
+    <span class="card-intensity">★★★★★</span>
+    <div class="card-emotion-emoji">😱</div>
+    <div class="card-emotion-name">极致恐惧</div>
+    <div class="card-emotion-score">+5 分</div>
+  </div>
+
+  <div class="emotion-card card-fear">
+    <span class="card-intensity">★★★★</span>
+    <div class="card-emotion-emoji">🤯</div>
+    <div class="card-emotion-name">惊喜爆炸</div>
+    <div class="card-emotion-score">+4 分</div>
+  </div>
+
+  <div class="emotion-card card-fear">
+    <span class="card-intensity">★★★</span>
+    <div class="card-emotion-emoji">🎢</div>
+    <div class="card-emotion-name">过山车感</div>
+    <div class="card-emotion-score">+3 分</div>
+  </div>
+
+  <div class="emotion-card card-fear">
+    <span class="card-intensity">★★★★</span>
+    <div class="card-emotion-emoji">💫</div>
+    <div class="card-emotion-name">眩晕迷离</div>
+    <div class="card-emotion-score">+4 分</div>
+  </div>
+
+  <div class="emotion-card card-fear">
+    <span class="card-intensity">★★★</span>
+    <div class="card-emotion-emoji">⚡</div>
+    <div class="card-emotion-name">闪电冲击</div>
+    <div class="card-emotion-score">+3 分</div>
+  </div>
+
+</div>
+
+<!-- ====== 元素卡 - 动作元素 ====== -->
+<div class="section-title element">🦅 元素卡 - 动作元素（共 20 张）</div>
+<div class="cards-grid">
+
+  <div class="element-card card-action">
+    <span class="element-type-badge badge-action">动作</span>
+    <div class="card-element-emoji">🦅</div>
+    <div class="card-element-name">自由飞行</div>
+    <div class="card-element-desc">可与任何场景组合</div>
+  </div>
+
+  <div class="element-card card-action">
+    <span class="element-type-badge badge-action">动作</span>
+    <div class="card-element-emoji">🏃‍♂️</div>
+    <div class="card-element-name">极速奔跑</div>
+    <div class="card-element-desc">场景卡效果+1分</div>
+  </div>
+
+  <div class="element-card card-action">
+    <span class="element-type-badge badge-action">动作</span>
+    <div class="card-element-emoji">🏊‍♀️</div>
+    <div class="card-element-name">深海游泳</div>
+    <div class="card-element-desc">适配海洋场景</div>
+  </div>
+
+  <div class="element-card card-action">
+    <span class="element-type-badge badge-action">动作</span>
+    <div class="card-element-emoji">🧗‍♀️</div>
+    <div class="card-element-name">悬崖攀爬</div>
+    <div class="card-element-desc">适配山脉场景</div>
+  </div>
+
+  <div class="element-card card-action">
+    <span class="element-type-badge badge-action">动作</span>
+    <div class="card-element-emoji">🎯</div>
+    <div class="card-element-name">精准射箭</div>
+    <div class="card-element-desc">可触发隐藏加分</div>
+  </div>
+
+</div>
+
+<!-- ====== 元素卡 - 魔法元素 ====== -->
+<div class="section-title element">🔮 元素卡 - 魔法元素（共 15 张）</div>
+<div class="cards-grid">
+
+  <div class="element-card card-magic">
+    <span class="element-type-badge badge-magic">魔法</span>
+    <div class="card-element-emoji">🔮</div>
+    <div class="card-element-name">时空扭曲</div>
+    <div class="card-element-desc">重新抽订单卡</div>
+  </div>
+
+  <div class="element-card card-magic">
+    <span class="element-type-badge badge-magic">魔法</span>
+    <div class="card-element-emoji">🪄</div>
+    <div class="card-element-name">魔法咒语</div>
+    <div class="card-element-desc">情绪卡效果翻倍</div>
+  </div>
+
+  <div class="element-card card-magic">
+    <span class="element-type-badge badge-magic">魔法</span>
+    <div class="card-element-emoji">✨</div>
+    <div class="card-element-name">光辉闪耀</div>
+    <div class="card-element-desc">所有卡牌+1分</div>
+  </div>
+
+  <div class="element-card card-magic">
+    <span class="element-type-badge badge-magic">魔法</span>
+    <div class="card-element-emoji">🪄</div>
+    <div class="card-element-name">变形术</div>
+    <div class="card-element-desc">场景卡可当情绪卡</div>
+  </div>
+
+</div>
+
+<!-- ====== 元素卡 - 叙事元素 ====== -->
+<div class="section-title element">🎭 元素卡 - 叙事元素（共 15 张）</div>
+<div class="cards-grid">
+
+  <div class="element-card card-narrative">
+    <span class="element-type-badge badge-narrative">叙事</span>
+    <div class="card-element-emoji">🎭</div>
+    <div class="card-element-name">戏剧冲突</div>
+    <div class="card-element-desc">增加梦境故事性</div>
+  </div>
+
+  <div class="element-card card-narrative">
+    <span class="element-type-badge badge-narrative">叙事</span>
+    <div class="card-element-emoji">🎵</div>
+    <div class="card-element-name">音乐盛宴</div>
+    <div class="card-element-desc">所有卡牌+1分</div>
+  </div>
+
+  <div class="element-card card-narrative">
+    <span class="element-type-badge badge-narrative">叙事</span>
+    <div class="card-element-emoji">📖</div>
+    <div class="card-element-name">故事叙述</div>
+    <div class="card-element-desc">可复制对手元素</div>
+  </div>
+
+  <div class="element-card card-narrative">
+    <span class="element-type-badge badge-narrative">叙事</span>
+    <div class="card-element-emoji">🎬</div>
+    <div class="card-element-name">电影场景</div>
+    <div class="card-element-desc">可连接两个场景</div>
+  </div>
+
+</div>
+
+<!-- ====== 客户订单卡 ====== -->
+<div class="section-title order">📋 客户订单卡（共 30 张）</div>
+<div class="cards-grid">
+
+  <div class="order-card">
+    <div class="order-header">📋 客户订单 #1</div>
+    <div class="order-client-type">客户类型：探险家</div>
+    <div class="order-req">
+      <strong>需求场景：</strong>自然系列<br>
+      <strong>需求情绪：</strong>刺激系
+    </div>
+    <div class="order-bonus">🎁 额外偏好：含有「飞行」元素 +3分</div>
+    <div class="order-penalty">⚠️ 禁忌元素：无</div>
+    <div class="order-base-score">基础分：12分</div>
+  </div>
+
+  <div class="order-card">
+    <div class="order-header">📋 客户订单 #2</div>
+    <div class="order-client-type">客户类型：冥想者</div>
+    <div class="order-req">
+      <strong>需求场景：</strong>自然系列<br>
+      <strong>需求情绪：</strong>宁静系
+    </div>
+    <div class="order-bonus">🎁 额外偏好：含有「音乐」元素 +3分</div>
+    <div class="order-penalty">⚠️ 禁忌元素：含有「闪电」元素 -5分</div>
+    <div class="order-base-score">基础分：10分</div>
+  </div>
+
+  <div class="order-card">
+    <div class="order-header">📋 客户订单 #3</div>
+    <div class="order-client-type">客户类型：浪漫派</div>
+    <div class="order-req">
+      <strong>需求场景：</strong>都市系列<br>
+      <strong>需求情绪：</strong>愉悦系
+    </div>
+    <div class="order-bonus">🎁 额外偏好：含有「彩虹」元素 +5分</div>
+    <div class="order-penalty">⚠️ 禁忌元素：无</div>
+    <div class="order-base-score">基础分：15分</div>
+  </div>
+
+  <div class="order-card">
+    <div class="order-header">📋 客户订单 #4</div>
+    <div class="order-client-type">客户类型：恐怖迷</div>
+    <div class="order-req">
+      <strong>需求场景：</strong>奇幻系列<br>
+      <strong>需求情绪：</strong>刺激系
+    </div>
+    <div class="order-bonus">🎁 额外偏好：含有「魔法」元素 +4分</div>
+    <div class="order-penalty">⚠️ 禁忌元素：含有「茶道」元素 -3分</div>
+    <div class="order-base-score">基础分：12分</div>
+  </div>
+
+  <div class="order-card">
+    <div class="order-header">📋 客户订单 #5</div>
+    <div class="order-client-type">客户类型：科幻迷</div>
+    <div class="order-req">
+      <strong>需求场景：</strong>奇幻系列<br>
+      <strong>需求情绪：</strong>奇异系
+    </div>
+    <div class="order-bonus">🎁 额外偏好：含有「时间」元素 +4分</div>
+    <div class="order-penalty">⚠️ 禁忌元素：含有「自然」场景 -2分</div>
+    <div class="order-base-score">基础分：14分</div>
+  </div>
+
+</div>
+
+<!-- ====== 特效卡 ====== -->
+<div class="section-title special">🔮 特效卡（共 20 张）</div>
+<div class="cards-grid">
+
+  <!-- 预知未来 ×5 -->
+  <div class="special-card">
+    <div class="special-title">🔮<br>预知未来</div>
+    <div class="special-emoji">🔮</div>
+    <div class="special-desc">提前看下一张订单卡<br>战略调整时机</div>
+    <div class="special-badge">回合开始前使用</div>
+  </div>
+
+  <div class="special-card">
+    <div class="special-title">🔮<br>预知未来</div>
+    <div class="special-emoji">🔮</div>
+    <div class="special-desc">提前看下一张订单卡<br>战略调整时机</div>
+    <div class="special-badge">回合开始前使用</div>
+  </div>
+
+  <!-- 灵感爆发 ×5 -->
+  <div class="special-card">
+    <div class="special-title">✨<br>灵感爆发</div>
+    <div class="special-emoji">✨</div>
+    <div class="special-desc">本回合多抽2张手牌<br>增加组合选择</div>
+    <div class="special-badge">抽牌阶段使用</div>
+  </div>
+
+  <div class="special-card">
+    <div class="special-title">✨<br>灵感爆发</div>
+    <div class="special-emoji">✨</div>
+    <div class="special-desc">本回合多抽2张手牌<br>增加组合选择</div>
+    <div class="special-badge">抽牌阶段使用</div>
+  </div>
+
+  <!-- 梦境融合 ×5 -->
+  <div class="special-card">
+    <div class="special-title">🌈<br>梦境融合</div>
+    <div class="special-emoji">🌈</div>
+    <div class="special-desc">将2张场景卡合并使用<br>创造复合场景</div>
+    <div class="special-badge">设计阶段使用</div>
+  </div>
+
+  <div class="special-card">
+    <div class="special-title">🌈<br>梦境融合</div>
+    <div class="special-emoji">🌈</div>
+    <div class="special-desc">将2张场景卡合并使用<br>创造复合场景</div>
+    <div class="special-badge">设计阶段使用</div>
+  </div>
+
+  <!-- 情绪感染 ×5 -->
+  <div class="special-card">
+    <div class="special-title">🎭<br>情绪感染</div>
+    <div class="special-emoji">🎭</div>
+    <div class="special-desc">复制对手的情绪卡效果<br>战术干扰</div>
+    <div class="special-badge">评分前使用</div>
+  </div>
+
+  <div class="special-card">
+    <div class="special-title">🎭<br>情绪感染</div>
+    <div class="special-emoji">🎭</div>
+    <div class="special-desc">复制对手的情绪卡效果<br>战术干扰</div>
+    <div class="special-badge">评分前使用</div>
+  </div>
+
+</div>
+
+<!-- ====== 设计师面板 ====== -->
+<div class="section-title board">🎨 设计师面板（共 5 张，每人 1 张）</div>
+
+<div class="designer-board">
+  <div class="board-header">
+    <div class="board-title">🎨 AI梦境设计工作室 — 设计师面板</div>
+    <div>设计师姓名：<span class="board-player-name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+  </div>
+  <div style="text-align:center; font-size:0.8em; color:#8b8bff; margin-bottom:12px;">本回合手牌区（最多持有 7 张）</div>
+  <div class="board-slots">
+    <div class="board-slot">手牌 1</div>
+    <div class="board-slot">手牌 2</div>
+    <div class="board-slot">手牌 3</div>
+    <div class="board-slot">手牌 4</div>
+    <div class="board-slot">手牌 5</div>
+    <div class="board-slot">手牌 6</div>
+    <div class="board-slot">手牌 7</div>
+  </div>
+  <div style="text-align:center; font-size:0.8em; color:#8b8bff; margin:12px 0 8px;">已提交梦境区（本回合设计）</div>
+  <div class="board-slots">
+    <div class="board-slot">场景卡</div>
+    <div class="board-slot">情绪卡</div>
+    <div class="board-slot">元素卡1</div>
+    <div class="board-slot">元素卡2</div>
+  </div>
+  <div class="board-score-row">
+    <div class="score-box">
+      <div class="score-box-label">本回合得分</div>
+      <div class="score-box-value"></div>
+    </div>
+    <div class="score-box">
+      <div class="score-box-label">累计总分</div>
+      <div class="score-box-value"></div>
+    </div>
+    <div style="font-size:0.7em; color:#8b8bff; margin-left:auto; text-align:right;">
+      特效卡区（最多3张）<br>
+      ┌──────┐ ┌──────┐ ┌──────┐<br>
+      │      │ │      │ │      │<br>
+      └──────┘ └──────┘ └──────┘
+    </div>
+  </div>
+</div>
+
+<!-- ====== 满意度代币 ====== -->
+<div class="section-title token">🪙 满意度代币（共 50 枚）</div>
+<div class="token-grid">
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">1</div>
+  <div class="satisfaction-token">2</div>
+  <div class="satisfaction-token">2</div>
+  <div class="satisfaction-token">2</div>
+  <div class="satisfaction-token">2</div>
+  <div class="satisfaction-token">2</div>
+  <div class="satisfaction-token">3</div>
+  <div class="satisfaction-token">3</div>
+  <div class="satisfaction-token">3</div>
+  <div class="satisfaction-token">5</div>
+  <div class="satisfaction-token">5</div>
+</div>
+<p style="text-align:center; font-size:0.8em; color:#c08000; margin: 6px 0 18px;">可用硬币或筹码代替，面值为 1/2/3/5 四种</p>
+
+<!-- 页脚 -->
+<div class="page-footer">
+  🎨 AI梦境设计师 AI Dream Designer &nbsp;|&nbsp; 打印道具 v1.0 &nbsp;|&nbsp; 2026-05-01
+  <br>
+  <span style="font-size:0.9em; opacity:0.7;">打印时请勾选「背景图形」，建议卡牌使用卡纸打印</span>
+</div>
+
+</body>
+</html>

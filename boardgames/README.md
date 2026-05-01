@@ -49,6 +49,11 @@ boardgames/
 | [元素对决](category/card/element-clash/README.md) | 卡牌 | 2-4人 | 30-45分钟 | 中等 |
 | [病毒危机](category/cooperative/virus-outbreak/README.md) | 合作 | 1-5人 | 45-60分钟 | 中等 |
 | [蒸汽革命](category/strategy/steam-revolution/README.md) | 策略 | 2-5人 | 60-90分钟 | 中等偏难 |
+| [AI梦境设计师](category/card/ai-dream-designer/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
+| [火星殖民计划](category/strategy/mars-colony/README.md) | 策略 | 1-4人 | 60-90分钟 | 中等偏难 |
+| [基因编辑实验室](category/cooperative/gene-lab/README.md) | 合作 | 1-4人 | 45-60分钟 | 中等 |
+| [数字分身上班记](category/party/digital-twin-work/README.md) | 派对 | 3-6人 | 20-30分钟 | 简单 |
+| [未来城市建造师](category/strategy/future-city-builder/README.md) | 策略 | 2-4人 | 45-60分钟 | 中等 |
 
 ## 添加新桌游
 
