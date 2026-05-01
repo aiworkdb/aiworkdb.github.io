@@ -488,6 +488,7 @@
 
 ### 官方资源
 
+- *打印道具请参考 [printables.html](printables.html) 文件*
 - [GitHub Pages 主页](https://aiworkdb.github.io/)
 - [桌游项目总览](https://aiworkdb.github.io/boardgames/)
 - [开发指南](https://github.com/aiworkdb/aiworkdb.github.io/tree/main/boardgames/development-guide.md)

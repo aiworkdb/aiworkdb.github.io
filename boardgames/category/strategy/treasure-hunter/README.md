@@ -263,3 +263,10 @@ A：先到达的玩家获胜。
 🎯 策略类桌游 | 适合朋友聚会和家庭娱乐
 
 *打印道具请参考 [printables.html](printables.html) 文件*
+
+---
+
+## 🔗 相关链接
+
+- [返回桌游目录](../../../README.md)
+- [桌游开发规范](../../../development-guide.md)
