@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极地探险 - 打印道具</title>
+<style>
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint {
+        display: none;
+    }
+    .page {
+        page-break-after: always;
+    }
+    .card {
+        page-break-inside: avoid;
+    }
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: #f0f4f8;
+    padding: 20px;
+}
+.print-hint {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.print-hint strong {
+    color: #856404;
+}
+.print-hint ul {
+    margin: 10px 0 0 20px;
+}
+.print-hint li {
+    margin: 5px 0;
+}
+.page {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+h1 {
+    text-align: center;
+    color: #1a365d;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+h2 {
+    color: #2d3748;
+    border-bottom: 2px solid #4299e1;
+    padding-bottom: 8px;
+    margin: 20px 0 15px 0;
+}
+.section {
+    margin-bottom: 30px;
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+.card {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    background: white;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.card-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.card-icon {
+    font-size: 32px;
+    margin: 8px 0;
+}
+.card-desc {
+    font-size: 11px;
+    color: #666;
+    margin-top: 5px;
+}
+.map-container {
+    text-align: center;
+    margin: 20px 0;
+}
+.hex-map {
+    display: inline-block;
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+    padding: 30px;
+    border-radius: 12px;
+    border: 3px solid #0097a7;
+}
+.hex-row {
+    display: flex;
+    justify-content: center;
+    margin: 3px 0;
+}
+.hex {
+    width: 60px;
+    height: 52px;
+    margin: 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    position: relative;
+}
+.hex-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #e3f2fd;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.hex-content {
+    position: relative;
+    z-index: 1;
+}
+.terrain-glacier .hex-bg { background: #e8eaf6; }
+.terrain-tundra .hex-bg { background: #c8e6c9; }
+.terrain-mountain .hex-bg { background: #b0bec5; }
+.terrain-ocean .hex-bg { background: #81d4fa; }
+.terrain-base .hex-bg { background: #fff9c4; }
+.player-piece {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    margin: 5px;
+}
+.score-track {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+}
+.score-box {
+    width: 35px;
+    height: 35px;
+    border: 2px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: white;
+}
+.resources-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 15px 0;
+}
+.resource-card {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+}
+.weather-card {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    min-height: 100px;
+}
+.task-card {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    min-height: 110px;
+}
+.explore-card {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    min-height: 100px;
+}
+.bg-food { background: #fff8e1; }
+.bg-fuel { background: #ffebee; }
+.bg-gear { background: #e8f5e9; }
+.bg-science { background: #e3f2fd; }
+.bg-weather-sunny { background: #fffde7; }
+.bg-weather-snow { background: #e1f5fe; }
+.bg-weather-blizzard { background: #eceff1; }
+.bg-weather-day { background: #fff9c4; }
+.bg-weather-night { background: #263238; color: white; }
+.bg-weather-fog { background: #f5f5f5; }
+@media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+        <li>卡牌和棋子建议使用<strong>卡纸</strong>打印</li>
+        <li>地图建议使用普通A4纸打印</li>
+    </ul>
+</div>
+
+<!-- 第1页：游戏地图 -->
+<div class="page">
+    <h1>🧊 极地探险 - 游戏地图</h1>
+    <div class="map-container">
+        <div class="hex-map">
+            <!-- 第1行 -->
+            <div class="hex-row">
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+            </div>
+            <!-- 第2行 -->
+            <div class="hex-row">
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-tundra"><div class="hex-bg"></div><div class="hex-content">🌲</div></div>
+                <div class="hex terrain-mountain"><div class="hex-bg"></div><div class="hex-content">🏔️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-ocean"><div class="hex-bg"></div><div class="hex-content">🌊</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+            </div>
+            <!-- 第3行 -->
+            <div class="hex-row">
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-tundra"><div class="hex-bg"></div><div class="hex-content">🌲</div></div>
+                <div class="hex terrain-mountain"><div class="hex-bg"></div><div class="hex-content">🏔️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-ocean"><div class="hex-bg"></div><div class="hex-content">🌊</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+            </div>
+            <!-- 第4行（中央基地） -->
+            <div class="hex-row">
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-tundra"><div class="hex-bg"></div><div class="hex-content">🌲</div></div>
+                <div class="hex terrain-mountain"><div class="hex-bg"></div><div class="hex-content">🏔️</div></div>
+                <div class="hex terrain-base"><div class="hex-bg"></div><div class="hex-content">🏠基地</div></div>
+                <div class="hex terrain-ocean"><div class="hex-bg"></div><div class="hex-content">🌊</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+            </div>
+            <!-- 第5行 -->
+            <div class="hex-row">
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-tundra"><div class="hex-bg"></div><div class="hex-content">🌲</div></div>
+                <div class="hex terrain-mountain"><div class="hex-bg"></div><div class="hex-content">🏔️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-ocean"><div class="hex-bg"></div><div class="hex-content">🌊</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+            </div>
+            <!-- 第6行 -->
+            <div class="hex-row">
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-tundra"><div class="hex-bg"></div><div class="hex-content">🌲</div></div>
+                <div class="hex terrain-mountain"><div class="hex-bg"></div><div class="hex-content">🏔️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-ocean"><div class="hex-bg"></div><div class="hex-content">🌊</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+            </div>
+            <!-- 第7行 -->
+            <div class="hex-row">
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+                <div class="hex terrain-glacier"><div class="hex-bg"></div><div class="hex-content">❄️</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <h2>地形说明</h2>
+        <div class="card-grid">
+            <div class="card">❄️<br><strong>冰川</strong><br>移动2🍖</div>
+            <div class="card">🌲<br><strong>苔原</strong><br>移动1🍖，得1🍖</div>
+            <div class="card">🏔️<br><strong>山脉</strong><br>移动3🍖+1🎒，得1🎒</div>
+            <div class="card">🌊<br><strong>海洋</strong><br>不可步行</div>
+            <div class="card">🏠<br><strong>基地</strong><br>安全区，恢复资源</div>
+        </div>
+    </div>
+</div>
+
+<!-- 第2页：资源卡 -->
+<div class="page">
+    <h1>🧊 极地探险 - 资源卡（共80张）</h1>
+    <h2>🍖 食物卡（20张）</h2>
+    <div class="card-grid">
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+        <div class="card bg-food"><div class="card-icon">🍖</div><div class="card-title">食物</div><div class="card-desc">维持生存<br>每格移动消耗1</div></div>
+    </div>
+</div>
+
+<div class="page">
+    <h1>🧊 极地探险 - 资源卡（续）</h1>
+    <h2>⛽ 燃料卡（20张）</h2>
+    <div class="card-grid">
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+        <div class="card bg-fuel"><div class="card-icon">⛽</div><div class="card-title">燃料</div><div class="card-desc">取暖驱寒<br>抵御暴风雪</div></div>
+    </div>
+</div>
+
+<div class="page">
+    <h1>🧊 极地探险 - 资源卡（续）</h1>
+    <h2>🎒 装备卡（20张）</h2>
+    <div class="card-grid">
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+        <div class="card bg-gear"><div class="card-icon">🎒</div><div class="card-title">装备</div><div class="card-desc">减少移动消耗<br>探索新区域</div></div>
+    </div>
+</div>
+
+<div class="page">
+    <h1>🧊 极地探险 - 资源卡（续）</h1>
+    <h2>🔬 科研点卡（20张）</h2>
+    <div class="card-grid">
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+        <div class="card bg-science"><div class="card-icon">🔬</div><div class="card-title">科研点</div><div class="card-desc">完成任务兑换分数<br>每3点=1分</div></div>
+    </div>
+</div>
+
+<!-- 第6页：天气卡 -->
+<div class="page">
+    <h1>🧊 极地探险 - 天气卡（12张）</h1>
+    <div class="card-grid">
+        <div class="weather-card bg-weather-sunny"><div class="card-icon">☀️</div><div class="card-title">晴朗</div><div class="card-desc">变化值:1<br>无负面影响<br>正常行动</div></div>
+        <div class="weather-card bg-weather-sunny"><div class="card-icon">☀️</div><div class="card-title">晴朗</div><div class="card-desc">变化值:1<br>无负面影响<br>正常行动</div></div>
+        <div class="weather-card bg-weather-snow"><div class="card-icon">🌨️</div><div class="card-title">下雪</div><div class="card-desc">变化值:2<br>移动消耗+1<br>可用⛽抵消</div></div>
+        <div class="weather-card bg-weather-snow"><div class="card-icon">🌨️</div><div class="card-title">下雪</div><div class="card-desc">变化值:2<br>移动消耗+1<br>可用⛽抵消</div></div>
+        <div class="weather-card bg-weather-blizzard"><div class="card-icon">❄️🌨️</div><div class="card-title">暴风雪</div><div class="card-desc">变化值:3<br>无法移动<br>损失1🍖</div></div>
+        <div class="weather-card bg-weather-blizzard"><div class="card-icon">❄️🌨️</div><div class="card-title">暴风雪</div><div class="card-desc">变化值:3<br>无法移动<br>损失1🍖</div></div>
+        <div class="weather-card bg-weather-day"><div class="card-icon">🌞</div><div class="card-title">极昼</div><div class="card-desc">变化值:2<br>可连续行动2次<br>抓住机会！</div></div>
+        <div class="weather-card bg-weather-day"><div class="card-icon">🌞</div><div class="card-title">极昼</div><div class="card-desc">变化值:2<br>可连续行动2次<br>抓住机会！</div></div>
+        <div class="weather-card bg-weather-night"><div class="card-icon">🌑</div><div class="card-title">极夜</div><div class="card-desc">变化值:4<br>无法探索新区域<br>返回基地</div></div>
+        <div class="weather-card bg-weather-night"><div class="card-icon">🌑</div><div class="card-title">极夜</div><div class="card-desc">变化值:4<br>无法探索新区域<br>返回基地</div></div>
+        <div class="weather-card bg-weather-fog"><div class="card-icon">🌫️</div><div class="card-title">冰雾</div><div class="card-desc">变化值:3<br>骰子检定<br>否则原地停留</div></div>
+        <div class="weather-card bg-weather-fog"><div class="card-icon">🌫️</div><div class="card-title">冰雾</div><div class="card-desc">变化值:3<br>骰子检定<br>否则原地停留</div></div>
+    </div>
+</div>
+
+<!-- 第7页：任务卡 -->
+<div class="page">
+    <h1>🧊 极地探险 - 任务卡（20张）</h1>
+    <div class="card-grid">
+        <div class="task-card"><div class="card-icon">🗺️</div><div class="card-title">地理测绘</div><div class="card-desc">探索8个新区域<br>━━━━━<br>奖励:3🔬+2分</div></div>
+        <div class="task-card"><div class="card-icon">🗺️</div><div class="card-title">地理测绘</div><div class="card-desc">探索8个新区域<br>━━━━━<br>奖励:3🔬+2分</div></div>
+        <div class="task-card"><div class="card-icon">🐻</div><div class="card-title">野生动物</div><div class="card-desc">收集3个🍖+2🎒<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🐻</div><div class="card-title">野生动物</div><div class="card-desc">收集3个🍖+2🎒<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🌡️</div><div class="card-title">气象观测</div><div class="card-desc">经历3种不同天气<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🌡️</div><div class="card-title">气象观测</div><div class="card-desc">经历3种不同天气<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🏺</div><div class="card-title">考古发现</div><div class="card-desc">到达遗迹格(❄️)<br>━━━━━<br>奖励:4🔬+3分</div></div>
+        <div class="task-card"><div class="card-icon">🏺</div><div class="card-title">考古发现</div><div class="card-desc">到达遗迹格(❄️)<br>━━━━━<br>奖励:4🔬+3分</div></div>
+        <div class="task-card"><div class="card-icon">🔬</div><div class="card-title">极地科考</div><div class="card-desc">建立3个研究站<br>━━━━━<br>奖励:5🔬+4分</div></div>
+        <div class="task-card"><div class="card-icon">🔬</div><div class="card-title">极地科考</div><div class="card-desc">建立3个研究站<br>━━━━━<br>奖励:5🔬+4分</div></div>
+        <div class="task-card"><div class="card-icon">🗺️</div><div class="card-title">地理测绘</div><div class="card-desc">探索8个新区域<br>━━━━━<br>奖励:3🔬+2分</div></div>
+        <div class="task-card"><div class="card-icon">🐻</div><div class="card-title">野生动物</div><div class="card-desc">收集3个🍖+2🎒<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🌡️</div><div class="card-title">气象观测</div><div class="card-desc">经历3种不同天气<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🏺</div><div class="card-title">考古发现</div><div class="card-desc">到达遗迹格(❄️)<br>━━━━━<br>奖励:4🔬+3分</div></div>
+        <div class="task-card"><div class="card-icon">🔬</div><div class="card-title">极地科考</div><div class="card-desc">建立3个研究站<br>━━━━━<br>奖励:5🔬+4分</div></div>
+        <div class="task-card"><div class="card-icon">🗺️</div><div class="card-title">地理测绘</div><div class="card-desc">探索8个新区域<br>━━━━━<br>奖励:3🔬+2分</div></div>
+        <div class="task-card"><div class="card-icon">🐻</div><div class="card-title">野生动物</div><div class="card-desc">收集3个🍖+2🎒<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🌡️</div><div class="card-title">气象观测</div><div class="card-desc">经历3种不同天气<br>━━━━━<br>奖励:2🔬+1分</div></div>
+        <div class="task-card"><div class="card-icon">🏺</div><div class="card-title">考古发现</div><div class="card-desc">到达遗迹格(❄️)<br>━━━━━<br>奖励:4🔬+3分</div></div>
+        <div class="task-card"><div class="card-icon">🔬</div><div class="card-title">极地科考</div><div class="card-desc">建立3个研究站<br>━━━━━<br>奖励:5🔬+4分</div></div>
+    </div>
+</div>
+
+<!-- 第8页：探险卡 -->
+<div class="page">
+    <h1>🧊 极地探险 - 探险卡（15张）</h1>
+    <div class="card-grid">
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">📦</div><div class="card-title">发现补给</div><div class="card-desc">获得2张资源卡<br>(任选类型)</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">📦</div><div class="card-title">发现补给</div><div class="card-desc">获得2张资源卡<br>(任选类型)</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">📦</div><div class="card-title">发现补给</div><div class="card-desc">获得2张资源卡<br>(任选类型)</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">📦</div><div class="card-title">发现补给</div><div class="card-desc">获得2张资源卡<br>(任选类型)</div></div>
+        <div class="explore-card" style="background:#ffebee"><div class="card-icon">❄️🌨️</div><div class="card-title">遭遇暴风雪</div><div class="card-desc">损失1🍖<br>退回上一格</div></div>
+        <div class="explore-card" style="background:#ffebee"><div class="card-icon">❄️🌨️</div><div class="card-title">遭遇暴风雪</div><div class="card-desc">损失1🍖<br>退回上一格</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">🦌</div><div class="card-title">发现快捷路径</div><div class="card-desc">下次移动消耗-1</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">🦌</div><div class="card-title">发现快捷路径</div><div class="card-desc">下次移动消耗-1</div></div>
+        <div class="explore-card" style="background:#ffebee"><div class="card-icon">🔧</div><div class="card-title">装备损坏</div><div class="card-desc">丢弃1张🎒装备卡</div></div>
+        <div class="explore-card" style="background:#ffebee"><div class="card-icon">🔧</div><div class="card-title">装备损坏</div><div class="card-desc">丢弃1张🎒装备卡</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">💡</div><div class="card-title">科研突破</div><div class="card-desc">获得2🔬科研点</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">💡</div><div class="card-title">科研突破</div><div class="card-desc">获得2🔬科研点</div></div>
+        <div class="explore-card" style="background:#ffebee"><div class="card-icon">🐻❄️</div><div class="card-title">野生动物袭击</div><div class="card-desc">损失2🍖</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">💡</div><div class="card-title">科研突破</div><div class="card-desc">获得2🔬科研点</div></div>
+        <div class="explore-card" style="background:#e8f5e9"><div class="card-icon">🦌</div><div class="card-title">发现快捷路径</div><div class="card-desc">下次移动消耗-1</div></div>
+    </div>
+</div>
+
+<!-- 第9页：玩家棋子与计分板 -->
+<div class="page">
+    <h1>🧊 极地探险 - 玩家棋子与计分板</h1>
+    <h2>玩家棋子（4颗）</h2>
+    <div style="text-align:center; margin: 20px 0;">
+        <div class="player-piece" style="background:#e53e3e;">红</div>
+        <div class="player-piece" style="background:#3182ce;">蓝</div>
+        <div class="player-piece" style="background:#38a169;">绿</div>
+        <div class="player-piece" style="background:#d69e2e;">黄</div>
+    </div>
+    <div style="margin-top:30px;">
+        <h2>计分板（0-50分）</h2>
+        <div class="score-track">
+            <div class="score-box">0</div>
+            <div class="score-box">1</div>
+            <div class="score-box">2</div>
+            <div class="score-box">3</div>
+            <div class="score-box">4</div>
+            <div class="score-box">5</div>
+            <div class="score-box">6</div>
+            <div class="score-box">7</div>
+            <div class="score-box">8</div>
+            <div class="score-box">9</div>
+            <div class="score-box">10</div>
+            <div class="score-box">12</div>
+            <div class="score-box">14</div>
+            <div class="score-box">16</div>
+            <div class="score-box">18</div>
+            <div class="score-box">20</div>
+            <div class="score-box">22</div>
+            <div class="score-box">24</div>
+            <div class="score-box">26</div>
+            <div class="score-box">28</div>
+            <div class="score-box">30</div>
+            <div class="score-box">35</div>
+            <div class="score-box">40</div>
+            <div class="score-box">45</div>
+            <div class="score-box">50</div>
+        </div>
+    </div>
+    <div style="margin-top:30px; padding:20px; border:2px solid #333; border-radius:8px;">
+        <h2>天气标记（6个）</h2>
+        <div class="card-grid">
+            <div class="weather-card bg-weather-sunny"><div class="card-icon">☀️</div>晴朗(1)</div>
+            <div class="weather-card bg-weather-snow"><div class="card-icon">🌨️</div>下雪(2)</div>
+            <div class="weather-card bg-weather-blizzard"><div class="card-icon">❄️🌨️</div>暴风雪(3)</div>
+            <div class="weather-card bg-weather-day"><div class="card-icon">🌞</div>极昼(2)</div>
+            <div class="weather-card bg-weather-night"><div class="card-icon">🌑</div>极夜(4)</div>
+            <div class="weather-card bg-weather-fog"><div class="card-icon">🌫️</div>冰雾(3)</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

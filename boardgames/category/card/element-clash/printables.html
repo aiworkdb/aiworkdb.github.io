@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>元素对决 - 打印道具</title>
+<style>
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint {
+        display: none;
+    }
+    .page {
+        page-break-after: always;
+    }
+    .card {
+        page-break-inside: avoid;
+    }
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 20px;
+}
+.print-hint {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    color: #856404;
+}
+.print-hint strong { color: #856404; }
+.print-hint ul { margin: 10px 0 0 20px; }
+.print-hint li { margin: 5px 0; }
+.page {
+    background: #16213e;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+h1 {
+    text-align: center;
+    color: #e94560;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+h2 {
+    color: #e94560;
+    border-bottom: 2px solid #e94560;
+    padding-bottom: 8px;
+    margin: 20px 0 15px 0;
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+.card {
+    border: 2px solid #444;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    position: relative;
+}
+.card-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+.card-icon {
+    font-size: 32px;
+    margin: 6px 0;
+}
+.card-desc {
+    font-size: 11px;
+    color: #ddd;
+    margin-top: 4px;
+    line-height: 1.3;
+}
+.card-level {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.4);
+}
+.card-attack {
+    position: absolute;
+    bottom: 5px;
+    left: 8px;
+    font-size: 11px;
+    font-weight: bold;
+}
+.card-cost {
+    position: absolute;
+    bottom: 5px;
+    right: 8px;
+    font-size: 11px;
+    color: #a78bfa;
+}
+/* 元素色彩 */
+.bg-fire { background: linear-gradient(135deg, #dc2626 0%, #f97316 100%); border-color: #f97316; }
+.bg-water { background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%); border-color: #06b6d4; }
+.bg-wood { background: linear-gradient(135deg, #16a34a 0%, #84cc16 100%); border-color: #84cc16; }
+.bg-metal { background: linear-gradient(135deg, #6b7280 0%, #d1d5db 100%); border-color: #d1d5db; color: #333; }
+.bg-earth { background: linear-gradient(135deg, #92400e 0%, #d97706 100%); border-color: #d97706; }
+.bg-spell { background: linear-gradient(135deg, #7c3aed 0%, #c084fc 100%); border-color: #c084fc; }
+.relation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+.relation-table th, .relation-table td {
+    border: 1px solid #444;
+    padding: 8px;
+    text-align: center;
+}
+.relation-table th {
+    background: #0f3460;
+    color: #e94560;
+}
+.relation-table td {
+    background: #1a1a2e;
+}
+.hp-card {
+    border: 3px solid #e94560;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 10px;
+    display: inline-block;
+    text-align: center;
+    width: 200px;
+}
+.hp-bar {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    margin-top: 8px;
+}
+.hp-pip {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #e94560;
+    border-radius: 3px;
+    background: #1a1a2e;
+}
+.mana-token {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #c084fc);
+    border: 2px solid #a78bfa;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+    margin: 5px;
+}
+@media print {
+    body { background: white; color: #333; padding: 0; }
+    .page { background: white; box-shadow: none; margin: 0; }
+    .card-desc { color: #666; }
+    h2 { color: #333; border-color: #666; }
+    .relation-table th { background: #eee; color: #333; }
+    .relation-table td { background: white; }
+}
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+        <li>元素卡建议使用<strong>卡纸</strong>打印，颜色区分元素类型</li>
+        <li>法力标记建议用硬币或豆子代替</li>
+    </ul>
+</div>
+
+<!-- 第1页：元素克制关系图 -->
+<div class="page">
+    <h1>⚡ 元素对决 - 元素克制关系图</h1>
+    <div style="text-align:center; margin: 20px 0;">
+        <div style="display:inline-block; background:#0f3460; padding:30px; border-radius:16px; border:2px solid #e94560;">
+            <div style="font-size:40px; text-align:center;">
+                <div style="margin-bottom:10px;">🔥 火</div>
+                <div style="display:flex; justify-content:space-between; padding:0 20px;">
+                    <span>🌿 木 ←克─</span>
+                    <span>─克→ ⚔️ 金</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:0 20px; margin-top:15px;">
+                    <span>🪨 土 ←克─</span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div style="margin-top:10px;">💧 水</div>
+                <div style="font-size:14px; margin-top:10px;">火克木 · 木克土 · 土克水 · 水克火 · 金克木 · 火克金</div>
+            </div>
+        </div>
+    </div>
+    <h2>相生组合技</h2>
+    <table class="relation-table">
+        <tr><th>组合</th><th>名称</th><th>效果</th></tr>
+        <tr><td>🌿+🔥</td><td>烈焰风暴</td><td>对所有对手造成3伤害</td></tr>
+        <tr><td>🔥+🪨</td><td>熔岩护盾</td><td>防御+5，反弹1伤害</td></tr>
+        <tr><td>🪨+⚔️</td><td>矿脉觉醒</td><td>获得3点法力</td></tr>
+        <tr><td>⚔️+💧</td><td>寒冰利刃</td><td>攻击+4，对手法力-1</td></tr>
+        <tr><td>💧+🌿</td><td>生命之泉</td><td>回复4点生命</td></tr>
+    </table>
+</div>
+
+<!-- 第2页：火元素卡 -->
+<div class="page">
+    <h1>🔥 元素对决 - 火元素卡（12张）</h1>
+    <div class="card-grid">
+        <div class="card bg-fire"><div class="card-level">初级</div><div class="card-icon">🔥</div><div class="card-title">小火球</div><div class="card-desc">造成2伤害</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-fire"><div class="card-level">初级</div><div class="card-icon">🔥</div><div class="card-title">小火球</div><div class="card-desc">造成2伤害</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-fire"><div class="card-level">初级</div><div class="card-icon">🔥</div><div class="card-title">火焰弹</div><div class="card-desc">造成1伤害</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-fire"><div class="card-level">初级</div><div class="card-icon">🔥</div><div class="card-title">火焰弹</div><div class="card-desc">造成1伤害</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-fire"><div class="card-level">初级</div><div class="card-icon">🔥</div><div class="card-title">火星</div><div class="card-desc">造成2伤害</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-fire"><div class="card-level">初级</div><div class="card-icon">🔥</div><div class="card-title">火星</div><div class="card-desc">造成2伤害</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-fire"><div class="card-level">中级</div><div class="card-icon">🔥</div><div class="card-title">烈焰冲击</div><div class="card-desc">造成3伤害+点燃(1/回合)</div><div class="card-attack">⚔3</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-fire"><div class="card-level">中级</div><div class="card-icon">🔥</div><div class="card-title">烈焰冲击</div><div class="card-desc">造成3伤害+点燃(1/回合)</div><div class="card-attack">⚔3</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-fire"><div class="card-level">中级</div><div class="card-icon">🔥</div><div class="card-title">灼烧</div><div class="card-desc">造成3伤害+点燃</div><div class="card-attack">⚔3</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-fire"><div class="card-level">中级</div><div class="card-icon">🔥</div><div class="card-title">灼烧</div><div class="card-desc">造成4伤害</div><div class="card-attack">⚔4</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-fire"><div class="card-level">高级</div><div class="card-icon">🔥</div><div class="card-title">地狱火</div><div class="card-desc">造成5伤害+点燃+2</div><div class="card-attack">⚔5</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-fire"><div class="card-level">高级</div><div class="card-icon">🔥</div><div class="card-title">毁灭之焰</div><div class="card-desc">造成6伤害</div><div class="card-attack">⚔6</div><div class="card-cost">🔮3</div></div>
+    </div>
+</div>
+
+<!-- 第3页：水元素卡 -->
+<div class="page">
+    <h1>💧 元素对决 - 水元素卡（12张）</h1>
+    <div class="card-grid">
+        <div class="card bg-water"><div class="card-level">初级</div><div class="card-icon">💧</div><div class="card-title">水柱</div><div class="card-desc">1伤害+防御1</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-water"><div class="card-level">初级</div><div class="card-icon">💧</div><div class="card-title">水柱</div><div class="card-desc">1伤害+防御1</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-water"><div class="card-level">初级</div><div class="card-icon">💧</div><div class="card-title">水花</div><div class="card-desc">1伤害+防御1</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-water"><div class="card-level">初级</div><div class="card-icon">💧</div><div class="card-title">水花</div><div class="card-desc">1伤害+防御1</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-water"><div class="card-level">初级</div><div class="card-icon">💧</div><div class="card-title">潮汐</div><div class="card-desc">1伤害+防御1</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-water"><div class="card-level">初级</div><div class="card-icon">💧</div><div class="card-title">潮汐</div><div class="card-desc">1伤害+防御1</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-water"><div class="card-level">中级</div><div class="card-icon">💧</div><div class="card-title">巨浪</div><div class="card-desc">2伤害+防御2</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-water"><div class="card-level">中级</div><div class="card-icon">💧</div><div class="card-title">巨浪</div><div class="card-desc">2伤害+防御2</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-water"><div class="card-level">中级</div><div class="card-icon">💧</div><div class="card-title">冰锥</div><div class="card-desc">2伤害+防御2</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-water"><div class="card-level">中级</div><div class="card-icon">💧</div><div class="card-title">冰锥</div><div class="card-desc">2伤害+防御2</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-water"><div class="card-level">高级</div><div class="card-icon">💧</div><div class="card-title">海啸</div><div class="card-desc">3伤害+防御3</div><div class="card-attack">⚔3</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-water"><div class="card-level">高级</div><div class="card-icon">💧</div><div class="card-title">绝对零度</div><div class="card-desc">3伤害+防御3+冻结1回合</div><div class="card-attack">⚔3</div><div class="card-cost">🔮3</div></div>
+    </div>
+</div>
+
+<!-- 第4页：木元素卡 -->
+<div class="page">
+    <h1>🌿 元素对决 - 木元素卡（12张）</h1>
+    <div class="card-grid">
+        <div class="card bg-wood"><div class="card-level">初级</div><div class="card-icon">🌿</div><div class="card-title">藤鞭</div><div class="card-desc">1伤害+回复2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-wood"><div class="card-level">初级</div><div class="card-icon">🌿</div><div class="card-title">藤鞭</div><div class="card-desc">1伤害+回复2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-wood"><div class="card-level">初级</div><div class="card-icon">🌿</div><div class="card-title">荆棘</div><div class="card-desc">1伤害+回复2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-wood"><div class="card-level">初级</div><div class="card-icon">🌿</div><div class="card-title">荆棘</div><div class="card-desc">1伤害+回复2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-wood"><div class="card-level">初级</div><div class="card-icon">🌿</div><div class="card-title">树根</div><div class="card-desc">1伤害+回复2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-wood"><div class="card-level">初级</div><div class="card-icon">🌿</div><div class="card-title">树根</div><div class="card-desc">1伤害+回复2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-wood"><div class="card-level">中级</div><div class="card-icon">🌿</div><div class="card-title">自然之力</div><div class="card-desc">2伤害+回复3</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-wood"><div class="card-level">中级</div><div class="card-icon">🌿</div><div class="card-title">自然之力</div><div class="card-desc">2伤害+回复3</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-wood"><div class="card-level">中级</div><div class="card-icon">🌿</div><div class="card-title">古树之怒</div><div class="card-desc">2伤害+回复3</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-wood"><div class="card-level">中级</div><div class="card-icon">🌿</div><div class="card-title">古树之怒</div><div class="card-desc">3伤害+回复2</div><div class="card-attack">⚔3</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-wood"><div class="card-level">高级</div><div class="card-icon">🌿</div><div class="card-title">世界树</div><div class="card-desc">3伤害+回复5</div><div class="card-attack">⚔3</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-wood"><div class="card-level">高级</div><div class="card-icon">🌿</div><div class="card-title">生命绽放</div><div class="card-desc">3伤害+回复5</div><div class="card-attack">⚔3</div><div class="card-cost">🔮3</div></div>
+    </div>
+</div>
+
+<!-- 第5页：金元素卡 & 土元素卡 -->
+<div class="page">
+    <h1>⚔️ 元素对决 - 金元素卡（12张）</h1>
+    <div class="card-grid">
+        <div class="card bg-metal"><div class="card-level">初级</div><div class="card-icon">⚔️</div><div class="card-title">飞刀</div><div class="card-desc">2伤害·无视1防御</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-metal"><div class="card-level">初级</div><div class="card-icon">⚔️</div><div class="card-title">飞刀</div><div class="card-desc">2伤害·无视1防御</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-metal"><div class="card-level">初级</div><div class="card-icon">⚔️</div><div class="card-title">短剑</div><div class="card-desc">2伤害·无视1防御</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-metal"><div class="card-level">初级</div><div class="card-icon">⚔️</div><div class="card-title">短剑</div><div class="card-desc">2伤害·无视1防御</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-metal"><div class="card-level">初级</div><div class="card-icon">⚔️</div><div class="card-title">长矛</div><div class="card-desc">2伤害·无视1防御</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-metal"><div class="card-level">初级</div><div class="card-icon">⚔️</div><div class="card-title">长矛</div><div class="card-desc">2伤害·无视1防御</div><div class="card-attack">⚔2</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-metal"><div class="card-level">中级</div><div class="card-icon">⚔️</div><div class="card-title">利刃风暴</div><div class="card-desc">3伤害·无视2防御</div><div class="card-attack">⚔3</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-metal"><div class="card-level">中级</div><div class="card-icon">⚔️</div><div class="card-title">利刃风暴</div><div class="card-desc">3伤害·无视2防御</div><div class="card-attack">⚔3</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-metal"><div class="card-level">中级</div><div class="card-icon">⚔️</div><div class="card-title">剑气</div><div class="card-desc">4伤害·无视2防御</div><div class="card-attack">⚔4</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-metal"><div class="card-level">中级</div><div class="card-icon">⚔️</div><div class="card-title">剑气</div><div class="card-desc">4伤害·无视2防御</div><div class="card-attack">⚔4</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-metal"><div class="card-level">高级</div><div class="card-icon">⚔️</div><div class="card-title">斩钢</div><div class="card-desc">5伤害·无视3防御</div><div class="card-attack">⚔5</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-metal"><div class="card-level">高级</div><div class="card-icon">⚔️</div><div class="card-title">破甲之刃</div><div class="card-desc">6伤害·无视3防御</div><div class="card-attack">⚔6</div><div class="card-cost">🔮3</div></div>
+    </div>
+</div>
+
+<div class="page">
+    <h1>🪨 元素对决 - 土元素卡（12张）</h1>
+    <div class="card-grid">
+        <div class="card bg-earth"><div class="card-level">初级</div><div class="card-icon">🪨</div><div class="card-title">石块</div><div class="card-desc">1伤害+防御2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-earth"><div class="card-level">初级</div><div class="card-icon">🪨</div><div class="card-title">石块</div><div class="card-desc">1伤害+防御2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-earth"><div class="card-level">初级</div><div class="card-icon">🪨</div><div class="card-title">泥墙</div><div class="card-desc">1伤害+防御2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-earth"><div class="card-level">初级</div><div class="card-icon">🪨</div><div class="card-title">泥墙</div><div class="card-desc">1伤害+防御2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-earth"><div class="card-level">初级</div><div class="card-icon">🪨</div><div class="card-title">岩石</div><div class="card-desc">1伤害+防御2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-earth"><div class="card-level">初级</div><div class="card-icon">🪨</div><div class="card-title">岩石</div><div class="card-desc">1伤害+防御2</div><div class="card-attack">⚔1</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-earth"><div class="card-level">中级</div><div class="card-icon">🪨</div><div class="card-title">山崩</div><div class="card-desc">2伤害+防御3</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-earth"><div class="card-level">中级</div><div class="card-icon">🪨</div><div class="card-title">山崩</div><div class="card-desc">2伤害+防御3</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-earth"><div class="card-level">中级</div><div class="card-icon">🪨</div><div class="card-title">大地震</div><div class="card-desc">2伤害+防御3</div><div class="card-attack">⚔2</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-earth"><div class="card-level">中级</div><div class="card-icon">🪨</div><div class="card-title">大地震</div><div class="card-desc">3伤害+防御2</div><div class="card-attack">⚔3</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-earth"><div class="card-level">高级</div><div class="card-icon">🪨</div><div class="card-title">大地之墙</div><div class="card-desc">3伤害+防御5</div><div class="card-attack">⚔3</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-earth"><div class="card-level">高级</div><div class="card-icon">🪨</div><div class="card-title">陨石坠落</div><div class="card-desc">3伤害+防御5</div><div class="card-attack">⚔3</div><div class="card-cost">🔮3</div></div>
+    </div>
+</div>
+
+<!-- 第7页：法术卡 -->
+<div class="page">
+    <h1>✨ 元素对决 - 法术卡（20张）</h1>
+    <div class="card-grid">
+        <div class="card bg-spell"><div class="card-icon">🔮</div><div class="card-title">元素觉醒</div><div class="card-desc">从弃牌堆回收2张元素卡</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-spell"><div class="card-icon">🔮</div><div class="card-title">元素觉醒</div><div class="card-desc">从弃牌堆回收2张元素卡</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-spell"><div class="card-icon">🔮</div><div class="card-title">元素觉醒</div><div class="card-desc">从弃牌堆回收2张元素卡</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-spell"><div class="card-icon">💥</div><div class="card-title">元素爆发</div><div class="card-desc">本回合攻击力翻倍</div><div class="card-cost">🔮4</div></div>
+        <div class="card bg-spell"><div class="card-icon">💥</div><div class="card-title">元素爆发</div><div class="card-desc">本回合攻击力翻倍</div><div class="card-cost">🔮4</div></div>
+        <div class="card bg-spell"><div class="card-icon">💥</div><div class="card-title">元素爆发</div><div class="card-desc">本回合攻击力翻倍</div><div class="card-cost">🔮4</div></div>
+        <div class="card bg-spell"><div class="card-icon">🛡️</div><div class="card-title">五行护体</div><div class="card-desc">本回合免疫所有伤害</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-spell"><div class="card-icon">🛡️</div><div class="card-title">五行护体</div><div class="card-desc">本回合免疫所有伤害</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-spell"><div class="card-icon">🛡️</div><div class="card-title">五行护体</div><div class="card-desc">本回合免疫所有伤害</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-spell"><div class="card-icon">🌀</div><div class="card-title">元素转换</div><div class="card-desc">将1张元素卡变为任意元素</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-spell"><div class="card-icon">🌀</div><div class="card-title">元素转换</div><div class="card-desc">将1张元素卡变为任意元素</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-spell"><div class="card-icon">🌀</div><div class="card-title">元素转换</div><div class="card-desc">将1张元素卡变为任意元素</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-spell"><div class="card-icon">⚡</div><div class="card-title">连锁反应</div><div class="card-desc">对所有对手造成3伤害</div><div class="card-cost">🔮5</div></div>
+        <div class="card bg-spell"><div class="card-icon">⚡</div><div class="card-title">连锁反应</div><div class="card-desc">对所有对手造成3伤害</div><div class="card-cost">🔮5</div></div>
+        <div class="card bg-spell"><div class="card-icon">🌈</div><div class="card-title">五行归一</div><div class="card-desc">展示5种元素·造成10伤害</div><div class="card-cost">🔮6</div></div>
+        <div class="card bg-spell"><div class="card-icon">⚡</div><div class="card-title">连锁反应</div><div class="card-desc">对所有对手造成3伤害</div><div class="card-cost">🔮5</div></div>
+        <div class="card bg-spell"><div class="card-icon">🔮</div><div class="card-title">元素觉醒</div><div class="card-desc">从弃牌堆回收2张元素卡</div><div class="card-cost">🔮3</div></div>
+        <div class="card bg-spell"><div class="card-icon">🛡️</div><div class="card-title">五行护体</div><div class="card-desc">本回合免疫所有伤害</div><div class="card-cost">🔮2</div></div>
+        <div class="card bg-spell"><div class="card-icon">🌀</div><div class="card-title">元素转换</div><div class="card-desc">将1张元素卡变为任意元素</div><div class="card-cost">🔮1</div></div>
+        <div class="card bg-spell"><div class="card-icon">💥</div><div class="card-title">元素爆发</div><div class="card-desc">本回合攻击力翻倍</div><div class="card-cost">🔮4</div></div>
+    </div>
+</div>
+
+<!-- 第8页：生命值卡 & 法力标记 -->
+<div class="page">
+    <h1>❤️ 元素对决 - 生命值卡与法力标记</h1>
+    <h2>生命值卡（4张）</h2>
+    <div style="text-align:center; margin:20px 0;">
+        <div class="hp-card">
+            <div style="font-size:24px;">❤️ 玩家1</div>
+            <div class="hp-bar">
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+            </div>
+            <div style="font-size:12px; margin-top:5px;">20点生命值</div>
+        </div>
+        <div class="hp-card">
+            <div style="font-size:24px;">❤️ 玩家2</div>
+            <div class="hp-bar">
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+            </div>
+            <div style="font-size:12px; margin-top:5px;">20点生命值</div>
+        </div>
+        <div class="hp-card">
+            <div style="font-size:24px;">❤️ 玩家3</div>
+            <div class="hp-bar">
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+            </div>
+            <div style="font-size:12px; margin-top:5px;">20点生命值</div>
+        </div>
+        <div class="hp-card">
+            <div style="font-size:24px;">❤️ 玩家4</div>
+            <div class="hp-bar">
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+                <div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div><div class="hp-pip"></div>
+            </div>
+            <div style="font-size:12px; margin-top:5px;">20点生命值</div>
+        </div>
+    </div>
+    <h2>法力标记（30个）</h2>
+    <div style="text-align:center; margin:15px 0;">
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+        <div class="mana-token">🔮</div><div class="mana-token">🔮</div><div class="mana-token">🔮</div>
+    </div>
+</div>
+
+</body>
+</html>
