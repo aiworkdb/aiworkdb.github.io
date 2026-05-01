@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古文明拍卖行 - 打印道具</title>
+<style>
+  /* ============ 基础重置 ============ */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #f5f0e8;
+    color: #2c1a0e;
+    line-height: 1.5;
+  }
+
+  /* ============ 打印背景支持 ============ */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .print-hint {
+      display: none !important;
+    }
+    .section-title {
+      page-break-before: always;
+    }
+    .section-title:first-of-type {
+      page-break-before: avoid;
+    }
+    body {
+      background: white;
+    }
+    .page-header {
+      page-break-after: avoid;
+    }
+  }
+
+  /* ============ 页头 ============ */
+  .page-header {
+    text-align: center;
+    padding: 30px 20px 20px;
+    background: linear-gradient(135deg, #1a0a00 0%, #5c2a00 40%, #8b4a00 70%, #c47a00 100%);
+    color: #f5e6c8;
+    margin-bottom: 30px;
+    border-bottom: 4px solid #c8a84b;
+  }
+  .page-header h1 {
+    font-size: 2.4em;
+    letter-spacing: 0.08em;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    margin-bottom: 8px;
+  }
+  .page-header .subtitle {
+    font-size: 1em;
+    opacity: 0.85;
+    letter-spacing: 0.12em;
+  }
+
+  /* ============ 打印提示 ============ */
+  .print-hint {
+    background: linear-gradient(135deg, #fff8e1, #fff3e0);
+    border: 2px solid #f9a825;
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin: 0 auto 32px;
+    max-width: 760px;
+    box-shadow: 0 2px 12px rgba(249,168,37,0.2);
+  }
+  .print-hint strong {
+    font-size: 1.05em;
+    color: #e65100;
+  }
+  .print-hint ul {
+    margin-top: 10px;
+    padding-left: 24px;
+  }
+  .print-hint li {
+    margin-bottom: 6px;
+    color: #5d4037;
+    font-size: 0.95em;
+  }
+  .print-hint .btn-print {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 28px;
+    background: linear-gradient(135deg, #c47a00, #f5a623);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    box-shadow: 0 3px 8px rgba(196,122,0,0.35);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .print-hint .btn-print:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(196,122,0,0.45);
+  }
+
+  /* ============ 区块标题 ============ */
+  .section-title {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    padding: 14px 0 10px;
+    margin: 32px auto 20px;
+    max-width: 760px;
+    border-bottom: 3px solid currentColor;
+  }
+  .section-title.egypt { color: #c8a84b; border-color: #c8a84b; }
+  .section-title.rome  { color: #c0392b; border-color: #c0392b; }
+  .section-title.maya  { color: #27ae60; border-color: #27ae60; }
+  .section-title.china { color: #2980b9; border-color: #2980b9; }
+  .section-title.special { color: #8e44ad; border-color: #8e44ad; }
+  .section-title.bid   { color: #2c1a0e; border-color: #2c1a0e; }
+  .section-title.board { color: #5c3317; border-color: #5c3317; }
+  .section-title.pawn  { color: #34495e; border-color: #34495e; }
+  .section-title.map   { color: #16a085; border-color: #16a085; }
+
+  /* ============ 卡牌网格 ============ */
+  .cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    max-width: 820px;
+    margin: 0 auto 12px;
+    padding: 0 16px;
+  }
+
+  /* ============ 文物卡通用 ============ */
+  .artifact-card {
+    width: 110px;
+    min-height: 155px;
+    border-radius: 12px;
+    padding: 10px 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    position: relative;
+    border: 3px solid;
+    cursor: default;
+    transition: transform 0.15s;
+  }
+  .artifact-card:hover { transform: translateY(-3px); }
+
+  /* 文明颜色主题 */
+  .card-egypt {
+    background: linear-gradient(160deg, #fef9ec 0%, #f5e0a0 60%, #e8c840 100%);
+    border-color: #c8a84b;
+  }
+  .card-rome {
+    background: linear-gradient(160deg, #fff0ee 0%, #f5bbb0 60%, #c0392b 100%);
+    border-color: #c0392b;
+  }
+  .card-maya {
+    background: linear-gradient(160deg, #eefff4 0%, #a8e6bf 60%, #27ae60 100%);
+    border-color: #27ae60;
+  }
+  .card-china {
+    background: linear-gradient(160deg, #eef6ff 0%, #a8c8f0 60%, #2980b9 100%);
+    border-color: #2980b9;
+  }
+
+  .card-civ-badge {
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    font-size: 0.58em;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    border-radius: 6px;
+    color: white;
+    white-space: nowrap;
+  }
+  .badge-egypt { background: #c8a84b; }
+  .badge-rome  { background: #c0392b; }
+  .badge-maya  { background: #27ae60; }
+  .badge-china { background: #2980b9; }
+
+  .card-set-mark {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    font-size: 0.65em;
+    font-weight: bold;
+    color: #e74c3c;
+  }
+
+  .card-emoji {
+    font-size: 2.6em;
+    margin-top: 18px;
+    filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.25));
+  }
+  .card-name {
+    font-size: 0.68em;
+    font-weight: bold;
+    text-align: center;
+    color: #1a0a00;
+    line-height: 1.3;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-value {
+    font-size: 1.3em;
+    font-weight: 900;
+    margin-top: 2px;
+  }
+  .card-value-label {
+    font-size: 0.6em;
+    color: #5a3e1b;
+  }
+  .card-egypt .card-value { color: #8b6a00; }
+  .card-rome  .card-value { color: #8b1a10; }
+  .card-maya  .card-value { color: #1a7a3e; }
+  .card-china .card-value { color: #1a5080; }
+
+  /* 套装件底部装饰 */
+  .card-set-stripe {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 7px;
+    border-radius: 0 0 9px 9px;
+    opacity: 0.8;
+  }
+  .stripe-egypt { background: repeating-linear-gradient(90deg,#c8a84b 0,#c8a84b 6px,#f5e0a0 6px,#f5e0a0 12px); }
+  .stripe-rome  { background: repeating-linear-gradient(90deg,#c0392b 0,#c0392b 6px,#f5bbb0 6px,#f5bbb0 12px); }
+  .stripe-maya  { background: repeating-linear-gradient(90deg,#27ae60 0,#27ae60 6px,#a8e6bf 6px,#a8e6bf 12px); }
+  .stripe-china { background: repeating-linear-gradient(90deg,#2980b9 0,#2980b9 6px,#a8c8f0 6px,#a8c8f0 12px); }
+
+  /* ============ 出价卡 ============ */
+  .bid-card {
+    width: 88px;
+    height: 120px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #2c1a0e, #5c3a1a);
+    border: 3px solid #c8a84b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .bid-card::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px; right: -20px; bottom: -20px;
+    background: radial-gradient(ellipse at 50% 30%, rgba(200,168,75,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .bid-coin-icon {
+    font-size: 1.8em;
+  }
+  .bid-value {
+    font-size: 1.7em;
+    font-weight: 900;
+    color: #f5d260;
+    text-shadow: 0 0 10px rgba(245,210,96,0.6);
+    line-height: 1;
+  }
+  .bid-value.big { font-size: 2.1em; }
+  .bid-value.huge { font-size: 2.5em; }
+  .bid-label {
+    font-size: 0.55em;
+    color: #c8a84b;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .bid-corner {
+    position: absolute;
+    font-size: 0.65em;
+    color: #c8a84b;
+    font-weight: bold;
+    top: 4px;
+    left: 6px;
+  }
+  .bid-corner-br {
+    position: absolute;
+    font-size: 0.65em;
+    color: #c8a84b;
+    font-weight: bold;
+    bottom: 4px;
+    right: 6px;
+    transform: rotate(180deg);
+  }
+
+  /* 出价卡套装注记 */
+  .bid-set-note {
+    font-size: 0.5em;
+    color: #a07840;
+    margin-top: 2px;
+  }
+
+  /* ============ 特权卡 ============ */
+  .priv-card {
+    width: 110px;
+    min-height: 155px;
+    border-radius: 12px;
+    background: linear-gradient(155deg, #1e0a3c 0%, #4a1a7c 50%, #8e44ad 100%);
+    border: 3px solid #d4a8f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 8px 12px;
+    gap: 6px;
+    box-shadow: 0 4px 18px rgba(100,0,150,0.4);
+    position: relative;
+  }
+  .priv-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 20%, rgba(212,168,248,0.15) 0%, transparent 65%);
+    border-radius: 9px;
+    pointer-events: none;
+  }
+  .priv-title {
+    font-size: 0.75em;
+    font-weight: bold;
+    color: #f0d8ff;
+    text-align: center;
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+  .priv-emoji {
+    font-size: 2.5em;
+    filter: drop-shadow(0 0 8px rgba(212,168,248,0.7));
+    z-index: 1;
+  }
+  .priv-desc {
+    font-size: 0.6em;
+    color: #d4a8f8;
+    text-align: center;
+    line-height: 1.4;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .priv-badge {
+    font-size: 0.52em;
+    background: rgba(212,168,248,0.25);
+    color: #f0d8ff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.04em;
+    z-index: 1;
+  }
+
+  /* ============ 玩家收藏板 ============ */
+  .collection-board {
+    width: 720px;
+    background: linear-gradient(155deg, #fdf8ef, #f5e8c8);
+    border: 3px solid #c8a84b;
+    border-radius: 16px;
+    padding: 18px 22px;
+    box-shadow: 0 4px 18px rgba(100,70,0,0.2);
+    margin: 0 auto 18px;
+  }
+  .board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #c8a84b;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .board-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #5c3317;
+    letter-spacing: 0.06em;
+  }
+  .board-player-name {
+    font-size: 0.85em;
+    color: #8b6a00;
+    border-bottom: 1.5px solid #c8a84b;
+    min-width: 120px;
+    padding-bottom: 2px;
+  }
+  .board-civ-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .board-civ-label {
+    width: 70px;
+    font-size: 0.78em;
+    font-weight: bold;
+    padding-top: 4px;
+  }
+  .board-civ-label.egypt { color: #c8a84b; }
+  .board-civ-label.rome  { color: #c0392b; }
+  .board-civ-label.maya  { color: #27ae60; }
+  .board-civ-label.china { color: #2980b9; }
+  .board-slots {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+  }
+  .board-slot {
+    width: 60px;
+    height: 56px;
+    border-radius: 8px;
+    border: 1.5px dashed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.58em;
+    color: #b8a898;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .slot-egypt { border-color: #c8a84b; background: rgba(200,168,75,0.06); }
+  .slot-rome  { border-color: #c0392b; background: rgba(192,57,43,0.06); }
+  .slot-maya  { border-color: #27ae60; background: rgba(39,174,96,0.06); }
+  .slot-china { border-color: #2980b9; background: rgba(41,128,185,0.06); }
+  .board-score-row {
+    border-top: 2px dashed #c8a84b;
+    padding-top: 10px;
+    margin-top: 8px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .score-box {
+    text-align: center;
+  }
+  .score-box-label {
+    font-size: 0.65em;
+    color: #8b6a00;
+  }
+  .score-box-value {
+    border-bottom: 1.5px solid #c8a84b;
+    min-width: 56px;
+    height: 28px;
+  }
+  .priv-area {
+    text-align: right;
+    font-size: 0.65em;
+    color: #8b6a00;
+    margin-left: auto;
+  }
+
+  /* ============ 拍卖场地图 ============ */
+  .auction-map {
+    width: 720px;
+    margin: 0 auto 18px;
+    background: linear-gradient(135deg, #fdf0d8, #f5ddb0);
+    border: 3px solid #c8a84b;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+  }
+  .map-header {
+    background: linear-gradient(90deg, #3d1c00, #7a3d00, #3d1c00);
+    padding: 12px 20px;
+    text-align: center;
+    color: #f5e6c8;
+    font-size: 1.1em;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+  }
+  .map-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .map-auction-table {
+    background: linear-gradient(155deg, #2c1a0e, #5c3a1a);
+    border: 3px solid #c8a84b;
+    border-radius: 14px;
+    padding: 18px 24px;
+    color: #f5e6c8;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    box-shadow: inset 0 0 30px rgba(200,168,75,0.1);
+  }
+  .map-table-title {
+    font-size: 0.85em;
+    color: #c8a84b;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+  }
+  .map-table-zones {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .map-zone {
+    background: rgba(200,168,75,0.12);
+    border: 1.5px dashed #c8a84b;
+    border-radius: 8px;
+    padding: 8px 14px;
+    text-align: center;
+    font-size: 0.72em;
+  }
+  .map-zone-label {
+    color: #c8a84b;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .map-zone-desc {
+    color: #d4b890;
+    font-size: 0.9em;
+    line-height: 1.4;
+  }
+  .map-divider {
+    color: #c8a84b;
+    font-size: 1.4em;
+  }
+  .map-players-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+  }
+  .map-player-zone {
+    flex: 1;
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 0.72em;
+    border: 2px dashed;
+  }
+  .map-player-zone.p1 { background: rgba(200,168,75,0.1); border-color: #c8a84b; color: #8b6a00; }
+  .map-player-zone.p2 { background: rgba(192,57,43,0.08);  border-color: #c0392b; color: #8b1a10; }
+  .map-player-zone.p3 { background: rgba(39,174,96,0.08);  border-color: #27ae60; color: #1a7a3e; }
+  .map-player-zone.p4 { background: rgba(41,128,185,0.08); border-color: #2980b9; color: #1a5080; }
+  .map-player-zone.p5 { background: rgba(142,68,173,0.08); border-color: #8e44ad; color: #5b2680; }
+  .map-pz-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 1.05em;
+  }
+  .map-pz-item {
+    background: rgba(255,255,255,0.5);
+    border-radius: 5px;
+    padding: 3px 6px;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* ============ 玩家棋子 ============ */
+  .pawn-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    max-width: 720px;
+    margin: 0 auto 12px;
+    padding: 0 16px;
+  }
+  .pawn-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .pawn-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2em;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    border: 3px solid rgba(255,255,255,0.5);
+    position: relative;
+  }
+  .pawn-p1 { background: radial-gradient(circle at 35% 35%, #f5d260, #c8a84b, #8b6a00); }
+  .pawn-p2 { background: radial-gradient(circle at 35% 35%, #f5a0a0, #c0392b, #7a1e15); }
+  .pawn-p3 { background: radial-gradient(circle at 35% 35%, #a8e6bf, #27ae60, #1a7a3e); }
+  .pawn-p4 { background: radial-gradient(circle at 35% 35%, #a8d4f0, #2980b9, #1a5080); }
+  .pawn-p5 { background: radial-gradient(circle at 35% 35%, #d4a8f8, #8e44ad, #5b2680); }
+  .pawn-name {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #2c1a0e;
+    letter-spacing: 0.05em;
+  }
+  .pawn-num-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #2c1a0e;
+    color: #f5d260;
+    font-size: 0.55em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #c8a84b;
+  }
+
+  /* ============ 金币代币 ============ */
+  .token-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    max-width: 720px;
+    margin: 0 auto 12px;
+    padding: 0 16px;
+  }
+  .coin-token {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f8e88a, #d4a800, #8b6a00);
+    border: 3px solid #c8a84b;
+    box-shadow: 0 3px 10px rgba(180,130,0,0.4), inset 0 1px 3px rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    font-weight: 900;
+    color: #5c3a00;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+  }
+
+  /* ============ 文明套装标记 ============ */
+  .marker-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    max-width: 720px;
+    margin: 0 auto 12px;
+    padding: 0 16px;
+  }
+  .civ-marker {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    border: 3px solid;
+    font-weight: bold;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+  .marker-egypt { background: radial-gradient(circle, #f5e0a0, #c8a84b); border-color: #8b6a00; color: #3d2800; }
+  .marker-rome  { background: radial-gradient(circle, #f5bbb0, #c0392b); border-color: #7a1e15; color: #fff; }
+  .marker-maya  { background: radial-gradient(circle, #a8e6bf, #27ae60); border-color: #1a7a3e; color: #fff; }
+  .marker-china { background: radial-gradient(circle, #a8c8f0, #2980b9); border-color: #1a5080; color: #fff; }
+
+  /* ============ 分值记录表 ============ */
+  .score-table {
+    width: 720px;
+    margin: 0 auto 18px;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+  }
+  .score-table th {
+    background: linear-gradient(90deg, #3d1c00, #7a3d00);
+    color: #f5e6c8;
+    padding: 10px 14px;
+    font-size: 0.85em;
+    letter-spacing: 0.06em;
+    text-align: center;
+    border: 1px solid #c8a84b;
+  }
+  .score-table td {
+    background: #fdf8ef;
+    padding: 8px 14px;
+    border: 1px solid #e8d8b0;
+    text-align: center;
+    font-size: 0.82em;
+    color: #3d2800;
+    min-height: 32px;
+  }
+  .score-table tr:nth-child(even) td {
+    background: #f5edd8;
+  }
+  .score-table .row-header {
+    background: #fdf0d8;
+    font-weight: bold;
+    color: #8b4a00;
+    text-align: left;
+  }
+  .score-table .total-row td {
+    background: linear-gradient(90deg, #fef5dc, #fde8a0);
+    font-weight: bold;
+    font-size: 0.9em;
+    border-top: 2px solid #c8a84b;
+  }
+
+  /* ============ 页脚 ============ */
+  .page-footer {
+    text-align: center;
+    padding: 24px 20px;
+    margin-top: 32px;
+    background: linear-gradient(90deg, #3d1c00, #7a3d00, #3d1c00);
+    color: #c8a84b;
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<!-- 页头 -->
+<div class="page-header">
+  <h1>🏛️ 古文明拍卖行</h1>
+  <div class="subtitle">Ancient Auction — 打印道具合集 | Print-and-Play Components</div>
+</div>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong>以充分利用页面空间</li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"（Background Graphics）</strong>选项，否则卡牌颜色不显示</li>
+    <li>文物卡、出价卡、特权卡建议使用<strong>卡纸</strong>打印，更耐用</li>
+    <li>打印后用剪刀或裁纸刀沿边框裁剪，可用透明胶袋套住保护</li>
+    <li>金币代币和套装标记建议打印后粘贴在厚纸板上再裁剪</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 立即打印</button>
+</div>
+
+<!-- ====== 拍卖会场地图 ====== -->
+<div class="section-title map">🗺️ 拍卖会场布局图</div>
+<div class="auction-map">
+  <div class="map-header">🏛️ 古文明拍卖行 — 拍卖会场</div>
+  <div class="map-body">
+    <!-- 拍卖台 -->
+    <div class="map-auction-table">
+      <div class="map-table-title">━━━  拍卖台（公共区域）  ━━━</div>
+      <div class="map-table-zones">
+        <div class="map-zone">
+          <div class="map-zone-label">📦 待拍牌堆</div>
+          <div class="map-zone-desc">文物卡背面<br>朝上叠放</div>
+        </div>
+        <div class="map-divider">→</div>
+        <div class="map-zone">
+          <div class="map-zone-label">🏺 当前拍品</div>
+          <div class="map-zone-desc">文物卡正面<br>朝上展示</div>
+        </div>
+        <div class="map-divider">→</div>
+        <div class="map-zone">
+          <div class="map-zone-label">🗑️ 废弃堆</div>
+          <div class="map-zone-desc">无人出价<br>或被搅局</div>
+        </div>
+        <div class="map-divider"> | </div>
+        <div class="map-zone">
+          <div class="map-zone-label">⭐ 特权卡堆</div>
+          <div class="map-zone-desc">补发用<br>背面朝上</div>
+        </div>
+      </div>
+    </div>
+    <!-- 玩家区 -->
+    <div class="map-players-row">
+      <div class="map-player-zone p1">
+        <div class="map-pz-title">🟡 玩家 A</div>
+        <div class="map-pz-item">收藏板 &amp; 文物展示</div>
+        <div class="map-pz-item">出价卡（手牌）</div>
+        <div class="map-pz-item">特权卡区</div>
+      </div>
+      <div class="map-player-zone p2">
+        <div class="map-pz-title">🔴 玩家 B</div>
+        <div class="map-pz-item">收藏板 &amp; 文物展示</div>
+        <div class="map-pz-item">出价卡（手牌）</div>
+        <div class="map-pz-item">特权卡区</div>
+      </div>
+      <div class="map-player-zone p3">
+        <div class="map-pz-title">🟢 玩家 C</div>
+        <div class="map-pz-item">收藏板 &amp; 文物展示</div>
+        <div class="map-pz-item">出价卡（手牌）</div>
+        <div class="map-pz-item">特权卡区</div>
+      </div>
+      <div class="map-player-zone p4">
+        <div class="map-pz-title">🔵 玩家 D</div>
+        <div class="map-pz-item">收藏板 &amp; 文物展示</div>
+        <div class="map-pz-item">出价卡（手牌）</div>
+        <div class="map-pz-item">特权卡区</div>
+      </div>
+      <div class="map-player-zone p5">
+        <div class="map-pz-title">🟣 玩家 E</div>
+        <div class="map-pz-item">收藏板 &amp; 文物展示</div>
+        <div class="map-pz-item">出价卡（手牌）</div>
+        <div class="map-pz-item">特权卡区</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 古埃及系列文物卡 ====== -->
+<div class="section-title egypt">🟡 古埃及系列文物卡（共 10 张）</div>
+<div class="cards-grid">
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🏺</div>
+    <div class="card-name">法老黄金面具</div>
+    <div class="card-value">12</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-egypt"></div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🐕</div>
+    <div class="card-name">阿努比斯雕像</div>
+    <div class="card-value">8</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-egypt"></div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">📜</div>
+    <div class="card-name">纸莎草卷轴</div>
+    <div class="card-value">6</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-egypt"></div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🪲</div>
+    <div class="card-name">圣甲虫护身符</div>
+    <div class="card-value">4</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-egypt"></div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <div class="card-emoji">💎</div>
+    <div class="card-name">尼罗河宝石</div>
+    <div class="card-value">9</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <div class="card-emoji">☀️</div>
+    <div class="card-name">太阳神圆盘</div>
+    <div class="card-value">7</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <div class="card-emoji">🪗</div>
+    <div class="card-name">木乃伊绷带</div>
+    <div class="card-value">3</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <div class="card-emoji">🪙</div>
+    <div class="card-name">亚历山大铸币</div>
+    <div class="card-value">5</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <div class="card-emoji">🦁</div>
+    <div class="card-name">狮身人面像残片</div>
+    <div class="card-value">10</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-egypt">
+    <span class="card-civ-badge badge-egypt">古埃及</span>
+    <div class="card-emoji">⚔️</div>
+    <div class="card-name">图坦卡蒙宝剑</div>
+    <div class="card-value">11</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+</div>
+
+<!-- ====== 古罗马系列文物卡 ====== -->
+<div class="section-title rome">🔴 古罗马系列文物卡（共 10 张）</div>
+<div class="cards-grid">
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🪖</div>
+    <div class="card-name">凯撒大帝头盔</div>
+    <div class="card-value">12</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-rome"></div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🛡️</div>
+    <div class="card-name">角斗士护盾</div>
+    <div class="card-value">8</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-rome"></div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🏟️</div>
+    <div class="card-name">角斗场缩微模型</div>
+    <div class="card-value">6</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-rome"></div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🗿</div>
+    <div class="card-name">维纳斯大理石像</div>
+    <div class="card-value">4</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-rome"></div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <div class="card-emoji">🗺️</div>
+    <div class="card-name">罗马帝国地图</div>
+    <div class="card-value">9</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <div class="card-emoji">🏛️</div>
+    <div class="card-name">执政官权杖</div>
+    <div class="card-value">7</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <div class="card-emoji">🔵</div>
+    <div class="card-name">百夫长徽章</div>
+    <div class="card-value">3</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <div class="card-emoji">🏺</div>
+    <div class="card-name">波斯战利品壶</div>
+    <div class="card-value">5</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <div class="card-emoji">🪨</div>
+    <div class="card-name">战神神殿碎片</div>
+    <div class="card-value">10</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-rome">
+    <span class="card-civ-badge badge-rome">古罗马</span>
+    <div class="card-emoji">🪙</div>
+    <div class="card-name">奥古斯都铸币</div>
+    <div class="card-value">11</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+</div>
+
+<!-- ====== 古玛雅系列文物卡 ====== -->
+<div class="section-title maya">🟢 古玛雅系列文物卡（共 10 张）</div>
+<div class="cards-grid">
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🪶</div>
+    <div class="card-name">羽蛇神羽毛冠</div>
+    <div class="card-value">12</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-maya"></div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">💚</div>
+    <div class="card-name">玉石面具</div>
+    <div class="card-value">8</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-maya"></div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">📅</div>
+    <div class="card-name">玛雅历法石盘</div>
+    <div class="card-value">6</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-maya"></div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🪄</div>
+    <div class="card-name">祭司黄金权杖</div>
+    <div class="card-value">4</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-maya"></div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <div class="card-emoji">🌿</div>
+    <div class="card-name">热带丛林地图</div>
+    <div class="card-value">9</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <div class="card-emoji">🔪</div>
+    <div class="card-name">供奉宝石刀</div>
+    <div class="card-value">7</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <div class="card-emoji">🍯</div>
+    <div class="card-name">蜂蜜壶</div>
+    <div class="card-value">3</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <div class="card-emoji">😈</div>
+    <div class="card-name">战士面具</div>
+    <div class="card-value">5</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <div class="card-emoji">🪨</div>
+    <div class="card-name">金字塔石刻</div>
+    <div class="card-value">10</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-maya">
+    <span class="card-civ-badge badge-maya">古玛雅</span>
+    <div class="card-emoji">🔭</div>
+    <div class="card-name">天文观测仪</div>
+    <div class="card-value">11</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+</div>
+
+<!-- ====== 古中国系列文物卡 ====== -->
+<div class="section-title china">🔵 古中国系列文物卡（共 10 张）</div>
+<div class="cards-grid">
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🔮</div>
+    <div class="card-name">皇帝玉玺</div>
+    <div class="card-value">12</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-china"></div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🏺</div>
+    <div class="card-name">青铜酒爵</div>
+    <div class="card-value">8</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-china"></div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🐴</div>
+    <div class="card-name">唐三彩骏马</div>
+    <div class="card-value">6</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-china"></div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <span class="card-set-mark">★套</span>
+    <div class="card-emoji">🪢</div>
+    <div class="card-name">丝绸卷轴</div>
+    <div class="card-value">4</div>
+    <div class="card-value-label">基础分值</div>
+    <div class="card-set-stripe stripe-china"></div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <div class="card-emoji">💚</div>
+    <div class="card-name">翡翠如意</div>
+    <div class="card-value">9</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <div class="card-emoji">📜</div>
+    <div class="card-name">甲骨文残片</div>
+    <div class="card-value">7</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <div class="card-emoji">🍵</div>
+    <div class="card-name">宋代官窑瓷碗</div>
+    <div class="card-value">3</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <div class="card-emoji">🔵</div>
+    <div class="card-name">汉代铜镜</div>
+    <div class="card-value">5</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <div class="card-emoji">🧱</div>
+    <div class="card-name">长城砖块</div>
+    <div class="card-value">10</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+  <div class="artifact-card card-china">
+    <span class="card-civ-badge badge-china">古中国</span>
+    <div class="card-emoji">⛵</div>
+    <div class="card-name">郑和宝船模型</div>
+    <div class="card-value">11</div>
+    <div class="card-value-label">基础分值</div>
+  </div>
+
+</div>
+
+<!-- ====== 出价卡（每人一套，共5套） ====== -->
+<div class="section-title bid">💰 出价卡（每人一套 × 5人份，共 50 张）</div>
+<div class="cards-grid">
+
+  <!-- 面值 1 -->
+  <div class="bid-card">
+    <span class="bid-corner">1</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value">1</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">1</span>
+  </div>
+  <!-- 面值 2 -->
+  <div class="bid-card">
+    <span class="bid-corner">2</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value">2</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">2</span>
+  </div>
+  <!-- 面值 3 -->
+  <div class="bid-card">
+    <span class="bid-corner">3</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value">3</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">3</span>
+  </div>
+  <!-- 面值 5 -->
+  <div class="bid-card">
+    <span class="bid-corner">5</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value">5</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">5</span>
+  </div>
+  <!-- 面值 8 -->
+  <div class="bid-card">
+    <span class="bid-corner">8</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value">8</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">8</span>
+  </div>
+  <!-- 面值 10 -->
+  <div class="bid-card">
+    <span class="bid-corner">10</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value big">10</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">10</span>
+  </div>
+  <!-- 面值 15 -->
+  <div class="bid-card">
+    <span class="bid-corner">15</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value big">15</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">15</span>
+  </div>
+  <!-- 面值 20 -->
+  <div class="bid-card">
+    <span class="bid-corner">20</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value big">20</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">20</span>
+  </div>
+  <!-- 面值 30 -->
+  <div class="bid-card">
+    <span class="bid-corner">30</span>
+    <div class="bid-coin-icon">💰</div>
+    <div class="bid-value big">30</div>
+    <div class="bid-label">出价</div>
+    <span class="bid-corner-br">30</span>
+  </div>
+  <!-- 面值 50 - 终极 -->
+  <div class="bid-card" style="border-color:#f5d260; box-shadow: 0 0 20px rgba(245,210,96,0.6);">
+    <span class="bid-corner" style="color:#f5d260;">50</span>
+    <div class="bid-coin-icon">👑</div>
+    <div class="bid-value huge" style="color:#f5d260;">50</div>
+    <div class="bid-label" style="color:#f5d260;">终极出价</div>
+    <div class="bid-set-note">每人仅1张！</div>
+    <span class="bid-corner-br" style="color:#f5d260;">50</span>
+  </div>
+
+</div>
+<p style="text-align:center; font-size:0.82em; color:#8b6a00; margin: 6px 0 18px;">↑ 以上为 1 套（10张），请按玩家人数重复打印对应套数 ↑</p>
+
+<!-- ====== 特权卡 ====== -->
+<div class="section-title special">⭐ 特权卡（共 20 张）</div>
+<div class="cards-grid">
+
+  <!-- 双倍竞拍 ×5 -->
+  <div class="priv-card">
+    <div class="priv-title">⭐×2<br>双倍竞拍</div>
+    <div class="priv-emoji">⭐</div>
+    <div class="priv-desc">本轮出价翻倍<br>（如出5牌，实算10）</div>
+    <div class="priv-badge">出价前宣告</div>
+  </div>
+  <div class="priv-card">
+    <div class="priv-title">⭐×2<br>双倍竞拍</div>
+    <div class="priv-emoji">⭐</div>
+    <div class="priv-desc">本轮出价翻倍<br>（如出5牌，实算10）</div>
+    <div class="priv-badge">出价前宣告</div>
+  </div>
+  <div class="priv-card">
+    <div class="priv-title">⭐×2<br>双倍竞拍</div>
+    <div class="priv-emoji">⭐</div>
+    <div class="priv-desc">本轮出价翻倍<br>（如出5牌，实算10）</div>
+    <div class="priv-badge">出价前宣告</div>
+  </div>
+  <div class="priv-card">
+    <div class="priv-title">⭐×2<br>双倍竞拍</div>
+    <div class="priv-emoji">⭐</div>
+    <div class="priv-desc">本轮出价翻倍<br>（如出5牌，实算10）</div>
+    <div class="priv-badge">出价前宣告</div>
+  </div>
+  <div class="priv-card">
+    <div class="priv-title">⭐×2<br>双倍竞拍</div>
+    <div class="priv-emoji">⭐</div>
+    <div class="priv-desc">本轮出价翻倍<br>（如出5牌，实算10）</div>
+    <div class="priv-badge">出价前宣告</div>
+  </div>
+
+  <!-- 内幕消息 ×5 -->
+  <div class="priv-card" style="background: linear-gradient(155deg,#0a1e3c,#1a4a7c,#2980b9);">
+    <div class="priv-title" style="color:#a8d4f0;">🔍<br>内幕消息</div>
+    <div class="priv-emoji">🔍</div>
+    <div class="priv-desc" style="color:#a8d4f0;">强制看任意对手<br>的1张出价卡</div>
+    <div class="priv-badge" style="background:rgba(168,212,240,0.2);color:#d8eeff;">出价前使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#0a1e3c,#1a4a7c,#2980b9);">
+    <div class="priv-title" style="color:#a8d4f0;">🔍<br>内幕消息</div>
+    <div class="priv-emoji">🔍</div>
+    <div class="priv-desc" style="color:#a8d4f0;">强制看任意对手<br>的1张出价卡</div>
+    <div class="priv-badge" style="background:rgba(168,212,240,0.2);color:#d8eeff;">出价前使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#0a1e3c,#1a4a7c,#2980b9);">
+    <div class="priv-title" style="color:#a8d4f0;">🔍<br>内幕消息</div>
+    <div class="priv-emoji">🔍</div>
+    <div class="priv-desc" style="color:#a8d4f0;">强制看任意对手<br>的1张出价卡</div>
+    <div class="priv-badge" style="background:rgba(168,212,240,0.2);color:#d8eeff;">出价前使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#0a1e3c,#1a4a7c,#2980b9);">
+    <div class="priv-title" style="color:#a8d4f0;">🔍<br>内幕消息</div>
+    <div class="priv-emoji">🔍</div>
+    <div class="priv-desc" style="color:#a8d4f0;">强制看任意对手<br>的1张出价卡</div>
+    <div class="priv-badge" style="background:rgba(168,212,240,0.2);color:#d8eeff;">出价前使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#0a1e3c,#1a4a7c,#2980b9);">
+    <div class="priv-title" style="color:#a8d4f0;">🔍<br>内幕消息</div>
+    <div class="priv-emoji">🔍</div>
+    <div class="priv-desc" style="color:#a8d4f0;">强制看任意对手<br>的1张出价卡</div>
+    <div class="priv-badge" style="background:rgba(168,212,240,0.2);color:#d8eeff;">出价前使用</div>
+  </div>
+
+  <!-- 一口价 ×5 -->
+  <div class="priv-card" style="background: linear-gradient(155deg,#1a2c00,#3a7a00,#7ab800);">
+    <div class="priv-title" style="color:#d4f0a8;">🔨<br>一口价</div>
+    <div class="priv-emoji">🔨</div>
+    <div class="priv-desc" style="color:#c8e890;">直接以底价×1.5<br>获得文物，无需竞价</div>
+    <div class="priv-badge" style="background:rgba(212,240,168,0.2);color:#e8ffd8;">出价前宣告</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#1a2c00,#3a7a00,#7ab800);">
+    <div class="priv-title" style="color:#d4f0a8;">🔨<br>一口价</div>
+    <div class="priv-emoji">🔨</div>
+    <div class="priv-desc" style="color:#c8e890;">直接以底价×1.5<br>获得文物，无需竞价</div>
+    <div class="priv-badge" style="background:rgba(212,240,168,0.2);color:#e8ffd8;">出价前宣告</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#1a2c00,#3a7a00,#7ab800);">
+    <div class="priv-title" style="color:#d4f0a8;">🔨<br>一口价</div>
+    <div class="priv-emoji">🔨</div>
+    <div class="priv-desc" style="color:#c8e890;">直接以底价×1.5<br>获得文物，无需竞价</div>
+    <div class="priv-badge" style="background:rgba(212,240,168,0.2);color:#e8ffd8;">出价前宣告</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#1a2c00,#3a7a00,#7ab800);">
+    <div class="priv-title" style="color:#d4f0a8;">🔨<br>一口价</div>
+    <div class="priv-emoji">🔨</div>
+    <div class="priv-desc" style="color:#c8e890;">直接以底价×1.5<br>获得文物，无需竞价</div>
+    <div class="priv-badge" style="background:rgba(212,240,168,0.2);color:#e8ffd8;">出价前宣告</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#1a2c00,#3a7a00,#7ab800);">
+    <div class="priv-title" style="color:#d4f0a8;">🔨<br>一口价</div>
+    <div class="priv-emoji">🔨</div>
+    <div class="priv-desc" style="color:#c8e890;">直接以底价×1.5<br>获得文物，无需竞价</div>
+    <div class="priv-badge" style="background:rgba(212,240,168,0.2);color:#e8ffd8;">出价前宣告</div>
+  </div>
+
+  <!-- 拍卖搅局 ×5 -->
+  <div class="priv-card" style="background: linear-gradient(155deg,#2c0a00,#7a1e00,#c0392b);">
+    <div class="priv-title" style="color:#ffd4c8;">🌀<br>拍卖搅局</div>
+    <div class="priv-emoji">🌀</div>
+    <div class="priv-desc" style="color:#ffc0b0;">本轮结果作废，重新竞拍该文物</div>
+    <div class="priv-badge" style="background:rgba(255,212,200,0.2);color:#ffe8e0;">揭牌后立即使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#2c0a00,#7a1e00,#c0392b);">
+    <div class="priv-title" style="color:#ffd4c8;">🌀<br>拍卖搅局</div>
+    <div class="priv-emoji">🌀</div>
+    <div class="priv-desc" style="color:#ffc0b0;">本轮结果作废，重新竞拍该文物</div>
+    <div class="priv-badge" style="background:rgba(255,212,200,0.2);color:#ffe8e0;">揭牌后立即使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#2c0a00,#7a1e00,#c0392b);">
+    <div class="priv-title" style="color:#ffd4c8;">🌀<br>拍卖搅局</div>
+    <div class="priv-emoji">🌀</div>
+    <div class="priv-desc" style="color:#ffc0b0;">本轮结果作废，重新竞拍该文物</div>
+    <div class="priv-badge" style="background:rgba(255,212,200,0.2);color:#ffe8e0;">揭牌后立即使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#2c0a00,#7a1e00,#c0392b);">
+    <div class="priv-title" style="color:#ffd4c8;">🌀<br>拍卖搅局</div>
+    <div class="priv-emoji">🌀</div>
+    <div class="priv-desc" style="color:#ffc0b0;">本轮结果作废，重新竞拍该文物</div>
+    <div class="priv-badge" style="background:rgba(255,212,200,0.2);color:#ffe8e0;">揭牌后立即使用</div>
+  </div>
+  <div class="priv-card" style="background: linear-gradient(155deg,#2c0a00,#7a1e00,#c0392b);">
+    <div class="priv-title" style="color:#ffd4c8;">🌀<br>拍卖搅局</div>
+    <div class="priv-emoji">🌀</div>
+    <div class="priv-desc" style="color:#ffc0b0;">本轮结果作废，重新竞拍该文物</div>
+    <div class="priv-badge" style="background:rgba(255,212,200,0.2);color:#ffe8e0;">揭牌后立即使用</div>
+  </div>
+
+</div>
+
+<!-- ====== 玩家棋子/标记 ====== -->
+<div class="section-title pawn">🎭 玩家标记棋子（共 5 颗，每人 1 颗）</div>
+<div class="pawn-grid">
+  <div class="pawn-item">
+    <div class="pawn-circle pawn-p1">
+      🧐
+      <span class="pawn-num-badge">1</span>
+    </div>
+    <div class="pawn-name">🟡 玩家 A</div>
+  </div>
+  <div class="pawn-item">
+    <div class="pawn-circle pawn-p2">
+      🕵️
+      <span class="pawn-num-badge">2</span>
+    </div>
+    <div class="pawn-name">🔴 玩家 B</div>
+  </div>
+  <div class="pawn-item">
+    <div class="pawn-circle pawn-p3">
+      👩‍🎓
+      <span class="pawn-num-badge">3</span>
+    </div>
+    <div class="pawn-name">🟢 玩家 C</div>
+  </div>
+  <div class="pawn-item">
+    <div class="pawn-circle pawn-p4">
+      🧙
+      <span class="pawn-num-badge">4</span>
+    </div>
+    <div class="pawn-name">🔵 玩家 D</div>
+  </div>
+  <div class="pawn-item">
+    <div class="pawn-circle pawn-p5">
+      👑
+      <span class="pawn-num-badge">5</span>
+    </div>
+    <div class="pawn-name">🟣 玩家 E</div>
+  </div>
+</div>
+
+<!-- ====== 金币代币 ====== -->
+<div class="section-title board" style="color:#c8a84b; border-color:#c8a84b;">🪙 金币代币（共 80 枚）</div>
+<div class="token-grid">
+  <!-- 16排×5 = 80枚，显示示例20枚 -->
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">1</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+  <div class="coin-token">5</div>
+</div>
+<p style="text-align:center; font-size:0.8em; color:#8b6a00; margin: 6px 0 18px;">可用筹码或硬币代替，面值为 1 和 5 两种</p>
+
+<!-- ====== 文明套装标记 ====== -->
+<div class="section-title board" style="color:#5c3317; border-color:#5c3317;">🏅 文明套装进度标记（每文明 4 枚，共 16 枚）</div>
+<div class="marker-grid">
+  <div class="civ-marker marker-egypt">🟡</div>
+  <div class="civ-marker marker-egypt">🟡</div>
+  <div class="civ-marker marker-egypt">🟡</div>
+  <div class="civ-marker marker-egypt">🟡</div>
+  <div class="civ-marker marker-rome">🔴</div>
+  <div class="civ-marker marker-rome">🔴</div>
+  <div class="civ-marker marker-rome">🔴</div>
+  <div class="civ-marker marker-rome">🔴</div>
+  <div class="civ-marker marker-maya">🟢</div>
+  <div class="civ-marker marker-maya">🟢</div>
+  <div class="civ-marker marker-maya">🟢</div>
+  <div class="civ-marker marker-maya">🟢</div>
+  <div class="civ-marker marker-china">🔵</div>
+  <div class="civ-marker marker-china">🔵</div>
+  <div class="civ-marker marker-china">🔵</div>
+  <div class="civ-marker marker-china">🔵</div>
+</div>
+<p style="text-align:center; font-size:0.8em; color:#8b6a00; margin: 6px 0 18px;">每完成1件套装件，在收藏板对应格中放置1枚标记</p>
+
+<!-- ====== 玩家收藏板 ====== -->
+<div class="section-title board">📋 玩家收藏板（共 5 张，每人 1 张）</div>
+
+<div class="collection-board">
+  <div class="board-header">
+    <div class="board-title">🏛️ 古文明拍卖行 — 收藏板</div>
+    <div>玩家姓名：<span class="board-player-name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+  </div>
+  <div class="board-civ-row">
+    <div class="board-civ-label egypt">🟡 埃及<br>套装</div>
+    <div class="board-slots">
+      <div class="board-slot slot-egypt">套装件1<br>法老面具</div>
+      <div class="board-slot slot-egypt">套装件2<br>阿努比斯</div>
+      <div class="board-slot slot-egypt">套装件3<br>莎草卷轴</div>
+      <div class="board-slot slot-egypt">套装件4<br>圣甲虫</div>
+    </div>
+    <div style="font-size:0.7em; color:#8b6a00; margin-left:10px; padding-top:4px;">集齐+20分</div>
+  </div>
+  <div class="board-civ-row">
+    <div class="board-civ-label rome">🔴 罗马<br>套装</div>
+    <div class="board-slots">
+      <div class="board-slot slot-rome">套装件1<br>凯撒头盔</div>
+      <div class="board-slot slot-rome">套装件2<br>角斗护盾</div>
+      <div class="board-slot slot-rome">套装件3<br>角斗场</div>
+      <div class="board-slot slot-rome">套装件4<br>维纳斯像</div>
+    </div>
+    <div style="font-size:0.7em; color:#8b1a10; margin-left:10px; padding-top:4px;">集齐+20分</div>
+  </div>
+  <div class="board-civ-row">
+    <div class="board-civ-label maya">🟢 玛雅<br>套装</div>
+    <div class="board-slots">
+      <div class="board-slot slot-maya">套装件1<br>羽毛冠</div>
+      <div class="board-slot slot-maya">套装件2<br>玉石面具</div>
+      <div class="board-slot slot-maya">套装件3<br>历法石盘</div>
+      <div class="board-slot slot-maya">套装件4<br>黄金权杖</div>
+    </div>
+    <div style="font-size:0.7em; color:#1a7a3e; margin-left:10px; padding-top:4px;">集齐+20分</div>
+  </div>
+  <div class="board-civ-row">
+    <div class="board-civ-label china">🔵 中国<br>套装</div>
+    <div class="board-slots">
+      <div class="board-slot slot-china">套装件1<br>皇帝玉玺</div>
+      <div class="board-slot slot-china">套装件2<br>青铜酒爵</div>
+      <div class="board-slot slot-china">套装件3<br>唐三彩马</div>
+      <div class="board-slot slot-china">套装件4<br>丝绸卷轴</div>
+    </div>
+    <div style="font-size:0.7em; color:#1a5080; margin-left:10px; padding-top:4px;">集齐+20分</div>
+  </div>
+  <div class="board-score-row">
+    <div class="score-box">
+      <div class="score-box-label">文物基础总分</div>
+      <div class="score-box-value"></div>
+    </div>
+    <div class="score-box">
+      <div class="score-box-label">套装加分</div>
+      <div class="score-box-value"></div>
+    </div>
+    <div class="score-box">
+      <div class="score-box-label">特殊奖励</div>
+      <div class="score-box-value"></div>
+    </div>
+    <div class="score-box">
+      <div class="score-box-label" style="color:#c47a00; font-weight:bold;">最终总分</div>
+      <div class="score-box-value" style="border-bottom: 2.5px solid #c8a84b; background: rgba(200,168,75,0.1);"></div>
+    </div>
+    <div class="priv-area">
+      特权卡区（最多2张）<br>
+      ┌──────┐ ┌──────┐<br>
+      │      │ │      │<br>
+      └──────┘ └──────┘
+    </div>
+  </div>
+</div>
+
+<!-- ====== 分值记录表 ====== -->
+<div class="section-title board" style="color:#3d1c00; border-color:#3d1c00;">📊 游戏分值记录表（可裁剪备用）</div>
+<table class="score-table">
+  <thead>
+    <tr>
+      <th style="width:160px;">计分项</th>
+      <th>玩家 A</th>
+      <th>玩家 B</th>
+      <th>玩家 C</th>
+      <th>玩家 D</th>
+      <th>玩家 E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="row-header">🟡 埃及文物分</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="row-header">🔴 罗马文物分</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="row-header">🟢 玛雅文物分</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="row-header">🔵 中国文物分</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="row-header">⭐ 套装加分</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="row-header">👑 保留50分卡</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="row-header">🏆 最多文物奖</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr class="total-row">
+      <td class="row-header">🎯 最终总分</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- 页脚 -->
+<div class="page-footer">
+  🏛️ 古文明拍卖行 Ancient Auction &nbsp;|&nbsp; 打印道具 v1.0 &nbsp;|&nbsp; 2026-05-01
+  <br>
+  <span style="font-size:0.9em; opacity:0.7;">打印时请勾选「背景图形」，建议卡牌使用卡纸打印</span>
+</div>
+
+</body>
+</html>
