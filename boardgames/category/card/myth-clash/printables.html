@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🃏 神魔封神录 - 打印道具</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#1a1a2e;color:#e0e0f0;line-height:1.5}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.print-hint{display:none!important}.section-title{page-break-before:always}.section-title:first-of-type{page-break-before:avoid}body{background:white}}
+.page-header{text-align:center;padding:30px 20px 20px;background:linear-gradient(135deg,#1a0a0a,#3a1a1a,#5a2a2a);margin-bottom:30px;border-bottom:4px solid #ff8b8b}
+.page-header h1{font-size:2.4em;text-shadow:2px 2px 8px rgba(255,255,255,0.3);margin-bottom:8px}
+.page-header .subtitle{font-size:1.1em;opacity:0.85}
+.print-hint{background:#ff8b8b;color:#1a1a2e;padding:12px 20px;text-align:center;font-weight:bold;margin:0 20px 20px;border-radius:8px}
+.section-title{font-size:1.6em;color:#ff8b8b;text-align:center;padding:20px 0 10px;margin:20px 0;border-bottom:2px solid #ff8b8b}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:0 20px 30px;max-width:900px;margin:0 auto}
+.card{border-radius:12px;padding:16px;min-height:160px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.card-name{font-size:1.3em;font-weight:bold;margin-bottom:4px}
+.card-type{font-size:0.85em;opacity:0.8;margin-bottom:8px}
+.card-power{font-size:1.8em;font-weight:bold;text-align:center;margin:6px 0}
+.card-ability{font-size:0.9em;background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin-top:auto}
+.c-blue{background:linear-gradient(135deg,#1a2a5a,#2a3a7a);border:2px solid #8b8bff}
+.c-red{background:linear-gradient(135deg,#3a1a1a,#5a2a2a);border:2px solid #ff6b6b}
+.c-green{background:linear-gradient(135deg,#1a3a1a,#2a5a2a);border:2px solid #6bff6b}
+.c-purple{background:linear-gradient(135deg,#2a1a3a,#3a2a5a);border:2px solid #bb8bff}
+.c-yellow{background:linear-gradient(135deg,#3a3a1a,#5a5a2a);border:2px solid #ffcc4b}
+.c-teal{background:linear-gradient(135deg,#1a3a3a,#2a5a5a);border:2px solid #4bffcc}
+.c-orange{background:linear-gradient(135deg,#3a2a1a,#5a4a2a);border:2px solid #ffaa4b}
+.c-pink{background:linear-gradient(135deg,#3a1a2a,#5a2a4a);border:2px solid #ff8bbb}
+.token-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:0 20px 30px;max-width:900px;margin:0 auto}
+.token{border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;font-size:0.85em;font-weight:bold;margin:0 auto}
+.t-gold{background:linear-gradient(135deg,#ffcc00,#ff9900);color:#3a1a00;border:2px solid #ff6600}
+.t-silver{background:linear-gradient(135deg,#ccc,#999);color:#333;border:2px solid #888}
+.cut-line{border-top:1px dashed #aaa;margin:10px 20px;text-align:center;color:#888;font-size:0.8em;padding-top:5px}
+</style>
+</head>
+<body>
+<div class="page-header">
+<h1>🃏 神魔封神录</h1>
+<div class="subtitle">打印道具 &mdash; 剪切后即可游玩</div>
+</div>
+<div class="print-hint">打印提示：建议使用A4纸彩色打印，打印后沿虚线剪裁</div>
+<div class="section-title">⚔️ 角色卡 — 神族</div>
+<div class="card-grid">
+<div class="card c-blue"><div class="card-name">哪吒</div><div class="card-type">神族 · 风火轮</div><div class="card-power">⚔ 7</div><div class="card-ability">争夺灵脉时战力+3</div></div>
+<div class="card c-blue"><div class="card-name">杨戬</div><div class="card-type">神族 · 天眼</div><div class="card-power">⚔ 6</div><div class="card-ability">查看对手1张手牌</div></div>
+<div class="card c-blue"><div class="card-name">雷震子</div><div class="card-type">神族 · 雷击</div><div class="card-power">⚔ 6</div><div class="card-ability">消灭对手1个战力≤3的角色</div></div>
+<div class="card c-blue"><div class="card-name">太乙真人</div><div class="card-type">神族 · 造化</div><div class="card-power">⚔ 4</div><div class="card-ability">从弃牌堆回收1张角色卡</div></div>
+<div class="card c-blue"><div class="card-name">哪吒(莲花)</div><div class="card-type">神族 · 重生</div><div class="card-power">⚔ 5</div><div class="card-ability">被消灭时回到手牌（1次）</div></div>
+<div class="card c-blue"><div class="card-name">金吒</div><div class="card-type">神族 · 金身</div><div class="card-power">⚔ 5</div><div class="card-ability">不受攻击法术影响</div></div>
+</div>
+<div class="section-title">👹 角色卡 — 魔族</div>
+<div class="card-grid">
+<div class="card c-red"><div class="card-name">妲己</div><div class="card-type">魔族 · 魅惑</div><div class="card-power">⚔ 5</div><div class="card-ability">使对手1个角色本回合战力归零</div></div>
+<div class="card c-red"><div class="card-name">申公豹</div><div class="card-type">魔族 · 挑拨</div><div class="card-power">⚔ 4</div><div class="card-ability">强制交换两个灵脉的占领者</div></div>
+<div class="card c-red"><div class="card-name">石矶</div><div class="card-type">魔族 · 玄功</div><div class="card-power">⚔ 6</div><div class="card-ability">被消灭时回到手牌</div></div>
+<div class="card c-red"><div class="card-name">闻仲</div><div class="card-type">魔族 · 铁鞭</div><div class="card-power">⚔ 7</div><div class="card-ability">争夺时若战力低于对手，+4战力</div></div>
+<div class="card c-red"><div class="card-name">袁洪</div><div class="card-type">魔族 · 变化</div><div class="card-power">⚔ 5</div><div class="card-ability">复制对手1个角色的神通</div></div>
+<div class="card c-red"><div class="card-name">吕岳</div><div class="card-type">魔族 · 瘟疫</div><div class="card-power">⚔ 4</div><div class="card-ability">使所有对手角色战力-1</div></div>
+</div>
+<div class="section-title">👤 角色卡 — 人族</div>
+<div class="card-grid">
+<div class="card c-green"><div class="card-name">姜子牙</div><div class="card-type">人族 · 封神</div><div class="card-power">⚔ 5</div><div class="card-ability">己方所有角色战力+1</div></div>
+<div class="card c-green"><div class="card-name">黄飞虎</div><div class="card-type">人族 · 忠义</div><div class="card-power">⚔ 4</div><div class="card-ability">保护相邻角色不被法术影响</div></div>
+<div class="card c-green"><div class="card-name">土行孙</div><div class="card-type">人族 · 地遁</div><div class="card-power">⚔ 3</div><div class="card-ability">可移至任意空灵脉</div></div>
+<div class="card c-green"><div class="card-name">李靖</div><div class="card-type">人族 · 镇守</div><div class="card-power">⚔ 4</div><div class="card-ability">占领的灵脉不可被争夺1回合</div></div>
+<div class="card c-green"><div class="card-name">哪吒(少年)</div><div class="card-type">人族 · 逆天</div><div class="card-power">⚔ 3</div><div class="card-ability">可挑战任何战力的角色</div></div>
+<div class="card c-green"><div class="card-name">韦护</div><div class="card-type">人族 · 降魔</div><div class="card-power">⚔ 4</div><div class="card-ability">出场时消灭1个魔族角色（≤4战力）</div></div>
+</div>
+<div class="section-title">📜 法术卡</div>
+<div class="card-grid">
+<div class="card c-purple"><div class="card-name">五雷轰顶</div><div class="card-type">攻击法术</div><div class="card-ability">消灭对手1个战力≤4的角色</div></div>
+<div class="card c-purple"><div class="card-name">金光护体</div><div class="card-type">防御法术</div><div class="card-ability">保护己方1个角色本回合不被消灭</div></div>
+<div class="card c-purple"><div class="card-name">移山倒海</div><div class="card-type">辅助法术</div><div class="card-ability">将1个灵脉移至新位置</div></div>
+<div class="card c-purple"><div class="card-name">窥天机</div><div class="card-type">辅助法术</div><div class="card-ability">查看对手全部手牌</div></div>
+<div class="card c-purple"><div class="card-name">借尸还魂</div><div class="card-type">辅助法术</div><div class="card-ability">从弃牌堆拿回2张卡</div></div>
+<div class="card c-purple"><div class="card-name">三昧真火</div><div class="card-type">攻击法术</div><div class="card-ability">对手所有角色战力-2</div></div>
+</div>
+<div class="section-title">🏔️ 灵脉卡</div>
+<div class="card-grid">
+<div class="card c-yellow"><div class="card-name">昆仑灵脉</div><div class="card-type">天命3点 · 需战力≥8</div></div>
+<div class="card c-yellow"><div class="card-name">蓬莱灵脉</div><div class="card-type">天命2点 · 需战力≥5</div></div>
+<div class="card c-yellow"><div class="card-name">凡间灵脉</div><div class="card-type">天命1点 · 需战力≥3</div></div>
+</div>
+
+</body>
+</html>

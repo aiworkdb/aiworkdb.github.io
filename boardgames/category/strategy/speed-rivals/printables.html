@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏎️ 极速争霸 - 打印道具</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#1a1a2e;color:#e0e0f0;line-height:1.5}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.print-hint{display:none!important}.section-title{page-break-before:always}.section-title:first-of-type{page-break-before:avoid}body{background:white}}
+.page-header{text-align:center;padding:30px 20px 20px;background:linear-gradient(135deg,#1a0a0a,#2a1a1a,#3a1a2a);margin-bottom:30px;border-bottom:4px solid #ff6b6b}
+.page-header h1{font-size:2.4em;text-shadow:2px 2px 8px rgba(255,255,255,0.3);margin-bottom:8px}
+.page-header .subtitle{font-size:1.1em;opacity:0.85}
+.print-hint{background:#ff6b6b;color:#1a1a2e;padding:12px 20px;text-align:center;font-weight:bold;margin:0 20px 20px;border-radius:8px}
+.section-title{font-size:1.6em;color:#ff6b6b;text-align:center;padding:20px 0 10px;margin:20px 0;border-bottom:2px solid #ff6b6b}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:0 20px 30px;max-width:900px;margin:0 auto}
+.card{border-radius:12px;padding:16px;min-height:160px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.card-name{font-size:1.3em;font-weight:bold;margin-bottom:4px}
+.card-type{font-size:0.85em;opacity:0.8;margin-bottom:8px}
+.card-power{font-size:1.8em;font-weight:bold;text-align:center;margin:6px 0}
+.card-ability{font-size:0.9em;background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;margin-top:auto}
+.c-blue{background:linear-gradient(135deg,#1a2a5a,#2a3a7a);border:2px solid #8b8bff}
+.c-red{background:linear-gradient(135deg,#3a1a1a,#5a2a2a);border:2px solid #ff6b6b}
+.c-green{background:linear-gradient(135deg,#1a3a1a,#2a5a2a);border:2px solid #6bff6b}
+.c-purple{background:linear-gradient(135deg,#2a1a3a,#3a2a5a);border:2px solid #bb8bff}
+.c-yellow{background:linear-gradient(135deg,#3a3a1a,#5a5a2a);border:2px solid #ffcc4b}
+.c-teal{background:linear-gradient(135deg,#1a3a3a,#2a5a5a);border:2px solid #4bffcc}
+.c-orange{background:linear-gradient(135deg,#3a2a1a,#5a4a2a);border:2px solid #ffaa4b}
+.c-pink{background:linear-gradient(135deg,#3a1a2a,#5a2a4a);border:2px solid #ff8bbb}
+.token-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:0 20px 30px;max-width:900px;margin:0 auto}
+.token{border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;font-size:0.85em;font-weight:bold;margin:0 auto}
+.t-gold{background:linear-gradient(135deg,#ffcc00,#ff9900);color:#3a1a00;border:2px solid #ff6600}
+.t-silver{background:linear-gradient(135deg,#ccc,#999);color:#333;border:2px solid #888}
+.cut-line{border-top:1px dashed #aaa;margin:10px 20px;text-align:center;color:#888;font-size:0.8em;padding-top:5px}
+</style>
+</head>
+<body>
+<div class="page-header">
+<h1>🏎️ 极速争霸</h1>
+<div class="subtitle">打印道具 &mdash; 剪切后即可游玩</div>
+</div>
+<div class="print-hint">打印提示：建议使用A4纸彩色打印，打印后沿虚线剪裁</div>
+<div class="section-title">🏁 赛道卡</div>
+<div class="card-grid">
+<div class="card c-blue"><div class="card-name">蒙特卡洛</div><div class="card-type">窄道多弯 · 3圈8弯</div><div class="card-ability">弯道优势+2 · 直道-1</div></div>
+<div class="card c-red"><div class="card-name">蒙扎</div><div class="card-type">高速直道 · 3圈3弯</div><div class="card-ability">直道优势+2 · 弯道-1</div></div>
+<div class="card c-teal"><div class="card-name">铃鹿</div><div class="card-type">综合均衡 · 3圈5弯</div><div class="card-ability">直道+1 · 弯道+1</div></div>
+<div class="card c-green"><div class="card-name">斯帕</div><div class="card-type">天气多变 · 3圈6弯</div><div class="card-ability">直道+1 · 弯道+1</div></div>
+<div class="card c-orange"><div class="card-name">银石</div><div class="card-type">老牌赛道 · 3圈6弯</div><div class="card-ability">直道+1 · 弯道+1</div></div>
+<div class="card c-purple"><div class="card-name">新加坡</div><div class="card-type">夜赛潮湿 · 3圈7弯</div><div class="card-ability">弯道优势+2 · 直道-1</div></div>
+</div>
+<div class="section-title">🔧 轮胎卡</div>
+<div class="card-grid">
+<div class="card c-red"><div class="card-name">软胎 🔴</div><div class="card-type">速度+2 · 耐久1圈</div><div class="card-ability">适合冲刺/排位赛，1圈后开始磨损</div></div>
+<div class="card c-yellow"><div class="card-name">中性胎 🟡</div><div class="card-type">速度+1 · 耐久2圈</div><div class="card-ability">均衡配方，2圈后开始磨损</div></div>
+<div class="card c-blue"><div class="card-name">硬胎 ⚪</div><div class="card-type">速度+0 · 耐久4圈</div><div class="card-ability">长距离/一停策略，4圈后开始磨损</div></div>
+<div class="card c-teal"><div class="card-name">雨胎 🔵</div><div class="card-type">雨天速度+1 · 耐久3圈</div><div class="card-ability">雨天专用，晴天无速度加成</div></div>
+</div>
+<div class="section-title">⚡ 策略卡</div>
+<div class="card-grid">
+<div class="card c-purple"><div class="card-name">进站换胎</div><div class="card-type">策略</div><div class="card-ability">丢失2个位置，更换轮胎配方</div></div>
+<div class="card c-purple"><div class="card-name">推进引擎</div><div class="card-type">策略</div><div class="card-ability">本圈速度+3，但燃油消耗+1</div></div>
+<div class="card c-purple"><div class="card-name">节省燃油</div><div class="card-type">策略</div><div class="card-ability">本圈速度-1，燃油消耗-1</div></div>
+<div class="card c-purple"><div class="card-name">DRS超车</div><div class="card-type">策略</div><div class="card-ability">直道上超车判定变为3+</div></div>
+<div class="card c-purple"><div class="card-name">防守位置</div><div class="card-type">策略</div><div class="card-ability">本圈不可被超车（除非速度差5+）</div></div>
+<div class="card c-purple"><div class="card-name">延迟进站</div><div class="card-type">策略</div><div class="card-ability">跳过本轮进站，轮胎磨损+1</div></div>
+</div>
+<div class="section-title">🌦️ 天气卡</div>
+<div class="card-grid">
+<div class="card c-yellow"><div class="card-name">☀️ 晴天</div><div class="card-type">标准条件</div><div class="card-ability">无特殊效果</div></div>
+<div class="card c-blue"><div class="card-name">🌧️ 雨天</div><div class="card-type">恶劣条件</div><div class="card-ability">所有非雨胎速度-2；雨胎正常</div></div>
+<div class="card c-teal"><div class="card-name">⛅ 变天</div><div class="card-type">不确定</div><div class="card-ability">每圈投骰决定天气（4+变雨）</div></div>
+</div>
+<div class="section-title">🏆 积分卡</div>
+<div class="card-grid">
+<div class="card c-gold-placeholder"><div class="card-name">🥇 冠军</div><div class="card-type">第1名</div><div class="card-ability">25分</div></div>
+<div class="card c-orange"><div class="card-name">🥈 亚军</div><div class="card-type">第2名</div><div class="card-ability">18分</div></div>
+<div class="card c-yellow"><div class="card-name">🥉 季军</div><div class="card-type">第3名</div><div class="card-ability">15分</div></div>
+<div class="card c-green"><div class="card-name">第四名</div><div class="card-type">第4名</div><div class="card-ability">12分</div></div>
+<div class="card c-blue"><div class="card-name">第五名</div><div class="card-type">第5名</div><div class="card-ability">10分</div></div>
+</div>
+
+</body>
+</html>
