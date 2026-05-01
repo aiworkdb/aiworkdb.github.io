@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蒸汽革命 - 打印道具</title>
+<style>
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint {
+        display: none;
+    }
+    .page {
+        page-break-after: always;
+    }
+    .card {
+        page-break-inside: avoid;
+    }
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: #fdf6e3;
+    padding: 20px;
+}
+.print-hint {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.print-hint strong {
+    color: #856404;
+}
+.print-hint ul {
+    margin: 10px 0 0 20px;
+}
+.print-hint li {
+    margin: 5px 0;
+}
+.page {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+h1 {
+    text-align: center;
+    color: #92400e;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+h2 {
+    color: #78350f;
+    border-bottom: 2px solid #d97706;
+    padding-bottom: 8px;
+    margin: 20px 0 15px 0;
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+.card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+.card {
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.card-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+.card-icon {
+    font-size: 32px;
+    margin: 6px 0;
+}
+.card-desc {
+    font-size: 11px;
+    color: #555;
+    margin-top: 4px;
+    line-height: 1.3;
+}
+.card-cost {
+    font-size: 11px;
+    color: #dc2626;
+    font-weight: bold;
+    margin-top: 4px;
+}
+.card-output {
+    font-size: 11px;
+    color: #16a34a;
+    margin-top: 2px;
+}
+.bg-factory {
+    background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+}
+.bg-tech {
+    background: linear-gradient(135deg, #dbeafe 0%, #3b82f6 100%);
+    color: white;
+}
+.bg-order {
+    background: linear-gradient(135deg, #d1fae5 0%, #10b981 100%);
+}
+.bg-event {
+    background: linear-gradient(135deg, #fce7f3 0%, #ec4899 100%);
+}
+.bg-resource {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 20px;
+    margin: 3px;
+    border: 2px solid #333;
+}
+.bg-coal { background: #374151; color: white; }
+.bg-steel { background: #9ca3af; }
+.bg-cotton { background: #f0fdf4; }
+.bg-product { background: #fef3c7; }
+.coin-marker {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border: 2px solid #d97706;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #78350f;
+    margin: 3px;
+}
+.railway-marker {
+    width: 60px;
+    height: 15px;
+    background: #78350f;
+    border: 1px solid #451a03;
+    display: inline-block;
+    margin: 3px;
+    border-radius: 3px;
+}
+.factory-marker {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #92400e;
+    background: #fef3c7;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin: 3px;
+    border-radius: 4px;
+}
+.map-container {
+    text-align: center;
+    margin: 20px 0;
+}
+.industry-map {
+    display: inline-block;
+    background: #fef9c3;
+    padding: 20px;
+    border-radius: 12px;
+    border: 3px solid #a16207;
+}
+.map-row {
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+}
+.map-cell {
+    width: 90px;
+    height: 70px;
+    border: 2px solid #92400e;
+    border-radius: 6px;
+    margin: 0 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+.cell-mine { background: #e5e7eb; }
+.cell-factory { background: #fed7aa; }
+.cell-city { background: #bbf7d0; }
+@media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+        <li>卡牌建议使用<strong>卡纸</strong>打印</li>
+        <li>地图建议使用普通A4纸打印</li>
+    </ul>
+</div>
+
+<!-- 第1页：工业地图 -->
+<div class="page">
+    <h1>🚂 蒸汽革命 - 工业地图</h1>
+    <div class="map-container">
+        <div class="industry-map">
+            <div class="map-row">
+                <div class="map-cell cell-mine">🏔️ 煤矿<br>(煤炭)</div>
+                <div class="map-cell cell-mine">🏔️ 钢矿<br>(钢铁)</div>
+                <div class="map-cell cell-mine">🌾 棉田<br>(棉花)</div>
+            </div>
+            <div style="text-align:center; margin:5px 0; font-size:18px;">⬇️ 🛤️ ⬇️ 🛤️ ⬇️</div>
+            <div class="map-row">
+                <div class="map-cell cell-factory">🏭 炼钢厂<br>(炼钢)</div>
+                <div class="map-cell cell-factory">🏭 纺织厂<br>(纺织)</div>
+                <div class="map-cell cell-factory">🏭 机械厂<br>(机械)</div>
+            </div>
+            <div style="text-align:center; margin:5px 0; font-size:18px;">⬇️ 🛤️ ⬇️ 🛤️ ⬇️</div>
+            <div class="map-row">
+                <div class="map-cell cell-city">🏙️ 伦敦</div>
+                <div class="map-cell cell-city">🏙️ 曼彻斯特</div>
+                <div class="map-cell cell-city">🏙️ 伯明翰</div>
+            </div>
+        </div>
+    </div>
+    <h2>资源标记</h2>
+    <div style="text-align:center;">
+        <div class="bg-resource bg-coal">⬛ 煤炭</div>
+        <div class="bg-resource bg-steel">⚙️ 钢铁</div>
+        <div class="bg-resource bg-cotton">☁️ 棉花</div>
+        <div class="bg-resource bg-product">📦 成品</div>
+    </div>
+</div>
+
+<!-- 第2页：工厂卡 -->
+<div class="page">
+    <h1>🏭 蒸汽革命 - 工厂卡（20张）</h1>
+    <div class="card-grid">
+        <div class="card bg-factory"><div class="card-icon">🏭🔥</div><div class="card-title">炼钢厂</div><div class="card-desc">消耗:5金+2钢铁<br>产出:2钢铁/回合</div><div class="card-cost">建造:5金+2钢铁</div><div class="card-output">产出:2钢铁</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭🔥</div><div class="card-title">炼钢厂</div><div class="card-desc">消耗:5金+2钢铁<br>产出:2钢铁/回合</div><div class="card-cost">建造:5金+2钢铁</div><div class="card-output">产出:2钢铁</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭🔥</div><div class="card-title">炼钢厂</div><div class="card-desc">消耗:5金+2钢铁<br>产出:2钢铁/回合</div><div class="card-cost">建造:5金+2钢铁</div><div class="card-output">产出:2钢铁</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭🔥</div><div class="card-title">炼钢厂</div><div class="card-desc">消耗:5金+2钢铁<br>产出:2钢铁/回合</div><div class="card-cost">建造:5金+2钢铁</div><div class="card-output">产出:2钢铁</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭🧵</div><div class="card-title">纺织厂</div><div class="card-desc">消耗:4金+2棉花<br>产出:2成品/回合</div><div class="card-cost">建造:4金+2棉花</div><div class="card-output">产出:2成品</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭🧵</div><div class="card-title">纺织厂</div><div class="card-desc">消耗:4金+2棉花<br>产出:2成品/回合</div><div class="card-cost">建造:4金+2棉花</div><div class="card-output">产出:2成品</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭🧵</div><div class="card-title">纺织厂</div><div class="card-desc">消耗:4金+2棉花<br>产出:2成品/回合</div><div class="card-cost">建造:4金+2棉花</div><div class="card-output">产出:2成品</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭🧵</div><div class="card-title">纺织厂</div><div class="card-desc">消耗:4金+2棉花<br>产出:2成品/回合</div><div class="card-cost">建造:4金+2棉花</div><div class="card-output">产出:2成品</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭⚙️</div><div class="card-title">机械厂</div><div class="card-desc">消耗:6金+3钢铁<br>产出:3成品/回合</div><div class="card-cost">建造:6金+3钢铁</div><div class="card-output">产出:3成品</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭⚙️</div><div class="card-title">机械厂</div><div class="card-desc">消耗:6金+3钢铁<br>产出:3成品/回合</div><div class="card-cost">建造:6金+3钢铁</div><div class="card-output">产出:3成品</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭⚙️</div><div class="card-title">机械厂</div><div class="card-desc">消耗:6金+3钢铁<br>产出:3成品/回合</div><div class="card-cost">建造:6金+3钢铁</div><div class="card-output">产出:3成品</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭⬛</div><div class="card-title">煤矿</div><div class="card-desc">消耗:3金<br>产出:3煤炭/回合</div><div class="card-cost">建造:3金</div><div class="card-output">产出:3煤炭</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭⬛</div><div class="card-title">煤矿</div><div class="card-desc">消耗:3金<br>产出:3煤炭/回合</div><div class="card-cost">建造:3金</div><div class="card-output">产出:3煤炭</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭⬛</div><div class="card-title">煤矿</div><div class="card-desc">消耗:3金<br>产出:3煤炭/回合</div><div class="card-cost">建造:3金</div><div class="card-output">产出:3煤炭</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭💨</div><div class="card-title">蒸汽工坊</div><div class="card-desc">消耗:8金+2钢铁<br>产出:任意资源×2</div><div class="card-cost">建造:8金+2钢铁</div><div class="card-output">灵活产出</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭💨</div><div class="card-title">蒸汽工坊</div><div class="card-desc">消耗:8金+2钢铁<br>产出:任意资源×2</div><div class="card-cost">建造:8金+2钢铁</div><div class="card-output">灵活产出</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭💨</div><div class="card-title">蒸汽工坊</div><div class="card-desc">消耗:8金+2钢铁<br>产出:任意资源×2</div><div class="card-cost">建造:8金+2钢铁</div><div class="card-output">灵活产出</div></div>
+        <div class="card bg-factory"><div class="card-icon">🏭💨</div><div class="card-title">蒸汽工坊</div><div class="card-desc">消耗:8金+2钢铁<br>产出:任意资源×2</div><div class="card-cost">建造:8金+2钢铁</div><div class="card-output">灵活产出</div></div>
+    </div>
+</div>
+
+<div class="page">
+    <h1>🛠️ 蒸汽革命 - 技术卡（15张）</h1>
+    <div class="card-grid-3">
+        <div class="card bg-tech"><div class="card-icon">🚂1</div><div class="card-title">蒸汽机改良</div><div class="card-desc">铁路运输效率+1</div><div class="card-cost">研发:3金</div></div>
+        <div class="card bg-tech"><div class="card-icon">🚂1</div><div class="card-title">蒸汽机改良</div><div class="card-desc">铁路运输效率+1</div><div class="card-cost">研发:3金</div></div>
+        <div class="card bg-tech"><div class="card-icon">🛠️1</div><div class="card-title">机床革新</div><div class="card-desc">工厂产出+1</div><div class="card-cost">研发:4金</div></div>
+        <div class="card bg-tech"><div class="card-icon">🛠️1</div><div class="card-title">机床革新</div><div class="card-desc">工厂产出+1</div><div class="card-cost">研发:4金</div></div>
+        <div class="card bg-tech"><div class="card-icon">⛏️1</div><div class="card-title">矿井通风</div><div class="card-desc">矿山产出+1</div><div class="card-cost">研发:2金</div></div>
+        <div class="card bg-tech"><div class="card-icon">⛏️1</div><div class="card-title">矿井通风</div><div class="card-desc">矿山产出+1</div><div class="card-cost">研发:2金</div></div>
+        <div class="card bg-tech"><div class="card-icon">📡1</div><div class="card-title">铁路电报</div><div class="card-desc">可远程完成订单</div><div class="card-cost">研发:3金</div></div>
+        <div class="card bg-tech"><div class="card-icon">📡1</div><div class="card-title">铁路电报</div><div class="card-desc">可远程完成订单</div><div class="card-cost">研发:3金</div></div>
+        <div class="card bg-tech"><div class="card-icon">🤖2</div><div class="card-title">工厂自动化</div><div class="card-desc">工厂无需工人运行</div><div class="card-cost">研发:6金</div></div>
+        <div class="card bg-tech"><div class="card-icon">💨2</div><div class="card-title">蒸汽涡轮</div><div class="card-desc">所有产出+1</div><div class="card-cost">研发:5金</div></div>
+        <div class="card bg-tech"><div class="card-icon">🛤️2</div><div class="card-title">铁路网络</div><div class="card-desc">铺设铁路费用-2</div><div class="card-cost">研发:4金</div></div>
+        <div class="card bg-tech"><div class="card-icon">🏙️2</div><div class="card-title">城市规划</div><div class="card-desc">城市订单奖励+2金</div><div class="card-cost">研发:5金</div></div>
+        <div class="card bg-tech"><div class="card-icon">🚂1</div><div class="card-title">蒸汽机改良</div><div class="card-desc">铁路运输效率+1</div><div class="card-cost">研发:3金</div></div>
+        <div class="card bg-tech"><div class="card-icon">⛏️1</div><div class="card-title">矿井通风</div><div class="card-desc">矿山产出+1</div><div class="card-cost">研发:2金</div></div>
+        <div class="card bg-tech"><div class="card-icon">📡1</div><div class="card-title">铁路电报</div><div class="card-desc">可远程完成订单</div><div class="card-cost">研发:3金</div></div>
+    </div>
+</div>
+
+<div class="page">
+    <h1>📦 蒸汽革命 - 订单卡（20张）</h1>
+    <div class="card-grid">
+        <div class="card bg-order"><div class="card-icon">📦1</div><div class="card-title">小型订单</div><div class="card-desc">需求:1成品<br>奖励:3金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦1</div><div class="card-title">小型订单</div><div class="card-desc">需求:1成品<br>奖励:3金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦1</div><div class="card-title">小型订单</div><div class="card-desc">需求:1成品<br>奖励:3金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦1</div><div class="card-title">小型订单</div><div class="card-desc">需求:1成品<br>奖励:3金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦2</div><div class="card-title">中型订单</div><div class="card-desc">需求:2成品<br>奖励:6金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦2</div><div class="card-title">中型订单</div><div class="card-desc">需求:2成品<br>奖励:6金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦2</div><div class="card-title">中型订单</div><div class="card-desc">需求:2成品<br>奖励:6金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦2</div><div class="card-title">中型订单</div><div class="card-desc">需求:2成品<br>奖励:6金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦3</div><div class="card-title">大型订单</div><div class="card-desc">需求:3成品+1钢铁<br>奖励:10金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦3</div><div class="card-title">大型订单</div><div class="card-desc">需求:3成品+1钢铁<br>奖励:10金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦3</div><div class="card-title">大型订单</div><div class="card-desc">需求:3成品+1钢铁<br>奖励:10金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦3</div><div class="card-title">大型订单</div><div class="card-desc">需求:3成品+1钢铁<br>奖励:10金</div></div>
+        <div class="card bg-order"><div class="card-icon">📦4</div><div class="card-title">特殊订单</div><div class="card-desc">特定资源组合<br>奖励:15金+技术卡</div></div>
+        <div class="card bg-order"><div class="card-icon">📦4</div><div class="card-title">特殊订单</div><div class="card-desc">特定资源组合<br>奖励:15金+技术卡</div></div>
+        <div class="card bg-order"><div class="card-icon">📦4</div><div class="card-title">特殊订单</div><div class="card-desc">特定资源组合<br>奖励:15金+技术卡</div></div>
+        <div class="card bg-order"><div class="card-icon">📦4</div><div class="card-title">特殊订单</div><div class="card-desc">特定资源组合<br>奖励:15金+技术卡</div></div>
+    </div>
+</div>
+
+<div class="page">
+    <h1>🎲 蒸汽革命 - 事件卡（10张）</h1>
+    <h2>📈 好消息（5张）</h2>
+    <div class="card-grid-3">
+        <div class="card bg-event"><div class="card-icon">📈</div><div class="card-title">经济繁荣</div><div class="card-desc">所有订单奖励+2金<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">📈</div><div class="card-title">经济繁荣</div><div class="card-desc">所有订单奖励+2金<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">🎪</div><div class="card-title">技术博览会</div><div class="card-desc">研发费用-2金<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">🎪</div><div class="card-title">技术博览会</div><div class="card-desc">研发费用-2金<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">💡</div><div class="card-title">新发现</div><div class="card-desc">所有玩家获得<br>1个免费资源</div></div>
+    </div>
+    <h2>📉 坏消息（5张）</h2>
+    <div class="card-grid-3">
+        <div class="card bg-event"><div class="card-icon">✊</div><div class="card-title">工人罢工</div><div class="card-desc">所有工厂产出-1<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">✊</div><div class="card-title">工人罢工</div><div class="card-desc">所有工厂产出-1<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">💥</div><div class="card-title">矿难</div><div class="card-desc">1个矿山产出为0<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">🚂💥</div><div class="card-title">铁路事故</div><div class="card-desc">1条铁路无法使用<br>(1回合)</div></div>
+        <div class="card bg-event"><div class="card-icon">📉</div><div class="card-title">金融危机</div><div class="card-desc">所有玩家<br>损失3金</div></div>
+    </div>
+</div>
+
+<!-- 第6页：标记物 -->
+<div class="page">
+    <h1>🚂 蒸汽革命 - 游戏标记物</h1>
+    <h2>金币标记（40个）</h2>
+    <div style="text-align:center;">
+        <div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div>
+        <div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div>
+        <div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div>
+        <div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div><div class="coin-marker">1</div>
+        <div class="coin-marker">5</div><div class="coin-marker">5</div><div class="coin-marker">5</div><div class="coin-marker">5</div><div class="coin-marker">5</div>
+        <div class="coin-marker">5</div><div class="coin-marker">5</div><div class="coin-marker">5</div><div class="coin-marker">5</div><div class="coin-marker">5</div>
+        <div class="coin-marker">10</div><div class="coin-marker">10</div><div class="coin-marker">10</div><div class="coin-marker">10</div><div class="coin-marker">10</div>
+        <div class="coin-marker">10</div><div class="coin-marker">10</div><div class="coin-marker">10</div><div class="coin-marker">10</div><div class="coin-marker">10</div>
+    </div>
+    <h2>铁路标记（25个）</h2>
+    <div style="text-align:center;">
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+        <div class="railway-marker"></div><div class="railway-marker"></div><div class="railway-marker"></div>
+    </div>
+    <h2>工厂标记（15个）</h2>
+    <div style="text-align:center;">
+        <div class="factory-marker">🏭</div><div class="factory-marker">🏭</div><div class="factory-marker">🏭</div>
+        <div class="factory-marker">🏭</div><div class="factory-marker">🏭</div><div class="factory-marker">🏭</div>
+        <div class="factory-marker">🏭</div><div class="factory-marker">🏭</div><div class="factory-marker">🏭</div>
+        <div class="factory-marker">🏭</div><div class="factory-marker">🏭</div><div class="factory-marker">🏭</div>
+        <div class="factory-marker">🏭</div><div class="factory-marker">🏭</div><div class="factory-marker">🏭</div>
+    </div>
+</div>
+
+</body>
+</html>
