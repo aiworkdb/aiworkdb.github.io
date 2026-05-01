@@ -1,664 +1,289 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>桌游卡牌生成器</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        .panel {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .panel-title {
-            font-size: 1.3em;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .color-picker {
-            display: flex;
-            gap: 10px;
-        }
-
-        .color-option {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-
-        .color-option.selected {
-            border-color: #333;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-right: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #eee;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .card-preview {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            min-height: 250px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        .card-icon {
-            font-size: 2.5em;
-        }
-
-        .card-description {
-            flex: 1;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #666;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .card-type {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .print-section {
-            margin-top: 30px;
-        }
-
-        .print-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .print-card {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            break-inside: avoid;
-        }
-
-        .print-card .card-header {
-            margin-bottom: 10px;
-        }
-
-        .print-card .card-title {
-            font-size: 1.2em;
-        }
-
-        .print-card .card-icon {
-            font-size: 2em;
-        }
-
-        .print-card .card-description {
-            flex: 1;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-        .print-card .card-footer {
-            margin-top: 10px;
-            padding-top: 10px;
-        }
-
-        @media print {
-            body {
-                background: white;
-            }
-            .panel {
-                display: none;
-            }
-            .print-section {
-                margin-top: 0;
-            }
-            .print-grid {
-                gap: 10px;
-            }
-        }
-
-        .saved-cards-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .saved-card-item {
-            padding: 12px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .saved-card-item:hover {
-            background: #f8f9fa;
-        }
-
-        .saved-card-item .title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .saved-card-item .meta {
-            font-size: 12px;
-            color: #888;
-        }
-
-        .delete-btn {
-            color: #dc3545;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            float: right;
-        }
-
-        .delete-btn:hover {
-            text-decoration: underline;
-        }
-
-        .pattern-toggle {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-
-        .toggle-btn {
-            flex: 1;
-            padding: 8px 16px;
-            border: 2px solid #ddd;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .toggle-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: transparent;
-        }
-
-        .toggle-btn:hover:not(.active) {
-            border-color: #667eea;
-        }
-
-        .card-icon-img {
-            max-width: 60px;
-            max-height: 60px;
-            object-fit: contain;
-        }
-
-        .print-card .card-icon-img {
-            max-width: 50px;
-            max-height: 50px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桌游卡牌设计工具</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+:root {
+    --sw:320px; --cw:260px; --ch:360px; --cr:14px;
+    --g1:#f5e6a0;--g2:#c8a84b;--g3:#8b6914;
+    --cm:#9e9e9e;--uc:#4fc3f7;--rr:#ffd700;
+    --b1:#0f0f1a;--b2:#1a1a2e;--b3:#25253e;
+    --t1:#e8e8f0;--t2:#a0a0b8;--ac:#667eea;--bd:#333350;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI','PingFang SC',sans-serif;background:var(--b1);color:var(--t1);min-height:100vh;overflow-x:hidden;}
+/* 顶部栏 */
+.topbar{background:var(--b2);border-bottom:1px solid var(--bd);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar h1{font-size:1.2em;font-weight:700;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ta{display:flex;gap:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--bd);border-radius:8px;background:var(--b3);color:var(--t1);font-size:13px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn:hover{border-color:var(--ac);background:rgba(102,126,234,0.15);}
+.btn-pri{background:linear-gradient(135deg,var(--ac),#764ba2);border:none;color:#fff;}
+.btn-gold{background:linear-gradient(135deg,var(--g1),var(--g3));border:none;color:#1a0a00;font-weight:600;}
+.btn-sm{padding:4px 8px;font-size:12px;}
+.btn-danger{border-color:#e74c3c;color:#e74c3c;}.btn-danger:hover{background:#e74c3c;color:#fff;}
+/* 主布局 */
+.main{display:grid;grid-template-columns:var(--sw) 1fr var(--sw);height:calc(100vh - 49px);}
+/* 侧边栏 */
+.sb{background:var(--b2);border-right:1px solid var(--bd);overflow-y:auto;padding:14px;}
+.sb:last-child{border-right:none;border-left:1px solid var(--bd);}
+.sb::-webkit-scrollbar{width:5px;}.sb::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px;}
+.sec{margin-bottom:16px;}.st{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--bd);}
+/* 表单 */
+.fg{margin-bottom:10px;}.fg label{display:block;font-size:11px;font-weight:600;color:var(--t2);margin-bottom:4px;}
+.fi{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--b3);color:var(--t1);font-size:13px;transition:border-color 0.2s;}
+.fi:focus{outline:none;border-color:var(--ac);}
+textarea.fi{resize:vertical;min-height:60px;line-height:1.4;}
+select.fi{cursor:pointer;appearance:auto;}
+/* 网格 */
+.gd{display:grid;gap:5px;}.g6{grid-template-columns:repeat(6,1fr);}.g4{grid-template-columns:repeat(4,1fr);}.g3{grid-template-columns:repeat(3,1fr);}
+.ob{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;border:2px solid var(--bd);border-radius:6px;background:var(--b3);color:var(--t1);font-size:11px;cursor:pointer;transition:all 0.2s;text-align:center;min-height:40px;}
+.ob:hover{border-color:var(--ac);}.ob.active{border-color:var(--ac);background:rgba(102,126,234,0.2);color:var(--ac);}
+.ob .e{font-size:18px;line-height:1;}.ob .l{font-size:9px;margin-top:1px;}
+/* 色块 */
+.cg{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}.sw{width:100%;aspect-ratio:1;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all 0.2s;}
+.sw:hover{transform:scale(1.1);}.sw.active{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,0.3);}
+/* 数值 */
+.sr{display:grid;grid-template-columns:1fr 1fr;gap:6px;}.sg{display:flex;align-items:center;gap:4px;}.sg label{font-size:10px;color:var(--t2);min-width:28px;}
+.sg input{width:54px;padding:5px 6px;border:1px solid var(--bd);border-radius:5px;background:var(--b3);color:var(--t1);font-size:13px;font-weight:700;text-align:center;}
+.sg input:focus{outline:none;border-color:var(--ac);}
+/* 上传 */
+.ua{border:2px dashed var(--bd);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s;margin-top:6px;}
+.ua:hover{border-color:var(--ac);background:rgba(102,126,234,0.05);}.ua .i{font-size:20px;}.ua .t{font-size:10px;color:var(--t2);}
+/* 预览区 */
+.pz{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--b1);padding:20px;overflow:auto;position:relative;}
+.pz::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(102,126,234,0.05) 0%,transparent 70%);pointer-events:none;}
+.pl{font-size:11px;color:var(--t2);margin-bottom:12px;letter-spacing:0.1em;text-transform:uppercase;}
+/* 卡牌 */
+.co{width:var(--cw);position:relative;padding:3px;border-radius:calc(var(--cr) + 3px);background:linear-gradient(135deg,var(--g1),var(--g2),var(--g3),var(--g2));box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:transform 0.3s,box-shadow 0.3s;z-index:1;}
+.co:hover{transform:scale(1.02);}
+.ci{width:100%;height:100%;border-radius:var(--cr);overflow:hidden;position:relative;}
+/* 稀有度 */
+.r-c .co{background:linear-gradient(135deg,#999,#777,#999);}
+.r-u .co{background:linear-gradient(135deg,#4fc3f7,#2196f3,#4fc3f7);box-shadow:0 0 15px rgba(79,195,247,0.4),0 8px 32px rgba(0,0,0,0.3);}
+.r-r .co{background:linear-gradient(135deg,var(--g1),var(--g2),var(--g3));box-shadow:0 0 20px rgba(255,215,0,0.5),0 8px 32px rgba(0,0,0,0.3);}
+.r-l .co{background:linear-gradient(45deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#9b59b6);background-size:300% 300%;animation:lg 3s ease infinite;box-shadow:0 0 30px rgba(255,107,107,0.5),0 0 60px rgba(255,107,107,0.2),0 8px 32px rgba(0,0,0,0.3);}
+@keyframes lg{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+/* 卡面 */
+.cf{width:100%;height:100%;display:flex;flex-direction:column;position:relative;}
+/* 纹理 */
+.tx-p .cf{background:linear-gradient(145deg,#f5e6c8,#e8d4a8,#f0dbb0,#e5c890);}
+.tx-m .cf{background:linear-gradient(145deg,#1a0a3e,#2a1a5e,#3a2a7e,#2a1a5e);}
+.tx-a .cf{background:linear-gradient(145deg,#2a2a2e,#3a3a42,#2a2a30,#1a1a22);}
+.tx-f .cf{background:linear-gradient(145deg,#0a2a0a,#1a4a1a,#0a3a0a,#052005);}
+.tx-p .cd{color:#3a2a1a;text-shadow:none;}.tx-p .ctb{color:var(--g3);text-shadow:none;}.tx-p .cr .s{color:#8b6a00;}
+/* 卡头 */
+.chd{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 36px 8px;min-height:46px;text-align:center;}
+.chb{position:absolute;inset:0;border-radius:var(--cr) var(--cr) 0 0;z-index:-1;}
+.cn{font-size:15px;font-weight:700;color:#fff;text-shadow:1px 1px 3px rgba(0,0,0,0.5);line-height:1.2;}
+.ctb{font-size:10px;font-weight:600;color:var(--g1);margin-top:2px;}
+/* 图标区 */
+.ca{flex:1;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;margin:0 12px;border-radius:6px;overflow:hidden;}
+.cab{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(102,126,234,0.15),transparent 70%);}
+.ce{font-size:60px;filter:drop-shadow(2px 4px 6px rgba(0,0,0,0.4));z-index:1;line-height:1;}
+.ci2{max-width:80%;max-height:80%;object-fit:contain;z-index:1;filter:drop-shadow(2px 4px 6px rgba(0,0,0,0.4));}
+/* 描述区 */
+.cda{position:relative;z-index:3;margin:0 12px;padding:8px 10px;min-height:48px;display:flex;align-items:center;text-align:center;}
+.cdb{position:absolute;inset:0;border-radius:6px;z-index:-1;opacity:0.7;}
+.cd{font-size:11px;line-height:1.4;color:#f0e0c0;text-shadow:0 1px 2px rgba(0,0,0,0.5);}
+/* 卡尾 */
+.cf2{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;padding:6px 36px 10px;text-align:center;}
+.cfb{position:absolute;inset:0;border-radius:0 0 var(--cr) var(--cr);z-index:-1;}
+.cr{display:flex;align-items:center;gap:4px;}.cr .s{font-size:10px;letter-spacing:1px;}
+/* 数值标签 */
+.tg{position:absolute;z-index:10;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;border:2px solid var(--g2);box-shadow:0 2px 6px rgba(0,0,0,0.3),inset 0 1px 2px rgba(255,255,255,0.3);}
+.tg-c{top:6px;left:6px;background:linear-gradient(145deg,#4a7fd9,#2a5fb9);}
+.tg-a{bottom:6px;right:6px;background:linear-gradient(145deg,#d94a4a,#b92a2a);}
+.tg-d{top:6px;right:6px;background:linear-gradient(145deg,#4ac27a,#2aa25a);}
+/* 角落 */
+.cnr{position:absolute;width:18px;height:18px;z-index:4;opacity:0.6;pointer-events:none;}.cnr svg{width:100%;height:100%;}
+.ctl{top:8px;left:8px;}.ctr{top:8px;right:8px;transform:scaleX(-1);}.cbl{bottom:8px;left:8px;transform:scaleY(-1);}.cbr{bottom:8px;right:8px;transform:scale(-1);}
+/* 主题 */
+.t-p .chb{background:linear-gradient(135deg,rgba(102,126,234,0.7),rgba(118,75,162,0.7));}.t-p .cfb{background:linear-gradient(135deg,rgba(118,75,162,0.5),rgba(102,126,234,0.5));}.t-p .cdb{background:rgba(102,126,234,0.15);}
+.t-r .chb{background:linear-gradient(135deg,rgba(231,76,60,0.7),rgba(192,57,43,0.7));}.t-r .cfb{background:linear-gradient(135deg,rgba(192,57,43,0.5),rgba(231,76,60,0.5));}.t-r .cdb{background:rgba(231,76,60,0.15);}
+.t-u .chb{background:linear-gradient(135deg,rgba(52,152,219,0.7),rgba(41,128,185,0.7));}.t-u .cfb{background:linear-gradient(135deg,rgba(41,128,185,0.5),rgba(52,152,219,0.5));}.t-u .cdb{background:rgba(52,152,219,0.15);}
+.t-g .chb{background:linear-gradient(135deg,rgba(39,174,96,0.7),rgba(30,132,73,0.7));}.t-g .cfb{background:linear-gradient(135deg,rgba(30,132,73,0.5),rgba(39,174,96,0.5));}.t-g .cdb{background:rgba(39,174,96,0.15);}
+.t-o .chb{background:linear-gradient(135deg,rgba(243,156,18,0.7),rgba(211,84,0,0.7));}.t-o .cfb{background:linear-gradient(135deg,rgba(211,84,0,0.5),rgba(243,156,18,0.5));}.t-o .cdb{background:rgba(243,156,18,0.15);}
+.t-pn .chb{background:linear-gradient(135deg,rgba(233,30,99,0.7),rgba(194,24,91,0.7));}.t-pn .cfb{background:linear-gradient(135deg,rgba(194,24,91,0.5),rgba(233,30,99,0.5));}.t-pn .cdb{background:rgba(233,30,99,0.15);}
+.t-te .chb{background:linear-gradient(135deg,rgba(0,188,212,0.7),rgba(0,151,167,0.7));}.t-te .cfb{background:linear-gradient(135deg,rgba(0,151,167,0.5),rgba(0,188,212,0.5));}.t-te .cdb{background:rgba(0,188,212,0.15);}
+.t-i .chb{background:linear-gradient(135deg,rgba(63,81,181,0.7),rgba(48,63,159,0.7));}.t-i .cfb{background:linear-gradient(135deg,rgba(48,63,159,0.5),rgba(63,81,181,0.5));}.t-i .cdb{background:rgba(63,81,181,0.15);}
+.t-am .chb{background:linear-gradient(135deg,rgba(255,152,0,0.7),rgba(245,124,0,0.7));}.t-am .cfb{background:linear-gradient(135deg,rgba(245,124,0,0.5),rgba(255,152,0,0.5));}.t-am .cdb{background:rgba(255,152,0,0.15);}
+.t-cy .chb{background:linear-gradient(135deg,rgba(0,172,193,0.7),rgba(0,131,143,0.7));}.t-cy .cfb{background:linear-gradient(135deg,rgba(0,131,143,0.5),rgba(0,172,193,0.5));}.t-cy .cdb{background:rgba(0,172,193,0.15);}
+.t-li .chb{background:linear-gradient(135deg,rgba(139,195,74,0.7),rgba(104,159,56,0.7));}.t-li .cfb{background:linear-gradient(135deg,rgba(104,159,56,0.5),rgba(139,195,74,0.5));}.t-li .cdb{background:rgba(139,195,74,0.15);}
+.t-ro .chb{background:linear-gradient(135deg,rgba(244,67,54,0.7),rgba(211,47,47,0.7));}.t-ro .cfb{background:linear-gradient(135deg,rgba(211,47,47,0.5),rgba(244,67,54,0.5));}.t-ro .cdb{background:rgba(244,67,54,0.15);}
+/* 列表 */
+.cli{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--bd);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all 0.2s;background:var(--b3);}
+.cli:hover{border-color:var(--ac);}.cli.selected{border-color:var(--ac);background:rgba(102,126,234,0.15);}
+.cli .ii{font-size:20px;flex-shrink:0;}.cli .info{flex:1;min-width:0;}
+.cli .in{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cli .meta{font-size:10px;color:var(--t2);}.cli .act{display:flex;gap:3px;}
+.rd{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:3px;}.rd.c{background:var(--cm);}.rd.u{background:var(--uc);}.rd.r{background:var(--rr);}.rd.l{background:linear-gradient(45deg,#ff6b6b,#ffd93d);}
+.es{text-align:center;padding:24px 16px;color:var(--t2);}.es .e{font-size:32px;margin-bottom:8px;opacity:0.5;}
+.sb2{display:flex;gap:10px;padding:6px 0;font-size:10px;color:var(--t2);border-bottom:1px solid var(--bd);margin-bottom:8px;}
+.dt{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;}
+.dt2{padding:4px 10px;border:1px solid var(--bd);border-radius:5px;background:var(--b3);color:var(--t2);font-size:11px;cursor:pointer;transition:all 0.2s;}
+.dt2:hover{border-color:var(--ac);}.dt2.active{border-color:var(--ac);background:rgba(102,126,234,0.15);color:var(--t1);}
+.hid{display:none;}
+/* Toast */
+.tb{position:fixed;top:60px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:6px;}
+.ts{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:500;animation:ti 0.3s ease,tio 0.3s ease 2.7s forwards;box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.ts-s{background:#2ecc71;color:#fff;}.ts-e{background:#e74c3c;color:#fff;}.ts-i{background:var(--ac);color:#fff;}
+@keyframes ti{from{opacity:0;transform:translateX(60px);}to{opacity:1;transform:translateX(0);}}
+@keyframes tio{from{opacity:1;}to{opacity:0;transform:translateY(-10px);}}
+/* 打印 */
+@media print{body{background:#fff;}.topbar,.sb,.pz,.tb{display:none!important;}.pa{display:block!important;}*{ -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}.co{box-shadow:none!important;}}
+.pa{display:none;padding:20px;}.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto;}
+.pc{border:1px dashed #ccc;padding:8px;position:relative;}.pcl{position:absolute;bottom:2px;right:4px;font-size:8px;color:#ccc;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎴 桌游卡牌生成器</h1>
-        
-        <div class="main-content">
-            <div class="panel">
-                <h2 class="panel-title">卡牌编辑</h2>
-                
-                <div class="form-group">
-                    <label>卡牌名称</label>
-                    <input type="text" id="cardTitle" placeholder="输入卡牌名称">
-                </div>
-
-                <div class="form-group">
-                    <label>卡牌图案</label>
-                    <div class="pattern-toggle" style="margin-bottom: 10px;">
-                        <button type="button" class="toggle-btn active" onclick="switchPatternMode('emoji')" id="emojiModeBtn">Emoji</button>
-                        <button type="button" class="toggle-btn" onclick="switchPatternMode('image')" id="imageModeBtn">自定义图片</button>
-                    </div>
-                    <div id="emojiSelector">
-                        <select id="cardIcon">
-                            <option value="💎">💎 宝石</option>
-                            <option value="⚔️">⚔️ 武器</option>
-                            <option value="🛡️">🛡️ 盾牌</option>
-                            <option value="🗡️">🗡️ 匕首</option>
-                            <option value="🏹">🏹 弓箭</option>
-                            <option value="🔮">🔮 魔法</option>
-                            <option value="💊">💊 药水</option>
-                            <option value="💰">💰 金币</option>
-                            <option value="🗺️">🗺️ 地图</option>
-                            <option value="⛏️">⛏️ 工具</option>
-                            <option value="🦴">🦴 骨头</option>
-                            <option value="🌿">🌿 草药</option>
-                            <option value="🔥">🔥 火焰</option>
-                            <option value="❄️">❄️ 冰霜</option>
-                            <option value="⚡">⚡ 雷电</option>
-                            <option value="🐉">🐉 龙</option>
-                            <option value="👹">👹 怪物</option>
-                            <option value="🧙">🧙 法师</option>
-                            <option value="⚰️">⚰️ 陷阱</option>
-                            <option value="🎁">🎁 宝箱</option>
-                        </select>
-                    </div>
-                    <div id="imageSelector" style="display: none;">
-                        <input type="file" id="cardImage" accept="image/*" onchange="handleImageUpload(event)" style="margin-bottom: 10px;">
-                        <div id="imagePreview" style="max-width: 100px; max-height: 100px; display: none;">
-                            <img id="previewImg" style="max-width: 100%; max-height: 100%;">
-                        </div>
-                        <small style="color: #888;">支持 JPG、PNG、GIF 格式，建议尺寸 200x200 像素</small>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>卡牌类型</label>
-                    <select id="cardType">
-                        <option value="resource">资源卡</option>
-                        <option value="tool">工具卡</option>
-                        <option value="trap">陷阱卡</option>
-                        <option value="treasure">宝藏卡</option>
-                        <option value="action">行动卡</option>
-                        <option value="event">事件卡</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>卡牌描述</label>
-                    <textarea id="cardDescription" placeholder="输入卡牌效果描述"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>卡牌颜色</label>
-                    <div class="color-picker" id="colorPicker">
-                        <div class="color-option" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" data-color="purple"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" data-color="pink"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" data-color="blue"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" data-color="green"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" data-color="orange"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);" data-color="lavender"></div>
-                    </div>
-                </div>
-
-                <button class="btn" onclick="addCard()">+ 添加卡牌</button>
-                <button class="btn btn-secondary" onclick="clearCards()">清空列表</button>
-            </div>
-
-            <div class="panel">
-                <h2 class="panel-title">预览</h2>
-                <div class="card-preview" id="cardPreview">
-                    <div class="card-header">
-                        <span class="card-icon">💎</span>
-                        <span class="card-title" style="color: #667eea;">卡牌名称</span>
-                    </div>
-                    <div class="card-description">卡牌描述预览...</div>
-                    <div class="card-footer">
-                        <span class="card-type" style="background: #667eea; color: white;">卡牌类型</span>
-                        <span>双击添加</span>
-                    </div>
-                </div>
-
-                <h2 class="panel-title" style="margin-top: 20px;">已保存卡牌</h2>
-                <div class="saved-cards-list" id="savedCardsList">
-                    <p style="text-align: center; color: #999;">暂无卡牌，添加一些吧！</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="print-section panel">
-            <h2 class="panel-title">📄 打印区域</h2>
-            <button class="btn" onclick="window.print()">🖨️ 打印卡牌</button>
-            <div class="print-grid" id="printGrid">
-                <p style="text-align: center; color: #999; grid-column: 1/-1;">添加卡牌后会显示在这里</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const colors = {
-            purple: '#667eea',
-            pink: '#f5576c',
-            blue: '#4facfe',
-            green: '#43e97b',
-            orange: '#fa709a',
-            lavender: '#a18cd1'
-        };
-
-        let savedCards = [];
-        let currentPatternMode = 'emoji';
-        let uploadedImageData = null;
-
-        document.querySelectorAll('.color-option').forEach(option => {
-            option.addEventListener('click', () => {
-                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
-                option.classList.add('selected');
-                updatePreview();
-            });
-        });
-
-        function switchPatternMode(mode) {
-            currentPatternMode = mode;
-            const emojiBtn = document.getElementById('emojiModeBtn');
-            const imageBtn = document.getElementById('imageModeBtn');
-            const emojiSelector = document.getElementById('emojiSelector');
-            const imageSelector = document.getElementById('imageSelector');
-
-            if (mode === 'emoji') {
-                emojiBtn.classList.add('active');
-                imageBtn.classList.remove('active');
-                emojiSelector.style.display = 'block';
-                imageSelector.style.display = 'none';
-            } else {
-                emojiBtn.classList.remove('active');
-                imageBtn.classList.add('active');
-                emojiSelector.style.display = 'none';
-                imageSelector.style.display = 'block';
-            }
-            updatePreview();
-        }
-
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (!file.type.match('image.*')) {
-                alert('请选择图片文件！');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedImageData = e.target.result;
-                const preview = document.getElementById('imagePreview');
-                const previewImg = document.getElementById('previewImg');
-                previewImg.src = uploadedImageData;
-                preview.style.display = 'block';
-                updatePreview();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        document.querySelectorAll('input, textarea, select').forEach(el => {
-            el.addEventListener('input', updatePreview);
-        });
-
-        function updatePreview() {
-            const title = document.getElementById('cardTitle').value || '卡牌名称';
-            const icon = document.getElementById('cardIcon').value;
-            const type = document.getElementById('cardType').value;
-            const typeText = document.getElementById('cardType').options[document.getElementById('cardType').selectedIndex].text;
-            const description = document.getElementById('cardDescription').value || '卡牌描述预览...';
-            const color = document.querySelector('.color-option.selected')?.getAttribute('data-color') || 'purple';
-            const colorHex = colors[color];
-
-            const preview = document.getElementById('cardPreview');
-            
-            const cardIconElement = preview.querySelector('.card-icon');
-            if (currentPatternMode === 'emoji') {
-                cardIconElement.innerHTML = icon;
-                cardIconElement.style.display = '';
-            } else {
-                if (uploadedImageData) {
-                    cardIconElement.innerHTML = `<img src="${uploadedImageData}" class="card-icon-img" alt="卡牌图案">`;
-                } else {
-                    cardIconElement.innerHTML = '🖼️';
-                }
-                cardIconElement.style.display = '';
-            }
-            
-            preview.querySelector('.card-title').textContent = title;
-            preview.querySelector('.card-title').style.color = colorHex;
-            preview.querySelector('.card-description').textContent = description;
-            preview.querySelector('.card-type').textContent = typeText;
-            preview.querySelector('.card-type').style.background = colorHex;
-            preview.style.background = `linear-gradient(135deg, ${colorHex}20 0%, ${colorHex}10 100%)`;
-        }
-
-        function addCard() {
-            const title = document.getElementById('cardTitle').value;
-            if (!title) {
-                alert('请输入卡牌名称！');
-                return;
-            }
-
-            const card = {
-                id: Date.now(),
-                title: title,
-                patternMode: currentPatternMode,
-                icon: document.getElementById('cardIcon').value,
-                imageData: currentPatternMode === 'image' ? uploadedImageData : null,
-                type: document.getElementById('cardType').value,
-                typeText: document.getElementById('cardType').options[document.getElementById('cardType').selectedIndex].text,
-                description: document.getElementById('cardDescription').value || '无描述',
-                color: document.querySelector('.color-option.selected')?.getAttribute('data-color') || 'purple'
-            };
-
-            savedCards.push(card);
-            renderSavedCards();
-            renderPrintGrid();
-        }
-
-        function renderSavedCards() {
-            const list = document.getElementById('savedCardsList');
-            if (savedCards.length === 0) {
-                list.innerHTML = '<p style="text-align: center; color: #999;">暂无卡牌，添加一些吧！</p>';
-                return;
-            }
-
-            list.innerHTML = savedCards.map(card => {
-                let iconDisplay = '';
-                if (card.patternMode === 'image' && card.imageData) {
-                    iconDisplay = `<img src="${card.imageData}" style="width: 20px; height: 20px; vertical-align: middle;" alt="图案">`;
-                } else {
-                    iconDisplay = card.icon;
-                }
-                return `
-                <div class="saved-card-item" onclick="editCard(${card.id})">
-                    <button class="delete-btn" onclick="event.stopPropagation(); deleteCard(${card.id})">删除</button>
-                    <div class="title">${iconDisplay} ${card.title}</div>
-                    <div class="meta">${card.typeText}</div>
-                </div>
-            `;
-            }).join('');
-        }
-
-        function renderPrintGrid() {
-            const grid = document.getElementById('printGrid');
-            if (savedCards.length === 0) {
-                grid.innerHTML = '<p style="text-align: center; color: #999; grid-column: 1/-1;">添加卡牌后会显示在这里</p>';
-                return;
-            }
-
-            grid.innerHTML = savedCards.map(card => {
-                let iconDisplay = '';
-                if (card.patternMode === 'image' && card.imageData) {
-                    iconDisplay = `<img src="${card.imageData}" class="card-icon-img" alt="卡牌图案">`;
-                } else {
-                    iconDisplay = card.icon;
-                }
-                return `
-                <div class="print-card" style="background: linear-gradient(135deg, ${colors[card.color]}20 0%, ${colors[card.color]}10 100%);">
-                    <div class="card-header">
-                        <span class="card-icon">${iconDisplay}</span>
-                        <span class="card-title" style="color: ${colors[card.color]};">${card.title}</span>
-                    </div>
-                    <div class="card-description">${card.description}</div>
-                    <div class="card-footer">
-                        <span class="card-type" style="background: ${colors[card.color]}; color: white;">${card.typeText}</span>
-                    </div>
-                </div>
-            `;
-            }).join('');
-        }
-
-        function deleteCard(id) {
-            savedCards = savedCards.filter(c => c.id !== id);
-            renderSavedCards();
-            renderPrintGrid();
-        }
-
-        function clearCards() {
-            if (confirm('确定要清空所有卡牌吗？')) {
-                savedCards = [];
-                renderSavedCards();
-                renderPrintGrid();
-            }
-        }
-
-        function editCard(id) {
-            const card = savedCards.find(c => c.id === id);
-            if (card) {
-                document.getElementById('cardTitle').value = card.title;
-                document.getElementById('cardIcon').value = card.icon;
-                document.getElementById('cardType').value = card.type;
-                document.getElementById('cardDescription').value = card.description;
-                
-                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
-                document.querySelector(`[data-color="${card.color}"]`)?.classList.add('selected');
-                
-                currentPatternMode = card.patternMode || 'emoji';
-                if (currentPatternMode === 'image') {
-                    uploadedImageData = card.imageData;
-                    if (uploadedImageData) {
-                        const preview = document.getElementById('imagePreview');
-                        const previewImg = document.getElementById('previewImg');
-                        previewImg.src = uploadedImageData;
-                        preview.style.display = 'block';
-                    }
-                    switchPatternMode('image');
-                } else {
-                    uploadedImageData = null;
-                    document.getElementById('imagePreview').style.display = 'none';
-                    switchPatternMode('emoji');
-                }
-                
-                updatePreview();
-            }
-        }
-    </script>
+<div class="tb" id="tb"></div>
+<div class="topbar">
+<h1>🎴 桌游卡牌设计</h1>
+<div class="ta">
+<select id="dsel" class="fi" style="width:140px" onchange="swDeck(this.value)"></select>
+<button class="btn" onclick="crDeck()">+卡组</button>
+<button class="btn" onclick="expJSON()">📤 导出</button>
+<button class="btn" onclick="document.getElementById('fi').click()">📥 导入</button>
+<input type="file" id="fi" class="hid" accept=".json" onchange="impJSON(event)">
+<button class="btn" onclick="expPNGs()">🖼️ PNG</button>
+<button class="btn" onclick="doPrt()">🖨️ 打印</button>
+</div>
+</div>
+<div class="main">
+<div class="sb" id="ed">
+<div class="sec"><div class="st">基本信息</div>
+<div class="fg"><label>名称</label><input class="fi" id="fN" placeholder="卡牌名称" oninput="up()"></div>
+<div class="fg"><label>类型</label><select class="fi" id="fT" onchange="up()">
+<option>资源卡</option><option>工具卡</option><option>陷阱卡</option><option>宝藏卡</option>
+<option>行动卡</option><option>事件卡</option><option>角色卡</option><option>法术卡</option><option>装备卡</option><option>场地卡</option>
+</select></div>
+<div class="fg"><label>描述</label><textarea class="fi" id="fD" oninput="up()"></textarea></div>
+</div>
+<div class="sec"><div class="st">模板</div>
+<div class="gd g3">
+<div class="ob active" data-t="c" onclick="sT('c')"><span class="e">🃏</span><span class="l">经典</span></div>
+<div class="ob" data-t="b" onclick="sT('b')"><span class="e">⚔️</span><span class="l">对战</span></div>
+<div class="ob" data-t="r" onclick="sT('r')"><span class="e">💰</span><span class="l">资源</span></div>
+</div>
+</div>
+<div class="sec"><div class="st">稀有度</div>
+<div class="gd g4">
+<div class="ob active" data-r="c" onclick="sR('c')"><span class="l">● 普通</span></div>
+<div class="ob" data-r="u" onclick="sR('u')"><span class="l">◆ 精良</span></div>
+<div class="ob" data-r="r" onclick="sR('r')"><span class="l">★ 稀有</span></div>
+<div class="ob" data-r="l" onclick="sR('l')"><span class="l">✦ 传说</span></div>
+</div>
+</div>
+<div class="sec"><div class="st">图标</div>
+<div class="gd g6" id="eg"></div>
+<div class="ua" onclick="document.getElementById('iu').click()">
+<div class="i">🖼️</div><div class="t">上传图片</div>
+</div>
+<input type="file" id="iu" class="hid" accept="image/*" onchange="hImg(event)">
+</div>
+<div class="sec"><div class="st">颜色</div>
+<div class="cg" id="cg"></div>
+</div>
+<div class="sec"><div class="st">纹理</div>
+<div class="gd g4">
+<div class="ob active" data-x="p" onclick="sX('p')"><span class="l">羊皮纸</span></div>
+<div class="ob" data-x="m" onclick="sX('m')"><span class="l">暗夜</span></div>
+<div class="ob" data-x="a" onclick="sX('a')"><span class="l">铁甲</span></div>
+<div class="ob" data-x="f" onclick="sX('f')"><span class="l">森林</span></div>
+</div>
+</div>
+<div class="sec"><div class="st">数值</div>
+<div class="sr">
+<div class="sg"><label>费用</label><input type="number" id="fC" min="0" max="99" oninput="up()"></div>
+<div class="sg"><label>攻击</label><input type="number" id="fA" min="0" max="99" oninput="up()"></div>
+</div>
+<div class="sr" style="margin-top:6px;">
+<div class="sg"><label>防御</label><input type="number" id="fDf" min="0" max="99" oninput="up()"></div>
+<div class="sg"><label>生命</label><input type="number" id="fH" min="0" max="99" oninput="up()"></div>
+</div>
+</div>
+<div class="sec" style="display:flex;gap:6px;flex-wrap:wrap;">
+<button class="btn btn-pri" style="flex:1" onclick="addC()">+ 添加</button>
+<button class="btn btn-gold" style="flex:1;display:none" id="ub" onclick="updC()">✓ 更新</button>
+<button class="btn" onclick="rst()">清空</button>
+</div>
+</div>
+<div class="pz">
+<div class="pl">实时预览</div>
+<div id="pv"></div>
+</div>
+<div class="sb">
+<div class="sec"><div class="st">卡牌列表</div>
+<div class="dt" id="dt"></div>
+<div class="sb2" id="sb2"></div>
+<div id="cl"><div class="es"><div class="e">🃏</div><div>还没有卡牌</div></div></div>
+<div class="sec" style="display:flex;gap:6px;">
+<button class="btn btn-sm btn-danger" onclick="clrAll()">清空</button>
+<button class="btn btn-sm" onclick="exp1PNG()">导出当前</button>
+</div>
+</div>
+</div>
+<div class="pa" id="pa"><div class="pg" id="pg"></div></div>
+<script>
+const E=['💎','⚔️','🛡️','🗡️','🏹','🔮','💊','💰','🗺️','⛏️','🦴','🌿','🔥','❄️','⚡','🐉','👹','🧙','⚰️','🎁','🃏','♟️','🎲','🌀','🌟','💀','🦇','🐺','🦁','🦅','🌊','🌋','🌙','☀️','🍎','🧪','📜','🗝️','🎪','🎭','🎯','♠️','♥️','♦️','♣️'];
+const TH=[{i:'purple',c:'#667eea',l:'紫'},{i:'red',c:'#e74c3c',l:'红'},{i:'blue',c:'#3498db',l:'蓝'},{i:'green',c:'#27ae60',l:'绿'},{i:'orange',c:'#f39c12',l:'橙'},{i:'pink',c:'#e91e63',l:'粉'},{i:'teal',c:'#00bcd4',l:'青'},{i:'indigo',c:'#3f51b5',l:'靛'},{i:'amber',c:'#ff9800',l:'琥珀'},{i:'cyan',c:'#00acc1',l:'天蓝'},{i:'lime',c:'#8bc34a',l:'黄绿'},{i:'rose',c:'#f44336',l:'玫红'}];
+const RI={c:{l:'普通',s:'☆',c:'var(--cm)'},u:{l:'精良',s:'◆',c:'var(--uc)'},r:{l:'稀有',s:'★',c:'var(--rr)'},l:{l:'传说',s:'✦',c:'var(--rr)'}};
+const CSV='<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L7 0 Q3.5 0 3.5 3.5 L3.5 7" stroke="rgba(200,168,75,0.6)" stroke-width="1" fill="none"/><circle cx="3" cy="3" r="0.8" fill="rgba(245,230,160,0.6)"/><path d="M0 0 L3 0 Q1.5 0 1.5 1.5 L1.5 3" stroke="rgba(245,230,160,0.8)" stroke-width="0.8" fill="none"/></svg>';
+const THM={purple:'p',red:'r',blue:'u',green:'g',orange:'o',pink:'pn',teal:'te',indigo:'i',amber:'am',cyan:'cy',lime:'li',rose:'ro'};
+let S={decks:[],cur:null,edit:null,tpl:'c',rar:'c',tx:'p',th:'purple',emoji:'💎',img:null};
+function init(){
+bEg();bCg();ld();up();rfUI();
+document.addEventListener('keydown',e=>{
+if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
+if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo();}
+});
+}
+function bEg(){document.getElementById('eg').innerHTML=E.map(e=>`<div class="ob ${e===S.emoji?'active':''}" data-e="${e}" onclick="sE('${e}')"><span class="e">${e}</span></div>`).join('');}
+function bCg(){document.getElementById('cg').innerHTML=TH.map(t=>`<div class="sw ${t.i===S.th?'active':''}" style="background:${t.c}" data-th="${t.i}" onclick="sTh('${t.i}')" title="${t.l}"></div>`).join('');}
+function sT(t){S.tpl=t;document.querySelectorAll('[data-t]').forEach(e=>e.classList.toggle('active',e.dataset.t===t));up();}
+function sR(r){S.rar=r;document.querySelectorAll('[data-r]').forEach(e=>e.classList.toggle('active',e.dataset.r===r));up();}
+function sX(x){S.tx=x;document.querySelectorAll('[data-x]').forEach(e=>e.classList.toggle('active',e.dataset.x===x));up();}
+function sTh(th){S.th=th;document.querySelectorAll('.sw').forEach(e=>e.classList.toggle('active',e.dataset.th===th));up();}
+function sE(e){S.emoji=e;S.img=null;document.querySelectorAll('[data-e]').forEach(x=>x.classList.toggle('active',x.dataset.e===e));up();}
+function hImg(ev){const f=ev.target.files[0];if(!f||!f.type.startsWith('image/'))return;const r=new FileReader();r.onload=e=>{S.img=e.target.result;document.querySelectorAll('[data-e]').forEach(x=>x.classList.remove('active'));up();};r.readAsDataURL(f);}
+function gf(){return{name:document.getElementById('fN').value.trim(),type:document.getElementById('fT').value,desc:document.getElementById('fD').value,emoji:S.emoji,img:S.img,tpl:S.tpl,rar:S.rar,tx:S.tx,th:S.th,cost:document.getElementById('fC').value,atk:document.getElementById('fA').value,def:document.getElementById('fDf').value,hp:document.getElementById('fH').value};}
+function sf(d){document.getElementById('fN').value=d.name||'';document.getElementById('fT').value=d.type||'资源卡';document.getElementById('fD').value=d.desc||'';document.getElementById('fC').value=d.cost||'';document.getElementById('fA').value=d.atk||'';document.getElementById('fDf').value=d.def||'';document.getElementById('fH').value=d.hp||'';S.tpl=d.tpl||'c';S.rar=d.rar||'c';S.tx=d.tx||'p';S.th=d.th||'purple';if(d.img){S.img=d.img;S.emoji='';}else{S.emoji=d.emoji||'💎';S.img=null;}sT(S.tpl);sR(S.rar);sX(S.tx);sTh(S.th);if(S.img){document.querySelectorAll('[data-e]').forEach(x=>x.classList.remove('active'));}else{sE(S.emoji);}up();}
+function bC(d){const ri=RI[d.rar]||RI.c;const show=d.tpl==='b'||d.tpl==='c';let art=d.img?`<img src="${d.img}" class="ci2" alt="">`:`<span class="ce">${d.emoji||'💎'}</span>`;let tags='';if(d.cost!==''&&d.cost!==undefined)tags+=`<div class="tg tg-c">${d.cost}</div>`;if(show&&d.atk!==''&&d.atk!==undefined)tags+=`<div class="tg tg-a">${d.atk}</div>`;if(show&&d.def!==''&&d.def!==undefined)tags+=`<div class="tg tg-d">${d.def}</div>`;let desc=d.desc||'暂无描述';if(d.hp!==''&&d.hp!==undefined)desc+=' ♥'+d.hp;return`<div class="co r-${d.rar}"><div class="ci"><div class="cf tx-${d.tx} t-${THM[d.th]||'p'}">
+${tags}<div class="cnr ctl">${CSV}</div><div class="cnr ctr">${CSV}</div><div class="cnr cbl">${CSV}</div><div class="cnr cbr">${CSV}</div>
+<div class="chd"><div class="chb"></div><div class="cn">${d.name||'卡牌名称'}</div><div class="ctb">${d.type||'资源卡'}</div></div>
+<div class="ca"><div class="cab"></div>${art}</div>
+<div class="cda"><div class="cdb"></div><div class="cd">${desc}</div></div>
+<div class="cf2"><div class="cfb"></div><div class="cr"><span class="s" style="color:${ri.c}">${ri.s}</span><span style="font-size:10px;color:${ri.c}">${ri.l}</span></div></div>
+</div></div></div>`;}
+function up(){document.getElementById('pv').innerHTML=bC(gf());}
+function getD(){return S.decks.find(d=>d.id===S.cur);}
+function crDeck(){const n=prompt('卡组名称：','卡组'+(S.decks.length+1));if(!n)return;const d={id:Date.now(),name:n.trim(),cards:[]};S.decks.push(d);S.cur=d.id;sv();rfUI();toast('已创建「'+d.name+'」','s');}
+function swDeck(id){S.cur=parseInt(id);sv();rfUI();rst();}
+function rfUI(){const sel=document.getElementById('dsel');sel.innerHTML=S.decks.map(d=>`<option value="${d.id}" ${d.id===S.cur?'selected':''}>${d.name} (${d.cards.length})</option>`).join('');const dt=document.getElementById('dt');dt.innerHTML=S.decks.map(d=>`<div class="dt2 ${d.id===S.cur?'active':''}" onclick="swDeck(${d.id})">${d.name} (${d.cards.length})</div>`).join('');rL();}
+function addC(){const f=gf();if(!f.name){toast('请输入名称','e');return;}const d=getD();if(!d){toast('请先创建卡组','e');return;}f.id=Date.now();d.cards.push(f);sv();rL();rst();toast('已添加「'+f.name+'」','s');}
+function updC(){if(!S.edit)return;const d=getD();const c=d.cards.find(x=>x.id===S.edit);if(!c)return;Object.assign(c,gf());c.id=S.edit;sv();rL();rst();toast('已更新「'+c.name+'」','s');}
+function editC(id){const d=getD();const c=d.cards.find(x=>x.id===id);if(!c)return;S.edit=id;sf(c);document.getElementById('ub').style.display='';rL();}
+function delC(id){const d=getD();const idx=d.cards.findIndex(x=>x.id===id);if(idx<0)return;const nm=d.cards[idx].name;d.cards.splice(idx,1);sv();rL();if(S.edit===id)rst();toast('已删除「'+nm+'」','i');}
+function dupC(id){const d=getD();const c=d.cards.find(x=>x.id===id);if(!c)return;const nc=JSON.parse(JSON.stringify(c));nc.id=Date.now();nc.name+=' (副本)';d.cards.push(nc);sv();rL();toast('已复制「'+c.name+'」','s');}
+function clrAll(){const d=getD();if(!d||!d.cards.length)return;if(!confirm('清空'+d.cards.length+'张卡牌？'))return;d.cards=[];sv();rL();rst();toast('已清空','i');}
+function rst(){document.getElementById('fN').value='';document.getElementById('fT').value='资源卡';document.getElementById('fD').value='';document.getElementById('fC').value='';document.getElementById('fA').value='';document.getElementById('fDf').value='';document.getElementById('fH').value='';S.edit=null;S.img=null;document.getElementById('ub').style.display='none';document.getElementById('iu').value='';sT('c');sR('c');sX('p');sTh('purple');sE('💎');up();}
+function rL(){const d=getD();const cl=document.getElementById('cl');const sb=document.getElementById('sb2');if(!d||!d.cards.length){cl.innerHTML='<div class="es"><div class="e">🃏</div><div>还没有卡牌</div></div>';sb.innerHTML='';return;}const cnt={};d.cards.forEach(c=>{cnt[c.rar]=(cnt[c.rar]||0)+1;});sb.innerHTML='<span>共 '+d.cards.length+' 张</span>'+Object.entries(cnt).map(([r,n])=>'<span><span class="rd '+r+'"></span>'+RI[r].l+' '+n+'</span>').join('');cl.innerHTML=d.cards.map(c=>{const ic=c.img?'<img src="'+c.img+'" style="width:20px;height:20px;object-fit:contain">':c.emoji;return`<div class="cli ${S.edit===c.id?'selected':''}" onclick="editC(${c.id})"><span class="ii">${ic}</span><div class="info"><div class="in">${c.name}</div><div class="meta"><span class="rd ${c.rar}"></span>${c.type} · ${RI[c.rar].l}</div></div><div class="act"><button class="btn btn-sm" onclick="event.stopPropagation();dupC(${c.id})">📋</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();delC(${c.id})">✕</button></div></div>`;}).join('');}
+function expJSON(){const data=JSON.stringify(S.decks,null,2);const blob=new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='decks-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(url);toast('已导出','s');}
+function impJSON(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const data=JSON.parse(e.target.result);if(!Array.isArray(data))throw 0;S.decks=data;S.cur=data.length?data[0].id:null;sv();rfUI();rst();toast('已导入 '+data.length+' 个卡组','s');}catch(err){toast('无效JSON','e');}};r.readAsText(f);ev.target.value='';}
+async function exp1PNG(){const el=document.querySelector('#pv .co');if(!el)return;try{const cv=await html2canvas(el,{scale:3,backgroundColor:null,useCORS:true,logging:false});const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='card-'+(gf().name||'unnamed')+'.png';a.click();toast('PNG已导出','s');}catch(err){toast('导出失败:'+err.message,'e');}}
+async function expPNGs(){const d=getD();if(!d||!d.cards.length){toast('没有卡牌','e');return;}toast('导出 '+d.cards.length+' 张...','i');const bx=document.getElementById('pv');for(let i=0;i<d.cards.length;i++){bx.innerHTML=bC(d.cards[i]);await new Promise(r=>setTimeout(r,100));try{const cv=await html2canvas(bx.querySelector('.co'),{scale:3,backgroundColor:null,useCORS:true,logging:false});const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='card-'+d.cards[i].name+'-'+(i+1)+'.png';a.click();await new Promise(r=>setTimeout(r,200));}catch(err){console.error(err);}}up();toast('全部导出完成','s');}
+function doPrt(){const d=getD();if(!d)return;document.getElementById('pg').innerHTML=d.cards.map(c=>`<div class="pc"><div style="transform:scale(1)">${bC(c)}</div><div class="pcl">✂ 剪裁线</div></div>`).join('');setTimeout(()=>window.print(),200);}
+let hist=[];let histIdx=-1;
+function sv(){try{localStorage.setItem('cm_d',JSON.stringify(S.decks));localStorage.setItem('cm_c',S.cur);hist=hist.slice(0,histIdx+1);hist.push(JSON.stringify(S.decks));histIdx=hist.length-1;if(hist.length>50){hist.shift();histIdx--;}}catch(e){}}
+function ld(){try{const d=localStorage.getItem('cm_d');if(d){S.decks=JSON.parse(d);const c=localStorage.getItem('cm_c');S.cur=c?parseInt(c):(S.decks.length>0?S.decks[0].id:null);}else{S.decks=[{id:Date.now(),name:'默认卡组',cards:[]}];S.cur=S.decks[0].id;}hist.push(JSON.stringify(S.decks));histIdx=0;}catch(e){S.decks=[{id:Date.now(),name:'默认卡组',cards:[]}];S.cur=S.decks[0].id;}}
+function undo(){if(histIdx<=0)return;histIdx--;S.decks=JSON.parse(hist[histIdx]);sv();rfUI();toast('已撤销','i');}
+function redo(){if(histIdx>=hist.length-1)return;histIdx++;S.decks=JSON.parse(hist[histIdx]);sv();rfUI();toast('已重做','i');}
+function toast(msg,type){const c=document.getElementById('tb');const t=document.createElement('div');t.className='ts ts-'+(type||'i');t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3000);}
+init();
+</script>
 </body>
 </html>
