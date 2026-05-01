@@ -43,6 +43,7 @@ boardgames/
 | [丝绸之路](category/strategy/silk-road/README.md) | 策略 | 2-5人 | 60-90分钟 | 中等偏难 |
 | [岛屿求生](category/cooperative/island-survival/README.md) | 合作 | 1-4人 | 45-75分钟 | 中等 |
 | [妖怪公寓](category/card/yokai-apartments/README.md) | 卡牌 | 2-5人 | 25-40分钟 | 简单偏中 |
+| [古文明拍卖行](category/card/ancient-auction/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 简单偏中 |
 
 ## 添加新桌游
 
