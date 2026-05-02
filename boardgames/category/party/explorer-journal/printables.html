@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>探险家日记 · 打印道具</title>
+  <style>
+    /* ===== 全局样式 ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: #f5f0e8;
+      color: #3d2b1f;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #5a3e28;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #8a6a50;
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    /* ===== 打印提示 ===== */
+    .print-hint {
+      background: #fff8e1;
+      border: 2px solid #f9a825;
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 28px;
+      font-size: 0.88rem;
+      line-height: 1.8;
+    }
+
+    .print-hint strong { color: #e65100; }
+    .print-hint ul { padding-left: 20px; margin-top: 6px; }
+
+    .print-btn {
+      display: block;
+      width: 180px;
+      margin: 0 auto 32px;
+      padding: 10px 0;
+      background: #5a3e28;
+      color: #fff;
+      text-align: center;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .print-btn:hover { background: #7a5840; }
+
+    /* ===== 分区标题 ===== */
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px 8px 0 0;
+      margin-bottom: 0;
+    }
+
+    .section-wrap {
+      margin-bottom: 40px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .section-body {
+      background: #fff;
+      padding: 20px;
+    }
+
+    /* ===== 地图 ===== */
+    .map-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .map-title-bar { background: linear-gradient(135deg, #2e7d32, #558b2f); }
+
+    .game-map {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .map-zone {
+      border-radius: 10px;
+      padding: 18px 10px;
+      text-align: center;
+      font-weight: bold;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .map-zone .zone-icon { font-size: 2.2rem; }
+    .map-zone .zone-name { font-size: 0.95rem; color: rgba(255,255,255,0.9); }
+    .map-zone .zone-sub  { font-size: 0.75rem; color: rgba(255,255,255,0.7); }
+
+    .zone-ocean   { background: linear-gradient(135deg, #0277bd, #4fc3f7); color: #fff; }
+    .zone-jungle  { background: linear-gradient(135deg, #2e7d32, #81c784); color: #fff; }
+    .zone-snow    { background: linear-gradient(135deg, #546e7a, #b0bec5); color: #fff; }
+    .zone-desert  { background: linear-gradient(135deg, #f57f17, #ffcc02); color: #5a3e28; }
+    .zone-ruins   { background: linear-gradient(135deg, #6a1b9a, #ce93d8); color: #fff; }
+    .zone-volcano { background: linear-gradient(135deg, #b71c1c, #ef9a9a); color: #fff; }
+
+    .score-track {
+      background: linear-gradient(90deg, #3e2723, #6d4c41);
+      border-radius: 10px;
+      padding: 12px 20px;
+      color: #fff;
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    .score-nodes {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .sn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      position: relative;
+    }
+
+    .sn.milestone { background: #ffd54f; color: #3e2723; border-color: #ffd54f; }
+
+    .sn-line {
+      width: 30px;
+      height: 3px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* ===== 卡牌通用 ===== */
+    .cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    .card {
+      width: 88px;
+      height: 124px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 4px;
+      text-align: center;
+      font-size: 0.7rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+      position: relative;
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+
+    .card-icon { font-size: 2rem; line-height: 1; margin-top: 4px; }
+    .card-name { font-weight: bold; font-size: 0.68rem; line-height: 1.3; }
+    .card-desc { font-size: 0.6rem; line-height: 1.4; color: rgba(0,0,0,0.7); padding: 0 2px; }
+    .card-type { font-size: 0.58rem; font-weight: bold; letter-spacing: 1px; opacity: 0.8; margin-bottom: 2px; }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -20px; right: -20px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* 地点卡：绿色系 */
+    .card-location { background: linear-gradient(145deg, #1b5e20, #388e3c); color: #fff; }
+    /* 事件卡：橙红色系 */
+    .card-event    { background: linear-gradient(145deg, #e65100, #ff8f00); color: #fff; }
+    /* 道具卡：蓝棕色 */
+    .card-tool     { background: linear-gradient(145deg, #1565c0, #0288d1); color: #fff; }
+    /* 挑战卡：紫色 */
+    .card-challenge { background: linear-gradient(145deg, #4a148c, #7b1fa2); color: #fff; }
+    /* 奇遇卡：金色 */
+    .card-bonus    { background: linear-gradient(145deg, #827717, #f9a825); color: #3e2723; }
+
+    /* ===== 角色牌 ===== */
+    .role-card {
+      width: 100px;
+      min-height: 140px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 0.68rem;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      page-break-inside: avoid;
+    }
+
+    .role-icon  { font-size: 2.4rem; margin-top: 4px; }
+    .role-name  { font-weight: bold; font-size: 0.78rem; }
+    .role-title { font-size: 0.62rem; opacity: 0.85; }
+    .role-skill { font-size: 0.6rem; line-height: 1.4; padding: 0 4px; margin-bottom: 4px; background: rgba(255,255,255,0.2); border-radius: 6px; padding: 4px; }
+
+    .role-1 { background: linear-gradient(145deg, #880e4f, #e91e63); color: #fff; }
+    .role-2 { background: linear-gradient(145deg, #1a237e, #3f51b5); color: #fff; }
+    .role-3 { background: linear-gradient(145deg, #004d40, #00897b); color: #fff; }
+    .role-4 { background: linear-gradient(145deg, #e65100, #ff9800); color: #fff; }
+    .role-5 { background: linear-gradient(145deg, #311b92, #673ab7); color: #fff; }
+    .role-6 { background: linear-gradient(145deg, #1b5e20, #43a047); color: #fff; }
+    .role-7 { background: linear-gradient(145deg, #bf360c, #f4511e); color: #fff; }
+    .role-8 { background: linear-gradient(145deg, #37474f, #607d8b); color: #fff; }
+
+    /* ===== 玩家棋子 ===== */
+    .pawn-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    .pawn {
+      width: 70px;
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border-radius: 50% 50% 40% 40%;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      font-size: 0.65rem;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .pawn span { font-size: 2rem; }
+
+    .pawn-1 { background: radial-gradient(circle at 30% 30%, #e91e63, #880e4f); }
+    .pawn-2 { background: radial-gradient(circle at 30% 30%, #3f51b5, #1a237e); }
+    .pawn-3 { background: radial-gradient(circle at 30% 30%, #009688, #004d40); }
+    .pawn-4 { background: radial-gradient(circle at 30% 30%, #ff9800, #e65100); }
+    .pawn-5 { background: radial-gradient(circle at 30% 30%, #9c27b0, #4a148c); }
+    .pawn-6 { background: radial-gradient(circle at 30% 30%, #4caf50, #1b5e20); }
+    .pawn-7 { background: radial-gradient(circle at 30% 30%, #f44336, #b71c1c); }
+    .pawn-8 { background: radial-gradient(circle at 30% 30%, #78909c, #37474f); }
+
+    /* ===== 荣誉勋章 ===== */
+    .medal-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+    .medal {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffd740, #ff8f00);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      border: 3px solid #ffab00;
+      page-break-inside: avoid;
+    }
+
+    /* ===== 分区颜色 ===== */
+    .bg-map      { background: linear-gradient(135deg, #2e7d32, #558b2f); }
+    .bg-location { background: linear-gradient(135deg, #1b5e20, #388e3c); }
+    .bg-event    { background: linear-gradient(135deg, #e65100, #ff8f00); }
+    .bg-tool     { background: linear-gradient(135deg, #1565c0, #0288d1); }
+    .bg-challenge { background: linear-gradient(135deg, #4a148c, #7b1fa2); }
+    .bg-bonus    { background: linear-gradient(135deg, #827717, #f9a825); }
+    .bg-role     { background: linear-gradient(135deg, #4e342e, #8d6e63); }
+    .bg-pawn     { background: linear-gradient(135deg, #37474f, #78909c); }
+    .bg-medal    { background: linear-gradient(135deg, #e65100, #ffa000); }
+
+    /* ===== 打印样式 ===== */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      body { background: #fff; padding: 8px; }
+
+      .print-hint { display: none; }
+      .print-btn  { display: none; }
+
+      .section-wrap { box-shadow: none; border: 1px solid #ccc; margin-bottom: 24px; }
+
+      .card, .role-card, .pawn, .medal { page-break-inside: avoid; }
+
+      .section-title { font-size: 1rem; padding: 6px 14px; }
+
+      h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🗺️ 探险家日记</h1>
+<p class="subtitle">Explorer's Journal · 打印道具全套 · 请使用A4纸打印，建议卡牌使用卡纸</p>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4纸张</strong> 打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则颜色无法显示</li>
+    <li>卡牌、棋子、角色牌建议使用 <strong>卡纸</strong> 打印，更耐用</li>
+    <li>打印完成后沿虚线裁剪，可使用护卡膜增加耐用度</li>
+    <li>荣誉勋章建议打印后粘在硬纸板或硬币上</li>
+  </ul>
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨️ 打印全部道具</button>
+
+<!-- ===== 一、游戏地图 ===== -->
+<div class="section-wrap map-container">
+  <div class="section-title bg-map">🌍 游戏地图 · 世界探险大赛荣誉地图</div>
+  <div class="section-body">
+    <div class="game-map">
+      <div class="map-zone zone-ocean">
+        <span class="zone-icon">🌊</span>
+        <span class="zone-name">碧海区</span>
+        <span class="zone-sub">海洋探险</span>
+      </div>
+      <div class="map-zone zone-jungle">
+        <span class="zone-icon">🌴</span>
+        <span class="zone-name">丛林区</span>
+        <span class="zone-sub">热带雨林</span>
+      </div>
+      <div class="map-zone zone-snow">
+        <span class="zone-icon">🏔️</span>
+        <span class="zone-name">雪峰区</span>
+        <span class="zone-sub">极地雪山</span>
+      </div>
+      <div class="map-zone zone-desert">
+        <span class="zone-icon">🏜️</span>
+        <span class="zone-name">沙漠区</span>
+        <span class="zone-sub">沙漠绿洲</span>
+      </div>
+      <div class="map-zone zone-ruins">
+        <span class="zone-icon">🏛️</span>
+        <span class="zone-name">遗迹区</span>
+        <span class="zone-sub">古文明遗迹</span>
+      </div>
+      <div class="map-zone zone-volcano">
+        <span class="zone-icon">🌋</span>
+        <span class="zone-name">火山区</span>
+        <span class="zone-sub">活火山探险</span>
+      </div>
+    </div>
+    <div class="score-track">
+      <div>⭐ 荣誉积分轨道</div>
+      <div class="score-nodes">
+        <div class="sn">0</div><div class="sn-line"></div>
+        <div class="sn">1</div><div class="sn-line"></div>
+        <div class="sn">2</div><div class="sn-line"></div>
+        <div class="sn milestone">3★</div><div class="sn-line"></div>
+        <div class="sn">4</div><div class="sn-line"></div>
+        <div class="sn">5</div><div class="sn-line"></div>
+        <div class="sn milestone">6★</div><div class="sn-line"></div>
+        <div class="sn">7</div><div class="sn-line"></div>
+        <div class="sn">8</div><div class="sn-line"></div>
+        <div class="sn">9</div><div class="sn-line"></div>
+        <div class="sn milestone">10🏆</div>
+      </div>
+      <div style="margin-top:8px; font-size:0.75rem; opacity:0.8;">★ 3分=初级探险家 · 6分=资深探险家 · 🏆 10分=游戏胜利！</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 二、地点卡 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-location">🌋 地点卡 Location Cards（共24张）</div>
+  <div class="section-body">
+    <div class="cards-grid">
+      <!-- 碧海区 蓝色 -->
+      <div class="card card-location" style="background:linear-gradient(145deg,#0277bd,#4fc3f7);color:#fff;">
+        <span class="card-type">碧海区 🌊</span>
+        <span class="card-icon">🦑</span>
+        <span class="card-name">马里亚纳海沟</span>
+        <span class="card-desc">水下世界，必须提到水下生物</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#0277bd,#4fc3f7);color:#fff;">
+        <span class="card-type">碧海区 🌊</span>
+        <span class="card-icon">🌊</span>
+        <span class="card-name">亚特兰蒂斯</span>
+        <span class="card-desc">传说中的沉没古城，含神话元素</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#0277bd,#4fc3f7);color:#fff;">
+        <span class="card-type">碧海区 🌊</span>
+        <span class="card-icon">🏴‍☠️</span>
+        <span class="card-name">加勒比海盗岛</span>
+        <span class="card-desc">神秘海盗聚集地，藏有宝藏</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#0277bd,#4fc3f7);color:#fff;">
+        <span class="card-type">碧海区 🌊</span>
+        <span class="card-icon">🐋</span>
+        <span class="card-name">南极洲冰海</span>
+        <span class="card-desc">极寒冰海，巨型海洋生物出没</span>
+      </div>
+      <!-- 丛林区 绿色 -->
+      <div class="card card-location">
+        <span class="card-type">丛林区 🌴</span>
+        <span class="card-icon">🌿</span>
+        <span class="card-name">亚马逊密林</span>
+        <span class="card-desc">雨林深处，必须涉及植物或动物</span>
+      </div>
+      <div class="card card-location">
+        <span class="card-type">丛林区 🌴</span>
+        <span class="card-icon">🦜</span>
+        <span class="card-name">婆罗洲雨林</span>
+        <span class="card-desc">濒危动物天堂，古老原始森林</span>
+      </div>
+      <div class="card card-location">
+        <span class="card-type">丛林区 🌴</span>
+        <span class="card-icon">🐍</span>
+        <span class="card-name">刚果盆地</span>
+        <span class="card-desc">非洲心脏地带，神秘部落出没</span>
+      </div>
+      <div class="card card-location">
+        <span class="card-type">丛林区 🌴</span>
+        <span class="card-icon">🐆</span>
+        <span class="card-name">越南丛林秘境</span>
+        <span class="card-desc">未被发现的洞穴系统，惊喜连连</span>
+      </div>
+      <!-- 雪峰区 银色 -->
+      <div class="card card-location" style="background:linear-gradient(145deg,#546e7a,#b0bec5);color:#fff;">
+        <span class="card-type">雪峰区 🏔️</span>
+        <span class="card-icon">⛰️</span>
+        <span class="card-name">喜马拉雅山</span>
+        <span class="card-desc">世界屋脊，含高原缺氧情节</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#546e7a,#b0bec5);color:#fff;">
+        <span class="card-type">雪峰区 🏔️</span>
+        <span class="card-icon">🐻‍❄️</span>
+        <span class="card-name">北极熊之地</span>
+        <span class="card-desc">格陵兰极圈，含冰雪/极寒元素</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#546e7a,#b0bec5);color:#fff;">
+        <span class="card-type">雪峰区 🏔️</span>
+        <span class="card-icon">🌨️</span>
+        <span class="card-name">阿尔卑斯雪谷</span>
+        <span class="card-desc">欧洲雪山，雪崩随时可能发生</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#546e7a,#b0bec5);color:#fff;">
+        <span class="card-type">雪峰区 🏔️</span>
+        <span class="card-icon">🦅</span>
+        <span class="card-name">安第斯山脉</span>
+        <span class="card-desc">南美高原，失落的印加文明痕迹</span>
+      </div>
+      <!-- 沙漠区 黄色 -->
+      <div class="card card-location" style="background:linear-gradient(145deg,#f57f17,#ffcc02);color:#3e2723;">
+        <span class="card-type">沙漠区 🏜️</span>
+        <span class="card-icon">🌵</span>
+        <span class="card-name">撒哈拉绿洲</span>
+        <span class="card-desc">沙漠中的奇迹，故事含骆驼/水源</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#f57f17,#ffcc02);color:#3e2723;">
+        <span class="card-type">沙漠区 🏜️</span>
+        <span class="card-icon">🐪</span>
+        <span class="card-name">阿拉伯大沙漠</span>
+        <span class="card-desc">沙漠之海，失落的商队路线</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#f57f17,#ffcc02);color:#3e2723;">
+        <span class="card-type">沙漠区 🏜️</span>
+        <span class="card-icon">🔥</span>
+        <span class="card-name">塔克拉玛干</span>
+        <span class="card-desc">死亡之海，日夜温差极大</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#f57f17,#ffcc02);color:#3e2723;">
+        <span class="card-type">沙漠区 🏜️</span>
+        <span class="card-icon">🌅</span>
+        <span class="card-name">纳米布沙漠</span>
+        <span class="card-desc">最古老的沙漠，神奇的仙女圈</span>
+      </div>
+      <!-- 遗迹区 紫色 -->
+      <div class="card card-location" style="background:linear-gradient(145deg,#6a1b9a,#ce93d8);color:#fff;">
+        <span class="card-type">遗迹区 🏛️</span>
+        <span class="card-icon">🏛️</span>
+        <span class="card-name">玛雅神庙</span>
+        <span class="card-desc">含古文字/机关，地图密码元素</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#6a1b9a,#ce93d8);color:#fff;">
+        <span class="card-type">遗迹区 🏛️</span>
+        <span class="card-icon">🗿</span>
+        <span class="card-name">复活节岛</span>
+        <span class="card-desc">神秘石像，古代文明的遗留谜题</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#6a1b9a,#ce93d8);color:#fff;">
+        <span class="card-type">遗迹区 🏛️</span>
+        <span class="card-icon">🔮</span>
+        <span class="card-name">巨石阵</span>
+        <span class="card-desc">神秘史前建筑，含超自然元素</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#6a1b9a,#ce93d8);color:#fff;">
+        <span class="card-type">遗迹区 🏛️</span>
+        <span class="card-icon">☀️</span>
+        <span class="card-name">印加失落城市</span>
+        <span class="card-desc">隐藏在云雾中的黄金城邦</span>
+      </div>
+      <!-- 火山区 红色 -->
+      <div class="card card-location" style="background:linear-gradient(145deg,#b71c1c,#ef9a9a);color:#fff;">
+        <span class="card-type">火山区 🌋</span>
+        <span class="card-icon">🌋</span>
+        <span class="card-name">夏威夷火山口</span>
+        <span class="card-desc">涉及岩浆/高温，高危高收益</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#b71c1c,#ef9a9a);color:#fff;">
+        <span class="card-type">火山区 🌋</span>
+        <span class="card-icon">💥</span>
+        <span class="card-name">庞贝古城</span>
+        <span class="card-desc">被火山封印的古城，历史加成</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#b71c1c,#ef9a9a);color:#fff;">
+        <span class="card-type">火山区 🌋</span>
+        <span class="card-icon">🔥</span>
+        <span class="card-name">冰岛火山带</span>
+        <span class="card-desc">冰与火之国，地热奇观遍布</span>
+      </div>
+      <div class="card card-location" style="background:linear-gradient(145deg,#b71c1c,#ef9a9a);color:#fff;">
+        <span class="card-type">火山区 🌋</span>
+        <span class="card-icon">🌡️</span>
+        <span class="card-name">印尼喀拉喀托</span>
+        <span class="card-desc">世界最活跃火山，随时可能喷发</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 三、事件卡 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-event">⚡ 事件卡 Event Cards（共30张）</div>
+  <div class="section-body">
+    <div class="cards-grid">
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🦁</span><span class="card-name">突遇猛兽</span><span class="card-desc">故事中需有惊险逃脱情节</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">⛈️</span><span class="card-name">暴风雨来袭</span><span class="card-desc">需描述如何应对恶劣天气</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🗺️</span><span class="card-name">发现神秘地图</span><span class="card-desc">故事加入藏宝寻路情节</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">👥</span><span class="card-name">遭遇当地土著</span><span class="card-desc">需有友好或冲突的沟通情节</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🔧</span><span class="card-name">装备全部损坏</span><span class="card-desc">必须说明如何用自然材料生存</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">⏰</span><span class="card-name">时间穿越</span><span class="card-desc">玩家自行决定穿越哪个时代</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🧙</span><span class="card-name">神秘帮助者</span><span class="card-desc">遇到一位神秘角色解困</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🕳️</span><span class="card-name">连环陷阱</span><span class="card-desc">遭遇多个陷阱，逐一化解</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">💧</span><span class="card-name">断水断粮</span><span class="card-desc">极限生存，如何找到食物和水</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🏃</span><span class="card-name">竞争者追踪</span><span class="card-desc">被另一队探险家跟踪抢先机</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🌊</span><span class="card-name">洪水暴发</span><span class="card-desc">山洪来袭，紧急转移求生</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">💎</span><span class="card-name">发现宝藏室</span><span class="card-desc">但宝藏有机关守护，如何破解</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🌪️</span><span class="card-name">沙尘暴突袭</span><span class="card-desc">能见度为零，需靠感觉导航</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🤕</span><span class="card-name">受伤了！</span><span class="card-desc">探险途中受了伤，如何继续前行</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">📡</span><span class="card-name">通讯中断</span><span class="card-desc">完全失联，独立面对未知挑战</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🗝️</span><span class="card-name">古老谜题</span><span class="card-desc">遇到古老的密码谜题阻挡前路</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🌈</span><span class="card-name">奇异天象</span><span class="card-desc">出现罕见自然现象，如何利用</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">👻</span><span class="card-name">诡异现象</span><span class="card-desc">遭遇无法解释的奇异事件</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🦅</span><span class="card-name">神鸟引路</span><span class="card-desc">一只神秘鸟类带领你前往目标</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🌿</span><span class="card-name">植物毒雾</span><span class="card-desc">奇异植物释放迷幻孢子，影响判断</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🏔️</span><span class="card-name">雪崩警报</span><span class="card-desc">雪山突发雪崩，极速撤离</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🐊</span><span class="card-name">鳄鱼领地</span><span class="card-desc">误入危险鳄鱼聚集区</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🌠</span><span class="card-name">陨石坑发现</span><span class="card-desc">发现新的陨石坑，里面有什么？</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🎭</span><span class="card-name">双重身份</span><span class="card-desc">遇到一个伪装成当地人的间谍</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🐜</span><span class="card-name">昆虫大军</span><span class="card-desc">数以百万计的昆虫迁徙路线上</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🏺</span><span class="card-name">考古大发现</span><span class="card-desc">挖到了改变历史的考古文物</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🌋</span><span class="card-name">火山预警</span><span class="card-desc">地面开始震动，30分钟后喷发？</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🧲</span><span class="card-name">磁场异常</span><span class="card-desc">所有指南针失效，如何导航？</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🌡️</span><span class="card-name">极端高温</span><span class="card-desc">气温突破极限，热浪滚滚</span></div>
+      <div class="card card-event"><span class="card-type">事件 ⚡</span><span class="card-icon">🚀</span><span class="card-name">神秘飞行物</span><span class="card-desc">目击不明飞行物，追还是逃？</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 四、道具卡 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-tool">🎒 道具卡 Tool Cards（共24张）</div>
+  <div class="section-body">
+    <div class="cards-grid">
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🔪</span><span class="card-name">瑞士军刀</span><span class="card-desc">万能工具，可解决故事中任意1个问题</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🧭</span><span class="card-name">指南针</span><span class="card-desc">迷路时神奇找到正确方向</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🩹</span><span class="card-name">急救包</span><span class="card-desc">治愈故事中的一处伤害</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🔭</span><span class="card-name">望远镜</span><span class="card-desc">提前发现1个威胁并预先规避</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">📓</span><span class="card-name">防水笔记本</span><span class="card-desc">记录发现，故事获额外细节加分</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">💍</span><span class="card-name">魔法指环</span><span class="card-desc">与神秘力量互动，剧情大反转</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🧪</span><span class="card-name">神秘药水</span><span class="card-desc">效果由玩家自行创意发挥</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🚁</span><span class="card-name">无人机</span><span class="card-desc">俯瞰全局，获得战略视角</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🔦</span><span class="card-name">防水手电</span><span class="card-desc">黑暗中照亮道路，发现隐藏线索</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🪢</span><span class="card-name">登山绳索</span><span class="card-desc">绑定/攀爬/跨越任意障碍</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">📸</span><span class="card-name">防水相机</span><span class="card-desc">记录证据，为故事增加可信度</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🌡️</span><span class="card-name">多功能手表</span><span class="card-desc">测气压/气温/计时，精准预测天气</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🎿</span><span class="card-name">折叠皮划艇</span><span class="card-desc">快速渡河/航行，逃离或探索水域</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🧱</span><span class="card-name">便携钻探仪</span><span class="card-desc">分析地质，找到地下通道或水源</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🔬</span><span class="card-name">迷你显微镜</span><span class="card-desc">鉴定神秘物质，发现肉眼不见的线索</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">📡</span><span class="card-name">卫星电话</span><span class="card-desc">联系外界求援或获取关键情报</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🪄</span><span class="card-name">祖传宝典</span><span class="card-desc">含有当地的古老知识，解读文字/习俗</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🧲</span><span class="card-name">磁力探测器</span><span class="card-desc">探测金属/宝藏，锁定地下埋藏物</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🦺</span><span class="card-name">防化服</span><span class="card-desc">免疫毒雾/化学/极端温度伤害</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🌱</span><span class="card-name">植物图鉴</span><span class="card-desc">识别毒植物/食物，确保安全生存</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🎵</span><span class="card-name">神奇口哨</span><span class="card-desc">可召唤动物伙伴协助冒险</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🏹</span><span class="card-name">弓箭套装</span><span class="card-desc">远程攻击/获取食物/发送信号</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🕯️</span><span class="card-name">永恒蜡烛</span><span class="card-desc">无限燃烧，可辟邪、驱虫、照明</span></div>
+      <div class="card card-tool"><span class="card-type">道具 🎒</span><span class="card-icon">🗡️</span><span class="card-name">古代匕首</span><span class="card-desc">开启古代锁具，切割任何材料</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 五、挑战卡 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-challenge">😱 挑战卡 Challenge Cards（共20张）</div>
+  <div class="section-body">
+    <div class="cards-grid">
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🗣️</span><span class="card-name">方言版</span><span class="card-desc">必须用某种方言讲述（由抽卡者指定）</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🙅</span><span class="card-name">禁忌词</span><span class="card-desc">全程不能说"然后"，违规者扣0.5分</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🎶</span><span class="card-name">唱出地名</span><span class="card-desc">故事中的地点名称必须唱出来</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🤲</span><span class="card-name">手语辅助</span><span class="card-desc">每讲一句话必须做一个手势</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🔄</span><span class="card-name">反转讲法</span><span class="card-desc">从故事结局讲回开头</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">😶</span><span class="card-name">面无表情</span><span class="card-desc">全程不能有表情，被发现扣0.5分</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🎪</span><span class="card-name">角色配音</span><span class="card-desc">为故事每个角色配不同的声音</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">💨</span><span class="card-name">极速版</span><span class="card-desc">30秒内讲完整个故事（含结尾）</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🤫</span><span class="card-name">悄悄话</span><span class="card-desc">必须用耳语讲完整个故事</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🌍</span><span class="card-name">外语嵌入</span><span class="card-desc">每3句话必须包含一个英文单词</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🔢</span><span class="card-name">数字魔咒</span><span class="card-desc">故事中必须说出至少5个不同数字</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🎯</span><span class="card-name">精准简洁</span><span class="card-desc">整个故事不超过50个字</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🎭</span><span class="card-name">情绪演员</span><span class="card-desc">每句话切换一种情绪（高兴→悲伤→愤怒…）</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🤔</span><span class="card-name">不说人称</span><span class="card-desc">不能说"我"、"你"、"他"，必须用名字替代</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🎬</span><span class="card-name">电影旁白</span><span class="card-desc">模仿电影预告片风格讲故事</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🎤</span><span class="card-name">说唱版</span><span class="card-desc">用说唱/饶舌的节奏讲完故事</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">👁️</span><span class="card-name">闭眼讲述</span><span class="card-desc">全程闭上眼睛讲故事</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🐢</span><span class="card-name">慢动作版</span><span class="card-desc">讲话速度必须非常缓慢，像慢镜头</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🎪</span><span class="card-name">绕口令结尾</span><span class="card-desc">故事结尾必须以绕口令形式收尾</span></div>
+      <div class="card card-challenge"><span class="card-type">挑战 😱</span><span class="card-icon">🔤</span><span class="card-name">字母开头</span><span class="card-desc">每句话必须从"探"字开头</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 六、奇遇卡 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-bonus">🌟 奇遇卡 Bonus Cards（共12张）</div>
+  <div class="section-body">
+    <div class="cards-grid">
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">⏸️</span><span class="card-name">时间停止</span><span class="card-desc">本轮投票暂停，额外讲述30秒</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">📚</span><span class="card-name">历史加成</span><span class="card-desc">含真实历史事件，额外+1分</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">👏</span><span class="card-name">全场喝彩</span><span class="card-desc">所有其他玩家强制给你投1票</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">🔀</span><span class="card-name">情节逆转</span><span class="card-desc">取消1张事件卡，重新抽取</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">💎</span><span class="card-name">双倍投票</span><span class="card-desc">本轮你的每票价值×2分</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">🛡️</span><span class="card-name">故事保护</span><span class="card-desc">免疫1次最低分惩罚</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">🎁</span><span class="card-name">神秘礼物</span><span class="card-desc">从道具牌堆顶摸2张加入手牌</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">⚡</span><span class="card-name">闪电出击</span><span class="card-desc">立即再进行一轮，分数照常计算</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">🌙</span><span class="card-name">黑夜加成</span><span class="card-desc">故事发生在夜晚，+1分</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">🤝</span><span class="card-name">友谊之力</span><span class="card-desc">可邀请1名其他玩家联合讲故事</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">🗳️</span><span class="card-name">民主否决</span><span class="card-desc">否决本轮挑战卡，不视为失败</span></div>
+      <div class="card card-bonus"><span class="card-type">奇遇 🌟</span><span class="card-icon">🏆</span><span class="card-name">传奇探险</span><span class="card-desc">本轮故事被记录为"传奇日记"，+2分</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 七、角色牌 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-role">🎭 探险家角色牌（共8张）</div>
+  <div class="section-body">
+    <div class="cards-grid">
+      <div class="role-card role-1">
+        <span class="role-icon">📸</span>
+        <span class="role-name">林晓雯</span>
+        <span class="role-title">🏅 探险摄影师</span>
+        <span class="role-skill">✨ 技能：每当讲故事中用到视觉描写，可额外+0.5分（四舍五入）</span>
+      </div>
+      <div class="role-card role-2">
+        <span class="role-icon">🏛️</span>
+        <span class="role-name">陈考古</span>
+        <span class="role-title">🏅 考古学家</span>
+        <span class="role-skill">✨ 技能：抽到遗迹区地点卡时，可选择换牌1次</span>
+      </div>
+      <div class="role-card role-3">
+        <span class="role-icon">🌿</span>
+        <span class="role-name">大卫·格林</span>
+        <span class="role-title">🏅 生存专家</span>
+        <span class="role-skill">✨ 技能：故事包含自然生存技能时，投票+1枚保底</span>
+      </div>
+      <div class="role-card role-4">
+        <span class="role-icon">📖</span>
+        <span class="role-name">索菲娅</span>
+        <span class="role-title">🏅 语言学家</span>
+        <span class="role-skill">✨ 技能：故事包含2种以上语言/文字时，额外+1分</span>
+      </div>
+      <div class="role-card role-5">
+        <span class="role-icon">🚀</span>
+        <span class="role-name">张博士</span>
+        <span class="role-title">🏅 科技专家</span>
+        <span class="role-skill">✨ 技能：使用道具卡时，额外发动一次道具的追加效果</span>
+      </div>
+      <div class="role-card role-6">
+        <span class="role-icon">🌍</span>
+        <span class="role-name">马可·波罗二世</span>
+        <span class="role-title">🏅 旅行家</span>
+        <span class="role-skill">✨ 技能：故事发生地与上一轮不同区域时，+0.5分</span>
+      </div>
+      <div class="role-card role-7">
+        <span class="role-icon">🧪</span>
+        <span class="role-name">艾米丽·科学</span>
+        <span class="role-title">🏅 野外科学家</span>
+        <span class="role-skill">✨ 技能：故事含有科学原理解释时，其他玩家多投1票不扣</span>
+      </div>
+      <div class="role-card role-8">
+        <span class="role-icon">🎵</span>
+        <span class="role-name">神秘游吟诗人</span>
+        <span class="role-title">🏅 游吟诗人</span>
+        <span class="role-skill">✨ 技能：接受挑战卡成功时，额外+1分（普通成功+2分）</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 八、玩家棋子 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-pawn">♟️ 玩家棋子（共8个）</div>
+  <div class="section-body">
+    <div class="pawn-grid">
+      <div class="pawn pawn-1"><span>🧭</span>1号</div>
+      <div class="pawn pawn-2"><span>🗺️</span>2号</div>
+      <div class="pawn pawn-3"><span>⛺</span>3号</div>
+      <div class="pawn pawn-4"><span>🎒</span>4号</div>
+      <div class="pawn pawn-5"><span>🔦</span>5号</div>
+      <div class="pawn pawn-6"><span>🌿</span>6号</div>
+      <div class="pawn pawn-7"><span>🏕️</span>7号</div>
+      <div class="pawn pawn-8"><span>🌟</span>8号</div>
+    </div>
+    <p style="text-align:center; margin-top:14px; color:#8a6a50; font-size:0.8rem;">
+      打印后裁剪，粘贴在小纸卷筒上即可立放在地图上
+    </p>
+  </div>
+</div>
+
+<!-- ===== 九、荣誉勋章 ===== -->
+<div class="section-wrap">
+  <div class="section-title bg-medal">🏅 荣誉勋章（每人5枚 × 8人 = 40枚）</div>
+  <div class="section-body">
+    <div class="medal-grid">
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+      <div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div><div class="medal">🌟</div>
+    </div>
+    <p style="text-align:center; margin-top:14px; color:#8a6a50; font-size:0.8rem;">
+      打印后裁剪，可粘贴在1元硬币上增加质感，或直接使用实体硬币代替
+    </p>
+  </div>
+</div>
+
+<div style="text-align:center; margin: 30px 0 10px; color:#8a6a50; font-size:0.8rem;">
+  🗺️ 探险家日记 Explorer's Journal · 2026 | 打印后即可开始冒险！
+</div>
+
+</body>
+</html>
