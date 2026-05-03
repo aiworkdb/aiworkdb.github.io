@@ -60,6 +60,7 @@ boardgames/
 | [绝密行动](category/cooperative/secret-mission/README.md) | 合作 | 1-5人 | 40-60分钟 | 中等偏难 |
 | [极速争霸](category/strategy/speed-rivals/README.md) | 策略 | 2-5人 | 40-60分钟 | 中等 |
 | [探险家日记](category/party/explorer-journal/README.md) | 派对 | 3-8人 | 25-45分钟 | 简单 |
+| [幽灵古堡](category/cooperative/ghost-castle/README.md) | 合作 | 1-5人 | 45-75分钟 | 中等 |
 
 ## 添加新桌游
 
