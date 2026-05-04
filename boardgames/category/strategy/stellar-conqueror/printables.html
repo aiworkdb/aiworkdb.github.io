@@ -1,0 +1,279 @@
+﻿:root{--bg-deep:#0a0e27;--bg-card:#111840;--bg-cell:#1a2560;--energy:#ffd700;--stardust:#ff69b4;--event:#ff4500;--tech:#00bfff;--common:#4caf50;--rare:#9c27b0;--legend:#ff9800;--scan:#607d8b;--border:#3a4a8a;--text:#e0e6ff;--text-dim:#8890bb;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg-deep);color:var(--text);font-family:sans-serif;padding:24px;}
+h1{text-align:center;font-size:2rem;margin-bottom:8px;background:linear-gradient(135deg,#ffd700,#ff69b4,#00bfff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:4px;}
+h2{font-size:1.2rem;margin:32px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--border);color:var(--energy);}
+.subtitle{text-align:center;color:var(--text-dim);margin-bottom:24px;font-size:0.9rem;}
+.print-hint{background:linear-gradient(135deg,#1a2560,#0d1a4a);border:1px solid var(--energy);border-radius:12px;padding:20px 28px;margin-bottom:32px;max-width:860px;margin-left:auto;margin-right:auto;}
+.print-hint h3{color:var(--energy);margin-bottom:10px;font-size:1rem;}
+.print-hint ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;}
+.print-hint ul li{font-size:0.88rem;padding-left:18px;position:relative;}
+.print-hint ul li::before{content:"★";position:absolute;left:0;color:var(--energy);font-size:0.7rem;top:1px;}
+.print-hint strong{color:var(--energy);}
+.section{max-width:1100px;margin:0 auto 40px;}
+.galaxy-map{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:720px;margin:0 auto;}
+.map-cell{background:var(--bg-cell);border:2px solid var(--border);border-radius:12px;padding:18px 10px;text-align:center;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+.map-icon{font-size:2.8rem;line-height:1;margin-bottom:6px;}
+.map-name{font-size:0.68rem;color:var(--text-dim);margin-bottom:4px;letter-spacing:1px;}
+.map-desc{font-size:0.72rem;color:var(--text);line-height:1.4;}
+.map-coord{position:absolute;top:4px;right:8px;font-size:0.6rem;color:var(--text-dim);opacity:0.6;}
+.map-cell.legend{border-color:var(--legend);background:linear-gradient(135deg,#1a1000,var(--bg-cell));}
+.map-cell.rare{border-color:var(--rare);background:linear-gradient(135deg,#160018,var(--bg-cell));}
+.map-cell.stardust{border-color:var(--stardust);background:linear-gradient(135deg,#1a0015,var(--bg-cell));}
+.map-cell.energy{border-color:var(--energy);background:linear-gradient(135deg,#1a1500,var(--bg-cell));}
+.map-cell.tech{border-color:var(--tech);background:linear-gradient(135deg,#001520,var(--bg-cell));}
+.map-cell.event{border-color:var(--event);background:linear-gradient(135deg,#200a00,var(--bg-cell));}
+.map-cell.scan{border-color:var(--scan);background:linear-gradient(135deg,#0d1520,var(--bg-cell));}
+.map-cell.common{border-color:var(--common);background:linear-gradient(135deg,#001a00,var(--bg-cell));}
+.map-cell.start{border-color:#4488ff;background:linear-gradient(135deg,#001030,var(--bg-cell));}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;}
+.card{background:var(--bg-card);border:2px solid var(--border);border-radius:10px;padding:11px 9px 9px;text-align:center;min-height:215px;display:flex;flex-direction:column;align-items:center;position:relative;}
+.card-icon{font-size:2.4rem;line-height:1;margin-bottom:5px;}
+.card-name{font-size:0.65rem;font-weight:700;color:var(--text);letter-spacing:0.5px;margin-bottom:4px;line-height:1.3;min-height:28px;display:flex;align-items:center;justify-content:center;}
+.card-type{font-size:0.58rem;color:var(--text-dim);margin-bottom:5px;letter-spacing:1px;text-transform:uppercase;}
+.card-desc{font-size:0.65rem;color:var(--text);line-height:1.4;flex:1;}
+.card-vp{margin-top:5px;font-size:0.72rem;font-weight:900;padding:3px 9px;border-radius:20px;background:rgba(255,215,0,0.15);color:var(--energy);border:1px solid var(--energy);letter-spacing:1px;}
+.card-cost{font-size:0.6rem;color:var(--stardust);margin-top:3px;}
+.card-effect{font-size:0.6rem;color:var(--tech);margin-top:3px;font-style:italic;}
+.card.energy{border-color:var(--energy);}
+.card.energy .card-icon{filter:drop-shadow(0 0 8px rgba(255,215,0,0.5));}
+.card.stardust{border-color:var(--stardust);}
+.card.stardust .card-icon{filter:drop-shadow(0 0 8px rgba(255,105,180,0.5));}
+.card.event{border-color:var(--event);}
+.card.tech{border-color:var(--tech);}
+.card.tech .card-icon{filter:drop-shadow(0 0 8px rgba(0,191,255,0.5));}
+.card.common{border-color:var(--common);}
+.card.common .card-icon{filter:drop-shadow(0 0 8px rgba(76,175,80,0.5));}
+.card.rare{border-color:var(--rare);}
+.card.rare .card-icon{filter:drop-shadow(0 0 8px rgba(156,39,176,0.5));}
+.card.legendary{border-color:var(--legend);}
+.card.legendary .card-icon{filter:drop-shadow(0 0 12px rgba(255,152,0,0.6));}
+.card.scan{border-color:var(--scan);}
+.card.scan .card-icon{filter:drop-shadow(0 0 8px rgba(96,125,139,0.5));}
+.card.positive{border-color:#4caf50;}
+.card.negative{border-color:#f44336;}
+.card.neutral{border-color:#9e9e9e;}
+.card-stack{background:var(--bg-card);border:2px dashed var(--border);border-radius:10px;padding:14px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:215px;}
+.stack-icon{font-size:1.9rem;margin-bottom:8px;}
+.stack-count{font-size:1.5rem;font-weight:900;color:var(--energy);}
+.stack-label{font-size:0.72rem;color:var(--text-dim);margin-top:4px;letter-spacing:1px;}
+.tokens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px;}
+.token-item{background:var(--bg-card);border:2px solid var(--border);border-radius:12px;padding:18px;text-align:center;}
+.token-token{width:76px;height:76px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;}
+.token-name{font-size:0.78rem;color:var(--text);margin-bottom:3px;letter-spacing:1px;}
+.token-desc{font-size:0.68rem;color:var(--text-dim);}
+.panel-grid{display:grid;grid-template-columns:repeat(auto-fill,230px);gap:14px;}
+.player-panel{background:var(--bg-card);border:2px solid var(--border);border-radius:12px;padding:14px;}
+.pp-header{font-size:0.82rem;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.pp-row{display:flex;justify-content:space-between;font-size:0.74rem;padding:3px 0;color:var(--text-dim);border-bottom:1px solid rgba(58,74,138,0.3);}
+.pp-row span:last-child{color:var(--text);font-weight:700;}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px;max-width:900px;margin:0 auto;}
+.legend-item{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:11px;display:flex;align-items:center;gap:11px;}
+.legend-icon{font-size:1.9rem;flex-shrink:0;}
+.legend-text h4{font-size:0.75rem;color:var(--text);margin-bottom:2px;}
+.legend-text p{font-size:0.65rem;color:var(--text-dim);}
+.vp{font-size:0.65rem;font-weight:900;padding:2px 8px;border-radius:20px;background:rgba(255,215,0,0.15);color:var(--energy);border:1px solid var(--energy);}
+@media print{
+*{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important;}
+body{background:white !important;color:#000 !important;padding:0;}
+.print-hint{display:none !important;}
+.section{page-break-inside:avoid;margin-bottom:16px;}
+h2{border-bottom-color:#000;color:#000;}
+.card,.card-stack,.map-cell,.token-item,.player-panel,.legend-item{background:white !important;border-color:#000 !important;box-shadow:none !important;color:#000 !important;}
+.vp{background:rgba(255,215,0,0.1) !important;color:#000 !important;border-color:#000 !important;}
+.galaxy-map,.map-cell,.cards-grid,.card{page-break-inside:avoid;}
+}
+<div style="text-align:center;margin-bottom:12px;">
+  <h1>STELLAR CONQUEROR</h1>
+  <p class="subtitle">星域征服者 · 打印道具包 · 策略类 · 2-4人 · 60-90分钟</p>
+</div>
+
+<div class="print-hint">
+  <h3>重要打印提示</h3>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+    <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，裁剪后可用透明胶带或塑封保护</li>
+    <li>地图建议用<strong>普通纸</strong>打印，贴在硬纸板上增加厚度效果更佳</li>
+    <li>棋子裁剪后可贴在瓶盖或硬币上增加重量感</li>
+    <li>建议每张卡牌多打印1-2张备用</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>银河星图（3x3 九宫格）</h2>
+  <p style="text-align:center;font-size:0.78rem;color:var(--text-dim);margin-bottom:14px;">每玩家放置1个飞船棋子在起点星域 · 只能走上下左右四格 · 必须走满骰子步数</p>
+  <div class="galaxy-map">
+    <div class="map-cell start"><span class="map-coord">(0,0)</span><div class="map-icon">🚀</div><div class="map-name">起点星域</div><div class="map-desc">全体玩家初始位置<br>停留：+1 能量晶石</div></div>
+    <div class="map-cell scan"><span class="map-coord">(0,1)</span><div class="map-icon">🔭</div><div class="map-name">探索区 I</div><div class="map-desc">未探索星域<br>停留：+1 扫描卡</div></div>
+    <div class="map-cell common"><span class="map-coord">(0,2)</span><div class="map-icon">🌍</div><div class="map-name">普通星域</div><div class="map-desc">常见星球分布<br>停留：占领普通星球</div></div>
+    <div class="map-cell energy"><span class="map-coord">(1,0)</span><div class="map-icon">⚡</div><div class="map-name">能源星域</div><div class="map-desc">能量富集区<br>停留：+2 能量晶石</div></div>
+    <div class="map-cell legendary"><span class="map-coord">(1,1)</span><div class="map-icon">💫</div><div class="map-name">传说星域</div><div class="map-desc">最珍稀星球<br>需2星尘激活 +5 VP</div></div>
+    <div class="map-cell rare"><span class="map-coord">(1,2)</span><div class="map-icon">🌟</div><div class="map-name">稀有星域</div><div class="map-desc">珍稀资源星<br>需1星尘激活 +3 VP</div></div>
+    <div class="map-cell event"><span class="map-coord">(2,0)</span><div class="map-icon">☄️</div><div class="map-name">事件星域</div><div class="map-desc">未知风险与机遇<br>停留：抽1张事件卡</div></div>
+    <div class="map-cell tech"><span class="map-coord">(2,1)</span><div class="map-icon">🔬</div><div class="map-name">科技星域</div><div class="map-desc">外星科技遗迹<br>科技卡或3能=1星尘</div></div>
+    <div class="map-cell stardust"><span class="map-coord">(2,2)</span><div class="map-icon">✨</div><div class="map-name">珍稀星域</div><div class="map-desc">星尘富集区<br>掷骰：奇数星尘/偶数能量</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>玩家飞船棋子（每色各1个）</h2>
+  <div class="tokens-grid">
+    <div class="token-item"><div class="token-token" style="background:linear-gradient(135deg,#e53935,#b71c1c);">🚀</div><div class="token-name">红色飞船</div><div class="token-desc">玩家1 · 起点星域出发</div></div>
+    <div class="token-item"><div class="token-token" style="background:linear-gradient(135deg,#1e88e5,#0d47a1);">🚀</div><div class="token-name">蓝色飞船</div><div class="token-desc">玩家2 · 起点星域出发</div></div>
+    <div class="token-item"><div class="token-token" style="background:linear-gradient(135deg,#43a047,#1b5e20);">🚀</div><div class="token-name">绿色飞船</div><div class="token-desc">玩家3 · 起点星域出发</div></div>
+    <div class="token-item"><div class="token-token" style="background:linear-gradient(135deg,#fb8c00,#e65100);">🚀</div><div class="token-name">橙色飞船</div><div class="token-desc">玩家4 · 起点星域出发</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>玩家面板（每玩家各1块）</h2>
+  <div class="panel-grid">
+    <div class="player-panel" style="border-color:#e53935;"><div class="pp-header">🔴 玩家 1 - 红色</div><div class="pp-row"><span>初始能量</span><span>⚡ x 5</span></div><div class="pp-row"><span>初始星尘</span><span>✨ x 2</span></div><div class="pp-row"><span>初始扫描卡</span><span>🔭 x 2</span></div><div class="pp-row"><span>胜利点</span><span>★ 0</span></div><div class="pp-row"><span>拥有科技</span><span>-</span></div><div class="pp-row"><span>占领星球</span><span>-</span></div></div>
+    <div class="player-panel" style="border-color:#1e88e5;"><div class="pp-header">🔵 玩家 2 - 蓝色</div><div class="pp-row"><span>初始能量</span><span>⚡ x 5</span></div><div class="pp-row"><span>初始星尘</span><span>✨ x 2</span></div><div class="pp-row"><span>初始扫描卡</span><span>🔭 x 2</span></div><div class="pp-row"><span>胜利点</span><span>★ 0</span></div><div class="pp-row"><span>拥有科技</span><span>-</span></div><div class="pp-row"><span>占领星球</span><span>-</span></div></div>
+    <div class="player-panel" style="border-color:#43a047;"><div class="pp-header">🟢 玩家 3 - 绿色</div><div class="pp-row"><span>初始能量</span><span>⚡ x 5</span></div><div class="pp-row"><span>初始星尘</span><span>✨ x 2</span></div><div class="pp-row"><span>初始扫描卡</span><span>🔭 x 2</span></div><div class="pp-row"><span>胜利点</span><span>★ 0</span></div><div class="pp-row"><span>拥有科技</span><span>-</span></div><div class="pp-row"><span>占领星球</span><span>-</span></div></div>
+    <div class="player-panel" style="border-color:#fb8c00;"><div class="pp-header">🟠 玩家 4 - 橙色</div><div class="pp-row"><span>初始能量</span><span>⚡ x 5</span></div><div class="pp-row"><span>初始星尘</span><span>✨ x 2</span></div><div class="pp-row"><span>初始扫描卡</span><span>🔭 x 2</span></div><div class="pp-row"><span>胜利点</span><span>★ 0</span></div><div class="pp-row"><span>拥有科技</span><span>-</span></div><div class="pp-row"><span>占领星球</span><span>-</span></div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>能量晶石卡（资源卡 · 共30张）</h2>
+  <div class="cards-grid">
+    <div class="card-stack"><div class="stack-icon" style="filter:drop-shadow(0 0 10px rgba(255,215,0,0.6));">⚡</div><div class="stack-count">30</div><div class="stack-label">能量晶石卡 · 基础资源</div></div>
+    <div class="card energy"><div class="card-icon">⚡</div><div class="card-name">能量晶石</div><div class="card-type">RESOURCE</div><div class="card-desc">最基础的资源。用于建造科技、使用扫描卡、兑换星尘。</div><div class="card-effect">万能资源 · 无处不用</div></div>
+    <div class="card energy"><div class="card-icon">⚡⚡</div><div class="card-name">浓缩能量块</div><div class="card-type">RESOURCE x2</div><div class="card-desc">高浓缩能量块，价值2个能量晶石，方便携带减少卡牌数量。</div><div class="card-effect">= 能量晶石 x 2</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>星尘卡（珍稀资源 · 共20张）</h2>
+  <div class="cards-grid">
+    <div class="card-stack"><div class="stack-icon" style="filter:drop-shadow(0 0 10px rgba(255,105,180,0.6));">✨</div><div class="stack-count">20</div><div class="stack-label">星尘卡 · 珍稀资源</div></div>
+    <div class="card stardust"><div class="card-icon">✨</div><div class="card-name">星尘</div><div class="card-type">RARE RESOURCE</div><div class="card-desc">珍稀资源。用于激活稀有星球（需1张）和传说星球（需2张）。</div><div class="card-effect">稀有: 需1张 · 传说: 需2张</div></div>
+    <div class="card stardust"><div class="card-icon">💎</div><div class="card-name">浓缩星尘</div><div class="card-type">RARE x2</div><div class="card-desc">高纯度浓缩星尘。价值2份星尘，方便管理减少卡牌数量。</div><div class="card-effect">= 星尘 x 2</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>普通星球卡（共15张 · 1-2 VP · 绿色边框）</h2>
+  <div class="cards-grid">
+    <div class="card common"><div class="card-icon">🌍</div><div class="card-name">岩石行星</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">荒凉的岩石星球，缺乏自然资源但可作为前进基地。</div><span class="vp">1 VP</span></div>
+    <div class="card common"><div class="card-icon">🌊</div><div class="card-name">海洋星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">被海洋覆盖的星球，水源丰富。占领后额外获得1个能量晶石。</div><span class="vp">1 VP + 能量</span><div class="card-effect">占领时: +1 能量晶石</div></div>
+    <div class="card common"><div class="card-icon">🪐</div><div class="card-name">气态巨行星</div><div class="card-type">COMMON 2 VP</div><div class="card-desc">庞大的气态行星，蕴含丰富能量。占领获得2个胜利点。</div><span class="vp">2 VP</span></div>
+    <div class="card common"><div class="card-icon">❄️</div><div class="card-name">冰冻星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">极寒的冰冻世界。占领后在下一个回合移动时骰子+1点。</div><span class="vp">1 VP</span><div class="card-effect">下回合: 骰子+1</div></div>
+    <div class="card common"><div class="card-icon">🏜️</div><div class="card-name">沙漠星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">炎热干燥的沙漠星球，地表下可能有矿藏。</div><span class="vp">1 VP</span></div>
+    <div class="card common"><div class="card-icon">🌿</div><div class="card-name">草原星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">拥有绿色植被的类地行星，适宜建立殖民地。</div><span class="vp">1 VP</span></div>
+    <div class="card common"><div class="card-icon">🌋</div><div class="card-name">火山星球</div><div class="card-type">COMMON 2 VP</div><div class="card-desc">持续喷发的火山星球。危险但回报丰厚，占领获得2 VP。</div><span class="vp">2 VP</span></div>
+    <div class="card common"><div class="card-icon">🪨</div><div class="card-name">小行星带</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">密集的小行星带。开采矿物可以获得额外能量。</div><span class="vp">1 VP + 能量</span><div class="card-effect">占领时: +1 能量晶石</div></div>
+    <div class="card common"><div class="card-icon">🌫️</div><div class="card-name">云海星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">终年被厚重云层覆盖的神秘星球。占领后下回合可免费扫描1次。</div><span class="vp">1 VP</span><div class="card-effect">下回合: 免费扫描x1</div></div>
+    <div class="card common"><div class="card-icon">🛸</div><div class="card-name">卫星基地</div><div class="card-type">COMMON 2 VP</div><div class="card-desc">天然形成的卫星。是建立前哨站的绝佳位置。</div><span class="vp">2 VP</span></div>
+    <div class="card common"><div class="card-icon">🌑</div><div class="card-name">黑暗星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">远离恒星的一片黑暗世界。外星生物潜伏其中。</div><span class="vp">1 VP</span></div>
+    <div class="card common"><div class="card-icon">🦖</div><div class="card-name">远古星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">保存着古老文明的遗迹。考古探索可能有意外收获。</div><span class="vp">1 VP</span></div>
+    <div class="card common"><div class="card-icon">☁️</div><div class="card-name">风暴星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">永恒风暴席卷的星球。征服它展示了你的实力。</div><span class="vp">1 VP</span></div>
+    <div class="card common"><div class="card-icon">🌸</div><div class="card-name">花海星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">遍野鲜花的外星世界。美丽的景观令人心旷神怡。</div><span class="vp">1 VP</span></div>
+    <div class="card common"><div class="card-icon">🗻</div><div class="card-name">高山星球</div><div class="card-type">COMMON 1 VP</div><div class="card-desc">巍峨的高山世界。是建立信号塔的理想地点。</div><span class="vp">1 VP</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>稀有星球卡（共8张 · 3 VP · 紫色边框）</h2>
+  <div class="cards-grid">
+    <div class="card rare"><div class="card-icon">💎</div><div class="card-name">钻石星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">整颗由钻石构成的星球，价值连城。占领后每回合+1能量晶石。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">每回合: +1 能量晶石</div></div>
+    <div class="card rare"><div class="card-icon">🌋</div><div class="card-name">熔岩星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">持续喷发的熔岩世界。占领后可攻击他人占领的星球（使其-1 VP）。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">可攻击他人星球减1 VP</div></div>
+    <div class="card rare"><div class="card-icon">🦠</div><div class="card-name">生命星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">发现了外星生命迹象的星球！占领后每回合可抽1张事件卡选择执行或丢弃。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">每回合: 抽事件卡选择生效</div></div>
+    <div class="card rare"><div class="card-icon">🕳️</div><div class="card-name">虫洞星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">自然形成的虫洞！占领后你的飞船可以进行超远距离传送。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">移动时可传送到任意格子</div></div>
+    <div class="card rare"><div class="card-icon">🔮</div><div class="card-name">水晶星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">巨大的水晶结构覆盖整个星球。占领后可复制任意对手的科技效果。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">可复制对手1个科技效果</div></div>
+    <div class="card rare"><div class="card-icon">🌈</div><div class="card-name">极光星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">极光笼罩的绝美星球。占领后下个回合的骰子+3点。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">下回合骰子+3</div></div>
+    <div class="card rare"><div class="card-icon">🧬</div><div class="card-name">基因星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">基因多样性极为丰富的星球。占领后每次占领普通星球时额外+1 VP。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">占领普通星球时额外+1 VP</div></div>
+    <div class="card rare"><div class="card-icon">🌌</div><div class="card-name">星云星球</div><div class="card-type">RARE 3 VP 需1星尘</div><div class="card-desc">漂浮在星云中的奇妙星球。占领后立即获得2张能量晶石和1张星尘。</div><span class="vp">3 VP</span><div class="card-cost">消耗 1 星尘</div><div class="card-effect">占领时: +2能量 +1星尘</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>传说星球卡（共4张 · 5 VP · 橙色边框）</h2>
+  <div class="cards-grid">
+    <div class="card legendary"><div class="card-icon">🌞</div><div class="card-name">创世之星</div><div class="card-type">LEGENDARY 5 VP 需2星尘</div><div class="card-desc">宇宙诞生时的第一颗恒星。传说中第一个占领它的玩家将永载星际史册。全游戏唯一，无法被攻击。</div><span class="vp">5 VP</span><div class="card-cost">消耗 2 星尘</div><div class="card-effect">全游戏唯一 无法被攻击</div></div>
+    <div class="card legendary"><div class="card-icon">🌌</div><div class="card-name">永恒星云</div><div class="card-type">LEGENDARY 5 VP 需2星尘</div><div class="card-desc">永不消散的神秘星云。占领后每回合获得2个能量晶石，资源滚滚而来。</div><span class="vp">5 VP</span><div class="card-cost">消耗 2 星尘</div><div class="card-effect">每回合: +2 能量晶石</div></div>
+    <div class="card legendary"><div class="card-icon">🌑</div><div class="card-name">暗能星球</div><div class="card-type">LEGENDARY 5 VP 需2星尘</div><div class="card-desc">由暗物质构成的未知星球。占领后可复制对手已占领星球的胜利点数值。</div><span class="vp">5 VP</span><div class="card-cost">消耗 2 星尘</div><div class="card-effect">可复制对手占领星球的 VP</div></div>
+    <div class="card legendary"><div class="card-icon">🎆</div><div class="card-name">超新星</div><div class="card-type">LEGENDARY 5 VP 需2星尘</div><div class="card-desc">即将爆发的超新星，能量巨大。占领后可立即再移动一次（掷骰子）。</div><span class="vp">5 VP</span><div class="card-cost">消耗 2 星尘</div><div class="card-effect">占领后立即再移动一次</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>科技卡（共16张 · 青色边框）</h2>
+  <div class="cards-grid">
+    <div class="card tech"><div class="card-icon">🚀</div><div class="card-name">曲速引擎</div><div class="card-type">PERMANENT 消耗3能量</div><div class="card-desc">超光速航行技术。永久效果：每次移动距离+2步。</div><div class="card-cost">3 能量</div><div class="card-effect">永久: 移动距离+2</div></div>
+    <div class="card tech"><div class="card-icon">🛡️</div><div class="card-name">能量护盾</div><div class="card-type">PERMANENT 消耗2能量</div><div class="card-desc">能量场保护装置。永久效果：免疫1次负面事件效果。</div><div class="card-cost">2 能量</div><div class="card-effect">永久: 免疫1次负面事件</div></div>
+    <div class="card tech"><div class="card-icon">🔭</div><div class="card-name">超级扫描</div><div class="card-type">ONE-TIME 消耗2能量</div><div class="card-desc">超级空间扫描仪。一次性效果：查看牌堆顶3张卡，选择1张放入手中，其余放回。</div><div class="card-cost">2 能量</div><div class="card-effect">一次性: 查看顶3选1</div></div>
+    <div class="card tech"><div class="card-icon">⛏️</div><div class="card-name">采矿激光</div><div class="card-type">PERMANENT 消耗4能量</div><div class="card-desc">高能采矿激光阵列。永久效果：在能源星域停留时能量晶石翻倍（+4而非+2）。</div><div class="card-cost">4 能量</div><div class="card-effect">永久: 能源区+4能量</div></div>
+    <div class="card tech"><div class="card-icon">⚡</div><div class="card-name">推进器</div><div class="card-type">PERMANENT 消耗2能量</div><div class="card-desc">引擎推进增强装置。永久效果：骰子投掷+1点。</div><div class="card-cost">2 能量</div><div class="card-effect">永久: 骰子+1点</div></div>
+    <div class="card tech"><div class="card-icon">🧬</div><div class="card-name">基因强化</div><div class="card-type">PERMANENT 消耗3能量</div><div class="card-desc">基因工程强化改造。永久效果：占领普通星球时额外+1 VP。</div><div class="card-cost">3 能量</div><div class="card-effect">永久: 普通星球+1 VP</div></div>
+    <div class="card tech"><div class="card-icon">🛰️</div><div class="card-name">通讯网络</div><div class="card-type">PERMANENT 消耗3能量</div><div class="card-desc">银河系通讯网络接入。永久效果：可查看所有对手当前手牌。</div><div class="card-cost">3 能量</div><div class="card-effect">永久: 查看对手手牌</div></div>
+    <div class="card tech"><div class="card-icon">💣</div><div class="card-name">引力炸弹</div><div class="card-type">ONE-TIME 消耗2能量</div><div class="card-desc">引力干扰炸弹。一次性效果：指定任意对手，使其失去1 VP（需该对手当前在稀有星域）。</div><div class="card-cost">2 能量</div><div class="card-effect">一次性: 对手-1 VP</div></div>
+    <div class="card tech"><div class="card-icon">🛸</div><div class="card-name">隐形装置</div><div class="card-type">PERMANENT 消耗3能量</div><div class="card-desc">光学隐形场发生器。永久效果：移动时可以选择跳过任意1个格子。</div><div class="card-cost">3 能量</div><div class="card-effect">永久: 移动跳过1格</div></div>
+    <div class="card tech"><div class="card-icon">🔋</div><div class="card-name">超级电容</div><div class="card-type">PERMANENT 消耗4能量</div><div class="card-desc">超高容量能量存储设备。永久效果：初始手牌增加2张能量晶石，且手牌上限+5。</div><div class="card-cost">4 能量</div><div class="card-effect">永久: +2初始能量 手牌+5</div></div>
+    <div class="card tech"><div class="card-icon">🌟</div><div class="card-name">星门科技</div><div class="card-type">ONE-TIME 消耗3能量</div><div class="card-desc">古老的外星星门技术。一次性效果：立即传送到任意星域，并触发该星域效果。</div><div class="card-cost">3 能量</div><div class="card-effect">一次性: 传送+触发效果</div></div>
+    <div class="card tech"><div class="card-icon">🧪</div><div class="card-name">物质复制</div><div class="card-type">ONE-TIME 消耗2能量</div><div class="card-desc">分子级物质复制仪。一次性效果：将手牌中任意1张卡复制1份放入手中。</div><div class="card-cost">2 能量</div><div class="card-effect">一次性: 复制手牌任意1张</div></div>
+    <div class="card tech"><div class="card-icon">⚙️</div><div class="card-name">自动导航</div><div class="card-type">PERMANENT 消耗2能量</div><div class="card-desc">AI自动导航系统。永久效果：在探索区停留时自动获得2张扫描卡（而非1张）。</div><div class="card-cost">2 能量</div><div class="card-effect">永久: 探索区+2扫描卡</div></div>
+    <div class="card tech"><div class="card-icon">🛠️</div><div class="card-name">紧急修复</div><div class="card-type">ONE-TIME 消耗2能量</div><div class="card-desc">快速维修机器人。一次性效果：恢复自己因负面事件或攻击失去的1 VP。</div><div class="card-cost">2 能量</div><div class="card-effect">一次性: 恢复1 VP</div></div>
+    <div class="card tech"><div class="card-icon">📡</div><div class="card-name">先知系统</div><div class="card-type">PERMANENT 消耗3能量</div><div class="card-desc">预知未来的量子计算系统。永久效果：每回合开始时可查看牌堆顶3张事件卡。</div><div class="card-cost">3 能量</div><div class="card-effect">永久: 每回合看顶3事件卡</div></div>
+    <div class="card tech"><div class="card-icon">🔱</div><div class="card-name">外星同盟</div><div class="card-type">PERMANENT 消耗4能量</div><div class="card-desc">与地外智慧生命建立同盟。永久效果：每当有玩家占领传说星球时，你同步获得+1 VP。</div><div class="card-cost">4 能量</div><div class="card-effect">永久: 对手占传说我+1 VP</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>事件卡（共20张 · 红色边框）</h2>
+  <div class="cards-grid">
+    <div class="card event positive"><div class="card-icon">⚡</div><div class="card-name">能量潮汐</div><div class="card-type">POSITIVE EVENT</div><div class="card-desc">银河系能量潮汐涌动。立即获得3张能量晶石！</div><div class="card-effect">立即: +3 能量晶石</div></div>
+    <div class="card event positive"><div class="card-icon">🌟</div><div class="card-name">流星雨</div><div class="card-type">POSITIVE EVENT</div><div class="card-desc">流星雨划过天际。随机发现1张普通星球卡，立即占领获得胜利点。</div><div class="card-effect">立即: +1 普通星球</div></div>
+    <div class="card event positive"><div class="card-icon">🔮</div><div class="card-name">宇宙预言</div><div class="card-type">POSITIVE EVENT</div><div class="card-desc">古老文明的宇宙预言揭示未来。查看牌堆顶3张事件卡，选择1张立即执行，其余放回。</div><div class="card-effect">查看顶3选1执行</div></div>
+    <div class="card event positive"><div class="card-icon">💰</div><div class="card-name">外星商人</div><div class="card-type">POSITIVE EVENT</div><div class="card-desc">友善的外星商人路过！可用3能量兑换1星尘，或1星尘兑换2能量。任选其一执行。</div><div class="card-effect">3能=1星尘 或 1星尘=2能</div></div>
+    <div class="card event positive"><div class="card-icon">🛸</div><div class="card-name">救援信号</div><div class="card-type">POSITIVE BIDDING</div><div class="card-desc">发出救援信号的飞船需要帮助！所有玩家可消耗2能量竞标。成功者获得+3 VP。</div><div class="card-effect">竞标: 2能量 to +3 VP</div></div>
+    <div class="card event positive"><div class="card-icon">🎁</div><div class="card-name">星际礼包</div><div class="card-type">POSITIVE EVENT</div><div class="card-desc">神秘的星际礼包出现在你面前。立即获得1能量+1星尘！</div><div class="card-effect">立即: +1能量 +1星尘</div></div>
+    <div class="card event positive"><div class="card-icon">🧬</div><div class="card-name">基因突变</div><div class="card-type">POSITIVE EVENT</div><div class="card-desc">你的船员发生了有益的基因突变！立即获得2个能量晶石，并在下回合占领普通星球时额外+1 VP。</div><div class="card-effect">+2能量 下次占普通+1VP</div></div>
+    <div class="card event negative"><div class="card-icon">☄️</div><div class="card-name">小行星带</div><div class="card-type">NEGATIVE EVENT</div><div class="card-desc">误入密集小行星带！飞船遭受撞击，失去2张能量晶石。</div><div class="card-effect">失去: -2 能量晶石</div></div>
+    <div class="card event negative"><div class="card-icon">🌋</div><div class="card-name">太阳耀斑</div><div class="card-type">NEGATIVE EVENT</div><div class="card-desc">强烈的太阳耀斑干扰了引擎系统！本回合无法移动，跳过移动阶段。</div><div class="card-effect">跳过: 本回合无法移动</div></div>
+    <div class="card event negative"><div class="card-icon">🕳️</div><div class="card-name">黑洞引力</div><div class="card-type">NEGATIVE EVENT</div><div class="card-desc">黑洞的引力将你的飞船传送到了随机的星域。随机传送到任意格子。</div><div class="card-effect">传送: 随机星域</div></div>
+    <div class="card event negative"><div class="card-icon">💀</div><div class="card-name">星际海盗</div><div class="card-type">NEGATIVE EVENT</div><div class="card-desc">星际海盗袭击！随机选择一名对手，你失去1张手牌（随机选择）。</div><div class="card-effect">对手随机夺走1张手牌</div></div>
+    <div class="card event negative"><div class="card-icon">🩸</div><div class="card-name">宇宙射线</div><div class="card-type">NEGATIVE EVENT</div><div class="card-desc">致命的宇宙射线辐射！飞船系统受损，下回合骰子-2点。</div><div class="card-effect">下回合骰子-2</div></div>
+    <div class="card event negative"><div class="card-icon">🔌</div><div class="card-name">系统故障</div><div class="card-type">NEGATIVE EVENT</div><div class="card-desc">飞船关键系统发生故障。失去1个你已占领的星球（随机取消），移除其胜利点。</div><div class="card-effect">失去1个已占领的星球</div></div>
+    <div class="card event neutral"><div class="card-icon">🌠</div><div class="card-name">星际联盟</div><div class="card-type">NEUTRAL EVENT</div><div class="card-desc">星际联盟发出召集令。与所有玩家各交换1张手牌。</div><div class="card-effect">与所有玩家换1张牌</div></div>
+    <div class="card event neutral"><div class="card-icon">🔀</div><div class="card-name">星图错乱</div><div class="card-type">NEUTRAL EVENT</div><div class="card-desc">银河磁场干扰导致星图错乱。所有玩家重新掷骰子决定本回合移动步数。</div><div class="card-effect">所有人重掷骰子</div></div>
+    <div class="card event neutral"><div class="card-icon">⚖️</div><div class="card-name">宇宙法庭</div><div class="card-type">NEUTRAL EVENT</div><div class="card-desc">宇宙法庭开庭！VP最高的玩家必须给VP最低的玩家1张手牌。</div><div class="card-effect">最高VP者给最低VP者1牌</div></div>
+    <div class="card event neutral"><div class="card-icon">🌀</div><div class="card-name">时空漩涡</div><div class="card-type">NEUTRAL EVENT</div><div class="card-desc">神秘的时空漩涡出现。所有玩家同时将飞船传送到起点星域并获得1能量。</div><div class="card-effect">全员传送至起点+1能量</div></div>
+    <div class="card event neutral"><div class="card-icon">📜</div><div class="card-name">古老信号</div><div class="card-type">NEUTRAL EVENT</div><div class="card-desc">接收到古老文明的广播信号。所有玩家各获得1张扫描卡。</div><div class="card-effect">全员+1扫描卡</div></div>
+    <div class="card event neutral"><div class="card-icon">🌙</div><div class="card-name">双子星系</div><div class="card-type">NEUTRAL EVENT</div><div class="card-desc">发现双子星系！所有玩家可以免费占领1张普通星球卡（无位置限制）。</div><div class="card-effect">全员免费占1普通星球</div></div>
+    <div class="card event neutral"><div class="card-icon">⏳</div><div class="card-name">时间膨胀</div><div class="card-type">NEUTRAL EVENT</div><div class="card-desc">接近光速飞行导致时间膨胀。当前VP最低的玩家额外+2 VP。</div><div class="card-effect">VP最低者+2 VP</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>扫描卡（共12张 · 灰色边框）</h2>
+  <div class="cards-grid">
+    <div class="card scan"><div class="card-icon">🔭</div><div class="card-name">远距扫描</div><div class="card-type">SCAN 消耗1能量</div><div class="card-desc">远程空间扫描。消耗1能量，查看探索区当前星球，发现1张星球卡。</div><div class="card-cost">1 能量</div><div class="card-effect">查看探索区 发现1星球卡</div></div>
+    <div class="card scan"><div class="card-icon">📡</div><div class="card-name">深层扫描</div><div class="card-type">SCAN 消耗2能量</div><div class="card-desc">深层空间扫描仪。消耗2能量，查看探索区所有卡牌（最多3张），选择1张放入手中。</div><div class="card-cost">2 能量</div><div class="card-effect">查看探索区所有卡 选1拿手</div></div>
+    <div class="card scan"><div class="card-icon">🌀</div><div class="card-name">即时跃迁</div><div class="card-type">SCAN 消耗2能量</div><div class="card-desc">空间跃迁引擎。消耗2能量，立即传送到任意相邻格子（上下左右各1格）。</div><div class="card-cost">2 能量</div><div class="card-effect">立即传送至相邻格子</div></div>
+    <div class="card scan"><div class="card-icon">🗺️</div><div class="card-name">星图绘制</div><div class="card-type">SCAN 消耗1能量</div><div class="card-desc">精确星图定位系统。消耗1能量，在下个回合开始时，可选择任意目的地移动（不受骰子限制）。</div><div class="card-cost">1 能量</div><div class="card-effect">下回合: 任意目的地移动</div></div>
+    <div class="card scan"><div class="card-icon">🎯</div><div class="card-name">精准定位</div><div class="card-type">SCAN 消耗1能量</div><div class="card-desc">高精度目标定位。在任意行动前使用，指定本回合骰子投掷结果为任意2-12之间的数字。</div><div class="card-cost">1 能量</div><div class="card-effect">本回合自定义骰子2-12</div></div>
+    <div class="card scan"><div class="card-icon">🔎</div><div class="card-name">情报截获</div><div class="card-type">SCAN 消耗1能量</div><div class="card-desc">信号截获与解码系统。消耗1能量，查看任意1名对手的全部手牌内容。</div><div class="card-cost">1 能量</div><div class="card-effect">查看1名对手全部手牌</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>图例说明</h2>
+  <div class="legend-grid">
+    <div class="legend-item"><div class="legend-icon">⚡</div><div class="legend-text"><h4>能量晶石</h4><p>基础资源 用于建造科技和使用扫描卡</p></div></div>
+    <div class="legend-item"><div class="legend-icon">✨</div><div class="legend-text"><h4>星尘</h4><p>珍稀资源 用于激活稀有/传说星球</p></div></div>
+    <div class="legend-item"><div class="legend-icon">🌍</div><div class="legend-text"><h4>普通星球</h4><p>占领获得 1-2 VP 无需消耗</p></div></div>
+    <div class="legend-item"><div class="legend-icon">🌟</div><div class="legend-text"><h4>稀有星球</h4><p>占领获得 3 VP 需消耗 1 星尘</p></div></div>
+    <div class="legend-item"><div class="legend-icon">💫</div><div class="legend-text"><h4>传说星球</h4><p>占领获得 5 VP 需消耗 2 星尘</p></div></div>
+    <div class="legend-item"><div class="legend-icon">🔬</div><div class="legend-text"><h4>科技卡</h4><p>永久或一次性效果 消耗能量建造</p></div></div>
+    <div class="legend-item"><div class="legend-icon">☄️</div><div class="legend-text"><h4>事件卡</h4><p>正面/负面/中性事件 立即生效</p></div></div>
+    <div class="legend-item"><div class="legend-icon">🔭</div><div class="legend-text"><h4>扫描卡</h4><p>情报收集 消耗能量一次性使用</p></div></div>
+    <div class="legend-item"><div class="legend-icon">🚀</div><div class="legend-text"><h4>飞船棋子</h4><p>代表玩家在星图中的位置</p></div></div>
+    <div class="legend-item"><div class="legend-icon">★</div><div class="legend-text"><h4>胜利点</h4><p>率先积累 10 VP 即获胜</p></div></div>
+  </div>
+</div>
+
+</body>
+</html>
