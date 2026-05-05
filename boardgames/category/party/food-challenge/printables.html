@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍳 美食挑战赛 - 打印道具</title>
+<style>
+  /* ===== 基础样式 ===== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', Arial, sans-serif;
+    background: #fff8f0;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  /* ===== 打印提示 ===== */
+  .print-hint {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border: 2px solid #f39c12;
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin: 20px auto;
+    max-width: 900px;
+    font-size: 14px;
+  }
+  .print-hint h2 { color: #d68910; margin-bottom: 10px; font-size: 16px; }
+  .print-hint ul { padding-left: 20px; }
+  .print-hint li { margin-bottom: 6px; line-height: 1.6; }
+
+  /* ===== 章节标题 ===== */
+  .section-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #c0392b;
+    margin: 30px 0 16px;
+    padding: 10px;
+    background: linear-gradient(135deg, #fdebd0, #fadbd8);
+    border-radius: 10px;
+    border-left: 6px solid #e74c3c;
+  }
+
+  /* ===== 卡牌容器 ===== */
+  .cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px 16px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* ===== 通用卡牌基础样式 ===== */
+  .card {
+    width: 88px;
+    height: 126px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 4px;
+    position: relative;
+    border: 2px solid rgba(0,0,0,0.15);
+    page-break-inside: avoid;
+    text-align: center;
+    cursor: default;
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.15);
+  }
+
+  .card-icon { font-size: 28px; line-height: 1.1; margin-bottom: 4px; }
+  .card-name { font-size: 10px; font-weight: bold; margin-bottom: 3px; }
+  .card-type { font-size: 8px; opacity: 0.85; margin-bottom: 3px; }
+  .card-desc { font-size: 8px; line-height: 1.3; opacity: 0.9; padding: 0 2px; }
+  .card-score {
+    position: absolute;
+    bottom: 5px;
+    right: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.7);
+    border-radius: 8px;
+    padding: 1px 4px;
+  }
+  .card-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 8px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 6px;
+    padding: 1px 4px;
+    font-weight: bold;
+  }
+
+  /* ===== 食材卡 ===== */
+  .ingredient-veggie {
+    background: linear-gradient(160deg, #d5f5e3, #a9dfbf);
+    border-color: #27ae60;
+  }
+  .ingredient-meat {
+    background: linear-gradient(160deg, #fadbd8, #f1948a);
+    border-color: #c0392b;
+  }
+  .ingredient-seafood {
+    background: linear-gradient(160deg, #d6eaf8, #85c1e9);
+    border-color: #2980b9;
+  }
+  .ingredient-spice {
+    background: linear-gradient(160deg, #fef9e7, #f9e79f);
+    border-color: #d4ac0d;
+  }
+
+  /* ===== 菜谱卡 ===== */
+  .recipe-easy {
+    background: linear-gradient(160deg, #eafaf1, #d5f5e3);
+    border-color: #1e8449;
+    width: 100px;
+    height: 140px;
+  }
+  .recipe-medium {
+    background: linear-gradient(160deg, #fef9e7, #fdebd0);
+    border-color: #ca6f1e;
+    width: 100px;
+    height: 140px;
+  }
+  .recipe-hard {
+    background: linear-gradient(160deg, #f4ecf7, #e8daef);
+    border-color: #6c3483;
+    width: 100px;
+    height: 140px;
+  }
+  .recipe-req {
+    font-size: 8px;
+    color: #555;
+    line-height: 1.4;
+    margin-top: 3px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 4px;
+    padding: 2px 4px;
+  }
+
+  /* ===== 事件卡 ===== */
+  .event-card {
+    background: linear-gradient(160deg, #1a1a2e, #16213e);
+    border-color: #e74c3c;
+    color: #fff;
+    width: 100px;
+    height: 140px;
+  }
+  .event-card .card-name { color: #ff6b6b; font-size: 9px; }
+  .event-card .card-desc { color: #ddd; font-size: 7.5px; }
+
+  /* ===== 评分卡 ===== */
+  .score-card {
+    background: linear-gradient(160deg, #fffde7, #fff176);
+    border-color: #f9a825;
+    border-width: 3px;
+    width: 100px;
+    height: 140px;
+  }
+
+  /* ===== 厨具卡 ===== */
+  .tool-card {
+    background: linear-gradient(160deg, #e8eaf6, #c5cae9);
+    border-color: #3949ab;
+    width: 100px;
+    height: 140px;
+  }
+
+  /* ===== 野牌 ===== */
+  .wild-card {
+    background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff);
+    border-color: #fff;
+    border-width: 3px;
+    width: 100px;
+    height: 140px;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  /* ===== 版图 ===== */
+  .game-board {
+    max-width: 900px;
+    margin: 20px auto;
+    border: 4px solid #e74c3c;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #fff9f0, #fdebd0);
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(231,76,60,0.2);
+    page-break-inside: avoid;
+  }
+
+  .board-header {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    text-align: center;
+    padding: 16px 20px;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  }
+  .board-header span { font-size: 14px; opacity: 0.85; display: block; margin-top: 4px; }
+
+  .board-top-row {
+    display: flex;
+    gap: 0;
+    border-bottom: 3px solid #e74c3c;
+  }
+
+  .board-zone {
+    flex: 1;
+    padding: 14px 12px;
+    text-align: center;
+    border-right: 2px solid #f0a890;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .board-zone:last-child { border-right: none; }
+  .board-zone-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #c0392b;
+    margin-bottom: 8px;
+  }
+  .board-zone-icon { font-size: 32px; margin-bottom: 6px; }
+  .board-zone-desc { font-size: 10px; color: #666; line-height: 1.5; }
+
+  .board-player-row {
+    display: flex;
+    border-bottom: 2px solid #f0a890;
+    flex-wrap: wrap;
+  }
+
+  .player-zone {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 10px;
+    border-right: 2px solid #f0a890;
+    min-height: 100px;
+  }
+  .player-zone:last-child { border-right: none; }
+  .player-zone-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .player-color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+    vertical-align: middle;
+    border: 1px solid rgba(0,0,0,0.2);
+  }
+
+  .card-slots {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .card-slot {
+    width: 28px;
+    height: 40px;
+    border: 1.5px dashed #bdc3c7;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.5);
+  }
+
+  .score-track {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #2c3e50, #1a252f);
+  }
+  .score-track-title {
+    color: #f1c40f;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .score-boxes {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .score-box {
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid #f1c40f;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f1c40f;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .score-box.milestone { background: rgba(241,196,15,0.3); font-size: 15px; }
+
+  /* ===== 角色卡 ===== */
+  .character-card {
+    width: 120px;
+    height: 160px;
+    border-radius: 12px;
+    background: linear-gradient(160deg, #1a1a2e, #16213e);
+    border: 3px solid #f39c12;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px;
+    text-align: center;
+    page-break-inside: avoid;
+    box-shadow: 3px 4px 12px rgba(0,0,0,0.3);
+  }
+  .character-card .char-icon { font-size: 36px; margin-bottom: 6px; }
+  .character-card .char-name { font-size: 12px; font-weight: bold; color: #f1c40f; margin-bottom: 6px; }
+  .character-card .char-skill-title { font-size: 9px; color: #aaa; margin-bottom: 4px; }
+  .character-card .char-skill { font-size: 9px; color: #eee; line-height: 1.4; }
+
+  /* ===== 棋子板 ===== */
+  .pieces-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    padding: 14px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .piece {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.2);
+    page-break-inside: avoid;
+  }
+
+  /* ===== 分隔线 ===== */
+  .divider {
+    max-width: 900px;
+    margin: 20px auto;
+    border: none;
+    border-top: 3px dashed #f0a890;
+  }
+
+  /* ===== 页面分隔 ===== */
+  .page-break { page-break-before: always; }
+
+  /* ===== 版权信息 ===== */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    font-size: 11px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ===== 打印样式 ===== */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .print-hint {
+      display: none;
+    }
+    body {
+      background: #fff;
+    }
+    .section-title {
+      margin-top: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 打印提示 ===== -->
+<div class="print-hint">
+  <h2>⚠️ 重要打印提示 — 请在打印前阅读</h2>
+  <ul>
+    <li>🖨️ 使用 <strong>A4纸张</strong> 打印，建议设置<strong>最小边距</strong></li>
+    <li>🎨 在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则彩色背景将无法显示</li>
+    <li>📄 <strong>卡牌和棋子</strong>建议使用<strong>卡纸</strong>打印以增加耐用性</li>
+    <li>✂️ 打印后沿虚线裁剪卡牌，建议<strong>过塑封</strong>以延长使用寿命</li>
+    <li>📋 版图建议打印后贴在硬纸板上增加稳定性</li>
+  </ul>
+</div>
+
+<!-- ===== 游戏标题 ===== -->
+<div style="text-align:center; padding: 10px 20px 0;">
+  <div style="font-size:32px; font-weight:bold; color:#c0392b; letter-spacing:3px;">🍳 美食挑战赛 Food Challenge</div>
+  <div style="font-size:13px; color:#888; margin-top:4px;">打印道具套装 · 完整版 · 3-7人游玩</div>
+</div>
+
+<!-- ===== 厨房赛场版图 ===== -->
+<div class="section-title">🗺️ 厨房赛场版图</div>
+
+<div class="game-board">
+  <div class="board-header">
+    🍳 美食挑战赛·厨房赛场
+    <span>Food Challenge — Kitchen Arena</span>
+  </div>
+
+  <!-- 功能区域 -->
+  <div class="board-top-row">
+    <div class="board-zone" style="background: linear-gradient(135deg, #d5f5e3, #abebc6);">
+      <div class="board-zone-icon">🛒</div>
+      <div class="board-zone-title">食材市场</div>
+      <div class="board-zone-desc">共用食材牌堆<br>每轮限摸2张</div>
+      <div style="margin-top:8px; display:flex; gap:4px; justify-content:center;">
+        <div style="width:32px; height:44px; background:rgba(255,255,255,0.6); border-radius:4px; border:2px solid #27ae60;"></div>
+        <div style="width:32px; height:44px; background:rgba(255,255,255,0.6); border-radius:4px; border:2px solid #27ae60;"></div>
+        <div style="width:32px; height:44px; background:rgba(255,255,255,0.6); border-radius:4px; border:2px solid #27ae60;"></div>
+      </div>
+    </div>
+    <div class="board-zone" style="background: linear-gradient(135deg, #fadbd8, #f1948a);">
+      <div class="board-zone-icon">🔔</div>
+      <div class="board-zone-title">事件触发区</div>
+      <div class="board-zone-desc">每轮翻开1张<br>影响本轮规则</div>
+      <div style="margin-top:8px;">
+        <div style="width:52px; height:72px; background:linear-gradient(160deg,#1a1a2e,#16213e); border-radius:6px; border:2px solid #e74c3c; margin:0 auto; display:flex; align-items:center; justify-content:center; color:#fff; font-size:22px;">⚡</div>
+      </div>
+    </div>
+    <div class="board-zone" style="background: linear-gradient(135deg, #fef9e7, #f9e79f);">
+      <div class="board-zone-icon">📋</div>
+      <div class="board-zone-title">菜谱展示区</div>
+      <div class="board-zone-desc">展示本轮目标菜谱<br>3-5人翻2张/6-7人翻3张</div>
+      <div style="margin-top:8px; display:flex; gap:6px; justify-content:center;">
+        <div style="width:40px; height:56px; background:linear-gradient(135deg,#eafaf1,#d5f5e3); border-radius:5px; border:2px solid #1e8449; display:flex; align-items:center; justify-content:center; font-size:18px;">🍜</div>
+        <div style="width:40px; height:56px; background:linear-gradient(135deg,#fef9e7,#fdebd0); border-radius:5px; border:2px solid #ca6f1e; display:flex; align-items:center; justify-content:center; font-size:18px;">🥩</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 玩家区域 -->
+  <div class="board-player-row">
+    <div class="player-zone" style="background:rgba(255,87,87,0.08);">
+      <div class="player-zone-title"><span class="player-color-dot" style="background:#e74c3c;"></span>玩家1 料理台</div>
+      <div style="font-size:9px; color:#888; text-align:center; margin-bottom:6px;">手牌区</div>
+      <div class="card-slots"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div>
+      <div style="font-size:9px; color:#888; text-align:center; margin:6px 0 4px;">已完成菜肴</div>
+      <div style="width:100%; height:28px; border:1.5px dashed #bdc3c7; border-radius:4px; background:rgba(255,255,255,0.4);"></div>
+    </div>
+    <div class="player-zone" style="background:rgba(52,152,219,0.08);">
+      <div class="player-zone-title"><span class="player-color-dot" style="background:#3498db;"></span>玩家2 料理台</div>
+      <div style="font-size:9px; color:#888; text-align:center; margin-bottom:6px;">手牌区</div>
+      <div class="card-slots"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div>
+      <div style="font-size:9px; color:#888; text-align:center; margin:6px 0 4px;">已完成菜肴</div>
+      <div style="width:100%; height:28px; border:1.5px dashed #bdc3c7; border-radius:4px; background:rgba(255,255,255,0.4);"></div>
+    </div>
+    <div class="player-zone" style="background:rgba(39,174,96,0.08);">
+      <div class="player-zone-title"><span class="player-color-dot" style="background:#27ae60;"></span>玩家3 料理台</div>
+      <div style="font-size:9px; color:#888; text-align:center; margin-bottom:6px;">手牌区</div>
+      <div class="card-slots"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div>
+      <div style="font-size:9px; color:#888; text-align:center; margin:6px 0 4px;">已完成菜肴</div>
+      <div style="width:100%; height:28px; border:1.5px dashed #bdc3c7; border-radius:4px; background:rgba(255,255,255,0.4);"></div>
+    </div>
+    <div class="player-zone" style="background:rgba(155,89,182,0.08);">
+      <div class="player-zone-title"><span class="player-color-dot" style="background:#9b59b6;"></span>玩家4 料理台</div>
+      <div style="font-size:9px; color:#888; text-align:center; margin-bottom:6px;">手牌区</div>
+      <div class="card-slots"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div>
+      <div style="font-size:9px; color:#888; text-align:center; margin:6px 0 4px;">已完成菜肴</div>
+      <div style="width:100%; height:28px; border:1.5px dashed #bdc3c7; border-radius:4px; background:rgba(255,255,255,0.4);"></div>
+    </div>
+  </div>
+  <div class="board-player-row" style="border-bottom:none;">
+    <div class="player-zone" style="background:rgba(230,126,34,0.08);">
+      <div class="player-zone-title"><span class="player-color-dot" style="background:#e67e22;"></span>玩家5 料理台</div>
+      <div style="font-size:9px; color:#888; text-align:center; margin-bottom:6px;">手牌区</div>
+      <div class="card-slots"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div>
+      <div style="font-size:9px; color:#888; text-align:center; margin:6px 0 4px;">已完成菜肴</div>
+      <div style="width:100%; height:28px; border:1.5px dashed #bdc3c7; border-radius:4px; background:rgba(255,255,255,0.4);"></div>
+    </div>
+    <div class="player-zone" style="background:rgba(22,160,133,0.08);">
+      <div class="player-zone-title"><span class="player-color-dot" style="background:#16a085;"></span>玩家6 料理台</div>
+      <div style="font-size:9px; color:#888; text-align:center; margin-bottom:6px;">手牌区</div>
+      <div class="card-slots"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div>
+      <div style="font-size:9px; color:#888; text-align:center; margin:6px 0 4px;">已完成菜肴</div>
+      <div style="width:100%; height:28px; border:1.5px dashed #bdc3c7; border-radius:4px; background:rgba(255,255,255,0.4);"></div>
+    </div>
+    <div class="player-zone" style="background:rgba(192,57,43,0.08);">
+      <div class="player-zone-title"><span class="player-color-dot" style="background:#c0392b;"></span>玩家7 料理台</div>
+      <div style="font-size:9px; color:#888; text-align:center; margin-bottom:6px;">手牌区</div>
+      <div class="card-slots"><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div><div class="card-slot"></div></div>
+      <div style="font-size:9px; color:#888; text-align:center; margin:6px 0 4px;">已完成菜肴</div>
+      <div style="width:100%; height:28px; border:1.5px dashed #bdc3c7; border-radius:4px; background:rgba(255,255,255,0.4);"></div>
+    </div>
+    <div class="player-zone" style="background:rgba(52,73,94,0.05);">
+      <div class="player-zone-title">📝 弃牌区</div>
+      <div style="font-size:9px; color:#aaa; text-align:center; margin-top:10px;">将已使用的食材卡<br>放置于此</div>
+    </div>
+  </div>
+
+  <!-- 积分轨道 -->
+  <div class="score-track">
+    <div class="score-track-title">🏆 积分追踪轨道（目标：20分）</div>
+    <div class="score-boxes">
+      <div class="score-box">0</div>
+      <div class="score-box">1</div>
+      <div class="score-box">2</div>
+      <div class="score-box">3</div>
+      <div class="score-box">4</div>
+      <div class="score-box milestone">5⭐</div>
+      <div class="score-box">6</div>
+      <div class="score-box">7</div>
+      <div class="score-box">8</div>
+      <div class="score-box">9</div>
+      <div class="score-box milestone">10🌟</div>
+      <div class="score-box">11</div>
+      <div class="score-box">12</div>
+      <div class="score-box">13</div>
+      <div class="score-box">14</div>
+      <div class="score-box milestone">15⭐</div>
+      <div class="score-box">16</div>
+      <div class="score-box">17</div>
+      <div class="score-box">18</div>
+      <div class="score-box">19</div>
+      <div class="score-box milestone" style="background:rgba(255,215,0,0.5); color:#fff;">🏆</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 食材卡 - 蔬菜类 ===== -->
+<div class="section-title">🥬 食材卡·蔬菜类（共15张）</div>
+<div class="cards-grid">
+  <!-- 番茄 ×3 -->
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🍅</div>
+    <div class="card-name">番茄</div>
+    <div class="card-type">Tomato</div>
+    <div class="card-desc">可用于素食菜谱</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🍅</div>
+    <div class="card-name">番茄</div>
+    <div class="card-type">Tomato</div>
+    <div class="card-desc">可用于素食菜谱</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🍅</div>
+    <div class="card-name">番茄</div>
+    <div class="card-type">Tomato</div>
+    <div class="card-desc">可用于素食菜谱</div>
+  </div>
+  <!-- 黄瓜 ×2 -->
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🥒</div>
+    <div class="card-name">黄瓜</div>
+    <div class="card-type">Cucumber</div>
+    <div class="card-desc">清爽蔬菜食材</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🥒</div>
+    <div class="card-name">黄瓜</div>
+    <div class="card-type">Cucumber</div>
+    <div class="card-desc">清爽蔬菜食材</div>
+  </div>
+  <!-- 胡萝卜 ×3 -->
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🥕</div>
+    <div class="card-name">胡萝卜</div>
+    <div class="card-type">Carrot</div>
+    <div class="card-desc">常用炖菜食材</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🥕</div>
+    <div class="card-name">胡萝卜</div>
+    <div class="card-type">Carrot</div>
+    <div class="card-desc">常用炖菜食材</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🥕</div>
+    <div class="card-name">胡萝卜</div>
+    <div class="card-type">Carrot</div>
+    <div class="card-desc">常用炖菜食材</div>
+  </div>
+  <!-- 青椒 ×3 -->
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🫑</div>
+    <div class="card-name">青椒</div>
+    <div class="card-type">Green Pepper</div>
+    <div class="card-desc">爆炒必备食材</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🫑</div>
+    <div class="card-name">青椒</div>
+    <div class="card-type">Green Pepper</div>
+    <div class="card-desc">爆炒必备食材</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🫑</div>
+    <div class="card-name">青椒</div>
+    <div class="card-type">Green Pepper</div>
+    <div class="card-desc">爆炒必备食材</div>
+  </div>
+  <!-- 洋葱 ×4 -->
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🧅</div>
+    <div class="card-name">洋葱</div>
+    <div class="card-type">Onion</div>
+    <div class="card-desc">多道菜谱需要</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🧅</div>
+    <div class="card-name">洋葱</div>
+    <div class="card-type">Onion</div>
+    <div class="card-desc">多道菜谱需要</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🧅</div>
+    <div class="card-name">洋葱</div>
+    <div class="card-type">Onion</div>
+    <div class="card-desc">多道菜谱需要</div>
+  </div>
+  <div class="card ingredient-veggie">
+    <div class="card-badge">蔬菜</div>
+    <div class="card-icon">🧅</div>
+    <div class="card-name">洋葱</div>
+    <div class="card-type">Onion</div>
+    <div class="card-desc">多道菜谱需要</div>
+  </div>
+</div>
+
+<!-- 肉类食材 -->
+<div class="section-title">🥩 食材卡·肉类（共12张）</div>
+<div class="cards-grid">
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🥩</div><div class="card-name">牛肉</div><div class="card-type">Beef</div><div class="card-desc">高分菜谱必备</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🥩</div><div class="card-name">牛肉</div><div class="card-type">Beef</div><div class="card-desc">高分菜谱必备</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🥩</div><div class="card-name">牛肉</div><div class="card-type">Beef</div><div class="card-desc">高分菜谱必备</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🐖</div><div class="card-name">猪肉</div><div class="card-type">Pork</div><div class="card-desc">经典家常食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🐖</div><div class="card-name">猪肉</div><div class="card-type">Pork</div><div class="card-desc">经典家常食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🐖</div><div class="card-name">猪肉</div><div class="card-type">Pork</div><div class="card-desc">经典家常食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🍗</div><div class="card-name">鸡肉</div><div class="card-type">Chicken</div><div class="card-desc">百搭蛋白食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🍗</div><div class="card-name">鸡肉</div><div class="card-type">Chicken</div><div class="card-desc">百搭蛋白食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🍗</div><div class="card-name">鸡肉</div><div class="card-type">Chicken</div><div class="card-desc">百搭蛋白食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🐑</div><div class="card-name">羊肉</div><div class="card-type">Lamb</div><div class="card-desc">风味独特食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🐑</div><div class="card-name">羊肉</div><div class="card-type">Lamb</div><div class="card-desc">风味独特食材</div></div>
+  <div class="card ingredient-meat"><div class="card-badge">肉类</div><div class="card-icon">🐑</div><div class="card-name">羊肉</div><div class="card-type">Lamb</div><div class="card-desc">风味独特食材</div></div>
+</div>
+
+<!-- 海鲜食材 -->
+<div class="section-title">🦐 食材卡·海鲜类（共12张）</div>
+<div class="cards-grid">
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🦐</div><div class="card-name">大虾</div><div class="card-type">Shrimp</div><div class="card-desc">豪华菜谱必备</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🦐</div><div class="card-name">大虾</div><div class="card-type">Shrimp</div><div class="card-desc">豪华菜谱必备</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🦐</div><div class="card-name">大虾</div><div class="card-type">Shrimp</div><div class="card-desc">豪华菜谱必备</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🐟</div><div class="card-name">鲜鱼</div><div class="card-type">Fish</div><div class="card-desc">清蒸红烧皆宜</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🐟</div><div class="card-name">鲜鱼</div><div class="card-type">Fish</div><div class="card-desc">清蒸红烧皆宜</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🐟</div><div class="card-name">鲜鱼</div><div class="card-type">Fish</div><div class="card-desc">清蒸红烧皆宜</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🦀</div><div class="card-name">螃蟹</div><div class="card-type">Crab</div><div class="card-desc">顶级海鲜食材</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🦀</div><div class="card-name">螃蟹</div><div class="card-type">Crab</div><div class="card-desc">顶级海鲜食材</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🦀</div><div class="card-name">螃蟹</div><div class="card-type">Crab</div><div class="card-desc">顶级海鲜食材</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🐚</div><div class="card-name">蛤蜊</div><div class="card-type">Clam</div><div class="card-desc">鲜美汤底食材</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🐚</div><div class="card-name">蛤蜊</div><div class="card-type">Clam</div><div class="card-desc">鲜美汤底食材</div></div>
+  <div class="card ingredient-seafood"><div class="card-badge">海鲜</div><div class="card-icon">🐚</div><div class="card-name">蛤蜊</div><div class="card-type">Clam</div><div class="card-desc">鲜美汤底食材</div></div>
+</div>
+
+<!-- 香料食材 -->
+<div class="section-title">🧂 食材卡·香料类（共9张）</div>
+<div class="cards-grid">
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🧄</div><div class="card-name">大蒜</div><div class="card-type">Garlic</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🧄</div><div class="card-name">大蒜</div><div class="card-type">Garlic</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🫚</div><div class="card-name">姜</div><div class="card-type">Ginger</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🫚</div><div class="card-name">姜</div><div class="card-type">Ginger</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🌶️</div><div class="card-name">辣椒</div><div class="card-type">Chili</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🌶️</div><div class="card-name">辣椒</div><div class="card-type">Chili</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🌿</div><div class="card-name">花椒</div><div class="card-type">Sichuan Pepper</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🌿</div><div class="card-name">葱</div><div class="card-type">Scallion</div><div class="card-desc">附带可得+1分</div></div>
+  <div class="card ingredient-spice"><div class="card-badge">香料+1</div><div class="card-icon">🌿</div><div class="card-name">葱</div><div class="card-type">Scallion</div><div class="card-desc">附带可得+1分</div></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ===== 菜谱卡 ===== -->
+<div class="section-title">🍽️ 菜谱卡·简单级（⭐ 2分，共10张）</div>
+<div class="cards-grid">
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🍳</div>
+    <div class="card-name">番茄炒蛋</div>
+    <div class="card-type">Stir-fried Egg &amp; Tomato</div>
+    <div class="recipe-req">🍅番茄 + 任意肉类</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🥗</div>
+    <div class="card-name">凉拌黄瓜</div>
+    <div class="card-type">Cucumber Salad</div>
+    <div class="recipe-req">🥒黄瓜 + 🧄大蒜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🥘</div>
+    <div class="card-name">胡萝卜炒肉</div>
+    <div class="card-type">Carrot &amp; Meat Stir-fry</div>
+    <div class="recipe-req">🥕胡萝卜 + 任意肉类</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🍲</div>
+    <div class="card-name">青椒肉丝</div>
+    <div class="card-type">Pepper &amp; Pork Shreds</div>
+    <div class="recipe-req">🫑青椒 + 🐖猪肉</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🍜</div>
+    <div class="card-name">葱爆羊肉</div>
+    <div class="card-type">Scallion &amp; Lamb</div>
+    <div class="recipe-req">🌿葱 + 🐑羊肉</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🍢</div>
+    <div class="card-name">清炒时蔬</div>
+    <div class="card-type">Stir-fried Veggies</div>
+    <div class="recipe-req">🥬任意蔬菜×2</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🫕</div>
+    <div class="card-name">蛤蜊豆腐汤</div>
+    <div class="card-type">Clam Soup</div>
+    <div class="recipe-req">🐚蛤蜊 + 🌿葱</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🍱</div>
+    <div class="card-name">白切鸡</div>
+    <div class="card-type">Poached Chicken</div>
+    <div class="recipe-req">🍗鸡肉 + 🧄大蒜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🥙</div>
+    <div class="card-name">辣炒鱿鱼</div>
+    <div class="card-type">Spicy Squid</div>
+    <div class="recipe-req">🐟鲜鱼 + 🌶️辣椒</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-easy">
+    <div class="card-badge">⭐2分</div>
+    <div class="card-icon">🍤</div>
+    <div class="card-name">蒜蓉虾</div>
+    <div class="card-type">Garlic Shrimp</div>
+    <div class="recipe-req">🦐大虾 + 🧄大蒜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+</div>
+
+<div class="section-title">🍽️ 菜谱卡·中等级（⭐⭐ 3分，共12张）</div>
+<div class="cards-grid">
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍖</div>
+    <div class="card-name">红烧牛肉</div>
+    <div class="card-type">Braised Beef</div>
+    <div class="recipe-req">🥩牛肉 + 🧅洋葱 + 任意香料</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍝</div>
+    <div class="card-name">番茄牛肉面</div>
+    <div class="card-type">Tomato Beef Noodle</div>
+    <div class="recipe-req">🍅番茄 + 🥩牛肉 + 任意香料</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🥘</div>
+    <div class="card-name">宫保鸡丁</div>
+    <div class="card-type">Kung Pao Chicken</div>
+    <div class="recipe-req">🍗鸡肉 + 🌶️辣椒 + 🫑青椒</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍲</div>
+    <div class="card-name">酸辣土豆丝</div>
+    <div class="card-type">Sour-Spicy Potato</div>
+    <div class="recipe-req">🥕胡萝卜 + 🌶️辣椒 + 🥒黄瓜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍛</div>
+    <div class="card-name">咖喱羊肉</div>
+    <div class="card-type">Curry Lamb</div>
+    <div class="recipe-req">🐑羊肉 + 🧅洋葱 + 🧄大蒜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍜</div>
+    <div class="card-name">麻婆豆腐</div>
+    <div class="card-type">Mapo Tofu</div>
+    <div class="recipe-req">🐖猪肉 + 🌶️辣椒 + 🌿花椒</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍣</div>
+    <div class="card-name">清蒸石斑鱼</div>
+    <div class="card-type">Steamed Fish</div>
+    <div class="recipe-req">🐟鲜鱼 + 🌿葱 + 🫚姜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🦞</div>
+    <div class="card-name">蒜蓉开边虾</div>
+    <div class="card-type">Garlic Open-back Shrimp</div>
+    <div class="recipe-req">🦐大虾×2 + 🧄大蒜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍱</div>
+    <div class="card-name">洋葱炒猪排</div>
+    <div class="card-type">Pork Steak &amp; Onion</div>
+    <div class="recipe-req">🐖猪肉 + 🧅洋葱 + 🫑青椒</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🫕</div>
+    <div class="card-name">螃蟹粉丝煲</div>
+    <div class="card-type">Crab &amp; Noodle Pot</div>
+    <div class="recipe-req">🦀螃蟹 + 🌿葱 + 🫚姜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🥗</div>
+    <div class="card-name">凉拌牛腱子</div>
+    <div class="card-type">Cold Beef Tendon</div>
+    <div class="recipe-req">🥩牛肉 + 🌶️辣椒 + 🥒黄瓜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-medium">
+    <div class="card-badge">⭐⭐3分</div>
+    <div class="card-icon">🍢</div>
+    <div class="card-name">蒜香蛤蜊</div>
+    <div class="card-type">Garlicky Clam</div>
+    <div class="recipe-req">🐚蛤蜊 + 🧄大蒜 + 🌿葱</div>
+    <div class="card-score">+1首个</div>
+  </div>
+</div>
+
+<div class="section-title">🍽️ 菜谱卡·豪华级（⭐⭐⭐ 5分，共8张）</div>
+<div class="cards-grid">
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🦞</div>
+    <div class="card-name">海鲜大餐</div>
+    <div class="card-type">Seafood Feast</div>
+    <div class="recipe-req">🦐虾 + 🦀蟹 + 🐚蛤蜊 + 任意香料</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🍖</div>
+    <div class="card-name">全家福火锅</div>
+    <div class="card-type">Hotpot Deluxe</div>
+    <div class="recipe-req">🥩牛肉 + 🦐虾 + 🥕胡萝卜 + 🌿花椒</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🥘</div>
+    <div class="card-name">厨神招牌菜</div>
+    <div class="card-type">Chef's Signature</div>
+    <div class="recipe-req">任意肉类×2 + 任意蔬菜×2</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🦀</div>
+    <div class="card-name">避风塘炒蟹</div>
+    <div class="card-type">Typhoon Shelter Crab</div>
+    <div class="recipe-req">🦀螃蟹×2 + 🧄大蒜 + 🌶️辣椒</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🍝</div>
+    <div class="card-name">意式海鲜饭</div>
+    <div class="card-type">Seafood Risotto</div>
+    <div class="recipe-req">🐟鱼 + 🦐虾 + 🧅洋葱 + 🧄大蒜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🥩</div>
+    <div class="card-name">黑椒牛排套餐</div>
+    <div class="card-type">Black Pepper Steak</div>
+    <div class="recipe-req">🥩牛肉×2 + 🫑青椒 + 🌿花椒</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🍲</div>
+    <div class="card-name">东北乱炖</div>
+    <div class="card-type">Northeast Stew</div>
+    <div class="recipe-req">🐖猪肉 + 🥕胡萝卜 + 🧅洋葱 + 🥒黄瓜</div>
+    <div class="card-score">+1首个</div>
+  </div>
+  <div class="card recipe-hard">
+    <div class="card-badge">⭐⭐⭐5分</div>
+    <div class="card-icon">🎉</div>
+    <div class="card-name">满汉全席</div>
+    <div class="card-type">Imperial Banquet</div>
+    <div class="recipe-req">任意肉+任意海鲜+任意蔬菜+任意香料</div>
+    <div class="card-score">+1首个</div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ===== 事件卡 ===== -->
+<div class="section-title">⚡ 事件卡（共20张）</div>
+<div class="cards-grid">
+  <div class="card event-card"><div class="card-icon">🔥</div><div class="card-name">厨房失火</div><div class="card-type">Kitchen Fire</div><div class="card-desc">所有玩家弃掉1张手牌（自选）</div></div>
+  <div class="card event-card"><div class="card-icon">🔥</div><div class="card-name">厨房失火</div><div class="card-type">Kitchen Fire</div><div class="card-desc">所有玩家弃掉1张手牌（自选）</div></div>
+  <div class="card event-card"><div class="card-icon">🐞</div><div class="card-name">食材短缺</div><div class="card-type">Shortage</div><div class="card-desc">食材市场本轮只能摸1次（而非2次）</div></div>
+  <div class="card event-card"><div class="card-icon">🐞</div><div class="card-name">食材短缺</div><div class="card-type">Shortage</div><div class="card-desc">食材市场本轮只能摸1次（而非2次）</div></div>
+  <div class="card event-card"><div class="card-icon">👨‍⚖️</div><div class="card-name">挑剔食客</div><div class="card-type">Picky Critic</div><div class="card-desc">本轮菜谱分值+2，但需额外附1种香料</div></div>
+  <div class="card event-card"><div class="card-icon">👨‍⚖️</div><div class="card-name">挑剔食客</div><div class="card-type">Picky Critic</div><div class="card-desc">本轮菜谱分值+2，但需额外附1种香料</div></div>
+  <div class="card event-card"><div class="card-icon">🎁</div><div class="card-name">神秘礼包</div><div class="card-type">Mystery Gift</div><div class="card-desc">每位玩家立即额外摸2张牌</div></div>
+  <div class="card event-card"><div class="card-icon">🎁</div><div class="card-name">神秘礼包</div><div class="card-type">Mystery Gift</div><div class="card-desc">每位玩家立即额外摸2张牌</div></div>
+  <div class="card event-card"><div class="card-icon">⏰</div><div class="card-name">限时特惠</div><div class="card-type">Flash Sale</div><div class="card-desc">首个完成任意菜谱的玩家额外+2分</div></div>
+  <div class="card event-card"><div class="card-icon">⏰</div><div class="card-name">限时特惠</div><div class="card-type">Flash Sale</div><div class="card-desc">首个完成任意菜谱的玩家额外+2分</div></div>
+  <div class="card event-card"><div class="card-icon">🔄</div><div class="card-name">食材交换</div><div class="card-type">Ingredient Swap</div><div class="card-desc">每位玩家可选择与任一对手交换1张牌</div></div>
+  <div class="card event-card"><div class="card-icon">🔄</div><div class="card-name">食材交换</div><div class="card-type">Ingredient Swap</div><div class="card-desc">每位玩家可选择与任一对手交换1张牌</div></div>
+  <div class="card event-card"><div class="card-icon">❄️</div><div class="card-name">冰箱故障</div><div class="card-type">Fridge Failure</div><div class="card-desc">海鲜食材本轮视为无效，不可使用</div></div>
+  <div class="card event-card"><div class="card-icon">❄️</div><div class="card-name">冰箱故障</div><div class="card-type">Fridge Failure</div><div class="card-desc">海鲜食材本轮视为无效，不可使用</div></div>
+  <div class="card event-card"><div class="card-icon">🌶️</div><div class="card-name">辣味挑战</div><div class="card-type">Spice Challenge</div><div class="card-desc">本轮提交菜肴必须附带1张辣椒卡</div></div>
+  <div class="card event-card"><div class="card-icon">🌶️</div><div class="card-name">辣味挑战</div><div class="card-type">Spice Challenge</div><div class="card-desc">本轮提交菜肴必须附带1张辣椒卡</div></div>
+  <div class="card event-card"><div class="card-icon">🎲</div><div class="card-name">随机大奖</div><div class="card-type">Lucky Draw</div><div class="card-desc">本轮最后一个完成菜谱者也得+1分</div></div>
+  <div class="card event-card"><div class="card-icon">🎲</div><div class="card-name">随机大奖</div><div class="card-type">Lucky Draw</div><div class="card-desc">本轮最后一个完成菜谱者也得+1分</div></div>
+  <div class="card event-card"><div class="card-icon">🤝</div><div class="card-name">合作烹饪</div><div class="card-type">Cooperation</div><div class="card-desc">玩家可临时借用相邻玩家的1张食材</div></div>
+  <div class="card event-card"><div class="card-icon">🤝</div><div class="card-name">合作烹饪</div><div class="card-type">Cooperation</div><div class="card-desc">玩家可临时借用相邻玩家的1张食材</div></div>
+</div>
+
+<!-- ===== 评分卡 ===== -->
+<div class="section-title">⭐ 评分卡（共15张）</div>
+<div class="cards-grid">
+  <div class="card score-card"><div class="card-icon">⭐</div><div class="card-name">美食评论家</div><div class="card-type">Food Critic</div><div class="card-desc">下轮开始时额外摸3张牌</div></div>
+  <div class="card score-card"><div class="card-icon">⭐</div><div class="card-name">美食评论家</div><div class="card-type">Food Critic</div><div class="card-desc">下轮开始时额外摸3张牌</div></div>
+  <div class="card score-card"><div class="card-icon">⭐</div><div class="card-name">美食评论家</div><div class="card-type">Food Critic</div><div class="card-desc">下轮开始时额外摸3张牌</div></div>
+  <div class="card score-card"><div class="card-icon">🏆</div><div class="card-name">厨艺冠军</div><div class="card-type">Champion</div><div class="card-desc">立即获得+1分</div></div>
+  <div class="card score-card"><div class="card-icon">🏆</div><div class="card-name">厨艺冠军</div><div class="card-type">Champion</div><div class="card-desc">立即获得+1分</div></div>
+  <div class="card score-card"><div class="card-icon">🏆</div><div class="card-name">厨艺冠军</div><div class="card-type">Champion</div><div class="card-desc">立即获得+1分</div></div>
+  <div class="card score-card"><div class="card-icon">🎀</div><div class="card-name">人气王</div><div class="card-type">Popularity Star</div><div class="card-desc">可指定1名玩家本轮弃1张手牌</div></div>
+  <div class="card score-card"><div class="card-icon">🎀</div><div class="card-name">人气王</div><div class="card-type">Popularity Star</div><div class="card-desc">可指定1名玩家本轮弃1张手牌</div></div>
+  <div class="card score-card"><div class="card-icon">🎀</div><div class="card-name">人气王</div><div class="card-type">Popularity Star</div><div class="card-desc">可指定1名玩家本轮弃1张手牌</div></div>
+  <div class="card score-card"><div class="card-icon">🍀</div><div class="card-name">幸运厨师</div><div class="card-type">Lucky Chef</div><div class="card-desc">下轮可免费使用1张野牌效果</div></div>
+  <div class="card score-card"><div class="card-icon">🍀</div><div class="card-name">幸运厨师</div><div class="card-type">Lucky Chef</div><div class="card-desc">下轮可免费使用1张野牌效果</div></div>
+  <div class="card score-card"><div class="card-icon">🍀</div><div class="card-name">幸运厨师</div><div class="card-type">Lucky Chef</div><div class="card-desc">下轮可免费使用1张野牌效果</div></div>
+  <div class="card score-card"><div class="card-icon">📺</div><div class="card-name">综艺明星</div><div class="card-type">TV Star</div><div class="card-desc">下轮可预先查看1张事件卡</div></div>
+  <div class="card score-card"><div class="card-icon">📺</div><div class="card-name">综艺明星</div><div class="card-type">TV Star</div><div class="card-desc">下轮可预先查看1张事件卡</div></div>
+  <div class="card score-card"><div class="card-icon">📺</div><div class="card-name">综艺明星</div><div class="card-type">TV Star</div><div class="card-desc">下轮可预先查看1张事件卡</div></div>
+</div>
+
+<!-- ===== 厨具卡 ===== -->
+<div class="section-title">🔧 厨具卡（共12张）</div>
+<div class="cards-grid">
+  <div class="card tool-card"><div class="card-icon">🍳</div><div class="card-name">平底锅</div><div class="card-type">Frying Pan</div><div class="card-desc">消耗1张蔬菜激活<br>蔬菜菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🍳</div><div class="card-name">平底锅</div><div class="card-type">Frying Pan</div><div class="card-desc">消耗1张蔬菜激活<br>蔬菜菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🍳</div><div class="card-name">平底锅</div><div class="card-type">Frying Pan</div><div class="card-desc">消耗1张蔬菜激活<br>蔬菜菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🔥</div><div class="card-name">烤箱</div><div class="card-type">Oven</div><div class="card-desc">消耗1张肉类激活<br>肉类菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🔥</div><div class="card-name">烤箱</div><div class="card-type">Oven</div><div class="card-desc">消耗1张肉类激活<br>肉类菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🔥</div><div class="card-name">烤箱</div><div class="card-type">Oven</div><div class="card-desc">消耗1张肉类激活<br>肉类菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🫕</div><div class="card-name">海鲜蒸锅</div><div class="card-type">Seafood Steamer</div><div class="card-desc">消耗1张海鲜激活<br>海鲜菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🫕</div><div class="card-name">海鲜蒸锅</div><div class="card-type">Seafood Steamer</div><div class="card-desc">消耗1张海鲜激活<br>海鲜菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🫕</div><div class="card-name">海鲜蒸锅</div><div class="card-type">Seafood Steamer</div><div class="card-desc">消耗1张海鲜激活<br>海鲜菜谱永久+1分</div></div>
+  <div class="card tool-card"><div class="card-icon">🔪</div><div class="card-name">专业砧板</div><div class="card-type">Pro Cutting Board</div><div class="card-desc">无需激活<br>每轮额外摸1张食材卡</div></div>
+  <div class="card tool-card"><div class="card-icon">🔪</div><div class="card-name">专业砧板</div><div class="card-type">Pro Cutting Board</div><div class="card-desc">无需激活<br>每轮额外摸1张食材卡</div></div>
+  <div class="card tool-card"><div class="card-icon">🔪</div><div class="card-name">专业砧板</div><div class="card-type">Pro Cutting Board</div><div class="card-desc">无需激活<br>每轮额外摸1张食材卡</div></div>
+</div>
+
+<!-- ===== 野牌 ===== -->
+<div class="section-title">🌈 野牌（共5张）</div>
+<div class="cards-grid">
+  <div class="card wild-card"><div class="card-icon">🌈</div><div class="card-name" style="color:#fff;">野牌 Wild</div><div class="card-type" style="color:#ffe;">任意食材替代</div><div class="card-desc" style="color:#fff;">可替代任意1张食材卡<br>每局每人最多使用1次</div></div>
+  <div class="card wild-card"><div class="card-icon">🌈</div><div class="card-name" style="color:#fff;">野牌 Wild</div><div class="card-type" style="color:#ffe;">任意食材替代</div><div class="card-desc" style="color:#fff;">可替代任意1张食材卡<br>每局每人最多使用1次</div></div>
+  <div class="card wild-card"><div class="card-icon">🌈</div><div class="card-name" style="color:#fff;">野牌 Wild</div><div class="card-type" style="color:#ffe;">任意食材替代</div><div class="card-desc" style="color:#fff;">可替代任意1张食材卡<br>每局每人最多使用1次</div></div>
+  <div class="card wild-card"><div class="card-icon">🌈</div><div class="card-name" style="color:#fff;">野牌 Wild</div><div class="card-type" style="color:#ffe;">任意食材替代</div><div class="card-desc" style="color:#fff;">可替代任意1张食材卡<br>每局每人最多使用1次</div></div>
+  <div class="card wild-card"><div class="card-icon">🌈</div><div class="card-name" style="color:#fff;">野牌 Wild</div><div class="card-type" style="color:#ffe;">任意食材替代</div><div class="card-desc" style="color:#fff;">可替代任意1张食材卡<br>每局每人最多使用1次</div></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ===== 厨师角色卡 ===== -->
+<div class="section-title">👨‍🍳 厨师角色卡（共7张）</div>
+<div class="cards-grid">
+  <div class="character-card" style="border-color:#e74c3c;">
+    <div class="char-icon">👨‍🍳</div>
+    <div class="char-name">主厨老张</div>
+    <div class="char-skill-title">特殊技能</div>
+    <div class="char-skill">每轮可额外摸1张食材卡，稳步积累优势</div>
+  </div>
+  <div class="character-card" style="border-color:#f39c12;">
+    <div class="char-icon">👩‍🍳</div>
+    <div class="char-name">甜品师小花</div>
+    <div class="char-skill-title">特殊技能</div>
+    <div class="char-skill">完成同类食材3张的菜谱时，额外+1分</div>
+  </div>
+  <div class="character-card" style="border-color:#3498db;">
+    <div class="char-icon">🧑‍🍳</div>
+    <div class="char-name">海鲜达人阿浩</div>
+    <div class="char-skill-title">特殊技能</div>
+    <div class="char-skill">含海鲜食材的菜谱永久+1分加成</div>
+  </div>
+  <div class="character-card" style="border-color:#27ae60;">
+    <div class="char-icon">👩‍🍳</div>
+    <div class="char-name">素食主义者林琳</div>
+    <div class="char-skill-title">特殊技能</div>
+    <div class="char-skill">含蔬菜食材的菜谱永久+1分加成</div>
+  </div>
+  <div class="character-card" style="border-color:#e67e22;">
+    <div class="char-icon">👨‍🍳</div>
+    <div class="char-name">速度王小陈</div>
+    <div class="char-skill-title">特殊技能</div>
+    <div class="char-skill">每轮首个完成菜谱额外固定+1分（叠加）</div>
+  </div>
+  <div class="character-card" style="border-color:#9b59b6;">
+    <div class="char-icon">👩‍🍳</div>
+    <div class="char-name">野牌女王大白</div>
+    <div class="char-skill-title">特殊技能</div>
+    <div class="char-skill">野牌持有上限为2张，其他玩家仅1张</div>
+  </div>
+  <div class="character-card" style="border-color:#16a085;">
+    <div class="char-icon">👨‍🍳</div>
+    <div class="char-name">料理新星晓峰</div>
+    <div class="char-skill-title">特殊技能</div>
+    <div class="char-skill">游戏开始时初始手牌为6张（其他人4张）</div>
+  </div>
+</div>
+
+<!-- ===== 得分棋子 ===== -->
+<div class="section-title">🎯 玩家棋子（每色5枚，共7色）</div>
+<div class="pieces-grid">
+  <div class="piece" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">🔴</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">🔴</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">🔴</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">🔴</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">🔴</div>
+  <div class="piece" style="background:linear-gradient(135deg,#3498db,#2980b9);">🔵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#3498db,#2980b9);">🔵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#3498db,#2980b9);">🔵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#3498db,#2980b9);">🔵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#3498db,#2980b9);">🔵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#27ae60,#1e8449);">🟢</div>
+  <div class="piece" style="background:linear-gradient(135deg,#27ae60,#1e8449);">🟢</div>
+  <div class="piece" style="background:linear-gradient(135deg,#27ae60,#1e8449);">🟢</div>
+  <div class="piece" style="background:linear-gradient(135deg,#27ae60,#1e8449);">🟢</div>
+  <div class="piece" style="background:linear-gradient(135deg,#27ae60,#1e8449);">🟢</div>
+  <div class="piece" style="background:linear-gradient(135deg,#f39c12,#d68910);">🟡</div>
+  <div class="piece" style="background:linear-gradient(135deg,#f39c12,#d68910);">🟡</div>
+  <div class="piece" style="background:linear-gradient(135deg,#f39c12,#d68910);">🟡</div>
+  <div class="piece" style="background:linear-gradient(135deg,#f39c12,#d68910);">🟡</div>
+  <div class="piece" style="background:linear-gradient(135deg,#f39c12,#d68910);">🟡</div>
+  <div class="piece" style="background:linear-gradient(135deg,#9b59b6,#6c3483);">🟣</div>
+  <div class="piece" style="background:linear-gradient(135deg,#9b59b6,#6c3483);">🟣</div>
+  <div class="piece" style="background:linear-gradient(135deg,#9b59b6,#6c3483);">🟣</div>
+  <div class="piece" style="background:linear-gradient(135deg,#9b59b6,#6c3483);">🟣</div>
+  <div class="piece" style="background:linear-gradient(135deg,#9b59b6,#6c3483);">🟣</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e67e22,#ca6f1e);">🟠</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e67e22,#ca6f1e);">🟠</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e67e22,#ca6f1e);">🟠</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e67e22,#ca6f1e);">🟠</div>
+  <div class="piece" style="background:linear-gradient(135deg,#e67e22,#ca6f1e);">🟠</div>
+  <div class="piece" style="background:linear-gradient(135deg,#16a085,#0e6655);">🩵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#16a085,#0e6655);">🩵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#16a085,#0e6655);">🩵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#16a085,#0e6655);">🩵</div>
+  <div class="piece" style="background:linear-gradient(135deg,#16a085,#0e6655);">🩵</div>
+</div>
+
+<!-- 版权 -->
+<div class="footer">
+  🍳 美食挑战赛 Food Challenge · 打印道具套装 · 3-7人游玩 · 适合8岁以上<br>
+  © 2026 boardgames project · <a href="README.md" style="color:#c0392b;">查看游戏规则</a>
+</div>
+
+</body>
+</html>
