@@ -62,6 +62,7 @@ boardgames/
 | [探险家日记](category/party/explorer-journal/README.md) | 派对 | 3-8人 | 25-45分钟 | 简单 |
 | [幽灵古堡](category/cooperative/ghost-castle/README.md) | 合作 | 1-5人 | 45-75分钟 | 中等 |
 | [星域征服者](category/strategy/stellar-conqueror/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等 |
+| [美食挑战赛](category/party/food-challenge/README.md) | 派对 | 3-7人 | 30-50分钟 | 简单 |
 
 ## 添加新桌游
 
