@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>重力翻转 · Gravity Flip</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0d0d1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+}
+#gameCanvas {
+  display: block;
+  max-width: 430px;
+  width: 100%;
+  cursor: pointer;
+  touch-action: none;
+}
+</style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// --- 响应式尺寸 ---
+function resize() {
+  const W = Math.min(430, window.innerWidth);
+  const H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+}
+resize();
+window.addEventListener('resize', () => { resize(); if (state !== 'play') drawScreen(); });
+
+// --- 游戏状态 ---
+let state = 'start'; // 'start' | 'play' | 'dead'
+let bestScore = parseInt(localStorage.getItem('gf_best') || '0');
+
+// --- 重力感应支持 ---
+let gyroEnabled = false;
+let gyroPending = false;
+let gyroGamma = 0; // 手机左右倾斜角 (-90~90)
+
+function enableGyro() {
+  if (gyroEnabled) return;
+  gyroEnabled = true;
+  window.addEventListener('deviceorientation', e => {
+    gyroGamma = e.gamma || 0;
+  });
+}
+
+// --- 游戏核心数据 ---
+let ball, channel, obstacles, energies, particles;
+let score, combo, comboTimer;
+let speed, speedTimer, speedLevel;
+let frameCount;
+let flashAlpha;
+let invincibleTimer;
+let shakeX, shakeY, shakeDuration;
+
+// --- 危险预警数据（边缘指示条） ---
+let dangerLeft = 0;  // 左侧危险条亮度 0~1
+let dangerRight = 0; // 右侧危险条亮度 0~1
+
+// --- 初始化游戏 ---
+function initGame() {
+  const W = canvas.width, H = canvas.height;
+  const chH = H * 0.58;
+  const chY = (H - chH) / 2;
+
+  channel = { x: 0, y: chY, w: W, h: chH };
+
+  ball = {
+    x: W * 0.25,
+    y: chY + chH * 0.75,
+    r: 15,
+    vy: 0,
+    gravity: 0.55,
+    gravDir: 1,   // 1=向下, -1=向上
+    trail: []
+  };
+
+  obstacles = [];
+  energies = [];
+  particles = [];
+  score = 0;
+  combo = 0;
+  comboTimer = 0;
+  speed = 3;
+  speedTimer = 0;
+  speedLevel = 1;
+  frameCount = 0;
+  flashAlpha = 0;
+  invincibleTimer = 0;
+  shakeX = 0; shakeY = 0; shakeDuration = 0;
+  dangerLeft = 0; dangerRight = 0;
+
+  // 预生成初始障碍
+  let nextX = W + 200;
+  for (let i = 0; i < 6; i++) {
+    nextX = spawnObstacle(nextX);
+  }
+}
+
+// --- 生成障碍物 ---
+function spawnObstacle(startX) {
+  const W = canvas.width;
+  const ch = channel;
+  const type = Math.random() < 0.33 ? 'top' : (Math.random() < 0.5 ? 'bottom' : 'float');
+  const h = 30 + Math.random() * 60;
+  let y, oy;
+
+  if (type === 'bottom') {
+    y = ch.y + ch.h - h;
+    oy = 'bottom';
+  } else if (type === 'top') {
+    y = ch.y;
+    oy = 'top';
+  } else {
+    y = ch.y + ch.h * 0.2 + Math.random() * ch.h * 0.6 - h / 2;
+    oy = 'float';
+  }
+
+  const w = 22 + Math.random() * 16;
+  const gap = 260 + Math.random() * 160;
+
+  // 随机在障碍物前方插入能量点
+  if (Math.random() < 0.65) {
+    const eY = ch.y + 30 + Math.random() * (ch.h - 60);
+    energies.push({ x: startX - gap * 0.5, y: eY, r: 8, phase: Math.random() * Math.PI * 2, collected: false });
+  }
+
+  obstacles.push({ x: startX, y, w, h, type: oy });
+  return startX + gap;
+}
+
+// --- 粒子系统 ---
+function spawnParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const spd = 1.5 + Math.random() * 3;
+    particles.push({
+      x, y,
+      vx: Math.cos(angle) * spd,
+      vy: Math.sin(angle) * spd,
+      life: 1,
+      decay: 0.04 + Math.random() * 0.03,
+      r: 2 + Math.random() * 3,
+      color
+    });
+  }
+}
+
+// --- 主游戏循环 ---
+function gameLoop() {
+  requestAnimationFrame(gameLoop);
+  if (state === 'play') {
+    update();
+  }
+  draw();
+}
+
+function update() {
+  const W = canvas.width, H = canvas.height;
+  const ch = channel;
+  frameCount++;
+
+  // 速度递增
+  speedTimer++;
+  if (speedTimer >= 300) { // 每5秒(60fps*5)
+    speedTimer = 0;
+    speed = Math.min(12, speed + 0.5);
+    speedLevel++;
+  }
+
+  // 无敌帧倒计时
+  if (invincibleTimer > 0) invincibleTimer--;
+
+  // 连击超时
+  if (comboTimer > 0) { comboTimer--; if (comboTimer === 0) combo = 0; }
+
+  // 屏幕震动
+  if (shakeDuration > 0) {
+    shakeDuration--;
+    shakeX = (Math.random() - 0.5) * 6;
+    shakeY = (Math.random() - 0.5) * 6;
+  } else { shakeX = 0; shakeY = 0; }
+
+  // 小球物理
+  ball.trail.push({ x: ball.x, y: ball.y });
+  if (ball.trail.length > 8) ball.trail.shift();
+
+  ball.vy += ball.gravity * ball.gravDir;
+  const maxFall = 9;
+  ball.vy = Math.max(-maxFall, Math.min(maxFall, ball.vy));
+  ball.y += ball.vy;
+
+  // 通道边界约束
+  const minY = ch.y + ball.r;
+  const maxY = ch.y + ch.h - ball.r;
+  if (ball.y <= minY) { ball.y = minY; ball.vy = 0; }
+  if (ball.y >= maxY) { ball.y = maxY; ball.vy = 0; }
+
+  // 移动障碍物
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    obstacles[i].x -= speed;
+    if (obstacles[i].x + obstacles[i].w < -10) {
+      obstacles.splice(i, 1);
+    }
+  }
+
+  // 移动能量点
+  for (let i = energies.length - 1; i >= 0; i--) {
+    energies[i].x -= speed;
+    energies[i].phase += 0.08;
+    if (energies[i].x < -20) energies.splice(i, 1);
+  }
+
+  // 更新粒子
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.1;
+    p.life -= p.decay;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  // 生成新障碍
+  const lastObs = obstacles[obstacles.length - 1];
+  if (!lastObs || lastObs.x < W + 100) {
+    spawnObstacle((lastObs ? lastObs.x : W) + 260 + Math.random() * 160);
+  }
+
+  // 重力感应（手机倾斜控制方向）
+  if (gyroEnabled && state === 'play') {
+    if (gyroGamma > 22) {
+      ball.gravDir = 1;  // 倾斜右侧 → 重力向下
+    } else if (gyroGamma < -22) {
+      ball.gravDir = -1; // 倾斜左侧 → 重力向上
+    }
+  }
+
+  // 危险预警：计算最近障碍物，边缘条指示方向
+  dangerLeft = Math.max(0, dangerLeft - 0.04);
+  dangerRight = Math.max(0, dangerRight - 0.04);
+  let nearestDist = Infinity;
+  let nearestDir = 0;
+  for (const ob of obstacles) {
+    const dx = ob.x + ob.w / 2 - ball.x;
+    if (dx > 0 && dx < nearestDist) {
+      nearestDist = dx;
+      nearestDir = 1; // 障碍在右侧
+    } else if (dx < 0 && -dx < nearestDist) {
+      nearestDist = -dx;
+      nearestDir = -1; // 障碍在左侧
+    }
+  }
+  // 距离越近、速度越快 → 预警越强
+  const dangerLevel = nearestDist < 200 ? Math.max(0, 1 - nearestDist / 200) * Math.min(speed / 8, 1) : 0;
+  if (nearestDir === -1) dangerLeft = Math.max(dangerLeft, dangerLevel);
+  if (nearestDir === 1) dangerRight = Math.max(dangerRight, dangerLevel);
+
+  // 碰撞检测：障碍物
+  if (invincibleTimer === 0) {
+    for (const ob of obstacles) {
+      if (checkBallObstacle(ball, ob)) {
+        // 死亡
+        spawnParticles(ball.x, ball.y, '#4fc3f7', 20);
+        shakeDuration = 18;
+        triggerDeath();
+        return;
+      }
+    }
+  }
+
+  // 碰撞检测：能量点
+  for (let i = energies.length - 1; i >= 0; i--) {
+    const e = energies[i];
+    if (e.collected) continue;
+    const dx = ball.x - e.x, dy = ball.y - e.y;
+    if (Math.sqrt(dx * dx + dy * dy) < ball.r + e.r + 4) {
+      e.collected = true;
+      combo++;
+      comboTimer = 120; // 2秒
+      const bonus = combo >= 3 ? combo : 1;
+      score += 10 * bonus;
+      spawnParticles(e.x, e.y, '#ffd700', 10);
+      energies.splice(i, 1);
+    }
+  }
+
+  // 帧分数
+  score += 0.05;
+
+  // 闪光衰减
+  if (flashAlpha > 0) flashAlpha -= 0.06;
+}
+
+function checkBallObstacle(ball, ob) {
+  // 精确AABB + 圆形碰撞
+  const bx = ball.x, by = ball.y, br = ball.r - 3; // 略微缩小碰撞半径
+  const nearX = Math.max(ob.x, Math.min(bx, ob.x + ob.w));
+  const nearY = Math.max(ob.y, Math.min(by, ob.y + ob.h));
+  const dx = bx - nearX, dy = by - nearY;
+  return dx * dx + dy * dy < br * br;
+}
+
+function triggerDeath() {
+  state = 'dead';
+  if (score > bestScore) {
+    bestScore = Math.floor(score);
+    localStorage.setItem('gf_best', bestScore);
+  }
+}
+
+// --- 翻转重力 ---
+function flipGravity() {
+  if (state === 'play') {
+    ball.gravDir *= -1;
+    ball.vy = -10 * ball.gravDir; // 翻转初速
+    invincibleTimer = 9; // 0.15秒无敌
+    flashAlpha = 0.18;
+  }
+}
+
+// --- 绘制 ---
+function draw() {
+  const W = canvas.width, H = canvas.height;
+  ctx.save();
+  ctx.translate(shakeX, shakeY);
+
+  // 背景
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fillRect(0, 0, W, H);
+
+  if (state === 'start') {
+    drawStartScreen();
+  } else if (state === 'play' || state === 'dead') {
+    drawGame();
+    if (state === 'dead') drawDeadOverlay();
+  }
+
+  ctx.restore();
+}
+
+function drawScreen() { draw(); }
+
+function drawGame() {
+  const W = canvas.width, H = canvas.height;
+  const ch = channel;
+
+  // 通道背景
+  ctx.fillStyle = '#16213e';
+  ctx.fillRect(ch.x, ch.y, ch.w, ch.h);
+
+  // 通道网格线（装饰）
+  ctx.strokeStyle = 'rgba(79,195,247,0.06)';
+  ctx.lineWidth = 1;
+  for (let x = (frameCount * speed * 0.3) % 60; x < W; x += 60) {
+    ctx.beginPath(); ctx.moveTo(x, ch.y); ctx.lineTo(x, ch.y + ch.h); ctx.stroke();
+  }
+
+  // 通道边框
+  ctx.strokeStyle = 'rgba(79,195,247,0.35)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ch.x, ch.y, ch.w, ch.h);
+
+  // 危险预警：边缘指示条（不闪屏！）
+  const drawDangerBar = (alpha, isLeft) => {
+    if (alpha <= 0) return;
+    const bw = 6 + alpha * 14; // 条宽度随危险程度变粗
+    const grad = ctx.createLinearGradient(isLeft ? 0 : W, 0, isLeft ? bw * 3 : W - bw * 3, 0);
+    grad.addColorStop(0, `rgba(239,83,80,${alpha * 0.7})`);
+    grad.addColorStop(1, 'rgba(239,83,80,0)');
+    ctx.fillStyle = grad;
+    if (isLeft) {
+      ctx.fillRect(0, ch.y, bw * 3, ch.h);
+    } else {
+      ctx.fillRect(W - bw * 3, ch.y, bw * 3, ch.h);
+    }
+  };
+  drawDangerBar(dangerLeft, true);
+  drawDangerBar(dangerRight, false);
+
+  // 翻转闪光
+  if (flashAlpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = flashAlpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+  }
+
+  // 粒子
+  for (const p of particles) {
+    ctx.save();
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 能量点
+  for (const e of energies) {
+    const pulse = 0.7 + Math.sin(e.phase) * 0.3;
+    ctx.save();
+    ctx.globalAlpha = pulse;
+    // 光晕
+    const grad = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r * 2.5);
+    grad.addColorStop(0, 'rgba(255,215,0,0.6)');
+    grad.addColorStop(1, 'rgba(255,215,0,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 2.5, 0, Math.PI * 2); ctx.fill();
+    // 主体
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath(); ctx.arc(e.x, e.y, e.r * pulse, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  // 障碍物
+  for (const ob of obstacles) {
+    drawObstacle(ob);
+  }
+
+  // 小球尾迹
+  for (let i = 0; i < ball.trail.length; i++) {
+    const t = ball.trail[i];
+    const alpha = (i / ball.trail.length) * 0.45;
+    const r = ball.r * (0.3 + 0.5 * i / ball.trail.length);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#4fc3f7';
+    ctx.beginPath(); ctx.arc(t.x, t.y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  // 小球
+  {
+    const isInv = invincibleTimer > 0;
+    ctx.save();
+    if (isInv) ctx.globalAlpha = 0.6 + Math.sin(frameCount * 0.8) * 0.4;
+    // 外发光
+    const grad = ctx.createRadialGradient(ball.x, ball.y, 0, ball.x, ball.y, ball.r * 2);
+    grad.addColorStop(0, 'rgba(79,195,247,0.5)');
+    grad.addColorStop(1, 'rgba(79,195,247,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r * 2, 0, Math.PI * 2); ctx.fill();
+    // 主体
+    ctx.fillStyle = '#4fc3f7';
+    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+    // 高光
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.beginPath(); ctx.arc(ball.x - ball.r * 0.3, ball.y - ball.r * 0.3, ball.r * 0.35, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  // HUD
+  drawHUD();
+}
+
+function drawObstacle(ob) {
+  const ch = channel;
+  if (ob.type === 'bottom') {
+    // 地面刺 - 红色三角
+    const numSpikes = Math.max(1, Math.floor(ob.w / 14));
+    const sw = ob.w / numSpikes;
+    ctx.fillStyle = '#ef5350';
+    ctx.strokeStyle = '#ff8a80';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < numSpikes; i++) {
+      ctx.beginPath();
+      ctx.moveTo(ob.x + i * sw, ob.y + ob.h);
+      ctx.lineTo(ob.x + i * sw + sw / 2, ob.y);
+      ctx.lineTo(ob.x + (i + 1) * sw, ob.y + ob.h);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+    }
+  } else if (ob.type === 'top') {
+    // 天花板刺 - 橙色倒三角
+    const numSpikes = Math.max(1, Math.floor(ob.w / 14));
+    const sw = ob.w / numSpikes;
+    ctx.fillStyle = '#ff7043';
+    ctx.strokeStyle = '#ffab91';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < numSpikes; i++) {
+      ctx.beginPath();
+      ctx.moveTo(ob.x + i * sw, ob.y);
+      ctx.lineTo(ob.x + i * sw + sw / 2, ob.y + ob.h);
+      ctx.lineTo(ob.x + (i + 1) * sw, ob.y);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+    }
+  } else {
+    // 悬浮障碍 - 紫色矩形
+    ctx.fillStyle = '#ab47bc';
+    ctx.strokeStyle = '#ce93d8';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
+    ctx.strokeRect(ob.x, ob.y, ob.w, ob.h);
+    // 内部花纹
+    ctx.strokeStyle = 'rgba(206,147,216,0.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(ob.x + 4, ob.y + 4); ctx.lineTo(ob.x + ob.w - 4, ob.y + ob.h - 4);
+    ctx.moveTo(ob.x + ob.w - 4, ob.y + 4); ctx.lineTo(ob.x + 4, ob.y + ob.h - 4);
+    ctx.stroke();
+  }
+}
+
+function drawHUD() {
+  const W = canvas.width, H = canvas.height;
+  const ch = channel;
+  const topY = ch.y - 8;
+
+  // 分数区域背景
+  ctx.fillStyle = 'rgba(22,33,62,0.85)';
+  ctx.beginPath();
+  ctx.roundRect(10, topY - 42, W - 20, 38, 8);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '500 15px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(`分数  ${Math.floor(score)}`, 20, topY - 20);
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffd700';
+  ctx.fillText(`Lv.${speedLevel}`, W / 2, topY - 20);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#b0bec5';
+  ctx.fillText(`最高 ${bestScore}`, W - 20, topY - 20);
+
+  // 连击显示
+  if (combo >= 2 && comboTimer > 0) {
+    const alpha = comboTimer > 30 ? 1 : comboTimer / 30;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ffd700';
+    ctx.font = `500 ${14 + combo * 1.5}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText(`${combo} 连击 × ${combo}`, W / 2, ch.y + 28);
+    ctx.restore();
+  }
+
+  // 重力方向指示 + 陀螺仪状态
+  ctx.fillStyle = 'rgba(22,33,62,0.85)';
+  ctx.beginPath(); ctx.roundRect(10, ch.y + ch.h + 8, gyroEnabled ? 130 : 80, 26, 6); ctx.fill();
+  ctx.fillStyle = '#4fc3f7';
+  ctx.font = '13px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText(ball.gravDir === 1 ? '▼ 向下' : '▲ 向上', 20, ch.y + ch.h + 25);
+  if (gyroEnabled) {
+    ctx.fillStyle = gyroGamma > 22 ? '#ef5350' : (gyroGamma < -22 ? '#ff7043' : '#78909c');
+    ctx.font = '11px Arial';
+    ctx.fillText(`│ ${Math.round(gyroGamma)}°`, 75, ch.y + ch.h + 25);
+  }
+
+  // 操作提示（仅前3秒）
+  if (frameCount < 180) {
+    ctx.save();
+    ctx.globalAlpha = frameCount < 120 ? 1 : (180 - frameCount) / 60;
+    ctx.fillStyle = 'rgba(22,33,62,0.8)';
+    ctx.beginPath(); ctx.roundRect(W/2 - 80, ch.y + ch.h + 8, 160, 26, 6); ctx.fill();
+    ctx.fillStyle = '#b0bec5';
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('点击屏幕翻转重力', W / 2, ch.y + ch.h + 25);
+    ctx.restore();
+  }
+}
+
+function drawStartScreen() {
+  const W = canvas.width, H = canvas.height;
+
+  // 装饰粒子
+  ctx.fillStyle = 'rgba(79,195,247,0.06)';
+  for (let i = 0; i < 30; i++) {
+    const x = (Math.sin(i * 137.5 + Date.now() * 0.0003) * 0.5 + 0.5) * W;
+    const y = (Math.cos(i * 97.3 + Date.now() * 0.0002) * 0.5 + 0.5) * H;
+    ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // 通道预览
+  const ch = channel || { x: 0, y: H * 0.21, w: W, h: H * 0.58 };
+  ctx.fillStyle = '#16213e';
+  ctx.fillRect(ch.x, ch.y, ch.w, ch.h);
+  ctx.strokeStyle = 'rgba(79,195,247,0.3)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(ch.x, ch.y, ch.w, ch.h);
+
+  // 标题
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#4fc3f7';
+  ctx.font = '500 32px Arial';
+  ctx.fillText('重力翻转', W / 2, H * 0.12);
+  ctx.fillStyle = 'rgba(79,195,247,0.6)';
+  ctx.font = '14px Arial';
+  ctx.fillText('Gravity Flip', W / 2, H * 0.12 + 28);
+
+  // 说明卡片
+  const cardY = ch.y + 20;
+  const cardW = W - 60;
+  const cardX = 30;
+  ctx.fillStyle = 'rgba(22,33,62,0.92)';
+  ctx.beginPath(); ctx.roundRect(cardX, cardY, cardW, 188, 12); ctx.fill();
+  ctx.strokeStyle = 'rgba(79,195,247,0.25)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.fillStyle = '#eceff1';
+  ctx.font = '500 14px Arial';
+  ctx.fillText('如何玩', W / 2, cardY + 28);
+
+  const tips = [
+    ['点击屏幕', '翻转重力方向'],
+    ['手机倾斜', '左倾向上 / 右倾向下'],
+    ['收集金球', '连击可获倍数加分'],
+    ['躲避障碍', '碰到即结束'],
+  ];
+  ctx.font = '13px Arial';
+  tips.forEach((t, i) => {
+    const ty = cardY + 58 + i * 34;
+    ctx.fillStyle = '#4fc3f7';
+    ctx.textAlign = 'left';
+    ctx.fillText('▸ ' + t[0], cardX + 20, ty);
+    ctx.fillStyle = '#90a4ae';
+    ctx.textAlign = 'right';
+    ctx.fillText(t[1], cardX + cardW - 20, ty);
+  });
+
+  // 最高分
+  if (bestScore > 0) {
+    ctx.fillStyle = 'rgba(22,33,62,0.9)';
+    ctx.beginPath(); ctx.roundRect(W/2 - 70, cardY + 160, 140, 36, 8); ctx.fill();
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '13px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`最高分  ${bestScore}`, W / 2, cardY + 183);
+  }
+
+  // 开始按钮
+  const btnY = ch.y + ch.h - 52;
+  const pulse = 0.85 + Math.sin(Date.now() * 0.003) * 0.15;
+  ctx.save();
+  ctx.globalAlpha = pulse;
+  ctx.fillStyle = '#4fc3f7';
+  ctx.beginPath(); ctx.roundRect(W/2 - 90, btnY, 180, 44, 22); ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#1a1a2e';
+  ctx.font = '500 16px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('点击开始', W / 2, btnY + 27);
+  ctx.restore();
+
+  // 底部提示
+  ctx.fillStyle = 'rgba(144,164,174,0.5)';
+  ctx.font = '12px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('速度随时间递增，挑战你的极限！', W / 2, H * 0.95);
+}
+
+function drawDeadOverlay() {
+  const W = canvas.width, H = canvas.height;
+
+  ctx.fillStyle = 'rgba(0,0,0,0.65)';
+  ctx.fillRect(0, 0, W, H);
+
+  const boxY = H * 0.28;
+  const boxH = H * 0.44;
+  ctx.fillStyle = '#16213e';
+  ctx.beginPath(); ctx.roundRect(W/2 - 120, boxY, 240, boxH, 16); ctx.fill();
+  ctx.strokeStyle = 'rgba(79,195,247,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = '#ef5350';
+  ctx.font = '500 22px Arial';
+  ctx.fillText('游戏结束', W / 2, boxY + 38);
+
+  ctx.fillStyle = '#b0bec5';
+  ctx.font = '13px Arial';
+  ctx.fillText('本次得分', W / 2, boxY + 70);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '500 38px Arial';
+  ctx.fillText(Math.floor(score), W / 2, boxY + 112);
+
+  const isNew = Math.floor(score) >= bestScore && Math.floor(score) > 0;
+  if (isNew) {
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '500 13px Arial';
+    ctx.fillText('✦ 新记录！', W / 2, boxY + 135);
+  }
+
+  ctx.fillStyle = '#b0bec5';
+  ctx.font = '13px Arial';
+  ctx.fillText('历史最高', W / 2, boxY + 160);
+  ctx.fillStyle = '#ffd700';
+  ctx.font = '500 22px Arial';
+  ctx.fillText(bestScore, W / 2, boxY + 186);
+
+  // 速度等级
+  ctx.fillStyle = '#78909c';
+  ctx.font = '12px Arial';
+  ctx.fillText(`达到速度等级 Lv.${speedLevel}`, W / 2, boxY + 210);
+
+  // 重新开始按钮
+  const btnY = boxY + boxH - 52;
+  ctx.fillStyle = '#4fc3f7';
+  ctx.beginPath(); ctx.roundRect(W/2 - 80, btnY, 160, 42, 21); ctx.fill();
+  ctx.fillStyle = '#1a1a2e';
+  ctx.font = '500 15px Arial';
+  ctx.fillText('再玩一次', W / 2, btnY + 26);
+}
+
+// --- 输入处理 ---
+function handleInput(e) {
+  e.preventDefault();
+  if (state === 'start') {
+    state = 'play';
+    initGame();
+    // 尝试启用重力感应（需要用户交互才能调用）
+    try { enableGyro(); } catch(_) {}
+    // iOS 13+ 需要主动请求权限
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().then(r => { if (r === 'granted') enableGyro(); }).catch(() => {});
+    }
+  } else if (state === 'play') {
+    flipGravity();
+  } else if (state === 'dead') {
+    state = 'play';
+    initGame();
+  }
+}
+
+canvas.addEventListener('click', handleInput);
+canvas.addEventListener('touchstart', handleInput, { passive: false });
+
+// 防止双击缩放
+canvas.addEventListener('dblclick', e => e.preventDefault());
+
+// --- 初始化 ---
+function init() {
+  // 初始化channel用于开始界面
+  const W = canvas.width, H = canvas.height;
+  channel = { x: 0, y: H * 0.21, w: W, h: H * 0.58 };
+  gameLoop();
+}
+
+init();
+</script>
+</body>
+</html>
