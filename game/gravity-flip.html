@@ -41,8 +41,10 @@ resize();
 window.addEventListener('resize', () => { resize(); if (state !== 'play') drawScreen(); });
 
 // --- 游戏状态 ---
-let state = 'start'; // 'start' | 'play' | 'dead'
+let state = 'start'; // 'start' | 'play' | 'dead' | 'rank'
 let bestScore = parseInt(localStorage.getItem('gf_best') || '0');
+let playerName = localStorage.getItem('gf_name') || '';
+let leaderboardData = null;
 
 // --- 重力感应支持 ---
 let gyroEnabled = false;
@@ -69,6 +71,27 @@ let shakeX, shakeY, shakeDuration;
 // --- 危险预警数据（边缘指示条） ---
 let dangerLeft = 0;  // 左侧危险条亮度 0~1
 let dangerRight = 0; // 右侧危险条亮度 0~1
+
+// --- 排行榜接入 ---
+const RANK_API = "https://rank.aitboy.cn/api";
+const RANK_KEY = "kjaqSxyMILQeREgutaaxZjxZShPrsrvMaUQpMtLDQIk";
+
+async function rankSubmit(name, s) {
+  try {
+    await fetch(`${RANK_API}/scores`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Api-Key": RANK_KEY },
+      body: JSON.stringify({ name: String(name).slice(0, 16) || "匿名玩家", score: Math.floor(s) }),
+    });
+  } catch(_) {}
+}
+
+async function rankFetch() {
+  try {
+    const res = await fetch(`${RANK_API}/leaderboard?limit=10`, { headers: { "X-Api-Key": RANK_KEY } });
+    return await res.json();
+  } catch(_) { return null; }
+}
 
 // --- 初始化游戏 ---
 function initGame() {
@@ -315,10 +338,13 @@ function checkBallObstacle(ball, ob) {
 
 function triggerDeath() {
   state = 'dead';
-  if (score > bestScore) {
-    bestScore = Math.floor(score);
+  const finalScore = Math.floor(score);
+  if (finalScore > bestScore) {
+    bestScore = finalScore;
     localStorage.setItem('gf_best', bestScore);
   }
+  // 异步提交排行榜，不阻塞界面
+  if (playerName) rankSubmit(playerName, finalScore);
 }
 
 // --- 翻转重力 ---
@@ -343,6 +369,9 @@ function draw() {
 
   if (state === 'start') {
     drawStartScreen();
+  } else if (state === 'rank') {
+    drawStartScreen();
+    drawRankOverlay();
   } else if (state === 'play' || state === 'dead') {
     drawGame();
     if (state === 'dead') drawDeadOverlay();
@@ -664,6 +693,17 @@ function drawStartScreen() {
   ctx.fillText('点击开始', W / 2, btnY + 27);
   ctx.restore();
 
+  // 排行榜按钮
+  const rankBtnY = btnY - 50;
+  ctx.fillStyle = 'rgba(79,195,247,0.12)';
+  ctx.beginPath(); ctx.roundRect(W/2 - 70, rankBtnY, 140, 36, 18); ctx.fill();
+  ctx.strokeStyle = 'rgba(79,195,247,0.35)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = '#4fc3f7';
+  ctx.font = '500 14px Arial';
+  ctx.fillText('🏆 查看排行榜', W / 2, rankBtnY + 23);
+
   // 底部提示
   ctx.fillStyle = 'rgba(144,164,174,0.5)';
   ctx.font = '12px Arial';
@@ -718,6 +758,13 @@ function drawDeadOverlay() {
   ctx.font = '12px Arial';
   ctx.fillText(`达到速度等级 Lv.${speedLevel}`, W / 2, boxY + 210);
 
+  // 昵称提示（底部，较小）
+  if (!playerName) {
+    ctx.fillStyle = 'rgba(79,195,247,0.7)';
+    ctx.font = '12px Arial';
+    ctx.fillText('💡 下次游戏可输入昵称上榜', W / 2, boxY + boxH - 14);
+  }
+
   // 重新开始按钮
   const btnY = boxY + boxH - 52;
   ctx.fillStyle = '#4fc3f7';
@@ -725,23 +772,166 @@ function drawDeadOverlay() {
   ctx.fillStyle = '#1a1a2e';
   ctx.font = '500 15px Arial';
   ctx.fillText('再玩一次', W / 2, btnY + 26);
+
+  // 排行榜入口
+  const rankBtnY = btnY - 46;
+  ctx.fillStyle = 'rgba(255,215,0,0.12)';
+  ctx.beginPath(); ctx.roundRect(W/2 - 70, rankBtnY, 140, 34, 17); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,215,0,0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = '#ffd700';
+  ctx.font = '500 13px Arial';
+  ctx.fillText('🏆 查看排行榜', W / 2, rankBtnY + 22);
+}
+
+// --- 排行榜视图 ---
+function drawRankOverlay() {
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = 'rgba(0,0,0,0.82)';
+  ctx.fillRect(0, 0, W, H);
+
+  const boxW = Math.min(340, W - 40);
+  const boxX = (W - boxW) / 2;
+  const boxY = H * 0.08;
+  const boxH = H * 0.84;
+
+  ctx.fillStyle = '#16213e';
+  ctx.beginPath(); ctx.roundRect(boxX, boxY, boxW, boxH, 16); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,215,0,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffd700';
+  ctx.font = '500 18px Arial';
+  ctx.fillText('🏆 排行榜', W / 2, boxY + 34);
+
+  if (!leaderboardData) {
+    ctx.fillStyle = 'rgba(144,164,174,0.7)';
+    ctx.font = '13px Arial';
+    ctx.fillText('加载中...', W / 2, boxY + 70);
+    ctx.fillText('（首次加载请稍候）', W / 2, boxY + 92);
+  } else if (leaderboardData.total === 0) {
+    ctx.fillStyle = 'rgba(144,164,174,0.7)';
+    ctx.font = '13px Arial';
+    ctx.fillText('暂无记录', W / 2, boxY + 70);
+    ctx.fillText('成为第一个上榜玩家！', W / 2, boxY + 92);
+  } else {
+    const padding = 20;
+    const rowH = 38;
+    const startY = boxY + 58;
+    const maxRows = Math.min(leaderboardData.data.length, 10);
+
+    leaderboardData.data.slice(0, maxRows).forEach((entry, i) => {
+      const ry = startY + i * rowH;
+      const isTop3 = entry.rank <= 3;
+      const rowBg = isTop3 ? 'rgba(255,215,0,0.08)' : 'rgba(79,195,247,0.04)';
+      ctx.fillStyle = rowBg;
+      ctx.beginPath(); ctx.roundRect(boxX + padding, ry, boxW - padding * 2, rowH - 4, 6); ctx.fill();
+
+      // 排名
+      const medals = ['', '🥇', '🥈', '🥉'];
+      ctx.fillStyle = isTop3 ? '#ffd700' : '#78909c';
+      ctx.font = `500 13px Arial`;
+      ctx.textAlign = 'left';
+      ctx.fillText(medals[entry.rank] || `#${entry.rank}`, boxX + padding + 10, ry + 22);
+
+      // 名字
+      ctx.fillStyle = isTop3 ? '#fff' : '#b0bec5';
+      ctx.font = `500 14px Arial`;
+      const name = entry.name.length > 8 ? entry.name.slice(0, 8) + '…' : entry.name;
+      ctx.fillText(name, boxX + padding + 50, ry + 23);
+
+      // 分数
+      ctx.textAlign = 'right';
+      ctx.fillStyle = isTop3 ? '#ffd700' : '#4fc3f7';
+      ctx.font = `500 14px Arial`;
+      ctx.fillText(entry.score.toLocaleString(), boxX + boxW - padding - 10, ry + 23);
+    });
+
+    // 总人数
+    ctx.fillStyle = '#546e7a';
+    ctx.font = '11px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`共 ${leaderboardData.total} 位玩家`, W / 2, boxY + boxH - 16);
+  }
+
+  // 返回按钮
+  ctx.fillStyle = 'rgba(79,195,247,0.15)';
+  const backY = boxY + boxH - 20;
+  ctx.beginPath(); ctx.roundRect(W/2 - 70, backY, 140, 34, 17); ctx.fill();
+  ctx.strokeStyle = 'rgba(79,195,247,0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = '#4fc3f7';
+  ctx.font = '500 13px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('← 返回', W / 2, backY + 21);
+}
+
+// --- 加载排行榜数据 ---
+function loadRankData() {
+  rankFetch().then(data => {
+    leaderboardData = data;
+  });
 }
 
 // --- 输入处理 ---
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: (src.clientX - rect.left) * (canvas.width / rect.width), y: (src.clientY - rect.top) * (canvas.height / rect.height) };
+}
+
 function handleInput(e) {
   e.preventDefault();
+  const pos = getPos(e);
+  const W = canvas.width, H = canvas.height;
+
   if (state === 'start') {
+    const ch = channel || { y: H * 0.21, h: H * 0.58 };
+    const rankBtnY = ch.y + ch.h - 102;
+    // 点到排行榜按钮区域
+    if (pos.y >= rankBtnY && pos.y <= rankBtnY + 36 && pos.x >= W/2 - 70 && pos.x <= W/2 + 70) {
+      state = 'rank';
+      leaderboardData = null;
+      loadRankData();
+      return;
+    }
+    // 昵称首次输入
+    if (!playerName) {
+      const name = prompt('🏆 输入你的昵称上榜（可跳过）:');
+      if (name && name.trim()) {
+        playerName = name.trim().slice(0, 16);
+        localStorage.setItem('gf_name', playerName);
+      }
+    }
     state = 'play';
     initGame();
-    // 尝试启用重力感应（需要用户交互才能调用）
     try { enableGyro(); } catch(_) {}
-    // iOS 13+ 需要主动请求权限
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
       DeviceOrientationEvent.requestPermission().then(r => { if (r === 'granted') enableGyro(); }).catch(() => {});
+    }
+  } else if (state === 'rank') {
+    // 返回按钮
+    const backY = (channel ? channel.y + channel.h * 0.08 : H * 0.08) + (channel ? channel.h * 0.84 : H * 0.84) - 20;
+    if (pos.y >= backY && pos.y <= backY + 34 && pos.x >= W/2 - 70 && pos.x <= W/2 + 70) {
+      state = 'start';
     }
   } else if (state === 'play') {
     flipGravity();
   } else if (state === 'dead') {
+    const boxY = H * 0.28, boxH = H * 0.44;
+    const btnY = boxY + boxH - 52;
+    const rankBtnY = btnY - 46;
+    // 点排行榜入口
+    if (pos.y >= rankBtnY && pos.y <= rankBtnY + 34 && pos.x >= W/2 - 70 && pos.x <= W/2 + 70) {
+      state = 'rank';
+      leaderboardData = null;
+      loadRankData();
+      return;
+    }
     state = 'play';
     initGame();
   }
