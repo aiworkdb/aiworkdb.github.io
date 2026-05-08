@@ -785,6 +785,9 @@ function drawDeadOverlay() {
   ctx.fillText('🏆 查看排行榜', W / 2, rankBtnY + 22);
 }
 
+// --- 排行榜加载动画状态 ---
+let rankLoadingPhase = 0;
+
 // --- 排行榜视图 ---
 function drawRankOverlay() {
   const W = canvas.width, H = canvas.height;
@@ -808,10 +811,24 @@ function drawRankOverlay() {
   ctx.fillText('🏆 排行榜', W / 2, boxY + 34);
 
   if (!leaderboardData) {
+    // 加载动画：三个脉冲圆点
+    const cx = W / 2;
+    const cy = boxY + 80;
+    const dots = 3;
+    for (let i = 0; i < dots; i++) {
+      const angle = (Date.now() * 0.003 + i * (Math.PI * 2 / dots)) % (Math.PI * 2);
+      const scale = 0.5 + Math.sin(angle) * 0.5;
+      ctx.save();
+      ctx.globalAlpha = 0.4 + scale * 0.6;
+      ctx.fillStyle = '#4fc3f7';
+      ctx.beginPath();
+      ctx.arc(cx + (i - 1) * 22, cy, 6 * scale, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
     ctx.fillStyle = 'rgba(144,164,174,0.7)';
     ctx.font = '13px Arial';
-    ctx.fillText('加载中...', W / 2, boxY + 70);
-    ctx.fillText('（首次加载请稍候）', W / 2, boxY + 92);
+    ctx.fillText('数据加载中...', W / 2, cy + 36);
   } else if (leaderboardData.total === 0) {
     ctx.fillStyle = 'rgba(144,164,174,0.7)';
     ctx.font = '13px Arial';
