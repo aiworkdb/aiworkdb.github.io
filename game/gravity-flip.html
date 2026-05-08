@@ -914,8 +914,8 @@ function handleInput(e) {
       DeviceOrientationEvent.requestPermission().then(r => { if (r === 'granted') enableGyro(); }).catch(() => {});
     }
   } else if (state === 'rank') {
-    // 返回按钮
-    const backY = (channel ? channel.y + channel.h * 0.08 : H * 0.08) + (channel ? channel.h * 0.84 : H * 0.84) - 20;
+    // 返回按钮：boxY = H*0.08, boxH = H*0.84, backY = boxY+boxH-20 = H*0.92-20
+    const backY = H * 0.92 - 20;
     if (pos.y >= backY && pos.y <= backY + 34 && pos.x >= W/2 - 70 && pos.x <= W/2 + 70) {
       state = 'start';
     }
