@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔法花园 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .print-hint strong {
+            color: #856404;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        /* 游戏地图样式 */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            grid-template-rows: repeat(5, 100px);
+            gap: 5px;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        .map-cell {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .map-cell .cell-label {
+            font-size: 12px;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .cell-garden { background: #c8e6c9; }
+        .cell-sun { background: #fff9c4; }
+        .cell-water { background: #b3e5fc; }
+        .cell-magic { background: #e1bee7; }
+        .cell-device { background: #ffe0b2; }
+        .cell-creature { background: #f8bbd0; }
+
+        /* 卡牌样式 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .card-icon {
+            font-size: 40px;
+        }
+
+        .card-type {
+            font-size: 12px;
+            color: white;
+            background: #666;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card-cost {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .card-cost strong {
+            color: #f57c00;
+        }
+
+        .card-description {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .card-score {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #fff9c4;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #f57c00;
+            text-align: center;
+        }
+
+        /* 资源卡样式 */
+        .resource-card {
+            background: linear-gradient(135deg, #f5f5f5, #fff);
+        }
+
+        .resource-card.sun { border-color: #fbc02d; }
+        .resource-card.water { border-color: #0288d1; }
+        .resource-card.magic { border-color: #7b1fa2; }
+
+        /* 植物卡样式 */
+        .plant-card {
+            background: linear-gradient(135deg, #e8f5e9, #fff);
+            border-color: #4caf50;
+        }
+
+        /* 装置卡样式 */
+        .device-card {
+            background: linear-gradient(135deg, #fff3e0, #fff);
+            border-color: #ff9800;
+        }
+
+        /* 生物卡样式 */
+        .creature-card {
+            background: linear-gradient(135deg, #fce4ec, #fff);
+            border-color: #e91e63;
+        }
+
+        /* 事件卡样式 */
+        .event-card {
+            background: linear-gradient(135deg, #e8eaf6, #fff);
+            border-color: #3f51b5;
+        }
+
+        /* 棋子样式 */
+        .pieces-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .piece {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .piece-1 { background: #f44336; }
+        .piece-2 { background: #2196f3; }
+        .piece-3 { background: #4caf50; }
+        .piece-4 { background: #ff9800; }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .card {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示：</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印</li>
+            <li>打印后可裁剪并塑封，增加耐用性</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🗺️ 游戏地图</h2>
+        <div class="game-map">
+            <div class="map-cell cell-garden">🌻<span class="cell-label">花园</span></div>
+            <div class="map-cell cell-water">💧<span class="cell-label">水分区</span></div>
+            <div class="map-cell cell-sun">☀️<span class="cell-label">阳光区</span></div>
+            <div class="map-cell cell-device">🏮<span class="cell-label">装置区</span></div>
+            <div class="map-cell cell-garden">🌻<span class="cell-label">花园</span></div>
+
+            <div class="map-cell cell-magic">✨<span class="cell-label">魔法区</span></div>
+            <div class="map-cell cell-garden">🌻<span class="cell-label">花园</span></div>
+            <div class="map-cell cell-water">💧<span class="cell-label">水分区</span></div>
+            <div class="map-cell cell-sun">☀️<span class="cell-label">阳光区</span></div>
+            <div class="map-cell cell-creature">🦌<span class="cell-label">生物区</span></div>
+
+            <div class="map-cell cell-sun">☀️<span class="cell-label">阳光区</span></div>
+            <div class="map-cell cell-magic">✨<span class="cell-label">魔法区</span></div>
+            <div class="map-cell cell-garden">🌻<span class="cell-label">花园</span></div>
+            <div class="map-cell cell-water">💧<span class="cell-label">水分区</span></div>
+            <div class="map-cell cell-device">🏮<span class="cell-label">装置区</span></div>
+
+            <div class="map-cell cell-water">💧<span class="cell-label">水分区</span></div>
+            <div class="map-cell cell-sun">☀️<span class="cell-label">阳光区</span></div>
+            <div class="map-cell cell-magic">✨<span class="cell-label">魔法区</span></div>
+            <div class="map-cell cell-garden">🌻<span class="cell-label">花园</span></div>
+            <div class="map-cell cell-water">💧<span class="cell-label">水分区</span></div>
+
+            <div class="map-cell cell-creature">🦌<span class="cell-label">生物区</span></div>
+            <div class="map-cell cell-garden">🌻<span class="cell-label">花园</span></div>
+            <div class="map-cell cell-sun">☀️<span class="cell-label">阳光区</span></div>
+            <div class="map-cell cell-magic">✨<span class="cell-label">魔法区</span></div>
+            <div class="map-cell cell-device">🏮<span class="cell-label">装置区</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🃏 资源卡</h2>
+        <div class="cards-container">
+            <div class="card resource-card sun">
+                <div class="card-header">
+                    <span class="card-icon">☀️</span>
+                    <span class="card-type">资源</span>
+                </div>
+                <div class="card-title">阳光卡</div>
+                <div class="card-description">
+                    基础资源卡，用于种植阳光类植物和激活植物能力。
+                </div>
+            </div>
+
+            <div class="card resource-card water">
+                <div class="card-header">
+                    <span class="card-icon">💧</span>
+                    <span class="card-type">资源</span>
+                </div>
+                <div class="card-title">水分卡</div>
+                <div class="card-description">
+                    基础资源卡，用于种植水分类植物和激活植物能力。
+                </div>
+            </div>
+
+            <div class="card resource-card magic">
+                <div class="card-header">
+                    <span class="card-icon">✨</span>
+                    <span class="card-type">资源</span>
+                </div>
+                <div class="card-title">魔法能量卡</div>
+                <div class="card-description">
+                    高级资源卡，用于种植高级植物、激活装置和吸引生物。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🌻 植物卡</h2>
+        <div class="cards-container">
+            <div class="card plant-card">
+                <div class="card-header">
+                    <span class="card-icon">🌻</span>
+                    <span class="card-type">植物</span>
+                </div>
+                <div class="card-title">太阳花</div>
+                <div class="card-cost">成本：<strong>阳光×2</strong></div>
+                <div class="card-description">
+                    基础植物，容易种植。相邻格子上的植物+1分。
+                </div>
+                <div class="card-score">分数：2分</div>
+            </div>
+
+            <div class="card plant-card">
+                <div class="card-header">
+                    <span class="card-icon">🪷</span>
+                    <span class="card-type">植物</span>
+                </div>
+                <div class="card-title">水晶兰</div>
+                <div class="card-cost">成本：<strong>水分×2</strong></div>
+                <div class="card-description">
+                    水分类植物。对角格子上的植物+1分。
+                </div>
+                <div class="card-score">分数：3分</div>
+            </div>
+
+            <div class="card plant-card">
+                <div class="card-header">
+                    <span class="card-icon">🌿</span>
+                    <span class="card-type">植物</span>
+                </div>
+                <div class="card-title">魔法藤</div>
+                <div class="card-cost">成本：<strong>阳光×1 + 水分×1</strong></div>
+                <div class="card-description">
+                    特殊植物。可以延伸到相邻空格，占据更多格子。
+                </div>
+                <div class="card-score">分数：2分</div>
+            </div>
+
+            <div class="card plant-card">
+                <div class="card-header">
+                    <span class="card-icon">🌙</span>
+                    <span class="card-type">植物</span>
+                </div>
+                <div class="card-title">月光草</div>
+                <div class="card-cost">成本：<strong>魔法能量×2</strong></div>
+                <div class="card-description">
+                    高级植物。夜晚回合（双数回合）分数翻倍。
+                </div>
+                <div class="card-score">分数：4分</div>
+            </div>
+
+            <div class="card plant-card">
+                <div class="card-header">
+                    <span class="card-icon">🔥</span>
+                    <span class="card-type">植物</span>
+                </div>
+                <div class="card-title">火焰花</div>
+                <div class="card-cost">成本：<strong>阳光×3</strong></div>
+                <div class="card-description">
+                    攻击植物。可以烧毁相邻格子上的植物（战术使用）。
+                </div>
+                <div class="card-score">分数：5分</div>
+            </div>
+
+            <div class="card plant-card">
+                <div class="card-header">
+                    <span class="card-icon">🍄</span>
+                    <span class="card-type">植物</span>
+                </div>
+                <div class="card-title">冰霜菇</div>
+                <div class="card-cost">成本：<strong>水分×3</strong></div>
+                <div class="card-description">
+                    控制植物。可以冻结相邻格子，使其一回合无法使用。
+                </div>
+                <div class="card-score">分数：4分</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🏮 装置卡</h2>
+        <div class="cards-container">
+            <div class="card device-card">
+                <div class="card-header">
+                    <span class="card-icon">⛲</span>
+                    <span class="card-type">装置</span>
+                </div>
+                <div class="card-title">喷泉</div>
+                <div class="card-cost">成本：<strong>水分×3</strong></div>
+                <div class="card-description">
+                    所有水分类植物+1分。效果持续全场。
+                </div>
+            </div>
+
+            <div class="card device-card">
+                <div class="card-header">
+                    <span class="card-icon">🕐</span>
+                    <span class="card-type">装置</span>
+                </div>
+                <div class="card-title">日晷</div>
+                <div class="card-cost">成本：<strong>阳光×3</strong></div>
+                <div class="card-description">
+                    所有阳光类植物+1分。效果持续全场。
+                </div>
+            </div>
+
+            <div class="card device-card">
+                <div class="card-header">
+                    <span class="card-icon">⭐</span>
+                    <span class="card-type">装置</span>
+                </div>
+                <div class="card-title">魔法阵</div>
+                <div class="card-cost">成本：<strong>魔法能量×3</strong></div>
+                <div class="card-description">
+                    所有植物+1分。效果持续全场。
+                </div>
+            </div>
+
+            <div class="card device-card">
+                <div class="card-header">
+                    <span class="card-icon">🏠</span>
+                    <span class="card-type">装置</span>
+                </div>
+                <div class="card-title">温室</div>
+                <div class="card-cost">成本：<strong>阳光×2 + 水分×2</strong></div>
+                <div class="card-description">
+                    保护所有植物，不会被烧毁或冻结。
+                </div>
+            </div>
+
+            <div class="card device-card">
+                <div class="card-header">
+                    <span class="card-icon">🐝</span>
+                    <span class="card-type">装置</span>
+                </div>
+                <div class="card-title">蜂巢</div>
+                <div class="card-cost">成本：<strong>魔法能量×2</strong></div>
+                <div class="card-description">
+                    吸引蜜蜂生物+2分。必须在生物区放置。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🦌 生物卡</h2>
+        <div class="cards-container">
+            <div class="card creature-card">
+                <div class="card-header">
+                    <span class="card-icon">🧚</span>
+                    <span class="card-type">生物</span>
+                </div>
+                <div class="card-title">精灵</div>
+                <div class="card-cost">成本：<strong>魔法能量×2</strong></div>
+                <div class="card-description">
+                    可以移动一个植物到相邻空格。每回合可激活一次。
+                </div>
+                <div class="card-score">分数：3分</div>
+            </div>
+
+            <div class="card creature-card">
+                <div class="card-header">
+                    <span class="card-icon">🦋</span>
+                    <span class="card-type">生物</span>
+                </div>
+                <div class="card-title">蝴蝶</div>
+                <div class="card-cost">成本：<strong>阳光×1</strong></div>
+                <div class="card-description">
+                    相邻生物区上的生物+1分。每回合可激活一次。
+                </div>
+                <div class="card-score">分数：2分</div>
+            </div>
+
+            <div class="card creature-card">
+                <div class="card-header">
+                    <span class="card-icon">🐝</span>
+                    <span class="card-type">生物</span>
+                </div>
+                <div class="card-title">蜜蜂</div>
+                <div class="card-cost">成本：<strong>水分×1</strong></div>
+                <div class="card-description">
+                    相邻花园格上的植物+1分。每回合可激活一次。
+                </div>
+                <div class="card-score">分数：2分</div>
+            </div>
+
+            <div class="card creature-card">
+                <div class="card-header">
+                    <span class="card-icon">🦄</span>
+                    <span class="card-type">生物</span>
+                </div>
+                <div class="card-title">独角兽</div>
+                <div class="card-cost">成本：<strong>魔法能量×5</strong></div>
+                <div class="card-description">
+                    稀有生物。游戏结束时额外+5分。
+                </div>
+                <div class="card-score">分数：10分</div>
+            </div>
+
+            <div class="card creature-card">
+                <div class="card-header">
+                    <span class="card-icon">🐉</span>
+                    <span class="card-type">生物</span>
+                </div>
+                <div class="card-title">龙</div>
+                <div class="card-cost">成本：<strong>阳光×3 + 魔法能量×3</strong></div>
+                <div class="card-description">
+                    传说生物。可以烧毁一个装置。每回合可激活一次。
+                </div>
+                <div class="card-score">分数：8分</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎲 事件卡</h2>
+        <div class="cards-container">
+            <div class="card event-card">
+                <div class="card-header">
+                    <span class="card-icon">🌧️</span>
+                    <span class="card-type">事件</span>
+                </div>
+                <div class="card-title">魔法雨</div>
+                <div class="card-description">
+                    所有玩家获得1张水分卡。
+                </div>
+            </div>
+
+            <div class="card event-card">
+                <div class="card-header">
+                    <span class="card-icon">☀️</span>
+                    <span class="card-type">事件</span>
+                </div>
+                <div class="card-title">阳光爆发</div>
+                <div class="card-description">
+                    所有玩家获得1张阳光卡。
+                </div>
+            </div>
+
+            <div class="card event-card">
+                <div class="card-header">
+                    <span class="card-icon">🌪️</span>
+                    <span class="card-type">事件</span>
+                </div>
+                <div class="card-title">魔法风暴</div>
+                <div class="card-description">
+                    随机移动一个植物到相邻空格。
+                </div>
+            </div>
+
+            <div class="card event-card">
+                <div class="card-header">
+                    <span class="card-icon">🦅</span>
+                    <span class="card-type">事件</span>
+                </div>
+                <div class="card-title">生物迁徙</div>
+                <div class="card-description">
+                    所有玩家随机获得1张生物卡。
+                </div>
+            </div>
+
+            <div class="card event-card">
+                <div class="card-header">
+                    <span class="card-icon">🎉</span>
+                    <span class="card-type">事件</span>
+                </div>
+                <div class="card-title">丰收</div>
+                <div class="card-description">
+                    所有植物分数+1。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🚶 玩家棋子</h2>
+        <div class="pieces-container">
+            <div class="piece piece-1">玩家1</div>
+            <div class="piece piece-2">玩家2</div>
+            <div class="piece piece-3">玩家3</div>
+            <div class="piece piece-4">玩家4</div>
+        </div>
+    </div>
+</body>
+</html>
