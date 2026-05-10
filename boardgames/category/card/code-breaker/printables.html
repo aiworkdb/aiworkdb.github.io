@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>密码破译师 - 打印道具</title>
+<style>
+  /* ===== 全局重置 ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d1b3e 100%);
+    color: #e0e0ff;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  /* ===== 打印提示 ===== */
+  .print-hint {
+    background: linear-gradient(135deg, #1e3a5f, #162b4a);
+    border: 2px solid #4a9eff;
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 20px rgba(74,158,255,0.2);
+  }
+  .print-hint h3 { color: #4a9eff; margin-bottom: 10px; font-size: 16px; }
+  .print-hint ul { padding-left: 20px; }
+  .print-hint li { line-height: 2; color: #b0c4de; font-size: 14px; }
+  .print-hint strong { color: #ffd700; }
+
+  /* ===== 页面标题 ===== */
+  .page-title {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .page-title h1 {
+    font-size: 2.4em;
+    font-weight: 900;
+    background: linear-gradient(90deg, #4a9eff, #7b68ee, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+  }
+  .page-title p { color: #8899aa; font-size: 14px; margin-top: 6px; }
+
+  /* ===== 章节标题 ===== */
+  .section-title {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #7b68ee;
+    border-left: 4px solid #7b68ee;
+    padding-left: 12px;
+    margin: 36px 0 18px 0;
+    letter-spacing: 1px;
+  }
+
+  /* ===== 卡牌网格布局 ===== */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 130px);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  /* ===== 通用卡牌样式 ===== */
+  .card {
+    width: 130px;
+    height: 180px;
+    border-radius: 12px;
+    padding: 10px 8px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    position: relative;
+    overflow: hidden;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .card:hover { transform: translateY(-4px) scale(1.03); }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+    background: inherit;
+    filter: brightness(1.8);
+  }
+  .card .card-icon { font-size: 32px; line-height: 1.2; margin: 8px 0 4px; }
+  .card .card-name { font-size: 11px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+  .card .card-type { font-size: 9px; border-radius: 8px; padding: 1px 6px; margin-bottom: 5px; font-weight: 600; }
+  .card .card-cost { font-size: 9px; color: #ffd700; margin-bottom: 3px; min-height: 14px; }
+  .card .card-effect { font-size: 9px; line-height: 1.4; flex: 1; }
+
+  /* ===== 情报碎片卡 ===== */
+  .intel-a {
+    background: linear-gradient(160deg, #0d2b6b, #1a4da8);
+    border: 2px solid #4a9eff;
+    box-shadow: 0 4px 16px rgba(74,158,255,0.3);
+    color: #d0e8ff;
+  }
+  .intel-a .card-type { background: #1a4da8; color: #4a9eff; }
+
+  .intel-b {
+    background: linear-gradient(160deg, #3a2800, #8a6000);
+    border: 2px solid #ffd700;
+    box-shadow: 0 4px 16px rgba(255,215,0,0.3);
+    color: #fff3cc;
+  }
+  .intel-b .card-type { background: #5a3e00; color: #ffd700; }
+
+  .intel-c {
+    background: linear-gradient(160deg, #3d0000, #8b0000);
+    border: 2px solid #ff4444;
+    box-shadow: 0 4px 16px rgba(255,68,68,0.3);
+    color: #ffd0d0;
+  }
+  .intel-c .card-type { background: #5c0000; color: #ff4444; }
+
+  /* ===== 分析工具卡 ===== */
+  .tool-card {
+    background: linear-gradient(160deg, #0d3d3d, #1a6b5a);
+    border: 2px solid #00d4a0;
+    box-shadow: 0 4px 16px rgba(0,212,160,0.25);
+    color: #ccfff4;
+  }
+  .tool-card .card-type { background: #0d3d3d; color: #00d4a0; }
+
+  /* ===== 反制卡 ===== */
+  .counter-card {
+    background: linear-gradient(160deg, #1a0d3d, #3d1a6b);
+    border: 2px solid #b060ff;
+    box-shadow: 0 4px 16px rgba(176,96,255,0.25);
+    color: #e8ccff;
+  }
+  .counter-card .card-type { background: #2a1050; color: #b060ff; }
+
+  /* ===== 特工技能卡 ===== */
+  .skill-card {
+    background: linear-gradient(160deg, #1a1a00, #4a4a00);
+    border: 2px solid #aaaa00;
+    box-shadow: 0 4px 16px rgba(170,170,0,0.25);
+    color: #fffff0;
+  }
+  .skill-card .card-type { background: #333300; color: #dddd00; }
+
+  /* ===== 双重间谍卡 ===== */
+  .spy-card {
+    background: linear-gradient(160deg, #1a0a0a, #3d1a2a);
+    border: 2px solid #ff69b4;
+    box-shadow: 0 6px 20px rgba(255,105,180,0.4);
+    color: #ffd0e8;
+    position: relative;
+  }
+  .spy-card::after {
+    content: '★';
+    position: absolute;
+    top: 6px; right: 8px;
+    color: #ffd700;
+    font-size: 14px;
+  }
+  .spy-card .card-type { background: #3d0a1a; color: #ff69b4; }
+  .spy-card .card-effect { font-size: 8px; }
+
+  /* ===== 密码板 ===== */
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 340px);
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .code-board {
+    background: linear-gradient(135deg, #0d1b3e, #162b4a);
+    border: 3px solid #4a9eff;
+    border-radius: 16px;
+    padding: 20px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .code-board h3 { color: #4a9eff; font-size: 16px; margin-bottom: 14px; text-align: center; }
+  .code-slots {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .code-slot {
+    width: 60px;
+    height: 60px;
+    border: 3px solid #4a9eff;
+    border-radius: 10px;
+    background: #0a0a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 900;
+    color: #4a9eff;
+  }
+  .slot-label {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .slot-label span {
+    width: 60px;
+    text-align: center;
+    font-size: 10px;
+    color: #8899aa;
+  }
+  .board-track { margin-top: 8px; }
+  .board-track-label { font-size: 11px; color: #8899aa; margin-bottom: 6px; }
+  .track-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .track-row .pos-label {
+    width: 40px;
+    color: #aaaacc;
+    font-size: 10px;
+  }
+  .track-dots {
+    display: flex;
+    gap: 4px;
+  }
+  .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #334;
+    background: #0a0a2e;
+  }
+  .dot.star { border-color: #ffd700; background: #333300; }
+  .dot.cross { border-color: #ff4444; background: #330000; }
+  .intel-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid #2a3a5a;
+  }
+  .intel-bar-label { font-size: 11px; color: #8899aa; }
+  .intel-dots { display: flex; gap: 4px; }
+  .intel-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #4a9eff;
+    background: #0a0a2e;
+  }
+  .intel-dot.filled { background: #4a9eff; }
+
+  /* ===== 玩家棋子 ===== */
+  .token-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .player-token {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 900;
+    border: 4px solid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .token-label { font-size: 10px; margin-top: 3px; font-weight: 600; }
+
+  .token-red { background: radial-gradient(circle, #8b0000, #550000); border-color: #ff4444; color: #ffd0d0; }
+  .token-blue { background: radial-gradient(circle, #00008b, #000055); border-color: #4a9eff; color: #d0e8ff; }
+  .token-green { background: radial-gradient(circle, #006400, #004000); border-color: #00cc44; color: #d0ffd0; }
+  .token-yellow { background: radial-gradient(circle, #8b8b00, #555500); border-color: #ffd700; color: #fffff0; }
+
+  /* ===== 参考牌 ===== */
+  .reference-card {
+    background: linear-gradient(135deg, #0d1b3e, #162b4a);
+    border: 2px solid #7b68ee;
+    border-radius: 12px;
+    padding: 16px 20px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .reference-card h3 { color: #7b68ee; margin-bottom: 12px; font-size: 14px; }
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ref-table th { background: #1a1a4e; color: #7b68ee; padding: 6px 8px; text-align: left; border-bottom: 1px solid #2a2a6e; }
+  .ref-table td { padding: 5px 8px; border-bottom: 1px solid #1a2a4a; color: #b0c4de; }
+  .ref-table tr:last-child td { border-bottom: none; }
+
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  /* ===== 打印样式 ===== */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .print-hint {
+      display: none;
+    }
+    body {
+      background: white !important;
+      color: black;
+      padding: 5mm;
+    }
+    .page-title h1 {
+      -webkit-text-fill-color: #333 !important;
+      background: none !important;
+      color: #333 !important;
+    }
+    .card {
+      box-shadow: none;
+      border-width: 1.5px;
+    }
+    .card-grid {
+      gap: 8px;
+    }
+    .section-title {
+      font-size: 13px;
+      margin: 24px 0 12px;
+    }
+    .board-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @page {
+      size: A4;
+      margin: 10mm;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+  <h3>⚠️ 重要打印提示</h3>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项以保留颜色</li>
+    <li>卡牌建议使用 <strong>卡纸</strong>打印，裁剪后过塑防止透视</li>
+    <li>密码板和参考牌可用 <strong>普通 A4 纸</strong>打印</li>
+    <li>打印后按虚线裁剪，建议准备剪刀和切纸机</li>
+  </ul>
+</div>
+
+<!-- 页面标题 -->
+<div class="page-title">
+  <h1>🔐 密码破译师 — 打印道具</h1>
+  <p>Code Breaker · 卡牌桌游打印套装 · v1.0</p>
+</div>
+
+<!-- ============================
+     一、情报碎片卡
+     ============================ -->
+<div class="section-title">📦 一、情报碎片卡（共 36 张）</div>
+
+<div style="margin-bottom:8px;font-size:12px;color:#8899aa;">
+  🔵 A级情报（×12）&nbsp;&nbsp;&nbsp;
+  🟡 B级情报（×12）&nbsp;&nbsp;&nbsp;
+  🔴 C级情报（×12）
+</div>
+
+<div class="card-grid">
+  <!-- A级情报 ×6（代表12张中6张） -->
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <!-- 继续补齐 A×6, B×6, C×6... 打印足够数量 -->
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+  <div class="card intel-a">
+    <div class="card-type">A 级情报</div>
+    <div class="card-icon">🔵</div>
+    <div class="card-name">A 级情报<br>碎片</div>
+    <div class="card-cost">情报值：1 点</div>
+    <div class="card-effect">可用于初级猜测<br>或激活工具卡</div>
+  </div>
+
+  <!-- B级情报 ×12 -->
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+  <div class="card intel-b">
+    <div class="card-type">B 级情报</div>
+    <div class="card-icon">🟡</div>
+    <div class="card-name">B 级情报<br>碎片</div>
+    <div class="card-cost">情报值：2 点</div>
+    <div class="card-effect">精准猜测费用<br>或高级工具激活</div>
+  </div>
+
+  <!-- C级情报 ×12 -->
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+  <div class="card intel-c">
+    <div class="card-type">C 级情报</div>
+    <div class="card-icon">🔴</div>
+    <div class="card-name">C 级情报<br>碎片</div>
+    <div class="card-cost">情报值：3 点</div>
+    <div class="card-effect">终极猜测费用<br>最强工具卡激活</div>
+  </div>
+</div>
+
+<!-- ============================
+     二、分析工具卡
+     ============================ -->
+<div class="section-title">🔬 二、分析工具卡（共 18 张）</div>
+<div class="card-grid">
+  <!-- 频率分析仪 ×3 -->
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">📡</div>
+    <div class="card-name">频率分析仪</div>
+    <div class="card-cost">费用：A×2</div>
+    <div class="card-effect">询问目标：密码中是否含某数字？（是/否）</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">📡</div>
+    <div class="card-name">频率分析仪</div>
+    <div class="card-cost">费用：A×2</div>
+    <div class="card-effect">询问目标：密码中是否含某数字？（是/否）</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">📡</div>
+    <div class="card-name">频率分析仪</div>
+    <div class="card-cost">费用：A×2</div>
+    <div class="card-effect">询问目标：密码中是否含某数字？（是/否）</div>
+  </div>
+  <!-- 量子扫描仪 ×3 -->
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">🔭</div>
+    <div class="card-name">量子扫描仪</div>
+    <div class="card-cost">费用：B×1</div>
+    <div class="card-effect">得知目标某一位密码的确切数字</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">🔭</div>
+    <div class="card-name">量子扫描仪</div>
+    <div class="card-cost">费用：B×1</div>
+    <div class="card-effect">得知目标某一位密码的确切数字</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">🔭</div>
+    <div class="card-name">量子扫描仪</div>
+    <div class="card-cost">费用：B×1</div>
+    <div class="card-effect">得知目标某一位密码的确切数字</div>
+  </div>
+  <!-- 神经网络分析 ×2 -->
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">🧠</div>
+    <div class="card-name">神经网络<br>分析</div>
+    <div class="card-cost">费用：C×1</div>
+    <div class="card-effect">得知目标密码中最大或最小的数字</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">🧠</div>
+    <div class="card-name">神经网络<br>分析</div>
+    <div class="card-cost">费用：C×1</div>
+    <div class="card-effect">得知目标密码中最大或最小的数字</div>
+  </div>
+  <!-- 交叉比对仪 ×3 -->
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">⚖️</div>
+    <div class="card-name">交叉比对仪</div>
+    <div class="card-cost">费用：A×1+B×1</div>
+    <div class="card-effect">询问两位玩家第N位密码是否相同</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">⚖️</div>
+    <div class="card-name">交叉比对仪</div>
+    <div class="card-cost">费用：A×1+B×1</div>
+    <div class="card-effect">询问两位玩家第N位密码是否相同</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">⚖️</div>
+    <div class="card-name">交叉比对仪</div>
+    <div class="card-cost">费用：A×1+B×1</div>
+    <div class="card-effect">询问两位玩家第N位密码是否相同</div>
+  </div>
+  <!-- 信号追踪器 ×4 -->
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">📻</div>
+    <div class="card-name">信号追踪器</div>
+    <div class="card-cost">费用：A×1</div>
+    <div class="card-effect">摸 2 张牌，然后弃 1 张</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">📻</div>
+    <div class="card-name">信号追踪器</div>
+    <div class="card-cost">费用：A×1</div>
+    <div class="card-effect">摸 2 张牌，然后弃 1 张</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">📻</div>
+    <div class="card-name">信号追踪器</div>
+    <div class="card-cost">费用：A×1</div>
+    <div class="card-effect">摸 2 张牌，然后弃 1 张</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">📻</div>
+    <div class="card-name">信号追踪器</div>
+    <div class="card-cost">费用：A×1</div>
+    <div class="card-effect">摸 2 张牌，然后弃 1 张</div>
+  </div>
+  <!-- 数据加速器 ×3 -->
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">⚡</div>
+    <div class="card-name">数据加速器</div>
+    <div class="card-cost">费用：无</div>
+    <div class="card-effect">本回合可额外进行 1 次猜测行动</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">⚡</div>
+    <div class="card-name">数据加速器</div>
+    <div class="card-cost">费用：无</div>
+    <div class="card-effect">本回合可额外进行 1 次猜测行动</div>
+  </div>
+  <div class="card tool-card">
+    <div class="card-type">分析工具</div>
+    <div class="card-icon">⚡</div>
+    <div class="card-name">数据加速器</div>
+    <div class="card-cost">费用：无</div>
+    <div class="card-effect">本回合可额外进行 1 次猜测行动</div>
+  </div>
+</div>
+
+<!-- ============================
+     三、反制卡
+     ============================ -->
+<div class="section-title">🛡️ 三、反制卡（共 14 张）</div>
+<div class="card-grid">
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🌫️</div>
+    <div class="card-name">信息迷雾</div>
+    <div class="card-cost">时机：任意</div>
+    <div class="card-effect">取消对手分析工具卡效果</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🌫️</div>
+    <div class="card-name">信息迷雾</div>
+    <div class="card-cost">时机：任意</div>
+    <div class="card-effect">取消对手分析工具卡效果</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🌫️</div>
+    <div class="card-name">信息迷雾</div>
+    <div class="card-cost">时机：任意</div>
+    <div class="card-effect">取消对手分析工具卡效果</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🔄</div>
+    <div class="card-name">反向追踪</div>
+    <div class="card-cost">时机：对手摸牌</div>
+    <div class="card-effect">让该对手展示摸到的牌给所有人</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🔄</div>
+    <div class="card-name">反向追踪</div>
+    <div class="card-cost">时机：对手摸牌</div>
+    <div class="card-effect">让该对手展示摸到的牌给所有人</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🔀</div>
+    <div class="card-name">密码重置</div>
+    <div class="card-cost">时机：猜中某位时</div>
+    <div class="card-effect">该位数字+1（9→0），猜测无效</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🔀</div>
+    <div class="card-name">密码重置</div>
+    <div class="card-cost">时机：猜中某位时</div>
+    <div class="card-effect">该位数字+1（9→0），猜测无效</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🏰</div>
+    <div class="card-name">铁壁防御</div>
+    <div class="card-cost">时机：量子扫描仪</div>
+    <div class="card-effect">否定扫描效果，拒绝透露密码</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🏰</div>
+    <div class="card-name">铁壁防御</div>
+    <div class="card-cost">时机：量子扫描仪</div>
+    <div class="card-effect">否定扫描效果，拒绝透露密码</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">🏰</div>
+    <div class="card-name">铁壁防御</div>
+    <div class="card-cost">时机：量子扫描仪</div>
+    <div class="card-effect">否定扫描效果，拒绝透露密码</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制★限1次</div>
+    <div class="card-icon">🔒</div>
+    <div class="card-name">双重加密</div>
+    <div class="card-cost">时机：任意（每局1次）</div>
+    <div class="card-effect">某一位密码全程免疫猜测</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制★限1次</div>
+    <div class="card-icon">🔒</div>
+    <div class="card-name">双重加密</div>
+    <div class="card-cost">时机：任意（每局1次）</div>
+    <div class="card-effect">某一位密码全程免疫猜测</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">📥</div>
+    <div class="card-name">情报截获</div>
+    <div class="card-cost">时机：对手弃牌时</div>
+    <div class="card-effect">将对手弃置的牌拿入自己手牌</div>
+  </div>
+  <div class="card counter-card">
+    <div class="card-type">反制</div>
+    <div class="card-icon">📥</div>
+    <div class="card-name">情报截获</div>
+    <div class="card-cost">时机：对手弃牌时</div>
+    <div class="card-effect">将对手弃置的牌拿入自己手牌</div>
+  </div>
+</div>
+
+<!-- ============================
+     四、特工技能卡
+     ============================ -->
+<div class="section-title">🕵️ 四、特工技能卡（共 12 张）</div>
+<div class="card-grid">
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">👥</div>
+    <div class="card-name">深喉线人</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">询问对手：密码中是否有相邻连续数字（如3,4）</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">👥</div>
+    <div class="card-name">深喉线人</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">询问对手：密码中是否有相邻连续数字（如3,4）</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🥷</div>
+    <div class="card-name">卧底渗透</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">秘密查看对手手牌中的 3 张（不公开）</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🥷</div>
+    <div class="card-name">卧底渗透</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">秘密查看对手手牌中的 3 张（不公开）</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能★限1</div>
+    <div class="card-icon">🔎</div>
+    <div class="card-name">全面搜查</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">所有玩家必须说出密码第1位数字</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🔥</div>
+    <div class="card-name">档案销毁</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">指定玩家弃置 2 张手牌（自选）</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🔥</div>
+    <div class="card-name">档案销毁</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">指定玩家弃置 2 张手牌（自选）</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🤝</div>
+    <div class="card-name">情报交换</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">与任意玩家各交换 1 张手牌</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🤝</div>
+    <div class="card-name">情报交换</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">与任意玩家各交换 1 张手牌</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🌑</div>
+    <div class="card-name">黑市情报</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">查看弃牌堆最上 3 张，选 1 张拿入手中</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🌑</div>
+    <div class="card-name">黑市情报</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">查看弃牌堆最上 3 张，选 1 张拿入手中</div>
+  </div>
+  <div class="card skill-card">
+    <div class="card-type">特工技能</div>
+    <div class="card-icon">🌑</div>
+    <div class="card-name">黑市情报</div>
+    <div class="card-cost">单次使用</div>
+    <div class="card-effect">查看弃牌堆最上 3 张，选 1 张拿入手中</div>
+  </div>
+</div>
+
+<!-- ============================
+     五、双重间谍卡
+     ============================ -->
+<div class="section-title">🎭 五、双重间谍卡（共 6 张）</div>
+<div style="margin-bottom:8px;font-size:12px;color:#ff69b4;">⭐ 稀有牌，每张均有两种可选效果，使用时宣布选择哪个效果</div>
+<div class="card-grid">
+  <div class="card spy-card" style="height:200px;">
+    <div class="card-type">双重间谍</div>
+    <div class="card-icon">🪞</div>
+    <div class="card-name">双面镜</div>
+    <div class="card-cost">选一效果</div>
+    <div class="card-effect"><strong>A：</strong>得知任意一位密码（第1或第4位）<br><strong>B：</strong>让对手擦去 1 个猜测标记</div>
+  </div>
+  <div class="card spy-card" style="height:200px;">
+    <div class="card-type">双重间谍</div>
+    <div class="card-icon">👻</div>
+    <div class="card-name">幽灵协议</div>
+    <div class="card-cost">选一效果</div>
+    <div class="card-effect"><strong>A：</strong>直接破译对手某一位（保证正确）<br><strong>B：</strong>偷取对手 2 张情报碎片卡</div>
+  </div>
+  <div class="card spy-card" style="height:200px;">
+    <div class="card-type">双重间谍</div>
+    <div class="card-icon">🗝️</div>
+    <div class="card-name">混沌密钥</div>
+    <div class="card-cost">选一效果</div>
+    <div class="card-effect"><strong>A：</strong>修改自己密码任意一位<br><strong>B：</strong>全员各弃 1 张摸 1 张</div>
+  </div>
+  <div class="card spy-card" style="height:200px;">
+    <div class="card-type">双重间谍</div>
+    <div class="card-icon">⚛️</div>
+    <div class="card-name">量子纠缠</div>
+    <div class="card-cost">选一效果</div>
+    <div class="card-effect"><strong>A：</strong>复制对手破译标记数量到自己<br><strong>B：</strong>令对手已破译标记减少 1 个</div>
+  </div>
+  <div class="card spy-card" style="height:200px;">
+    <div class="card-type">双重间谍</div>
+    <div class="card-icon">🔁</div>
+    <div class="card-name">无限循环</div>
+    <div class="card-cost">选一效果</div>
+    <div class="card-effect"><strong>A：</strong>弃牌堆洗回牌堆，再摸 3 张<br><strong>B：</strong>回合结束后获得额外一个完整回合</div>
+  </div>
+  <div class="card spy-card" style="height:200px;">
+    <div class="card-type">双重间谍</div>
+    <div class="card-icon">🌒</div>
+    <div class="card-name">阴影协定</div>
+    <div class="card-cost">选一效果</div>
+    <div class="card-effect"><strong>A：</strong>与一位对手结成同盟，共同胜利<br><strong>B：</strong>让一位对手情报值立即归零</div>
+  </div>
+</div>
+
+<!-- ============================
+     六、玩家密码板
+     ============================ -->
+<div class="section-title">📋 六、玩家密码板（打印 4 份）</div>
+<div class="board-grid">
+  <div class="code-board">
+    <h3>🕵️ 玩家密码板</h3>
+    <div style="font-size:11px;color:#8899aa;text-align:center;margin-bottom:10px;">在下方格子中写下你的秘密 4 位密码</div>
+    <div class="code-slots">
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+    </div>
+    <div class="slot-label">
+      <span>第 1 位</span>
+      <span>第 2 位</span>
+      <span>第 3 位</span>
+      <span>第 4 位</span>
+    </div>
+    <div class="board-track">
+      <div class="board-track-label">📌 对手猜测记录（⭐=猜对 ❌=猜错）</div>
+      <div class="track-row">
+        <span class="pos-label">第 1 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 2 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 3 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 4 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="intel-bar">
+      <span class="intel-bar-label">情报值：</span>
+      <div class="intel-dots">
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-board">
+    <h3>🕵️ 玩家密码板</h3>
+    <div style="font-size:11px;color:#8899aa;text-align:center;margin-bottom:10px;">在下方格子中写下你的秘密 4 位密码</div>
+    <div class="code-slots">
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+    </div>
+    <div class="slot-label">
+      <span>第 1 位</span>
+      <span>第 2 位</span>
+      <span>第 3 位</span>
+      <span>第 4 位</span>
+    </div>
+    <div class="board-track">
+      <div class="board-track-label">📌 对手猜测记录（⭐=猜对 ❌=猜错）</div>
+      <div class="track-row">
+        <span class="pos-label">第 1 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 2 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 3 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 4 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="intel-bar">
+      <span class="intel-bar-label">情报值：</span>
+      <div class="intel-dots">
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-board">
+    <h3>🕵️ 玩家密码板</h3>
+    <div style="font-size:11px;color:#8899aa;text-align:center;margin-bottom:10px;">在下方格子中写下你的秘密 4 位密码</div>
+    <div class="code-slots">
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+    </div>
+    <div class="slot-label">
+      <span>第 1 位</span>
+      <span>第 2 位</span>
+      <span>第 3 位</span>
+      <span>第 4 位</span>
+    </div>
+    <div class="board-track">
+      <div class="board-track-label">📌 对手猜测记录（⭐=猜对 ❌=猜错）</div>
+      <div class="track-row">
+        <span class="pos-label">第 1 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 2 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 3 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 4 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="intel-bar">
+      <span class="intel-bar-label">情报值：</span>
+      <div class="intel-dots">
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-board">
+    <h3>🕵️ 玩家密码板</h3>
+    <div style="font-size:11px;color:#8899aa;text-align:center;margin-bottom:10px;">在下方格子中写下你的秘密 4 位密码</div>
+    <div class="code-slots">
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+      <div class="code-slot">?</div>
+    </div>
+    <div class="slot-label">
+      <span>第 1 位</span>
+      <span>第 2 位</span>
+      <span>第 3 位</span>
+      <span>第 4 位</span>
+    </div>
+    <div class="board-track">
+      <div class="board-track-label">📌 对手猜测记录（⭐=猜对 ❌=猜错）</div>
+      <div class="track-row">
+        <span class="pos-label">第 1 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 2 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 3 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="pos-label">第 4 位</span>
+        <div class="track-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="intel-bar">
+      <span class="intel-bar-label">情报值：</span>
+      <div class="intel-dots">
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot filled"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+        <div class="intel-dot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     七、玩家棋子
+     ============================ -->
+<div class="section-title">🎲 七、玩家棋子（各打印 1 份）</div>
+<div class="token-grid">
+  <div class="player-token token-red">
+    <div>🕵️</div>
+    <div class="token-label">玩家 A</div>
+  </div>
+  <div class="player-token token-blue">
+    <div>🕵️</div>
+    <div class="token-label">玩家 B</div>
+  </div>
+  <div class="player-token token-green">
+    <div>🕵️</div>
+    <div class="token-label">玩家 C</div>
+  </div>
+  <div class="player-token token-yellow">
+    <div>🕵️</div>
+    <div class="token-label">玩家 D</div>
+  </div>
+</div>
+
+<!-- ============================
+     八、快速参考牌
+     ============================ -->
+<div class="section-title">📖 八、快速参考牌（每位玩家各 1 份）</div>
+<div class="ref-grid">
+  <div class="reference-card">
+    <h3>🔍 猜测密码 · 费用参考</h3>
+    <table class="ref-table">
+      <tr><th>猜测类型</th><th>费用</th><th>猜对奖励</th><th>猜错惩罚</th></tr>
+      <tr><td>初级猜测</td><td>A×1</td><td>标记⭐</td><td>获得「大/小」提示</td></tr>
+      <tr><td>精准猜测</td><td>B×1</td><td>⭐+获得对手 1 张牌</td><td>无</td></tr>
+      <tr><td>终极猜测</td><td>C×1</td><td>双位⭐⭐</td><td>本回合不能再猜</td></tr>
+    </table>
+  </div>
+  <div class="reference-card">
+    <h3>⚡ 每回合流程</h3>
+    <table class="ref-table">
+      <tr><th>阶段</th><th>操作</th></tr>
+      <tr><td>① 摸牌</td><td>从牌堆摸 2 张</td></tr>
+      <tr><td>② 行动</td><td>执行 2 次行动（任意组合）</td></tr>
+      <tr><td>③ 弃牌</td><td>手牌超 7 张需弃至 7 张</td></tr>
+      <tr><td>④ 传递</td><td>宣布结束，轮到下家</td></tr>
+    </table>
+  </div>
+  <div class="reference-card">
+    <h3>🏆 胜利条件</h3>
+    <table class="ref-table">
+      <tr><th>方式</th><th>条件</th></tr>
+      <tr><td>完全破译</td><td>累积⭐标记 ≥ 4 个（某对手）</td></tr>
+      <tr><td>情报耗尽</td><td>某玩家情报值归零 → 出局</td></tr>
+      <tr><td>牌堆耗尽</td><td>⭐最多的玩家获胜</td></tr>
+    </table>
+  </div>
+  <div class="reference-card">
+    <h3>📉 情报值扣减</h3>
+    <table class="ref-table">
+      <tr><th>触发情况</th><th>扣减</th></tr>
+      <tr><td>被精准猜测猜对 1 位</td><td>-1 点</td></tr>
+      <tr><td>被「档案销毁」弃牌</td><td>-1 点</td></tr>
+      <tr><td>被「阴影协定」B效果</td><td>归零</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:32px;padding-top:20px;border-top:1px solid #2a3a5a;color:#556677;font-size:12px;">
+  🔐 密码破译师 (Code Breaker) · 卡牌桌游 · v1.0 · AIWorkDB 桌游创作组
+</div>
+
+</body>
+</html>

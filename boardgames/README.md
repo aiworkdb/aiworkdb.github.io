@@ -64,6 +64,7 @@ boardgames/
 | [星域征服者](category/strategy/stellar-conqueror/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等 |
 | [魔法花园](category/strategy/enchanted-garden/README.md) | 策略 | 2-4人 | 45-60分钟 | 中等 |
 | [美食挑战赛](category/party/food-challenge/README.md) | 派对 | 3-7人 | 30-50分钟 | 简单 |
+| [密码破译师](category/card/code-breaker/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
 
 ## 添加新桌游
 
