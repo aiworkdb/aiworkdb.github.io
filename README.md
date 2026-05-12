@@ -18,16 +18,24 @@ aiworkdb.github.io/
 ├── README.md                    # 本文件，项目索引
 ├── LICENSE                      # 开源协议
 ├── aitool.md                    # AI 工具导航大全
-└── boardgames/                  # 桌游项目目录
-    ├── README.md                # 桌游索引目录
-    ├── development-guide.md     # 桌游开发规范文档
-    ├── category/                # 按类别分类的桌游
-    │   └── strategy/            # 策略类桌游
-    │       └── treasure-hunter/ # 宝藏猎人游戏
-    ├── tools/                   # 桌游工具集
-    │   ├── README.md           # 工具说明文档
-    │   └── card-maker.html     # 卡牌生成器
-    └── resources/               # 资源文件（可选）
+├── wechat-51.md                 # 微信相关文档
+├── boardgames/                  # 桌游项目目录
+│   ├── README.md                # 桌游索引目录
+│   ├── development-guide.md      # 桌游开发规范文档
+│   ├── wechat-project.md        # 桌游微信推广项目
+│   ├── category/                # 按类别分类的桌游
+│   │   ├── strategy/           # 策略类桌游（13款）
+│   │   ├── party/              # 派对类桌游（11款）
+│   │   ├── card/               # 卡牌类桌游（9款）
+│   │   └── cooperative/         # 合作类桌游（11款）
+│   └── tools/                   # 桌游工具集
+│       ├── README.md           # 工具说明文档
+│       └── card-maker.html     # 卡牌生成器
+├── game/                        # 小游戏
+│   ├── README.md               # 游戏索引
+│   └── gravity-flip.html       # 重力翻转游戏
+└── prompt/                      # Prompt 资源
+    └── wechat.md               # 微信相关 Prompt
 ```
 
 ---
@@ -60,6 +68,16 @@ aiworkdb.github.io/
 
 📁 **[boardgames/](boardgames/)** - 桌游设计与开发资源
 
+#### 桌游统计
+
+| 类别 | 数量 | 说明 |
+| :--- | :--- | :--- |
+| 🎯 策略类 | 13款 | 需要深思熟虑的策略游戏 |
+| 🎉 派对类 | 11款 | 适合聚会娱乐的轻松游戏 |
+| 🃏 卡牌类 | 9款 | 以卡牌为核心机制的游戏 |
+| 🤝 合作类 | 11款 | 玩家共同对抗游戏系统的游戏 |
+| **总计** | **44款** | 持续更新中 |
+
 #### 主要资源
 
 | 资源 | 说明 | 链接 |
@@ -69,15 +87,29 @@ aiworkdb.github.io/
 | 卡牌生成器 | 在线创建和打印桌游卡牌 | [tools/card-maker.html](boardgames/tools/card-maker.html) |
 | 工具说明 | 桌游工具集使用文档 | [tools/README.md](boardgames/tools/README.md) |
 
-#### 已收录桌游
+#### 精选桌游推荐
 
 | 游戏名称 | 类别 | 玩家人数 | 游戏时长 | 难度 | 链接 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | 宝藏猎人 | 策略 | 2-4人 | 45-60分钟 | 中等 | [查看详情](boardgames/category/strategy/treasure-hunter/README.md) |
+| 星际贸易站 | 策略 | 2-4人 | 60-90分钟 | 中等/困难 | [查看详情](boardgames/category/strategy/starport-trader/README.md) |
+| 魔法学院 | 合作 | 2-4人 | 45-60分钟 | 中等 | [查看详情](boardgames/category/cooperative/magic-academy/README.md) |
+| 时间特工 | 派对 | 4-8人 | 20-40分钟 | 中等 | [查看详情](boardgames/category/party/time-agents/README.md) |
+| 文明密语 | 卡牌 | 2-5人 | 30-50分钟 | 中等 | [查看详情](boardgames/category/card/civilization-cipher/README.md) |
 
 #### 可用工具
 
 - 🃏 **[卡牌生成器](boardgames/tools/card-maker.html)**：可视化创建和打印桌游卡牌，支持多种卡牌类型和自定义样式
+
+---
+
+### 小游戏
+
+🎮 **[game/](game/)** - 休闲小游戏集合
+
+| 游戏名称 | 说明 | 链接 |
+| :--- | :--- | :--- |
+| 重力翻转 | 重力感应的休闲游戏 | [gravity-flip.html](game/gravity-flip.html) |
 
 ---
 
@@ -93,6 +125,10 @@ aiworkdb.github.io/
 2. **使用工具**：打开 [卡牌生成器](boardgames/tools/card-maker.html) 创建自定义卡牌
 3. **添加新桌游**：参考 [开发规范](boardgames/development-guide.md) 创建新桌游项目
 
+### 玩游戏
+
+打开 [game/gravity-flip.html](game/gravity-flip.html) 开始游戏。
+
 ---
 
 ## 项目特点
@@ -101,7 +137,8 @@ aiworkdb.github.io/
 - 🎮 **开箱即用**：桌游提供完整的可打印素材
 - 🛠️ **工具完善**：提供卡牌生成器等实用工具
 - 📖 **文档详细**：每个项目都有完整的说明文档
-- 🆓 **免费使用**：大部分资源可免费使用和打印
+- 🆓 **免费使用**：所有资源可免费使用和打印
+- 🎯 **持续更新**：桌游库持续扩充，涵盖多种类型
 
 ---
 
@@ -115,4 +152,4 @@ aiworkdb.github.io/
 
 ---
 
-*最后更新：2026-04-29*
+*最后更新：2026-05-12*
