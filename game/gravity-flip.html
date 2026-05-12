@@ -80,6 +80,23 @@ const _$ = (() => {
   const _2 = 'caf8d7db1acc';                                          // 密钥（分散存储）
   const _3 = _2.split('').reverse().join('').slice(0,12);             // 密钥反转混淆
 
+  // 异常调用检测
+  let _c = 0, _t = 0;
+  const _w = () => {
+    const now = Date.now();
+    if (now - _t < 3000) { _c++; if (_c > 2) {
+      alert(
+        '\u26A0 \u975E\u6CD5\u8BF7\u6C42\u68C0\u6D4B\u5230\n\n' +
+        '\u60A8\u7684 IP \u5730\u5740\u5DF2\u88AB\u8BB0\u5F55\u5728\u6848\n' +
+        '\u5E76\u63D0\u4EA4\u7BA1\u7406\u5458\u5904\u7406\u4E2D\n\n' +
+        '\u5185\u5BB9\u5DF2\u53D1\u9001\u81F3\u7BA1\u5BBF\u90E8\u95E8\n' +
+        '\u8BF7\u52FF\u8BD5\u56FE\u7A0D\u540E\u518D\u8BD5'
+      );
+      _c = 0;
+    }} else { _c = 1; }
+    _t = now;
+  };
+
   // HMAC签名（分散到多个闭包中）
   const _k = async (m) => {
     const e = new TextEncoder();
@@ -93,6 +110,7 @@ const _$ = (() => {
 
   // 提交分数（闭包装载）
   const _s = async (n, s) => {
+    _w(); // 触发检测
     try {
       const t = Math.floor(Date.now() / 1000);
       const g = await _k(`${n}:${s}:${t}`);
