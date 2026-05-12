@@ -684,8 +684,8 @@
         const ASCEND_FORCE = -3;   // 阴松开时最大向上速度
         const FALL_SPEED = 3;      // 阳松开时下落速度
         const SCROLL_SPEED = 5;
-        const GROUND_Y_RATIO = 0.75;
-        const SKY_Y_RATIO = 0.25;
+        const GROUND_Y_RATIO = 0.80;  // 阳世界底部 80%
+        const SKY_Y_RATIO = 0.35;     // 天空顶部 35%
         const MIN_OBSTACLE_GAP = 300;
         const YIN_YANG_RADIUS = 25;
 
@@ -783,18 +783,18 @@
                 name: '宣纸留白',
                 yangTop: '#f5f0e6',
                 yangBottom: '#e8e0d0',
-                yinTop: '#1a1a2e',
-                yinBottom: '#16213e',
-                divider: '#2d2d44',
+                yinTop: '#4a5a8b',      // 调亮以便看清障碍物
+                yinBottom: '#3a4a7b',
+                divider: '#5a6a9b',
                 price: 0
             },
             qianlishanhe: {
                 name: '千里江山',
                 yangTop: '#c9e4ca',
                 yangBottom: '#91ac86',
-                yinTop: '#1a3a4a',
-                yinBottom: '#0d2636',
-                divider: '#2a5a6a',
+                yinTop: '#5a8aaa',      // 调亮以便看清障碍物
+                yinBottom: '#4a7a9a',
+                divider: '#6a9aba',
                 price: 150,
                 currency: 'ink'
             },
@@ -802,9 +802,9 @@
                 name: '寒江雪',
                 yangTop: '#fafafa',
                 yangBottom: '#e8e8e8',
-                yinTop: '#2c3e50',
-                yinBottom: '#1a252f',
-                divider: '#34495e',
+                yinTop: '#6a8aaa',      // 调亮以便看清障碍物
+                yinBottom: '#5a7a9a',
+                divider: '#7a9aba',
                 price: 100,
                 currency: 'ink'
             },
@@ -812,8 +812,8 @@
                 name: '闹市灯影',
                 yangTop: '#2c1810',
                 yangBottom: '#1a0f0a',
-                yinTop: '#0f0f1a',
-                yinBottom: '#050510',
+                yinTop: '#3a4a5a',      // 稍亮以便看清障碍物
+                yinBottom: '#2a3a4a',
                 divider: '#ff6b35',
                 price: 200,
                 currency: 'spirit'
