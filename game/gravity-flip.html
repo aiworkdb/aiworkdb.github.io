@@ -72,16 +72,29 @@ let shakeX, shakeY, shakeDuration;
 let dangerLeft = 0;  // 左侧危险条亮度 0~1
 let dangerRight = 0; // 右侧危险条亮度 0~1
 
-// --- 排行榜接入 ---
+// --- 排行榜接入（HMAC-SHA256 签名）---
 const RANK_API = "https://rank.aitboy.cn/api";
 const RANK_KEY = "kjaqSxyMILQeREgutaaxZjxZShPrsrvMaUQpMtLDQIk";
+const RANK_SECRET = "caf8d7db1acc";
+
+async function hmacSign(msg) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw", enc.encode(RANK_SECRET),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const buf = await crypto.subtle.sign("HMAC", key, enc.encode(msg));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
 
 async function rankSubmit(name, s) {
   try {
+    const ts = Math.floor(Date.now() / 1000);
+    const sig = await hmacSign(`${name}:${s}:${ts}`);
     await fetch(`${RANK_API}/scores`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Api-Key": RANK_KEY },
-      body: JSON.stringify({ name: String(name).slice(0, 16) || "匿名玩家", score: Math.floor(s) }),
+      body: JSON.stringify({ name: String(name).slice(0, 16) || "匿名玩家", score: Math.floor(s), ts, sig }),
     });
   } catch(_) {}
 }
