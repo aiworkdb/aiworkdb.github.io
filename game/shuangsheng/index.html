@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>双生逆行</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+            overflow: hidden;
+            background: #1a1a2e;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #gameContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .score-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .combo-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ffd700;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .combo-display.active {
+            opacity: 1;
+        }
+
+        .hint-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 28px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .hint-text.visible {
+            opacity: 1;
+        }
+
+        #menu, #gameOver, #dailyChallenge, #shop, #leaderboard {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            pointer-events: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #menu.active, #gameOver.active, #dailyChallenge.active, #shop.active, #leaderboard.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-title {
+            font-size: 48px;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        .menu-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 40px;
+        }
+
+        .menu-btn {
+            background: linear-gradient(135deg, #c41e3a, #8b0000);
+            color: #fff;
+            border: none;
+            padding: 15px 50px;
+            font-size: 20px;
+            margin: 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+            pointer-events: auto;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(196,30,58,0.5);
+        }
+
+        .menu-btn.secondary {
+            background: linear-gradient(135deg, #1e3a5f, #0d1b2a);
+        }
+
+        .menu-btn.tertiary {
+            background: linear-gradient(135deg, #4a3f35, #2d2419);
+            font-size: 16px;
+            padding: 12px 30px;
+        }
+
+        .menu-btn-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .final-score {
+            font-size: 72px;
+            color: #ffd700;
+            margin: 20px 0;
+            text-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+
+        .final-label {
+            font-size: 24px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 5px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .mode-tab {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .mode-tab.active {
+            background: linear-gradient(135deg, #c41e3a, #8b0000);
+        }
+
+        /* Shop styles */
+        .shop-section {
+            width: 90%;
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+
+        .shop-title {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .currency-display {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .currency-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .currency-icon.ink {
+            background: radial-gradient(circle, #333 0%, #111 100%);
+            border: 2px solid #555;
+        }
+
+        .currency-icon.spirit {
+            background: radial-gradient(circle, #ffd700 0%, #b8860b 100%);
+            border: 2px solid #fff;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .item-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .item-card:hover {
+            transform: scale(1.02);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .item-card.owned {
+            border-color: #ffd700;
+        }
+
+        .item-card.equipped {
+            border-color: #00ff00;
+            background: rgba(0,255,0,0.1);
+        }
+
+        .item-preview {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+        }
+
+        .item-name {
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .item-price {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Leaderboard styles */
+        .leaderboard-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-list {
+            width: 90%;
+            max-width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .leaderboard-rank {
+            width: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .leaderboard-rank.gold { color: #ffd700; }
+        .leaderboard-rank.silver { color: #c0c0c0; }
+        .leaderboard-rank.bronze { color: #cd7f32; }
+
+        .leaderboard-name {
+            flex: 1;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .leaderboard-score {
+            color: #ffd700;
+            font-size: 18px;
+        }
+
+        .leaderboard-empty {
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .player-rank {
+            background: rgba(255,215,0,0.2);
+            border: 1px solid #ffd700;
+        }
+
+        /* Daily challenge progress */
+        .daily-progress {
+            width: 80%;
+            max-width: 300px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ffd700);
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .daily-status {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .daily-status.success {
+            color: #00ff00;
+        }
+
+        /* Name input */
+        .name-input-container {
+            margin: 20px 0;
+        }
+
+        .name-input {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: inherit;
+            width: 200px;
+        }
+
+        .name-input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .input-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Tutorial overlay */
+        #tutorial {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .tutorial-hand {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .tutorial-hand.visible {
+            opacity: 1;
+            animation: tapAnim 1s ease-in-out infinite;
+        }
+
+        @keyframes tapAnim {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+        }
+
+        /* Edge glow effects */
+        .edge-glow {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
+
+        .edge-glow.yang {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(196,30,58,0.3), transparent 30%);
+        }
+
+        .edge-glow.yin {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(30,58,95,0.3), transparent 30%);
+        }
+
+        .edge-glow.active {
+            opacity: 1;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+
+        /* Character preview in shop */
+        .char-preview {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .char-preview-item {
+            text-align: center;
+        }
+
+        .char-preview-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <div id="ui">
+        <div class="score-panel">
+            <div>分数: <span id="scoreDisplay">0</span></div>
+            <div style="font-size: 14px; opacity: 0.7;">最高: <span id="highScoreDisplay">0</span></div>
+        </div>
+        <div class="combo-display" id="comboDisplay">
+            连击 x<span id="comboValue">1</span>
+        </div>
+        <div class="hint-text" id="hintText"></div>
+    </div>
+
+    <div class="edge-glow yang" id="yangGlow"></div>
+    <div class="edge-glow yin" id="yinGlow"></div>
+
+    <div id="menu" class="active">
+        <h1 class="menu-title">双生逆行</h1>
+        <p class="menu-subtitle">按住屏幕，阳起阴降；松开屏幕，阳落阴升</p>
+
+        <div class="name-input-container">
+            <p class="input-label">你的名字</p>
+            <input type="text" class="name-input" id="playerNameInput" maxlength="10" placeholder="输入名称">
+        </div>
+
+        <button class="menu-btn" id="startEndless">无尽模式</button>
+        <button class="menu-btn secondary" id="startDaily">每日渡劫</button>
+
+        <div class="menu-btn-row" style="margin-top: 20px;">
+            <button class="menu-btn tertiary" id="openShop">商店</button>
+            <button class="menu-btn tertiary" id="openLeaderboard">排行榜</button>
+        </div>
+    </div>
+
+    <div id="gameOver">
+        <p class="final-label">最终得分</p>
+        <p class="final-score" id="finalScore">0</p>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value" id="statYinYang">0</div>
+                <div class="stat-label">阴阳同收</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="statCombo">0</div>
+                <div class="stat-label">最高连击</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="statDodge">0</div>
+                <div class="stat-label">极限闪避</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="statTime">0s</div>
+                <div class="stat-label">存活时间</div>
+            </div>
+        </div>
+
+        <button class="menu-btn" id="retryBtn">再试一次</button>
+        <button class="menu-btn secondary" id="backToMenu">返回主菜单</button>
+    </div>
+
+    <div id="dailyChallenge">
+        <h2 class="menu-title" style="font-size: 36px;">每日渡劫</h2>
+        <p class="menu-subtitle" id="dailyDate"></p>
+
+        <div class="daily-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="dailyProgressFill" style="width: 0%"></div>
+            </div>
+            <p class="progress-text" id="dailyProgressText">0 / 60 秒</p>
+        </div>
+
+        <p class="daily-status" id="dailyStatus">准备渡劫...</p>
+
+        <div id="dailyBestStats" style="display: none;">
+            <div class="stats-grid" style="max-width: 300px;">
+                <div class="stat-item">
+                    <div class="stat-value" id="dailyBestYinYang">0</div>
+                    <div class="stat-label">阴阳同收</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="dailyBestDodge">0</div>
+                    <div class="stat-label">极限闪避</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="menu-btn" id="startDailyGame">开始渡劫</button>
+        <button class="menu-btn secondary" id="backFromDaily">返回</button>
+    </div>
+
+    <div id="shop">
+        <h2 class="menu-title" style="font-size: 32px;">商店</h2>
+
+        <div class="currency-display">
+            <div class="currency-item">
+                <div class="currency-icon ink"></div>
+                <span>墨滴: <span id="inkCurrency">0</span></span>
+            </div>
+            <div class="currency-item">
+                <div class="currency-icon spirit"></div>
+                <span>灵墨: <span id="spiritCurrency">0</span></span>
+            </div>
+        </div>
+
+        <div class="shop-section">
+            <h3 class="shop-title">角色皮肤</h3>
+            <div class="item-grid" id="charSkinGrid"></div>
+        </div>
+
+        <div class="shop-section">
+            <h3 class="shop-title">背景卷轴</h3>
+            <div class="item-grid" id="bgGrid"></div>
+        </div>
+
+        <button class="menu-btn secondary" id="backFromShop">返回</button>
+    </div>
+
+    <div id="leaderboard">
+        <h2 class="menu-title" style="font-size: 32px;">排行榜</h2>
+
+        <div class="mode-tabs">
+            <button class="mode-tab active" data-tab="endless">无尽模式</button>
+            <button class="mode-tab" data-tab="daily">每日渡劫</button>
+        </div>
+
+        <div class="leaderboard-tabs" id="dailySubTabs" style="display: none;">
+            <button class="mode-tab active" data-subtab="survive">渡劫榜</button>
+            <button class="mode-tab" data-subtab="yinyang">阴阳同修榜</button>
+            <button class="mode-tab" data-subtab="dodge">极限微操榜</button>
+        </div>
+
+        <div class="leaderboard-list" id="leaderboardList"></div>
+
+        <button class="menu-btn secondary" id="backFromLeaderboard">返回</button>
+    </div>
+
+    <div id="tutorial">
+        <div class="tutorial-hand" id="tutorialHand"></div>
+    </div>
+
+    <script>
+        // ============================================
+        // 双生逆行 - 游戏主代码
+        // ============================================
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game constants
+        const GRAVITY = 0.15;      // 重力
+        const JUMP_FORCE = -6;     // 阳按住时最大向上速度
+        const DESCEND_FORCE = 5;   // 阴按住时最大向下速度
+        const ASCEND_FORCE = -3;   // 阴松开时最大向上速度
+        const FALL_SPEED = 3;      // 阳松开时下落速度
+        const SCROLL_SPEED = 5;
+        const GROUND_Y_RATIO = 0.75;
+        const SKY_Y_RATIO = 0.25;
+        const MIN_OBSTACLE_GAP = 300;
+        const YIN_YANG_RADIUS = 25;
+
+        // Game state
+        let gameState = 'menu';
+        let isHolding = false;
+        let score = 0;
+        let combo = 1;
+        let maxCombo = 1;
+        let perfectDodges = 0;
+        let yinYangCollects = 0;
+        let gameTime = 0;
+        let gameStartTime = 0;
+        let lastFrameTime = 0;
+        let deltaTime = 0;
+        let deathFadeTimer = 0; // For death animation fade out
+
+        // Tutorial state
+        let tutorialPhase = 0;
+        let tutorialTimer = 0;
+
+        // Daily challenge state
+        let isDailyMode = false;
+        let dailySeed = 0;
+        let dailySurvivors = 0;
+        let dailyBestYinYang = 0;
+        let dailyBestDodge = 0;
+        let obstacleCount = 0; // Used for deterministic daily mode generation
+
+        // Player data
+        let playerName = localStorage.getItem('shuangsheng_name') || '';
+        let highScore = parseInt(localStorage.getItem('shuangsheng_highscore')) || 0;
+        let inkCurrency = parseInt(localStorage.getItem('shuangsheng_ink')) || 0;
+        let spiritCurrency = parseInt(localStorage.getItem('shuangsheng_spirit')) || 0;
+        let ownedSkins = JSON.parse(localStorage.getItem('shuangsheng_owned_skins') || '["default"]');
+        let ownedBgs = JSON.parse(localStorage.getItem('shuangsheng_owned_bgs') || '["default"]');
+        let equippedSkin = localStorage.getItem('shuangsheng_skin') || 'default';
+        let equippedBg = localStorage.getItem('shuangsheng_bg') || 'default';
+        let lastDailyDate = localStorage.getItem('shuangsheng_daily_date') || '';
+        let dailyCompleted = localStorage.getItem('shuangsheng_daily_completed') === 'true';
+
+        // Characters
+        let yangChar = null;
+        let yinChar = null;
+
+        // World elements
+        let obstacles = [];
+        let collectibles = [];
+        let particles = [];
+        let inkTrails = [];
+
+        // Skin definitions
+        const SKINS = {
+            default: {
+                name: '朱泥 & 靛云',
+                yangColor: '#c41e3a',
+                yangColorLight: '#e63950',
+                yinColor: '#1e3a5f',
+                yinColorLight: '#3d6a9f',
+                price: 0,
+                currency: 'free'
+            },
+            sunmoon: {
+                name: '金乌 & 玉兔',
+                yangColor: '#ffa500',
+                yangColorLight: '#ffcc00',
+                yinColor: '#f0f8ff',
+                yinColorLight: '#e6e6fa',
+                price: 100,
+                currency: 'ink'
+            },
+            weiqi: {
+                name: '白子 & 黑子',
+                yangColor: '#ffffff',
+                yangColorLight: '#f5f5f5',
+                yinColor: '#111111',
+                yinColorLight: '#333333',
+                price: 150,
+                currency: 'ink'
+            },
+            xiuxian: {
+                name: '飞剑 & 符箓',
+                yangColor: '#4169e1',
+                yangColorLight: '#6495ed',
+                yinColor: '#9400d3',
+                yinColorLight: '#ba55d3',
+                price: 200,
+                currency: 'spirit'
+            }
+        };
+
+        // Background definitions
+        const BACKGROUNDS = {
+            default: {
+                name: '宣纸留白',
+                yangTop: '#f5f0e6',
+                yangBottom: '#e8e0d0',
+                yinTop: '#1a1a2e',
+                yinBottom: '#16213e',
+                divider: '#2d2d44',
+                price: 0
+            },
+            qianlishanhe: {
+                name: '千里江山',
+                yangTop: '#c9e4ca',
+                yangBottom: '#91ac86',
+                yinTop: '#1a3a4a',
+                yinBottom: '#0d2636',
+                divider: '#2a5a6a',
+                price: 150,
+                currency: 'ink'
+            },
+            hanjiangxue: {
+                name: '寒江雪',
+                yangTop: '#fafafa',
+                yangBottom: '#e8e8e8',
+                yinTop: '#2c3e50',
+                yinBottom: '#1a252f',
+                divider: '#34495e',
+                price: 100,
+                currency: 'ink'
+            },
+            chaoshibeiyin: {
+                name: '闹市灯影',
+                yangTop: '#2c1810',
+                yangBottom: '#1a0f0a',
+                yinTop: '#0f0f1a',
+                yinBottom: '#050510',
+                divider: '#ff6b35',
+                price: 200,
+                currency: 'spirit'
+            }
+        };
+
+        // Audio context
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            switch(type) {
+                case 'hold':
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(80, now);
+                    gainNode.gain.setValueAtTime(0.3, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.15);
+                    break;
+                case 'release':
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.setValueAtTime(800, now);
+                    oscillator.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.15);
+                    break;
+                case 'collect':
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(523, now);
+                    oscillator.frequency.setValueAtTime(659, now + 0.05);
+                    oscillator.frequency.setValueAtTime(784, now + 0.1);
+                    gainNode.gain.setValueAtTime(0.2, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.2);
+                    break;
+                case 'yinyang':
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(523, now);
+                    oscillator.frequency.setValueAtTime(659, now + 0.08);
+                    oscillator.frequency.setValueAtTime(784, now + 0.16);
+                    oscillator.frequency.setValueAtTime(1047, now + 0.24);
+                    gainNode.gain.setValueAtTime(0.25, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.4);
+                    break;
+                case 'combo':
+                    const baseFreq = 400 + combo * 50;
+                    oscillator.frequency.setValueAtTime(baseFreq, now);
+                    oscillator.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.1);
+                    gainNode.gain.setValueAtTime(0.15, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    oscillator.start(now);
+                    oscillator.stop(now + 0.15);
+                    break;
+                case 'death':
+                    const noise = audioCtx.createBufferSource();
+                    const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < data.length; i++) {
+                        data[i] = Math.random() * 2 - 1;
+                    }
+                    noise.buffer = buffer;
+                    const noiseGain = audioCtx.createGain();
+                    noise.connect(noiseGain);
+                    noiseGain.connect(audioCtx.destination);
+                    noiseGain.gain.setValueAtTime(0.4, now);
+                    noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    noise.start(now);
+                    noise.stop(now + 0.3);
+                    break;
+                case 'success':
+                    const osc1 = audioCtx.createOscillator();
+                    const osc2 = audioCtx.createOscillator();
+                    const gain1 = audioCtx.createGain();
+                    const gain2 = audioCtx.createGain();
+                    osc1.connect(gain1);
+                    osc2.connect(gain2);
+                    gain1.connect(audioCtx.destination);
+                    gain2.connect(audioCtx.destination);
+
+                    osc1.type = 'sine';
+                    osc2.type = 'sine';
+                    osc1.frequency.setValueAtTime(523, now);
+                    osc2.frequency.setValueAtTime(784, now);
+                    osc1.frequency.setValueAtTime(659, now + 0.15);
+                    osc2.frequency.setValueAtTime(1047, now + 0.15);
+                    osc1.frequency.setValueAtTime(784, now + 0.3);
+                    osc2.frequency.setValueAtTime(1175, now + 0.3);
+
+                    gain1.gain.setValueAtTime(0.2, now);
+                    gain2.gain.setValueAtTime(0.2, now);
+                    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+
+                    osc1.start(now);
+                    osc2.start(now);
+                    osc1.stop(now + 0.6);
+                    osc2.stop(now + 0.6);
+                    break;
+            }
+        }
+
+        // Resize handler
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Character class
+        class Character {
+            constructor(isYang) {
+                this.isYang = isYang;
+                this.x = canvas.width * 0.2;
+                this.radius = YIN_YANG_RADIUS;
+                
+                if (isYang) {
+                    // 阳：在屏幕下方阳世界区域
+                    // 阳世界范围：skyY (25%) 到 groundY (75%)
+                    this.skyY = canvas.height * SKY_Y_RATIO + this.radius;  // 阳世界顶部（25% + 半径）
+                    this.groundY = canvas.height * GROUND_Y_RATIO - this.radius;  // 阳世界底部（75% - 半径）
+                    this.y = this.groundY;  // 初始在阳世界底部
+                } else {
+                    // 阴：在屏幕上方阴世界区域
+                    // 阴世界范围：0 到 skyY (25%)
+                    // 屏幕 y=0 在顶部，y=height 在底部
+                    // 阴向上升时 y 减小，向下落时 y 增大
+                    this.skyY = this.radius;  // 阴世界顶部（0 + 半径）
+                    this.groundY = canvas.height * SKY_Y_RATIO - this.radius;  // 阴世界底部（25% - 半径）
+                    this.y = canvas.height * SKY_Y_RATIO / 2;  // 初始在阴世界中央
+                }
+                
+                this.vy = 0;
+                this.targetY = this.y;
+                this.baseY = this.y;
+                this.color = isYang ? SKINS[equippedSkin].yangColor : SKINS[equippedSkin].yinColor;
+                this.colorLight = isYang ? SKINS[equippedSkin].yangColorLight : SKINS[equippedSkin].yinColorLight;
+                this.squash = 1;
+                this.stretch = 1;
+                this.rotation = 0;
+                this.collected = false;
+                this.trailPoints = [];
+            }
+
+            update(dt) {
+                // 核心机制：按住时阳起阴降，松开时阳落阴升
+                if (isHolding) {
+                    if (this.isYang) {
+                        // 按住：阳向上跳（负速度向上）
+                        // 使用 Math.min 限制最负值不超过 JUMP_FORCE
+                        this.vy = Math.min(this.vy - GRAVITY, JUMP_FORCE);
+                    } else {
+                        // 按住：阴向下落（正速度向下）
+                        // 使用 Math.max 限制最大正值不超过 DESCEND_FORCE
+                        this.vy = Math.max(this.vy + GRAVITY, DESCEND_FORCE);
+                    }
+                } else {
+                    // 松开时
+                    if (this.isYang) {
+                        // 松开：阳落下（正速度向下）
+                        // 使用 Math.min 限制最大正值不超过 FALL_SPEED
+                        this.vy = Math.min(this.vy + GRAVITY, FALL_SPEED);
+                    } else {
+                        // 松开：阴上升（负速度向上）
+                        // 使用 Math.max 限制最负值不超过 ASCEND_FORCE
+                        this.vy = Math.max(this.vy - GRAVITY, ASCEND_FORCE);
+                    }
+                }
+
+                this.y += this.vy;
+
+                // Boundaries
+                if (this.isYang) {
+                    if (this.y > this.groundY) {
+                        this.y = this.groundY;
+                        this.vy = 0;
+                        if (this.squash > 0.9) {
+                            this.squash = 0.7;
+                            this.stretch = 1.3;
+                        }
+                    }
+                    if (this.y < this.skyY) {
+                        this.y = this.skyY;
+                        this.vy = 0;
+                    }
+                } else {
+                    // 阴边界：向上不能超过天空，向下不能超过中部
+                    // 阴向上移动时 y 减小（vy 负值），向下移动时 y 增大（vy 正值）
+                    if (this.y > this.groundY) {
+                        // 向下超出边界
+                        this.y = this.groundY;
+                        this.vy = 0;
+                        if (this.squash > 0.9) {
+                            this.squash = 0.7;
+                            this.stretch = 1.3;
+                        }
+                    }
+                    if (this.y < this.skyY) {
+                        // 向上超出边界
+                        this.y = this.skyY;
+                        this.vy = 0;
+                    }
+                }
+
+                // Squash & stretch recovery
+                this.squash += (1 - this.squash) * 0.2;
+                this.stretch += (1 - this.stretch) * 0.2;
+
+                // Rotation based on velocity
+                this.rotation += this.vy * 0.02;
+
+                // Update color from skin
+                this.color = this.isYang ? SKINS[equippedSkin].yangColor : SKINS[equippedSkin].yinColor;
+                this.colorLight = this.isYang ? SKINS[equippedSkin].yangColorLight : SKINS[equippedSkin].yinColorLight;
+
+                // Trail
+                if (Math.random() < 0.3) {
+                    this.trailPoints.push({x: this.x, y: this.y, alpha: 0.5});
+                }
+                this.trailPoints = this.trailPoints.filter(p => {
+                    p.alpha -= 0.02;
+                    p.x -= SCROLL_SPEED * 0.5;
+                    return p.alpha > 0;
+                });
+            }
+
+            draw() {
+                const bg = BACKGROUNDS[equippedBg];
+
+                // Draw trail
+                ctx.save();
+                this.trailPoints.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, this.radius * 0.6, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color + Math.floor(p.alpha * 80).toString(16).padStart(2, '0');
+                    ctx.fill();
+                });
+                ctx.restore();
+
+                // Draw character
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.scale(this.stretch, this.squash);
+
+                // Main body (ink blob style)
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.radius);
+                gradient.addColorStop(0, this.colorLight);
+                gradient.addColorStop(0.7, this.color);
+                gradient.addColorStop(1, this.color);
+
+                ctx.beginPath();
+
+                // Irregular ink blob shape
+                const points = 8;
+                for (let i = 0; i <= points; i++) {
+                    const angle = (i / points) * Math.PI * 2;
+                    const wobble = 0.9 + Math.sin(angle * 3 + this.rotation * 5) * 0.15;
+                    const r = this.radius * wobble;
+                    const px = Math.cos(angle) * r;
+                    const py = Math.sin(angle) * r;
+                    if (i === 0) {
+                        ctx.moveTo(px, py);
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+                ctx.closePath();
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                // Eyes
+                const eyeOffset = this.radius * 0.3;
+                ctx.fillStyle = bg.yinTop;
+                ctx.beginPath();
+                ctx.arc(-eyeOffset, -5, 5, 0, Math.PI * 2);
+                ctx.arc(eyeOffset, -5, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Yin/Yang symbol indicator
+                ctx.fillStyle = this.isYang ? bg.yinTop : this.colorLight;
+                ctx.beginPath();
+                ctx.arc(0, 8, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        // Obstacle class
+        class Obstacle {
+            constructor(type, x, isYang) {
+                this.type = type;
+                this.x = x;
+                this.isYang = isYang;
+                this.y = isYang ? canvas.height * GROUND_Y_RATIO : canvas.height * SKY_Y_RATIO;
+                this.width = 40;
+                this.height = type === 'spike' ? 50 : (type === 'icicle' ? 60 : 40);
+                this.passed = false;
+                this.inkAlpha = 0;
+                this.inkGrowing = true;
+                this.moveOffset = 0;
+                this.moveDir = 1;
+            }
+
+            update(dt) {
+                this.x -= SCROLL_SPEED;
+
+                // Ink spread animation
+                if (this.inkGrowing) {
+                    this.inkAlpha = Math.min(1, this.inkAlpha + 0.05);
+                }
+
+                // Moving obstacles
+                if (this.type === 'moving') {
+                    this.moveOffset += this.moveDir * 2;
+                    if (Math.abs(this.moveOffset) > 60) {
+                        this.moveDir *= -1;
+                    }
+                }
+            }
+
+            draw() {
+                const bg = BACKGROUNDS[equippedBg];
+                ctx.save();
+                ctx.globalAlpha = this.inkAlpha;
+
+                if (this.isYang) {
+                    // Ground spike (pen stroke style)
+                    const spikeX = this.x;
+                    const spikeY = this.y;
+
+                    ctx.strokeStyle = this.type === 'vanishing' ? '#8b4513' : '#1a1a1a';
+                    ctx.lineWidth = 8;
+                    ctx.lineCap = 'round';
+
+                    ctx.beginPath();
+                    if (this.type === 'vanishing') {
+                        // Dashed platform
+                        ctx.setLineDash([15, 10]);
+                        ctx.moveTo(spikeX - 60, spikeY);
+                        ctx.lineTo(spikeX + 60, spikeY);
+                    } else {
+                        // Sharp spike
+                        ctx.moveTo(spikeX - 20, spikeY);
+                        ctx.quadraticCurveTo(spikeX, spikeY - this.height - 20, spikeX + 20, spikeY);
+                    }
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Ink splatter at base
+                    ctx.fillStyle = '#1a1a1a';
+                    ctx.beginPath();
+                    ctx.ellipse(spikeX, spikeY + 5, 25, 8, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                } else {
+                    // Icicle (ink drip style)
+                    const icicleX = this.x + this.moveOffset;
+                    const icicleY = this.y;
+
+                    ctx.fillStyle = '#1a1a1a';
+                    ctx.beginPath();
+                    ctx.moveTo(icicleX - 15, icicleY);
+                    ctx.quadraticCurveTo(icicleX - 20, icicleY + this.height * 0.6,
+                                         icicleX, icicleY + this.height);
+                    ctx.quadraticCurveTo(icicleX + 20, icicleY + this.height * 0.6,
+                                         icicleX + 15, icicleY);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Ink pool at top
+                    ctx.beginPath();
+                    ctx.ellipse(icicleX, icicleY - 5, 20, 8, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            getBounds() {
+                if (this.isYang) {
+                    if (this.type === 'vanishing') {
+                        return {
+                            x: this.x - 60,
+                            y: this.y - 10,
+                            width: 120,
+                            height: 10
+                        };
+                    }
+                    return {
+                        x: this.x - 20,
+                        y: this.y - this.height,
+                        width: 40,
+                        height: this.height
+                    };
+                } else {
+                    return {
+                        x: this.x + this.moveOffset - 15,
+                        y: this.y,
+                        width: 30,
+                        height: this.height
+                    };
+                }
+            }
+        }
+
+        // Collectible class
+        class Collectible {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.radius = 15;
+                this.rotation = 0;
+                this.collected = false;
+                this.glowPhase = 0;
+            }
+
+            update(dt) {
+                this.x -= SCROLL_SPEED;
+                this.rotation += 0.05;
+                this.glowPhase += 0.1;
+            }
+
+            draw() {
+                if (this.collected) return;
+
+                const glow = 0.5 + Math.sin(this.glowPhase) * 0.3;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+
+                // Outer glow
+                const glowGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.radius * 2);
+                if (this.type === 'yang' || this.type === 'yinyang') {
+                    glowGradient.addColorStop(0, `rgba(255, 165, 0, ${glow})`);
+                    glowGradient.addColorStop(1, 'rgba(255, 165, 0, 0)');
+                }
+                if (this.type === 'yin' || this.type === 'yinyang') {
+                    glowGradient.addColorStop(0, `rgba(135, 206, 235, ${glow})`);
+                    glowGradient.addColorStop(1, 'rgba(135, 206, 235, 0)');
+                }
+                ctx.fillStyle = glowGradient;
+                ctx.beginPath();
+                ctx.arc(0, 0, this.radius * 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Core
+                if (this.type === 'yinyang') {
+                    // Combined yin-yang orb
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#87ceeb';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.radius * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.type === 'yang') {
+                    ctx.fillStyle = '#ffa500';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = '#87ceeb';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            checkCollision(char) {
+                const dx = this.x - char.x;
+                const dy = this.y - char.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                return dist < this.radius + char.radius;
+            }
+        }
+
+        // Particle class
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 10;
+                this.vy = (Math.random() - 0.5) * 10;
+                this.color = color;
+                this.radius = Math.random() * 5 + 2;
+                this.alpha = 1;
+                this.life = 60;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.2;
+                this.alpha -= 1/this.life;
+                this.life--;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Seeded random for daily challenge
+        function seededRandom(seed) {
+            const x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
+
+        // Generate obstacles
+        function generateObstacle() {
+            const lastObstacle = obstacles[obstacles.length - 1];
+            const minX = lastObstacle ? lastObstacle.x + MIN_OBSTACLE_GAP : canvas.width + 200;
+
+            if (isDailyMode) {
+                // Daily mode uses seeded random with obstacle count for determinism
+                const rand = seededRandom(dailySeed + obstacleCount);
+                if (rand > 0.4) {
+                    const isYang = seededRandom(dailySeed + obstacleCount + 1) > 0.5;
+                    const types = ['spike', 'icicle'];
+                    if (obstacleCount > 30) types.push('moving'); // Use count instead of time
+                    const type = types[Math.floor(seededRandom(dailySeed + obstacleCount + 2) * types.length)];
+                    obstacles.push(new Obstacle(type, canvas.width + 100, isYang));
+                    obstacleCount++;
+                }
+            } else {
+                // Normal mode
+                if (Math.random() > 0.5) {
+                    const isYang = Math.random() > 0.5;
+                    const types = ['spike', 'icicle', 'vanishing', 'moving'];
+                    const type = types[Math.floor(Math.random() * types.length)];
+                    obstacles.push(new Obstacle(type, canvas.width + 100, isYang));
+                }
+            }
+
+            // Collectibles
+            if (Math.random() > 0.7) {
+                const yangY = canvas.height * GROUND_Y_RATIO - 80;
+                const yinY = canvas.height * SKY_Y_RATIO + 80;
+                const both = Math.random() > 0.7;
+
+                if (both) {
+                    collectibles.push(new Collectible(canvas.width + 150, yangY, 'yinyang'));
+                    collectibles.push(new Collectible(canvas.width + 150, yinY, 'yinyang'));
+                } else {
+                    const isYang = Math.random() > 0.5;
+                    collectibles.push(new Collectible(
+                        canvas.width + 150,
+                        isYang ? yangY : yinY,
+                        isYang ? 'yang' : 'yin'
+                    ));
+                }
+            }
+        }
+
+        // Collision detection
+        function checkCollision(char, obstacle) {
+            const bounds = obstacle.getBounds();
+            const charBounds = {
+                x: char.x - char.radius * 0.7,
+                y: char.y - char.radius * 0.7,
+                width: char.radius * 1.4,
+                height: char.radius * 1.4
+            };
+
+            return !(charBounds.x + charBounds.width < bounds.x ||
+                     charBounds.x > bounds.x + bounds.width ||
+                     charBounds.y + charBounds.height < bounds.y ||
+                     charBounds.y > bounds.y + bounds.height);
+        }
+
+        // Draw background
+        function drawBackground() {
+            const bg = BACKGROUNDS[equippedBg];
+            const groundY = canvas.height * GROUND_Y_RATIO;
+            const skyY = canvas.height * SKY_Y_RATIO;
+
+            // Yin world (top)
+            const yinGradient = ctx.createLinearGradient(0, 0, 0, skyY);
+            yinGradient.addColorStop(0, bg.yinTop);
+            yinGradient.addColorStop(1, bg.yinBottom);
+            ctx.fillStyle = yinGradient;
+            ctx.fillRect(0, 0, canvas.width, skyY);
+
+            // Yang world (bottom)
+            const yangGradient = ctx.createLinearGradient(0, skyY, 0, canvas.height);
+            yangGradient.addColorStop(0, bg.yangTop);
+            yangGradient.addColorStop(1, bg.yangBottom);
+            ctx.fillStyle = yangGradient;
+            ctx.fillRect(0, skyY, canvas.width, canvas.height - skyY);
+
+            // Divider line
+            ctx.strokeStyle = bg.divider;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([10, 10]);
+            ctx.beginPath();
+            ctx.moveTo(0, skyY);
+            ctx.lineTo(canvas.width, skyY);
+            ctx.moveTo(0, groundY);
+            ctx.lineTo(canvas.width, groundY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Decorative ink splatters
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            for (let i = 0; i < 5; i++) {
+                const x = ((gameTime * 20 + i * 200) % (canvas.width + 200)) - 100;
+                ctx.beginPath();
+                ctx.arc(x, groundY + 30, 20 + i * 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Draw countdown
+        function drawCountdown() {
+            // Use gameTime for consistency with tutorial phases
+            let count = 3 - Math.floor(gameTime);
+
+            if (count > 0) {
+                ctx.save();
+                ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 120px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(count.toString(), canvas.width / 2, canvas.height / 2);
+                ctx.restore();
+                return true;
+            }
+            return false;
+        }
+
+        // Update UI
+        function updateUI() {
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('highScoreDisplay').textContent = highScore;
+
+            const comboDisplay = document.getElementById('comboDisplay');
+            if (combo > 1) {
+                comboDisplay.classList.add('active');
+                document.getElementById('comboValue').textContent = combo;
+            } else {
+                comboDisplay.classList.remove('active');
+            }
+        }
+
+        // Game over
+        function gameOver() {
+            gameState = 'gameover';
+            deathFadeTimer = 0.5; // Start fade out animation (0.5 seconds)
+            playSound('death');
+
+            // Create death particles
+            for (let i = 0; i < 30; i++) {
+                particles.push(new Particle(yangChar.x, yangChar.y, yangChar.color));
+                particles.push(new Particle(yinChar.x, yinChar.y, yinChar.color));
+            }
+
+            // Check daily mode
+            if (isDailyMode && gameTime >= 60) {
+                playSound('success');
+                dailyCompleted = true;
+                localStorage.setItem('shuangsheng_daily_completed', 'true');
+                spiritCurrency += 50;
+                localStorage.setItem('shuangsheng_spirit', spiritCurrency);
+            }
+
+            // Update high score
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('shuangsheng_highscore', highScore);
+            }
+
+            // Award currency
+            inkCurrency += Math.floor(score / 10);
+            localStorage.setItem('shuangsheng_ink', inkCurrency);
+
+            // Update stats display
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('statYinYang').textContent = yinYangCollects;
+            document.getElementById('statCombo').textContent = maxCombo;
+            document.getElementById('statDodge').textContent = perfectDodges;
+            document.getElementById('statTime').textContent = Math.floor(gameTime) + 's';
+
+            // Save to leaderboards
+            saveToLeaderboard();
+
+            setTimeout(() => {
+                document.getElementById('gameOver').classList.add('active');
+            }, 500);
+        }
+
+        // Save to leaderboard
+        function saveToLeaderboard() {
+            if (!playerName) playerName = '匿名';
+
+            if (isDailyMode) {
+                // Daily leaderboard
+                let dailyLeaderboard = JSON.parse(localStorage.getItem('shuangsheng_daily_leaderboard') || '[]');
+                const todayKey = getTodayKey();
+
+                // Add/update player
+                const existing = dailyLeaderboard.find(e => e.name === playerName && e.date === todayKey);
+                if (existing) {
+                    existing.bestTime = Math.max(existing.bestTime, gameTime);
+                    existing.yinYang = Math.max(existing.yinYang, yinYangCollects);
+                    existing.dodge = Math.max(existing.dodge, perfectDodges);
+                    if (gameTime >= 60) existing.completed = true;
+                } else {
+                    dailyLeaderboard.push({
+                        name: playerName,
+                        date: todayKey,
+                        bestTime: gameTime,
+                        yinYang: yinYangCollects,
+                        dodge: perfectDodges,
+                        completed: gameTime >= 60
+                    });
+                }
+
+                localStorage.setItem('shuangsheng_daily_leaderboard', JSON.stringify(dailyLeaderboard));
+            } else {
+                // Endless leaderboard
+                let endlessLeaderboard = JSON.parse(localStorage.getItem('shuangsheng_endless_leaderboard') || '[]');
+                endlessLeaderboard.push({
+                    name: playerName,
+                    score: score,
+                    combo: maxCombo,
+                    time: Math.floor(gameTime)
+                });
+                endlessLeaderboard.sort((a, b) => b.score - a.score);
+                endlessLeaderboard = endlessLeaderboard.slice(0, 100);
+                localStorage.setItem('shuangsheng_endless_leaderboard', JSON.stringify(endlessLeaderboard));
+            }
+        }
+
+        // Get today's date key
+        function getTodayKey() {
+            const d = new Date();
+            return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
+        }
+
+        // Initialize game
+        function initGame(daily = false) {
+            isDailyMode = daily;
+
+            if (daily) {
+                // Daily challenge setup
+                const todayKey = getTodayKey();
+                dailySeed = todayKey.split('-').join('');
+
+                // Check if already completed today
+                if (lastDailyDate === todayKey && dailyCompleted) {
+                    document.getElementById('dailyStatus').textContent = '今日已渡劫成功！';
+                    document.getElementById('dailyStatus').classList.add('success');
+                } else {
+                    document.getElementById('dailyStatus').textContent = '准备渡劫...';
+                    document.getElementById('dailyStatus').classList.remove('success');
+                }
+
+                document.getElementById('dailyDate').textContent = todayKey;
+                document.getElementById('dailyProgressFill').style.width = '0%';
+                document.getElementById('dailyProgressText').textContent = '0 / 60 秒';
+
+                // Load daily best
+                const dailyLeaderboard = JSON.parse(localStorage.getItem('shuangsheng_daily_leaderboard') || '[]');
+                const playerDaily = dailyLeaderboard.filter(e => e.name === playerName && e.date === todayKey);
+                if (playerDaily.length > 0) {
+                    document.getElementById('dailyBestStats').style.display = 'block';
+                    document.getElementById('dailyBestYinYang').textContent = Math.max(...playerDaily.map(e => e.yinYang));
+                    document.getElementById('dailyBestDodge').textContent = Math.max(...playerDaily.map(e => e.dodge));
+                } else {
+                    document.getElementById('dailyBestStats').style.display = 'none';
+                }
+
+                document.getElementById('dailyChallenge').classList.add('active');
+            } else {
+                startGame();
+            }
+        }
+
+        function startGame() {
+            gameState = 'playing';
+            score = 0;
+            combo = 1;
+            maxCombo = 1;
+            perfectDodges = 0;
+            yinYangCollects = 0;
+            gameTime = 0;
+            obstacleCount = 0; // Reset for daily mode determinism
+            tutorialPhase = 0;
+            tutorialTimer = 0;
+
+            yangChar = new Character(true);
+            yinChar = new Character(false);
+            obstacles = [];
+            collectibles = [];
+            particles = [];
+            inkTrails = [];
+
+            gameStartTime = Date.now();
+            lastFrameTime = Date.now();
+
+            document.getElementById('menu').classList.remove('active');
+            document.getElementById('dailyChallenge').classList.remove('active');
+            document.getElementById('gameOver').classList.remove('active');
+            document.getElementById('hintText').classList.remove('visible');
+
+            // Tutorial obstacles - placed further away to give player time to learn
+            obstacles.push(new Obstacle('spike', canvas.width + 1200, true));
+            obstacles.push(new Obstacle('icicle', canvas.width + 2000, false));
+
+            initAudio();
+        }
+
+        // Main game loop
+        function gameLoop(timestamp) {
+            // 防止页面恢复时 deltaTime 过大或为负
+            const rawDelta = (timestamp - lastFrameTime) / 1000;
+            deltaTime = Math.max(0, Math.min(rawDelta, 0.1)); // 限制在 0-100ms 之间
+            lastFrameTime = timestamp;
+
+            // Clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (gameState === 'playing') {
+                gameTime += deltaTime;
+
+                // Tutorial phase
+                if (tutorialPhase === 0 && gameTime < 2) {
+                    // 0-2s: countdown
+                } else if (tutorialPhase === 0 && gameTime >= 2) {
+                    tutorialPhase = 1;
+                    showTutorialHint('按住屏幕跳过尖刺');
+                } else if (tutorialPhase === 1 && gameTime >= 4) {
+                    tutorialPhase = 2;
+                    showTutorialHint('松开屏幕让阴上升');
+                } else if (tutorialPhase === 2 && gameTime >= 6) {
+                    tutorialPhase = 3;
+                    hideTutorialHint();
+                }
+
+                // Update characters
+                yangChar.update(deltaTime);
+                yinChar.update(deltaTime);
+
+                // Update obstacles
+                obstacles.forEach(obs => obs.update(deltaTime));
+                obstacles = obstacles.filter(obs => obs.x > -100);
+
+                // Update collectibles
+                collectibles.forEach(col => col.update(deltaTime));
+                collectibles = collectibles.filter(col => col.x > -50 && !col.collected);
+
+                // Generate new obstacles
+                if (gameTime > 6) {
+                    const lastObs = obstacles[obstacles.length - 1];
+                    if (!lastObs || lastObs.x < canvas.width - MIN_OBSTACLE_GAP + Math.random() * 200) {
+                        generateObstacle();
+                    }
+                }
+
+                // Collision with obstacles
+                for (const obs of obstacles) {
+                    if (!obs.passed) {
+                        if (obs.isYang && checkCollision(yangChar, obs)) {
+                            gameOver();
+                            break;
+                        } else if (!obs.isYang && checkCollision(yinChar, obs)) {
+                            gameOver();
+                            break;
+                        }
+                    }
+
+                    // Check if passed (and was close call - perfect dodge)
+                    if (!obs.passed && obs.x < yangChar.x - 50) {
+                        obs.passed = true;
+                        combo++;
+                        maxCombo = Math.max(maxCombo, combo);
+                        score += combo;
+                        // Only count as perfect dodge if obstacle was in the opposite realm
+                        // or was very close to the character
+                        const charY = obs.isYang ? yangChar.y : yinChar.y;
+                        const obsY = obs.getBounds().y;
+                        const distance = Math.abs(charY - obsY);
+                        // Perfect dodge: same realm obstacle AND close call (within 30px of hitting)
+                        const isOppositeRealm = (obs.isYang && yinChar.y > canvas.height * SKY_Y_RATIO + 20) ||
+                                                (!obs.isYang && yangChar.y < canvas.height * GROUND_Y_RATIO - 20);
+                        if (isOppositeRealm) {
+                            perfectDodges++;
+                        }
+                        playSound('combo');
+                    }
+                }
+
+                // Check yinyang simultaneous collection
+                let yangYinYang = null;
+                let yinYinYang = null;
+
+                for (const col of collectibles) {
+                    if (col.collected || col.type !== 'yinyang') continue;
+
+                    const yangHit = col.checkCollision(yangChar);
+                    const yinHit = col.checkCollision(yinChar);
+
+                    if (yangHit && yinHit) {
+                        // Both characters collected at the same time
+                        col.collected = true;
+                        score += 5 * combo;
+                        yinYangCollects++;
+                        playSound('yinyang');
+                    } else if (yangHit) {
+                        // Only yang hit - mark for potential double collect
+                        yangYinYang = col;
+                    } else if (yinHit) {
+                        // Only yin hit - mark for potential double collect
+                        yinYinYang = col;
+                    }
+                }
+
+                // Handle individual yang/yin orbs
+                for (const col of collectibles) {
+                    if (col.collected) continue;
+                    if (col.type === 'yinyang') continue; // Already handled above
+
+                    if (col.type === 'yang') {
+                        if (col.checkCollision(yangChar)) {
+                            col.collected = true;
+                            score += combo;
+                            playSound('collect');
+                        }
+                    } else if (col.type === 'yin') {
+                        if (col.checkCollision(yinChar)) {
+                            col.collected = true;
+                            score += combo;
+                            playSound('collect');
+                        }
+                    }
+                }
+
+                // Update particles
+                particles.forEach(p => p.update());
+                particles = particles.filter(p => p.life > 0);
+
+                // Daily mode check
+                if (isDailyMode && gameTime >= 60 && gameState === 'playing') {
+                    playSound('success');
+                    gameOver();
+                }
+
+                // Update UI
+                updateUI();
+
+                // Update edge glow
+                document.getElementById('yangGlow').classList.toggle('active', isHolding);
+                document.getElementById('yinGlow').classList.toggle('active', isHolding);
+
+                // Update daily progress
+                if (isDailyMode) {
+                    const progress = Math.min(100, (gameTime / 60) * 100);
+                    document.getElementById('dailyProgressFill').style.width = progress + '%';
+                    document.getElementById('dailyProgressText').textContent =
+                        `${Math.floor(gameTime)} / 60 秒`;
+                }
+            }
+
+            // Draw
+            drawBackground();
+
+            if (gameState === 'playing' || gameState === 'gameover') {
+                // Draw obstacles
+                obstacles.forEach(obs => obs.draw());
+
+                // Draw collectibles
+                collectibles.forEach(col => col.draw());
+
+                // Draw characters with fade out animation on death
+                if (gameState === 'gameover') {
+                    // Update fade timer
+                    if (deathFadeTimer > 0) {
+                        deathFadeTimer -= deltaTime;
+                        // Draw characters with fading alpha
+                        ctx.save();
+                        ctx.globalAlpha = Math.max(0, deathFadeTimer / 0.5);
+                        yangChar.draw();
+                        yinChar.draw();
+                        ctx.restore();
+                    }
+                } else if (gameState === 'playing') {
+                    yangChar.draw();
+                    yinChar.draw();
+                }
+
+                // Draw particles
+                particles.forEach(p => p.draw());
+            }
+
+            // Draw countdown
+            if (gameState === 'playing' && gameTime < 3) {
+                drawCountdown();
+            }
+
+            // Daily mode UI
+            if (isDailyMode && gameState === 'playing') {
+                // Keep showing progress
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Tutorial hints
+        function showTutorialHint(text) {
+            const hint = document.getElementById('hintText');
+            hint.textContent = text;
+            hint.classList.add('visible');
+        }
+
+        function hideTutorialHint() {
+            document.getElementById('hintText').classList.remove('visible');
+        }
+
+        // Input handling
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchMoved = false;
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            initAudio();
+
+            if (gameState === 'menu' || gameState === 'gameover' ||
+                gameState === 'dailyChallenge' || gameState === 'shop' || gameState === 'leaderboard') {
+                return;
+            }
+
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchMoved = false;
+
+            // Two finger touch for pause
+            if (e.touches.length >= 2) {
+                // Pause functionality could be added here
+                return;
+            }
+
+            isHolding = true;
+            playSound('hold');
+        }
+
+        function handleTouchMove(e) {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                const dx = touch.clientX - touchStartX;
+                const dy = touch.clientY - touchStartY;
+                if (Math.sqrt(dx*dx + dy*dy) > 20) {
+                    touchMoved = true;
+                }
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (touchMoved) return;
+
+            isHolding = false;
+            playSound('release');
+        }
+
+        function handleMouseDown(e) {
+            initAudio();
+
+            if (gameState === 'menu' || gameState === 'gameover' ||
+                gameState === 'dailyChallenge' || gameState === 'shop' || gameState === 'leaderboard') {
+                return;
+            }
+
+            touchStartX = e.clientX;
+            touchStartY = e.clientY;
+            touchMoved = false;
+
+            isHolding = true;
+            playSound('hold');
+        }
+
+        function handleMouseMove(e) {
+            const dx = e.clientX - touchStartX;
+            const dy = e.clientY - touchStartY;
+            if (Math.sqrt(dx*dx + dy*dy) > 20) {
+                touchMoved = true;
+            }
+        }
+
+        function handleMouseUp(e) {
+            if (touchMoved) return;
+
+            isHolding = false;
+            playSound('release');
+        }
+
+        // Event listeners
+        canvas.addEventListener('touchstart', handleTouchStart, {passive: false});
+        canvas.addEventListener('touchmove', handleTouchMove, {passive: false});
+        canvas.addEventListener('touchend', handleTouchEnd);
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mouseup', handleMouseUp);
+
+        // UI Event listeners
+        document.getElementById('startEndless').addEventListener('click', () => {
+            playerName = document.getElementById('playerNameInput').value.trim() || '匿名';
+            localStorage.setItem('shuangsheng_name', playerName);
+            initGame(false);
+        });
+
+        document.getElementById('startDaily').addEventListener('click', () => {
+            playerName = document.getElementById('playerNameInput').value.trim() || '匿名';
+            localStorage.setItem('shuangsheng_name', playerName);
+            initGame(true);
+        });
+
+        document.getElementById('startDailyGame').addEventListener('click', () => {
+            startGame();
+        });
+
+        document.getElementById('retryBtn').addEventListener('click', () => {
+            startGame();
+        });
+
+        document.getElementById('backToMenu').addEventListener('click', () => {
+            document.getElementById('gameOver').classList.remove('active');
+            document.getElementById('menu').classList.add('active');
+        });
+
+        document.getElementById('backFromDaily').addEventListener('click', () => {
+            document.getElementById('dailyChallenge').classList.remove('active');
+            document.getElementById('menu').classList.add('active');
+        });
+
+        // Shop
+        document.getElementById('openShop').addEventListener('click', () => {
+            updateShopUI();
+            document.getElementById('menu').classList.remove('active');
+            document.getElementById('shop').classList.add('active');
+        });
+
+        document.getElementById('backFromShop').addEventListener('click', () => {
+            document.getElementById('shop').classList.remove('active');
+            document.getElementById('menu').classList.add('active');
+        });
+
+        function updateShopUI() {
+            document.getElementById('inkCurrency').textContent = inkCurrency;
+            document.getElementById('spiritCurrency').textContent = spiritCurrency;
+
+            // Character skins
+            const charGrid = document.getElementById('charSkinGrid');
+            charGrid.innerHTML = '';
+
+            for (const [key, skin] of Object.entries(SKINS)) {
+                const owned = ownedSkins.includes(key);
+                const equipped = equippedSkin === key;
+
+                const card = document.createElement('div');
+                card.className = 'item-card' + (owned ? ' owned' : '') + (equipped ? ' equipped' : '');
+                card.innerHTML = `
+                    <div class="char-preview">
+                        <div class="char-preview-item">
+                            <div class="char-preview-circle" style="background: ${skin.yangColor}"></div>
+                        </div>
+                        <div class="char-preview-item">
+                            <div class="char-preview-circle" style="background: ${skin.yinColor}"></div>
+                        </div>
+                    </div>
+                    <div class="item-name">${skin.name}</div>
+                    <div class="item-price">${owned ? (equipped ? '已装备' : '已拥有') : (skin.price + ' ' + (skin.currency === 'ink' ? '墨滴' : '灵墨'))}</div>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (owned) {
+                        equippedSkin = key;
+                        localStorage.setItem('shuangsheng_skin', key);
+                    } else {
+                        const currency = skin.currency === 'ink' ? inkCurrency : spiritCurrency;
+                        const price = skin.price;
+                        if (currency >= price) {
+                            if (skin.currency === 'ink') {
+                                inkCurrency -= price;
+                                localStorage.setItem('shuangsheng_ink', inkCurrency);
+                            } else {
+                                spiritCurrency -= price;
+                                localStorage.setItem('shuangsheng_spirit', spiritCurrency);
+                            }
+                            ownedSkins.push(key);
+                            localStorage.setItem('shuangsheng_owned_skins', JSON.stringify(ownedSkins));
+                            equippedSkin = key;
+                            localStorage.setItem('shuangsheng_skin', key);
+                        }
+                    }
+                    updateShopUI();
+                });
+
+                charGrid.appendChild(card);
+            }
+
+            // Backgrounds
+            const bgGrid = document.getElementById('bgGrid');
+            bgGrid.innerHTML = '';
+
+            for (const [key, bg] of Object.entries(BACKGROUNDS)) {
+                const owned = ownedBgs.includes(key);
+                const equipped = equippedBg === key;
+
+                const card = document.createElement('div');
+                card.className = 'item-card' + (owned ? ' owned' : '') + (equipped ? ' equipped' : '');
+
+                const previewGradient = `linear-gradient(${bg.yinTop}, ${bg.yinBottom}, ${bg.yangTop}, ${bg.yangBottom})`;
+
+                card.innerHTML = `
+                    <div class="item-preview" style="background: ${previewGradient}"></div>
+                    <div class="item-name">${bg.name}</div>
+                    <div class="item-price">${owned ? (equipped ? '已装备' : '已拥有') : (bg.price + ' 墨滴')}</div>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (owned) {
+                        equippedBg = key;
+                        localStorage.setItem('shuangsheng_bg', key);
+                    } else {
+                        if (inkCurrency >= bg.price) {
+                            inkCurrency -= bg.price;
+                            localStorage.setItem('shuangsheng_ink', inkCurrency);
+                            ownedBgs.push(key);
+                            localStorage.setItem('shuangsheng_owned_bgs', JSON.stringify(ownedBgs));
+                            equippedBg = key;
+                            localStorage.setItem('shuangsheng_bg', key);
+                        }
+                    }
+                    updateShopUI();
+                });
+
+                bgGrid.appendChild(card);
+            }
+        }
+
+        // Leaderboard
+        document.getElementById('openLeaderboard').addEventListener('click', () => {
+            showLeaderboard('endless');
+            document.getElementById('menu').classList.remove('active');
+            document.getElementById('leaderboard').classList.add('active');
+        });
+
+        document.getElementById('backFromLeaderboard').addEventListener('click', () => {
+            document.getElementById('leaderboard').classList.remove('active');
+            document.getElementById('menu').classList.add('active');
+        });
+
+        // Leaderboard tabs
+        document.querySelectorAll('.mode-tab[data-tab]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.mode-tab[data-tab]').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const mode = tab.dataset.tab;
+                document.getElementById('dailySubTabs').style.display = mode === 'daily' ? 'flex' : 'none';
+                showLeaderboard(mode);
+            });
+        });
+
+        document.querySelectorAll('.mode-tab[data-subtab]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.mode-tab[data-subtab]').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                showLeaderboard('daily', tab.dataset.subtab);
+            });
+        });
+
+        function showLeaderboard(mode, subMode = 'survive') {
+            const list = document.getElementById('leaderboardList');
+            list.innerHTML = '';
+
+            if (mode === 'endless') {
+                const endless = JSON.parse(localStorage.getItem('shuangsheng_endless_leaderboard') || '[]');
+
+                if (endless.length === 0) {
+                    list.innerHTML = '<div class="leaderboard-empty">暂无记录</div>';
+                    return;
+                }
+
+                endless.slice(0, 20).forEach((entry, i) => {
+                    const rank = i + 1;
+                    const rankClass = rank === 1 ? 'gold' : (rank === 2 ? 'silver' : (rank === 3 ? 'bronze' : ''));
+                    const isPlayer = entry.name === playerName;
+
+                    const item = document.createElement('div');
+                    item.className = 'leaderboard-item' + (isPlayer ? ' player-rank' : '');
+                    item.innerHTML = `
+                        <span class="leaderboard-rank ${rankClass}">${rank}</span>
+                        <span class="leaderboard-name">${entry.name}</span>
+                        <span class="leaderboard-score">${entry.score}</span>
+                    `;
+                    list.appendChild(item);
+                });
+            } else {
+                // Daily leaderboard
+                const todayKey = getTodayKey();
+                const daily = JSON.parse(localStorage.getItem('shuangsheng_daily_leaderboard') || '[]');
+                const todayData = daily.filter(e => e.date === todayKey);
+
+                if (todayData.length === 0) {
+                    list.innerHTML = '<div class="leaderboard-empty">今日暂无渡劫记录</div>';
+                    return;
+                }
+
+                let sorted;
+                if (subMode === 'survive') {
+                    sorted = todayData.filter(e => e.completed).sort((a, b) => b.bestTime - a.bestTime);
+                } else if (subMode === 'yinyang') {
+                    sorted = todayData.sort((a, b) => b.yinYang - a.yinYang);
+                } else {
+                    sorted = todayData.sort((a, b) => b.dodge - a.dodge);
+                }
+
+                sorted.slice(0, 20).forEach((entry, i) => {
+                    const rank = i + 1;
+                    const rankClass = rank === 1 ? 'gold' : (rank === 2 ? 'silver' : (rank === 3 ? 'bronze' : ''));
+                    const isPlayer = entry.name === playerName;
+
+                    let value;
+                    if (subMode === 'survive') {
+                        value = entry.bestTime.toFixed(1) + 's';
+                    } else if (subMode === 'yinyang') {
+                        value = entry.yinYang + '次';
+                    } else {
+                        value = entry.dodge + '次';
+                    }
+
+                    const item = document.createElement('div');
+                    item.className = 'leaderboard-item' + (isPlayer ? ' player-rank' : '');
+                    item.innerHTML = `
+                        <span class="leaderboard-rank ${rankClass}">${rank}</span>
+                        <span class="leaderboard-name">${entry.name}</span>
+                        <span class="leaderboard-score">${value}</span>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+        }
+
+        // Initialize
+        document.getElementById('playerNameInput').value = playerName;
+        requestAnimationFrame(gameLoop);
+
+        // Prevent context menu on long press
+        canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && gameState === 'playing') {
+                // Could pause game here
+            }
+        });
+    </script>
+</body>
+</html>
