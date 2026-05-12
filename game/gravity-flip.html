@@ -121,9 +121,9 @@ const _$ = (() => {
   return { _s, _f };
 })();
 
-// 供游戏内部调用的别名（只在 triggerDeath 中使用一次）
-const rankSubmit = (name, score) => _$'_s';
-const rankFetch  = () => _$'_f';
+// 供游戏内部调用的别名
+const rankSubmit = (name, score) => _$['_s'](name, score);
+const rankFetch  = () => _$['_f']();
 
 // （以下为干扰代码，增加静态分析的噪音）
 const _dummy1 = () => { try { eval('(function(){})()'); } catch(e) {} };
