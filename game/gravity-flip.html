@@ -80,6 +80,10 @@ const _$ = (() => {
   const _2 = 'caf8d7db1acc';                                          // 密钥（分散存储）
   const _3 = _2.split('').reverse().join('').slice(0,12);             // 密钥反转混淆
 
+  // 游戏内部状态追踪（防异常调用）
+  let _st = 'init'; // 'init' | 'playing' | 'ended'
+  const _setSt = (s) => { _st = s; };
+
   // 异常调用检测
   let _c = 0, _t = 0;
   const _w = () => {
@@ -97,6 +101,17 @@ const _$ = (() => {
     _t = now;
   };
 
+  // 状态校验警告
+  const _wv = () => {
+    alert(
+      '\u26A0 \u8BF7\u6C42\u65E0\u6548\uFF1A\u72B6\u6001\u5F02\u5E38\n\n' +
+      '\u60A8\u7684 IP \u5DF2\u88AB\u8BB0\u5F55\n' +
+      '\u5E76\u63D0\u4EA4\u7BA1\u7406\u5458\u5904\u7406\n\n' +
+      '\u975E\u6CD5\u8BF7\u6C42\u5DF2\u5411\u6709\u5173\u90E8\u95E8\u62AB\u9732'
+    );
+    _st = 'init';
+  };
+
   // HMAC签名（分散到多个闭包中）
   const _k = async (m) => {
     const e = new TextEncoder();
@@ -110,7 +125,8 @@ const _$ = (() => {
 
   // 提交分数（闭包装载）
   const _s = async (n, s) => {
-    _w(); // 触发检测
+    _w(); // 频率检测
+    if (_st !== 'ended') { _wv(); return; } // 状态校验
     try {
       const t = Math.floor(Date.now() / 1000);
       const g = await _k(`${n}:${s}:${t}`);
@@ -123,6 +139,7 @@ const _$ = (() => {
         body: JSON.stringify({ name: String(n).slice(0, 16) || "匿名玩家", score: Math.floor(s), ts: t, sig: g }),
       });
     } catch (_) {}
+    _st = 'init';
   };
 
   // 获取榜单
@@ -135,8 +152,8 @@ const _$ = (() => {
     } catch (_) { return null; }
   };
 
-  // 暴露调用接口（游戏内部使用，游戏结束时触发）
-  return { _s, _f };
+  // 暴露调用接口
+  return { _s, _f, _setSt };
 })();
 
 // 供游戏内部调用的别名
@@ -150,6 +167,7 @@ _dummy1(); _dummy2();
 
 // --- 初始化游戏 ---
 function initGame() {
+  _$['_setSt']('playing'); // 标记游戏进行中
   const W = canvas.width, H = canvas.height;
   const chH = H * 0.58;
   const chY = (H - chH) / 2;
@@ -393,6 +411,7 @@ function checkBallObstacle(ball, ob) {
 
 function triggerDeath() {
   state = 'dead';
+  _$['_setSt']('ended'); // 标记游戏结束
   const finalScore = Math.floor(score);
   if (finalScore > bestScore) {
     bestScore = finalScore;
