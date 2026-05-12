@@ -1132,9 +1132,10 @@
                 this.type = type;
                 this.x = x;
                 this.isYang = isYang;
-                this.y = isYang ? canvas.height * GROUND_Y_RATIO : canvas.height * SKY_Y_RATIO;
                 this.width = 40;
                 this.height = type === 'spike' ? 50 : (type === 'icicle' ? 60 : 40);
+                // 阳障碍物在阳世界底部(75%)向上画，阴障碍物挂在阴世界底部(25%)上方
+                this.y = isYang ? canvas.height * GROUND_Y_RATIO : canvas.height * SKY_Y_RATIO - this.height;
                 this.passed = false;
                 this.inkAlpha = 0;
                 this.inkGrowing = true;
@@ -1194,12 +1195,13 @@
                     ctx.fill();
 
                 } else {
-                    // Icicle (ink drip style)
+                    // Icicle (ink drip style) - hanging from sky
                     const icicleX = this.x + this.moveOffset;
                     const icicleY = this.y;
 
                     ctx.fillStyle = '#1a1a1a';
                     ctx.beginPath();
+                    // 冰柱从顶部(y)向下画，底部到达25%分割线
                     ctx.moveTo(icicleX - 15, icicleY);
                     ctx.quadraticCurveTo(icicleX - 20, icicleY + this.height * 0.6,
                                          icicleX, icicleY + this.height);
@@ -1208,9 +1210,9 @@
                     ctx.closePath();
                     ctx.fill();
 
-                    // Ink pool at top
+                    // Ink pool at top (挂在天空的墨水)
                     ctx.beginPath();
-                    ctx.ellipse(icicleX, icicleY - 5, 20, 8, 0, 0, Math.PI * 2);
+                    ctx.ellipse(icicleX, icicleY, 20, 8, 0, 0, Math.PI * 2);
                     ctx.fill();
                 }
 
@@ -1384,10 +1386,10 @@
                 }
             }
 
-            // Collectibles
+            // Collectibles - 放在各自世界的中央区域
             if (Math.random() > 0.7) {
-                const yangY = canvas.height * GROUND_Y_RATIO - 80;
-                const yinY = canvas.height * SKY_Y_RATIO + 80;
+                const yangY = canvas.height * (GROUND_Y_RATIO + SKY_Y_RATIO) / 2; // 阳世界中央 50%
+                const yinY = canvas.height * SKY_Y_RATIO / 2; // 阴世界中央 12.5%
                 const both = Math.random() > 0.7;
 
                 if (both) {
