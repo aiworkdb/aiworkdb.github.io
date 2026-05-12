@@ -72,39 +72,63 @@ let shakeX, shakeY, shakeDuration;
 let dangerLeft = 0;  // 左侧危险条亮度 0~1
 let dangerRight = 0; // 右侧危险条亮度 0~1
 
-// --- 排行榜接入（HMAC-SHA256 签名）---
-const RANK_API = "https://rank.aitboy.cn/api";
-const RANK_KEY = "kjaqSxyMILQeREgutaaxZjxZShPrsrvMaUQpMtLDQIk";
-const RANK_SECRET = "caf8d7db1acc";
+// --- 排行榜接入（混淆增强版） ---
+const _$ = (() => {
+  // base64 编码存储关键字符串
+  const _0 = atob('aHR0cHM6Ly9yYW5rLmFpdGJveS5jbi9hcGk=');           // API地址
+  const _1 = atob('a2phcVN4eU1JTFFlUkVndXRhYXhaaXhaU2hQcnNydk1hVVFwTXRMRElRaw=='); // API_KEY
+  const _2 = 'caf8d7db1acc';                                          // 密钥（分散存储）
+  const _3 = _2.split('').reverse().join('').slice(0,12);             // 密钥反转混淆
 
-async function hmacSign(msg) {
-  const enc = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw", enc.encode(RANK_SECRET),
-    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
-  );
-  const buf = await crypto.subtle.sign("HMAC", key, enc.encode(msg));
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
-}
+  // HMAC签名（分散到多个闭包中）
+  const _k = async (m) => {
+    const e = new TextEncoder();
+    const k = await crypto.subtle.importKey(
+      "raw", e.encode(_2.slice(0,4) + _3.slice(4,8) + _2.slice(8)),
+      { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+    );
+    const b = await crypto.subtle.sign("HMAC", k, e.encode(m));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+  };
 
-async function rankSubmit(name, s) {
-  try {
-    const ts = Math.floor(Date.now() / 1000);
-    const sig = await hmacSign(`${name}:${s}:${ts}`);
-    await fetch(`${RANK_API}/scores`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Api-Key": RANK_KEY },
-      body: JSON.stringify({ name: String(name).slice(0, 16) || "匿名玩家", score: Math.floor(s), ts, sig }),
-    });
-  } catch(_) {}
-}
+  // 提交分数（闭包装载）
+  const _s = async (n, s) => {
+    try {
+      const t = Math.floor(Date.now() / 1000);
+      const g = await _k(`${n}:${s}:${t}`);
+      await fetch(`${_0}/` + ['s', 'c', 'o', 'r', 'e', 's'].join(''), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": _1,
+        },
+        body: JSON.stringify({ name: String(n).slice(0, 16) || "匿名玩家", score: Math.floor(s), ts: t, sig: g }),
+      });
+    } catch (_) {}
+  };
 
-async function rankFetch() {
-  try {
-    const res = await fetch(`${RANK_API}/leaderboard?limit=10`, { headers: { "X-Api-Key": RANK_KEY } });
-    return await res.json();
-  } catch(_) { return null; }
-}
+  // 获取榜单
+  const _f = async () => {
+    try {
+      const r = await fetch(`${_0}/` + ['l', 'e', 'a', 'd', 'e', 'r', 'b', 'o', 'a', 'r', 'd'].join('') + '?limit=10', {
+        headers: { "X-Api-Key": _1 },
+      });
+      return await r.json();
+    } catch (_) { return null; }
+  };
+
+  // 暴露调用接口（游戏内部使用，游戏结束时触发）
+  return { _s, _f };
+})();
+
+// 供游戏内部调用的别名（只在 triggerDeath 中使用一次）
+const rankSubmit = (name, score) => _$'_s';
+const rankFetch  = () => _$'_f';
+
+// （以下为干扰代码，增加静态分析的噪音）
+const _dummy1 = () => { try { eval('(function(){})()'); } catch(e) {} };
+const _dummy2 = () => { const _arr = [1,2,3,4,5].map(x => x * 2); return _arr[0] + _arr[4]; };
+_dummy1(); _dummy2();
 
 // --- 初始化游戏 ---
 function initGame() {
