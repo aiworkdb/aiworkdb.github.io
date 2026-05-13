@@ -33,7 +33,8 @@ aiworkdb.github.io/
 │       └── card-maker.html     # 卡牌生成器
 ├── game/                        # 小游戏
 │   ├── README.md               # 游戏索引
-│   └── gravity-flip.html       # 重力翻转游戏
+│   ├── gravity-flip.html       # 重力翻转游戏
+│   └── shuangsheng/            # 双生逆行游戏
 └── prompt/                      # Prompt 资源
     └── wechat.md               # 微信相关 Prompt
 ```
@@ -110,6 +111,7 @@ aiworkdb.github.io/
 | 游戏名称 | 说明 | 链接 |
 | :--- | :--- | :--- |
 | 重力翻转 | 重力感应的休闲游戏 | [gravity-flip.html](game/gravity-flip.html) |
+| 双生逆行 | 阴阳双世界的障碍挑战游戏 | [shuangsheng/](game/shuangsheng/) |
 
 ---
 
@@ -152,4 +154,4 @@ aiworkdb.github.io/
 
 ---
 
-*最后更新：2026-05-12*
+*最后更新：2026-05-13*
