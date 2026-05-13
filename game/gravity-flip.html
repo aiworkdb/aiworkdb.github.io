@@ -44,7 +44,7 @@ window.addEventListener('resize', () => { resize(); if (state !== 'play') drawSc
 let state = 'start'; // 'start' | 'play' | 'dead' | 'rank'
 let bestScore = parseInt(localStorage.getItem('gf_best') || '0');
 let playerName = localStorage.getItem('gf_name') || '';
-let leaderboardData = null;
+let leaderboardData = undefined;
 
 // --- 重力感应支持 ---
 let gyroEnabled = false;
@@ -149,7 +149,7 @@ const _$ = (() => {
         headers: { "X-Api-Key": _1 },
       });
       return await r.json();
-    } catch (_) { return null; }
+    } catch (_) { return false; }
   };
 
   // 暴露调用接口
@@ -884,7 +884,7 @@ function drawRankOverlay() {
   ctx.font = '500 18px Arial';
   ctx.fillText('🏆 排行榜', W / 2, boxY + 34);
 
-  if (!leaderboardData) {
+  if (leaderboardData === undefined) {
     // 加载动画：三个脉冲圆点
     const cx = W / 2;
     const cy = boxY + 80;
@@ -903,6 +903,11 @@ function drawRankOverlay() {
     ctx.fillStyle = 'rgba(144,164,174,0.7)';
     ctx.font = '13px Arial';
     ctx.fillText('数据加载中...', W / 2, cy + 36);
+  } else if (leaderboardData === false) {
+    ctx.fillStyle = 'rgba(244,67,54,0.6)';
+    ctx.font = '13px Arial';
+    ctx.fillText('加载失败，请检查网络', W / 2, boxY + 70);
+    ctx.fillText('或点击屏幕重试', W / 2, boxY + 92);
   } else if (leaderboardData.total === 0) {
     ctx.fillStyle = 'rgba(144,164,174,0.7)';
     ctx.font = '13px Arial';
@@ -986,7 +991,7 @@ function handleInput(e) {
     // 点到排行榜按钮区域
     if (pos.y >= rankBtnY && pos.y <= rankBtnY + 36 && pos.x >= W/2 - 70 && pos.x <= W/2 + 70) {
       state = 'rank';
-      leaderboardData = null;
+      leaderboardData = undefined;
       loadRankData();
       return;
     }
@@ -1019,7 +1024,7 @@ function handleInput(e) {
     // 点排行榜入口
     if (pos.y >= rankBtnY && pos.y <= rankBtnY + 34 && pos.x >= W/2 - 70 && pos.x <= W/2 + 70) {
       state = 'rank';
-      leaderboardData = null;
+      leaderboardData = undefined;
       loadRankData();
       return;
     }
