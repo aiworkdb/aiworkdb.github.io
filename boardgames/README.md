@@ -66,6 +66,7 @@ boardgames/
 | [美食挑战赛](category/party/food-challenge/README.md) | 派对 | 3-7人 | 30-50分钟 | 简单 |
 | [密码破译师](category/card/code-breaker/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
 | [卧底大厨](category/party/chef-undercover/README.md) | 派对 | 4-8人 | 25-45分钟 | 简单 |
+| [星际医疗队](category/cooperative/stellar-medics/README.md) | 合作 | 2-5人 | 45-70分钟 | 中等 |
 
 ## 添加新桌游
 

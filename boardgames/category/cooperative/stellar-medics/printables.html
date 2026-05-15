@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星际医疗队 Stellar Medics — 打印道具</title>
+  <style>
+    /* ===== 全局样式 ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f4e 50%, #0d2137 100%);
+      color: #e0e8ff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* ===== 打印提示（屏幕可见，打印隐藏）===== */
+    .print-hint {
+      background: linear-gradient(135deg, #1e3a5f, #2d5a8e);
+      border: 2px solid #4a9eff;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(74, 158, 255, 0.3);
+    }
+    .print-hint h2 {
+      color: #4a9eff;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    .print-hint ul {
+      padding-left: 20px;
+      line-height: 1.8;
+      color: #b0c8f0;
+    }
+    .print-hint li strong { color: #ffdd57; }
+
+    /* ===== 标题区 ===== */
+    .page-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .page-title h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(90deg, #4a9eff, #a855f7, #06ffd4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      margin-bottom: 6px;
+    }
+    .page-title p {
+      color: #8899bb;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+    }
+
+    /* ===== 章节标题 ===== */
+    .section-title {
+      font-size: 1.4rem;
+      color: #4a9eff;
+      text-align: center;
+      margin: 40px 0 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #2a4a7f;
+      letter-spacing: 3px;
+    }
+
+    /* ===== 打印分页 ===== */
+    .page-break { page-break-before: always; }
+
+    /* ===== 飞船地图 ===== */
+    .map-wrapper {
+      background: linear-gradient(135deg, #0d1f3c, #1a3060);
+      border: 3px solid #4a9eff;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 0 auto 40px;
+      max-width: 900px;
+      box-shadow: 0 0 40px rgba(74, 158, 255, 0.25);
+    }
+    .map-title {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #06ffd4;
+      margin-bottom: 16px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 10px rgba(6, 255, 212, 0.5);
+    }
+
+    .ship-map {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .room {
+      border-radius: 10px;
+      padding: 12px 6px;
+      text-align: center;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: 2px solid transparent;
+      transition: transform 0.2s;
+      cursor: default;
+    }
+    .room:hover { transform: scale(1.03); }
+    .room .room-icon { font-size: 2rem; line-height: 1; }
+    .room .room-label { font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; }
+    .room .room-pos { font-size: 0.6rem; opacity: 0.6; }
+    .room .room-desc { font-size: 0.6rem; opacity: 0.8; text-align: center; line-height: 1.3; }
+
+    /* 舱室颜色主题 */
+    .room-command   { background: linear-gradient(135deg, #1a3a6e, #2a5aaa); border-color: #4a9eff; }
+    .room-comms     { background: linear-gradient(135deg, #1e3a5e, #2d5a8e); border-color: #60aaff; }
+    .room-surgery   { background: linear-gradient(135deg, #3a1a1a, #6e2a2a); border-color: #ff6060; }
+    .room-critical  { background: linear-gradient(135deg, #4a1a1a, #8e2a2a); border-color: #ff4444; box-shadow: 0 0 12px rgba(255,68,68,0.4); }
+    .room-exit      { background: linear-gradient(135deg, #1a4a2a, #2a7a4a); border-color: #50ff90; }
+    .room-power     { background: linear-gradient(135deg, #3a3a1a, #6e6e2a); border-color: #ffdd57; }
+    .room-lab       { background: linear-gradient(135deg, #2a1a4a, #4a2a8e); border-color: #a855f7; }
+    .room-corridor  { background: linear-gradient(135deg, #1a2a3a, #2a3a4a); border-color: #445566; }
+    .room-ward      { background: linear-gradient(135deg, #1a3a4a, #2a5a6e); border-color: #4abbdd; }
+    .room-supply    { background: linear-gradient(135deg, #2a3a1a, #4a6e2a); border-color: #80cc40; }
+    .room-pharmacy  { background: linear-gradient(135deg, #1a4a3a, #2a7a5a); border-color: #40ddaa; }
+    .room-isolation { background: linear-gradient(135deg, #3a1a3a, #6e2a6e); border-color: #dd40dd; }
+    .room-engineer  { background: linear-gradient(135deg, #3a2a1a, #6e4a2a); border-color: #dd8840; }
+
+    /* 病毒路线标记 */
+    .map-legend {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+    }
+    .legend-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ===== 倒计时轨迹 ===== */
+    .countdown-track {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0 auto 40px;
+      max-width: 700px;
+    }
+    .countdown-cell {
+      width: 44px; height: 44px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #1a2a4a, #2a3a5a);
+      border: 2px solid #3a5a8a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #4a9eff;
+    }
+    .countdown-cell.danger { border-color: #ff4444; color: #ff6666; background: linear-gradient(135deg, #3a1a1a, #5a2a2a); }
+    .countdown-cell.warning { border-color: #ffaa00; color: #ffcc44; background: linear-gradient(135deg, #3a2a1a, #5a3a1a); }
+
+    /* ===== 卡牌通用样式 ===== */
+    .cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      width: 130px;
+      min-height: 190px;
+      border-radius: 12px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      border: 2px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+    }
+
+    .card-icon   { font-size: 2.2rem; margin-bottom: 6px; line-height: 1; }
+    .card-type   { font-size: 0.6rem; letter-spacing: 2px; opacity: 0.7; margin-bottom: 4px; text-transform: uppercase; }
+    .card-name   { font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; line-height: 1.2; }
+    .card-level  { font-size: 0.65rem; margin-bottom: 6px; }
+    .card-effect {
+      font-size: 0.65rem;
+      line-height: 1.4;
+      opacity: 0.9;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+    .card-cost {
+      font-size: 0.65rem;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.3);
+      opacity: 0.9;
+    }
+    .card-count {
+      font-size: 0.6rem;
+      margin-top: 4px;
+      opacity: 0.6;
+    }
+
+    /* 药品卡 */
+    .card-medicine { background: linear-gradient(160deg, #1a4a2a, #2e7a44); border-color: #50dd90; color: #d0ffe8; }
+    /* 诊断卡 */
+    .card-diagnose { background: linear-gradient(160deg, #1a2a5a, #2a4a9e); border-color: #6090ff; color: #d0e8ff; }
+    /* 维修卡 */
+    .card-repair   { background: linear-gradient(160deg, #3a3a3a, #555555); border-color: #9999bb; color: #e8e8ff; }
+    /* 防护卡 */
+    .card-shield   { background: linear-gradient(160deg, #3a2a1a, #6e5a2a); border-color: #ddaa44; color: #ffe8c0; }
+    /* 特效卡 */
+    .card-special  { background: linear-gradient(160deg, #3a1a4a, #6a2a8e); border-color: #cc66ff; color: #f0d0ff; box-shadow: 0 0 16px rgba(168,85,247,0.4); }
+    /* 危机事件卡 */
+    .card-crisis   { background: linear-gradient(160deg, #4a1a1a, #8e2a2a); border-color: #ff5555; color: #ffd0d0; }
+    /* 正面事件卡 */
+    .card-positive { background: linear-gradient(160deg, #1a4a3a, #2a8e6a); border-color: #55ffaa; color: #d0ffe8; }
+
+    /* ===== 角色卡 ===== */
+    .role-cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    .role-card {
+      width: 160px;
+      min-height: 240px;
+      border-radius: 14px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      border: 2px solid transparent;
+      transition: transform 0.2s;
+    }
+    .role-card:hover { transform: translateY(-5px); }
+    .role-icon   { font-size: 3rem; margin-bottom: 8px; }
+    .role-title  { font-size: 0.7rem; letter-spacing: 2px; opacity: 0.7; margin-bottom: 4px; }
+    .role-name   { font-size: 1rem; font-weight: bold; margin-bottom: 10px; }
+    .role-actions { font-size: 0.75rem; margin-bottom: 10px; padding: 3px 10px; border-radius: 10px; background: rgba(0,0,0,0.25); }
+    .role-ability { font-size: 0.68rem; line-height: 1.5; opacity: 0.9; flex-grow: 1; }
+
+    .role-surgeon   { background: linear-gradient(160deg, #3a1a1a, #7a2a2a); border-color: #ff6060; color: #ffe0e0; }
+    .role-nurse     { background: linear-gradient(160deg, #1a3a3a, #2a7a7a); border-color: #40dddd; color: #d0ffff; }
+    .role-engineer  { background: linear-gradient(160deg, #3a3a1a, #7a7a2a); border-color: #dddd40; color: #ffffd0; }
+    .role-biochemist{ background: linear-gradient(160deg, #2a1a3a, #5a2a7a); border-color: #cc55ff; color: #f0d0ff; }
+    .role-captain   { background: linear-gradient(160deg, #1a2a4a, #2a4a8a); border-color: #4a9eff; color: #d0e8ff; }
+
+    /* ===== 病患档案卡 ===== */
+    .patient-cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    .patient-card {
+      width: 165px;
+      min-height: 210px;
+      border-radius: 12px;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      background: linear-gradient(160deg, #1a2a4a, #0d1f3c);
+      border: 2px solid #3a5a7a;
+      transition: transform 0.2s;
+    }
+    .patient-card:hover { transform: translateY(-4px); }
+    .patient-number { font-size: 0.65rem; opacity: 0.6; letter-spacing: 2px; margin-bottom: 4px; }
+    .patient-icon   { font-size: 2.5rem; margin-bottom: 6px; }
+    .patient-name   { font-size: 0.9rem; font-weight: bold; margin-bottom: 6px; color: #4a9eff; }
+    .patient-hp     { font-size: 1.1rem; margin-bottom: 6px; }
+    .patient-loc    { font-size: 0.65rem; background: rgba(74,158,255,0.15); padding: 2px 8px; border-radius: 8px; margin-bottom: 6px; }
+    .patient-symptom { font-size: 0.6rem; line-height: 1.4; opacity: 0.85; }
+    .patient-cure   { font-size: 0.6rem; margin-top: 6px; padding: 3px 6px; border-radius: 6px; background: rgba(80,221,144,0.15); color: #80ffbb; }
+
+    /* 重症病患高亮 */
+    .patient-critical { border-color: #ff5555; background: linear-gradient(160deg, #3a1515, #2a1010); }
+    .patient-critical .patient-name { color: #ff7777; }
+
+    /* ===== 玩家棋子 ===== */
+    .pawn-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .pawn {
+      width: 100px;
+      height: 130px;
+      border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      border: 3px solid transparent;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+      cursor: default;
+    }
+    .pawn:hover { transform: scale(1.08); }
+    .pawn-label { font-size: 0.7rem; margin-top: 4px; font-weight: bold; }
+
+    .pawn-1 { background: linear-gradient(160deg, #ff4444, #cc2222); border-color: #ff6666; color: #fff; }
+    .pawn-2 { background: linear-gradient(160deg, #4477ff, #2255cc); border-color: #6699ff; color: #fff; }
+    .pawn-3 { background: linear-gradient(160deg, #44bb44, #229922); border-color: #66dd66; color: #fff; }
+    .pawn-4 { background: linear-gradient(160deg, #ffaa22, #dd8800); border-color: #ffcc44; color: #fff; }
+    .pawn-5 { background: linear-gradient(160deg, #aa44cc, #882299); border-color: #cc66ee; color: #fff; }
+
+    /* ===== 资源方块 ===== */
+    .resource-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .resource-block {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      border: 3px solid transparent;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .resource-label { font-size: 0.65rem; margin-top: 4px; }
+    .resource-med  { background: linear-gradient(135deg, #1a5a2a, #2e8a44); border-color: #50dd90; color: #d0ffe8; }
+    .resource-eng  { background: linear-gradient(135deg, #5a5a1a, #8a8a2a); border-color: #dddd40; color: #ffffd0; }
+    .resource-virus{ background: linear-gradient(135deg, #5a1a1a, #8a2a2a); border-color: #dd4040; color: #ffd0d0; }
+    .resource-fault{ background: linear-gradient(135deg, #3a3a3a, #555555); border-color: #9999bb; color: #e8e8ff; }
+
+    /* ===== 行动令牌 ===== */
+    .token-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .token {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      border: 3px solid #4a9eff;
+      background: linear-gradient(135deg, #1a2a4a, #2a3a6a);
+      box-shadow: 0 0 12px rgba(74,158,255,0.3);
+    }
+
+    /* ===== 病毒标记 ===== */
+    .virus-token {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 3px solid #ff5555;
+      background: linear-gradient(135deg, #4a1a1a, #7a2a2a);
+      box-shadow: 0 0 14px rgba(255,85,85,0.4);
+    }
+
+    /* ===== 打印样式 ===== */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      body {
+        background: white !important;
+        color: #000 !important;
+        padding: 8px;
+      }
+
+      .print-hint {
+        display: none !important;
+      }
+
+      .section-title {
+        color: #1a3a6a !important;
+        border-bottom-color: #3a5a8a !important;
+      }
+
+      .page-title h1 {
+        -webkit-text-fill-color: #1a3a7a !important;
+        color: #1a3a7a !important;
+      }
+
+      .map-wrapper {
+        break-inside: avoid;
+        box-shadow: none !important;
+        border-color: #2a4a7a !important;
+      }
+
+      .cards-grid, .role-cards-grid, .patient-cards-grid, .pawn-grid {
+        break-inside: avoid;
+      }
+
+      .card, .role-card, .patient-card, .pawn {
+        break-inside: avoid;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+      }
+
+      .page-break {
+        page-break-before: always !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 打印提示（屏幕显示，打印隐藏）-->
+  <div class="print-hint">
+    <h2>⚠️ 重要打印提示 — 请在打印前阅读</h2>
+    <ul>
+      <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+      <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项，否则颜色无法正确打印</li>
+      <li>地图建议使用 <strong>A3 或放大 141% 打印</strong>，效果更佳</li>
+      <li>卡牌和棋子建议使用 <strong>卡纸（200g 以上）</strong>打印，增加耐用性</li>
+      <li>打印后可裁剪卡牌并使用<strong>卡套或塑封</strong>保护</li>
+      <li>红色圆形病毒标记 × 30、灰色故障标记 × 15 可用硬币或彩色纸片代替</li>
+    </ul>
+  </div>
+
+  <!-- 页面标题 -->
+  <div class="page-title">
+    <h1>🚀 星际医疗队 · Stellar Medics</h1>
+    <p>打印道具合集 · PRINTABLE COMPONENTS</p>
+  </div>
+
+  <!-- =========== 一、飞船地图 =========== -->
+  <h2 class="section-title">🗺️ 一、医疗飞船「星途号」地图</h2>
+
+  <div class="map-wrapper">
+    <div class="map-title">⭐ 医疗飞船 STELLAR HOPE ⭐</div>
+
+    <div class="ship-map">
+      <!-- Row A -->
+      <div class="room room-command">
+        <div class="room-icon">🖥️</div>
+        <div class="room-label">指挥舱</div>
+        <div class="room-pos">A1</div>
+        <div class="room-desc">每回合<br>额外摸1牌</div>
+      </div>
+      <div class="room room-comms">
+        <div class="room-icon">📡</div>
+        <div class="room-label">通讯舱</div>
+        <div class="room-pos">A2</div>
+        <div class="room-desc">每5回合<br>用1张特效卡</div>
+      </div>
+      <div class="room room-surgery">
+        <div class="room-icon">🔪</div>
+        <div class="room-label">手术室</div>
+        <div class="room-pos">A3</div>
+        <div class="room-desc">药品卡效果+1</div>
+      </div>
+      <div class="room room-critical">
+        <div class="room-icon">🩺</div>
+        <div class="room-label">重症舱 ⚠️</div>
+        <div class="room-pos">A4</div>
+        <div class="room-desc">病患01/02/03<br>每回合自动-1HP</div>
+      </div>
+      <div class="room room-exit">
+        <div class="room-icon">🚪</div>
+        <div class="room-label">紧急出口</div>
+        <div class="room-pos">A5</div>
+        <div class="room-desc">全员到达<br>触发胜利</div>
+      </div>
+
+      <!-- Row B -->
+      <div class="room room-power">
+        <div class="room-icon">⚡</div>
+        <div class="room-label">动力舱</div>
+        <div class="room-pos">B1</div>
+        <div class="room-desc">故障时全体<br>行动令牌-1</div>
+      </div>
+      <div class="room room-lab">
+        <div class="room-icon">🧪</div>
+        <div class="room-label">实验室</div>
+        <div class="room-pos">B2</div>
+        <div class="room-desc">3张药品卡<br>合成1张特效卡</div>
+      </div>
+      <div class="room room-corridor">
+        <div class="room-icon">➡️</div>
+        <div class="room-label">走廊</div>
+        <div class="room-pos">B3</div>
+        <div class="room-desc">通道</div>
+      </div>
+      <div class="room room-ward">
+        <div class="room-icon">🛏️</div>
+        <div class="room-label">普通病房</div>
+        <div class="room-pos">B4</div>
+        <div class="room-desc">病患04/05<br>标准治疗</div>
+      </div>
+      <div class="room room-supply">
+        <div class="room-icon">📦</div>
+        <div class="room-label">补给站</div>
+        <div class="room-pos">B5</div>
+        <div class="room-desc">每回合补充<br>2个医疗资源</div>
+      </div>
+
+      <!-- Row C -->
+      <div class="room room-pharmacy">
+        <div class="room-icon">💊</div>
+        <div class="room-label">医药库</div>
+        <div class="room-pos">C1</div>
+        <div class="room-desc">每回合<br>起始手牌+1</div>
+      </div>
+      <div class="room room-isolation">
+        <div class="room-icon">🔒</div>
+        <div class="room-label">隔离舱</div>
+        <div class="room-pos">C2</div>
+        <div class="room-desc">病患08<br>病毒不扩散</div>
+      </div>
+      <div class="room room-corridor">
+        <div class="room-icon">➡️</div>
+        <div class="room-label">走廊</div>
+        <div class="room-pos">C3</div>
+        <div class="room-desc">通道</div>
+      </div>
+      <div class="room room-ward">
+        <div class="room-icon">🛏️</div>
+        <div class="room-label">普通病房</div>
+        <div class="room-pos">C4</div>
+        <div class="room-desc">病患06/07<br>标准治疗</div>
+      </div>
+      <div class="room room-engineer">
+        <div class="room-icon">🔧</div>
+        <div class="room-label">工程维修间</div>
+        <div class="room-pos">C5</div>
+        <div class="room-desc">维修卡消耗<br>能量-1</div>
+      </div>
+    </div>
+
+    <!-- 图例 -->
+    <div class="map-legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#ff4444;"></div>
+        <span>🦠 病毒路线1（A4→A3→A2→A1）</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#ff8800;"></div>
+        <span>🦠 病毒路线2（A4→B4→C4）</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#aa44ff;"></div>
+        <span>🦠 病毒路线3（B4→B3→B2→B1）</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#4466ff;"></div>
+        <span>🦠 病毒路线4（C4→C3→C2→C1）</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#ffdd57;"></div>
+        <span>⚠️ 重症区（自动失血）</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#50ff90;"></div>
+        <span>✅ 胜利触发点</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========== 倒计时轨迹 =========== -->
+  <h2 class="section-title">⏱️ 倒计时轨迹</h2>
+  <div class="countdown-track">
+    <div class="countdown-cell">20</div>
+    <div class="countdown-cell">19</div>
+    <div class="countdown-cell">18</div>
+    <div class="countdown-cell">17</div>
+    <div class="countdown-cell">16</div>
+    <div class="countdown-cell warning">15</div>
+    <div class="countdown-cell warning">14</div>
+    <div class="countdown-cell warning">13</div>
+    <div class="countdown-cell warning">12</div>
+    <div class="countdown-cell warning">11</div>
+    <div class="countdown-cell danger">10</div>
+    <div class="countdown-cell danger">9</div>
+    <div class="countdown-cell danger">8</div>
+    <div class="countdown-cell danger">7</div>
+    <div class="countdown-cell danger">6</div>
+    <div class="countdown-cell danger">5</div>
+    <div class="countdown-cell danger">4</div>
+    <div class="countdown-cell danger">3</div>
+    <div class="countdown-cell danger">2</div>
+    <div class="countdown-cell danger">1</div>
+  </div>
+
+  <!-- =========== 二、角色卡 =========== -->
+  <div class="page-break"></div>
+  <h2 class="section-title">🎭 二、角色卡（共 5 张）</h2>
+  <div class="role-cards-grid">
+
+    <div class="role-card role-surgeon">
+      <div class="role-icon">👨‍⚕️</div>
+      <div class="role-title">CHIEF SURGEON</div>
+      <div class="role-name">船医</div>
+      <div class="role-actions">⚡ 每回合 3 次行动</div>
+      <div class="role-ability">
+        💊 使用药品卡时效果+1级<br><br>
+        🏥 可一次治疗 2 名相邻病患（消耗 1 次行动）<br><br>
+        🔪 在手术室使用卡牌时无需额外消耗
+      </div>
+    </div>
+
+    <div class="role-card role-nurse">
+      <div class="role-icon">👩‍⚕️</div>
+      <div class="role-title">HEAD NURSE</div>
+      <div class="role-name">护士长</div>
+      <div class="role-actions">⚡ 每回合 3 次行动</div>
+      <div class="role-ability">
+        🃏 每回合额外摸 1 张牌<br><br>
+        🤝 可将手牌分享给相邻玩家（移动时免费）<br><br>
+        📋 可查看任意病患档案（无需诊断卡）
+      </div>
+    </div>
+
+    <div class="role-card role-engineer">
+      <div class="role-icon">🔧</div>
+      <div class="role-title">ENGINEER</div>
+      <div class="role-name">工程师</div>
+      <div class="role-actions">⚡ 每回合 3 次行动</div>
+      <div class="role-ability">
+        🔧 维修卡效果+1（多清除 1 个故障标记）<br><br>
+        🤖 每回合开始时免费清除 1 个故障标记<br><br>
+        ⚡ 在工程维修间使用维修卡不消耗能量
+      </div>
+    </div>
+
+    <div class="role-card role-biochemist">
+      <div class="role-icon">🔬</div>
+      <div class="role-title">BIOCHEMIST</div>
+      <div class="role-name">生化学家</div>
+      <div class="role-actions">⚡ 每回合 3 次行动</div>
+      <div class="role-ability">
+        🔬 使用诊断卡时额外揭示 1 张病症<br><br>
+        🧪 实验室合成只需 2 张药品卡（而非 3 张）<br><br>
+        🧬 可「分析」病毒扩散规律，跳过 1 次扩散
+      </div>
+    </div>
+
+    <div class="role-card role-captain">
+      <div class="role-icon">🧑‍✈️</div>
+      <div class="role-title">CAPTAIN</div>
+      <div class="role-name">船长</div>
+      <div class="role-actions">⚡ 每回合 4 次行动</div>
+      <div class="role-ability">
+        🎖️ 每回合让全体玩家各多行动 1 次<br><br>
+        🖥️ 在指挥舱时可额外摸 2 张牌<br><br>
+        📣 可宣布「紧急指令」，全体行动顺序可自由调整
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =========== 三、病患档案卡 =========== -->
+  <div class="page-break"></div>
+  <h2 class="section-title">🗒️ 三、病患档案卡（共 8 张）</h2>
+  <div class="patient-cards-grid">
+
+    <div class="patient-card patient-critical">
+      <div class="patient-number">病患 #01</div>
+      <div class="patient-icon">🧓</div>
+      <div class="patient-name">老队长</div>
+      <div class="patient-hp">❤️❤️❤️ HP: 3</div>
+      <div class="patient-loc">📍 重症舱 A4</div>
+      <div class="patient-symptom">🦴 隐藏病症：骨折<br>需要 维修卡 + 药品卡联合使用</div>
+      <div class="patient-cure">治愈：维修卡×1 + 药品卡×3</div>
+    </div>
+
+    <div class="patient-card patient-critical">
+      <div class="patient-number">病患 #02</div>
+      <div class="patient-icon">👩‍🔬</div>
+      <div class="patient-name">科学家</div>
+      <div class="patient-hp">❤️❤️ HP: 2</div>
+      <div class="patient-loc">📍 重症舱 A4</div>
+      <div class="patient-symptom">🦠 隐藏病症：病毒感染<br>揭示后该路线扩散速度+1</div>
+      <div class="patient-cure">治愈：诊断卡×1 + 药品卡×2</div>
+    </div>
+
+    <div class="patient-card patient-critical">
+      <div class="patient-number">病患 #03</div>
+      <div class="patient-icon">🧒</div>
+      <div class="patient-name">小孩</div>
+      <div class="patient-hp">❤️ HP: 1</div>
+      <div class="patient-loc">📍 重症舱 A4</div>
+      <div class="patient-symptom">⚠️ 隐藏病症：重度过敏<br>对所有普通药品卡免疫！</div>
+      <div class="patient-cure">治愈：特种药品 或 特效卡</div>
+    </div>
+
+    <div class="patient-card">
+      <div class="patient-number">病患 #04</div>
+      <div class="patient-icon">👷</div>
+      <div class="patient-name">工程师</div>
+      <div class="patient-hp">❤️❤️❤️❤️ HP: 4</div>
+      <div class="patient-loc">📍 普通病房 B4</div>
+      <div class="patient-symptom">✅ 无隐藏病症<br>标准外伤，普通治疗即可</div>
+      <div class="patient-cure">治愈：止痛剂×4</div>
+    </div>
+
+    <div class="patient-card">
+      <div class="patient-number">病患 #05</div>
+      <div class="patient-icon">👨‍🍳</div>
+      <div class="patient-name">厨师</div>
+      <div class="patient-hp">❤️❤️❤️ HP: 3</div>
+      <div class="patient-loc">📍 普通病房 B4</div>
+      <div class="patient-symptom">☠️ 隐藏病症：神经毒素<br>每 2 回合向相邻舱室扩散 1 次</div>
+      <div class="patient-cure">治愈：病毒溯源×1 + 药品卡×2</div>
+    </div>
+
+    <div class="patient-card">
+      <div class="patient-number">病患 #06</div>
+      <div class="patient-icon">📰</div>
+      <div class="patient-name">记者</div>
+      <div class="patient-hp">❤️❤️ HP: 2</div>
+      <div class="patient-loc">📍 普通病房 C4</div>
+      <div class="patient-symptom">✅ 无隐藏病症<br>轻微骨折，易于治疗</div>
+      <div class="patient-cure">治愈：止痛剂×2</div>
+    </div>
+
+    <div class="patient-card">
+      <div class="patient-number">病患 #07</div>
+      <div class="patient-icon">🤖</div>
+      <div class="patient-name">机器人</div>
+      <div class="patient-hp">❤️❤️❤️❤️❤️ HP: 5</div>
+      <div class="patient-loc">📍 普通病房 C4</div>
+      <div class="patient-symptom">💻 隐藏病症：系统崩溃<br>必须用维修卡+诊断卡才有效</div>
+      <div class="patient-cure">治愈：维修卡×2 + 诊断卡×1</div>
+    </div>
+
+    <div class="patient-card">
+      <div class="patient-number">病患 #08</div>
+      <div class="patient-icon">👩</div>
+      <div class="patient-name">船长妻子</div>
+      <div class="patient-hp">❤️❤️❤️❤️ HP: 4</div>
+      <div class="patient-loc">📍 隔离舱 C2</div>
+      <div class="patient-symptom">☢️ 隐藏病症：辐射中毒<br>同舱室玩家每回合行动-1</div>
+      <div class="patient-cure">治愈：深度扫描×1 + 药品卡×3</div>
+    </div>
+
+  </div>
+
+  <!-- =========== 四、药品卡 =========== -->
+  <div class="page-break"></div>
+  <h2 class="section-title">💊 四、药品卡（共 20 张）</h2>
+  <div class="cards-grid">
+
+    <!-- 止痛剂 × 10 -->
+    <div class="card card-medicine">
+      <div class="card-type">药品卡 ⭐</div>
+      <div class="card-icon">💊</div>
+      <div class="card-name">止痛剂</div>
+      <div class="card-level">基础药品</div>
+      <div class="card-effect">恢复目标病患<br>1 点生命值</div>
+      <div class="card-count">×10</div>
+    </div>
+    <div class="card card-medicine">
+      <div class="card-type">药品卡 ⭐</div>
+      <div class="card-icon">💊</div>
+      <div class="card-name">止痛剂</div>
+      <div class="card-level">基础药品</div>
+      <div class="card-effect">恢复目标病患<br>1 点生命值</div>
+      <div class="card-count">×10</div>
+    </div>
+    <div class="card card-medicine">
+      <div class="card-type">药品卡 ⭐</div>
+      <div class="card-icon">💊</div>
+      <div class="card-name">止痛剂</div>
+      <div class="card-level">基础药品</div>
+      <div class="card-effect">恢复目标病患<br>1 点生命值</div>
+      <div class="card-count">×10</div>
+    </div>
+    <div class="card card-medicine">
+      <div class="card-type">药品卡 ⭐</div>
+      <div class="card-icon">💊</div>
+      <div class="card-name">止痛剂</div>
+      <div class="card-level">基础药品</div>
+      <div class="card-effect">恢复目标病患<br>1 点生命值</div>
+      <div class="card-count">×10</div>
+    </div>
+
+    <!-- 广谱抗生素 × 6 -->
+    <div class="card card-medicine">
+      <div class="card-type">药品卡 ⭐⭐</div>
+      <div class="card-icon">💉</div>
+      <div class="card-name">广谱抗生素</div>
+      <div class="card-level">进阶药品</div>
+      <div class="card-effect">恢复 2 点生命值，同时清除 1 个病毒标记</div>
+      <div class="card-count">×6</div>
+    </div>
+    <div class="card card-medicine">
+      <div class="card-type">药品卡 ⭐⭐</div>
+      <div class="card-icon">💉</div>
+      <div class="card-name">广谱抗生素</div>
+      <div class="card-level">进阶药品</div>
+      <div class="card-effect">恢复 2 点生命值，同时清除 1 个病毒标记</div>
+      <div class="card-count">×6</div>
+    </div>
+    <div class="card card-medicine">
+      <div class="card-type">药品卡 ⭐⭐</div>
+      <div class="card-icon">💉</div>
+      <div class="card-name">广谱抗生素</div>
+      <div class="card-level">进阶药品</div>
+      <div class="card-effect">恢复 2 点生命值，同时清除 1 个病毒标记</div>
+      <div class="card-count">×6</div>
+    </div>
+
+    <!-- 纳米修复液 × 4 -->
+    <div class="card card-medicine" style="border-color:#a0ffcc;">
+      <div class="card-type">药品卡 ⭐⭐⭐</div>
+      <div class="card-icon">🔬</div>
+      <div class="card-name">纳米修复液</div>
+      <div class="card-level">特种药品</div>
+      <div class="card-effect">恢复 3 点生命值，并治愈 1 种隐藏病症</div>
+      <div class="card-count">×4</div>
+    </div>
+    <div class="card card-medicine" style="border-color:#a0ffcc;">
+      <div class="card-type">药品卡 ⭐⭐⭐</div>
+      <div class="card-icon">🔬</div>
+      <div class="card-name">纳米修复液</div>
+      <div class="card-level">特种药品</div>
+      <div class="card-effect">恢复 3 点生命值，并治愈 1 种隐藏病症</div>
+      <div class="card-count">×4</div>
+    </div>
+
+  </div>
+
+  <!-- =========== 五、诊断卡 =========== -->
+  <h2 class="section-title">🔬 五、诊断卡（共 15 张）</h2>
+  <div class="cards-grid">
+
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡</div>
+      <div class="card-icon">🩻</div>
+      <div class="card-name">基础检测</div>
+      <div class="card-effect">翻开 1 名病患的隐藏病症牌</div>
+      <div class="card-cost">🎯 消耗 1 行动</div>
+      <div class="card-count">×6</div>
+    </div>
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡</div>
+      <div class="card-icon">🩻</div>
+      <div class="card-name">基础检测</div>
+      <div class="card-effect">翻开 1 名病患的隐藏病症牌</div>
+      <div class="card-cost">🎯 消耗 1 行动</div>
+      <div class="card-count">×6</div>
+    </div>
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡</div>
+      <div class="card-icon">🩻</div>
+      <div class="card-name">基础检测</div>
+      <div class="card-effect">翻开 1 名病患的隐藏病症牌</div>
+      <div class="card-cost">🎯 消耗 1 行动</div>
+      <div class="card-count">×6</div>
+    </div>
+
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡 🔬</div>
+      <div class="card-icon">🖥️</div>
+      <div class="card-name">深度扫描</div>
+      <div class="card-effect">同时翻开 2 名病患的隐藏病症（需在实验室）</div>
+      <div class="card-cost">📍 需在实验室 B2</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡 🔬</div>
+      <div class="card-icon">🖥️</div>
+      <div class="card-name">深度扫描</div>
+      <div class="card-effect">同时翻开 2 名病患的隐藏病症（需在实验室）</div>
+      <div class="card-cost">📍 需在实验室 B2</div>
+      <div class="card-count">×3</div>
+    </div>
+
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡 🦠</div>
+      <div class="card-icon">🦠</div>
+      <div class="card-name">病毒溯源</div>
+      <div class="card-effect">找出扩散源头，可阻止该舱室本轮病毒扩散</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡 👥</div>
+      <div class="card-icon">👥</div>
+      <div class="card-name">紧急会诊</div>
+      <div class="card-effect">2 名玩家分享手牌，各选 1 张换给对方</div>
+      <div class="card-count">×2</div>
+    </div>
+    <div class="card card-diagnose">
+      <div class="card-type">诊断卡 🧬</div>
+      <div class="card-icon">🧬</div>
+      <div class="card-name">基因分析</div>
+      <div class="card-effect">永久降低 1 条病毒路线扩散速度（每路线限用 1 次）</div>
+      <div class="card-count">×1</div>
+    </div>
+
+  </div>
+
+  <!-- =========== 六、维修卡 =========== -->
+  <div class="page-break"></div>
+  <h2 class="section-title">⚙️ 六、维修卡（共 15 张）</h2>
+  <div class="cards-grid">
+
+    <div class="card card-repair">
+      <div class="card-type">维修卡</div>
+      <div class="card-icon">🔧</div>
+      <div class="card-name">应急修缮</div>
+      <div class="card-effect">清除目标舱室 1 个故障标记</div>
+      <div class="card-cost">⚡ 消耗 1 能量方块</div>
+      <div class="card-count">×6</div>
+    </div>
+    <div class="card card-repair">
+      <div class="card-type">维修卡</div>
+      <div class="card-icon">🔧</div>
+      <div class="card-name">应急修缮</div>
+      <div class="card-effect">清除目标舱室 1 个故障标记</div>
+      <div class="card-cost">⚡ 消耗 1 能量方块</div>
+      <div class="card-count">×6</div>
+    </div>
+    <div class="card card-repair">
+      <div class="card-type">维修卡</div>
+      <div class="card-icon">🔧</div>
+      <div class="card-name">应急修缮</div>
+      <div class="card-effect">清除目标舱室 1 个故障标记</div>
+      <div class="card-cost">⚡ 消耗 1 能量方块</div>
+      <div class="card-count">×6</div>
+    </div>
+
+    <div class="card card-repair">
+      <div class="card-type">维修卡 ⚡</div>
+      <div class="card-icon">⚡</div>
+      <div class="card-name">系统重启</div>
+      <div class="card-effect">清除动力舱全部故障，恢复全体行动令牌</div>
+      <div class="card-cost">⚡ 消耗 2 能量方块</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-repair">
+      <div class="card-type">维修卡 🔌</div>
+      <div class="card-icon">🔌</div>
+      <div class="card-name">电路焊接</div>
+      <div class="card-effect">阻断 1 条病毒扩散路线 1 个回合</div>
+      <div class="card-cost">⚡ 消耗 1 能量方块</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-repair">
+      <div class="card-type">维修卡 🛠️</div>
+      <div class="card-icon">🛠️</div>
+      <div class="card-name">精密维修</div>
+      <div class="card-effect">清除任意舱室所有故障标记</div>
+      <div class="card-cost">⚡ 消耗 3 能量方块</div>
+      <div class="card-count">×2</div>
+    </div>
+    <div class="card card-repair">
+      <div class="card-type">维修卡 🤖</div>
+      <div class="card-icon">🤖</div>
+      <div class="card-name">自动修复程序</div>
+      <div class="card-effect">每回合末自动清除 1 个故障（持续 3 回合）</div>
+      <div class="card-cost">⚡ 放置后免费</div>
+      <div class="card-count">×1</div>
+    </div>
+
+  </div>
+
+  <!-- =========== 七、防护卡 =========== -->
+  <h2 class="section-title">🛡️ 七、防护卡（共 10 张）</h2>
+  <div class="cards-grid">
+
+    <div class="card card-shield">
+      <div class="card-type">防护卡</div>
+      <div class="card-icon">🧱</div>
+      <div class="card-name">局部隔离</div>
+      <div class="card-effect">目标舱室本回合不扩散病毒</div>
+      <div class="card-cost">持续 1 回合</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-shield">
+      <div class="card-type">防护卡</div>
+      <div class="card-icon">🛡️</div>
+      <div class="card-name">防护屏障</div>
+      <div class="card-effect">选择 1 条路线，本回合该路线病毒不移动</div>
+      <div class="card-cost">持续 1 回合</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-shield">
+      <div class="card-type">防护卡</div>
+      <div class="card-icon">🧴</div>
+      <div class="card-name">全舱消毒</div>
+      <div class="card-effect">清除目标舱室所有病毒标记</div>
+      <div class="card-cost">即时效果</div>
+      <div class="card-count">×2</div>
+    </div>
+    <div class="card card-shield">
+      <div class="card-type">防护卡</div>
+      <div class="card-icon">⛔</div>
+      <div class="card-name">医疗隔离带</div>
+      <div class="card-effect">将病患移至隔离舱，永久停止其传播病毒</div>
+      <div class="card-cost">持久效果</div>
+      <div class="card-count">×1</div>
+    </div>
+    <div class="card card-shield" style="border-color:#ffe55a;">
+      <div class="card-type">防护卡 💠</div>
+      <div class="card-icon">💠</div>
+      <div class="card-name">超级防护罩</div>
+      <div class="card-effect">所有舱室本回合免疫病毒扩散</div>
+      <div class="card-cost">持续 1 回合（全场）</div>
+      <div class="card-count">×1</div>
+    </div>
+
+  </div>
+
+  <!-- =========== 八、特效卡 =========== -->
+  <div class="page-break"></div>
+  <h2 class="section-title">🌟 八、特效卡（共 10 张）</h2>
+  <div class="cards-grid">
+
+    <div class="card card-special">
+      <div class="card-type">特效卡 🌟</div>
+      <div class="card-icon">🚑</div>
+      <div class="card-name">全员急救</div>
+      <div class="card-effect">所有 8 名病患同时恢复 1 点生命值</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-special">
+      <div class="card-type">特效卡 🌟</div>
+      <div class="card-icon">💥</div>
+      <div class="card-name">病毒清除炮</div>
+      <div class="card-effect">清除飞船上所有病毒标记</div>
+      <div class="card-count">×2</div>
+    </div>
+    <div class="card card-special">
+      <div class="card-type">特效卡 ⏰</div>
+      <div class="card-icon">⏰</div>
+      <div class="card-name">时间压缩</div>
+      <div class="card-effect">倒计时轨迹后退 2 格（多 2 回合时间）</div>
+      <div class="card-cost">全局仅可使用 1 次</div>
+      <div class="card-count">×1</div>
+    </div>
+    <div class="card card-special">
+      <div class="card-type">特效卡 📦</div>
+      <div class="card-icon">📦</div>
+      <div class="card-name">紧急补给</div>
+      <div class="card-effect">立即获得 5 个医疗资源 + 3 个能量方块</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-special" style="box-shadow:0 0 24px rgba(255,215,0,0.6);">
+      <div class="card-type">特效卡 ✨✨</div>
+      <div class="card-icon">✨</div>
+      <div class="card-name">医学奇迹</div>
+      <div class="card-effect">直接治愈 1 名病患（无论当前病症）</div>
+      <div class="card-cost">最后关头专用</div>
+      <div class="card-count">×1</div>
+    </div>
+
+  </div>
+
+  <!-- =========== 九、危机事件卡 =========== -->
+  <h2 class="section-title">🚨 九、危机事件卡（共 20 张）</h2>
+  <div class="cards-grid">
+
+    <div class="card card-crisis">
+      <div class="card-type">危机事件</div>
+      <div class="card-icon">💧</div>
+      <div class="card-name">管道爆裂</div>
+      <div class="card-effect">掷骰子，对应舱室+2 个故障标记</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-crisis">
+      <div class="card-type">危机事件</div>
+      <div class="card-icon">🦠</div>
+      <div class="card-name">病毒变异</div>
+      <div class="card-effect">最快路线额外扩散 1 格</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-crisis">
+      <div class="card-type">危机事件</div>
+      <div class="card-icon">📉</div>
+      <div class="card-name">重症恶化</div>
+      <div class="card-effect">重症舱所有病患生命值-1</div>
+      <div class="card-count">×3</div>
+    </div>
+    <div class="card card-crisis">
+      <div class="card-type">危机事件</div>
+      <div class="card-icon">⚡</div>
+      <div class="card-name">设备断电</div>
+      <div class="card-effect">随机 1 名玩家本回合行动令牌-1</div>
+      <div class="card-count">×2</div>
+    </div>
+    <div class="card card-crisis">
+      <div class="card-type">危机事件 ☢️</div>
+      <div class="card-icon">☢️</div>
+      <div class="card-name">太空辐射</div>
+      <div class="card-effect">所有药品卡本回合效果-1</div>
+      <div class="card-count">×2</div>
+    </div>
+    <div class="card card-crisis">
+      <div class="card-type">危机事件 🤢</div>
+      <div class="card-icon">🤢</div>
+      <div class="card-name">晕船事件</div>
+      <div class="card-effect">1 名随机玩家本回合不能移动</div>
+      <div class="card-count">×2</div>
+    </div>
+    <div class="card card-crisis" style="box-shadow:0 0 18px rgba(255,100,100,0.6);">
+      <div class="card-type">危机事件 ⚠️</div>
+      <div class="card-icon">🌬️</div>
+      <div class="card-name">氧气泄漏</div>
+      <div class="card-effect">倒计时前进 2 格！（减少 2 回合）</div>
+      <div class="card-count">×1</div>
+    </div>
+    <div class="card card-crisis">
+      <div class="card-type">危机事件</div>
+      <div class="card-icon">❌</div>
+      <div class="card-name">医疗失误</div>
+      <div class="card-effect">随机 1 名病患生命值-2（最低降至 1）</div>
+      <div class="card-count">×1</div>
+    </div>
+    <div class="card card-crisis">
+      <div class="card-type">危机事件</div>
+      <div class="card-icon">🔩</div>
+      <div class="card-name">机械故障</div>
+      <div class="card-effect">实验室或补给站本回合无法使用</div>
+      <div class="card-count">×1</div>
+    </div>
+    <div class="card card-positive">
+      <div class="card-type">危机事件 ✅</div>
+      <div class="card-icon">🎁</div>
+      <div class="card-name">援助到来</div>
+      <div class="card-effect">获得 3 张随机卡牌！（正面事件）</div>
+      <div class="card-count">×2</div>
+    </div>
+
+  </div>
+
+  <!-- =========== 十、玩家棋子 =========== -->
+  <div class="page-break"></div>
+  <h2 class="section-title">🎭 十、玩家棋子（共 5 个）</h2>
+  <div class="pawn-grid">
+    <div class="pawn pawn-1"><span>👨‍⚕️</span><div class="pawn-label">船医</div></div>
+    <div class="pawn pawn-2"><span>👩‍⚕️</span><div class="pawn-label">护士长</div></div>
+    <div class="pawn pawn-3"><span>🔧</span><div class="pawn-label">工程师</div></div>
+    <div class="pawn pawn-4"><span>🔬</span><div class="pawn-label">生化学家</div></div>
+    <div class="pawn pawn-5"><span>🧑‍✈️</span><div class="pawn-label">船长</div></div>
+  </div>
+
+  <!-- =========== 十一、资源方块与标记 =========== -->
+  <h2 class="section-title">🎲 十一、资源方块与标记</h2>
+  <div class="resource-grid">
+    <div class="resource-block resource-med">💊<div class="resource-label">医疗资源</div></div>
+    <div class="resource-block resource-med">💊<div class="resource-label">医疗资源</div></div>
+    <div class="resource-block resource-med">💊<div class="resource-label">医疗资源</div></div>
+    <div class="resource-block resource-med">💊<div class="resource-label">医疗资源</div></div>
+    <div class="resource-block resource-med">💊<div class="resource-label">医疗资源</div></div>
+    <div class="resource-block resource-eng">⚡<div class="resource-label">能量方块</div></div>
+    <div class="resource-block resource-eng">⚡<div class="resource-label">能量方块</div></div>
+    <div class="resource-block resource-eng">⚡<div class="resource-label">能量方块</div></div>
+    <div class="resource-block resource-virus">🦠<div class="resource-label">病毒标记</div></div>
+    <div class="resource-block resource-virus">🦠<div class="resource-label">病毒标记</div></div>
+    <div class="resource-block resource-virus">🦠<div class="resource-label">病毒标记</div></div>
+    <div class="resource-block resource-fault">⚙️<div class="resource-label">故障标记</div></div>
+    <div class="resource-block resource-fault">⚙️<div class="resource-label">故障标记</div></div>
+    <div class="resource-block resource-fault">⚙️<div class="resource-label">故障标记</div></div>
+  </div>
+
+  <!-- 行动令牌 -->
+  <h2 class="section-title">🪙 十二、行动令牌（共 15 个）</h2>
+  <div class="token-grid">
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+    <div class="token">🎯</div>
+  </div>
+
+  <!-- 页脚 -->
+  <div style="text-align:center; padding:30px 0 10px; color:#445566; font-size:0.8rem; border-top:1px solid #1a2a3a; margin-top:30px;">
+    <p>⭐ 星际医疗队 Stellar Medics · 打印道具合集</p>
+    <p>合作类桌游 · 2-5人 · 45-70分钟 · 10岁以上</p>
+    <p style="margin-top:8px;">返回 <a href="README.md" style="color:#4a9eff;">游戏说明 README.md</a></p>
+  </div>
+
+</body>
+</html>
