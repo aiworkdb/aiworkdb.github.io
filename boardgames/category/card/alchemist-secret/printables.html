@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>炼金术士的秘密 - 打印道具</title>
+<style>
+/* ========== 全局变量 ========== */
+:root {
+  --bg-dark: #1a0f0a;
+  --bg-card: #2c1810;
+  --gold: #d4a843;
+  --gold-light: #f0d68a;
+  --gold-dark: #8b6914;
+  --fire: #e74c3c;
+  --water: #3498db;
+  --earth: #a0522d;
+  --air: #bdc3c7;
+  --quint: #f39c12;
+  --potion: #9b59b6;
+  --transmute: #c0392b;
+  --recipe: #2ecc71;
+  --text: #e8d5b7;
+  --text-dark: #1a0f0a;
+  --border: #5a3a1a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: linear-gradient(135deg, #1a0f0a 0%, #2c1810 50%, #1a0f0a 100%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ========== 打印提示 ========== */
+.print-hint {
+  background: linear-gradient(135deg, #2c1810, #3d2012);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.print-hint h2 {
+  color: var(--gold-light);
+  margin-bottom: 12px;
+  font-size: 1.3em;
+  text-align: center;
+}
+.print-hint ul {
+  list-style: none;
+  padding: 0;
+}
+.print-hint li {
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  color: var(--text);
+  font-size: 0.95em;
+}
+.print-hint li:last-child { border-bottom: none; }
+.print-hint strong { color: var(--gold-light); }
+.print-hint .btn-print {
+  display: block;
+  margin: 15px auto 0;
+  padding: 12px 36px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: #1a0f0a;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Georgia', serif;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.print-hint .btn-print:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(212,168,67,0.5);
+}
+
+/* ========== 章节标题 ========== */
+.section-title {
+  text-align: center;
+  margin: 40px 0 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(139,105,20,0.2));
+  border-top: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  border-radius: 8px;
+  page-break-before: always;
+}
+.section-title:first-of-type { page-break-before: auto; }
+.section-title h2 {
+  color: var(--gold-light);
+  font-size: 1.5em;
+  letter-spacing: 2px;
+}
+
+/* ========== 炼金台 ========== */
+.alchemy-table {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 30px;
+  background: linear-gradient(135deg, #3d2012, #2c1810);
+  border: 3px solid var(--gold);
+  border-radius: 16px;
+  padding: 25px;
+  position: relative;
+  overflow: hidden;
+}
+.alchemy-table::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(212,168,67,0.1), transparent 60%);
+  pointer-events: none;
+}
+.alchemy-table h3 {
+  text-align: center;
+  color: var(--gold-light);
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+}
+.table-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.deck-zone {
+  background: rgba(0,0,0,0.3);
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.deck-zone .zone-icon {
+  font-size: 2.5em;
+  margin-bottom: 8px;
+}
+.deck-zone .zone-label {
+  font-size: 0.9em;
+  color: var(--gold-light);
+  font-weight: bold;
+}
+.deck-zone .zone-sub {
+  font-size: 0.75em;
+  color: var(--text);
+  opacity: 0.7;
+}
+.deck-zone.active { border-color: var(--gold); border-style: solid; background: rgba(212,168,67,0.1); }
+
+.discard-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.discard-zone {
+  background: rgba(0,0,0,0.4);
+  border: 1px dashed #5a3a1a;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  color: var(--text);
+  opacity: 0.6;
+}
+
+.public-recipes {
+  background: rgba(0,0,0,0.3);
+  border: 2px solid var(--gold);
+  border-radius: 10px;
+  padding: 15px;
+}
+.public-recipes h4 {
+  text-align: center;
+  color: var(--gold-light);
+  margin-bottom: 10px;
+  font-size: 1em;
+  letter-spacing: 1px;
+}
+.recipe-slots {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.recipe-slot {
+  background: rgba(212,168,67,0.15);
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+  padding: 10px 15px;
+  text-align: center;
+  min-width: 100px;
+}
+.recipe-slot .slot-name {
+  font-size: 0.8em;
+  color: var(--gold-light);
+  margin-bottom: 4px;
+}
+.recipe-slot .slot-elements {
+  font-size: 1.1em;
+  letter-spacing: 2px;
+}
+
+/* ========== 卡牌通用样式 ========== */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 10px;
+}
+.card {
+  width: 160px;
+  height: 220px;
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  transition: transform 0.2s;
+  cursor: default;
+  border: 2px solid;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+.card .card-icon {
+  font-size: 3em;
+  margin: 5px 0;
+}
+.card .card-name {
+  font-size: 0.85em;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.3;
+}
+.card .card-effect {
+  font-size: 0.7em;
+  text-align: center;
+  line-height: 1.3;
+  opacity: 0.9;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.card .card-count {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 0.65em;
+  opacity: 0.7;
+}
+.card .card-type {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  font-size: 0.6em;
+  opacity: 0.6;
+  letter-spacing: 1px;
+}
+
+/* 元素卡 */
+.card-fire { background: linear-gradient(180deg, #c0392b 0%, #7b241c 50%, #3d0c0a 100%); border-color: #e74c3c; color: #fff; }
+.card-water { background: linear-gradient(180deg, #2980b9 0%, #1a5276 50%, #0b2d4a 100%); border-color: #3498db; color: #fff; }
+.card-earth { background: linear-gradient(180deg, #a0522d 0%, #6b3718 50%, #3d1a08 100%); border-color: #8b4513; color: #fff; }
+.card-air { background: linear-gradient(180deg, #95a5a6 0%, #5d6d7e 50%, #2c3e50 100%); border-color: #bdc3c7; color: #fff; }
+.card-quint { background: linear-gradient(180deg, #f39c12 0%, #b8860b 50%, #6b4c00 100%); border-color: #f1c40f; color: #1a0f0a; }
+
+/* 药剂卡 */
+.card-potion { background: linear-gradient(180deg, #8e44ad 0%, #5b2c6f 50%, #2e0e3d 100%); border-color: #9b59b6; color: #fff; }
+
+/* 嬗变卡 */
+.card-transmute { background: linear-gradient(180deg, #c0392b 0%, #78281f 50%, #3d0c0a 100%); border-color: #c0392b; color: #fff; }
+.card-transmute.positive { background: linear-gradient(180deg, #27ae60 0%, #1e7032 50%, #0d3518 100%); border-color: #2ecc71; }
+.card-transmute.negative { background: linear-gradient(180deg, #922b21 0%, #641e16 50%, #2e0806 100%); border-color: #e74c3c; }
+
+/* 配方卡 */
+.card-recipe { background: linear-gradient(180deg, #27ae60 0%, #1a6e35 50%, #0d3518 100%); border-color: #2ecc71; color: #fff; }
+.card-recipe.rare { background: linear-gradient(180deg, #2980b9 0%, #1a5276 50%, #0b2d4a 100%); border-color: #3498db; }
+.card-recipe.epic { background: linear-gradient(180deg, #8e44ad 0%, #5b2c6f 50%, #2e0e3d 100%); border-color: #9b59b6; }
+.card-recipe.legendary { background: linear-gradient(180deg, #f39c12 0%, #b8860b 50%, #6b4c00 100%); border-color: #f1c40f; color: #1a0f0a; }
+
+/* ========== 玩家面板 ========== */
+.player-panels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+.player-panel {
+  background: linear-gradient(135deg, #3d2012, #2c1810);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 15px;
+  width: 300px;
+}
+.player-panel h4 {
+  text-align: center;
+  color: var(--gold-light);
+  margin-bottom: 10px;
+  font-size: 1em;
+  letter-spacing: 1px;
+}
+.panel-section {
+  margin-bottom: 10px;
+}
+.panel-section .label {
+  font-size: 0.75em;
+  color: var(--gold);
+  margin-bottom: 4px;
+}
+.hand-area {
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 40px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.hand-area .mini-card {
+  width: 30px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+}
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.track-slot {
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7em;
+  color: var(--text);
+  opacity: 0.5;
+}
+.track-slot.filled {
+  background: rgba(212,168,67,0.3);
+  border-color: var(--gold);
+  opacity: 1;
+}
+.potion-slots {
+  display: flex;
+  gap: 6px;
+}
+.potion-slot {
+  width: 40px;
+  height: 50px;
+  background: rgba(0,0,0,0.3);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6em;
+  color: var(--text);
+  opacity: 0.5;
+}
+
+/* ========== 卡牌背面 ========== */
+.card-back-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.card-back {
+  width: 160px;
+  height: 220px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  border: 2px solid;
+}
+.card-back .back-icon {
+  font-size: 4em;
+  margin-bottom: 8px;
+}
+.card-back .back-text {
+  font-size: 0.9em;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-align: center;
+}
+.back-element { background: linear-gradient(135deg, #2c1810, #3d2012); border-color: var(--gold); color: var(--gold-light); }
+.back-potion { background: linear-gradient(135deg, #2e0e3d, #5b2c6f 50%, #2e0e3d); border-color: #9b59b6; color: #e8d5b7; }
+.back-transmute { background: linear-gradient(135deg, #3d0c0a, #78281f 50%, #3d0c0a); border-color: #c0392b; color: #e8d5b7; }
+.back-recipe { background: linear-gradient(135deg, #0d3518, #1a6e35 50%, #0d3518); border-color: #2ecc71; color: #e8d5b7; }
+
+/* ========== 装饰元素 ========== */
+.divider {
+  width: 60%;
+  max-width: 300px;
+  height: 2px;
+  margin: 15px auto;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.page-break { page-break-after: always; }
+
+/* ========== 打印样式 ========== */
+@media print {
+  @page { margin: 8mm; size: A4; }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+    padding: 0;
+  }
+  .print-hint { display: none; }
+  .section-title {
+    page-break-before: always;
+    background: #f5f0e8 !important;
+    border-color: #8b6914 !important;
+    color: #1a0f0a !important;
+  }
+  .section-title:first-of-type { page-break-before: auto; }
+  .card:hover { transform: none; }
+  .card-back-grid, .cards-container { page-break-inside: avoid; }
+  .alchemy-table, .player-panel {
+    page-break-inside: avoid;
+    border-color: #8b6914 !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 打印提示 ==================== -->
+<div class="print-hint">
+  <h2>🔮 炼金术士的秘密 - 打印道具集</h2>
+  <ul>
+    <li>📄 使用 <strong>A4纸张</strong> 打印，建议设置<strong>最小边距</strong></li>
+    <li>🖨️ 在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+    <li>🃏 卡牌建议使用 <strong>200g以上卡纸</strong> 打印，增加耐用性</li>
+    <li>✂️ 打印后沿边框裁剪，建议使用卡套（65×90mm）保护</li>
+    <li>📦 本页包含全部道具：炼金台×1、元素卡×50、药剂卡×20、嬗变卡×15、配方卡×15、玩家面板×5、卡背×4</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 打印全部道具</button>
+</div>
+
+<!-- ==================== 炼金台面板 ==================== -->
+<div class="section-title"><h2>🔮 炼金台面板</h2></div>
+<div class="alchemy-table">
+  <h3>⚗️ 炼 金 台 ⚗️</h3>
+  <div class="table-grid">
+    <div class="deck-zone active">
+      <div class="zone-icon">📦🔥</div>
+      <div class="zone-label">元素牌堆</div>
+      <div class="zone-sub">50张 · 抽完洗弃牌</div>
+    </div>
+    <div class="deck-zone">
+      <div class="zone-icon">📦🧪</div>
+      <div class="zone-label">药剂牌堆</div>
+      <div class="zone-sub">20张 · 抽完即止</div>
+    </div>
+    <div class="deck-zone">
+      <div class="zone-icon">📦⚡</div>
+      <div class="zone-label">嬗变牌堆</div>
+      <div class="zone-sub">15张 · 事件触发</div>
+    </div>
+  </div>
+  <div class="discard-row">
+    <div class="discard-zone">♻️ 弃元素堆</div>
+    <div class="discard-zone">♻️ 弃药剂堆</div>
+    <div class="discard-zone">♻️ 弃嬗变堆</div>
+  </div>
+  <div class="public-recipes">
+    <h4>📜 公开配方区（翻开2-3张）</h4>
+    <div class="recipe-slots">
+      <div class="recipe-slot">
+        <div class="slot-name">配方一</div>
+        <div class="slot-elements">🔥🔥💧🪨🌬️✨✨</div>
+      </div>
+      <div class="recipe-slot">
+        <div class="slot-name">配方二</div>
+        <div class="slot-elements">💧💧🔥🪨🌬️✨✨</div>
+      </div>
+      <div class="recipe-slot">
+        <div class="slot-name">配方三</div>
+        <div class="slot-elements">🪨🪨🔥💧🌬️✨✨</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 元素卡 ==================== -->
+<div class="section-title"><h2>🔥 元素卡（共50张，每类10张）</h2></div>
+
+<div class="cards-container">
+  <!-- 火元素 x10 -->
+  <div class="card card-fire"><div class="card-count">×10</div><div class="card-icon">🔥</div><div class="card-name">火元素</div><div class="card-effect">可被"火焰药剂"额外利用<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-fire"><div class="card-count">×10</div><div class="card-icon">🔥</div><div class="card-name">火元素</div><div class="card-effect">可被"火焰药剂"额外利用<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-fire"><div class="card-count">×10</div><div class="card-icon">🔥</div><div class="card-name">火元素</div><div class="card-effect">可被"火焰药剂"额外利用<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+
+  <!-- 水元素 x10 -->
+  <div class="card card-water"><div class="card-count">×10</div><div class="card-icon">💧</div><div class="card-name">水元素</div><div class="card-effect">免疫"干涸"嬗变<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-water"><div class="card-count">×10</div><div class="card-icon">💧</div><div class="card-name">水元素</div><div class="card-effect">免疫"干涸"嬗变<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-water"><div class="card-count">×10</div><div class="card-icon">💧</div><div class="card-name">水元素</div><div class="card-effect">免疫"干涸"嬗变<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+
+  <!-- 土元素 x10 -->
+  <div class="card card-earth"><div class="card-count">×10</div><div class="card-icon">🪨</div><div class="card-name">土元素</div><div class="card-effect">免疫"地震"嬗变<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-earth"><div class="card-count">×10</div><div class="card-icon">🪨</div><div class="card-name">土元素</div><div class="card-effect">免疫"地震"嬗变<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-earth"><div class="card-count">×10</div><div class="card-icon">🪨</div><div class="card-name">土元素</div><div class="card-effect">免疫"地震"嬗变<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+
+  <!-- 风元素 x10 -->
+  <div class="card card-air"><div class="card-count">×10</div><div class="card-icon">🌬️</div><div class="card-name">风元素</div><div class="card-effect">每回合适用：多抽1张<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-air"><div class="card-count">×10</div><div class="card-icon">🌬️</div><div class="card-name">风元素</div><div class="card-effect">每回合适用：多抽1张<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-air"><div class="card-count">×10</div><div class="card-icon">🌬️</div><div class="card-name">风元素</div><div class="card-effect">每回合适用：多抽1张<br>配方基础材料</div><div class="card-type">ELEMENT</div></div>
+
+  <!-- 精粹 x10 -->
+  <div class="card card-quint"><div class="card-count">×10</div><div class="card-icon">✨</div><div class="card-name">精粹</div><div class="card-effect">万能元素！替代任意元素<br>⚠️ 稀有卡，谨慎使用</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-quint"><div class="card-count">×10</div><div class="card-icon">✨</div><div class="card-name">精粹</div><div class="card-effect">万能元素！替代任意元素<br>⚠️ 稀有卡，谨慎使用</div><div class="card-type">ELEMENT</div></div>
+  <div class="card card-quint"><div class="card-count">×10</div><div class="card-icon">✨</div><div class="card-name">精粹</div><div class="card-effect">万能元素！替代任意元素<br>⚠️ 稀有卡，谨慎使用</div><div class="card-type">ELEMENT</div></div>
+</div>
+
+<!-- ==================== 药剂卡 ==================== -->
+<div class="section-title"><h2>🧪 药剂卡（共20张，每种5张）</h2></div>
+<div class="cards-container">
+  <div class="card card-potion"><div class="card-count">×5</div><div class="card-icon">🧪💨</div><div class="card-name">疾风药剂</div><div class="card-effect">本回合额外抽取<br>2张元素卡</div><div class="card-type">POTION</div></div>
+  <div class="card card-potion"><div class="card-count">×5</div><div class="card-icon">🧪👁️</div><div class="card-name">洞察药剂</div><div class="card-effect">查看任意牌堆顶3张<br>选1张加入手牌</div><div class="card-type">POTION</div></div>
+  <div class="card card-potion"><div class="card-count">×5</div><div class="card-icon">🧪🖐️</div><div class="card-name">窃取药剂</div><div class="card-effect">从对手手中随机<br>抽取1张元素卡</div><div class="card-type">POTION</div></div>
+  <div class="card card-potion"><div class="card-count">×5</div><div class="card-icon">🧪🛡️</div><div class="card-name">护盾药剂</div><div class="card-effect">抵消一次针对你的<br>负面效果（可打断）</div><div class="card-type">POTION</div></div>
+</div>
+
+<!-- ==================== 嬗变卡 ==================== -->
+<div class="section-title"><h2>⚡ 嬗变卡（共15张）</h2></div>
+<div class="cards-container">
+  <div class="card card-transmute"><div class="card-count">×3</div><div class="card-icon">⚡🔥</div><div class="card-name">元素风暴</div><div class="card-effect">所有玩家弃掉一种元素<br>从牌堆补抽2张</div><div class="card-type">TRANSMUTE · 中性</div></div>
+  <div class="card card-transmute positive"><div class="card-count">×3</div><div class="card-icon">⚡💧</div><div class="card-name">贤者之雨</div><div class="card-effect">所有玩家从元素牌堆<br>抽取2张元素卡</div><div class="card-type">TRANSMUTE · 正面</div></div>
+  <div class="card card-transmute negative"><div class="card-count">×2</div><div class="card-icon">⚡💀</div><div class="card-name">炼狱之火</div><div class="card-effect">所有玩家随机<br>弃掉1张手牌</div><div class="card-type">TRANSMUTE · 负面</div></div>
+  <div class="card card-transmute positive"><div class="card-count">×2</div><div class="card-icon">⚡✨</div><div class="card-name">点石成金</div><div class="card-effect">当前玩家获得<br>1张精粹卡</div><div class="card-type">TRANSMUTE · 正面</div></div>
+  <div class="card card-transmute"><div class="card-count">×2</div><div class="card-icon">⚡⚖️</div><div class="card-name">等价交换</div><div class="card-effect">所有玩家弃掉手牌中<br>最多的一种元素类型</div><div class="card-type">TRANSMUTE · 中性</div></div>
+  <div class="card card-transmute negative"><div class="card-count">×1</div><div class="card-icon">⚡☠️</div><div class="card-name">末日审判</div><div class="card-effect">所有已完成配方<br>进度全部清零！</div><div class="card-type">TRANSMUTE · 极负面</div></div>
+  <div class="card card-transmute positive"><div class="card-count">×1</div><div class="card-icon">⚡🌟</div><div class="card-name">幸运之星</div><div class="card-effect">当前玩家立即完成<br>配方中的任意1格</div><div class="card-type">TRANSMUTE · 极正面</div></div>
+  <div class="card card-transmute negative"><div class="card-count">×1</div><div class="card-icon">⚡🐉</div><div class="card-name">龙之吐息</div><div class="card-effect">掷骰决定的玩家<br>弃掉所有火元素卡</div><div class="card-type">TRANSMUTE · 负面</div></div>
+</div>
+
+<!-- ==================== 配方卡 ==================== -->
+<div class="section-title"><h2>📜 配方卡（共15张）</h2></div>
+<div class="cards-container">
+  <!-- 普通配方 -->
+  <div class="card card-recipe"><div class="card-count">普通</div><div class="card-icon">☀️</div><div class="card-name">太阳之石</div><div class="card-effect">需求：🔥🔥💧🪨🌬️✨✨<br>7格 · 普通难度</div><div class="card-type">RECIPE · NORMAL</div></div>
+  <div class="card card-recipe"><div class="card-count">普通</div><div class="card-icon">🌙</div><div class="card-name">月之精华</div><div class="card-effect">需求：💧💧🔥🪨🌬️✨✨<br>7格 · 普通难度</div><div class="card-type">RECIPE · NORMAL</div></div>
+  <div class="card card-recipe"><div class="card-count">普通</div><div class="card-icon">🌍</div><div class="card-name">大地之心</div><div class="card-effect">需求：🪨🪨🔥💧🌬️✨✨<br>7格 · 普通难度</div><div class="card-type">RECIPE · NORMAL</div></div>
+
+  <!-- 稀有配方 -->
+  <div class="card card-recipe rare"><div class="card-count">稀有</div><div class="card-icon">🌪️</div><div class="card-name">风暴之眼</div><div class="card-effect">需求：🌬️🌬️🔥💧🪨✨✨<br>7格 · 稀有难度</div><div class="card-type">RECIPE · RARE</div></div>
+  <div class="card card-recipe rare"><div class="card-count">稀有</div><div class="card-icon">🐦‍🔥</div><div class="card-name">凤凰之泪</div><div class="card-effect">需求：🔥🔥💧💧🪨🌬️✨<br>7格 · 稀有难度</div><div class="card-type">RECIPE · RARE</div></div>
+
+  <!-- 史诗配方 -->
+  <div class="card card-recipe epic"><div class="card-count">史诗</div><div class="card-icon">🐉</div><div class="card-name">龙之血</div><div class="card-effect">需求：🔥🔥🪨🪨💧🌬️✨<br>7格 · 史诗难度</div><div class="card-type">RECIPE · EPIC</div></div>
+  <div class="card card-recipe epic"><div class="card-count">史诗</div><div class="card-icon">🌌</div><div class="card-name">虚空结晶</div><div class="card-effect">需求：✨✨💧💧🔥🪨🌬️<br>7格 · 史诗难度</div><div class="card-type">RECIPE · EPIC</div></div>
+
+  <!-- 传说配方 -->
+  <div class="card card-recipe legendary"><div class="card-count">传说</div><div class="card-icon">💎</div><div class="card-name">贤者之石</div><div class="card-effect">需求：✨✨✨🔥💧🪨🌬️<br>7格 · 传说难度</div><div class="card-type">RECIPE · LEGENDARY</div></div>
+</div>
+
+<!-- ==================== 玩家面板 ==================== -->
+<div class="section-title"><h2>📋 玩家面板（5张）</h2></div>
+<div class="player-panels">
+  <!-- 面板 1 -->
+  <div class="player-panel">
+    <h4>🔴 玩家一 · 炼金笔记</h4>
+    <div class="panel-section">
+      <div class="label">🃏 手牌区（最多7张）</div>
+      <div class="hand-area">
+        <div class="mini-card card-fire" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🔥</div>
+        <div class="mini-card card-fire" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🔥</div>
+        <div class="mini-card card-water" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">💧</div>
+        <div class="mini-card card-earth" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🪨</div>
+        <div class="mini-card card-air" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🌬️</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">📜 配方进度（7格轨道）</div>
+      <div class="track-grid">
+        <div class="track-slot">1</div><div class="track-slot">2</div><div class="track-slot">3</div>
+        <div class="track-slot">4</div><div class="track-slot">5</div><div class="track-slot">6</div><div class="track-slot">7</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">🧪 已用药剂（最多3瓶）</div>
+      <div class="potion-slots">
+        <div class="potion-slot">1</div><div class="potion-slot">2</div><div class="potion-slot">3</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;"><span style="color:var(--gold);">💎 积分：___ 分</span></div>
+  </div>
+
+  <!-- 面板 2 -->
+  <div class="player-panel">
+    <h4>🔵 玩家二 · 炼金笔记</h4>
+    <div class="panel-section">
+      <div class="label">🃏 手牌区（最多7张）</div>
+      <div class="hand-area">
+        <div class="mini-card card-water" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">💧</div>
+        <div class="mini-card card-water" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">💧</div>
+        <div class="mini-card card-fire" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🔥</div>
+        <div class="mini-card card-earth" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🪨</div>
+        <div class="mini-card card-quint" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">✨</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">📜 配方进度</div>
+      <div class="track-grid">
+        <div class="track-slot">1</div><div class="track-slot">2</div><div class="track-slot">3</div>
+        <div class="track-slot">4</div><div class="track-slot">5</div><div class="track-slot">6</div><div class="track-slot">7</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">🧪 已用药剂（最多3瓶）</div>
+      <div class="potion-slots">
+        <div class="potion-slot">1</div><div class="potion-slot">2</div><div class="potion-slot">3</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;"><span style="color:var(--gold);">💎 积分：___ 分</span></div>
+  </div>
+
+  <!-- 面板 3 -->
+  <div class="player-panel">
+    <h4>🟢 玩家三 · 炼金笔记</h4>
+    <div class="panel-section">
+      <div class="label">🃏 手牌区（最多7张）</div>
+      <div class="hand-area">
+        <div class="mini-card card-earth" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🪨</div>
+        <div class="mini-card card-earth" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🪨</div>
+        <div class="mini-card card-fire" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🔥</div>
+        <div class="mini-card card-water" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">💧</div>
+        <div class="mini-card card-air" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🌬️</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">📜 配方进度</div>
+      <div class="track-grid">
+        <div class="track-slot">1</div><div class="track-slot">2</div><div class="track-slot">3</div>
+        <div class="track-slot">4</div><div class="track-slot">5</div><div class="track-slot">6</div><div class="track-slot">7</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">🧪 已用药剂（最多3瓶）</div>
+      <div class="potion-slots">
+        <div class="potion-slot">1</div><div class="potion-slot">2</div><div class="potion-slot">3</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;"><span style="color:var(--gold);">💎 积分：___ 分</span></div>
+  </div>
+
+  <!-- 面板 4 -->
+  <div class="player-panel">
+    <h4>🟡 玩家四 · 炼金笔记</h4>
+    <div class="panel-section">
+      <div class="label">🃏 手牌区（最多7张）</div>
+      <div class="hand-area">
+        <div class="mini-card card-air" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🌬️</div>
+        <div class="mini-card card-air" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🌬️</div>
+        <div class="mini-card card-fire" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🔥</div>
+        <div class="mini-card card-earth" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🪨</div>
+        <div class="mini-card card-quint" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">✨</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">📜 配方进度</div>
+      <div class="track-grid">
+        <div class="track-slot">1</div><div class="track-slot">2</div><div class="track-slot">3</div>
+        <div class="track-slot">4</div><div class="track-slot">5</div><div class="track-slot">6</div><div class="track-slot">7</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">🧪 已用药剂（最多3瓶）</div>
+      <div class="potion-slots">
+        <div class="potion-slot">1</div><div class="potion-slot">2</div><div class="potion-slot">3</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;"><span style="color:var(--gold);">💎 积分：___ 分</span></div>
+  </div>
+
+  <!-- 面板 5 -->
+  <div class="player-panel">
+    <h4>🟣 玩家五 · 炼金笔记</h4>
+    <div class="panel-section">
+      <div class="label">🃏 手牌区（最多7张）</div>
+      <div class="hand-area">
+        <div class="mini-card card-quint" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">✨</div>
+        <div class="mini-card card-fire" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🔥</div>
+        <div class="mini-card card-water" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">💧</div>
+        <div class="mini-card card-earth" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🪨</div>
+        <div class="mini-card card-air" style="width:28px;height:38px;border-radius:3px;font-size:0.8em;">🌬️</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">📜 配方进度</div>
+      <div class="track-grid">
+        <div class="track-slot">1</div><div class="track-slot">2</div><div class="track-slot">3</div>
+        <div class="track-slot">4</div><div class="track-slot">5</div><div class="track-slot">6</div><div class="track-slot">7</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="label">🧪 已用药剂（最多3瓶）</div>
+      <div class="potion-slots">
+        <div class="potion-slot">1</div><div class="potion-slot">2</div><div class="potion-slot">3</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;"><span style="color:var(--gold);">💎 积分：___ 分</span></div>
+  </div>
+</div>
+
+<!-- ==================== 卡牌背面 ==================== -->
+<div class="section-title"><h2>🃏 卡牌背面参考（各打印对应数量）</h2></div>
+<div class="card-back-grid">
+  <div class="card-back back-element">
+    <div class="back-icon">⚗️</div>
+    <div class="back-text">元素卡<br>ELEMENT</div>
+  </div>
+  <div class="card-back back-potion">
+    <div class="back-icon">🧪</div>
+    <div class="back-text">药剂卡<br>POTION</div>
+  </div>
+  <div class="card-back back-transmute">
+    <div class="back-icon">⚡</div>
+    <div class="back-text">嬗变卡<br>TRANSMUTE</div>
+  </div>
+  <div class="card-back back-recipe">
+    <div class="back-icon">📜</div>
+    <div class="back-text">配方卡<br>RECIPE</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div style="text-align:center; padding:20px; opacity:0.6; font-size:0.8em;">
+  <p>🔮 炼金术士的秘密 · Alchemist's Secret v1.0</p>
+  <p>建议使用200g卡纸打印 · 打印时请勾选"背景图形"</p>
+</div>
+
+</body>
+</html>
