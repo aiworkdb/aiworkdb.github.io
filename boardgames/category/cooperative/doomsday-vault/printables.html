@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>末日种子库 - 打印道具</title>
+<style>
+  /* ===== 基础重置 ===== */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    line-height: 1.5;
+    padding: 20px;
+  }
+
+  /* ===== 打印支持 ===== */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body { background: #fff; color: #000; padding: 0; }
+    .no-print, .print-hint, .section-nav { display: none !important; }
+    .page-break { page-break-before: always; }
+    .card-grid { page-break-inside: avoid; }
+    h1, h2, h3 { page-break-after: avoid; }
+    @page { margin: 10mm; size: A4; }
+  }
+
+  /* ===== 打印提示 ===== */
+  .print-hint {
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .print-hint strong { font-size: 17px; }
+  .print-hint ul { margin-top: 8px; padding-left: 20px; }
+  .print-hint li { margin: 4px 0; }
+
+  /* ===== 标题区 ===== */
+  .header {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #0f3460, #16213e);
+    border-radius: 16px;
+    margin-bottom: 30px;
+    border: 2px solid #e94560;
+  }
+  .header h1 {
+    font-size: 36px;
+    color: #00fff5;
+    text-shadow: 0 0 30px rgba(0,255,245,0.3);
+    letter-spacing: 4px;
+  }
+  .header .subtitle {
+    font-size: 16px;
+    color: #a0a0c0;
+    margin-top: 8px;
+  }
+
+  /* ===== 导航 ===== */
+  .section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  .section-nav a {
+    display: inline-block;
+    padding: 8px 18px;
+    background: #16213e;
+    color: #00fff5;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    border: 1px solid #e94560;
+    transition: all 0.2s;
+  }
+  .section-nav a:hover { background: #e94560; color: #fff; }
+
+  /* ===== 章节通用 ===== */
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-size: 26px;
+    color: #00fff5;
+    border-left: 4px solid #e94560;
+    padding-left: 16px;
+    margin-bottom: 20px;
+  }
+  .section-desc {
+    color: #9090a0;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== 卡牌网格 ===== */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  /* ===== 单张卡牌 ===== */
+  .card {
+    width: 100%;
+    aspect-ratio: 2.5 / 3.5;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); }
+
+  /* 卡牌类型颜色 */
+  .card-seed-common     { background: linear-gradient(145deg, #2d5016, #4a7c23); border-color: #6b9b37; }
+  .card-seed-rare       { background: linear-gradient(145deg, #1a5276, #2980b9); border-color: #5dade2; }
+  .card-seed-epic       { background: linear-gradient(145deg, #6c3483, #8e44ad); border-color: #bb8fce; }
+  .card-seed-legendary  { background: linear-gradient(145deg, #7e4700, #b9770e); border-color: #f4d03f; }
+  .card-res-energy      { background: linear-gradient(145deg, #0e6655, #1abc9c); border-color: #48c9b0; }
+  .card-res-food        { background: linear-gradient(145deg, #922b21, #c0392b); border-color: #ec7063; }
+  .card-res-medicine    { background: linear-gradient(145deg, #1a5276, #2980b9); border-color: #85c1e9; }
+  .card-res-parts       { background: linear-gradient(145deg, #566573, #7f8c8d); border-color: #aab7b8; }
+  .card-equip           { background: linear-gradient(145deg, #1c2833, #2c3e50); border-color: #5dade2; }
+  .card-event-crisis    { background: linear-gradient(145deg, #641e16, #c0392b); border-color: #e74c3c; }
+  .card-event-oppty     { background: linear-gradient(145deg, #0e6655, #1abc9c); border-color: #2ecc71; }
+  .card-event-choice    { background: linear-gradient(145deg, #7d5a00, #b7950b); border-color: #f1c40f; }
+  .card-role            { background: linear-gradient(145deg, #1a1a3e, #2d2d5e); border-color: #e94560; }
+
+  /* 卡牌内容 */
+  .card-type-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.35);
+    color: #ddd;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .card-icon {
+    font-size: 36px;
+    text-align: center;
+    margin: 8px 0 4px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+  .card-name {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    margin-bottom: 6px;
+    line-height: 1.2;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-cost {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    background: rgba(0,0,0,0.25);
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin: auto 6px;
+  }
+  .card-effect {
+    font-size: 11px;
+    color: rgba(255,255,255,0.88);
+    flex: 1;
+    padding: 6px;
+    background: rgba(0,0,0,0.18);
+    border-radius: 6px;
+    margin: 0 4px 4px;
+    line-height: 1.45;
+  }
+  .card-vp {
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffd700;
+    margin-top: auto;
+    padding-top: 4px;
+  }
+  .card-rarity-star {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  /* ===== 地图区域 ===== */
+  .map-container {
+    background: #0d1b2a;
+    border-radius: 16px;
+    padding: 24px;
+    border: 2px solid #1b3a5c;
+    margin-bottom: 30px;
+  }
+  .map-container h3 {
+    color: #00fff5;
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 20px;
+  }
+
+  /* 主面板 */
+  .main-panel {
+    max-width: 700px;
+    margin: 0 auto 24px;
+    background: linear-gradient(180deg, #0a1628, #102040);
+    border: 2px solid #e94560;
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .panel-title {
+    text-align: center;
+    font-size: 22px;
+    color: #00fff5;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .system-track {
+    margin-bottom: 14px;
+  }
+  .system-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .track-bar {
+    height: 24px;
+    background: #1a1a3e;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #333;
+  }
+  .track-fill {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .fill-power   { background: linear-gradient(90deg, #f39c12, #f1c40f, #ffeaa7); width: 83%; }  /* 10/12 */
+  .fill-temp    { background: linear-gradient(90deg, #3498db, #00cec9, #81ecec); width: 67%; }  /* 8/12 */
+  .fill-oxygen  { background: linear-gradient(90deg, #00b894, #55efc4, #a8e6cf); width: 75%; }  /* 9/12 */
+
+  .vault-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+    margin-top: 14px;
+    padding: 12px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+  }
+  .vault-cell {
+    aspect-ratio: 1;
+    border: 1px dashed #333;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: rgba(255,255,255,0.03);
+    color: #555;
+  }
+  .vault-counter {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #e94560;
+    font-weight: bold;
+  }
+
+  /* 远征地图 */
+  .expedition-map {
+    max-width: 650px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #1a2a3a, #0d1520);
+    border: 2px solid #1b3a5c;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+  }
+  .map-node {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+    border: 3px solid;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    z-index: 2;
+    cursor: default;
+  }
+  .map-node .node-icon { font-size: 24px; margin-bottom: 2px; }
+  .node-base    { background: linear-gradient(145deg, #2ecc71, #27ae60); border-color: #58d68d; top: 10px; left: 50%; transform: translateX(-50%); }
+  .node-amazon  { background: linear-gradient(145deg, #27ae60, #1e8449); border-color: #58d68d; top: 130px; left: 18%; }
+  .node-siberia { background: linear-gradient(145deg, #5dade2, #3498db); border-color: #85c1e9; top: 130px; left: 64%; }
+  .node-savanna { background: linear-gradient(145deg, #e67e22, #d35400); border-color: #f0b27a; top: 270px; left: 8%; }
+  .node-atoll   { background: linear-gradient(145deg, #17a589, #148f77); border-color: #48c9b0; top: 270px; left: 42%; }
+  .node-himalaya{ background: linear-gradient(145deg, #8e44ad, #6c3483); border-color: #bb8fce; top: 270px; left: 76%; }
+  .node-mediter { background: linear-gradient(145deg, #f1c40f, #d4ac0d); border-color: #f7dc6f; top: 400px; left: 42%; }
+
+  .danger-badge {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    background: #e74c3c;
+    color: #fff;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+  }
+  .safe-badge {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    background: #2ecc71;
+    color: #fff;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+  }
+
+  .map-svg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .map-svg-layer line {
+    stroke: #3d5a80;
+    stroke-width: 3;
+    stroke-dasharray: 8,4;
+  }
+
+  /* ===== 棋子/指示物 ===== */
+  .token-section { margin-bottom: 30px; }
+  .token-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  .player-token {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    border: 3px solid;
+    font-weight: bold;
+    font-size: 12px;
+    color: #fff;
+  }
+  .token-name { font-size: 10px; margin-top: 2px; }
+  .token-engineer { background: #e67e22; border-color: #f0b27a; }
+  .token-botanist  { background: #27ae60; border-color: #58d68d; }
+  .token-security  { background: #e74c3c; border-color: #ec7063; }
+  .token-logistics { background: #3498db; border-color: #85c1e9; }
+  .token-explorer  { background: #9b59b6; border-color: #bb8fce; }
+
+  .ap-token {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #f1c40f, #f39c12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .system-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 2px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .ind-power  { background: #f1c40f; }
+  .ind-temp   { background: #00cec9; }
+  .ind-oxy    { background: #55efc4; }
+
+  /* ===== 分隔线（打印换页）===== */
+  .page-break { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #333; }
+
+  /* ===== 卡组标题行 ===== */
+  .deck-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 8px 14px;
+    background: rgba(233,69,96,0.1);
+    border-radius: 8px;
+    border-left: 4px solid #e94560;
+  }
+  .deck-header h4 {
+    color: #00fff5;
+    font-size: 16px;
+  }
+  .deck-count {
+    margin-left: auto;
+    background: #e94560;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  /* ===== 角色卡特殊布局 ===== */
+  .role-card {
+    aspect-ratio: 2.2 / 3.5;
+  }
+  .role-card .card-name { font-size: 13px; min-height: 28px; }
+  .role-skill-box {
+    font-size: 10px;
+    color: rgba(255,255,255,0.85);
+    background: rgba(233,69,96,0.2);
+    border-radius: 6px;
+    padding: 5px 6px;
+    margin: 2px 4px;
+    border-left: 2px solid #e94560;
+  }
+  .role-ult-box {
+    font-size: 10px;
+    color: #ffd700;
+    background: rgba(255,215,0,0.1);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 6px;
+    padding: 5px 6px;
+    margin: 2px 4px;
+  }
+  .role-hp-bar {
+    text-align: center;
+    font-size: 12px;
+    margin-top: auto;
+    padding-top: 4px;
+  }
+  .hp-heart { color: #e74c3c; }
+
+  /* ===== 背面图案 ===== */
+  .card-back {
+    width: 100%;
+    aspect-ratio: 2.5 / 3.5;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #1a1a3e, #0f0f2e);
+    border: 2px solid #e94560;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-back::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(233,69,96,0.05) 10px,
+      rgba(233,69,96,0.05) 20px
+    );
+  }
+  .card-back span { position: relative; z-index: 1; }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 600px) {
+    .card-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .header h1 { font-size: 26px; }
+    .map-node { width: 60px; height: 60px; font-size: 9px; }
+    .map-node .node-icon { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== 打印提示 ====== -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议在浏览器打印设置中选择<strong>最小边距</strong></li>
+    <li>务必<strong>勾选"背景图形"</strong>选项（Chrome：更多设置 → 背景；Firefox：页面设置 → 打印背景）</li>
+    <li><strong>卡牌和棋子建议使用卡纸（160g以上）</strong>打印，增加耐用性和手感</li>
+    <li>打印后可用<strong>裁纸刀/剪刀</strong>沿卡牌边缘裁剪，建议圆角处理避免划手</li>
+    <li>有条件可使用<strong>塑封机</strong>对卡牌进行塑封，大幅延长使用寿命</li>
+    <li><strong>地图</>建议使用普通 A4 纸打印，可塑封后配合记号笔重复使用系统轨道</li>
+  </ul>
+</div>
+
+<!-- ====== 标题 ====== -->
+<div class="header">
+  <h1>🌍 末日种子库</h1>
+  <div class="subtitle">DOOMSDAY VAULT — 打印道具集 | Doomsday Vault Printable Components</div>
+</div>
+
+<!-- ====== 快捷导航 ====== -->
+<nav class="section-nav no-print">
+  <a href="#main-panel">📊 主面板</a>
+  <a href="#expedition-map">🗺️ 远征地图</a>
+  <a href="#tokens">♟️ 棋子与指示物</a>
+  <a href="#seed-cards">🌱 种子卡</a>
+  <a href="#resource-cards">📦 资源卡</a>
+  <a href="#equip-cards">🔬 设备卡</a>
+  <a href="#event-cards">⚠️ 事件卡</a>
+  <a href="#role-cards">👤 角色卡</a>
+  <a href="#card-backs">🎴 卡背</a>
+</nav>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: 主面板 -->
+<!-- ============================================================ -->
+<div class="page-break" id="main-panel"></div>
+<section class="section">
+  <h2 class="section-title">📊 种子库主控制面板</h2>
+  <p class="section-desc">打印后放在桌面中央。用记号笔或小物件在系统轨道上标记当前值。</p>
+
+  <div class="main-panel">
+    <div class="panel-title">🌍 末日种子库 — 主控制面板</div>
+
+    <!-- 电力系统 -->
+    <div class="system-track">
+      <div class="system-label"><span style="font-size:20px;">⚡</span> 电力系统 POWER</div>
+      <div class="track-bar"><div class="track-fill fill-power">10 / 12</div></div>
+    </div>
+
+    <!-- 温度控制 -->
+    <div class="system-track">
+      <div class="system-label"><span style="font-size:20px;">❄️</span> 温度控制 TEMPERATURE</div>
+      <div class="track-bar"><div class="track-fill fill-temp">8 / 12</div></div>
+    </div>
+
+    <!-- 氧气循环 -->
+    <div class="system-track">
+      <div class="system-label"><span style="font-size:20px;">🫁</span> 氧气循环 OXYGEN</div>
+      <div class="track-bar"><div class="track-fill fill-oxygen">9 / 12</div></div>
+    </div>
+
+    <!-- 已保存物种库 -->
+    <h4 style="color:#00fff5;margin:16px 0 10px;text-align:center;">📦 已保存物种库 — 目标：25种不同物种</h4>
+    <div class="vault-grid">
+      <div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div>
+      <div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div>
+      <div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div>
+      <div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div>
+      <div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div><div class="vault-cell"></div>
+      <div class="vault-cell"></div><div class="vault-cell"></div>
+    </div>
+    <div class="vault-counter">当前已保存：<span style="font-size:20px;">0</span> / 25 种 &nbsp;|&nbsp; 总 VP：<span style="font-size:20px;color:#ffd700;">0</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: 远征地图 -->
+<!-- ============================================================ -->
+<div class="page-break" id="expedition-map"></div>
+<section class="section">
+  <h2 class="section-title">🗺️ 远征地图</h2>
+  <p class="section-desc">打印后放置在主面板旁。玩家棋子沿连线移动到各远征点搜索种子。</p>
+
+  <div class="expedition-map">
+    <h3>🌍 全球远征网</h3>
+    <svg class="map-svg-layer" viewBox="0 0 600 480" xmlns="http://www.w3.org/2000/svg">
+      <!-- Base -> Amazon -->
+      <line x1="300" y1="55" x2="110" y2="155" />
+      <!-- Base -> Siberia -->
+      <line x1="300" y1="55" x2="490" y2="155" />
+      <!-- Amazon -> Savanna -->
+      <line x1="110" y1="155" x2="55" y2="305" />
+      <!-- Siberia -> Himalaya -->
+      <line x1="490" y1="155" x2="530" y2="305" />
+      <!-- Savanna -> Atoll -->
+      <line x1="55" y1="305" x2="280" y2="305" />
+      <!-- Atoll -> Himalaya -->
+      <line x1="280" y1="305" x2="530" y2="305" />
+      <!-- Atoll -> Mediterranean -->
+      <line x1="280" y1="305" x2="300" y2="430" />
+    </svg>
+
+    <!-- 基地营地 -->
+    <div class="map-node node-base">
+      <span class="node-icon">🏠</span>
+      基地<br>营地
+      <span class="safe-badge">安全</span>
+    </div>
+
+    <!-- 亚马逊废墟 -->
+    <div class="map-node node-amazon" style="top:120px;left:60px;">
+      <span class="node-icon">🌿</span>
+      亚马逊<br>废墟
+      <span class="danger-badge">★★☆</span>
+    </div>
+
+    <!-- 西伯利亚冻土 -->
+    <div class="map-node node-siberia" style="top:120px;right:60px;">
+      <span class="node-icon">❄️</span>
+      西伯利亚<br>冻土
+      <span class="danger-badge">★☆☆</span>
+    </div>
+
+    <!-- 非洲草原 -->
+    <div class="map-node node-savanna" style="top:250px;left:10px;">
+      <span class="node-icon">🦁</span>
+      非洲<br>草原
+      <span class="danger-badge">★★★</span>
+    </div>
+
+    <!-- 太平洋环礁 -->
+    <div class="map-node node-atoll" style="top:250px;left:240px;">
+      <span class="node-icon">🏝️</span>
+      太平洋<br>环礁
+      <span class="danger-badge">★★☆</span>
+    </div>
+
+    <!-- 喜马拉雅山谷 -->
+    <div class="map-node node-himalaya" style="top:250px;right:10px;">
+      <span class="node-icon">⛰️</span>
+      喜马拉雅<br>山谷
+      <span class="danger-badge">★★★★</span>
+    </div>
+
+    <!-- 地中海遗迹 -->
+    <div class="map-node node-mediter" style="bottom:20px;left:240px;">
+      <span class="node-icon">🫒</span>
+      地中海<br>遗迹
+      <span class="danger-badge">★★★</span>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;background:#16213e;padding:14px;border-radius:10px;border:1px solid #333;font-size:13px;line-height:1.8;">
+    <strong style="color:#00fff5;">📋 地图说明：</strong><br>
+    🟢 <strong>安全</strong> — 基地营地：恢复 HP、存取公共资源<br>
+    ⚡ <strong>★☆☆ 低危</strong> — 西伯利亚冻土：必得能量+耐寒物种<br>
+    🔶 <strong>★★☆ 中危</strong> — 亚马逊、太平洋：中等风险+不错产出<br>
+    🔴 <strong>★★★ 高危</strong> — 非洲草原、地中海：高风险但高回报<br>
+    💀 <strong>★★★★ 极危</strong> — 喜马拉雅：极高难度，可能出传说级种子<br>
+    ── 虚线为移动路线，每次相邻移动消耗 1 AP
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: 棋子与指示物 -->
+<!-- ============================================================ -->
+<div class="page-break" id="tokens"></div>
+<section class="section token-section">
+  <h2 class="section-title">♟️ 玩家棋子与指示物</h2>
+  <p class="section-desc">沿虚线裁剪后折叠成立体棋子，或粘贴在圆形底座上使用。</p>
+
+  <h4 style="color:#e94560;margin:14px 0 10px;">👤 玩家角色棋子（每人1枚）</h4>
+  <div class="token-grid">
+    <div class="player-token token-engineer"><span>👷‍♀️</span><span class="token-name">工程师</span></div>
+    <div class="player-token token-botanist"><span>🌾</span><span class="token-name">植物学家</span></div>
+    <div class="player-token token-security"><span>🛡️</span><span class="token-name">安全主管</span></div>
+    <div class="player-token token-logistics"><span>📦</span><span class="token-name">后勤官</span></div>
+    <div class="player-token token-explorer"><span>🧭</span><span class="token-name">探险家</span></div>
+  </div>
+
+  <h4 style="color:#e94560;margin:20px 0 10px;">⭐ 行动点指示物（每玩家需要4个）</h4>
+  <div class="token-grid" style="gap:8px;">
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+    <div class="ap-token">AP</div>
+  </div>
+  <p style="color:#888;font-size:12px;margin-top:6px;">↑ 共 16 个 AP 指示物（4人游戏用量），1-2人游戏可减半打印</p>
+
+  <h4 style="color:#e94560;margin:20px 0 10px;">🔴 系统状态指示物（每种颜色需要12个）</h4>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+    <div>
+      <div style="font-size:13px;color:#f1c40f;margin-bottom:6px;">⚡ 电力 ×12</div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;width:160px;">
+        <div class="system-indicator ind-power"></div><div class="system-indicator ind-power"></div>
+        <div class="system-indicator ind-power"></div><div class="system-indicator ind-power"></div>
+        <div class="system-indicator ind-power"></div><div class="system-indicator ind-power"></div>
+        <div class="system-indicator ind-power"></div><div class="system-indicator ind-power"></div>
+        <div class="system-indicator ind-power"></div><div class="system-indicator ind-power"></div>
+        <div class="system-indicator ind-power"></div><div class="system-indicator ind-power"></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13px;color:#00cec9;margin-bottom:6px;">❄️ 温度 ×12</div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;width:160px;">
+        <div class="system-indicator ind-temp"></div><div class="system-indicator ind-temp"></div>
+        <div class="system-indicator ind-temp"></div><div class="system-indicator ind-temp"></div>
+        <div class="system-indicator ind-temp"></div><div class="system-indicator ind-temp"></div>
+        <div class="system-indicator ind-temp"></div><div class="system-indicator ind-temp"></div>
+        <div class="system-indicator ind-temp"></div><div class="system-indicator ind-temp"></div>
+        <div class="system-indicator ind-temp"></div><div class="system-indicator ind-temp"></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13px;color:#55efc4;margin-bottom:6px;">🫁 氧气 ×12</div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;width:160px;">
+        <div class="system-indicator ind-oxy"></div><div class="system-indicator ind-oxy"></div>
+        <div class="system-indicator ind-oxy"></div><div class="system-indicator ind-oxy"></div>
+        <div class="system-indicator ind-oxy"></div><div class="system-indicator ind-oxy"></div>
+        <div class="system-indicator ind-oxy"></div><div class="system-indicator ind-oxy"></div>
+        <div class="system-indicator ind-oxy"></div><div class="system-indicator ind-oxy"></div>
+        <div class="system-indicator ind-oxy"></div><div class="system-indicator ind-oxy"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: 种子卡
+<!-- ============================================================ -->
+<div class="page-break" id="seed-cards"></div>
+<section class="section">
+  <h2 class="section-title">🌱 种子卡（共50张）</h2>
+
+  <!-- 普通种子 -->
+  <div class="deck-header"><h4>🌱 普通种子卡 — 自动入库 | 1VP | 共20张（每种×4）</h4><span class="deck-count">×20</span></div>
+  <div class="card-grid">
+
+    <div class="card card-seed-common">
+      <span class="card-type-badge">普通</span>
+      <div class="card-icon">🌾🌱</div>
+      <div class="card-name">小麦 Wheat</div>
+      <div class="card-cost">入库：无需资源（自动）</div>
+      <div class="card-effect">全球最重要的粮食作物之一。耐寒性强，易于长期低温保存。</div>
+      <div class="card-vp">⭐ 1 VP</div>
+    </div>
+
+    <div class="card card-seed-common">
+      <span class="card-type-badge">普通</span>
+      <div class="card-icon">🌾🌱</div>
+      <div class="card-name">水稻 Rice</div>
+      <div class="card-cost">入库：无需资源（自动）</div>
+      <div class="card-effect">亚洲主粮作物。需干燥密封环境，保存条件简单。</div>
+      <div class="card-vp">⭐ 1 VP</div>
+    </div>
+
+    <div class="card card-seed-common">
+      <span class="card-type-badge">普通</span>
+      <div class="card-icon">🌽🌱</div>
+      <div class="card-name">玉米 Corn</div>
+      <div class="card-cost">入库：无需资源（自动）</div>
+      <div class="card-effect">高产饲料兼粮食来源。适应力极强，分布广泛。</div>
+      <div class="card-vp">⭐ 1 VP</div>
+    </div>
+
+    <div class="card card-seed-common">
+      <span class="card-type-badge">普通</span>
+      <div class="card-icon">🥔🌱</div>
+      <div class="card-name">马铃薯 Potato</div>
+      <div class="card-cost">入库：无需资源（自动）</div>
+      <div class="card-effect">块茎类作物代表。块茎本身即可繁殖，生命力顽强。</div>
+      <div class="card-vp">⭐ 1 VP</div>
+    </div>
+
+    <div class="card card-seed-common">
+      <span class="card-type-badge">普通</span>
+      <div class="card-icon">🫘🌱</div>
+      <div class="card-name">大豆 Soybean</div>
+      <div class="card-cost">入库：无需资源（自动）</div>
+      <div class="card-effect">优质植物蛋白来源。豆科固氮特性使其具有生态修复价值。</div>
+      <div class="card-vp">⭐ 1 VP</div>
+    </div>
+  </div>
+  <p style="color:#6b9b37;font-size:12px;margin-top:8px;">* 以上每种各打印 4 份（共 20 张），背面统一使用种子卡背</p>
+
+  <!-- 稀有种子 -->
+  <div class="deck-header"><h4>🌿 稀有种子卡 — 需消耗能量入库 | 2VP | 共16张（每种×4）</h4><span class="deck-count">×16</span></div>
+  <div class="card-grid">
+
+    <div class="card card-seed-rare">
+      <span class="card-type-badge">稀有</span>
+      <div class="card-icon">☕🌿</div>
+      <div class="card-name">咖啡 Coffee</div>
+      <div class="card-cost">入库：⚡ 能量 ×1</div>
+      <div class="card-effect">热带经济作物之王。种子含高浓度咖啡因，需恒温冷冻保存。</div>
+      <div class="card-vp">⭐⭐ 2 VP</div>
+    </div>
+
+    <div class="card card-seed-rare">
+      <span class="card-type-badge">稀有</span>
+      <div class="card-icon">🍫🌿</div>
+      <div class="card-name">可可 Cocoa</div>
+      <div class="card-cost">入库：⚡ 能量 ×1</div>
+      <div class="card-effect">巧克力的原料。可可豆脂肪含量高，对温度变化极为敏感。</div>
+      <div class="card-vp">⭐⭐ 2 VP</div>
+    </div>
+
+    <div class="card card-seed-rare">
+      <span class="card-type-badge">稀有</span>
+      <div class="card-icon">👃🌿</div>
+      <div class="card-name">香草 Vanilla</div>
+      <div class="card-cost">入库：⚡ 能量 ×1</div>
+      <div class="card-effect">世界第二昂贵的香料。兰科藤本植物，种子活性维持极其困难。</div>
+      <div class="card-vp">⭐⭐ 2 VP</div>
+    </div>
+
+    <div class="card card-seed-rare">
+      <span class="card-type-badge">稀有</span>
+      <div class="card-icon">💛🌿</div>
+      <div class="card-name">藏红花 Saffron</div>
+      <div class="card-cost">入库：⚡ 能量 ×2</div>
+      <div class="card-effect">红色黄金。每朵花仅3根柱头，是世界上最昂贵的香料。</div>
+      <div class="card-vp">⭐⭐ 2 VP</div>
+    </div>
+  </div>
+  <p style="color:#5dade2;font-size:12px;margin-top:8px;">* 以上每种各打印 4 份（共 16 张）</p>
+
+  <!-- 史诗种子 -->
+  <div class="deck-header"><h4>🌺 史诗种子卡 — 需复合资源入库 | 3VP | 共10张（每种×2）</h4><span class="deck-count">×10</span></div>
+  <div class="card-grid">
+
+    <div class="card card-seed-epic">
+      <span class="card-type-badge">史诗</span>
+      <div class="card-icon">👻🌺</div>
+      <div class="card-name">幽灵兰 Ghost Orchid</div>
+      <div class="card-cost">入库：⚡×2 + 🔧零件×1</div>
+      <div class="card-effect">佛罗里达湿地最神秘的兰花。无叶，完全依赖共生真菌生存。</div>
+      <div class="card-vp">⭐⭐⭐ 3 VP</div>
+    </div>
+
+    <div class="card card-seed-epic">
+      <span class="card-type-badge">史诗</span>
+      <div class="card-icon">💀🌺</div>
+      <div class="card-name">尸花 Corpse Flower</div>
+      <div class="card-cost">入库：⚡×2 + 🔧零件×1</div>
+      <div class="card-effect">世界最大的花之一。开花时散发腐肉气味吸引传粉者，数年一遇。</div>
+      <div class="card-vp">⭐⭐⭐ 3 VP</div>
+    </div>
+
+    <div class="card card-seed-epic">
+      <span class="card-type-badge">史诗</span>
+      <div class="card-icon">🌲🌺</div>
+      <div class="card-name">瓦勒迈松 Wollemi Pine</div>
+      <div class="card-cost">入库：⚡×2 + 💊医疗×1</div>
+      <div class="card-effect">"活化石"树种，曾被认为已灭绝200万年。1994年在澳大利亚重新被发现。</div>
+      <div class="card-vp">⭐⭐⭐ 3 VP</div>
+    </div>
+
+    <div class="card card-seed-epic">
+      <span class="card-type-badge">史诗</span>
+      <div class="card-icon">🩸🌺</div>
+      <div class="card-name">龙血树 Dragon Blood Tree</div>
+      <div class="card-cost">入库：⚡×2 + 🔧零件×1</div>
+      <div class="card-effect">索科特拉岛特有种。受伤时流出深红色树脂，形似龙血，极具药用价值。</div>
+      <div class="card-vp">⭐⭐⭐ 3 VP</div>
+    </div>
+
+    <div class="card card-seed-epic">
+      <span class="card-type-badge">史诗</span>
+      <div class="card-icon">😈🌺</div>
+      <div class="card-name">魔鬼椒 Ghost Pepper</div>
+      <div class="card-cost">入库：⚡×2 + 🍖食物×1</div>
+      <div class="card-effect">印度阿萨姆邦特产。史高维尔指标超过100万单位，曾是世界最辣辣椒。</div>
+      <div class="card-vp">⭐⭐⭐ 3 VP</div>
+    </div>
+  </div>
+  <p style="color:#bb8fce;font-size:12px;margin-top:8px;">* 以上每种各打印 2 份（共 10 张）</p>
+
+  <!-- 传说种子 -->
+  <div class="deck-header"><h4>💫 传说种子卡 — 极难入库+特殊效果 | 5VP | 共4张（全游戏唯一！）</h4><span class="deck-count">×4</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+
+    <div class="card card-seed-legendary">
+      <span class="card-type-badge">传说</span>
+      <div class="card-icon">🌴💫</div>
+      <div class="card-name">犹太海枣 Judean Date Palm</div>
+      <div class="card-cost">入库：⚡×3 + 🔧×2 + 💊×1</div>
+      <div class="card-effect">公元1世纪犹大国国树，被认为已灭绝千年。2005年从考古遗址的2000年前种子成功复活萌发！<br><br><strong style="color:#ffd700;">✨ 特殊效果：入库成功 → 全员恢复 2 HP</strong></div>
+      <div class="card-vp">💫💫💫💫💫 5 VP</div>
+    </div>
+
+    <div class="card card-seed-legendary">
+      <span class="card-type-badge">传说</span>
+      <div class="card-icon">🧊💫</div>
+      <div class="card-name">窄叶蝇子草 Silene stenophylla</div>
+      <div class="card-cost">入库：⚡×3 + 🔧×2 + 💊×1</div>
+      <div class="card-effect">从西伯利亚永冻层中发现的3.2万年前远古种子，至今仍能成功再生植株——地球上最古老的再生生命！<br><br><strong style="color:#ffd700;">✨ 特殊效果：入库成功 → 任选一系统 +3</strong></div>
+      <div class="card-vp">💫💫💫💫💫 5 VP</div>
+    </div>
+  </div>
+  <p style="color:#f4d03f;font-size:12px;margin-top:8px;">* 各打印 2 份（共 4 张）。传说种子极为稀缺，是逆转局势的关键！</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: 资源卡 -->
+<!-- ============================================================ -->
+<div class="page-break" id="resource-cards"></div>
+<section class="section">
+  <h2 class="section-title">📦 资源卡（共60张）</h2>
+
+  <!-- 能量 -->
+  <div class="deck-header"><h4>⚡ 能量卡 — 维持电力系统和设备运作 | 共18张</h4><span class="deck-count">×18</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));">
+    <div class="card card-res-energy">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">⚡</div>
+      <div class="card-name">能量 Energy</div>
+      <div class="card-effect">种子库的核心命脉。<br><br>用途：维护电力系统、支付入库成本、驱动设备、购买永久装备。<br><br>获取：基地发电(2AP→2⚡)、西伯利亚必得1⚡、事件奖励</div>
+    </div>
+    <div class="card card-res-energy">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">⚡</div>
+      <div class="card-name">能量 Energy</div>
+      <div class="card-effect">没有能源，一切都会停摆。<br><br>优先保障电力系统不低于警戒线！</div>
+    </div>
+  </div>
+  <p style="color:#48c9b0;font-size:12px;margin-top:6px;">* 打印 9 份并裁剪为单张 = 共 18 张能量卡</p>
+
+  <!-- 食物 -->
+  <div class="deck-header"><h4>🍖 食物卡 — 远征消耗与生命维持 | 共18张</h4><span class="deck-count">×18</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));">
+    <div class="card card-res-food">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">🍖</div>
+      <div class="card-name">食物 Food</div>
+      <div class="card-effect">探险者的基本保障。<br><br>用途：支付地点风险消耗、部分入库需求、维持体力。<br><br>获取：基地配发口粮(1AP→1🍖)、事件奖励</div>
+    </div>
+    <div class="card card-res-food">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">🍖</div>
+      <div class="card-name">食物 Food</div>
+      <div class="card-effect">饥饿会让判断力下降。<br><br>外出远征前确保食物充足！</div>
+    </div>
+  </div>
+  <p style="color:#ec7063;font-size:12px;margin-top:6px;">* 打印 9 份 = 共 18 张食物卡</p>
+
+  <!-- 医疗包 -->
+  <div class="deck-header"><h4>💊 医疗包卡 — 治疗中和灾害 | 共12张</h4><span class="deck-count">×12</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));">
+    <div class="card card-res-medicine">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">💊</div>
+      <div class="card-name">医疗包 Medicine</div>
+      <div class="card-effect">救命的医疗物资。<br><br>用途：治疗HP（1AP+💊×1=回2HP）、中和灾害效果、传说级种子入库。<br><br>获取：基地调配(2AP→1💊)、太平洋可能获得</div>
+    </div>
+    <div class="card card-res-medicine">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">💊</div>
+      <div class="card-name">医疗包 Medicine</div>
+      <div class="card-effect">伤员无法远征，只能做辅助工作。<br><br>保持全员健康是团队效率的基础！</div>
+    </div>
+  </div>
+  <p style="color:#85c1e9;font-size:12px;margin-top:6px;">* 打印 6 份 = 共 12 张医疗包卡</p>
+
+  <!-- 零件 -->
+  <div class="deck-header"><h4>🔧 零件卡 — 修复系统与高级入库 | 共12张</h4><span class="deck-count">×12</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));">
+    <div class="card card-res-parts">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">🔧</div>
+      <div class="card-name">零件 Parts</div>
+      <div class="card-effect">珍贵的机械备件。<br><br>用途：修复系统(消耗零件回复系统值)、史诗/传说级种子入库、购买永久设备。<br><br>获取：基地搜索零件库(2AP→1🔧)、地中海可能获得</div>
+    </div>
+    <div class="card card-res-parts">
+      <span class="card-type-badge">资源</span>
+      <div class="card-icon">🔧</div>
+      <div class="card-name">零件 Parts</div>
+      <div class="card-effect">系统崩溃的前兆就是零件告急。<br><br>合理储备零件以应对突发故障！</div>
+    </div>
+  </div>
+  <p style="color:#aab7b8;font-size:12px;margin-top:6px;">* 打印 6 份 = 共 12 张零件卡</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: 设备卡
+<!-- ============================================================ -->
+<div class="page-break" id="equip-cards"></div>
+<section class="section">
+  <h2 class="section-title">🔬 设备卡（共10张）</h2>
+  <p class="section-desc">分为一次性设备和永久设备两类。永久设备一旦安装整局受益。</p>
+
+  <div class="deck-header"><h4>🔬 全部设备一览</h4><span class="deck-count">×10</span></div>
+  <div class="card-grid">
+
+    <div class="card card-equip">
+      <span class="card-type-badge">一次性</span>
+      <div class="card-icon">🧊</div>
+      <div class="card-name">便携式冷藏箱</div>
+      <div class="card-cost">获取：太平洋环礁 / 事件奖励</div>
+      <div class="card-effect">本回合入库种子的能量消耗 -1⚡<br><br>适合批量入库时节省大量能量资源。</div>
+      <div style="text-align:center;font-size:11px;color:#aaa;margin-top:auto;">一次性 · 使用后弃置</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">一次性</span>
+      <div class="card-icon">☢️</div>
+      <div class="card-name">辐射探测仪</div>
+      <div class="card-cost">获取：地中海遗迹</div>
+      <div class="card-effect">免疫地中海遗迹地点的辐射泄漏伤害<br><br>前往高风险地区前的必备保险。</div>
+      <div style="text-align:center;font-size:11px;color:#aaa;margin-top:auto;">一次性 · 使用后弃置</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">🏆 永久</span>
+      <div class="card-icon">🚙</div>
+      <div class="card-name">全地形车 ATV</div>
+      <div class="card-cost">购买：⚡×3 + 🔧×2</div>
+      <div class="card-effect">所有玩家的移动 AP 消耗 -1（最低为0）<br><br><strong style="color:#2ecc71;">整局受益！强烈推荐优先购买！</strong></div>
+      <div style="text-align:center;font-size:11px;color:#2ecc71;margin-top:auto;">🏆 永久设备 · 放置公共区</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">🏆 永久</span>
+      <div class="card-icon">🧬</div>
+      <div class="card-name">基因测序仪 Sequencer</div>
+      <div class="card-cost">购买：⚡×4 + 🔧×3</div>
+      <div class="card-effect">每当有玩家执行入库操作时，额外抽1张种子卡（放入该玩家手牌）</div>
+      <div style="text-align:center;font-size:11px;color:#2ecc71;margin-top:auto;">🏆 永久设备 · 放置公共区</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">一次性</span>
+      <div class="card-icon">🔋</div>
+      <div class="card-name">应急发电机</div>
+      <div class="card-cost">获取：事件奖励</div>
+      <div class="card-effect">电力系统立即 +3<br><br>当电力降至危险临界值时的救命稻草。</div>
+      <div style="text-align:center;font-size:11px;color:#aaa;margin-top:auto;">一次性 · 使用后弃置</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">🏆 永久</span>
+      <div class="card-icon">🤖</div>
+      <div class="card-name">医疗机器人 Med-Bot</div>
+      <div class="card-cost">购买：⚡×3 + 💊×2</div>
+      <div class="card-effect">每位玩家回合开始时自动恢复 1 HP<br><br>多人游戏中性价比极高的持续收益设备。</div>
+      <div style="text-align:center;font-size:11px;color:#2ecc71;margin-top:auto;">🏆 永久设备 · 放置公共区</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">🏆 永久</span>
+      <div class="card-icon">📡</div>
+      <div class="card-name">无人机侦察 Drone Scout</div>
+      <div class="card-cost">购买：⚡×2 + 🔧×1</div>
+      <div class="card-effect">前往远征地点前可预览该地点将产出的种子种类，再决定是否前往</div>
+      <div style="text-align:center;font-size:11px;color:#2ecc71;margin-top:auto;">🏆 永久设备 · 放置公共区</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">🏆 永久</span>
+      <div class="card-icon">🏗️</div>
+      <div class="card-name">种子加速柜 Speed Vault</div>
+      <div class="card-cost">购买：⚡×5 + 🔧×4</div>
+      <div class="card-effect">每个全局回合中，可额外免费入库 1 张种子卡（不限哪位玩家触发）</div>
+      <div style="text-align:center;font-size:11px;color:#2ecc71;margin-top:auto;">🏆 永久设备 · 后期冲刺神器</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">一次性</span>
+      <div class="card-icon">😷</div>
+      <div class="card-name">防毒面具 Gas Mask</div>
+      <div class="card-cost">获取：事件奖励</div>
+      <div class="card-effect">本轮免疫氧气下降相关的所有负面效果（包括CO₂泄漏等事件的HP伤害）</div>
+      <div style="text-align:center;font-size:11px;color:#aaa;margin-top:auto;">一次性 · 使用后弃置</div>
+    </div>
+
+    <div class="card card-equip">
+      <span class="card-type-badge">🏆 永久</span>
+      <div class="card-icon">☀️</div>
+      <div class="card-name">太阳能板 Solar Panel</div>
+      <div class="card-cost">获取：事件奖励（不可购买）</div>
+      <div class="card-effect">自安装起，每回合结束时电力系统自动 +1<br><br><strong style="color:#f1c40f;">不可购买！只能通过事件获得！</strong></div>
+      <div style="text-align:center;font-size:11px;color:#f1c40f;margin-top:auto;">🏆 永久 · 仅事件掉落</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: 事件卡
+<!-- ============================================================ -->
+<div class="page-break" id="event-cards"></div>
+<section class="section">
+  <h2 class="section-title">⚠️ 事件卡（共24张）</h2>
+  <p class="section-desc">每回合结束后抽取 1 张并执行。决定团队的生死存亡。</p>
+
+  <!-- 危机事件 -->
+  <div class="deck-header"><h4>🔴 危机事件 — 系统损害型 | 共14张</h4><span class="deck-count">×14</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(195px,1fr));">
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">☀️⚡</div>
+      <div class="card-name">太阳风暴 Solar Flare</div>
+      <div class="card-effect" style="border-left:3px solid #e74c3c;"><strong style="color:#e74c3c;">电力系统 -3</strong><br>太阳风暴导致电网过载，发电机被迫降功率运行。</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🧊❄️</div>
+      <div class="card-name">冰层裂缝 Ice Crack</div>
+      <div class="card-effect" style="border-left:3px solid #00cec9;"><strong style="color:#00cec9;">温度控制 -3</strong><br>永冻层出现结构性裂缝，冷气大量外泄。</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">💨🫁</div>
+      <div class="card-name">通风故障 Vent Failure</div>
+      <div class="card-effect" style="border-left:3px solid #55efc4;"><strong style="color:#55efc4;">氧气循环 -3</strong><br>主通风管道堵塞，空气循环效率骤降。</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🌍💥</div>
+      <div class="card-name">地震波及 Earthquake</div>
+      <div class="card-effect" style="border-left:3px solid #e74c3c;"><strong style="color:#e74c3c;">所有系统各 -1</strong><br>远程地震传导至种子库，所有设施受到震动损坏。</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">⚡🔥</div>
+      <div class="card-name">电路短路 Short Circuit</div>
+      <div class="card-effect" style="border-left:3px solid #f39c12;"><strong style="color:#f39c12;">电力系统 -2</strong><br>额外：丢弃手中 1 张 ⚡ 能量卡（如有）</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">❄️⚠️</div>
+      <div class="card-name">冷冻机组故障 Freezer Fail</div>
+      <div class="card-effect" style="border-left:3px solid #00cec9;"><strong style="color:#00cec9;">温度控制 -2</strong><br>如果已保存物种库中有稀有或以上种子，随机弃置1张！</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">☠️🫁</div>
+      <div class="card-name">CO₂ 泄露 CO₂ Leak</div>
+      <div class="card-effect" style="border-left:3px solid #55efc4;"><strong style="color:#55efc4;">氧气循环 -2</strong><br>额外：所有玩家 -1 HP</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🔋⚠️</div>
+      <div class="card-name">能源枯竭警报 Energy Drain</div>
+      <div class="card-effect" style="border-left:3px solid #f39c12;"><strong style="color:#f39c12;">电力系统 -2</strong><br>额外：下一位玩家所有行动 AP 消耗 +1</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🌊❄️</div>
+      <div class="card-name">永久冻土融化 Permafrost Melt</div>
+      <div class="card-effect" style="border-left:3px solid #00cec9;"><strong style="color:#00cec9;">温度控制 -2</strong><br>从已保存物种库中退回 1 张普通种子至弃牌堆</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">⚡💥</div>
+      <div class="card-name">电力过载 Power Surge</div>
+      <div class="card-effect" style="border-left:3px solid #e74c3c;"><strong style="color:#e74c3c;">电力系统 -4</strong><br>可选择弃置 2 张 ⚡ 卡减免为 -2</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🌨️⚠️</div>
+      <div class="card-name">暴风雪封锁 Blizzard Lockdown</div>
+      <div class="card-effect" style="border-left:3px solid #00cec9;"><strong>在外远征的玩家下回合无法返回基地</strong><br>多承受一次所在地点的特殊风险</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🔗⚠️</div>
+      <div class="card-name">系统联动故障 Cascade Fail</div>
+      <div class="card-effect" style="border-left:3px solid #e74c3c;"><strong>选择一个系统 -3</strong><br>其相邻系统（电力→温度→氧气→电力）各 -1</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🚨👾</div>
+      <div class="card-name">入侵者闯入 Intruder Alert</div>
+      <div class="card-effect" style="border-left:3px solid #e74c3c;"><strong>安全威胁！全体投票：</strong><br>A. 消耗 ⚡×3 驱离<br>B. 每人 -2 HP 且随机一系统 -2</div>
+    </div>
+
+    <div class="card card-event-crisis">
+      <span class="card-type-badge">危机</span>
+      <div class="card-icon">🦠⚠️</div>
+      <div class="card-name">种子腐败危机 Seed Rot</div>
+      <div class="card-effect" style="border-left:3px solid #e74c3c;"><strong>从已保存物种库中移除 1 张</strong>稀有及以上级别种子（如有）。如无则移除1张普通种子。</div>
+    </div>
+  </div>
+
+  <!-- 机遇事件 -->
+  <div class="deck-header"><h4>🟢 机遇事件 — 幸运眷顾型 | 共6张</h4><span class="deck-count">×6</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(195px,1fr));">
+
+    <div class="card card-event-oppty">
+      <span class="card-type-badge">机遇</span>
+      <div class="card-icon">✈️📦</div>
+      <div class="card-name">救援物资空投 Supply Drop</div>
+      <div class="card-effect" style="border-left:3px solid #2ecc71;"><strong style="color:#2ecc71;">公共资源库增加：</strong><br>⚡×3 + 🍖×2 + 💊×1</div>
+    </div>
+
+    <div class="card card-event-oppty">
+      <span class="card-type-badge">机遇</span>
+      <div class="card-icon">🔋✅</div>
+      <div class="card-name">备用电源启动 Backup Power</div>
+      <div class="card-effect" style="border-left:3px solid #2ecc71;"><strong style="color:#2ecc71;">电力系统 +4</strong><br>紧急备用电池上线，电力瞬间充盈。</div>
+    </div>
+
+    <div class="card card-event-oppty">
+      <span class="card-type-badge">机遇</span>
+      <div class="card-icon">👷✅</div>
+      <div class="card-name">外部维修队 Repair Team</div>
+      <div class="card-effect" style="border-left:3px solid #2ecc71;"><strong style="color:#2ecc71;">任选一个系统 +3</strong><br>外部支援队伍抵达，协助修复受损设施。</div>
+    </div>
+
+    <div class="card card-event-oppty">
+      <span class="card-type-badge">机遇</span>
+      <div class="card-icon">🏛️✅</div>
+      <div class="card-name">古老温室发现 Old Greenhouse</div>
+      <div class="card-effect" style="border-left:3px solid #2ecc71;"><strong style="color:#2ecc71;">免费获得 2 张稀有种子卡</strong><br>在一处被掩埋的温室中发现了完好的珍稀植物样本。</div>
+    </div>
+
+    <div class="card card-event-oppty">
+      <span class="card-type-badge">机遇</span>
+      <div class="card-icon">🌤️✅</div>
+      <div class="card-name">气候暂时稳定 Calm Weather</div>
+      <div class="card-effect" style="border-left:3px solid #2ecc71;"><strong style="color:#2ecc71;">本回合跳过事件抽取</strong>（放入牌堆底）；所有系统各 +1</div>
+    </div>
+
+    <div class="card card-event-oppty">
+      <span class="card-type-badge">机遇</span>
+      <div class="card-icon">🧪✅</div>
+      <div class="card-name">科学突破 Breakthrough</div>
+      <div class="card-effect" style="border-left:3px solid #2ecc71;"><strong style="color:#2ecc71;">下次入库操作资源需求减半</strong>（向下取整）<br>持续至被使用一次为止。</div>
+    </div>
+  </div>
+
+  <!-- 选择事件 -->
+  <div class="deck-header"><h4>🟡 选择事件 — 抉择时刻型 | 共4张</h4><span class="deck-count">×4</span></div>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(210px,1fr));">
+
+    <div class="card card-event-choice">
+      <span class="card-type-badge">抉择</span>
+      <div class="card-icon">⚡🤔</div>
+      <div class="card-name">能源抉择 Energy Choice</div>
+      <div class="card-effect">
+        <div style="margin-bottom:6px;"><strong style="color:#2ecc71;">A. 电力系统 +3</strong></div>
+        <div><strong style="color:#f39c12;">B. 每位玩家获得 ⚡×2</strong></div>
+        <div style="margin-top:6px;font-size:10px;color:#aaa;">团队讨论后投票决定</div>
+      </div>
+    </div>
+
+    <div class="card card-event-choice">
+      <span class="card-type-badge">抉择</span>
+      <div class="card-icon">📋🤔</div>
+      <div class="card-name">紧急调度 Urgent Dispatch</div>
+      <div class="card-effect">
+        <div style="margin-bottom:6px;"><strong style="color:#2ecc71;">A. 任一系统 +2 但另一系统 -1</strong></div>
+        <div><strong style="color:#f39c12;">B. 公共资源库 +⚡×2 +🔧×1</strong></div>
+      </div>
+    </div>
+
+    <div class="card card-event-choice">
+      <span class="card-type-badge">抉择</span>
+      <div class="card-icon">🗺️🤔</div>
+      <div class="card-name">冒险发现 Risky Discovery</div>
+      <div class="card-effect">
+        <div style="margin-bottom:6px;"><strong style="color:#2ecc71;">A. 免费获得 1 张随机种子卡</strong></div>
+        <div><strong style="color:#f39c12;">B. 下次远征搜索结果 +1 张</strong></div>
+      </div>
+    </div>
+
+    <div class="card card-event-choice">
+      <span class="card-type-badge">抉择</span>
+      <div class="card-icon">⚖️🤔</div>
+      <div class="card-name">牺牲与收获 Sacrifice & Gain</div>
+      <div class="card-effect">
+        <div style="margin-bottom:6px;"><strong style="color:#e74c3c;">A. 某玩家 -2 HP 但任一系统 +3</strong></div>
+        <div><strong style="color:#2ecc71;">B. 全员各回 1 HP 但电力 -1</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 8: 角色卡
+<!-- ============================================================ -->
+<div class="page-break" id="role-cards"></div>
+<section class="section">
+  <h2 class="section-title">👤 角色卡（共5张）</h2>
+  <p class="section-desc">每位玩家选择一名角色，拥有独特被动技能和专属能力（每局限1次）。</p>
+
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));">
+
+    <div class="card card-role role-card">
+      <span class="card-type-badge">角色</span>
+      <div class="card-icon">👷‍♀️</div>
+      <div class="card-name">首席工程师 Chief Engineer</div>
+      <div class="role-skill-box">
+        <strong style="color:#f39c12;">⚙️ 被动技能：</strong>修复系统时效果 +1<br>
+        <small>(花同样资源/AP 让系统多回复 1 点)</small>
+      </div>
+      <div class="role-ult-box">
+        <strong>🔧 专属能力「紧急重启」：</strong><br>
+        将任一系统直接恢复到最大值的 ½（向上取整）
+      </div>
+      <div class="role-hp-bar"><span class="hp-heart">❤️</span> 4 HP</div>
+    </div>
+
+    <div class="card card-role role-card">
+      <span class="card-type-badge">角色</span>
+      <div class="card-icon">🌾</div>
+      <div class="card-name">植物学家 Botanist</div>
+      <div class="role-skill-box">
+        <strong style="color:#2ecc71;">🌱 被动技能：</strong>入库种子资源需求 -1<br>
+        <small>(每种资源最多减 1，最低为 0)</small>
+      </div>
+      <div class="role-ult-box">
+        <strong>🌿 专属能力「绿色奇迹」：</strong><br>
+        将手中任意 1 张种子卡直接入库，无视资源需求
+      </div>
+      <div class="role-hp-bar"><span class="hp-heart">❤️</span> 4 HP</div>
+    </div>
+
+    <div class="card card-role role-card">
+      <span class="card-type-badge">角色</span>
+      <div class="card-icon">🛡️</div>
+      <div class="card-name">安全主管 Security Chief</div>
+      <div class="role-skill-box">
+        <strong style="color:#e74c3c;">🛡️ 被动技能：</strong>免疫远征地点特殊风险<br>
+        <small>(仍需承担基本消耗)</small>
+      </div>
+      <div class="role-ult-box">
+        <strong>🚨 专属能力「全面封锁」：</strong><br>
+        取消本次事件卡效果并将其销毁
+      </div>
+      <div class="role-hp-bar"><span class="hp-heart">❤️</span> 3 HP</div>
+    </div>
+
+    <div class="card card-role role-card">
+      <span class="card-type-badge">角色</span>
+      <div class="card-icon">📦</div>
+      <div class="card-name">后勤官 Logistics Coordinator</div>
+      <div class="role-skill-box">
+        <strong style="color:#3498db;">📦 被动技能：</strong>资源交换比优化为 2:1<br>
+        <small>(代替默认的 3:1)</small>
+      </div>
+      <div class="role-ult-box">
+        <strong>📋 专属能力「战时配给」：</strong><br>
+        每位玩家各获得 ⚡×1 + 🍖×1 + 💊×1
+      </div>
+      <div class="role-hp-bar"><span class="hp-heart">❤️</span> 5 HP</div>
+    </div>
+
+    <div class="card card-role role-card">
+      <span class="card-type-badge">角色</span>
+      <div class="card-icon">🧭</div>
+      <div class="card-name">野外探险家 Field Scout</div>
+      <div class="role-skill-box">
+        <strong style="color:#9b59b6;">🧭 被动技能：</strong>移动 & 搜索各省 1 AP<br>
+        <small>(实际获得 5 AP 或等价效果)</small>
+      </div>
+      <div class="role-ult-box">
+        <strong>🏃 专属能力「极限生存」：</strong><br>
+        本次远征不受任何地点风险影响，且搜索结果 +1 张
+      </div>
+      <div class="role-hp-bar"><span class="hp-heart">❤️</span> 3 HP</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 9: 卡背图案
+<!-- ============================================================ -->
+<div class="page-break" id="card-backs"></div>
+<section class="section">
+  <h2 class="section-title">🎴 卡背图案</h2>
+  <p class="section-desc">打印后贴在每张卡牌背面。不同类型的卡牌可以使用不同的卡背以便分类洗牌。</p>
+
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));">
+
+    <div class="card-back"><span>🌱</span></div>
+    <div class="card-back"><span>🌱</span></div>
+
+    <div class="card-back" style="border-color:#5dade2;background:linear-gradient(145deg,#0a2540,#153a5e);"><span>📦</span></div>
+    <div class="card-back" style="border-color:#5dade2;background:linear-gradient(145deg,#0a2540,#153a5e);"><span>📦</span></div>
+
+    <div class="card-back" style="border-color:#e74c3c;background:linear-gradient(145deg,#2d1016,#4a1525);"><span>⚠️</span></div>
+    <div class="card-back" style="border-color:#e74c3c;background:linear-gradient(145deg,#2d1016,#4a1525);"><span>⚠️</span></div>
+
+    <div class="card-back" style="border-color:#e94560;background:linear-gradient(145deg,#1a1a3e,#2d2d5e);"><span>👤</span></div>
+  </div>
+
+  <div style="background:#16213e;padding:16px;border-radius:10px;margin-top:16px;font-size:13px;line-height:1.8;">
+    <strong style="color:#00fff5;">📋 卡背分类说明：</strong><br>
+    - <span style="color:#6b9b37;">🌱 绿色卡背</span> → 用于全部种子卡（普通/稀有/史诗/传说共用同一副）<br>
+    - <span style="color:#5dade2;">📦 蓝色卡背</span> → 用于资源卡（4种资源混合一副或分4副）<br>
+    - <span style="color:#e74c3c;">⚠️ 红色卡背</span> → 用于事件卡（危机/机遇/选择混在一起洗）<br>
+    - <span style="color:#e94560;">👤 紫色卡背</span> → 用于角色卡（仅5张，无需太多卡背）
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 页脚
+<!-- ============================================================ -->
+<footer style="text-align:center;padding:30px;color:#555;font-size:13px;border-top:1px solid #333;margin-top:40px;">
+  <p>🌍 <strong>末日种子库 Doomsday Vault</strong> — 当世界陷入黑暗，我们守望着光明的种子。</p>
+  <p style="margin-top:6px;">打印道具集 v1.0 | 请参考 <a href="README.md" style="color:#e94560;text-decoration:none;">README.md</a> 了解完整规则</p>
+  <p style="margin-top:4px;font-size:11px;color:#444;">© 2026 Doomsday Vault — A Cooperative Strategy Board Game for 1-5 Players</p>
+</footer>
+
+</body>
+</html>
