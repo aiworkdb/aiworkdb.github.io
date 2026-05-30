@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遗址争霸 Ruin Conquest — 打印道具</title>
+<style>
+  /* ===== 全局样式 ===== */
+  :root {
+    --stone: #8B7355;
+    --gold: #D4A017;
+    --wood: #6B8E4E;
+    --dark: #2C1810;
+    --parchment: #F5E6C8;
+    --parchment-dark: #E8D5A3;
+    --accent-red: #B33000;
+    --accent-blue: #1A4A7A;
+    --accent-green: #2D5A1B;
+    --accent-yellow: #B8860B;
+    --card-width: 63mm;
+    --card-height: 88mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', 'Microsoft YaHei', serif;
+    background: #2C1810;
+    color: var(--dark);
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--gold);
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #C8A97A;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+
+  /* ===== 打印提示 ===== */
+  .print-hint {
+    background: linear-gradient(135deg, #FFF3CD, #FFE69C);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  }
+
+  .print-hint strong {
+    color: #856404;
+    font-size: 1rem;
+  }
+
+  .print-hint ul {
+    margin-top: 8px;
+    padding-left: 20px;
+    color: #533f03;
+    line-height: 1.8;
+  }
+
+  .print-hint .btn-print {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 20px;
+    background: var(--gold);
+    color: #2C1810;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .print-hint .btn-print:hover {
+    background: #B8860B;
+    color: white;
+  }
+
+  /* ===== 章节标题 ===== */
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+  }
+
+  /* ===== 游戏地图 ===== */
+  .map-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .game-map {
+    background: linear-gradient(145deg, #F5E6C8, #E8D0A0);
+    border: 4px solid #6B4226;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .map-title {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #4A2C0A;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+  }
+
+  .map-grid {
+    display: grid;
+    grid-template-columns: 30px repeat(7, 1fr);
+    grid-template-rows: 30px repeat(7, 1fr);
+    gap: 2px;
+    width: 100%;
+    aspect-ratio: 8/8;
+  }
+
+  .map-label-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #6B4226;
+  }
+
+  .map-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #6B4226;
+  }
+
+  .map-cell {
+    border: 1px solid rgba(107,66,38,0.4);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    cursor: default;
+    transition: transform 0.1s;
+    aspect-ratio: 1;
+    position: relative;
+  }
+
+  .map-cell:hover {
+    transform: scale(1.1);
+    z-index: 10;
+  }
+
+  .cell-ruin      { background: #D4C4A0; }
+  .cell-forest    { background: #A8C88A; }
+  .cell-gold      { background: #F0D060; }
+  .cell-relic-s   { background: #E0C080; }
+  .cell-relic-l   { background: #D4A040; }
+  .cell-temple    { background: #C890C0; }
+  .cell-trap      { background: #C08080; }
+
+  .map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    color: #4A2C0A;
+    background: rgba(255,255,255,0.5);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  /* ===== 卡牌通用样式 ===== */
+  .cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .card {
+    width: var(--card-width);
+    min-height: var(--card-height);
+    border-radius: 8px;
+    border: 2px solid;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .card-header {
+    padding: 6px 8px 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .card-title-area {
+    flex: 1;
+  }
+
+  .card-name {
+    font-size: 0.78rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  .card-type {
+    font-size: 0.6rem;
+    opacity: 0.8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .card-count-badge {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .card-art {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    opacity: 0.25;
+    letter-spacing: -5px;
+  }
+
+  .card-body {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 0.68rem;
+    line-height: 1.5;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .card-effect-label {
+    font-size: 0.6rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 2px;
+  }
+
+  .card-footer {
+    padding: 4px 8px;
+    font-size: 0.6rem;
+    text-align: center;
+    opacity: 0.6;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* 遗迹卡 — 石褐色 */
+  .card-relic {
+    border-color: #8B6914;
+    background: linear-gradient(160deg, #3D2B0A, #5C3D1A);
+    color: #F0D090;
+  }
+  .card-relic .card-header { background: linear-gradient(90deg, #6B4A1A, #8B6220); }
+  .card-relic .card-art { color: #D4A040; }
+
+  /* 事件卡 — 深紫暗红 */
+  .card-event {
+    border-color: #6A2040;
+    background: linear-gradient(160deg, #2A0A20, #4A1A30);
+    color: #F0A0C0;
+  }
+  .card-event .card-header { background: linear-gradient(90deg, #5A1030, #7A2050); }
+  .card-event .card-art { color: #D060A0; }
+
+  /* 封印卡 — 深蓝石灰 */
+  .card-seal {
+    border-color: #2A4A8A;
+    background: linear-gradient(160deg, #0A1A3A, #1A2A5A);
+    color: #A0C0F0;
+  }
+  .card-seal .card-header { background: linear-gradient(90deg, #1A3060, #2A4A80); }
+  .card-seal .card-art { color: #6090D0; }
+
+  /* 技能卡 — 腓尼基黄金 */
+  .card-skill-ph {
+    border-color: #C09020;
+    background: linear-gradient(160deg, #3A2800, #5A4010);
+    color: #FFE080;
+  }
+  .card-skill-ph .card-header { background: linear-gradient(90deg, #6A5010, #8A7020); }
+
+  /* 技能卡 — 玛雅绿 */
+  .card-skill-my {
+    border-color: #2A6A20;
+    background: linear-gradient(160deg, #0A2A08, #1A4A15);
+    color: #A0E090;
+  }
+  .card-skill-my .card-header { background: linear-gradient(90deg, #1A5015, #2A7025); }
+
+  /* 技能卡 — 埃及蓝 */
+  .card-skill-eg {
+    border-color: #1A4A9A;
+    background: linear-gradient(160deg, #080A2A, #10183A);
+    color: #80B0FF;
+  }
+  .card-skill-eg .card-header { background: linear-gradient(90deg, #10206A, #1A3080); }
+
+  /* 技能卡 — 华夏红 */
+  .card-skill-ch {
+    border-color: #9A1A10;
+    background: linear-gradient(160deg, #2A0505, #4A0A0A);
+    color: #FF9080;
+  }
+  .card-skill-ch .card-header { background: linear-gradient(90deg, #6A1008, #8A2010); }
+
+  /* ===== 遗址瓦片 ===== */
+  .tiles-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tile {
+    width: 52px;
+    height: 52px;
+    border-radius: 4px;
+    border: 2px solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: default;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .tile-label {
+    font-size: 0.45rem;
+    font-weight: bold;
+    margin-top: 1px;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .tile-ruin   { background: #C8B890; border-color: #8B7355; color: #4A3520; }
+  .tile-forest { background: #90B870; border-color: #3A7020; color: #1A4A08; }
+  .tile-gold   { background: #E8C840; border-color: #A08010; color: #503800; }
+  .tile-relic-s { background: #D8A840; border-color: #986820; color: #5A3010; }
+  .tile-relic-l { background: #E0883A; border-color: #A84820; color: #5A2010; }
+  .tile-temple { background: #C880C0; border-color: #806090; color: #3A1848; }
+  .tile-trap   { background: #C06060; border-color: #882020; color: #400808; }
+  .tile-back   { background: linear-gradient(135deg, #6B4226, #3D2210); border-color: #2C1810; color: #C8A060; font-size: 1rem; }
+
+  /* ===== 玩家棋子 ===== */
+  .pawns-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .pawn-set {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pawn-label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #D4A017;
+    letter-spacing: 1px;
+  }
+
+  .pawn-row {
+    display: flex;
+    gap: 4px;
+  }
+
+  .pawn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  .monument {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    border: 3px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  .pawn-ph { background: radial-gradient(circle at 35% 35%, #FFE060, #C09020); }
+  .pawn-my { background: radial-gradient(circle at 35% 35%, #60E060, #206020); }
+  .pawn-eg { background: radial-gradient(circle at 35% 35%, #60A0FF, #1040A0); }
+  .pawn-ch { background: radial-gradient(circle at 35% 35%, #FF7060, #A01010); }
+
+  .monument-ph { background: linear-gradient(145deg, #FFE060, #806010); }
+  .monument-my { background: linear-gradient(145deg, #60E060, #104010); }
+  .monument-eg { background: linear-gradient(145deg, #60A0FF, #102060); }
+  .monument-ch { background: linear-gradient(145deg, #FF7060, #600808); }
+
+  /* ===== 资源令牌 ===== */
+  .tokens-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .token-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .token-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    max-width: 180px;
+  }
+
+  .token {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .token-stone  { background: #B0A080; border-color: #6B5530; color: #3A2810; }
+  .token-wood   { background: #90B860; border-color: #3A6010; color: #1A3808; }
+  .token-gold   { background: #F0D050; border-color: #A07808; color: #503800; }
+  .token-relic1 { background: linear-gradient(135deg, #E8C070, #C89040); border-color: #806020; color: #3A2000; font-size: 0.75rem; }
+  .token-relic2 { background: linear-gradient(135deg, #70C0E8, #4090C0); border-color: #205A80; color: #0A2030; font-size: 0.75rem; }
+  .token-relic3 { background: linear-gradient(135deg, #E89070, #C05030); border-color: #802020; color: #300808; font-size: 0.75rem; }
+
+  .token-label {
+    font-size: 0.7rem;
+    color: #D4A017;
+    text-align: center;
+  }
+
+  /* ===== 玩家面板 ===== */
+  .player-boards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .player-board {
+    width: 200px;
+    border-radius: 8px;
+    border: 3px solid;
+    padding: 12px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .board-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-align: center;
+    padding: 4px;
+    border-radius: 4px;
+  }
+
+  .board-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed rgba(255,255,255,0.2);
+  }
+
+  .board-value {
+    font-size: 1rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .board-ph { background: #3A2800; border-color: #C09020; color: #FFE080; }
+  .board-ph .board-title { background: #6A5010; }
+  .board-my { background: #0A2008; border-color: #2A6A20; color: #A0E090; }
+  .board-my .board-title { background: #1A5015; }
+  .board-eg { background: #08081A; border-color: #1A4A9A; color: #80B0FF; }
+  .board-eg .board-title { background: #10206A; }
+  .board-ch { background: #2A0508; border-color: #9A1A10; color: #FF9080; }
+  .board-ch .board-title { background: #6A1008; }
+
+  /* ===== 打印样式 ===== */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    .print-hint {
+      display: none;
+    }
+
+    body {
+      background: white;
+      padding: 5mm;
+    }
+
+    h1 {
+      color: #8B6914 !important;
+      text-shadow: none;
+    }
+
+    .subtitle {
+      color: #6B4226 !important;
+    }
+
+    .section-title {
+      color: #8B6914 !important;
+    }
+
+    .map-wrapper {
+      page-break-after: always;
+    }
+
+    .cards-grid {
+      page-break-inside: avoid;
+    }
+
+    .section {
+      page-break-before: auto;
+    }
+
+    .card {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .tile {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .player-board {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>⚔️ 遗址争霸 ⚔️</h1>
+<h2 class="subtitle">Ruin Conquest — 打印道具全套</h2>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4纸张</strong> 打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"（Background Graphics）</strong>选项</li>
+    <li>卡牌、棋子和瓦片建议使用<strong>卡纸（160g以上）</strong>打印，更耐用</li>
+    <li>打印后建议用刀模或剪刀沿边框裁剪，可选择<strong>塑封</strong>增加耐用性</li>
+    <li>遗址瓦片建议打印2份：一份正面，一份背面，双面粘合</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 立即打印</button>
+</div>
+
+<!-- ===== 一、游戏地图 ===== -->
+<div class="section">
+  <div class="section-title">📍 一、游戏地图（7×7 遗址区域）</div>
+  <div class="map-wrapper">
+    <div class="game-map">
+      <div class="map-title">⚔️ 古代大陆遗址图 ⚔️</div>
+      <div class="map-grid">
+        <!-- 列标题行 -->
+        <div class="map-label-col"></div>
+        <div class="map-label-col">A</div>
+        <div class="map-label-col">B</div>
+        <div class="map-label-col">C</div>
+        <div class="map-label-col">D</div>
+        <div class="map-label-col">E</div>
+        <div class="map-label-col">F</div>
+        <div class="map-label-col">G</div>
+        <!-- 第1行 -->
+        <div class="map-label-row">1</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-gold" title="黄金矿脉">✨</div>
+        <div class="map-cell cell-temple" title="神殿遗址 — 高价值！">🛕</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-trap" title="陷阱！小心">⚠️</div>
+        <!-- 第2行 -->
+        <div class="map-label-row">2</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-relic-l" title="大文物 — 3分+摸卡">👑</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-relic-s" title="小文物 — 1分">🏺</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <!-- 第3行 -->
+        <div class="map-label-row">3</div>
+        <div class="map-cell cell-gold" title="黄金矿脉">✨</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-relic-s" title="小文物 — 1分">🏺</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-gold" title="黄金矿脉">✨</div>
+        <div class="map-cell cell-relic-s" title="小文物 — 1分">🏺</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <!-- 第4行（核心神殿行！） -->
+        <div class="map-label-row" style="color:#C890C0;font-weight:900">4</div>
+        <div class="map-cell cell-temple" title="神殿遗址 — 高价值！">🛕</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-gold" title="黄金矿脉">✨</div>
+        <div class="map-cell cell-relic-l" title="大文物 — 3分+摸卡">👑</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-temple" title="神殿遗址 — 高价值！">🛕</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <!-- 第5行 -->
+        <div class="map-label-row">5</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-relic-s" title="小文物 — 1分">🏺</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-relic-s" title="小文物 — 1分">🏺</div>
+        <div class="map-cell cell-gold" title="黄金矿脉">✨</div>
+        <div class="map-cell cell-trap" title="陷阱！小心">⚠️</div>
+        <!-- 第6行 -->
+        <div class="map-label-row">6</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-relic-l" title="大文物 — 3分+摸卡">👑</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-relic-s" title="小文物 — 1分">🏺</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <!-- 第7行 -->
+        <div class="map-label-row">7</div>
+        <div class="map-cell cell-relic-s" title="小文物 — 1分">🏺</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-ruin" title="废墟 — 石料">🧱</div>
+        <div class="map-cell cell-gold" title="黄金矿脉">✨</div>
+        <div class="map-cell cell-forest" title="森林遗迹 — 木材">🌿</div>
+        <div class="map-cell cell-relic-l" title="大文物 — 3分+摸卡">👑</div>
+        <div class="map-cell cell-temple" title="神殿遗址 — 高价值！">🛕</div>
+      </div>
+      <div class="map-legend">
+        <div class="legend-item" style="background:#A8C88A55">🌿 森林(2AP)</div>
+        <div class="legend-item" style="background:#D4C4A055">🧱 废墟(1AP)</div>
+        <div class="legend-item" style="background:#E8C84055">✨ 矿脉(1AP)</div>
+        <div class="legend-item" style="background:#D8A84055">🏺 小文物(1AP)</div>
+        <div class="legend-item" style="background:#E0883A55">👑 大文物(2AP)</div>
+        <div class="legend-item" style="background:#C880C055">🛕 神殿(3AP)</div>
+        <div class="legend-item" style="background:#C0606055">⚠️ 陷阱!</div>
+      </div>
+      <div style="margin-top:10px;text-align:center;font-size:0.65rem;color:#6B4226;">
+        🟡玩家1起点: A7/B7 &nbsp;|&nbsp; 🟢玩家2起点: G1/F1 &nbsp;|&nbsp; 🔵玩家3起点: A1/B1 &nbsp;|&nbsp; 🔴玩家4起点: G7/F7
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 二、遗址瓦片（背面） ===== -->
+<div class="section">
+  <div class="section-title">🧩 二、遗址瓦片（49块）— 背面（打印后粘贴）</div>
+  <div class="tiles-grid">
+    <!-- 废墟 ×15 -->
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏛️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <!-- 森林 ×10 -->
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🌿<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <!-- 黄金 ×6 -->
+    <div class="tile tile-back">✨<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">✨<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">✨<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">✨<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">✨<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">✨<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <!-- 小文物 ×8 -->
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🏺<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <!-- 大文物 ×5 -->
+    <div class="tile tile-back">👑<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">👑<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">👑<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">👑<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">👑<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <!-- 神殿 ×3 -->
+    <div class="tile tile-back">🛕<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🛕<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">🛕<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <!-- 陷阱 ×2 -->
+    <div class="tile tile-back">⚠️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+    <div class="tile tile-back">⚠️<div class="tile-label" style="color:#C8A060">遗址</div></div>
+  </div>
+  <p style="margin-top:12px;font-size:0.75rem;color:#A08040;">↑ 以上为瓦片正面（玩家翻开后可见）。背面打印时仅显示"遗址"字样（玩家翻开前不知道内容）。</p>
+</div>
+
+<!-- ===== 三、遗迹卡（24张） ===== -->
+<div class="section">
+  <div class="section-title">🏺 三、遗迹卡（共24张）</div>
+  <div class="cards-grid">
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">🏺</div>
+        <div class="card-title-area">
+          <div class="card-name">深度挖掘</div>
+          <div class="card-type">遗迹卡 · 行动</div>
+        </div>
+        <div class="card-count-badge">×4</div>
+      </div>
+      <div class="card-art">🏺🏺🏺</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        本回合挖掘任意格时，获得<strong>双倍</strong>资源/文物令牌。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">👣</div>
+        <div class="card-title-area">
+          <div class="card-name">古道探路</div>
+          <div class="card-type">遗迹卡 · 行动</div>
+        </div>
+        <div class="card-count-badge">×3</div>
+      </div>
+      <div class="card-art">👣🗺️👣</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        本回合派遣队员时，移动消耗行动力 <strong>-1</strong>（最低1点）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">🪨</div>
+        <div class="card-title-area">
+          <div class="card-name">石料征用</div>
+          <div class="card-type">遗迹卡 · 即时</div>
+        </div>
+        <div class="card-count-badge">×3</div>
+      </div>
+      <div class="card-art">🪨🪨🪨</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        立即从公共池获得 <strong>2枚石料</strong>。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">🤝</div>
+        <div class="card-title-area">
+          <div class="card-name">文明借贷</div>
+          <div class="card-type">遗迹卡 · 外交</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🤝💰🤝</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        从任意对手借1枚资源，对手若同意额外获得<strong>+1声望</strong>。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">🏃</div>
+        <div class="card-title-area">
+          <div class="card-name">紧急撤退</div>
+          <div class="card-type">遗迹卡 · 防御</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🏃💨🏃</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        立即将己方被驱逐的1名队员重新放置到<strong>任意己方控制格</strong>。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">🗺️</div>
+        <div class="card-title-area">
+          <div class="card-name">地图解密</div>
+          <div class="card-type">遗迹卡 · 侦察</div>
+        </div>
+        <div class="card-count-badge">×3</div>
+      </div>
+      <div class="card-art">🗺️🔍🗺️</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        秘密翻看地图任意<strong>3格瓦片</strong>（不触发效果，其他玩家不可见）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">🚧</div>
+        <div class="card-title-area">
+          <div class="card-name">封锁路线</div>
+          <div class="card-type">遗迹卡 · 控制</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🚧⛔🚧</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        指定地图<strong>1格</strong>，本回合其他玩家无法进入该格。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">🔬</div>
+        <div class="card-title-area">
+          <div class="card-name">文物鉴定</div>
+          <div class="card-type">遗迹卡 · 增值</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🔬🏺🔬</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        将手中<strong>1枚文物令牌增值+1分</strong>（在令牌上标记）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">⚔️</div>
+        <div class="card-title-area">
+          <div class="card-name">军事干预</div>
+          <div class="card-type">遗迹卡 · 攻击</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">⚔️🛡️⚔️</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        驱逐目标格<strong>1名对手队员</strong>（对手无法使用任何卡牌阻止）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡</div>
+    </div>
+
+    <div class="card card-relic">
+      <div class="card-header">
+        <div class="card-icon">✨</div>
+        <div class="card-title-area">
+          <div class="card-name">神明庇护</div>
+          <div class="card-type">遗迹卡 · 保护</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-art">✨🛡️✨</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        本回合己方所有队员<strong>免疫陷阱</strong>和<strong>驱逐</strong>效果。
+      </div>
+      <div class="card-footer">Ruin Conquest — 遗迹卡（稀有）</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 四、事件卡（18张） ===== -->
+<div class="section">
+  <div class="section-title">⚡ 四、事件卡（共18张）</div>
+  <div class="cards-grid">
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">🌪️</div>
+        <div class="card-title-area">
+          <div class="card-name">沙尘暴</div>
+          <div class="card-type">事件卡 · 全体</div>
+        </div>
+        <div class="card-count-badge">×3</div>
+      </div>
+      <div class="card-art">🌪️💨🌪️</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        下一回合<strong>所有玩家行动力-1</strong>（最低2点）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">💼</div>
+        <div class="card-title-area">
+          <div class="card-name">文物走私</div>
+          <div class="card-type">事件卡 · 补偿</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">💼🏺💼</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        <strong>排名最后</strong>的玩家立即获得1枚2分文物令牌。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">🛕</div>
+        <div class="card-title-area">
+          <div class="card-name">神殿显圣</div>
+          <div class="card-type">事件卡 · 增益</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🛕⚡🛕</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        下一回合<strong>所有神殿格文物价值翻倍</strong>。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">🌍</div>
+        <div class="card-title-area">
+          <div class="card-name">遗址地震</div>
+          <div class="card-type">事件卡 · 随机</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🌍💥🌍</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        随机翻开地图上<strong>3块未翻瓦片</strong>，立即触发对应效果（不归属任何玩家）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">🐪</div>
+        <div class="card-title-area">
+          <div class="card-name">贸易商队</div>
+          <div class="card-type">事件卡 · 贸易</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🐪💰🐪</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        所有玩家可以花费<strong>2黄金</strong>从公共池购买任意5枚资源（本回合内）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">📖</div>
+        <div class="card-title-area">
+          <div class="card-name">考古学家会议</div>
+          <div class="card-type">事件卡 · 摸牌</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">📖✨📖</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        <strong>所有玩家各摸1张遗迹卡</strong>（手牌上限6张）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">😈</div>
+        <div class="card-title-area">
+          <div class="card-name">叛变风波</div>
+          <div class="card-type">事件卡 · 混乱</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">😈💥😈</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        玩家<strong>最多的格子</strong>，该格所有队员<strong>全部撤回</strong>各自营地。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">☀️</div>
+        <div class="card-title-area">
+          <div class="card-name">大旱之年</div>
+          <div class="card-type">事件卡 · 资源</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-art">☀️🌵☀️</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        本回合公共池<strong>木材补充量减半</strong>（向下取整）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡（稀有）</div>
+    </div>
+
+    <div class="card card-event">
+      <div class="card-header">
+        <div class="card-icon">🏆</div>
+        <div class="card-title-area">
+          <div class="card-name">黄金时代</div>
+          <div class="card-type">事件卡 · 建造</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🏆✨🏆</div>
+      <div class="card-body">
+        <div class="card-effect-label">立即生效</div>
+        本回合<strong>每建造1座纪念碑额外+2声望</strong>。
+      </div>
+      <div class="card-footer">Ruin Conquest — 事件卡</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 五、文明专属技能卡 ===== -->
+<div class="section">
+  <div class="section-title">🌟 五、文明专属技能卡（每文明3张）</div>
+  <div class="cards-grid">
+
+    <!-- 腓尼基 -->
+    <div class="card card-skill-ph">
+      <div class="card-header">
+        <div class="card-icon">🚢</div>
+        <div class="card-title-area">
+          <div class="card-name">海上贸易网</div>
+          <div class="card-type">🟡 腓尼基商贾 · 经济</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        与任意玩家<strong>交换最多3枚资源</strong>（无需对方同意）。
+      </div>
+      <div class="card-footer">腓尼基文明专属</div>
+    </div>
+
+    <div class="card card-skill-ph">
+      <div class="card-header">
+        <div class="card-icon">⚓</div>
+        <div class="card-title-area">
+          <div class="card-name">港口补给</div>
+          <div class="card-type">🟡 腓尼基商贾 · 资源</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        立即获得 <strong>3木材 + 2黄金</strong>。
+      </div>
+      <div class="card-footer">腓尼基文明专属</div>
+    </div>
+
+    <div class="card card-skill-ph">
+      <div class="card-header">
+        <div class="card-icon">🤝</div>
+        <div class="card-title-area">
+          <div class="card-name">商业同盟</div>
+          <div class="card-type">🟡 腓尼基商贾 · 行动</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        下一回合<strong>行动力+2</strong>（6点行动力）。
+      </div>
+      <div class="card-footer">腓尼基文明专属</div>
+    </div>
+
+    <!-- 玛雅 -->
+    <div class="card card-skill-my">
+      <div class="card-header">
+        <div class="card-icon">👁️</div>
+        <div class="card-title-area">
+          <div class="card-name">预言之眼</div>
+          <div class="card-type">🟢 玛雅祭司 · 侦察</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        查看<strong>事件牌堆顶3张</strong>卡，可自由调换顺序。
+      </div>
+      <div class="card-footer">玛雅文明专属</div>
+    </div>
+
+    <div class="card card-skill-my">
+      <div class="card-header">
+        <div class="card-icon">🔥</div>
+        <div class="card-title-area">
+          <div class="card-name">祭祀仪式</div>
+          <div class="card-type">🟢 玛雅祭司 · 建造</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        消耗2枚文物令牌（任意），<strong>无视资源需求</strong>立即建造1座纪念碑。
+      </div>
+      <div class="card-footer">玛雅文明专属</div>
+    </div>
+
+    <div class="card card-skill-my">
+      <div class="card-header">
+        <div class="card-icon">📅</div>
+        <div class="card-title-area">
+          <div class="card-name">历法掌控</div>
+          <div class="card-type">🟢 玛雅祭司 · 先手</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        宣布并确定<strong>本回合行动顺序</strong>，你最先行动。
+      </div>
+      <div class="card-footer">玛雅文明专属</div>
+    </div>
+
+    <!-- 埃及 -->
+    <div class="card card-skill-eg">
+      <div class="card-header">
+        <div class="card-icon">👁️‍🗨️</div>
+        <div class="card-title-area">
+          <div class="card-name">法老意志</div>
+          <div class="card-type">🔵 埃及传人 · 军事</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        驱逐任意遗址格的<strong>全部对手队员</strong>（无法阻止）。
+      </div>
+      <div class="card-footer">埃及文明专属</div>
+    </div>
+
+    <div class="card card-skill-eg">
+      <div class="card-header">
+        <div class="card-icon">🔺</div>
+        <div class="card-title-area">
+          <div class="card-name">永恒建筑</div>
+          <div class="card-type">🔵 埃及传人 · 建造</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        你建造的纪念碑<strong>额外+2声望</strong>，且本局<strong>免疫摧毁</strong>事件卡效果。
+      </div>
+      <div class="card-footer">埃及文明专属</div>
+    </div>
+
+    <div class="card card-skill-eg">
+      <div class="card-header">
+        <div class="card-icon">🪬</div>
+        <div class="card-title-area">
+          <div class="card-name">木乃伊诅咒</div>
+          <div class="card-type">🔵 埃及传人 · 诅咒</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        指定1名对手，其<strong>下一回合行动力-2</strong>（最低1点）。
+      </div>
+      <div class="card-footer">埃及文明专属</div>
+    </div>
+
+    <!-- 华夏 -->
+    <div class="card card-skill-ch">
+      <div class="card-header">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title-area">
+          <div class="card-name">工程奇迹</div>
+          <div class="card-type">🔴 华夏工匠 · 建造</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        建造纪念碑资源消耗<strong>减半</strong>（向上取整），本回合有效。
+      </div>
+      <div class="card-footer">华夏文明专属</div>
+    </div>
+
+    <div class="card card-skill-ch">
+      <div class="card-header">
+        <div class="card-icon">⚒️</div>
+        <div class="card-title-area">
+          <div class="card-name">铸铁工坊</div>
+          <div class="card-type">🔴 华夏工匠 · 资源</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        立即获得 <strong>4石料 + 2木材</strong>。
+      </div>
+      <div class="card-footer">华夏文明专属</div>
+    </div>
+
+    <div class="card card-skill-ch">
+      <div class="card-header">
+        <div class="card-icon">🐉</div>
+        <div class="card-title-area">
+          <div class="card-name">龙脉堪舆</div>
+          <div class="card-type">🔴 华夏工匠 · 地图</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-body">
+        <div class="card-effect-label">技能效果（1次）</div>
+        选择地图任意<strong>3格</strong>，本游戏中这3格对你挖掘<strong>资源翻倍</strong>。
+      </div>
+      <div class="card-footer">华夏文明专属</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 六、封印卡（6张） ===== -->
+<div class="section">
+  <div class="section-title">🔒 六、封印卡（共6张）</div>
+  <div class="cards-grid">
+
+    <div class="card card-seal">
+      <div class="card-header">
+        <div class="card-icon">🔒</div>
+        <div class="card-title-area">
+          <div class="card-name">古代禁制</div>
+          <div class="card-type">封印卡 · 2回合</div>
+        </div>
+        <div class="card-count-badge">×3</div>
+      </div>
+      <div class="card-art">🔒🏛️🔒</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        持续<strong>2回合</strong>：禁止其他玩家进入此格，你可远程采集该格资源。
+      </div>
+      <div class="card-footer">Ruin Conquest — 封印卡</div>
+    </div>
+
+    <div class="card card-seal">
+      <div class="card-header">
+        <div class="card-icon">🗿</div>
+        <div class="card-title-area">
+          <div class="card-name">领主石碑</div>
+          <div class="card-type">封印卡 · 3回合</div>
+        </div>
+        <div class="card-count-badge">×2</div>
+      </div>
+      <div class="card-art">🗿🌟🗿</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        持续<strong>3回合</strong>：封锁该格，每回合结算时你获得<strong>+1声望</strong>（无需进入）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 封印卡</div>
+    </div>
+
+    <div class="card card-seal">
+      <div class="card-header">
+        <div class="card-icon">⛩️</div>
+        <div class="card-title-area">
+          <div class="card-name">祭坛结界</div>
+          <div class="card-type">封印卡 · 持续</div>
+        </div>
+        <div class="card-count-badge">×1</div>
+      </div>
+      <div class="card-art">⛩️💫⛩️</div>
+      <div class="card-body">
+        <div class="card-effect-label">效果</div>
+        持续到被移除：其他玩家进入此格需额外支付<strong>1黄金给你</strong>（买路费）。
+      </div>
+      <div class="card-footer">Ruin Conquest — 封印卡（稀有）</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 七、玩家棋子 ===== -->
+<div class="section">
+  <div class="section-title">🎲 七、玩家棋子与纪念碑</div>
+  <div class="pawns-grid">
+
+    <div class="pawn-set">
+      <div class="pawn-label">🟡 腓尼基商贾</div>
+      <div class="pawn-row">
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+        <div class="pawn pawn-ph" title="腓尼基队员">👤</div>
+      </div>
+      <div style="font-size:0.65rem;color:#A08040;text-align:center">探险队员 ×8</div>
+      <div class="pawn-row" style="margin-top:4px">
+        <div class="monument monument-ph" title="腓尼基纪念碑">🏛️</div>
+        <div class="monument monument-ph" title="腓尼基纪念碑">🏛️</div>
+        <div class="monument monument-ph" title="腓尼基纪念碑">🏛️</div>
+        <div class="monument monument-ph" title="腓尼基纪念碑">🏛️</div>
+      </div>
+      <div style="font-size:0.65rem;color:#A08040;text-align:center">纪念碑 ×4</div>
+    </div>
+
+    <div class="pawn-set">
+      <div class="pawn-label">🟢 玛雅祭司</div>
+      <div class="pawn-row">
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+        <div class="pawn pawn-my" title="玛雅队员">👤</div>
+      </div>
+      <div style="font-size:0.65rem;color:#60A040;text-align:center">探险队员 ×8</div>
+      <div class="pawn-row" style="margin-top:4px">
+        <div class="monument monument-my" title="玛雅纪念碑">🏛️</div>
+        <div class="monument monument-my" title="玛雅纪念碑">🏛️</div>
+        <div class="monument monument-my" title="玛雅纪念碑">🏛️</div>
+        <div class="monument monument-my" title="玛雅纪念碑">🏛️</div>
+      </div>
+      <div style="font-size:0.65rem;color:#60A040;text-align:center">纪念碑 ×4</div>
+    </div>
+
+    <div class="pawn-set">
+      <div class="pawn-label">🔵 埃及传人</div>
+      <div class="pawn-row">
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+        <div class="pawn pawn-eg" title="埃及队员">👤</div>
+      </div>
+      <div style="font-size:0.65rem;color:#6090D0;text-align:center">探险队员 ×8</div>
+      <div class="pawn-row" style="margin-top:4px">
+        <div class="monument monument-eg" title="埃及纪念碑">🏛️</div>
+        <div class="monument monument-eg" title="埃及纪念碑">🏛️</div>
+        <div class="monument monument-eg" title="埃及纪念碑">🏛️</div>
+        <div class="monument monument-eg" title="埃及纪念碑">🏛️</div>
+      </div>
+      <div style="font-size:0.65rem;color:#6090D0;text-align:center">纪念碑 ×4</div>
+    </div>
+
+    <div class="pawn-set">
+      <div class="pawn-label">🔴 华夏工匠</div>
+      <div class="pawn-row">
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+        <div class="pawn pawn-ch" title="华夏队员">👤</div>
+      </div>
+      <div style="font-size:0.65rem;color:#D06050;text-align:center">探险队员 ×8</div>
+      <div class="pawn-row" style="margin-top:4px">
+        <div class="monument monument-ch" title="华夏纪念碑">🏛️</div>
+        <div class="monument monument-ch" title="华夏纪念碑">🏛️</div>
+        <div class="monument monument-ch" title="华夏纪念碑">🏛️</div>
+        <div class="monument monument-ch" title="华夏纪念碑">🏛️</div>
+      </div>
+      <div style="font-size:0.65rem;color:#D06050;text-align:center">纪念碑 ×4</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 八、资源令牌 ===== -->
+<div class="section">
+  <div class="section-title">💰 八、资源令牌与文物令牌</div>
+  <div class="tokens-grid">
+
+    <div class="token-group">
+      <div class="token-label">🪨 石料 ×20</div>
+      <div class="token-row">
+        <div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div>
+        <div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div>
+        <div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div>
+        <div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div><div class="token token-stone">🪨</div>
+      </div>
+    </div>
+
+    <div class="token-group">
+      <div class="token-label">🪵 木材 ×20</div>
+      <div class="token-row">
+        <div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div>
+        <div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div>
+        <div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div>
+        <div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div><div class="token token-wood">🪵</div>
+      </div>
+    </div>
+
+    <div class="token-group">
+      <div class="token-label">🥇 黄金 ×15</div>
+      <div class="token-row">
+        <div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div>
+        <div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div>
+        <div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div><div class="token token-gold">🥇</div>
+      </div>
+    </div>
+
+    <div class="token-group">
+      <div class="token-label">🏺 文物1分 ×8</div>
+      <div class="token-row">
+        <div class="token token-relic1">1</div><div class="token token-relic1">1</div><div class="token token-relic1">1</div><div class="token token-relic1">1</div>
+        <div class="token token-relic1">1</div><div class="token token-relic1">1</div><div class="token token-relic1">1</div><div class="token token-relic1">1</div>
+      </div>
+    </div>
+
+    <div class="token-group">
+      <div class="token-label">⚡ 文物2分 ×6</div>
+      <div class="token-row">
+        <div class="token token-relic2">2</div><div class="token token-relic2">2</div><div class="token token-relic2">2</div>
+        <div class="token token-relic2">2</div><div class="token token-relic2">2</div><div class="token token-relic2">2</div>
+      </div>
+    </div>
+
+    <div class="token-group">
+      <div class="token-label">👑 文物3分 ×5</div>
+      <div class="token-row">
+        <div class="token token-relic3">3</div><div class="token token-relic3">3</div><div class="token token-relic3">3</div>
+        <div class="token token-relic3">3</div><div class="token token-relic3">3</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 九、玩家面板 ===== -->
+<div class="section">
+  <div class="section-title">📋 九、玩家文明面板（各1张）</div>
+  <div class="player-boards">
+
+    <div class="player-board board-ph">
+      <div class="board-title">🟡 腓尼基商贾<br><small>Phoenician Merchants</small></div>
+      <div class="board-row"><span>🪨 石料</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🪵 木材</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🥇 黄金</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏺 文物令牌</span><div class="board-value"></div></div>
+      <div class="board-row"><span>⭐ 声望</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏛️ 纪念碑已建</span><div class="board-value"></div></div>
+      <div style="font-size:0.6rem;margin-top:6px;opacity:0.7">
+        技能卡：□海上贸易网 □港口补给 □商业同盟
+      </div>
+    </div>
+
+    <div class="player-board board-my">
+      <div class="board-title">🟢 玛雅祭司<br><small>Maya Priests</small></div>
+      <div class="board-row"><span>🪨 石料</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🪵 木材</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🥇 黄金</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏺 文物令牌</span><div class="board-value"></div></div>
+      <div class="board-row"><span>⭐ 声望</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏛️ 纪念碑已建</span><div class="board-value"></div></div>
+      <div style="font-size:0.6rem;margin-top:6px;opacity:0.7">
+        技能卡：□预言之眼 □祭祀仪式 □历法掌控
+      </div>
+    </div>
+
+    <div class="player-board board-eg">
+      <div class="board-title">🔵 埃及传人<br><small>Egyptian Legacy</small></div>
+      <div class="board-row"><span>🪨 石料</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🪵 木材</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🥇 黄金</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏺 文物令牌</span><div class="board-value"></div></div>
+      <div class="board-row"><span>⭐ 声望</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏛️ 纪念碑已建</span><div class="board-value"></div></div>
+      <div style="font-size:0.6rem;margin-top:6px;opacity:0.7">
+        技能卡：□法老意志 □永恒建筑 □木乃伊诅咒
+      </div>
+    </div>
+
+    <div class="player-board board-ch">
+      <div class="board-title">🔴 华夏工匠<br><small>Chinese Artisans</small></div>
+      <div class="board-row"><span>🪨 石料</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🪵 木材</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🥇 黄金</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏺 文物令牌</span><div class="board-value"></div></div>
+      <div class="board-row"><span>⭐ 声望</span><div class="board-value"></div></div>
+      <div class="board-row"><span>🏛️ 纪念碑已建</span><div class="board-value"></div></div>
+      <div style="font-size:0.6rem;margin-top:6px;opacity:0.7">
+        技能卡：□工程奇迹 □铸铁工坊 □龙脉堪舆
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 页脚 -->
+<div style="text-align:center;margin-top:40px;padding:16px;border-top:1px solid #6B4226;color:#A08040;font-size:0.75rem;">
+  ⚔️ 遗址争霸 Ruin Conquest | 打印道具 v1.0 | 策略类桌游 2-4人 | 60-90分钟<br>
+  打印后请裁剪并塑封以延长使用寿命。返回 <a href="README.md" style="color:#D4A017">游戏说明</a>
+</div>
+
+</body>
+</html>
