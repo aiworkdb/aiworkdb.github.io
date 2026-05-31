@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星际餐厅大逃亡 - 打印道具</title>
+<style>
+  /* ===== 全局样式 ===== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #0d0d2b;
+    color: #e8e8f0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.2em;
+    color: #ffe066;
+    text-shadow: 0 0 18px #ffe066, 0 0 40px #ff9900;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-size: 1.3em;
+    color: #7ecfff;
+    border-left: 4px solid #7ecfff;
+    padding-left: 10px;
+    margin: 30px 0 14px 0;
+    text-shadow: 0 0 8px #7ecfff66;
+  }
+  .subtitle {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.95em;
+    margin-bottom: 28px;
+  }
+
+  /* ===== 打印提示 ===== */
+  .print-hint {
+    background: linear-gradient(135deg, #1a1a3e, #2a2a5e);
+    border: 2px solid #7ecfff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px #7ecfff33;
+  }
+  .print-hint strong { color: #ffe066; }
+  .print-hint ul { margin-top: 8px; padding-left: 20px; }
+  .print-hint li { margin: 4px 0; color: #ccc; }
+  .btn-print {
+    display: block;
+    margin: 16px auto 0;
+    padding: 10px 32px;
+    background: linear-gradient(135deg, #ffe066, #ff9900);
+    color: #1a1a3e;
+    border: none;
+    border-radius: 24px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px #ff990066;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-print:hover { transform: scale(1.04); box-shadow: 0 6px 24px #ff990099; }
+
+  /* ===== 地图 ===== */
+  .game-map {
+    background: linear-gradient(160deg, #0a0a1e 60%, #1a0a2e);
+    border: 3px solid #7ecfff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 30px #7ecfff44;
+    page-break-inside: avoid;
+  }
+  .map-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    gap: 8px;
+  }
+  .map-cell {
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+    position: relative;
+  }
+  .map-cell .zone-name { font-size: 0.9em; font-weight: bold; margin-bottom: 4px; }
+  .map-cell .zone-desc { font-size: 0.75em; color: #aaa; }
+  .map-cell .zone-icon { font-size: 1.8em; margin-bottom: 4px; display: block; }
+
+  .zone-engine { border-color: #ff6b35; background: #1e0a00; }
+  .zone-nav    { border-color: #7ecfff; background: #001e2e; }
+  .zone-power  { border-color: #ffe066; background: #1e1800; }
+  .zone-oxygen { border-color: #6bffb8; background: #001e10; }
+  .zone-kitchen { border-color: #ff9966; background: #1e0a00; grid-column: 1; }
+  .zone-storage { border-color: #6bffb8; background: #001e10; grid-column: 2; }
+  .zone-dining  { border-color: #c8a0ff; background: #0e001e; grid-column: 1 / 3; }
+  .zone-shop    { border-color: #ff9900; background: #1e0e00; }
+  .zone-desk    { border-color: #ffe066; background: #1e1800; }
+
+  .track-row { display: flex; gap: 6px; justify-content: center; margin-top: 6px; }
+  .track-box {
+    width: 20px; height: 20px; border-radius: 4px;
+    border: 1.5px solid #aaa; display: inline-block;
+    background: #0d0d2b;
+  }
+
+  .dining-tables { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+  .table-badge {
+    background: #c8a0ff22;
+    border: 2px solid #c8a0ff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.8em;
+    text-align: center;
+    color: #c8a0ff;
+    font-weight: bold;
+  }
+
+  /* ===== 系统追踪条 ===== */
+  .track-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  .track-card {
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+  .track-card .t-icon { font-size: 1.8em; margin-bottom: 6px; }
+  .track-card .t-name { font-size: 0.85em; font-weight: bold; margin-bottom: 8px; }
+  .track-boxes { display: flex; gap: 5px; justify-content: center; margin-bottom: 6px; }
+  .tbox { width: 24px; height: 24px; border-radius: 5px; border: 2px solid; display: inline-block; }
+  .track-labels { display: flex; gap: 5px; justify-content: center; }
+  .tlabel { width: 24px; font-size: 0.6em; text-align: center; color: #888; }
+
+  /* ===== 卡牌网格 ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  .card {
+    border-radius: 12px;
+    padding: 12px 10px 10px;
+    text-align: center;
+    border: 2px solid;
+    position: relative;
+    page-break-inside: avoid;
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card .card-type-badge {
+    position: absolute;
+    top: 8px; left: 8px;
+    font-size: 0.6em;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .card .card-icon { font-size: 2.2em; margin: 22px 0 6px; display: block; }
+  .card .card-name { font-size: 0.85em; font-weight: bold; margin-bottom: 5px; line-height: 1.3; }
+  .card .card-body { font-size: 0.72em; color: #ccc; line-height: 1.4; flex: 1; }
+  .card .card-bottom {
+    margin-top: 8px;
+    font-size: 0.7em;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* 顾客卡 - 蓝系 */
+  .card-customer { border-color: #7ecfff; background: linear-gradient(160deg, #001a2e, #002040); }
+  .card-customer .card-type-badge { background: #7ecfff22; color: #7ecfff; }
+  .card-customer .card-bottom { background: #7ecfff22; color: #7ecfff; }
+  /* 菜谱卡 - 绿系 */
+  .card-recipe   { border-color: #6bffb8; background: linear-gradient(160deg, #001e10, #002018); }
+  .card-recipe .card-type-badge { background: #6bffb822; color: #6bffb8; }
+  .card-recipe .card-bottom { background: #6bffb822; color: #6bffb8; }
+  /* 危机卡 - 红系 */
+  .card-crisis   { border-color: #ff4444; background: linear-gradient(160deg, #1e0000, #200010); }
+  .card-crisis .card-type-badge { background: #ff444422; color: #ff6666; }
+  .card-crisis .card-bottom { background: #ff444422; color: #ff6666; }
+  /* 配件卡 - 灰系 */
+  .card-part     { border-color: #aaaacc; background: linear-gradient(160deg, #0e0e1e, #141428); }
+  .card-part .card-type-badge { background: #aaaacc22; color: #ccccff; }
+  .card-part .card-bottom { background: #aaaacc22; color: #ccccff; }
+  /* 角色卡 - 金系 */
+  .card-role     { border-color: #ffe066; background: linear-gradient(160deg, #1e1800, #201400); }
+  .card-role .card-type-badge { background: #ffe06622; color: #ffe066; }
+  .card-role .card-bottom { background: #ffe06622; color: #ffe066; }
+  /* 特殊顾客卡 - 紫系 */
+  .card-special  { border-color: #c8a0ff; background: linear-gradient(160deg, #0e001e, #14002a); }
+  .card-special .card-type-badge { background: #c8a0ff22; color: #c8a0ff; }
+  .card-special .card-bottom { background: #c8a0ff22; color: #c8a0ff; }
+
+  /* ===== 棋子区域 ===== */
+  .pawn-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  .pawn-card {
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid;
+    font-size: 2em;
+    page-break-inside: avoid;
+  }
+  .pawn-name { font-size: 0.32em; margin-top: 4px; font-weight: bold; text-align: center; line-height: 1.2; }
+
+  /* ===== 信用点代币 ===== */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .token {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid;
+    font-weight: bold;
+    page-break-inside: avoid;
+    margin: 0 auto;
+  }
+  .token-1 { border-color: #aaa; background: radial-gradient(circle, #2a2a3e, #1a1a2e); color: #aaa; }
+  .token-5 { border-color: #ffe066; background: radial-gradient(circle, #2e2800, #1e1a00); color: #ffe066; }
+  .token-10 { border-color: #ff9900; background: radial-gradient(circle, #2e1800, #1e0e00); color: #ff9900; }
+
+  /* ===== 参考卡 ===== */
+  .ref-card {
+    background: linear-gradient(160deg, #1a1a3e, #0d0d2b);
+    border: 2px solid #7ecfff;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    page-break-inside: avoid;
+  }
+  .ref-card h3 { color: #ffe066; font-size: 1em; margin-bottom: 10px; }
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
+  .ref-table th {
+    background: #7ecfff22;
+    color: #7ecfff;
+    padding: 5px 8px;
+    text-align: left;
+    border: 1px solid #7ecfff44;
+  }
+  .ref-table td {
+    padding: 4px 8px;
+    border: 1px solid #7ecfff22;
+    color: #ccc;
+    vertical-align: top;
+  }
+  .ref-table tr:hover td { background: #7ecfff08; }
+
+  /* ===== 分页 ===== */
+  .page-break { page-break-after: always; margin: 0; }
+
+  /* ===== 打印样式 ===== */
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { background: #fff; color: #000; padding: 8px; }
+    h1, h2 { color: #1a1a3e; text-shadow: none; }
+    h1 { font-size: 1.6em; }
+    h2 { border-color: #1a1a3e; color: #1a1a3e; }
+    .game-map, .card, .track-card, .ref-card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示（打印前必读）</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"（Background Graphics）</strong>选项，否则颜色无法显示</li>
+    <li>卡牌和棋子建议使用<strong>卡纸</strong>打印并裁剪</li>
+    <li>系统追踪条建议打印后塑封，使用白板笔标记</li>
+    <li>代币建议粘贴到硬纸板上再裁剪</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 立即打印所有道具</button>
+</div>
+
+<h1>🚀 星际餐厅大逃亡</h1>
+<p class="subtitle">Space Diner Escape — 合作桌游打印道具包 · 1-5人 · 45-75分钟</p>
+
+<!-- ==================== 第1页：游戏地图 ==================== -->
+<h2>🗺️ 飞船"银河小馆"地图</h2>
+<div class="game-map">
+  <div class="map-grid">
+    <!-- 系统区域 -->
+    <div class="map-cell zone-engine">
+      <span class="zone-icon">🔧</span>
+      <div class="zone-name">系统控制室</div>
+      <div class="zone-desc">修复：引擎 / 动力</div>
+      <div class="zone-desc" style="color:#ff6b35;margin-top:4px;">移动消耗 2点</div>
+      <div class="track-row">
+        <div class="track-box"></div><div class="track-box"></div>
+        <div class="track-box"></div><div class="track-box"></div><div class="track-box"></div>
+      </div>
+      <div style="font-size:0.65em;color:#ff6b35;margin-top:2px;">引擎 损坏进度 ①②③④⑤</div>
+    </div>
+    <div class="map-cell zone-nav">
+      <span class="zone-icon">🚀</span>
+      <div class="zone-name">驾驶舱</div>
+      <div class="zone-desc">修复：导航系统</div>
+      <div class="zone-desc" style="color:#7ecfff;margin-top:4px;">移动消耗 2点</div>
+      <div class="track-row">
+        <div class="track-box"></div><div class="track-box"></div>
+        <div class="track-box"></div><div class="track-box"></div><div class="track-box"></div>
+      </div>
+      <div style="font-size:0.65em;color:#7ecfff;margin-top:2px;">导航 损坏进度 ①②③④⑤</div>
+    </div>
+    <div class="map-cell zone-power">
+      <span class="zone-icon">🔋</span>
+      <div class="zone-name">动力核心室</div>
+      <div class="zone-desc">修复：动力系统</div>
+      <div class="zone-desc" style="color:#ffe066;margin-top:4px;">移动消耗 2点</div>
+      <div class="track-row">
+        <div class="track-box"></div><div class="track-box"></div>
+        <div class="track-box"></div><div class="track-box"></div><div class="track-box"></div>
+      </div>
+      <div style="font-size:0.65em;color:#ffe066;margin-top:2px;">动力 损坏进度 ①②③④⑤</div>
+    </div>
+    <div class="map-cell zone-oxygen">
+      <span class="zone-icon">💨</span>
+      <div class="zone-name">氧气循环室</div>
+      <div class="zone-desc">修复：氧气系统</div>
+      <div class="zone-desc" style="color:#6bffb8;margin-top:4px;">移动消耗 2点</div>
+      <div class="track-row">
+        <div class="track-box"></div><div class="track-box"></div>
+        <div class="track-box"></div><div class="track-box"></div><div class="track-box"></div>
+      </div>
+      <div style="font-size:0.65em;color:#6bffb8;margin-top:2px;">氧气 损坏进度 ①②③④⑤</div>
+    </div>
+    <!-- 后厨 & 储藏 -->
+    <div class="map-cell zone-kitchen">
+      <span class="zone-icon">🍳</span>
+      <div class="zone-name">后厨区</div>
+      <div class="zone-desc">灶台A（普通）</div>
+      <div class="zone-desc">灶台B（普通）</div>
+      <div class="zone-desc" style="color:#ff9900;">灶台C（精炼）</div>
+    </div>
+    <div class="map-cell zone-storage">
+      <span class="zone-icon">🛒</span>
+      <div class="zone-name">食材储藏区</div>
+      <div class="zone-desc">🥩 🌾 🐟 🥦 🧀 🌶️ 🥚</div>
+      <div class="zone-desc" style="margin-top:4px;">行动：取2份同类食材</div>
+    </div>
+    <!-- 用餐区 -->
+    <div class="map-cell zone-dining" style="grid-column:1/3;">
+      <span class="zone-icon">🍽️</span>
+      <div class="zone-name">用餐区（共6桌）</div>
+      <div class="dining-tables">
+        <div class="table-badge">🪑 桌 1</div>
+        <div class="table-badge">🪑 桌 2</div>
+        <div class="table-badge">🪑 桌 3</div>
+        <div class="table-badge">🪑 桌 4</div>
+        <div class="table-badge">🪑 桌 5</div>
+        <div class="table-badge">🪑 桌 6</div>
+      </div>
+    </div>
+    <!-- 商店 & 服务台 -->
+    <div class="map-cell zone-shop">
+      <span class="zone-icon">🛍️</span>
+      <div class="zone-name">配件商店</div>
+      <div class="zone-desc">购买修复配件</div>
+      <div class="zone-desc" style="color:#ff9900;margin-top:4px;">移动消耗 1点</div>
+    </div>
+    <div class="map-cell zone-desk">
+      <span class="zone-icon">📋</span>
+      <div class="zone-name">服务台</div>
+      <div class="zone-desc">接取新顾客订单</div>
+      <div class="zone-desc" style="color:#ffe066;margin-top:4px;">移动消耗 1点</div>
+    </div>
+  </div>
+
+  <!-- 轮次追踪 -->
+  <div style="margin-top:18px;text-align:center;">
+    <div style="font-size:0.9em;color:#ffe066;font-weight:bold;margin-bottom:8px;">⏱️ 轮次追踪（共6轮）</div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <div class="table-badge" style="border-color:#ffe066;color:#ffe066;">第1轮</div>
+      <div class="table-badge" style="border-color:#ffe066;color:#ffe066;">第2轮</div>
+      <div class="table-badge" style="border-color:#ffe066;color:#ffe066;">第3轮</div>
+      <div class="table-badge" style="border-color:#ff9900;color:#ff9900;">第4轮</div>
+      <div class="table-badge" style="border-color:#ff6b35;color:#ff6b35;">第5轮</div>
+      <div class="table-badge" style="border-color:#ff4444;color:#ff4444;">第6轮⚠️</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 第2页：系统追踪条 & 行动速查 ==================== -->
+<h2>⚙️ 系统损坏追踪条（每人一份）</h2>
+<div class="track-section">
+  <!-- 引擎 -->
+  <div class="track-card" style="background:linear-gradient(160deg,#1e0a00,#0a0000);border:2px solid #ff6b35;">
+    <div class="t-icon">🔧</div>
+    <div class="t-name" style="color:#ff6b35;">引擎系统</div>
+    <div class="track-boxes">
+      <div class="tbox" style="border-color:#ff6b35;"></div>
+      <div class="tbox" style="border-color:#ff6b35;"></div>
+      <div class="tbox" style="border-color:#ff6b35;"></div>
+      <div class="tbox" style="border-color:#ff6b35;"></div>
+      <div class="tbox" style="border-color:#ff6b35;"></div>
+    </div>
+    <div style="font-size:0.68em;color:#ff8866;margin-top:4px;">0=安全 3=⚠️加抽 5=💀失败</div>
+  </div>
+  <!-- 导航 -->
+  <div class="track-card" style="background:linear-gradient(160deg,#001e2e,#000e1e);border:2px solid #7ecfff;">
+    <div class="t-icon">🚀</div>
+    <div class="t-name" style="color:#7ecfff;">导航系统</div>
+    <div class="track-boxes">
+      <div class="tbox" style="border-color:#7ecfff;"></div>
+      <div class="tbox" style="border-color:#7ecfff;"></div>
+      <div class="tbox" style="border-color:#7ecfff;"></div>
+      <div class="tbox" style="border-color:#7ecfff;"></div>
+      <div class="tbox" style="border-color:#7ecfff;"></div>
+    </div>
+    <div style="font-size:0.68em;color:#aaddff;margin-top:4px;">0=安全 3=⚠️加抽 5=💀失败</div>
+  </div>
+  <!-- 动力 -->
+  <div class="track-card" style="background:linear-gradient(160deg,#1e1800,#0e0e00);border:2px solid #ffe066;">
+    <div class="t-icon">🔋</div>
+    <div class="t-name" style="color:#ffe066;">动力系统</div>
+    <div class="track-boxes">
+      <div class="tbox" style="border-color:#ffe066;"></div>
+      <div class="tbox" style="border-color:#ffe066;"></div>
+      <div class="tbox" style="border-color:#ffe066;"></div>
+      <div class="tbox" style="border-color:#ffe066;"></div>
+      <div class="tbox" style="border-color:#ffe066;"></div>
+    </div>
+    <div style="font-size:0.68em;color:#ffdd88;margin-top:4px;">0=安全 3=⚠️加抽 5=💀失败</div>
+  </div>
+  <!-- 氧气 -->
+  <div class="track-card" style="background:linear-gradient(160deg,#001e10,#000e08);border:2px solid #6bffb8;">
+    <div class="t-icon">💨</div>
+    <div class="t-name" style="color:#6bffb8;">氧气系统</div>
+    <div class="track-boxes">
+      <div class="tbox" style="border-color:#6bffb8;"></div>
+      <div class="tbox" style="border-color:#6bffb8;"></div>
+      <div class="tbox" style="border-color:#6bffb8;"></div>
+      <div class="tbox" style="border-color:#6bffb8;"></div>
+      <div class="tbox" style="border-color:#6bffb8;"></div>
+    </div>
+    <div style="font-size:0.68em;color:#88ffcc;margin-top:4px;">0=安全 3=⚠️加抽 5=💀失败</div>
+  </div>
+</div>
+
+<h2>📋 行动速查参考卡</h2>
+<div class="ref-card">
+  <h3>🎮 每回合行动（每人4点，每点选一项）</h3>
+  <table class="ref-table">
+    <tr><th>行动</th><th>消耗</th><th>说明</th><th>前提</th></tr>
+    <tr><td>🚶 移动</td><td>1点</td><td>移动到相邻区域</td><td>无（控制室/驾驶舱需2点）</td></tr>
+    <tr><td>🍳 烹饪</td><td>1点</td><td>在灶台推进菜品1步</td><td>在后厨区</td></tr>
+    <tr><td>🍽️ 上菜</td><td>1点</td><td>送菜至对应餐桌</td><td>在用餐区+手持菜品</td></tr>
+    <tr><td>🛒 补食材</td><td>1点</td><td>取2份同类食材</td><td>在储藏区</td></tr>
+    <tr><td>📋 接单</td><td>1点</td><td>翻1-2张顾客订单</td><td>在服务台</td></tr>
+    <tr><td>🛒 买配件</td><td>1点+💰</td><td>购买1张配件卡</td><td>在商店区</td></tr>
+    <tr><td>🔧 修复</td><td>1点+配件</td><td>修复对应系统损坏</td><td>在对应区域+持配件</td></tr>
+  </table>
+</div>
+
+<div class="ref-card">
+  <h3>🏆 胜利条件 vs ❌ 失败条件</h3>
+  <table class="ref-table">
+    <tr><th>条件类型</th><th>具体要求</th><th>判定时机</th></tr>
+    <tr><td style="color:#6bffb8;">✅ 胜利</td><td>4系统损坏≤1 + 信用点≥5 + 无超时顾客</td><td>第6轮行动结束时</td></tr>
+    <tr><td style="color:#ff6666;">❌ 失败①</td><td>任一系统损坏达5格</td><td>危机阶段结束时立即判定</td></tr>
+    <tr><td style="color:#ff6666;">❌ 失败②</td><td>6轮结束后系统未达标</td><td>第6轮危机结束后</td></tr>
+    <tr><td style="color:#ff6666;">❌ 失败③</td><td>信用点归零且无法运营</td><td>任意阶段</td></tr>
+  </table>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 第3页：顾客订单卡 ==================== -->
+<h2>🌌 顾客订单卡（共30张，以下为示例18张）</h2>
+<div class="cards-grid">
+  <!-- 绿星顾客 -->
+  <div class="card card-customer">
+    <span class="card-type-badge">🟢 绿星</span>
+    <span class="card-icon">😊</span>
+    <div class="card-name">友好的阿尔法人 #01</div>
+    <div class="card-body">餐桌：1号<br>订单：🌌 星云浓汤<br>等待：⏳ 3轮</div>
+    <div class="card-bottom">💰 赏金：2 信用点</div>
+  </div>
+  <div class="card card-customer">
+    <span class="card-type-badge">🟢 绿星</span>
+    <span class="card-icon">🤗</span>
+    <div class="card-name">好奇的泡泡星人 #02</div>
+    <div class="card-body">餐桌：2号<br>订单：🚀 太空炒饭<br>等待：⏳ 3轮</div>
+    <div class="card-bottom">💰 赏金：2 信用点</div>
+  </div>
+  <div class="card card-customer">
+    <span class="card-type-badge">🟢 绿星</span>
+    <span class="card-icon">🌈</span>
+    <div class="card-name">彩虹晶体人 #03</div>
+    <div class="card-body">餐桌：3号<br>订单：🧀 彗星奶酪饼<br>等待：⏳ 3轮</div>
+    <div class="card-bottom">💰 赏金：3 信用点</div>
+  </div>
+  <div class="card card-customer">
+    <span class="card-type-badge">🟢 绿星</span>
+    <span class="card-icon">🌿</span>
+    <div class="card-name">植物大脑人 #04</div>
+    <div class="card-body">餐桌：4号<br>订单：🌌 银河蔬菜羹<br>等待：⏳ 3轮</div>
+    <div class="card-bottom">💰 赏金：2 信用点</div>
+  </div>
+  <!-- 黄星顾客 -->
+  <div class="card card-customer">
+    <span class="card-type-badge">🟡 黄星</span>
+    <span class="card-icon">🦑</span>
+    <div class="card-name">贵族鱿鱼人 #05</div>
+    <div class="card-body">餐桌：2号<br>订单：🌌星云浓汤<br>+👑精致星鱼排<br>等待：⏳ 2轮</div>
+    <div class="card-bottom">💰 赏金：6 信用点</div>
+  </div>
+  <div class="card card-customer">
+    <span class="card-type-badge">🟡 黄星</span>
+    <span class="card-icon">👸</span>
+    <div class="card-name">水晶公主 #06</div>
+    <div class="card-body">餐桌：5号<br>订单：☄️陨石烤肉<br>+❄️冻星甜品<br>等待：⏳ 2轮</div>
+    <div class="card-bottom">💰 赏金：5 信用点</div>
+  </div>
+  <div class="card card-customer">
+    <span class="card-type-badge">🟡 黄星</span>
+    <span class="card-icon">🐙</span>
+    <div class="card-name">八爪大亨 #07</div>
+    <div class="card-body">餐桌：1号<br>订单：⭐星鱼排<br>+🚀太空炒饭<br>等待：⏳ 2轮</div>
+    <div class="card-bottom">💰 赏金：7 信用点</div>
+  </div>
+  <div class="card card-customer">
+    <span class="card-type-badge">🟡 黄星</span>
+    <span class="card-icon">🎭</span>
+    <div class="card-name">变色龙外交官 #08</div>
+    <div class="card-body">餐桌：3号<br>订单：🕳️虫洞饺子<br>+🌌银河蔬菜羹<br>等待：⏳ 2轮</div>
+    <div class="card-bottom">💰 赏金：5 信用点</div>
+  </div>
+  <!-- 红星顾客 -->
+  <div class="card card-customer">
+    <span class="card-type-badge">🔴 红星</span>
+    <span class="card-icon">🤖</span>
+    <div class="card-name">暴躁机器人 #09</div>
+    <div class="card-body">餐桌：6号<br>订单：☄️陨石烤肉（必须🥩×2）<br>等待：⏳ 1轮</div>
+    <div class="card-bottom">💰 赏金：9 信用点</div>
+  </div>
+  <div class="card card-customer">
+    <span class="card-type-badge">🔴 红星</span>
+    <span class="card-icon">😤</span>
+    <div class="card-name">急性子宇宙神 #10</div>
+    <div class="card-body">餐桌：4号<br>订单：💥超新星火锅<br>等待：⏳ 1轮</div>
+    <div class="card-bottom">💰 赏金：10 信用点</div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 第4页：菜谱卡 ==================== -->
+<h2>🍜 菜谱卡（共20张，以下为核心10种）</h2>
+<div class="cards-grid">
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">🌌</span>
+    <div class="card-name">星云浓汤</div>
+    <div class="card-body">食材：🥩×1 + 🌾×1<br>烹饪步数：1步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">🚀</span>
+    <div class="card-name">太空炒饭</div>
+    <div class="card-body">食材：🌾×2 + 🥚×1<br>烹饪步数：1步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">☄️</span>
+    <div class="card-name">陨石烤肉</div>
+    <div class="card-body">食材：🥩×2<br>烹饪步数：2步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">⭐</span>
+    <div class="card-name">星鱼排</div>
+    <div class="card-body">食材：🐟×2 + 🌶️×1<br>烹饪步数：2步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">精致料理</span>
+    <span class="card-icon">👑</span>
+    <div class="card-name">精致星鱼排</div>
+    <div class="card-body">食材：🐟×2+🧀×1+🌶️×1<br>烹饪步数：3步<br>灶台：C（精炼专用）</div>
+    <div class="card-bottom" style="color:#ffe066;">★★ 精致料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">🌠</span>
+    <div class="card-name">彗星奶酪饼</div>
+    <div class="card-body">食材：🧀×2 + 🌾×1<br>烹饪步数：1步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">🌌</span>
+    <div class="card-name">银河蔬菜羹</div>
+    <div class="card-body">食材：🥦×2 + 🌾×1<br>烹饪步数：1步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">❄️</span>
+    <div class="card-name">冻星甜品</div>
+    <div class="card-body">食材：🧀×1 + 🌾×1<br>烹饪步数：1步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">精致料理</span>
+    <span class="card-icon">💥</span>
+    <div class="card-name">超新星火锅</div>
+    <div class="card-body">食材：🥩×1+🥦×1+🐟×1+🌶️×1<br>烹饪步数：4步<br>灶台：C（精炼专用）</div>
+    <div class="card-bottom" style="color:#ff9900;">★★★ 特级精致</div>
+  </div>
+  <div class="card card-recipe">
+    <span class="card-type-badge">普通料理</span>
+    <span class="card-icon">🕳️</span>
+    <div class="card-name">虫洞饺子</div>
+    <div class="card-body">食材：🌾×2 + 🥩×1<br>烹饪步数：2步<br>灶台：A或B</div>
+    <div class="card-bottom">★ 普通料理</div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 第5页：危机事件卡 & 配件卡 ==================== -->
+<h2>⚠️ 危机事件卡（共18张，以下为代表12张）</h2>
+<div class="cards-grid">
+  <div class="card card-crisis">
+    <span class="card-type-badge">🔴 陨石</span>
+    <span class="card-icon">☄️</span>
+    <div class="card-name">超大陨石撞击</div>
+    <div class="card-body">引擎损坏 +2<br>本轮额外翻1张危机牌</div>
+    <div class="card-bottom">⚠️ 高危！优先修引擎</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🔴 陨石</span>
+    <span class="card-icon">🌧️</span>
+    <div class="card-name">微流星雨</div>
+    <div class="card-body">全部4个系统各损坏 +1</div>
+    <div class="card-bottom">⚠️ 备好修复配件！</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🔴 陨石</span>
+    <span class="card-icon">🪨</span>
+    <div class="card-name">小行星群</div>
+    <div class="card-body">随机2个系统各损坏 +1<br>（骰子决定：1-2引擎，3-4导航，5-6氧气/动力）</div>
+    <div class="card-bottom">⚠️ 骰子决定命运</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🔴 陨石</span>
+    <span class="card-icon">💥</span>
+    <div class="card-name">碎片风暴</div>
+    <div class="card-body">食材储藏区本轮封闭<br>（无法补充食材）</div>
+    <div class="card-bottom">⚠️ 提前备好食材！</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟡 投诉</span>
+    <span class="card-icon">😡</span>
+    <div class="card-name">暴躁机器人离桌</div>
+    <div class="card-body">一位🔴红星顾客愤而离去<br>扣除 8 信用点</div>
+    <div class="card-bottom">⚠️ 优先服务红星！</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟡 投诉</span>
+    <span class="card-icon">🔥</span>
+    <div class="card-name">厨房起火</div>
+    <div class="card-body">灶台C本轮无法使用<br>精致料理本轮无法烹饪</div>
+    <div class="card-bottom">⚠️ 提前完成精致料理！</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟡 投诉</span>
+    <span class="card-icon">💦</span>
+    <div class="card-name">食材泄漏</div>
+    <div class="card-body">随机扔弃3份食材<br>（骰子决定类型）</div>
+    <div class="card-bottom">⚠️ 注意食材库存</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟡 投诉</span>
+    <span class="card-icon">📣</span>
+    <div class="card-name">集体投诉</div>
+    <div class="card-body">所有等待≥2轮的顾客<br>各扣除 3 信用点</div>
+    <div class="card-bottom">⚠️ 速速上菜！</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟠 干扰</span>
+    <span class="card-icon">🌞</span>
+    <div class="card-name">太阳风暴</div>
+    <div class="card-body">所有玩家本轮起始<br>行动点各 -2</div>
+    <div class="card-bottom">⚠️ 高效分工！</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟠 干扰</span>
+    <span class="card-icon">📶</span>
+    <div class="card-name">通讯干扰</div>
+    <div class="card-body">本轮玩家不得交换食材<br>或共享行动</div>
+    <div class="card-bottom">⚠️ 独立完成任务</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟠 干扰</span>
+    <span class="card-icon">🔌</span>
+    <div class="card-name">电力超载</div>
+    <div class="card-body">动力系统损坏 +1<br>商店本轮不开放</div>
+    <div class="card-bottom">⚠️ 无法购买配件</div>
+  </div>
+  <div class="card card-crisis">
+    <span class="card-type-badge">🟠 干扰</span>
+    <span class="card-icon">🌀</span>
+    <div class="card-name">引力涡流</div>
+    <div class="card-body">所有玩家本轮移动<br>消耗额外 +1点</div>
+    <div class="card-bottom">⚠️ 减少不必要移动</div>
+  </div>
+</div>
+
+<h2>🔩 配件卡（共16张，4类各4张）</h2>
+<div class="cards-grid">
+  <div class="card card-part">
+    <span class="card-type-badge">引擎配件</span>
+    <span class="card-icon">🔧</span>
+    <div class="card-name">引擎备件</div>
+    <div class="card-body">修复目标：引擎系统<br>修复效果：损坏 -2格<br>使用位置：系统控制室</div>
+    <div class="card-bottom">💰 购买价：4 信用点</div>
+  </div>
+  <div class="card card-part">
+    <span class="card-type-badge">引擎配件</span>
+    <span class="card-icon">🔧</span>
+    <div class="card-name">引擎备件</div>
+    <div class="card-body">修复目标：引擎系统<br>修复效果：损坏 -2格<br>使用位置：系统控制室</div>
+    <div class="card-bottom">💰 购买价：4 信用点</div>
+  </div>
+  <div class="card card-part">
+    <span class="card-type-badge">氧气配件</span>
+    <span class="card-icon">💨</span>
+    <div class="card-name">过滤芯</div>
+    <div class="card-body">修复目标：氧气系统<br>修复效果：损坏 -2格<br>使用位置：氧气循环室</div>
+    <div class="card-bottom">💰 购买价：3 信用点</div>
+  </div>
+  <div class="card card-part">
+    <span class="card-type-badge">氧气配件</span>
+    <span class="card-icon">💨</span>
+    <div class="card-name">过滤芯</div>
+    <div class="card-body">修复目标：氧气系统<br>修复效果：损坏 -2格<br>使用位置：氧气循环室</div>
+    <div class="card-bottom">💰 购买价：3 信用点</div>
+  </div>
+  <div class="card card-part">
+    <span class="card-type-badge">动力配件</span>
+    <span class="card-icon">⚡</span>
+    <div class="card-name">能量电池</div>
+    <div class="card-body">修复目标：动力系统<br>修复效果：损坏 -2格<br>使用位置：动力核心室</div>
+    <div class="card-bottom">💰 购买价：3 信用点</div>
+  </div>
+  <div class="card card-part">
+    <span class="card-type-badge">动力配件</span>
+    <span class="card-icon">⚡</span>
+    <div class="card-name">能量电池</div>
+    <div class="card-body">修复目标：动力系统<br>修复效果：损坏 -2格<br>使用位置：动力核心室</div>
+    <div class="card-bottom">💰 购买价：3 信用点</div>
+  </div>
+  <div class="card card-part">
+    <span class="card-type-badge">导航配件</span>
+    <span class="card-icon">🗺️</span>
+    <div class="card-name">导航模块</div>
+    <div class="card-body">修复目标：导航系统<br>修复效果：损坏 -3格（精密）<br>使用位置：驾驶舱</div>
+    <div class="card-bottom">💰 购买价：5 信用点</div>
+  </div>
+  <div class="card card-part">
+    <span class="card-type-badge">导航配件</span>
+    <span class="card-icon">🗺️</span>
+    <div class="card-name">导航模块</div>
+    <div class="card-body">修复目标：导航系统<br>修复效果：损坏 -3格（精密）<br>使用位置：驾驶舱</div>
+    <div class="card-bottom">💰 购买价：5 信用点</div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 第6页：角色卡 & 特殊顾客卡 ==================== -->
+<h2>🎭 角色技能卡（5张）</h2>
+<div class="cards-grid" style="grid-template-columns:repeat(5,1fr);">
+  <div class="card card-role" style="min-height:210px;">
+    <span class="card-type-badge">角色</span>
+    <span class="card-icon">👨‍🍳</span>
+    <div class="card-name">厨师长</div>
+    <div class="card-body">行动点：4/轮<br><br><strong>专属技能：</strong><br>烹饪消耗½点<br>（每轮最多3次优惠）</div>
+    <div class="card-bottom">推荐：1-2人局必选</div>
+  </div>
+  <div class="card card-role" style="min-height:210px;">
+    <span class="card-type-badge">角色</span>
+    <span class="card-icon">🤖</span>
+    <div class="card-name">修理机器人</div>
+    <div class="card-body">行动点：4/轮<br><br><strong>专属技能：</strong><br>修复行动-1点消耗<br>修复值+1</div>
+    <div class="card-bottom">推荐：3人+强推</div>
+  </div>
+  <div class="card card-role" style="min-height:210px;">
+    <span class="card-type-badge">角色</span>
+    <span class="card-icon">🦑</span>
+    <div class="card-name">章鱼服务员</div>
+    <div class="card-body">行动点：4/轮<br><br><strong>专属技能：</strong><br>1点可同时为<br>2桌顾客上菜</div>
+    <div class="card-bottom">推荐：订单多时强力</div>
+  </div>
+  <div class="card card-role" style="min-height:210px;">
+    <span class="card-type-badge">角色</span>
+    <span class="card-icon">👩‍🚀</span>
+    <div class="card-name">导航员</div>
+    <div class="card-body">行动点：4/轮<br><br><strong>专属技能：</strong><br>每轮结束可预览<br>下1张危机牌</div>
+    <div class="card-bottom">推荐：辅助规划全队</div>
+  </div>
+  <div class="card card-role" style="min-height:210px;">
+    <span class="card-type-badge">角色</span>
+    <span class="card-icon">🧙</span>
+    <div class="card-name">星际厨神</div>
+    <div class="card-body">行动点：4/轮<br><br><strong>专属技能：</strong><br>每轮1次：普通料理<br>升级为精致料理</div>
+    <div class="card-bottom">推荐：复杂订单救星</div>
+  </div>
+</div>
+
+<h2>🌠 特殊顾客卡（6张，混入订单堆）</h2>
+<div class="cards-grid" style="grid-template-columns:repeat(6,1fr);">
+  <div class="card card-special" style="min-height:200px;">
+    <span class="card-type-badge">特殊</span>
+    <span class="card-icon">👾</span>
+    <div class="card-name">美食评论家</div>
+    <div class="card-body">触发：接单时翻出<br>效果：本轮必须完成全部当前订单！<br>失败扣 10 信用点</div>
+    <div class="card-bottom">🔴 高风险挑战</div>
+  </div>
+  <div class="card card-special" style="min-height:200px;">
+    <span class="card-type-badge">特殊</span>
+    <span class="card-icon">🌟</span>
+    <div class="card-name">饥饿宇宙神</div>
+    <div class="card-body">触发：接单时翻出<br>效果：立即多开2桌<br>但赏金×2！</div>
+    <div class="card-bottom">🟡 高压高回报</div>
+  </div>
+  <div class="card card-special" style="min-height:200px;">
+    <span class="card-type-badge">特殊</span>
+    <span class="card-icon">💣</span>
+    <div class="card-name">混乱制造者</div>
+    <div class="card-body">触发：接单时翻出<br>效果：随机系统 +2损坏<br>补偿：获得 8 信用点</div>
+    <div class="card-bottom">🟠 混乱但有补偿</div>
+  </div>
+  <div class="card card-special" style="min-height:200px;">
+    <span class="card-type-badge">特殊</span>
+    <span class="card-icon">🎁</span>
+    <div class="card-name">幸运星旅者</div>
+    <div class="card-body">触发：接单时翻出<br>效果：免费获得<br>1张随机配件卡！</div>
+    <div class="card-bottom">🟢 纯好事！</div>
+  </div>
+  <div class="card card-special" style="min-height:200px;">
+    <span class="card-type-badge">特殊</span>
+    <span class="card-icon">🕵️</span>
+    <div class="card-name">神秘食客</div>
+    <div class="card-body">触发：接单时翻出<br>效果：猜点的菜（骰子判断）<br>猜对×2，猜错无赏金</div>
+    <div class="card-bottom">🎲 赌一赌？</div>
+  </div>
+  <div class="card card-special" style="min-height:200px;">
+    <span class="card-type-badge">特殊</span>
+    <span class="card-icon">💫</span>
+    <div class="card-name">流浪诗人</div>
+    <div class="card-body">触发：服务完成后<br>效果：全体玩家<br>本轮额外 +2 行动点</div>
+    <div class="card-bottom">🟢 珍贵的行动加速</div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 第7页：棋子 & 代币 ==================== -->
+<h2>♟️ 玩家棋子（剪下后可折叠竖立）</h2>
+<div class="pawn-grid">
+  <div>
+    <div class="pawn-card" style="border-color:#ffe066;background:radial-gradient(circle,#2a2200,#1a1400);">
+      👨‍🍳<div class="pawn-name" style="color:#ffe066;">厨师长</div>
+    </div>
+  </div>
+  <div>
+    <div class="pawn-card" style="border-color:#7ecfff;background:radial-gradient(circle,#001a2e,#000e1e);">
+      🤖<div class="pawn-name" style="color:#7ecfff;">修理机器人</div>
+    </div>
+  </div>
+  <div>
+    <div class="pawn-card" style="border-color:#c8a0ff;background:radial-gradient(circle,#0e001e,#08000e);">
+      🦑<div class="pawn-name" style="color:#c8a0ff;">章鱼服务员</div>
+    </div>
+  </div>
+  <div>
+    <div class="pawn-card" style="border-color:#6bffb8;background:radial-gradient(circle,#001e10,#000e08);">
+      👩‍🚀<div class="pawn-name" style="color:#6bffb8;">导航员</div>
+    </div>
+  </div>
+  <div>
+    <div class="pawn-card" style="border-color:#ff9900;background:radial-gradient(circle,#1e0e00,#0e0800);">
+      🧙<div class="pawn-name" style="color:#ff9900;">星际厨神</div>
+    </div>
+  </div>
+</div>
+
+<h2>💰 星际信用点代币（按需打印，建议每种打印10个）</h2>
+<div class="token-grid">
+  <!-- 1点代币 × 6 -->
+  <div class="token token-1"><div style="font-size:1.5em;">⭐</div><div>1</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-1"><div style="font-size:1.5em;">⭐</div><div>1</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-1"><div style="font-size:1.5em;">⭐</div><div>1</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-1"><div style="font-size:1.5em;">⭐</div><div>1</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-1"><div style="font-size:1.5em;">⭐</div><div>1</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-1"><div style="font-size:1.5em;">⭐</div><div>1</div><div style="font-size:0.55em;">信用点</div></div>
+  <!-- 5点代币 × 6 -->
+  <div class="token token-5"><div style="font-size:1.5em;">🌟</div><div>5</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-5"><div style="font-size:1.5em;">🌟</div><div>5</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-5"><div style="font-size:1.5em;">🌟</div><div>5</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-5"><div style="font-size:1.5em;">🌟</div><div>5</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-5"><div style="font-size:1.5em;">🌟</div><div>5</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-5"><div style="font-size:1.5em;">🌟</div><div>5</div><div style="font-size:0.55em;">信用点</div></div>
+  <!-- 10点代币 × 4 -->
+  <div class="token token-10"><div style="font-size:1.5em;">💫</div><div>10</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-10"><div style="font-size:1.5em;">💫</div><div>10</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-10"><div style="font-size:1.5em;">💫</div><div>10</div><div style="font-size:0.55em;">信用点</div></div>
+  <div class="token token-10"><div style="font-size:1.5em;">💫</div><div>10</div><div style="font-size:0.55em;">信用点</div></div>
+</div>
+
+<!-- 食材代币 -->
+<h2>🛒 食材代币（各打印4-6个）</h2>
+<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px;">
+  <div class="token" style="border-color:#ff6b35;background:radial-gradient(circle,#1e0a00,#0e0500);color:#ff6b35;width:70px;height:70px;font-size:0.7em;">🥩<br>肉</div>
+  <div class="token" style="border-color:#ffe066;background:radial-gradient(circle,#1e1800,#0e0e00);color:#ffe066;width:70px;height:70px;font-size:0.7em;">🌾<br>谷物</div>
+  <div class="token" style="border-color:#7ecfff;background:radial-gradient(circle,#001a2e,#000e1e);color:#7ecfff;width:70px;height:70px;font-size:0.7em;">🐟<br>鱼</div>
+  <div class="token" style="border-color:#6bffb8;background:radial-gradient(circle,#001e10,#000e08);color:#6bffb8;width:70px;height:70px;font-size:0.7em;">🥦<br>蔬菜</div>
+  <div class="token" style="border-color:#fff;background:radial-gradient(circle,#1e1e1e,#0e0e0e);color:#eee;width:70px;height:70px;font-size:0.7em;">🧀<br>奶酪</div>
+  <div class="token" style="border-color:#ff4444;background:radial-gradient(circle,#1e0000,#0e0000);color:#ff8888;width:70px;height:70px;font-size:0.7em;">🌶️<br>辣椒</div>
+  <div class="token" style="border-color:#c8a0ff;background:radial-gradient(circle,#0e001e,#08000e);color:#c8a0ff;width:70px;height:70px;font-size:0.7em;">🥚<br>蛋</div>
+</div>
+
+<div style="text-align:center;margin-top:30px;padding:20px;border-top:2px solid #7ecfff33;color:#666;font-size:0.8em;">
+  <p>🚀 星际餐厅大逃亡 Space Diner Escape | 合作桌游 | 1-5人 | 45-75分钟</p>
+  <p>📖 规则说明请参考 <a href="README.md" style="color:#7ecfff;">README.md</a> | 本道具包遵循 CC BY-SA 4.0 开放授权</p>
+</div>
+
+</body>
+</html>
