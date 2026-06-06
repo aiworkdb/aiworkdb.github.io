@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台词之王 (Line Master) - 打印道具</title>
+<style>
+  :root {
+    --card-w: 60mm;
+    --card-h: 85mm;
+    --scene-color: #1a237e;
+    --scene-light: #3949ab;
+    --char-color: #4a148c;
+    --char-light: #7b1fa2;
+    --emotion-color: #b71c1c;
+    --emotion-light: #e53935;
+    --director-color: #e65100;
+    --director-light: #ff9800;
+    --token-color: #f9a825;
+    --bg: #1a1a2e;
+    --text: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
+
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .print-hint { display: none !important; }
+    .page-break { page-break-before: always; }
+    body { background: white !important; }
+    .section-title { color: #333 !important; }
+  }
+
+  body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .print-hint {
+    background: linear-gradient(135deg, #b71c1c, #e65100);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    margin: 20px auto;
+    max-width: 700px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .print-hint h2 { margin-bottom: 12px; font-size: 1.3em; }
+  .print-hint ul { padding-left: 20px; }
+  .print-hint li { margin: 6px 0; }
+
+  .container { max-width: 210mm; margin: 0 auto; padding: 10px; }
+
+  .section-title {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 25px 0 15px;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+  }
+  .section-title.scene { background: var(--scene-color); }
+  .section-title.char { background: var(--char-color); }
+  .section-title.emotion { background: var(--emotion-color); }
+  .section-title.director { background: var(--director-color); }
+  .section-title.token { background: #5d4037; }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6mm;
+    justify-items: center;
+  }
+
+  /* Card Base */
+  .card {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  /* Scene Card */
+  .card-scene {
+    background: linear-gradient(135deg, var(--scene-color) 0%, #283593 50%, var(--scene-light) 100%);
+    border: 2px solid #5c6bc0;
+  }
+  .card-scene .card-header {
+    background: rgba(0,0,0,0.25);
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8em;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: #c5cae9;
+  }
+  .card-scene .card-icon { font-size: 1.4em; }
+  .card-scene .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .card-scene .card-number {
+    font-size: 0.65em;
+    color: #9fa8da;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .card-scene .card-text {
+    font-size: 1.05em;
+    font-weight: bold;
+    line-height: 1.4;
+    color: #e8eaf6;
+  }
+  .card-scene .card-footer {
+    padding: 3px 8px;
+    text-align: right;
+    font-size: 0.65em;
+    color: #7986cb;
+    background: rgba(0,0,0,0.2);
+  }
+
+  /* Character Card */
+  .card-char {
+    background: linear-gradient(135deg, var(--char-color) 0%, #6a1b9a 50%, var(--char-light) 100%);
+    border: 2px solid #ab47bc;
+  }
+  .card-char .card-header {
+    background: rgba(0,0,0,0.25);
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #e1bee7;
+  }
+  .card-char .card-icon { font-size: 1.4em; }
+  .card-char .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .card-char .card-number {
+    font-size: 0.65em;
+    color: #ce93d8;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .card-char .card-text {
+    font-size: 1.15em;
+    font-weight: bold;
+    line-height: 1.3;
+    color: #f3e5f5;
+    margin-bottom: 4px;
+  }
+  .card-char .card-hint {
+    font-size: 0.65em;
+    color: #ce93d8;
+    line-height: 1.3;
+    font-style: italic;
+  }
+  .card-char .card-footer {
+    padding: 3px 8px;
+    text-align: right;
+    font-size: 0.65em;
+    color: #ab47bc;
+    background: rgba(0,0,0,0.2);
+  }
+
+  /* Emotion Card */
+  .card-emotion {
+    background: linear-gradient(135deg, var(--emotion-color) 0%, #c62828 50%, var(--emotion-light) 100%);
+    border: 2px solid #ef5350;
+  }
+  .card-emotion .card-header {
+    background: rgba(0,0,0,0.25);
+    padding: 4px 8px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-align: center;
+    color: #ffcdd2;
+  }
+  .card-emotion .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    text-align: center;
+  }
+  .card-emotion .card-emoji {
+    font-size: 2.2em;
+    margin-bottom: 6px;
+  }
+  .card-emotion .card-text {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ffebee;
+    margin-bottom: 6px;
+  }
+  .card-emotion .card-tips {
+    font-size: 0.62em;
+    color: #ef9a9a;
+    line-height: 1.4;
+    font-style: italic;
+  }
+  .card-emotion .card-footer {
+    padding: 3px 8px;
+    text-align: right;
+    font-size: 0.65em;
+    color: #ef5350;
+    background: rgba(0,0,0,0.2);
+  }
+
+  /* Director Card */
+  .card-director {
+    background: linear-gradient(135deg, #e65100 0%, #ef6c00 50%, var(--director-light) 100%);
+    border: 3px solid #ffb74d;
+    border-radius: 8px;
+  }
+  .card-director .card-header {
+    background: rgba(0,0,0,0.3);
+    padding: 5px 8px;
+    text-align: center;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #ffe0b2;
+    letter-spacing: 1px;
+  }
+  .card-director .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .card-director .card-icon-big {
+    font-size: 2.5em;
+    margin-bottom: 6px;
+  }
+  .card-director .card-name {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff3e0;
+    margin-bottom: 6px;
+  }
+  .card-director .card-effect {
+    font-size: 0.7em;
+    color: #ffe0b2;
+    line-height: 1.4;
+    background: rgba(0,0,0,0.2);
+    padding: 4px 6px;
+    border-radius: 4px;
+    width: 100%;
+  }
+  .card-director .card-footer {
+    padding: 3px 8px;
+    text-align: right;
+    font-size: 0.65em;
+    color: #ffb74d;
+    background: rgba(0,0,0,0.25);
+  }
+
+  /* Card Back */
+  .card-back {
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    border: 2px solid #e94560;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .card-back .back-icon { font-size: 3em; }
+  .card-back .back-text {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #e94560;
+    letter-spacing: 2px;
+  }
+
+  /* Tokens */
+  .tokens-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4mm;
+    justify-items: center;
+  }
+  .token {
+    width: 22mm;
+    height: 22mm;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .token-applause {
+    background: radial-gradient(circle at 40% 35%, #fff9c4, #f9a825 60%, #f57f17);
+    border: 2px solid #fbc02d;
+  }
+  .token-oscar {
+    width: 28mm;
+    height: 28mm;
+    background: radial-gradient(circle at 40% 35%, #fff8e1, #ffd54f 50%, #f9a825);
+    border: 3px solid #ff8f00;
+    font-size: 1.5em;
+  }
+
+  /* Page Breaks */
+  .page-break { page-break-before: always; }
+
+  /* Summary card */
+  .summary-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    text-align: center;
+  }
+  .summary-box h3 { margin-bottom: 10px; color: #ffd54f; }
+  .summary-box p { font-size: 0.85em; color: #ccc; margin: 4px 0; }
+
+  .card-back-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6mm;
+    justify-items: center;
+  }
+
+  @media screen and (max-width: 700px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .tokens-grid { grid-template-columns: repeat(5, 1fr); }
+    .card-back-grid { grid-template-columns: repeat(2, 1fr); }
+    :root { --card-w: 55mm; --card-h: 78mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+  <h2>🖨️ 重要打印提示</h2>
+  <ul>
+    <li>请使用 <strong>A4 纸张</strong> 打印，建议设置 <strong>最小边距</strong>（5-8mm）</li>
+    <li>在打印对话框中，务必 <strong>勾选"背景图形"</strong> 选项，否则卡牌背景色不会显示！</li>
+    <li>卡牌和代币建议使用 <strong>200g以上卡纸</strong> 打印，增加耐用性</li>
+    <li>打印后沿卡牌边缘裁剪，可选塑封延长使用寿命</li>
+    <li>每张卡牌背面统一（最后两页），可双面打印（短边翻转）</li>
+  </ul>
+</div>
+
+<div class="container">
+
+  <!-- ==================== 场景卡 (30张) ==================== -->
+  <div class="section-title scene">🎬 场景卡 × 30</div>
+
+  <div class="cards-grid">
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S01 · 日常</div><div class="card-body"><div class="card-number">SCENE · 01</div><div class="card-text">在电梯里遇到多年未见的前任</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S02 · 日常</div><div class="card-body"><div class="card-number">SCENE · 02</div><div class="card-text">面试时手机突然响了</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S03 · 日常</div><div class="card-body"><div class="card-number">SCENE · 03</div><div class="card-text">发现外卖里有一只虫子</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S04 · 日常</div><div class="card-body"><div class="card-number">SCENE · 04</div><div class="card-text">第一次约会，餐厅突然停电</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S05 · 日常</div><div class="card-body"><div class="card-number">SCENE · 05</div><div class="card-text">考试时发现忘带笔了</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S06 · 日常</div><div class="card-body"><div class="card-number">SCENE · 06</div><div class="card-text">在超市排队时碰到偶像</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S07 · 日常</div><div class="card-body"><div class="card-number">SCENE · 07</div><div class="card-text">游泳时假发漂走了</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S08 · 日常</div><div class="card-body"><div class="card-number">SCENE · 08</div><div class="card-text">朋友婚礼上手捧花砸到了别人</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S09 · 日常</div><div class="card-body"><div class="card-number">SCENE · 09</div><div class="card-text">给暗恋对象发错消息</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S10 · 日常</div><div class="card-body"><div class="card-number">SCENE · 10</div><div class="card-text">在图书馆不小心大声打了个喷嚏</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S11 · 日常</div><div class="card-body"><div class="card-number">SCENE · 11</div><div class="card-text">地铁坐反了两站才发现</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S12 · 日常</div><div class="card-body"><div class="card-number">SCENE · 12</div><div class="card-text">给老板倒咖啡全洒在他键盘上</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S13 · 日常</div><div class="card-body"><div class="card-number">SCENE · 13</div><div class="card-text">相亲对象是小学时天天打架的同桌</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S14 · 日常</div><div class="card-body"><div class="card-number">SCENE · 14</div><div class="card-text">KTV唱歌跑调被全场嘘</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S15 · 日常</div><div class="card-body"><div class="card-number">SCENE · 15</div><div class="card-text">看电影坐错了位置被人赶起来</div></div><div class="card-footer">⭐ 简单</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S16 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 16</div><div class="card-text">在太空站发现了外星人的外卖订单</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S17 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 17</div><div class="card-text">穿越到古代发现手机还有10%电</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S18 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 18</div><div class="card-text">突然有了读心术，发现老板在想鱼香肉丝</div></div><div class="card-footer">⭐⭐⭐ 困难</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S19 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 19</div><div class="card-text">吸血鬼开的牙科诊所里</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S20 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 20</div><div class="card-text">僵尸追着你要求合影签名</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S21 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 21</div><div class="card-text">时间暂停了，只有你能动</div></div><div class="card-footer">⭐⭐⭐ 困难</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S22 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 22</div><div class="card-text">家里的猫开口说话，要揭发你的秘密</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S23 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 23</div><div class="card-text">中了五百万但规则是24小时内必须花完</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S24 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 24</div><div class="card-text">变成透明人的第一天出门</div></div><div class="card-footer">⭐⭐⭐ 困难</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S25 · 奇幻</div><div class="card-body"><div class="card-number">SCENE · 25</div><div class="card-text">外星人降落到地球，点名要见你</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S26 · 名人</div><div class="card-body"><div class="card-number">SCENE · 26</div><div class="card-text">给总统当翻译时突然忘词了</div></div><div class="card-footer">⭐⭐⭐ 困难</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S27 · 名人</div><div class="card-body"><div class="card-number">SCENE · 27</div><div class="card-text">在奥斯卡颁奖礼上走红毯摔了一跤</div></div><div class="card-footer">⭐⭐ 中等</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S28 · 名人</div><div class="card-body"><div class="card-number">SCENE · 28</div><div class="card-text">和世界首富一起被关在了电梯里</div></div><div class="card-footer">⭐⭐⭐ 困难</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S29 · 名人</div><div class="card-body"><div class="card-number">SCENE · 29</div><div class="card-text">被误认为某国皇室成员带去见了国王</div></div><div class="card-footer">⭐⭐⭐ 困难</div></div>
+    <div class="card card-scene"><div class="card-header"><span class="card-icon">🎬</span>S30 · 名人</div><div class="card-body"><div class="card-number">SCENE · 30</div><div class="card-text">作为特邀嘉宾在诺贝尔奖晚宴上致辞</div></div><div class="card-footer">⭐⭐⭐ 困难</div></div>
+  </div>
+
+  <!-- ==================== 角色卡 (30张) ==================== -->
+  <div class="section-title char page-break">🎭 角色卡 × 30</div>
+
+  <div class="cards-grid">
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C01 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 01</div><div class="card-text">外卖小哥</div><div class="card-hint">赶时间、熟悉地图、疲惫但坚强</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C02 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 02</div><div class="card-text">退休大爷</div><div class="card-hint">悠闲、爱唠叨、什么都懂一点</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C03 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 03</div><div class="card-text">幼儿园老师</div><div class="card-hint">温柔但威严、习惯对小孩语气</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C04 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 04</div><div class="card-text">程序员</div><div class="card-hint">逻辑思维、社恐、穿格子衫</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C05 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 05</div><div class="card-text">健身教练</div><div class="card-hint">热情、正能量、口头禅"再来一组"</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C06 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 06</div><div class="card-text">公交车司机</div><div class="card-hint">见多识广、耐心好、爱吐槽乘客</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C07 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 07</div><div class="card-text">食堂阿姨</div><div class="card-hint">手抖、亲切、掌握学生命运</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C08 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 08</div><div class="card-text">快递员</div><div class="card-hint">风风火火、熟悉小区、话不多</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C09 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 09</div><div class="card-text">护士</div><div class="card-hint">细心、冷静、面对各种病人</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C10 · 日常</div><div class="card-body"><div class="card-number">CHARACTER · 10</div><div class="card-text">保安</div><div class="card-hint">警惕、爱问"你找谁"、三班倒</div></div><div class="card-footer">日常角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C11 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 11</div><div class="card-text">特工</div><div class="card-hint">神秘、身手矫健、总在暗中观察</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C12 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 12</div><div class="card-text">考古学家</div><div class="card-hint">博学、对古物痴迷、不怕脏</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C13 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 13</div><div class="card-text">驯兽师</div><div class="card-hint">爱动物、被咬过无数次、有耐心</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C14 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 14</div><div class="card-text">深海潜水员</div><div class="card-hint">冷静、对海洋生物如数家珍</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C15 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 15</div><div class="card-text">宇航员</div><div class="card-hint">失重感、什么都要飘起来</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C16 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 16</div><div class="card-text">舞台魔术师</div><div class="card-hint">花哨、善于表演、每个动作都是戏</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C17 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 17</div><div class="card-text">忍者</div><div class="card-hint">沉默寡言、动作快、存在感极低</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C18 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 18</div><div class="card-text">海盗</div><div class="card-hint">粗犷、爱财、说话带"呀嚯"</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C19 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 19</div><div class="card-text">名侦探</div><div class="card-hint">观察入微、凡事推理、不说废话</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C20 · 特殊</div><div class="card-body"><div class="card-number">CHARACTER · 20</div><div class="card-text">国王/女王</div><div class="card-hint">威严、随意发号施令、臣民跪安</div></div><div class="card-footer">特殊职业</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C21 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 21</div><div class="card-text">机器人</div><div class="card-hint">逻辑死板、偶尔短路、学人类说话</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C22 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 22</div><div class="card-text">吸血鬼</div><div class="card-hint">优雅、怕光、对血过敏</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C23 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 23</div><div class="card-text">精灵</div><div class="card-hint">古灵精怪、会魔法但总用错</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C24 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 24</div><div class="card-text">巨人</div><div class="card-hint">什么东西都嫌太小、走路地动山摇</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C25 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 25</div><div class="card-text">美人鱼</div><div class="card-hint">对陆地一切好奇、不能站只能坐</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C26 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 26</div><div class="card-text">幽灵</div><div class="card-hint">透明飘渺、穿墙但经常卡住</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C27 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 27</div><div class="card-text">超级英雄</div><div class="card-hint">爱管闲事、总是摆pose、能力不稳定</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C28 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 28</div><div class="card-text">巫师</div><div class="card-hint">挥魔杖、念咒语、药剂经常爆炸</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C29 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 29</div><div class="card-text">时间旅行者</div><div class="card-hint">对"古代"大惊小怪、总说反了年代</div></div><div class="card-footer">奇幻角色</div></div>
+    <div class="card card-char"><div class="card-header"><span class="card-icon">🎭</span>C30 · 奇幻</div><div class="card-body"><div class="card-number">CHARACTER · 30</div><div class="card-text">外星人</div><div class="card-hint">对人类一切感到困惑、说话带翻译器延迟</div></div><div class="card-footer">奇幻角色</div></div>
+  </div>
+
+  <!-- ==================== 情绪卡 (20张) ==================== -->
+  <div class="section-title emotion page-break">😄 情绪卡 × 20</div>
+
+  <div class="cards-grid">
+    <div class="card card-emotion"><div class="card-header">EMOTION · E01</div><div class="card-body"><div class="card-emoji">😍</div><div class="card-text">深情款款</div><div class="card-tips">眼神温柔、语气慢而真诚</div></div><div class="card-footer">E01</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E02</div><div class="card-body"><div class="card-emoji">😡</div><div class="card-text">暴跳如雷</div><div class="card-tips">拍桌大吼、语速极快、青筋暴起</div></div><div class="card-footer">E02</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E03</div><div class="card-body"><div class="card-emoji">😐</div><div class="card-text">冷漠无情</div><div class="card-tips">面无表情、语气平淡、惜字如金</div></div><div class="card-footer">E03</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E04</div><div class="card-body"><div class="card-emoji">🥳</div><div class="card-text">欣喜若狂</div><div class="card-tips">手舞足蹈、声音尖细、停不下来</div></div><div class="card-footer">E04</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E05</div><div class="card-body"><div class="card-emoji">😱</div><div class="card-text">惊恐万分</div><div class="card-tips">睁大眼、捂胸口、语无伦次</div></div><div class="card-footer">E05</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E06</div><div class="card-body"><div class="card-emoji">🧐</div><div class="card-text">一本正经</div><div class="card-tips">推眼镜、用学术语、像在讲课</div></div><div class="card-footer">E06</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E07</div><div class="card-body"><div class="card-emoji">😏</div><div class="card-text">阴阳怪气</div><div class="card-tips">话里有话、拖长音、反问句式</div></div><div class="card-footer">E07</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E08</div><div class="card-body"><div class="card-emoji">😮‍💨</div><div class="card-text">生无可恋</div><div class="card-tips">叹气、躺平、对什么都不感兴趣</div></div><div class="card-footer">E08</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E09</div><div class="card-body"><div class="card-emoji">😆</div><div class="card-text">眉飞色舞</div><div class="card-tips">挤眉弄眼、声音起伏、话特别多</div></div><div class="card-footer">E09</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E10</div><div class="card-body"><div class="card-emoji">🥰</div><div class="card-text">含情脉脉</div><div class="card-tips">轻声细语、欲言又止、偶尔偷看</div></div><div class="card-footer">E10</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E11</div><div class="card-body"><div class="card-emoji">🤫</div><div class="card-text">鬼鬼祟祟</div><div class="card-tips">压低声音、左右环顾、三句话一回头</div></div><div class="card-footer">E11</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E12</div><div class="card-body"><div class="card-emoji">😎</div><div class="card-text">得意洋洋</div><div class="card-tips">昂头挺胸、炫耀语气、"我就知道"</div></div><div class="card-footer">E12</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E13</div><div class="card-body"><div class="card-emoji">😭</div><div class="card-text">悲痛欲绝</div><div class="card-tips">哭腔、哽咽、时不时擦泪</div></div><div class="card-footer">E13</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E14</div><div class="card-body"><div class="card-emoji">🤬</div><div class="card-text">气急败坏</div><div class="card-tips">咒骂连篇、语无伦次、拍桌子</div></div><div class="card-footer">E14</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E15</div><div class="card-body"><div class="card-emoji">😰</div><div class="card-text">忐忑不安</div><div class="card-tips">结巴、反复确认、手心冒汗</div></div><div class="card-footer">E15</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E16</div><div class="card-body"><div class="card-emoji">💪</div><div class="card-text">理直气壮</div><div class="card-tips">声音洪亮、不容置疑、"就是这样的"</div></div><div class="card-footer">E16</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E17</div><div class="card-body"><div class="card-emoji">😜</div><div class="card-text">嬉皮笑脸</div><div class="card-tips">挤眉弄眼、不好好说话、总在憋笑</div></div><div class="card-footer">E17</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E18</div><div class="card-body"><div class="card-emoji">🧓</div><div class="card-text">语重心长</div><div class="card-tips">慢条斯理、像长辈教育晚辈</div></div><div class="card-footer">E18</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E19</div><div class="card-body"><div class="card-emoji">😵</div><div class="card-text">六神无主</div><div class="card-tips">茫然四顾、问一句答一句、慌乱</div></div><div class="card-footer">E19</div></div>
+    <div class="card card-emotion"><div class="card-header">EMOTION · E20</div><div class="card-body"><div class="card-emoji">👑</div><div class="card-text">趾高气扬</div><div class="card-tips">目中无人、用鼻孔看人、语气命令式</div></div><div class="card-footer">E20</div></div>
+  </div>
+
+  <!-- ==================== 导演卡 (15张) ==================== -->
+  <div class="section-title director page-break">🎥 导演卡 × 15</div>
+
+  <div class="cards-grid">
+    <div class="card card-director"><div class="card-header">🎬 DIRECTOR · D01</div><div class="card-body"><div class="card-icon-big">🎬</div><div class="card-name">抢戏卡</div><div class="card-effect">他人表演结束后，你立即表演属于自己的版本，然后同时参与投票</div></div><div class="card-footer">使用时机：投票前</div></div>
+    <div class="card card-director"><div class="card-header">🎬 DIRECTOR · D02</div><div class="card-body"><div class="card-icon-big">🎬</div><div class="card-name">抢戏卡</div><div class="card-effect">他人表演结束后，你立即表演属于自己的版本，然后同时参与投票</div></div><div class="card-footer">使用时机：投票前</div></div>
+    <div class="card card-director"><div class="card-header">🎬 DIRECTOR · D03</div><div class="card-body"><div class="card-icon-big">🎬</div><div class="card-name">抢戏卡</div><div class="card-effect">他人表演结束后，你立即表演属于自己的版本，然后同时参与投票</div></div><div class="card-footer">使用时机：投票前</div></div>
+    <div class="card card-director"><div class="card-header">🎬 DIRECTOR · D04</div><div class="card-body"><div class="card-icon-big">🎬</div><div class="card-name">抢戏卡</div><div class="card-effect">他人表演结束后，你立即表演属于自己的版本，然后同时参与投票</div></div><div class="card-footer">使用时机：投票前</div></div>
+    <div class="card card-director"><div class="card-header">🎬 DIRECTOR · D05</div><div class="card-body"><div class="card-icon-big">🎬</div><div class="card-name">抢戏卡</div><div class="card-effect">他人表演结束后，你立即表演属于自己的版本，然后同时参与投票</div></div><div class="card-footer">使用时机：投票前</div></div>
+    <div class="card card-director"><div class="card-header">🔄 DIRECTOR · D06</div><div class="card-body"><div class="card-icon-big">🔄</div><div class="card-name">换角卡</div><div class="card-effect">强制当前演员将任意一张已抽的卡换成新抽的卡</div></div><div class="card-footer">使用时机：表演前</div></div>
+    <div class="card card-director"><div class="card-header">🔄 DIRECTOR · D07</div><div class="card-body"><div class="card-icon-big">🔄</div><div class="card-name">换角卡</div><div class="card-effect">强制当前演员将任意一张已抽的卡换成新抽的卡</div></div><div class="card-footer">使用时机：表演前</div></div>
+    <div class="card card-director"><div class="card-header">🔄 DIRECTOR · D08</div><div class="card-body"><div class="card-icon-big">🔄</div><div class="card-name">换角卡</div><div class="card-effect">强制当前演员将任意一张已抽的卡换成新抽的卡</div></div><div class="card-footer">使用时机：表演前</div></div>
+    <div class="card card-director"><div class="card-header">➕ DIRECTOR · D09</div><div class="card-body"><div class="card-icon-big">➕</div><div class="card-name">加戏卡</div><div class="card-effect">给当前演员一个额外条件（如"用方言""必须唱歌""单膝跪地"），完成得好你额外得1掌声</div></div><div class="card-footer">使用时机：表演前</div></div>
+    <div class="card card-director"><div class="card-header">➕ DIRECTOR · D10</div><div class="card-body"><div class="card-icon-big">➕</div><div class="card-name">加戏卡</div><div class="card-effect">给当前演员一个额外条件（如"用方言""必须唱歌""单膝跪地"），完成得好你额外得1掌声</div></div><div class="card-footer">使用时机：表演前</div></div>
+    <div class="card card-director"><div class="card-header">➕ DIRECTOR · D11</div><div class="card-body"><div class="card-icon-big">➕</div><div class="card-name">加戏卡</div><div class="card-effect">给当前演员一个额外条件（如"用方言""必须唱歌""单膝跪地"），完成得好你额外得1掌声</div></div><div class="card-footer">使用时机：表演前</div></div>
+    <div class="card card-director"><div class="card-header">✂️ DIRECTOR · D12</div><div class="card-body"><div class="card-icon-big">✂️</div><div class="card-name">剪辑卡</div><div class="card-effect">取消任意一名玩家的投票资格（本轮不能投票）</div></div><div class="card-footer">使用时机：投票阶段</div></div>
+    <div class="card card-director"><div class="card-header">✂️ DIRECTOR · D13</div><div class="card-body"><div class="card-icon-big">✂️</div><div class="card-name">剪辑卡</div><div class="card-effect">取消任意一名玩家的投票资格（本轮不能投票）</div></div><div class="card-footer">使用时机：投票阶段</div></div>
+    <div class="card card-director"><div class="card-header">🏆 DIRECTOR · D14</div><div class="card-body"><div class="card-icon-big">🏆</div><div class="card-name">颁奖卡</div><div class="card-effect">你自己额外获得1个掌声代币</div></div><div class="card-footer">使用时机：投票后统分前</div></div>
+    <div class="card card-director"><div class="card-header">🏆 DIRECTOR · D15</div><div class="card-body"><div class="card-icon-big">🏆</div><div class="card-name">颁奖卡</div><div class="card-effect">你自己额外获得1个掌声代币</div></div><div class="card-footer">使用时机：投票后统分前</div></div>
+  </div>
+
+  <!-- ==================== 卡牌背面 (统一背面) ==================== -->
+  <div class="section-title page-break" style="background: linear-gradient(135deg, #1a1a2e, #e94560);">🃏 卡牌背面参考（双面打印用）</div>
+
+  <div class="summary-box">
+    <h3>📌 双面打印说明</h3>
+    <p>以下为统一卡牌背面设计，建议用<strong>短边翻转</strong>方式双面打印</p>
+    <p>场景卡/角色卡/情绪卡/导演卡使用相同的背面，便于洗牌</p>
+  </div>
+
+  <div class="card-back-grid">
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+    <div class="card card-back"><span class="back-icon">🎬</span><span class="back-text">台词之王</span></div>
+  </div>
+
+  <!-- ==================== 掌声代币 ==================== -->
+  <div class="section-title token page-break">👏 掌声代币 × 40</div>
+
+  <div class="tokens-grid">
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+    <div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div><div class="token token-applause">👏</div>
+  </div>
+
+  <div class="summary-box">
+    <p>💡 代币建议：打印后裁剪成圆形，贴在厚纸板或硬币上使用。也可直接使用糖果/硬币代替。</p>
+  </div>
+
+  <!-- ==================== 奥斯卡奖杯 ==================== -->
+  <div class="section-title token page-break">🏆 奥斯卡奖杯代币</div>
+
+  <div style="display: flex; justify-content: center; gap: 20mm; flex-wrap: wrap; padding: 20px;">
+    <div class="token token-oscar" style="width: 35mm; height: 35mm; font-size: 2em;">🏆</div>
+    <div class="token token-oscar" style="width: 35mm; height: 35mm; font-size: 2em;">🏆</div>
+  </div>
+
+  <div class="summary-box">
+    <h3>🎬 全部打印完成！</h3>
+    <p>总计：场景卡30张 + 角色卡30张 + 情绪卡20张 + 导演卡15张 = <strong>95张卡牌</strong></p>
+    <p>代币：掌声代币40枚 + 奥斯卡奖杯2座</p>
+    <p style="margin-top: 10px; color: #ffd54f;">现在就叫上朋友，开始你们的即兴表演吧！🎭</p>
+  </div>
+
+</div>
+
+</body>
+</html>
