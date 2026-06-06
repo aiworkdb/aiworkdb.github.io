@@ -71,6 +71,7 @@ boardgames/
 | [末日种子库](category/cooperative/doomsday-vault/README.md) | 合作 | 1-5人 | 45-70分钟 | 中等 |
 | [遗址争霸](category/strategy/ruin-conquest/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等偏难 |
 | [星际餐厅大逃亡](category/cooperative/space-diner-escape/README.md) | 合作 | 1-5人 | 45-75分钟 | 中等 |
+| [台词之王](category/party/line-master/README.md) | 派对 | 3-8人 | 25-45分钟 | 简单 |
 
 ## 添加新桌游
 
