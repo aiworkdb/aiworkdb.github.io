@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时空驿站 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .card-id {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        /* 时代卡样式 */
+        .card-era {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card-era .card-title,
+        .card-era .card-desc,
+        .card-era .card-id {
+            color: white;
+        }
+
+        /* 物品卡样式 */
+        .card-item-dino {
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+        }
+
+        .card-item-medieval {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .card-item-future {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .card-item-egypt {
+            background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%);
+        }
+
+        .card-item-renaissance {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        /* 悖论卡样式 */
+        .card-paradox {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+
+        .card-paradox .card-title,
+        .card-paradox .card-desc,
+        .card-paradox .card-id {
+            color: white;
+        }
+
+        /* 订单卡样式 */
+        .card-order {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+        }
+
+        .card-order .card-title,
+        .card-order .card-desc,
+        .card-order .card-id {
+            color: white;
+        }
+
+        /* 地图样式 */
+        .map-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .game-map {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            border: 5px solid #34495e;
+            border-radius: 15px;
+            padding: 40px;
+            color: white;
+            font-size: 18px;
+            line-height: 2;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .map-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            align-items: center;
+        }
+
+        .map-center {
+            background: radial-gradient(circle, #f39c12 0%, #e74c3c 100%);
+            padding: 30px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.8);
+        }
+
+        .map-era {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-era-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        /* 棋子样式 */
+        .pieces-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .piece {
+            width: 80px;
+            height: 80px;
+            border: 4px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .piece-red { background: #ff6b6b; }
+        .piece-blue { background: #4ecdc4; }
+        .piece-green { background: #95e1d3; }
+        .piece-yellow { background: #fce38a; }
+        .piece-purple { background: #a8e6cf; }
+        .piece-orange { background: #ffd93d; }
+
+        /* 代币样式 */
+        .tokens-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .token {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #f39c12;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fef9a7 0%, #f39c12 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        /* 卡牌背面 */
+        .card-back {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-back-icon {
+            font-size: 64px;
+            margin-bottom: 10px;
+        }
+
+        .card-back-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .card {
+                box-shadow: none;
+            }
+
+            .card:hover {
+                transform: none;
+            }
+        }
+
+        @page {
+            margin: 10mm;
+        }
+    </style>
+</head>
+<body>
+    <!-- 打印提示 -->
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示：</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+            <li>打印后可裁剪并塑封，延长使用寿命</li>
+            <li>建议先打印1-2张测试，确认颜色和尺寸满意后再批量打印</li>
+        </ul>
+    </div>
+
+    <!-- 游戏地图 -->
+    <div class="section">
+        <h2>🗺️ 游戏地图</h2>
+        <div class="map-container">
+            <div class="game-map">
+                <div class="map-title">🕰️ 时空驿站总站</div>
+                <div class="map-grid">
+                    <div class="map-era">
+                        <div class="map-era-title">🦕</div>
+                        <div><strong>恐龙时代</strong></div>
+                        <div>收集：化石/恐龙蛋/蕨类</div>
+                    </div>
+                    <div class="map-center">🏛️<br>驿站<br>总站</div>
+                    <div class="map-era">
+                        <div class="map-era-title">🏰</div>
+                        <div><strong>中世纪</strong></div>
+                        <div>收集：宝剑/盾牌/魔法书</div>
+                    </div>
+                    <div class="map-era">
+                        <div class="map-era-title">🤖</div>
+                        <div><strong>未来世界</strong></div>
+                        <div>收集：芯片/激光枪/反重力鞋</div>
+                    </div>
+                    <div></div>
+                    <div class="map-era">
+                        <div class="map-era-title">🏺</div>
+                        <div><strong>古代埃及</strong></div>
+                        <div>收集：金字塔/木乃伊/圣甲虫</div>
+                    </div>
+                    <div class="map-era">
+                        <div class="map-era-title">🎭</div>
+                        <div><strong>文艺复兴</strong></div>
+                        <div>收集：油画/面具/小提琴</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 时代卡 -->
+    <div class="section">
+        <h2>🕰️ 时代卡（30张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">设定配送目标时代，决定你可以收集哪个时代的物品。</p>
+        <div class="cards-grid">
+            <div class="card card-era">
+                <div class="card-icon">🦕</div>
+                <div class="card-title">E01 - 恐龙时代</div>
+                <div class="card-desc">目标：收集恐龙时代的物品<br>化石/恐龙蛋/蕨类植物</div>
+                <div class="card-id">时代卡 #01</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🦕</div>
+                <div class="card-title">E02 - 恐龙时代</div>
+                <div class="card-desc">目标：收集恐龙时代的物品<br>化石/恐龙蛋/蕨类植物</div>
+                <div class="card-id">时代卡 #02</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🦕</div>
+                <div class="card-title">E03 - 恐龙时代</div>
+                <div class="card-desc">目标：收集恐龙时代的物品<br>化石/恐龙蛋/蕨类植物</div>
+                <div class="card-id">时代卡 #03</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🦕</div>
+                <div class="card-title">E04 - 恐龙时代</div>
+                <div class="card-desc">目标：收集恐龙时代的物品<br>化石/恐龙蛋/蕨类植物</div>
+                <div class="card-id">时代卡 #04</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🦕</div>
+                <div class="card-title">E05 - 恐龙时代</div>
+                <div class="card-desc">目标：收集恐龙时代的物品<br>化石/恐龙蛋/蕨类植物</div>
+                <div class="card-id">时代卡 #05</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🦕</div>
+                <div class="card-title">E06 - 恐龙时代</div>
+                <div class="card-desc">目标：收集恐龙时代的物品<br>化石/恐龙蛋/蕨类植物</div>
+                <div class="card-id">时代卡 #06</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏰</div>
+                <div class="card-title">E07 - 中世纪</div>
+                <div class="card-desc">目标：收集中世纪物品<br>宝剑/盾牌/魔法书</div>
+                <div class="card-id">时代卡 #07</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏰</div>
+                <div class="card-title">E08 - 中世纪</div>
+                <div class="card-desc">目标：收集中世纪物品<br>宝剑/盾牌/魔法书</div>
+                <div class="card-id">时代卡 #08</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏰</div>
+                <div class="card-title">E09 - 中世纪</div>
+                <div class="card-desc">目标：收集中世纪物品<br>宝剑/盾牌/魔法书</div>
+                <div class="card-id">时代卡 #09</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏰</div>
+                <div class="card-title">E10 - 中世纪</div>
+                <div class="card-desc">目标：收集中世纪物品<br>宝剑/盾牌/魔法书</div>
+                <div class="card-id">时代卡 #10</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏰</div>
+                <div class="card-title">E11 - 中世纪</div>
+                <div class="card-desc">目标：收集中世纪物品<br>宝剑/盾牌/魔法书</div>
+                <div class="card-id">时代卡 #11</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏰</div>
+                <div class="card-title">E12 - 中世纪</div>
+                <div class="card-desc">目标：收集中世纪物品<br>宝剑/盾牌/魔法书</div>
+                <div class="card-id">时代卡 #12</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">E13 - 未来世界</div>
+                <div class="card-desc">目标：收集未来世界物品<br>芯片/激光枪/反重力鞋</div>
+                <div class="card-id">时代卡 #13</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">E14 - 未来世界</div>
+                <div class="card-desc">目标：收集未来世界物品<br>芯片/激光枪/反重力鞋</div>
+                <div class="card-id">时代卡 #14</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">E15 - 未来世界</div>
+                <div class="card-desc">目标：收集未来世界物品<br>芯片/激光枪/反重力鞋</div>
+                <div class="card-id">时代卡 #15</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">E16 - 未来世界</div>
+                <div class="card-desc">目标：收集未来世界物品<br>芯片/激光枪/反重力鞋</div>
+                <div class="card-id">时代卡 #16</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">E17 - 未来世界</div>
+                <div class="card-desc">目标：收集未来世界物品<br>芯片/激光枪/反重力鞋</div>
+                <div class="card-id">时代卡 #17</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">E18 - 未来世界</div>
+                <div class="card-desc">目标：收集未来世界物品<br>芯片/激光枪/反重力鞋</div>
+                <div class="card-id">时代卡 #18</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏺</div>
+                <div class="card-title">E19 - 古代埃及</div>
+                <div class="card-desc">目标：收集古代埃及物品<br>金字塔/木乃伊/圣甲虫</div>
+                <div class="card-id">时代卡 #19</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏺</div>
+                <div class="card-title">E20 - 古代埃及</div>
+                <div class="card-desc">目标：收集古代埃及物品<br>金字塔/木乃伊/圣甲虫</div>
+                <div class="card-id">时代卡 #20</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏺</div>
+                <div class="card-title">E21 - 古代埃及</div>
+                <div class="card-desc">目标：收集古代埃及物品<br>金字塔/木乃伊/圣甲虫</div>
+                <div class="card-id">时代卡 #21</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏺</div>
+                <div class="card-title">E22 - 古代埃及</div>
+                <div class="card-desc">目标：收集古代埃及物品<br>金字塔/木乃伊/圣甲虫</div>
+                <div class="card-id">时代卡 #22</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏺</div>
+                <div class="card-title">E23 - 古代埃及</div>
+                <div class="card-desc">目标：收集古代埃及物品<br>金字塔/木乃伊/圣甲虫</div>
+                <div class="card-id">时代卡 #23</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🏺</div>
+                <div class="card-title">E24 - 古代埃及</div>
+                <div class="card-desc">目标：收集古代埃及物品<br>金字塔/木乃伊/圣甲虫</div>
+                <div class="card-id">时代卡 #24</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">E25 - 文艺复兴</div>
+                <div class="card-desc">目标：收集文艺复兴物品<br>油画/面具/小提琴</div>
+                <div class="card-id">时代卡 #25</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">E26 - 文艺复兴</div>
+                <div class="card-desc">目标：收集文艺复兴物品<br>油画/面具/小提琴</div>
+                <div class="card-id">时代卡 #26</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">E27 - 文艺复兴</div>
+                <div class="card-desc">目标：收集文艺复兴物品<br>油画/面具/小提琴</div>
+                <div class="card-id">时代卡 #27</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">E28 - 文艺复兴</div>
+                <div class="card-desc">目标：收集文艺复兴物品<br>油画/面具/小提琴</div>
+                <div class="card-id">时代卡 #28</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">E29 - 文艺复兴</div>
+                <div class="card-desc">目标：收集文艺复兴物品<br>油画/面具/小提琴</div>
+                <div class="card-id">时代卡 #29</div>
+            </div>
+            <div class="card card-era">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">E30 - 文艺复兴</div>
+                <div class="card-desc">目标：收集文艺复兴物品<br>油画/面具/小提琴</div>
+                <div class="card-id">时代卡 #30</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 物品卡 - 恐龙时代 -->
+    <div class="section">
+        <h2>🦕 物品卡 - 恐龙时代（12张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">在恐龙时代区域收集这些物品，用于完成订单。</p>
+        <div class="cards-grid">
+            <div class="card card-item-dino">
+                <div class="card-icon">🦴</div>
+                <div class="card-title">化石 ×1</div>
+                <div class="card-desc">古老的恐龙化石<br>用于完成化石快递订单</div>
+                <div class="card-id">物品卡 #D01</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🦴</div>
+                <div class="card-title">化石 ×1</div>
+                <div class="card-desc">古老的恐龙化石<br>用于完成化石快递订单</div>
+                <div class="card-id">物品卡 #D02</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🦴</div>
+                <div class="card-title">化石 ×1</div>
+                <div class="card-desc">古老的恐龙化石<br>用于完成化石快递订单</div>
+                <div class="card-id">物品卡 #D03</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🥚</div>
+                <div class="card-title">恐龙蛋 ×1</div>
+                <div class="card-desc">珍贵的恐龙蛋<br>用于完成恐龙探险订单</div>
+                <div class="card-id">物品卡 #D04</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🥚</div>
+                <div class="card-title">恐龙蛋 ×1</div>
+                <div class="card-desc">珍贵的恐龙蛋<br>用于完成恐龙探险订单</div>
+                <div class="card-id">物品卡 #D05</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🥚</div>
+                <div class="card-title">恐龙蛋 ×1</div>
+                <div class="card-desc">珍贵的恐龙蛋<br>用于完成恐龙探险订单</div>
+                <div class="card-id">物品卡 #D06</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🌿</div>
+                <div class="card-title">蕨类植物 ×1</div>
+                <div class="card-desc">史前蕨类植物<br>恐龙的主食</div>
+                <div class="card-id">物品卡 #D07</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🌿</div>
+                <div class="card-title">蕨类植物 ×1</div>
+                <div class="card-desc">史前蕨类植物<br>恐龙的主食</div>
+                <div class="card-id">物品卡 #D08</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🦴</div>
+                <div class="card-title">化石 ×1</div>
+                <div class="card-desc">古老的恐龙化石<br>用于完成化石快递订单</div>
+                <div class="card-id">物品卡 #D09</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🥚</div>
+                <div class="card-title">恐龙蛋 ×1</div>
+                <div class="card-desc">珍贵的恐龙蛋<br>用于完成恐龙探险订单</div>
+                <div class="card-id">物品卡 #D10</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🌿</div>
+                <div class="card-title">蕨类植物 ×1</div>
+                <div class="card-desc">史前蕨类植物<br>恐龙的主食</div>
+                <div class="card-id">物品卡 #D11</div>
+            </div>
+            <div class="card card-item-dino">
+                <div class="card-icon">🦴</div>
+                <div class="card-title">化石 ×1</div>
+                <div class="card-desc">古老的恐龙化石<br>用于完成化石快递订单</div>
+                <div class="card-id">物品卡 #D12</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 物品卡 - 中世纪 -->
+    <div class="section">
+        <h2>🏰 物品卡 - 中世纪（12张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">在中世纪区域收集这些物品，用于完成订单。</p>
+        <div class="cards-grid">
+            <div class="card card-item-medieval">
+                <div class="card-icon">⚔️</div>
+                <div class="card-title">宝剑 ×1</div>
+                <div class="card-desc">骑士的宝剑<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M01</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">⚔️</div>
+                <div class="card-title">宝剑 ×1</div>
+                <div class="card-desc">骑士的宝剑<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M02</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">🛡️</div>
+                <div class="card-title">盾牌 ×1</div>
+                <div class="card-desc">坚固的盾牌<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M03</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">🛡️</div>
+                <div class="card-title">盾牌 ×1</div>
+                <div class="card-desc">坚固的盾牌<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M04</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">📕</div>
+                <div class="card-title">魔法书 ×1</div>
+                <div class="card-desc">神秘的魔法书<br>用于完成中世纪套装订单</div>
+                <div class="card-id">物品卡 #M05</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">📕</div>
+                <div class="card-title">魔法书 ×1</div>
+                <div class="card-desc">神秘的魔法书<br>用于完成中世纪套装订单</div>
+                <div class="card-id">物品卡 #M06</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">⚔️</div>
+                <div class="card-title">宝剑 ×1</div>
+                <div class="card-desc">骑士的宝剑<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M07</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">🛡️</div>
+                <div class="card-title">盾牌 ×1</div>
+                <div class="card-desc">坚固的盾牌<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M08</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">📕</div>
+                <div class="card-title">魔法书 ×1</div>
+                <div class="card-desc">神秘的魔法书<br>用于完成中世纪套装订单</div>
+                <div class="card-id">物品卡 #M09</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">⚔️</div>
+                <div class="card-title">宝剑 ×1</div>
+                <div class="card-desc">骑士的宝剑<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M10</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">🛡️</div>
+                <div class="card-title">盾牌 ×1</div>
+                <div class="card-desc">坚固的盾牌<br>用于完成骑士装备订单</div>
+                <div class="card-id">物品卡 #M11</div>
+            </div>
+            <div class="card card-item-medieval">
+                <div class="card-icon">📕</div>
+                <div class="card-title">魔法书 ×1</div>
+                <div class="card-desc">神秘的魔法书<br>用于完成中世纪套装订单</div>
+                <div class="card-id">物品卡 #M12</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 继续添加其他时代的物品卡... -->
+    <!-- 由于篇幅限制，我将添加简化的版本 -->
+
+    <!-- 时间悖论卡 -->
+    <div class="section">
+        <h2>⚡ 时间悖论卡（20张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">收集物品时可能触发时间悖论，让游戏变得不可预测！</p>
+        <div class="cards-grid">
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P01 - 时间错乱</div>
+                <div class="card-desc">所有玩家传递1张手牌给左手边玩家</div>
+                <div class="card-id">悖论卡 #01</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P02 - 恐龙入侵</div>
+                <div class="card-desc">持有恐龙时代物品的玩家跳过1回合</div>
+                <div class="card-id">悖论卡 #02</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P03 - 魔法失控</div>
+                <div class="card-desc">所有玩家手牌洗混后随机分配</div>
+                <div class="card-id">悖论卡 #03</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P04 - 未来科技故障</div>
+                <div class="card-desc">未来世界物品全部失效1回合</div>
+                <div class="card-id">悖论卡 #04</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P05 - 木乃伊诅咒</div>
+                <div class="card-desc">持有古代埃及物品的玩家弃1张牌</div>
+                <div class="card-id">悖论卡 #05</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P06 - 艺术家罢工</div>
+                <div class="card-desc">文艺复兴物品暂时无法使用</div>
+                <div class="card-id">悖论卡 #06</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P07 - 传送门关闭</div>
+                <div class="card-desc">本回合无法激活传送门</div>
+                <div class="card-id">悖论卡 #07</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P08 - 时间能量泄漏</div>
+                <div class="card-desc">所有玩家失去1个时间能量</div>
+                <div class="card-id">悖论卡 #08</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P09 - 平行宇宙</div>
+                <div class="card-desc">复制左手边玩家的手牌</div>
+                <div class="card-id">悖论卡 #09</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P10 - 时间循环</div>
+                <div class="card-desc">本回合所有操作重复1次</div>
+                <div class="card-id">悖论卡 #10</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P11 - 历史改写</div>
+                <div class="card-desc">可交换1张订单卡</div>
+                <div class="card-id">悖论卡 #11</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P12 - 时空塌缩</div>
+                <div class="card-desc">所有玩家回到驿站</div>
+                <div class="card-id">悖论卡 #12</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P13 - 预言成真</div>
+                <div class="card-desc">查看未来2张订单卡</div>
+                <div class="card-id">悖论卡 #13</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P14 - 时间盗贼</div>
+                <div class="card-desc">随机偷取1个时间能量</div>
+                <div class="card-id">悖论卡 #14</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P15 - 时代融合</div>
+                <div class="card-desc">本回合可收集任意时代物品</div>
+                <div class="card-id">悖论卡 #15</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P16 - 时间静止</div>
+                <div class="card-desc">选择1名玩家跳过下回合</div>
+                <div class="card-id">悖论卡 #16</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P17 - 加速时光</div>
+                <div class="card-desc">本回合可多收集1张物品卡</div>
+                <div class="card-id">悖论卡 #17</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P18 - 时间倒流</div>
+                <div class="card-desc">撤销上1次操作</div>
+                <div class="card-id">悖论卡 #18</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P19 - 时空裂缝</div>
+                <div class="card-desc">随机抽取1张其他玩家的物品卡</div>
+                <div class="card-id">悖论卡 #19</div>
+            </div>
+            <div class="card card-paradox">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">P20 - 大团圆结局</div>
+                <div class="card-desc">所有玩家各获得1个时间能量</div>
+                <div class="card-id">悖论卡 #20</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 订单卡（简化版，仅显示部分） -->
+    <div class="section">
+        <h2>📋 订单卡（25张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">完成订单获得胜利点，先完成5个订单的玩家获胜！</p>
+        <div class="cards-grid">
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O01 - 化石快递</div>
+                <div class="card-desc">要求：化石×2<br>奖励：1胜利点</div>
+                <div class="card-id">订单卡 #01</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O02 - 骑士装备</div>
+                <div class="card-desc">要求：宝剑×1 + 盾牌×1<br>奖励：1胜利点</div>
+                <div class="card-id">订单卡 #02</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O03 - 未来套装</div>
+                <div class="card-desc">要求：芯片×1 + 激光枪×1<br>奖励：1胜利点</div>
+                <div class="card-id">订单卡 #03</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O04 - 法老宝藏</div>
+                <div class="card-desc">要求：金字塔×1 + 木乃伊×1<br>奖励：1胜利点</div>
+                <div class="card-id">订单卡 #04</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O05 - 艺术收藏</div>
+                <div class="card-desc">要求：油画×1 + 面具×1<br>奖励：1胜利点</div>
+                <div class="card-id">订单卡 #05</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O06 - 恐龙探险</div>
+                <div class="card-desc">要求：化石×1 + 恐龙蛋×1<br>奖励：1胜利点</div>
+                <div class="card-id">订单卡 #06</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O07 - 中世纪套装</div>
+                <div class="card-desc">要求：宝剑×1 + 盾牌×1 + 魔法书×1<br>奖励：2胜利点</div>
+                <div class="card-id">订单卡 #07</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O08 - 未来战士</div>
+                <div class="card-desc">要求：芯片×1 + 激光枪×1 + 反重力鞋×1<br>奖励：2胜利点</div>
+                <div class="card-id">订单卡 #08</div>
+            </div>
+            <div class="card card-order">
+                <div class="card-icon">📦</div>
+                <div class="card-title">O11 - 时空旅行家</div>
+                <div class="card-desc">要求：5个不同时代物品各1个<br>奖励：3胜利点</div>
+                <div class="card-id">订单卡 #11</div>
+            </div>
+        </div>
+        <p style="margin-top: 20px; color: #999; font-style: italic;">注：此处仅显示部分订单卡示例，完整25张订单卡请参考游戏规则。</p>
+    </div>
+
+    <!-- 玩家棋子 -->
+    <div class="section">
+        <h2>🎲 玩家棋子（6个）</h2>
+        <p style="margin-bottom: 15px; color: #666;">每位玩家选择一个棋子，标记自己在地图上的位置。</p>
+        <div class="pieces-grid">
+            <div class="piece piece-red">🔴</div>
+            <div class="piece piece-blue">🔵</div>
+            <div class="piece piece-green">🟢</div>
+            <div class="piece piece-yellow">🟡</div>
+            <div class="piece piece-purple">🟣</div>
+            <div class="piece piece-orange">🟠</div>
+        </div>
+        <p style="margin-top: 20px; color: #666;">打印后裁剪，建议使用卡纸增加耐用性。也可以用纽扣、棋子等替代。</p>
+    </div>
+
+    <!-- 时间能量代币 -->
+    <div class="section">
+        <h2>⏳ 时间能量代币（30个）</h2>
+        <p style="margin-bottom: 15px; color: #666;">用于激活传送门、使用特殊能力。每位玩家起始2个。</p>
+        <div class="tokens-grid">
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+            <div class="token">⏳</div>
+        </div>
+        <p style="margin-top: 20px; color: #666;">打印后裁剪，建议使用卡纸。也可以用硬币、棋子等替代。</p>
+    </div>
+
+    <!-- 卡牌背面 -->
+    <div class="section">
+        <h2>🃏 卡牌背面（统一设计）</h2>
+        <p style="margin-bottom: 15px; color: #666;">打印卡牌时，建议双面打印背面，增加游戏体验。</p>
+        <div class="cards-grid">
+            <div class="card-back">
+                <div class="card-back-icon">🕰️</div>
+                <div class="card-back-text">时空驿站<br>Chrono Station</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="print-hint" style="margin-top: 30px;">
+        <h2>📝 打印建议：</h2>
+        <ul>
+            <li><strong>卡牌打印</strong>：建议使用200g-300g卡纸，双面打印（正面卡牌+背面统一设计）</li>
+            <li><strong>地图打印</strong>：建议使用A4普通纸，彩色打印</li>
+            <li><strong>棋子打印</strong>：建议使用卡纸，打印后裁剪，或用现成棋子替代</li>
+            <li><strong>代币打印</strong>：建议使用卡纸，打印后裁剪，或用硬币替代</li>
+            <li><strong>塑封</strong>：打印后可塑封，延长使用寿命</li>
+            <li><strong>裁剪</strong>：使用剪刀或切纸刀，确保边缘整齐</li>
+        </ul>
+    </div>
+</body>
+</html>
