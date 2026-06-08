@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际灯塔守护者 - 打印道具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+        }
+
+        .print-hint li {
+            margin: 8px 0;
+            color: #856404;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 游戏地图样式 */
+        .game-map {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            border-radius: 12px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .hex-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 80px);
+            grid-template-rows: repeat(7, 70px);
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .hex-cell {
+            width: 80px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+        }
+
+        .hex-core {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.8);
+        }
+
+        .hex-energy {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .hex-parts {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .hex-starchart {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        .hex-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+        }
+
+        /* 卡牌样式 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            width: 200px;
+            height: 280px;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            page-break-inside: avoid;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin: 20px 0;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .card-desc {
+            font-size: 12px;
+            text-align: center;
+            color: white;
+            margin-top: 10px;
+        }
+
+        /* 卡牌类型颜色 */
+        .card-energy {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .card-parts {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .card-starchart {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        .card-event {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .card-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+        }
+
+        .card-role {
+            background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+        }
+
+        /* 棋子样式 */
+        .pieces-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .piece {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            page-break-inside: avoid;
+        }
+
+        .piece-ship {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        .piece-player {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        /* 标记样式 */
+        .markers-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .marker {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            page-break-inside: avoid;
+        }
+
+        .marker-energy {
+            background: #e74c3c;
+        }
+
+        .marker-fault {
+            background: #e67e22;
+        }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-after: always;
+            }
+
+            .section:last-child {
+                page-break-after: auto;
+            }
+
+            .card, .piece, .marker {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示：</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印</li>
+            <li>打印后可裁剪并塑封，增加耐用性</li>
+        </ul>
+    </div>
+
+    <div class="controls">
+        <button onclick="generateAll()">生成所有道具</button>
+        <button onclick="window.print()">打印</button>
+    </div>
+
+    <!-- 游戏地图 -->
+    <div class="section">
+        <h2>🗺️ 游戏地图</h2>
+        <div class="game-map">
+            <div class="hex-grid">
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-parts">零件库</div>
+                <div class="hex-cell hex-parts">零件库</div>
+                <div class="hex-cell hex-core">🌟<br>灯塔<br>核心</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-parts">零件库</div>
+                <div class="hex-cell hex-core">🌟<br>灯塔<br>核心</div>
+                <div class="hex-cell hex-parts">零件库</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-parts">零件库</div>
+                <div class="hex-cell hex-parts">零件库</div>
+                <div class="hex-cell hex-core">🌟<br>灯塔<br>核心</div>
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-energy">能量站</div>
+                <div class="hex-cell hex-parts">零件库</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+                <div class="hex-cell hex-starchart">星图室</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+                <div class="hex-cell hex-dark">黑暗区</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 卡牌 -->
+    <div class="section">
+        <h2>🃏 卡牌</h2>
+        <div id="cards-container" class="cards-container"></div>
+    </div>
+
+    <!-- 棋子 -->
+    <div class="section">
+        <h2>🚀 棋子</h2>
+        <div id="pieces-container" class="pieces-container"></div>
+    </div>
+
+    <!-- 标记 -->
+    <div class="section">
+        <h2>📍 标记</h2>
+        <div id="markers-container" class="markers-container"></div>
+    </div>
+
+    <script>
+        // 卡牌数据
+        const cardData = {
+            energy: { count: 30, icon: '🔋', title: '能量卡', type: 'card-energy', desc: '为灯塔提供能量' },
+            parts: { count: 25, icon: '🔧', title: '零件卡', type: 'card-parts', desc: '修复灯塔故障' },
+            starchart: { count: 20, icon: '⭐', title: '星图卡', type: 'card-starchart', desc: '引导飞船导航' },
+            event: { count: 20, icon: '⚡', title: '事件卡', type: 'card-event', desc: '随机事件挑战' },
+            dark: { count: 15, icon: '🌑', title: '黑暗卡', type: 'card-dark', desc: '黑暗能量攻击' },
+            role: { 
+                count: 5, 
+                icon: '👤', 
+                title: ['工程师', '导航员', '能源师', '通讯官', '科学家'],
+                type: 'card-role', 
+                desc: '玩家特殊能力'
+            }
+        };
+
+        // 生成卡牌
+        function generateCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+
+            Object.keys(cardData).forEach(type => {
+                const data = cardData[type];
+                for (let i = 0; i < data.count; i++) {
+                    const card = document.createElement('div');
+                    card.className = `card ${data.type}`;
+                    
+                    let title = data.title;
+                    if (type === 'role') {
+                        title = data.title[i] || `角色${i+1}`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="card-icon">${data.icon}</div>
+                        <div class="card-title">${title}</div>
+                        <div class="card-desc">${data.desc}</div>
+                        <div style="font-size: 10px; margin-top: 10px; opacity: 0.8;">#${i+1}</div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        // 生成棋子
+        function generatePieces() {
+            const container = document.getElementById('pieces-container');
+            container.innerHTML = '';
+
+            // 飞船棋子
+            for (let i = 0; i < 12; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'piece piece-ship';
+                piece.innerHTML = '🚀';
+                piece.title = `飞船 ${i+1}`;
+                container.appendChild(piece);
+            }
+
+            // 玩家棋子
+            const playerColors = ['🔴', '🔵', '🟢', '🟡', '🟣'];
+            for (let i = 0; i < 5; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'piece piece-player';
+                piece.innerHTML = playerColors[i];
+                piece.title = `玩家 ${i+1}`;
+                container.appendChild(piece);
+            }
+        }
+
+        // 生成标记
+        function generateMarkers() {
+            const container = document.getElementById('markers-container');
+            container.innerHTML = '';
+
+            // 能量标记
+            for (let i = 0; i < 20; i++) {
+                const marker = document.createElement('div');
+                marker.className = 'marker marker-energy';
+                marker.innerHTML = '⚡';
+                marker.title = `能量 ${i+1}`;
+                container.appendChild(marker);
+            }
+
+            // 故障标记
+            for (let i = 0; i < 15; i++) {
+                const marker = document.createElement('div');
+                marker.className = 'marker marker-fault';
+                marker.innerHTML = '⚠️';
+                marker.title = `故障 ${i+1}`;
+                container.appendChild(marker);
+            }
+        }
+
+        // 生成所有道具
+        function generateAll() {
+            generateCards();
+            generatePieces();
+            generateMarkers();
+        }
+
+        // 页面加载时自动生成
+        window.onload = function() {
+            generateAll();
+        };
+    </script>
+</body>
+</html>
