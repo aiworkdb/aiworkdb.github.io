@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独行猎人 - 打印道具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 地图样式 */
+        .map-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .map-layer {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+
+        .map-layer h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 60px);
+            gap: 2px;
+            background: #333;
+            padding: 2px;
+            border-radius: 4px;
+        }
+
+        .map-cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .map-cell.entrance {
+            background: #d4a76a;
+        }
+
+        .map-cell.road {
+            background: #e0e0e0;
+        }
+
+        .map-cell.monster {
+            background: #ffcccc;
+        }
+
+        .map-cell.event {
+            background: #fff3cd;
+        }
+
+        .map-cell.treasure {
+            background: #d4edda;
+        }
+
+        .map-cell.rest {
+            background: #cce5ff;
+        }
+
+        .map-cell.observe {
+            background: #e6ccff;
+        }
+
+        .map-cell.boss {
+            background: #f0c0ff;
+        }
+
+        /* 卡牌样式 */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .card {
+            width: 150px;
+            height: 210px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin: 10px 0;
+        }
+
+        .card-info {
+            font-size: 11px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .card-type {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* 角色卡特殊样式 */
+        .card.character {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card.character .card-type {
+            color: #ddd;
+        }
+
+        /* 怪物卡特殊样式 */
+        .card.monster {
+            background: #fff5f5;
+        }
+
+        .card.monster .card-title {
+            color: #c92a2a;
+        }
+
+        /* 装备卡特殊样式 */
+        .card.equipment {
+            background: #f0f9ff;
+        }
+
+        .card.equipment .card-title {
+            color: #1971c2;
+        }
+
+        /* 技能卡特殊样式 */
+        .card.skill {
+            background: #f9f0ff;
+        }
+
+        .card.skill .card-title {
+            color: #9c36b5;
+        }
+
+        /* 任务卡特殊样式 */
+        .card.quest {
+            background: #fff9db;
+        }
+
+        .card.quest .card-title {
+            color: #e67700;
+        }
+
+        /* 事件卡特殊样式 */
+        .card.event {
+            background: #f8f9fa;
+        }
+
+        .card.event .card-title {
+            color: #495057;
+        }
+
+        /* 消耗品卡特殊样式 */
+        .card.consumable {
+            background: #f0fff4;
+        }
+
+        .card.consumable .card-title {
+            color: #2b8a3e;
+        }
+
+        /* 棋子样式 */
+        .pieces-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .piece {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .piece.player1 {
+            background: #ff6b6b;
+        }
+
+        .piece.player2 {
+            background: #4ecdc4;
+        }
+
+        .piece.player3 {
+            background: #ffe66d;
+        }
+
+        .piece.player4 {
+            background: #a8e6cf;
+        }
+
+        .piece-label {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 标记物样式 */
+        .tokens-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .token {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            background: white;
+        }
+
+        .token.hp {
+            background: #ffcccc;
+        }
+
+        .token.level {
+            background: #cce5ff;
+        }
+
+        .token.mp {
+            background: #e6ccff;
+        }
+
+        .token-label {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* 打印优化 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .map-grid {
+                gap: 1px;
+                padding: 1px;
+            }
+
+            .map-cell {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .card {
+                box-shadow: none;
+            }
+        }
+
+        @page {
+            margin: 10mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示：</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印</li>
+            <li>打印后可裁剪并塑封，增加耐用性</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🗺️ 游戏地图（5层地下城）</h2>
+        <div class="map-container">
+            <!-- 第1层 -->
+            <div class="map-layer">
+                <h3>第1层（入口层）</h3>
+                <div class="map-grid">
+                    <div class="map-cell entrance">🚪</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💰</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell event">🎲</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell entrance">🚪</div>
+
+                    <div class="map-cell road"></div>
+                    <div class="map-cell rest">🌿</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell observe">👀</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">👹</div>
+                    <div class="map-cell road"></div>
+
+                    <div class="map-cell event">🎲</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell rest">🌿</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💰</div>
+
+                    <div class="map-cell road"></div>
+                    <div class="map-cell observe">👀</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell rest">🌿</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell event">🎲</div>
+
+                    <div class="map-cell treasure">💰</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell event">🎲</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell observe">👀</div>
+                    <div class="map-cell road"></div>
+
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💰</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell event">🎲</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💰</div>
+                    <div class="map-cell road"></div>
+
+                    <div class="map-cell entrance">🚪</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">💀</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell entrance">🚪</div>
+                </div>
+            </div>
+
+            <!-- 第5层（Boss层） -->
+            <div class="map-layer">
+                <h3>第5层（Boss层）</h3>
+                <div class="map-grid">
+                    <div class="map-cell boss">🐉</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💎</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">👹</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💎</div>
+
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">💀</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell event">🎲</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💎</div>
+                    <div class="map-cell road"></div>
+
+                    <div class="map-cell monster">👹</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">💀</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell event">🎲</div>
+
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💎</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">👹</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">💀</div>
+
+                    <div class="map-cell event">🎲</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">👹</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💎</div>
+                    <div class="map-cell road"></div>
+
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">💀</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell treasure">💎</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell monster">👹</div>
+                    <div class="map-cell road"></div>
+
+                    <div class="map-cell entrance">🚪</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell event">🎲</div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell road"></div>
+                    <div class="map-cell boss">🐉</div>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 15px; color: #666;">注：第2-4层结构类似，怪物更强。打印时请参考README.md中的完整地图。</p>
+    </div>
+
+    <div class="section">
+        <h2>🧙 角色卡（玩家职业）</h2>
+        <div class="cards-container">
+            <div class="card character">
+                <div class="card-title">剑士</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-info">
+                    生命值: 120<br>
+                    攻击力: 15<br>
+                    防御力: 10<br>
+                    魔法值: 30
+                </div>
+                <div class="card-type">职业 | 坦克/输出</div>
+            </div>
+
+            <div class="card character">
+                <div class="card-title">法师</div>
+                <div class="card-icon">🔮</div>
+                <div class="card-info">
+                    生命值: 80<br>
+                    攻击力: 8<br>
+                    防御力: 5<br>
+                    魔法值: 100
+                </div>
+                <div class="card-type">职业 | 魔法输出</div>
+            </div>
+
+            <div class="card character">
+                <div class="card-title">弓箭手</div>
+                <div class="card-icon">🏹</div>
+                <div class="card-info">
+                    生命值: 90<br>
+                    攻击力: 12<br>
+                    防御力: 6<br>
+                    魔法值: 50
+                </div>
+                <div class="card-type">职业 | 远程输出</div>
+            </div>
+
+            <div class="card character">
+                <div class="card-title">牧师</div>
+                <div class="card-icon">📿</div>
+                <div class="card-info">
+                    生命值: 100<br>
+                    攻击力: 6<br>
+                    防御力: 8<br>
+                    魔法值: 80
+                </div>
+                <div class="card-type">职业 | 治疗/辅助</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>👹 怪物卡</h2>
+        <div class="cards-container">
+            <div class="card monster">
+                <div class="card-title">哥布林</div>
+                <div class="card-icon">👺</div>
+                <div class="card-info">
+                    生命值: 30<br>
+                    攻击力: 8<br>
+                    防御力: 3<br>
+                    经验值: 20
+                </div>
+                <div class="card-type">普通怪物</div>
+            </div>
+
+            <div class="card monster">
+                <div class="card-title">兽人</div>
+                <div class="card-icon">👹</div>
+                <div class="card-info">
+                    生命值: 50<br>
+                    攻击力: 12<br>
+                    防御力: 5<br>
+                    经验值: 35
+                </div>
+                <div class="card-type">普通怪物</div>
+            </div>
+
+            <div class="card monster">
+                <div class="card-title">骷髅</div>
+                <div class="card-icon">💀</div>
+                <div class="card-info">
+                    生命值: 40<br>
+                    攻击力: 10<br>
+                    防御力: 8<br>
+                    经验值: 30
+                </div>
+                <div class="card-type">普通怪物</div>
+            </div>
+
+            <div class="card monster">
+                <div class="card-title">巨魔</div>
+                <div class="card-icon">👿</div>
+                <div class="card-info">
+                    生命值: 80<br>
+                    攻击力: 18<br>
+                    防御力: 10<br>
+                    经验值: 60
+                </div>
+                <div class="card-type">精英怪物</div>
+            </div>
+
+            <div class="card monster">
+                <div class="card-title">龙族</div>
+                <div class="card-icon">🐉</div>
+                <div class="card-info">
+                    生命值: 150<br>
+                    攻击力: 25<br>
+                    防御力: 15<br>
+                    经验值: 100
+                </div>
+                <div class="card-type">稀有怪物</div>
+            </div>
+
+            <div class="card monster">
+                <div class="card-title">地下城Boss</div>
+                <div class="card-icon">🐲</div>
+                <div class="card-info">
+                    生命值: 300<br>
+                    攻击力: 35<br>
+                    防御力: 20<br>
+                    经验值: 200
+                </div>
+                <div class="card-type">Boss</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚔️ 装备卡</h2>
+        <div class="cards-container">
+            <div class="card equipment">
+                <div class="card-title">铁剑</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-info">
+                    攻击力 +5<br>
+                    稀有度: 普通
+                </div>
+                <div class="card-type">武器</div>
+            </div>
+
+            <div class="card equipment">
+                <div class="card-title">火焰剑</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-info">
+                    攻击力 +10<br>
+                    稀有度: 稀有<br>
+                    附加火焰伤害
+                </div>
+                <div class="card-type">武器</div>
+            </div>
+
+            <div class="card equipment">
+                <div class="card-title">冰霜弓</div>
+                <div class="card-icon">❄️</div>
+                <div class="card-info">
+                    攻击力 +8<br>
+                    稀有度: 稀有<br>
+                    减速敌人
+                </div>
+                <div class="card-type">武器</div>
+            </div>
+
+            <div class="card equipment">
+                <div class="card-title">雷霆法杖</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-info">
+                    攻击力 +12<br>
+                    稀有度: 史诗<br>
+                    链式闪电攻击
+                </div>
+                <div class="card-type">武器</div>
+            </div>
+
+            <div class="card equipment">
+                <div class="card-title">皮甲</div>
+                <div class="card-icon">🧥</div>
+                <div class="card-info">
+                    防御力 +3<br>
+                    稀有度: 普通
+                </div>
+                <div class="card-type">防具</div>
+            </div>
+
+            <div class="card equipment">
+                <div class="card-title">锁子甲</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-info">
+                    防御力 +6<br>
+                    稀有度: 稀有<br>
+                    减少物理伤害
+                </div>
+                <div class="card-type">防具</div>
+            </div>
+
+            <div class="card equipment">
+                <div class="card-title">力量戒指</div>
+                <div class="card-icon">💍</div>
+                <div class="card-info">
+                    攻击 +3<br>
+                    稀有度: 普通
+                </div>
+                <div class="card-type">饰品</div>
+            </div>
+
+            <div class="card equipment">
+                <div class="card-title">生命宝石</div>
+                <div class="card-icon">💎</div>
+                <div class="card-info">
+                    生命 +20<br>
+                    稀有度: 史诗<br>
+                    死亡时自动复活
+                </div>
+                <div class="card-type">饰品</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>✨ 技能卡</h2>
+        <div class="cards-container">
+            <div class="card skill">
+                <div class="card-title">火球术</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-info">
+                    消耗: 20 MP<br>
+                    效果: 造成30点魔法伤害<br>
+                    冷却: 1回合
+                </div>
+                <div class="card-type">攻击技能</div>
+            </div>
+
+            <div class="card skill">
+                <div class="card-title">治愈术</div>
+                <div class="card-icon">💚</div>
+                <div class="card-info">
+                    消耗: 15 MP<br>
+                    效果: 恢复40点生命值<br>
+                    冷却: 2回合
+                </div>
+                <div class="card-type">治疗技能</div>
+            </div>
+
+            <div class="card skill">
+                <div class="card-title">护盾术</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-info">
+                    消耗: 10 MP<br>
+                    效果: 本回合免疫50%伤害<br>
+                    冷却: 0回合
+                </div>
+                <div class="card-type">防御技能</div>
+            </div>
+
+            <div class="card skill">
+                <div class="card-title">隐身术</div>
+                <div class="card-icon">👤</div>
+                <div class="card-info">
+                    消耗: 25 MP<br>
+                    效果: 下回合必中且暴击<br>
+                    冷却: 3回合
+                </div>
+                <div class="card-type">潜行技能</div>
+            </div>
+
+            <div class="card skill">
+                <div class="card-title">群体治愈</div>
+                <div class="card-icon">💚💚</div>
+                <div class="card-info">
+                    消耗: 30 MP<br>
+                    效果: 恢复全体30点生命值<br>
+                    冷却: 3回合
+                </div>
+                <div class="card-type">群体治疗</div>
+            </div>
+
+            <div class="card skill">
+                <div class="card-title">闪电链</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-info">
+                    消耗: 35 MP<br>
+                    效果: 攻击所有敌人<br>
+                    冷却: 4回合
+                </div>
+                <div class="card-type">群体攻击</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📜 任务卡</h2>
+        <div class="cards-container">
+            <div class="card quest">
+                <div class="card-title">击败Boss</div>
+                <div class="card-icon">🐲</div>
+                <div class="card-info">
+                    类型: 主线任务<br>
+                    目标: 击败地下城Boss<br>
+                    奖励: 胜利条件
+                </div>
+                <div class="card-type">主线</div>
+            </div>
+
+            <div class="card quest">
+                <div class="card-title">清理怪物</div>
+                <div class="card-icon">👹</div>
+                <div class="card-info">
+                    类型: 支线任务<br>
+                    目标: 击败20只怪物<br>
+                    奖励: 200金币
+                </div>
+                <div class="card-type">支线</div>
+            </div>
+
+            <div class="card quest">
+                <div class="card-title">收集宝藏</div>
+                <div class="card-icon">💰</div>
+                <div class="card-info">
+                    类型: 支线任务<br>
+                    目标: 打开10个宝藏箱<br>
+                    奖励: 随机稀有装备
+                </div>
+                <div class="card-type">支线</div>
+            </div>
+
+            <div class="card quest">
+                <div class="card-title">无伤通关</div>
+                <div class="card-icon">🏆</div>
+                <div class="card-info">
+                    类型: 隐藏任务<br>
+                    目标: 全程不受伤<br>
+                    奖励: 传说装备
+                </div>
+                <div class="card-type">隐藏</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎲 事件卡</h2>
+        <div class="cards-container">
+            <div class="card event">
+                <div class="card-title">宝箱陷阱</div>
+                <div class="card-icon">💥</div>
+                <div class="card-info">
+                    效果: 失去20点生命值<br>
+                    应对: 使用感知技能规避
+                </div>
+                <div class="card-type">负面事件</div>
+            </div>
+
+            <div class="card event">
+                <div class="card-title">神秘商人</div>
+                <div class="card-icon">🧙</div>
+                <div class="card-info">
+                    效果: 可以购买稀有装备<br>
+                    应对: 消耗金币
+                </div>
+                <div class="card-type">中立事件</div>
+            </div>
+
+            <div class="card event">
+                <div class="card-title">魔法泉水</div>
+                <div class="card-icon">💧</div>
+                <div class="card-info">
+                    效果: 恢复所有生命值和MP<br>
+                    应对: 立即生效
+                </div>
+                <div class="card-type">正面事件</div>
+            </div>
+
+            <div class="card event">
+                <div class="card-title">怪物袭击</div>
+                <div class="card-icon">👹</div>
+                <div class="card-info">
+                    效果: 强制战斗<br>
+                    应对: 正常战斗流程
+                </div>
+                <div class="card-type">负面事件</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧪 消耗品卡</h2>
+        <div class="cards-container">
+            <div class="card consumable">
+                <div class="card-title">生命药剂</div>
+                <div class="card-icon">🧪</div>
+                <div class="card-info">
+                    效果: 恢复30点生命值<br>
+                    使用时机: 任意时刻
+                </div>
+                <div class="card-type">消耗品</div>
+            </div>
+
+            <div class="card consumable">
+                <div class="card-title">魔法药剂</div>
+                <div class="card-icon">💙</div>
+                <div class="card-info">
+                    效果: 恢复30点魔法值<br>
+                    使用时机: 任意时刻
+                </div>
+                <div class="card-type">消耗品</div>
+            </div>
+
+            <div class="card consumable">
+                <div class="card-title">攻击卷轴</div>
+                <div class="card-icon">📜</div>
+                <div class="card-info">
+                    效果: 本回合攻击力+10<br>
+                    使用时机: 战斗时
+                </div>
+                <div class="card-type">消耗品</div>
+            </div>
+
+            <div class="card consumable">
+                <div class="card-title">复活卷轴</div>
+                <div class="card-icon">✨</div>
+                <div class="card-info">
+                    效果: 复活死亡的自己<br>
+                    使用时机: 死亡时
+                </div>
+                <div class="card-type">消耗品</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 玩家棋子</h2>
+        <div class="pieces-container">
+            <div>
+                <div class="piece player1">🧙</div>
+                <div class="piece-label">玩家1</div>
+            </div>
+            <div>
+                <div class="piece player2">🧝</div>
+                <div class="piece-label">玩家2</div>
+            </div>
+            <div>
+                <div class="piece player3">🧛</div>
+                <div class="piece-label">玩家3</div>
+            </div>
+            <div>
+                <div class="piece player4">🧚</div>
+                <div class="piece-label">玩家4</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 标记物</h2>
+        <div class="tokens-container">
+            <div>
+                <div class="token hp">HP</div>
+                <div class="token-label">生命值标记</div>
+            </div>
+            <div>
+                <div class="token level">Lv</div>
+                <div class="token-label">等级标记</div>
+            </div>
+            <div>
+                <div class="token mp">MP</div>
+                <div class="token-label">魔法值标记</div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 15px; color: #666;">提示：可以用硬币、纽扣等替代棋子，用纸笔记录生命值、等级和魔法值。</p>
+    </div>
+
+    <div class="section" style="text-align: center; padding: 30px;">
+        <h2>🎮 祝游戏愉快！</h2>
+        <p style="margin-top: 15px; line-height: 1.8;">
+            请参考 <a href="README.md">README.md</a> 了解完整游戏规则。<br>
+            打印时记得勾选"背景图形"选项！
+        </p>
+    </div>
+</body>
+</html>
