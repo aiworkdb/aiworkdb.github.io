@@ -75,6 +75,7 @@ boardgames/
 | [台词之王](category/party/line-master/README.md) | 派对 | 3-8人 | 25-45分钟 | 简单 |
 | [时空驿站](category/party/chrono-station/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
 | [芙莉莲的旅程](category/cooperative/frieren-journey/README.md) | 合作 | 2-4人 | 45-90分钟 | 中等 |
+| [独行猎人](category/cooperative/solo-level-ing-hunters/README.md) | 合作 | 1-4人 | 60-90分钟 | 中等/困难 |
 
 ## 添加新桌游
 
