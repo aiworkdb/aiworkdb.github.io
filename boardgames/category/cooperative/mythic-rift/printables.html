@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神话裂隙 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 地图拼板样式 */
+        .map-tiles {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tile {
+            aspect-ratio: 1;
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .tile.normal {
+            background: #e8f5e9;
+        }
+
+        .tile.energy {
+            background: #fff3e0;
+        }
+
+        .tile.artifact {
+            background: #f3e5f5;
+        }
+
+        .tile.event {
+            background: #fce4ec;
+        }
+
+        .tile.boss {
+            background: #ffebee;
+        }
+
+        .tile.camp {
+            background: #e0f2f1;
+        }
+
+        .tile-label {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* 卡牌样式 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            aspect-ratio: 2.5/3.5;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            padding-bottom: 5px;
+        }
+
+        .card-icon {
+            font-size: 36px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-description {
+            font-size: 10px;
+            margin-top: 5px;
+            line-height: 1.3;
+        }
+
+        .card-type {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+        }
+
+        /* 角色卡样式 */
+        .character-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* 神器卡样式 */
+        .artifact-card.attack {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            color: white;
+        }
+
+        .artifact-card.defense {
+            background: linear-gradient(135deg, #2196F3 0%, #03A9F4 100%);
+            color: white;
+        }
+
+        .artifact-card.support {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+        }
+
+        .artifact-card.special {
+            background: linear-gradient(135deg, #FF9800 0%, #FFC107 100%);
+            color: white;
+        }
+
+        /* 技能卡样式 */
+        .skill-card.attack {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+
+        .skill-card.defense {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+
+        .skill-card.support {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+
+        /* 事件卡样式 */
+        .event-card.explore {
+            background: #f3e5f5;
+            border-color: #9c27b0;
+        }
+
+        .event-card.battle {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .event-card.random {
+            background: #fce4ec;
+            border-color: #e91e63;
+        }
+
+        /* Boss卡样式 */
+        .boss-card {
+            background: linear-gradient(135deg, #000000 0%, #434343 100%);
+            color: white;
+        }
+
+        /* 棋子样式 */
+        .pieces-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .piece {
+            aspect-ratio: 1;
+            border: 3px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+        }
+
+        .piece-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .piece.sunwukong {
+            background: #ff9800;
+        }
+
+        .piece.hercules {
+            background: #2196F3;
+        }
+
+        .piece.thor {
+            background: #9c27b0;
+        }
+
+        .piece.ra {
+            background: #ffc107;
+        }
+
+        .piece.susano {
+            background: #00bcd4;
+        }
+
+        /* 标记样式 */
+        .tokens-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .token {
+            aspect-ratio: 1;
+            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .token.sanity {
+            background: #e1f5fe;
+        }
+
+        .token.action {
+            background: #fff9c4;
+        }
+
+        .token.energy {
+            background: #f3e5f5;
+        }
+
+        .token.damage {
+            background: #ffcdd2;
+        }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+    </style>
+</head>
+<body>
+    <!-- 打印提示 -->
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印（200g以上）</li>
+            <li>地图拼板可以使用普通A4纸打印</li>
+            <li>打印后可裁剪并塑封，增加耐用性</li>
+        </ul>
+    </div>
+
+    <!-- 游戏地图拼板 -->
+    <div class="section">
+        <h2>🗺️ 游戏地图拼板（24块）</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：打印后裁剪，每次游戏随机拼接</p>
+        <div class="map-tiles">
+            <div class="tile normal">
+                <span>⬜</span>
+                <div class="tile-label">普通空间 1</div>
+            </div>
+            <div class="tile normal">
+                <span>⬜</span>
+                <div class="tile-label">普通空间 2</div>
+            </div>
+            <div class="tile normal">
+                <span>⬜</span>
+                <div class="tile-label">普通空间 3</div>
+            </div>
+            <div class="tile normal">
+                <span>⬜</span>
+                <div class="tile-label">普通空间 4</div>
+            </div>
+            <div class="tile normal">
+                <span>⬜</span>
+                <div class="tile-label">普通空间 5</div>
+            </div>
+            <div class="tile normal">
+                <span>⬜</span>
+                <div class="tile-label">普通空间 6</div>
+            </div>
+            <div class="tile energy">
+                <span>💎</span>
+                <div class="tile-label">能量节点 1</div>
+            </div>
+            <div class="tile energy">
+                <span>💎</span>
+                <div class="tile-label">能量节点 2</div>
+            </div>
+            <div class="tile energy">
+                <span>💎</span>
+                <div class="tile-label">能量节点 3</div>
+            </div>
+            <div class="tile energy">
+                <span>💎</span>
+                <div class="tile-label">能量节点 4</div>
+            </div>
+            <div class="tile energy">
+                <span>💎</span>
+                <div class="tile-label">能量节点 5</div>
+            </div>
+            <div class="tile energy">
+                <span>💎</span>
+                <div class="tile-label">能量节点 6</div>
+            </div>
+            <div class="tile artifact">
+                <span>⭐</span>
+                <div class="tile-label">神器遗迹 1</div>
+            </div>
+            <div class="tile artifact">
+                <span>⭐</span>
+                <div class="tile-label">神器遗迹 2</div>
+            </div>
+            <div class="tile artifact">
+                <span>⭐</span>
+                <div class="tile-label">神器遗迹 3</div>
+            </div>
+            <div class="tile artifact">
+                <span>⭐</span>
+                <div class="tile-label">神器遗迹 4</div>
+            </div>
+            <div class="tile event">
+                <span>🌀</span>
+                <div class="tile-label">混沌裂隙 1</div>
+            </div>
+            <div class="tile event">
+                <span>🌀</span>
+                <div class="tile-label">混沌裂隙 2</div>
+            </div>
+            <div class="tile event">
+                <span>🌀</span>
+                <div class="tile-label">混沌裂隙 3</div>
+            </div>
+            <div class="tile event">
+                <span>🌀</span>
+                <div class="tile-label">混沌裂隙 4</div>
+            </div>
+            <div class="tile event">
+                <span>🌀</span>
+                <div class="tile-label">混沌裂隙 5</div>
+            </div>
+            <div class="tile event">
+                <span>🌀</span>
+                <div class="tile-label">混沌裂隙 6</div>
+            </div>
+            <div class="tile boss">
+                <span>👑</span>
+                <div class="tile-label">Boss房间</div>
+            </div>
+            <div class="tile camp">
+                <span>🏕️</span>
+                <div class="tile-label">安全营地 1</div>
+            </div>
+            <div class="tile camp">
+                <span>🏕️</span>
+                <div class="tile-label">安全营地 2</div>
+            </div>
+            <div class="tile camp">
+                <span>🏕️</span>
+                <div class="tile-label">安全营地 3</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 角色卡 -->
+    <div class="section">
+        <h2>🎭 角色卡（5张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：每位玩家选择一张角色卡</p>
+        <div class="cards-grid">
+            <div class="card character-card">
+                <div class="card-header">孙悟空</div>
+                <div class="card-icon">🐵</div>
+                <div class="card-description">
+                    攻击力: 4 | 防御力: 2<br>
+                    理智值: 5 | 行动点: 3<br>
+                    特殊技能: 如意金箍棒、七十二变
+                </div>
+            </div>
+            <div class="card character-card">
+                <div class="card-header">赫拉克勒斯</div>
+                <div class="card-icon">💪</div>
+                <div class="card-description">
+                    攻击力: 3 | 防御力: 5<br>
+                    理智值: 6 | 行动点: 3<br>
+                    特殊技能: 神力护盾、十二试炼
+                </div>
+            </div>
+            <div class="card character-card">
+                <div class="card-header">托尔</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-description">
+                    攻击力: 4 | 防御力: 3<br>
+                    理智值: 5 | 行动点: 3<br>
+                    特殊技能: 雷神之锤、风暴召唤
+                </div>
+            </div>
+            <div class="card character-card">
+                <div class="card-header">拉</div>
+                <div class="card-icon">☀️</div>
+                <div class="card-description">
+                    攻击力: 2 | 防御力: 3<br>
+                    理智值: 5 | 行动点: 4<br>
+                    特殊技能: 太阳之泪、光明审判
+                </div>
+            </div>
+            <div class="card character-card">
+                <div class="card-header">须佐之男</div>
+                <div class="card-icon">🌊</div>
+                <div class="card-description">
+                    攻击力: 3 | 防御力: 3<br>
+                    理智值: 5 | 行动点: 3<br>
+                    特殊技能: 天丛云剑、八岐大蛇
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 神器卡 -->
+    <div class="section">
+        <h2>⚡ 神器卡（20张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：在神器遗迹抽取，装备后获得强大效果</p>
+        <div class="cards-grid">
+            <div class="card artifact-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">破魔之箭</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">攻击+2</div>
+            </div>
+            <div class="card artifact-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">斩铁剑</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">攻击时骰出6可再攻一次</div>
+            </div>
+            <div class="card artifact-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">雷霆之怒</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">造成范围伤害+1</div>
+            </div>
+            <div class="card artifact-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">毁灭之斧</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">攻击无视防御</div>
+            </div>
+            <div class="card artifact-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">噬魂匕首</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">击杀恢复1理智</div>
+            </div>
+            <div class="card artifact-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">守护之盾</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">防御+2</div>
+            </div>
+            <div class="card artifact-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">镜面装甲</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">反弹1点伤害</div>
+            </div>
+            <div class="card artifact-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">生命之玉</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">每回合恢复1理智</div>
+            </div>
+            <div class="card artifact-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">不屈意志</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">理智为1时不会阵亡</div>
+            </div>
+            <div class="card artifact-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">灵慧披风</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">受到事件卡影响-1</div>
+            </div>
+            <div class="card artifact-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">贤者之石</div>
+                <div class="card-icon">💚</div>
+                <div class="card-description">每回合额外+1行动点</div>
+            </div>
+            <div class="card artifact-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">空间之钥</div>
+                <div class="card-icon">💚</div>
+                <div class="card-description">可瞬间移动到任意位置</div>
+            </div>
+            <div class="card artifact-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">时间沙漏</div>
+                <div class="card-icon">💚</div>
+                <div class="card-description">可跳过Boss的一回合</div>
+            </div>
+            <div class="card artifact-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">治愈之泉</div>
+                <div class="card-icon">💚</div>
+                <div class="card-description">治疗所有队友+2理智</div>
+            </div>
+            <div class="card artifact-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">魔力源泉</div>
+                <div class="card-icon">💚</div>
+                <div class="card-description">技能卡消耗-1行动点</div>
+            </div>
+            <div class="card artifact-card special">
+                <div class="card-type">特殊</div>
+                <div class="card-header">混沌之眼</div>
+                <div class="card-icon">✨</div>
+                <div class="card-description">可查看Boss的下一步行动</div>
+            </div>
+            <div class="card artifact-card special">
+                <div class="card-type">特殊</div>
+                <div class="card-header">命运之轮</div>
+                <div class="card-icon">✨</div>
+                <div class="card-description">可重骰一次骰子</div>
+            </div>
+            <div class="card artifact-card special">
+                <div class="card-type">特殊</div>
+                <div class="card-header">虚空之镜</div>
+                <div class="card-icon">✨</div>
+                <div class="card-description">可复制对手最后使用的卡牌</div>
+            </div>
+            <div class="card artifact-card special">
+                <div class="card-type">特殊</div>
+                <div class="card-header">永恒之枪</div>
+                <div class="card-icon">✨</div>
+                <div class="card-description">攻击必定命中要害（伤害×2）</div>
+            </div>
+            <div class="card artifact-card special">
+                <div class="card-type">特殊</div>
+                <div class="card-header">创世之书</div>
+                <div class="card-icon">✨</div>
+                <div class="card-description">可获得所有类型神器各1个</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 技能卡 -->
+    <div class="section">
+        <h2>🎯 技能卡（30张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：每回合恢复阶段抽取，用于战斗和探索</p>
+        <h3 style="margin: 15px 0 10px 0; color: #f44336;">攻击技能（10张）</h3>
+        <div class="cards-grid">
+            <div class="card skill-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">猛击</div>
+                <div class="card-icon">🗡️</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 造成2点伤害</div>
+            </div>
+            <div class="card skill-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">连击</div>
+                <div class="card-icon">🗡️</div>
+                <div class="card-description">消耗: 2行动点<br>效果: 造成1点伤害，可攻击两次</div>
+            </div>
+            <div class="card skill-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">重击</div>
+                <div class="card-icon">🗡️</div>
+                <div class="card-description">消耗: 2行动点<br>效果: 造成3点伤害</div>
+            </div>
+            <div class="card skill-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">穿刺</div>
+                <div class="card-icon">🗡️</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 造成1点伤害，无视防御</div>
+            </div>
+            <div class="card skill-card attack">
+                <div class="card-type">攻击</div>
+                <div class="card-header">旋风斩</div>
+                <div class="card-icon">🗡️</div>
+                <div class="card-description">消耗: 3行动点<br>效果: 造成2点范围伤害</div>
+            </div>
+        </div>
+        <h3 style="margin: 15px 0 10px 0; color: #2196F3;">防御技能（10张）</h3>
+        <div class="cards-grid">
+            <div class="card skill-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">格挡</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 减少1点受到的伤害</div>
+            </div>
+            <div class="card skill-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">铁壁</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">消耗: 2行动点<br>效果: 减少3点受到的伤害</div>
+            </div>
+            <div class="card skill-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">闪避</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 50%概率完全闪避攻击</div>
+            </div>
+            <div class="card skill-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">反击</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">消耗: 2行动点<br>效果: 减少1点伤害，造成1点反击伤害</div>
+            </div>
+            <div class="card skill-card defense">
+                <div class="card-type">防御</div>
+                <div class="card-header">治愈之光</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-description">消耗: 2行动点<br>效果: 恢复2点理智值</div>
+            </div>
+        </div>
+        <h3 style="margin: 15px 0 10px 0; color: #4CAF50;">辅助技能（10张）</h3>
+        <div class="cards-grid">
+            <div class="card skill-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">疾风步</div>
+                <div class="card-icon">💫</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 移动2格</div>
+            </div>
+            <div class="card skill-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">侦查</div>
+                <div class="card-icon">💫</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 查看前方地形</div>
+            </div>
+            <div class="card skill-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">采集</div>
+                <div class="card-icon">💫</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 获得1个裂隙能量</div>
+            </div>
+            <div class="card skill-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">冥想</div>
+                <div class="card-icon">💫</div>
+                <div class="card-description">消耗: 2行动点<br>效果: 抽取1张技能卡</div>
+            </div>
+            <div class="card skill-card support">
+                <div class="card-type">辅助</div>
+                <div class="card-header">鼓舞</div>
+                <div class="card-icon">💫</div>
+                <div class="card-description">消耗: 1行动点<br>效果: 队友获得1个额外行动点</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 事件卡 -->
+    <div class="section">
+        <h2>🎲 事件卡（30张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：停留在混沌裂隙时抽取，可能有利或有害</p>
+        <h3 style="margin: 15px 0 10px 0; color: #9c27b0;">探险事件（10张）</h3>
+        <div class="cards-grid">
+            <div class="card event-card explore">
+                <div class="card-type">探险</div>
+                <div class="card-header">古老遗迹</div>
+                <div class="card-icon">🗺️</div>
+                <div class="card-description">获得1个裂隙能量</div>
+            </div>
+            <div class="card event-card explore">
+                <div class="card-type">探险</div>
+                <div class="card-header">神秘商人</div>
+                <div class="card-icon">🗺️</div>
+                <div class="card-description">可花费2能量购买1神器</div>
+            </div>
+            <div class="card event-card explore">
+                <div class="card-type">探险</div>
+                <div class="card-header">宝藏</div>
+                <div class="card-icon">🗺️</div>
+                <div class="card-description">抽取1张神器卡</div>
+            </div>
+            <div class="card event-card explore">
+                <div class="card-type">探险</div>
+                <div class="card-header">传送门</div>
+                <div class="card-icon">🗺️</div>
+                <div class="card-description">可瞬间移动到Boss房间前</div>
+            </div>
+            <div class="card event-card explore">
+                <div class="card-type">探险</div>
+                <div class="card-header">智慧试炼</div>
+                <div class="card-icon">🗺️</div>
+                <div class="card-description">答对谜题获得奖励</div>
+            </div>
+        </div>
+        <h3 style="margin: 15px 0 10px 0; color: #ff9800;">战斗事件（10张）</h3>
+        <div class="cards-grid">
+            <div class="card event-card battle">
+                <div class="card-type">战斗</div>
+                <div class="card-header">小怪袭扰</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">受到1点伤害</div>
+            </div>
+            <div class="card event-card battle">
+                <div class="card-type">战斗</div>
+                <div class="card-header">伏击</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">本回合无法防御</div>
+            </div>
+            <div class="card event-card battle">
+                <div class="card-type">战斗</div>
+                <div class="card-header">增援</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">Boss召唤2个小怪</div>
+            </div>
+            <div class="card event-card battle">
+                <div class="card-type">战斗</div>
+                <div class="card-header">狂暴</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">Boss下回合攻击+2</div>
+            </div>
+            <div class="card event-card battle">
+                <div class="card-type">战斗</div>
+                <div class="card-header">战术配合</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-description">所有玩家攻击+1</div>
+            </div>
+        </div>
+        <h3 style="margin: 15px 0 10px 0; color: #e91e63;">随机事件（10张）</h3>
+        <div class="cards-grid">
+            <div class="card event-card random">
+                <div class="card-type">随机</div>
+                <div class="card-header">日月同辉</div>
+                <div class="card-icon">🎲</div>
+                <div class="card-description">所有玩家恢复2理智</div>
+            </div>
+            <div class="card event-card random">
+                <div class="card-type">随机</div>
+                <div class="card-header">星象异变</div>
+                <div class="card-icon">🎲</div>
+                <div class="card-description">重新布置地图</div>
+            </div>
+            <div class="card event-card random">
+                <div class="card-type">随机</div>
+                <div class="card-header">时空扭曲</div>
+                <div class="card-icon">🎲</div>
+                <div class="card-description">所有玩家位置随机交换</div>
+            </div>
+            <div class="card event-card random">
+                <div class="card-type">随机</div>
+                <div class="card-header">神力降临</div>
+                <div class="card-icon">🎲</div>
+                <div class="card-description">所有玩家全属性+1</div>
+            </div>
+            <div class="card event-card random">
+                <div class="card-type">随机</div>
+                <div class="card-header">命运转盘</div>
+                <div class="card-icon">🎲</div>
+                <div class="card-description">随机抽取一个效果（好或坏）</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Boss卡 -->
+    <div class="section">
+        <h2>👹 Boss卡（3张）</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：Boss是游戏的最终挑战，分为三个章节</p>
+        <div class="cards-grid">
+            <div class="card boss-card">
+                <div class="card-header">混沌守护者（第一章）</div>
+                <div class="card-icon">👹</div>
+                <div class="card-description">
+                    生命值: 15<br>
+                    攻击力: 2 | 防御力: 1<br>
+                    特殊能力: 每回合召唤1个小怪<br>
+                    <br>
+                    策略: 优先清理小怪，使用范围攻击
+                </div>
+            </div>
+            <div class="card boss-card">
+                <div class="card-header">虚空领主（第二章）</div>
+                <div class="card-icon">💀</div>
+                <div class="card-description">
+                    生命值: 25<br>
+                    攻击力: 3 | 防御力: 2<br>
+                    特殊能力: 每回合腐蚀1名玩家2点理智<br>
+                    <br>
+                    策略: 需要治疗师，快速输出
+                </div>
+            </div>
+            <div class="card boss-card">
+                <div class="card-header">混沌之主（第三章）</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-description">
+                    生命值: 40<br>
+                    攻击力: 4 | 防御力: 3<br>
+                    特殊能力: 每回合所有玩家失去1理智<br>
+                    狂暴模式: 血量<50%时攻击力+2<br>
+                    <br>
+                    策略: 全员配合，保留大招
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 玩家棋子 -->
+    <div class="section">
+        <h2>🎯 玩家棋子（5个）</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：打印后裁剪，每位玩家选择一个棋子</p>
+        <div class="pieces-grid">
+            <div class="piece sunwukong">
+                🐵
+                <div class="piece-label">孙悟空</div>
+            </div>
+            <div class="piece hercules">
+                💪
+                <div class="piece-label">赫拉克勒斯</div>
+            </div>
+            <div class="piece thor">
+                ⚡
+                <div class="piece-label">托尔</div>
+            </div>
+            <div class="piece ra">
+                ☀️
+                <div class="piece-label">拉</div>
+            </div>
+            <div class="piece susano">
+                🌊
+                <div class="piece-label">须佐之男</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 游戏标记 -->
+    <div class="section">
+        <h2>📍 游戏标记</h2>
+        <p style="margin-bottom: 15px; color: #666;">提示：打印后裁剪，用于追踪游戏状态</p>
+        
+        <h3 style="margin: 15px 0 10px 0;">理智值标记（25个）</h3>
+        <div class="tokens-grid">
+            <div class="token sanity">1</div>
+            <div class="token sanity">2</div>
+            <div class="token sanity">3</div>
+            <div class="token sanity">4</div>
+            <div class="token sanity">5</div>
+            <div class="token sanity">5</div>
+            <div class="token sanity">5</div>
+            <div class="token sanity">5</div>
+            <div class="token sanity">5</div>
+            <div class="token sanity">5</div>
+        </div>
+
+        <h3 style="margin: 15px 0 10px 0;">行动点标记（20个）</h3>
+        <div class="tokens-grid">
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+            <div class="token action">⚡</div>
+        </div>
+
+        <h3 style="margin: 15px 0 10px 0;">裂隙能量标记（30个）</h3>
+        <div class="tokens-grid">
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+            <div class="token energy">💎</div>
+        </div>
+
+        <h3 style="margin: 15px 0 10px 0;">伤害标记（20个）</h3>
+        <div class="tokens-grid">
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+            <div class="token damage">💥</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 打印说明</h2>
+        <ol style="line-height: 2; margin-left: 20px;">
+            <li>使用A4纸张打印所有页面</li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则卡牌颜色无法正常显示</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印（200g以上），增加耐用性</li>
+            <li>地图拼板可以使用普通A4纸打印</li>
+            <li>打印后使用剪刀或裁纸刀裁剪卡牌和棋子</li>
+            <li>建议使用透明胶带或塑封机处理卡牌，增加使用寿命</li>
+            <li>可以使用硬币、骰子等替代标记物</li>
+        </ol>
+    </div>
+</body>
+</html>
