@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>间谍家庭派对 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+        }
+
+        .print-hint li {
+            margin: 8px 0;
+            color: #856404;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            background: white;
+            page-break-inside: avoid;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin: 15px 0;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 身份卡样式 */
+        .identity-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .identity-card .card-title {
+            color: white;
+        }
+
+        .identity-card .card-desc {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* 任务卡样式 */
+        .mission-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .mission-card .card-title {
+            color: white;
+        }
+
+        /* 行动卡样式 */
+        .action-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .action-card .card-title {
+            color: white;
+        }
+
+        /* 事件卡样式 */
+        .event-card {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .event-card .card-title {
+            color: white;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .cards-grid {
+                gap: 10px;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌建议使用<strong>卡纸</strong>打印（160g-200g）</li>
+            <li>打印后可裁剪并塑封，增加耐用性</li>
+            <li>建议先打印一张测试，确认颜色和尺寸满意后再批量打印</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🎭 身份卡 (共8张)</h2>
+        <p style="margin-bottom: 15px; color: #666;">每位玩家随机抽取一张，秘密查看后放置在面前（正面朝下）</p>
+        <div class="cards-grid">
+            <div class="card identity-card">
+                <div class="card-title">间谍</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>可查看其他玩家身份卡<br>
+                    <strong>胜利条件：</strong>完成3个间谍任务
+                </div>
+            </div>
+            <div class="card identity-card">
+                <div class="card-title">间谍</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>可查看其他玩家身份卡<br>
+                    <strong>胜利条件：</strong>完成3个间谍任务
+                </div>
+            </div>
+            <div class="card identity-card">
+                <div class="card-title">杀手</div>
+                <div class="card-icon">🔪</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>可阻止其他玩家行动<br>
+                    <strong>胜利条件：</strong>淘汰2名玩家
+                </div>
+            </div>
+            <div class="card identity-card">
+                <div class="card-title">杀手</div>
+                <div class="card-icon">🔪</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>可阻止其他玩家行动<br>
+                    <strong>胜利条件：</strong>淘汰2名玩家
+                </div>
+            </div>
+            <div class="card identity-card">
+                <div class="card-title">超能力者</div>
+                <div class="card-icon">🧠</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>可读取其他玩家手牌<br>
+                    <strong>胜利条件：</strong>收集5张行动卡
+                </div>
+            </div>
+            <div class="card identity-card">
+                <div class="card-title">超能力者</div>
+                <div class="card-icon">🧠</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>可读取其他玩家手牌<br>
+                    <strong>胜利条件：</strong>收集5张行动卡
+                </div>
+            </div>
+            <div class="card identity-card">
+                <div class="card-title">普通人</div>
+                <div class="card-icon">👨</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>无特殊能力<br>
+                    <strong>胜利条件：</strong>完成2个家庭任务
+                </div>
+            </div>
+            <div class="card identity-card">
+                <div class="card-title">普通人</div>
+                <div class="card-icon">👨</div>
+                <div class="card-desc">
+                    <strong>特殊能力：</strong>无特殊能力<br>
+                    <strong>胜利条件：</strong>完成2个家庭任务
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>📋 任务卡 (示例15张，共30张)</h2>
+        <p style="margin-bottom: 15px; color: #666;">玩家从任务卡堆抽取任务，完成即可获得分数</p>
+        <div class="cards-grid">
+            <div class="card mission-card">
+                <div class="card-title">间谍任务</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    在不被发现的情况下收集3张行动卡
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">间谍任务</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    让其他玩家相信你是普通人
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">间谍任务</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    成功伪装完成一个任务
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">家庭任务</div>
+                <div class="card-icon">👨👩👧</div>
+                <div class="card-desc">
+                    一起表演一个家庭场景（30秒）
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">家庭任务</div>
+                <div class="card-icon">👨👩👧</div>
+                <div class="card-desc">
+                    猜猜其他玩家的真实身份
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">家庭任务</div>
+                <div class="card-icon">👨👩👧</div>
+                <div class="card-desc">
+                    说服其他玩家给你一张手牌
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">特殊任务</div>
+                <div class="card-icon">⭐</div>
+                <div class="card-desc">
+                    发起一次投票，驱逐一名可疑玩家
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">特殊任务</div>
+                <div class="card-icon">⭐</div>
+                <div class="card-desc">
+                    使用超能力读取一名玩家的身份
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">特殊任务</div>
+                <div class="card-icon">⭐</div>
+                <div class="card-desc">
+                    在所有玩家面前揭示你的真实身份
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">间谍任务</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    成功偷取其他玩家2张手牌而不被发现
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">家庭任务</div>
+                <div class="card-icon">👨👩👧</div>
+                <div class="card-desc">
+                    与其他玩家合作完成一个谜题
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">家庭任务</div>
+                <div class="card-icon">👨👩👧</div>
+                <div class="card-desc">
+                    用一句话描述你的角色，让大家猜
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">特殊任务</div>
+                <div class="card-icon">⭐</div>
+                <div class="card-desc">
+                    在一次投票中成功指控一名间谍
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">特殊任务</div>
+                <div class="card-icon">⭐</div>
+                <div class="card-desc">
+                    完成3个同类型任务，触发能力升级
+                </div>
+            </div>
+            <div class="card mission-card">
+                <div class="card-title">间谍任务</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    在游戏结束时，仍然隐藏着自己的身份
+                </div>
+            </div>
+        </div>
+        <p style="margin-top: 20px; color: #999; font-style: italic;">
+            注：以上为示例任务卡，实际游戏建议准备30张任务卡（间谍任务10张、家庭任务15张、特殊任务5张）
+        </p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>⚡ 行动卡 (示例20张，共40张)</h2>
+        <p style="margin-bottom: 15px; color: #666;">每回合可使用最多2张行动卡，效果立即生效</p>
+        <div class="cards-grid">
+            <div class="card action-card">
+                <div class="card-title">侦查</div>
+                <div class="card-icon">🔍</div>
+                <div class="card-desc">
+                    查看一名玩家手牌<br>
+                    <em>使用时机：任意回合</em>
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">伪装</div>
+                <div class="card-icon">🎭</div>
+                <div class="card-desc">
+                    假冒另一名玩家身份<br>
+                    <em>使用时机：任务判定时</em>
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">攻击</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-desc">
+                    对一名玩家造成伤害<br>
+                    <em>使用时机：对抗阶段</em>
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">防御</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-desc">
+                    抵挡一次攻击<br>
+                    <em>使用时机：被攻击时</em>
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">交换</div>
+                <div class="card-icon">🔄</div>
+                <div class="card-desc">
+                    与其他玩家交换手牌<br>
+                    <em>使用时机：任意回合</em>
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">偷窃</div>
+                <div class="card-icon">🥷</div>
+                <div class="card-desc">
+                    偷取其他玩家一张牌<br>
+                    <em>使用时机：任意回合</em>
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">侦查</div>
+                <div class="card-icon">🔍</div>
+                <div class="card-desc">
+                    查看一名玩家手牌
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">伪装</div>
+                <div class="card-icon">🎭</div>
+                <div class="card-desc">
+                    假冒另一名玩家身份
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">攻击</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-desc">
+                    对一名玩家造成伤害
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">防御</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-desc">
+                    抵挡一次攻击
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">交换</div>
+                <div class="card-icon">🔄</div>
+                <div class="card-desc">
+                    与其他玩家交换手牌
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">偷窃</div>
+                <div class="card-icon">🥷</div>
+                <div class="card-desc">
+                    偷取其他玩家一张牌
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">侦查</div>
+                <div class="card-icon">🔍</div>
+                <div class="card-desc">
+                    查看一名玩家手牌
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">伪装</div>
+                <div class="card-icon">🎭</div>
+                <div class="card-desc">
+                    假冒另一名玩家身份
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">攻击</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-desc">
+                    对一名玩家造成伤害
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">防御</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-desc">
+                    抵挡一次攻击
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">交换</div>
+                <div class="card-icon">🔄</div>
+                <div class="card-desc">
+                    与其他玩家交换手牌
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">偷窃</div>
+                <div class="card-icon">🥷</div>
+                <div class="card-desc">
+                    偷取其他玩家一张牌
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">侦查</div>
+                <div class="card-icon">🔍</div>
+                <div class="card-desc">
+                    查看一名玩家手牌
+                </div>
+            </div>
+            <div class="card action-card">
+                <div class="card-title">防御</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-desc">
+                    抵挡一次攻击
+                </div>
+            </div>
+        </div>
+        <p style="margin-top: 20px; color: #999; font-style: italic;">
+            注：以上为示例行动卡，实际游戏建议准备40张行动卡（侦查8张、伪装8张、攻击8张、防御8张、交换4张、偷窃4张）
+        </p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>🎲 事件卡 (共15张)</h2>
+        <p style="margin-bottom: 15px; color: #666;">回合开始时10%概率触发，立即执行事件卡效果</p>
+        <div class="cards-grid">
+            <div class="card event-card">
+                <div class="card-title">身份暴露</div>
+                <div class="card-icon">😱</div>
+                <div class="card-desc">
+                    所有玩家展示身份卡<br>
+                    <strong>无法应对</strong>
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">任务失败</div>
+                <div class="card-icon">❌</div>
+                <div class="card-desc">
+                    当前任务作废<br>
+                    <strong>重新抽取任务</strong>
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">额外回合</div>
+                <div class="card-icon">➕</div>
+                <div class="card-desc">
+                    获得额外行动机会<br>
+                    <strong>立即使用</strong>
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">交换身份</div>
+                <div class="card-icon">🔄</div>
+                <div class="card-desc">
+                    随机交换两名玩家身份<br>
+                    <strong>无法应对</strong>
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">资源补给</div>
+                <div class="card-icon">📦</div>
+                <div class="card-desc">
+                    所有玩家抽2张行动卡<br>
+                    <strong>立即使用</strong>
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">身份暴露</div>
+                <div class="card-icon">😱</div>
+                <div class="card-desc">
+                    所有玩家展示身份卡
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">任务失败</div>
+                <div class="card-icon">❌</div>
+                <div class="card-desc">
+                    当前任务作废
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">额外回合</div>
+                <div class="card-icon">➕</div>
+                <div class="card-desc">
+                    获得额外行动机会
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">交换身份</div>
+                <div class="card-icon">🔄</div>
+                <div class="card-desc">
+                    随机交换两名玩家身份
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">资源补给</div>
+                <div class="card-icon">📦</div>
+                <div class="card-desc">
+                    所有玩家抽2张行动卡
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">投票时间</div>
+                <div class="card-icon">🗳️</div>
+                <div class="card-desc">
+                    立即发起一次投票<br>
+                    驱逐得票最多的玩家
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">双重身份</div>
+                <div class="card-icon">🎭</div>
+                <div class="card-desc">
+                    所有玩家获得第二个身份<br>
+                    需要同时完成两个任务
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">混乱时刻</div>
+                <div class="card-icon">🌪️</div>
+                <div class="card-desc">
+                    所有玩家随机交换手牌<br>
+                    <strong>无法应对</strong>
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">间谍获胜</div>
+                <div class="card-icon">🕵️</div>
+                <div class="card-desc">
+                    所有间谍身份玩家获得1分<br>
+                    <strong>立即结算</strong>
+                </div>
+            </div>
+            <div class="card event-card">
+                <div class="card-title">和平时刻</div>
+                <div class="card-icon">🕊️</div>
+                <div class="card-desc">
+                    下一回合禁止攻击行动<br>
+                    <strong>保护弱者</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>🎯 分数令牌和任务标记</h2>
+        <p style="margin-bottom: 15px; color: #666;">可用硬币、纽扣等替代</p>
+        <div style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; margin-top: 20px;">
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; font-weight: bold;">
+                1
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; font-weight: bold;">
+                1
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; font-weight: bold;">
+                1
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; font-weight: bold;">
+                1
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; font-weight: bold;">
+                1
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; font-weight: bold;">
+                2
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; font-weight: bold;">
+                2
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; font-weight: bold;">
+                2
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; font-weight: bold;">
+                ✓
+            </div>
+            <div style="width: 50px; height: 50px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; font-weight: bold;">
+                ✓
+            </div>
+        </div>
+        <p style="margin-top: 20px; color: #666;">
+            <strong>说明：</strong><br>
+            • 粉色令牌（1分）：记录玩家得分，准备10-20个<br>
+            • 蓝色令牌（2分）：双倍分数令牌，准备5-10个<br>
+            • 绿色标记（✓）：任务完成标记，准备8个<br>
+            • 可用硬币、纽扣、棋子等进行替代
+        </p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>🖨️ 打印说明</h2>
+        <div style="background: #e7f3ff; border-left: 4px solid #007bff; padding: 15px; margin-top: 20px;">
+            <h3 style="color: #007bff; margin-bottom: 10px;">打印步骤</h3>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印本文档</li>
+                <li><strong>重要：</strong>在打印对话框中，务必勾选<strong>"背景图形"</strong>选项</li>
+                <li>建议使用<strong>卡纸</strong>打印（160g-200g），增加卡牌耐用性</li>
+                <li>打印后沿卡牌边框裁剪</li>
+                <li>可选：将卡牌塑封，进一步增加耐用性</li>
+                <li>准备分数令牌（可用硬币、纽扣等替代）</li>
+            </ol>
+        </div>
+
+        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-top: 20px;">
+            <h3 style="color: #856404; margin-bottom: 10px;">⚠️ 常见问题</h3>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li><strong>打印后背景颜色不见了？</strong><br>请在打印设置中勾选"背景图形"选项</li>
+                <li><strong>卡牌尺寸不合适？</strong><br>调整打印缩放比例，建议100%或实际尺寸</li>
+                <li><strong>卡牌太薄怎么办？</strong><br>使用卡纸打印，或将普通纸打印后粘贴到硬纸板上</li>
+                <li><strong>如何增加卡牌耐用性？</strong><br>塑封卡牌，或使用透明胶带覆盖表面</li>
+            </ul>
+        </div>
+
+        <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin-top: 20px;">
+            <h3 style="color: #155724; margin-bottom: 10px;">✅ 检查清单</h3>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li>□ 身份卡已打印（8张）</li>
+                <li>□ 任务卡已打印（建议30张）</li>
+                <li>□ 行动卡已打印（建议40张）</li>
+                <li>□ 事件卡已打印（15张）</li>
+                <li>□ 分数令牌已准备（可用替代物）</li>
+                <li>□ 打印时勾选了"背景图形"</li>
+                <li>□ 卡牌已裁剪</li>
+                <li>□ （可选）卡牌已塑封</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 打印按钮功能（如果需要）
+        function printCards() {
+            window.print();
+        }
+
+        // 页面加载完成后的提示
+        window.addEventListener('load', function() {
+            console.log('间谍家庭派对 - 打印道具页面已加载');
+            console.log('请使用浏览器的打印功能打印本页面');
+            console.log('重要：打印时请勾选"背景图形"选项');
+        });
+    </script>
+</body>
+</html>
