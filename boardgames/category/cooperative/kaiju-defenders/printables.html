@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>怪兽守护者 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .print-hint strong {
+            color: #856404;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        /* 游戏地图样式 */
+        .game-map {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .map-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(7, 60px);
+            grid-template-rows: repeat(7, 60px);
+            gap: 2px;
+            background: #bdc3c7;
+            padding: 2px;
+            border-radius: 8px;
+        }
+
+        .map-cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: white;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .map-cell.road { background: #ecf0f1; }
+        .map-cell.nest { background: #a8e6cf; }
+        .map-cell.residential { background: #fdebd0; }
+        .map-cell.commercial { background: #d4e6f1; }
+        .map-cell.industrial { background: #fad7a0; }
+        .map-cell.alien { background: #d7bde2; }
+        .map-cell.mothership { background: #f1948a; }
+        .map-cell.ocean { background: #aed6f1; }
+
+        /* 棋子样式 */
+        .pieces-section {
+            margin: 20px 0;
+        }
+
+        .pieces-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .piece-card {
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            background: #ebf5fb;
+        }
+
+        .piece-icon {
+            font-size: 48px;
+            margin: 10px 0;
+        }
+
+        .piece-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 5px 0;
+        }
+
+        /* 卡牌样式 */
+        .cards-section {
+            margin: 20px 0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .card {
+            border: 2px solid #7f8c8d;
+            border-radius: 8px;
+            padding: 12px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #bdc3c7;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-right: 10px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .card-type {
+            font-size: 11px;
+            color: #7f8c8d;
+            margin-top: 2px;
+        }
+
+        .card-description {
+            font-size: 12px;
+            color: #34495e;
+            line-height: 1.4;
+        }
+
+        .card-cost {
+            font-size: 11px;
+            color: #e74c3c;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* 不同类型的卡牌样式 */
+        .card.ability { border-color: #3498db; background: #ebf5fb; }
+        .card.energy { border-color: #e74c3c; background: #fdedec; }
+        .card.event { border-color: #f39c12; background: #fef9e7; }
+        .card.alien { border-color: #9b59b6; background: #f4ecf7; }
+        .card.building { border-color: #27ae60; background: #eafaf1; }
+
+        /* 标记样式 */
+        .markers-section {
+            margin: 20px 0;
+        }
+
+        .markers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .marker {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #7f8c8d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto;
+        }
+
+        .marker-label {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 10px;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .pieces-grid,
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦖 怪兽守护者 - 打印道具</h1>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul>
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印</li>
+                <li>打印后可裁剪并塑封，增加耐用性</li>
+            </ul>
+        </div>
+
+        <!-- 游戏地图 -->
+        <h2>🗺️ 游戏地图</h2>
+        <div class="game-map">
+            <div class="map-grid">
+                <div class="map-cell ocean">🌊</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell commercial">🏢</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell alien">👽</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell industrial">🏭</div>
+
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell residential">🏠</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell commercial">🏢</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell alien">👽</div>
+                <div class="map-cell road">⬛</div>
+
+                <div class="map-cell commercial">🏢</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell residential">🏠</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell commercial">🏢</div>
+
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell industrial">🏭</div>
+                <div class="map-cell nest">🦖</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell residential">🏠</div>
+                <div class="map-cell alien">👽</div>
+                <div class="map-cell road">⬛</div>
+
+                <div class="map-cell alien">👽</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell commercial">🏢</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell residential">🏠</div>
+
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell residential">🏠</div>
+                <div class="map-cell alien">👽</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell commercial">🏢</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell industrial">🏭</div>
+
+                <div class="map-cell industrial">🏭</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell residential">🏠</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell alien">👽</div>
+                <div class="map-cell road">⬛</div>
+                <div class="map-cell mothership">🚀</div>
+            </div>
+            <p style="margin-top: 15px; font-size: 14px; color: #7f8c8d;">
+                地图说明：🦖怪兽巢穴 | 🏠住宅建筑 | 🏢商业建筑 | 🏭工业建筑 | 👽外星基地 | 🚀母舰港口 | 🌊海洋 | ⬛道路
+            </p>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 怪兽棋子 -->
+        <h2>🦖 怪兽棋子</h2>
+        <div class="pieces-section">
+            <div class="pieces-grid">
+                <div class="piece-card">
+                    <div class="piece-icon">🦖</div>
+                    <div class="piece-name">哥斯拉型</div>
+                    <div style="font-size: 12px; color: #7f8c8d;">原子吐息</div>
+                </div>
+                <div class="piece-card">
+                    <div class="piece-icon">🦋</div>
+                    <div class="piece-name">魔斯拉型</div>
+                    <div style="font-size: 12px; color: #7f8c8d;">飞行冲击</div>
+                </div>
+                <div class="piece-card">
+                    <div class="piece-icon">🦅</div>
+                    <div class="piece-name">拉顿型</div>
+                    <div style="font-size: 12px; color: #7f8c8d;">烈焰风暴</div>
+                </div>
+                <div class="piece-card">
+                    <div class="piece-icon">🦏</div>
+                    <div class="piece-name">安基拉斯型</div>
+                    <div style="font-size: 12px; color: #7f8c8d;">钢铁防御</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 怪兽能力卡 -->
+        <h2>🔮 怪兽能力卡</h2>
+        <div class="cards-section">
+            <div class="cards-grid">
+                <div class="card ability">
+                    <div class="card-header">
+                        <div class="card-icon">🔥</div>
+                        <div>
+                            <div class="card-title">原子吐息</div>
+                            <div class="card-type">哥斯拉型</div>
+                        </div>
+                    </div>
+                    <div class="card-description">对相邻外星基地造成2点伤害</div>
+                    <div class="card-cost">消耗：能量×3</div>
+                </div>
+
+                <div class="card ability">
+                    <div class="card-header">
+                        <div class="card-icon">🦋</div>
+                        <div>
+                            <div class="card-title">飞行冲击</div>
+                            <div class="card-type">魔斯拉型</div>
+                        </div>
+                    </div>
+                    <div class="card-description">可飞行越过海洋和障碍</div>
+                    <div class="card-cost">消耗：能量×2</div>
+                </div>
+
+                <div class="card ability">
+                    <div class="card-header">
+                        <div class="card-icon">🌪️</div>
+                        <div>
+                            <div class="card-title">烈焰风暴</div>
+                            <div class="card-type">拉顿型</div>
+                        </div>
+                    </div>
+                    <div class="card-description">本回合所有移动+2步</div>
+                    <div class="card-cost">消耗：能量×2</div>
+                </div>
+
+                <div class="card ability">
+                    <div class="card-header">
+                        <div class="card-icon">🛡️</div>
+                        <div>
+                            <div class="card-title">钢铁防御</div>
+                            <div class="card-type">安基拉斯型</div>
+                        </div>
+                    </div>
+                    <div class="card-description">本回合免疫外星攻击</div>
+                    <div class="card-cost">消耗：能量×1</div>
+                </div>
+
+                <div class="card ability">
+                    <div class="card-header">
+                        <div class="card-icon">💥</div>
+                        <div>
+                            <div class="card-title">终极原子吐息</div>
+                            <div class="card-type">哥斯拉型</div>
+                        </div>
+                    </div>
+                    <div class="card-description">对全部外星基地造成3点伤害</div>
+                    <div class="card-cost">消耗：能量×5</div>
+                </div>
+
+                <div class="card ability">
+                    <div class="card-header">
+                        <div class="card-icon">✨</div>
+                        <div>
+                            <div class="card-title">治愈之光</div>
+                            <div class="card-type">魔斯拉型</div>
+                        </div>
+                    </div>
+                    <div class="card-description">恢复所有怪兽1点生命值</div>
+                    <div class="card-cost">消耗：能量×3</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 能量核心卡 -->
+        <h2>⚡ 能量核心卡</h2>
+        <div class="cards-section">
+            <div class="cards-grid">
+                <div class="card energy">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div>
+                            <div class="card-title">红色核心</div>
+                            <div class="card-type">攻击型能量</div>
+                        </div>
+                    </div>
+                    <div class="card-description">用于攻击型技能，增加攻击力</div>
+                </div>
+
+                <div class="card energy">
+                    <div class="card-header">
+                        <div class="card-icon">💙</div>
+                        <div>
+                            <div class="card-title">蓝色核心</div>
+                            <div class="card-type">防御型能量</div>
+                        </div>
+                    </div>
+                    <div class="card-description">用于防御型技能，增加防御力</div>
+                </div>
+
+                <div class="card energy">
+                    <div class="card-header">
+                        <div class="card-icon">💚</div>
+                        <div>
+                            <div class="card-title">绿色核心</div>
+                            <div class="card-type">移动型能量</div>
+                        </div>
+                    </div>
+                    <div class="card-description">用于移动型技能，增加移动力</div>
+                </div>
+
+                <div class="card energy">
+                    <div class="card-header">
+                        <div class="card-icon">💛</div>
+                        <div>
+                            <div class="card-title">金色核心</div>
+                            <div class="card-type">稀有能量</div>
+                        </div>
+                    </div>
+                    <div class="card-description">万能能量，可用于任何技能</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 事件卡 -->
+        <h2>📜 事件卡</h2>
+        <div class="cards-section">
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div>
+                            <div class="card-title">电力恢复</div>
+                            <div class="card-type">增益事件</div>
+                        </div>
+                    </div>
+                    <div class="card-description">所有怪兽获得1张能量核心卡</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <div class="card-icon">👥</div>
+                        <div>
+                            <div class="card-title">人群疏散</div>
+                            <div class="card-type">增益事件</div>
+                        </div>
+                    </div>
+                    <div class="card-description">本回合外星攻击-1</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <div class="card-icon">⚠️</div>
+                        <div>
+                            <div class="card-title">道路坍塌</div>
+                            <div class="card-type">减益事件</div>
+                        </div>
+                    </div>
+                    <div class="card-description">后退3步</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <div class="card-icon">👽</div>
+                        <div>
+                            <div class="card-title">外星增援</div>
+                            <div class="card-type">减益事件</div>
+                        </div>
+                    </div>
+                    <div class="card-description">增加1个外星基地</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <div class="card-icon">🌟</div>
+                        <div>
+                            <div class="card-title">幸运之星</div>
+                            <div class="card-type">增益事件</div>
+                        </div>
+                    </div>
+                    <div class="card-description">下回合掷骰子+1</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <div class="card-icon">🌪️</div>
+                        <div>
+                            <div class="card-title">能量风暴</div>
+                            <div class="card-type">中性事件</div>
+                        </div>
+                    </div>
+                    <div class="card-description">所有玩家交换1张手牌</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 外星指令卡 -->
+        <h2>👽 外星指令卡</h2>
+        <div class="cards-section">
+            <div class="cards-grid">
+                <div class="card alien">
+                    <div class="card-header">
+                        <div class="card-icon">💥</div>
+                        <div>
+                            <div class="card-title">能量武器</div>
+                            <div class="card-type">攻击指令</div>
+                        </div>
+                    </div>
+                    <div class="card-description">随机摧毁1个建筑</div>
+                </div>
+
+                <div class="card alien">
+                    <div class="card-header">
+                        <div class="card-icon">✈️</div>
+                        <div>
+                            <div class="card-title">空中打击</div>
+                            <div class="card-type">攻击指令</div>
+                        </div>
+                    </div>
+                    <div class="card-description">所有怪兽失去1点生命</div>
+                </div>
+
+                <div class="card alien">
+                    <div class="card-header">
+                        <div class="card-icon">🛡️</div>
+                        <div>
+                            <div class="card-title">基地护盾</div>
+                            <div class="card-type">防御指令</div>
+                        </div>
+                    </div>
+                    <div class="card-description">本回合无法摧毁外星基地</div>
+                </div>
+
+                <div class="card alien">
+                    <div class="card-header">
+                        <div class="card-icon">🚀</div>
+                        <div>
+                            <div class="card-title">母舰充能</div>
+                            <div class="card-type">强化指令</div>
+                        </div>
+                    </div>
+                    <div class="card-description">母舰防御+1</div>
+                </div>
+
+                <div class="card alien">
+                    <div class="card-header">
+                        <div class="card-icon">🔄</div>
+                        <div>
+                            <div class="card-title">基地修复</div>
+                            <div class="card-type">防御指令</div>
+                        </div>
+                    </div>
+                    <div class="card-description">修复1个被摧毁的外星基地</div>
+                </div>
+
+                <div class="card alien">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div>
+                            <div class="card-title">能量干扰</div>
+                            <div class="card-type">减益指令</div>
+                        </div>
+                    </div>
+                    <div class="card-description">所有玩家失去1张能量核心卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 建筑卡 -->
+        <h2>🏢 建筑卡</h2>
+        <div class="cards-section">
+            <div class="cards-grid">
+                <div class="card building">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div>
+                            <div class="card-title">发电厂</div>
+                            <div class="card-type">工业建筑</div>
+                        </div>
+                    </div>
+                    <div class="card-description">所有能量核心效果+1</div>
+                </div>
+
+                <div class="card building">
+                    <div class="card-header">
+                        <div class="card-icon">🏥</div>
+                        <div>
+                            <div class="card-title">医院</div>
+                            <div class="card-type">住宅建筑</div>
+                        </div>
+                    </div>
+                    <div class="card-description">每回合恢复1点生命值</div>
+                </div>
+
+                <div class="card building">
+                    <div class="card-header">
+                        <div class="card-icon">🔫</div>
+                        <div>
+                            <div class="card-title">军械库</div>
+                            <div class="card-type">工业建筑</div>
+                        </div>
+                    </div>
+                    <div class="card-description">攻击外星基地时伤害+1</div>
+                </div>
+
+                <div class="card building">
+                    <div class="card-header">
+                        <div class="card-icon">📡</div>
+                        <div>
+                            <div class="card-title">雷达站</div>
+                            <div class="card-type">商业建筑</div>
+                        </div>
+                    </div>
+                    <div class="card-description">可查看下一张外星指令卡</div>
+                </div>
+
+                <div class="card building">
+                    <div class="card-header">
+                        <div class="card-icon">🏪</div>
+                        <div>
+                            <div class="card-title">超市</div>
+                            <div class="card-type">商业建筑</div>
+                        </div>
+                    </div>
+                    <div class="card-description">停留在附近时获得额外能量核心</div>
+                </div>
+
+                <div class="card building">
+                    <div class="card-header">
+                        <div class="card-icon">🏫</div>
+                        <div>
+                            <div class="card-title">学校</div>
+                            <div class="card-type">住宅建筑</div>
+                        </div>
+                    </div>
+                    <div class="card-description">学习新技能时消耗-1</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 游戏标记 -->
+        <h2>🎯 游戏标记</h2>
+        <div class="markers-section">
+            <div class="markers-grid">
+                <div>
+                    <div class="marker" style="background: #a8e6cf; border-color: #27ae60;">🦖</div>
+                    <div class="marker-label">怪兽棋子</div>
+                </div>
+                <div>
+                    <div class="marker" style="background: #d7bde2; border-color: #9b59b6;">👽</div>
+                    <div class="marker-label">外星棋子</div>
+                </div>
+                <div>
+                    <div class="marker" style="background: #fdebd0; border-color: #f39c12;">🏠</div>
+                    <div class="marker-label">建筑标记</div>
+                </div>
+                <div>
+                    <div class="marker" style="background: #d4e6f1; border-color: #3498db;">⚡</div>
+                    <div class="marker-label">能量标记</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #ecf0f1; border-radius: 8px;">
+            <h3 style="color: #2c3e50; margin-bottom: 10px;">📝 打印建议</h3>
+            <ul style="margin-left: 20px; color: #34495e;">
+                <li>游戏地图建议打印在A4纸上，使用彩色打印</li>
+                <li>卡牌建议使用卡纸打印，增加耐用性</li>
+                <li>棋子建议打印后裁剪，可用硬币或纽扣替代</li>
+                <li>打印后可用塑封机塑封，延长使用寿命</li>
+                <li>所有道具建议放在收纳盒中，方便整理</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -78,6 +78,7 @@ boardgames/
 | [独行猎人](category/cooperative/solo-level-ing-hunters/README.md) | 合作 | 1-4人 | 60-90分钟 | 中等/困难 |
 | [神话裂隙](category/cooperative/mythic-rift/README.md) | 合作 | 2-5人 | 60-90分钟 | 中等/困难 |
 | [间谍家庭派对](category/party/spy-family-party/README.md) | 派对 | 4-8人 | 30-45分钟 | 简单 |
+| [怪兽守护者](category/cooperative/kaiju-defenders/README.md) | 合作 | 2-4人 | 45-60分钟 | 中等 |
 
 ## 添加新桌游
 
