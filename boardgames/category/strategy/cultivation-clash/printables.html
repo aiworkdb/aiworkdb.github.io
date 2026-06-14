@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修仙争霸 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .print-hint h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5a67d8;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #5a67d8;
+        }
+
+        /* 游戏地图样式 */
+        .game-map {
+            display: inline-block;
+            background: #2d3748;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px auto;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 70px);
+            grid-template-rows: repeat(8, 70px);
+            gap: 2px;
+        }
+
+        .map-cell {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .cell-start { background: #fefcbf; }
+        .cell-path { background: #cbd5e0; }
+        .cell-herb { background: #9ae6b4; }
+        .cell-stone { background: #63b3ed; }
+        .cell-beast { background: #fbd38d; }
+        .cell-pill { background: #d6bcfa; }
+        .cell-sutra { background: #faf089; }
+        .cell-tribulation { background: #fc8181; }
+        .cell-ascension { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+
+        .cell-label {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 10px;
+            color: #2d3748;
+            font-weight: bold;
+        }
+
+        /* 卡牌样式 */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .card {
+            width: 160px;
+            height: 220px;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            page-break-inside: avoid;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .card-icon {
+            font-size: 64px;
+            margin: 10px 0;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .card-resource { background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%); border: 3px solid #5a67d8; }
+        .card-technique { background: linear-gradient(135deg, #fefcbf 0%, #fef3c7 100%); border: 3px solid #d69e2e; }
+        .card-pill { background: linear-gradient(135deg, #e9d8fd 0%, #d6bcfa 100%); border: 3px solid #9f7aea; }
+        .card-tribulation { background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%); border: 3px solid #e53e3e; }
+        .card-ascension { background: linear-gradient(135deg, #fbb6ce 0%, #f687b3 100%); border: 3px solid #d53f8c; }
+
+        /* 棋子样式 */
+        .pieces-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .piece {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 4px solid white;
+        }
+
+        .piece-red { background: #fc8181; }
+        .piece-blue { background: #63b3ed; }
+        .piece-green { background: #68d391; }
+        .piece-yellow { background: #f6e05e; }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none !important;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        .page-break {
+            height: 0;
+        }
+
+        h1.main-title {
+            text-align: center;
+            color: white;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1 class="main-title">修仙争霸 - 打印道具</h1>
+
+    <div class="print-hint">
+        <h3>⚠️ 重要打印提示：</h3>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+            <li>打印后可裁剪并塑封，延长使用寿命</li>
+            <li>建议先打印测试页，确认颜色和布局正常</li>
+        </ul>
+    </div>
+
+    <!-- 游戏地图 -->
+    <div class="section">
+        <div class="section-title">🗺️ 游戏地图 (8x8 修仙世界)</div>
+        <div style="text-align: center;">
+            <div class="game-map">
+                <div class="map-grid">
+                    <div class="map-cell cell-start">🧙<span class="cell-label">凡人村</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-tribulation">⚡<span class="cell-label">天劫区</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-stone">💎<span class="cell-label">灵石矿</span></div>
+                    <div class="map-cell cell-path"></div>
+
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-beast">🔮<span class="cell-label">灵兽林</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-pill">💊<span class="cell-label">丹房</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-sutra">📜<span class="cell-label">藏经阁</span></div>
+
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-tribulation">⚡<span class="cell-label">天劫区</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-beast">🔮<span class="cell-label">灵兽林</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-stone">💎<span class="cell-label">灵石矿</span></div>
+
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-stone">💎<span class="cell-label">灵石矿</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-beast">🔮<span class="cell-label">灵兽林</span></div>
+                    <div class="map-cell cell-path"></div>
+
+                    <div class="map-cell cell-tribulation">⚡<span class="cell-label">天劫区</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-sutra">📜<span class="cell-label">藏经阁</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-pill">💊<span class="cell-label">丹房</span></div>
+
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-pill">💊<span class="cell-label">丹房</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-beast">🔮<span class="cell-label">灵兽林</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-tribulation">⚡<span class="cell-label">天劫区</span></div>
+
+                    <div class="map-cell cell-stone">💎<span class="cell-label">灵石矿</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-sutra">📜<span class="cell-label">藏经阁</span></div>
+                    <div class="map-cell cell-path"></div>
+
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-pill">💊<span class="cell-label">丹房</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-ascension">✨<span class="cell-label">飞升台</span></div>
+                    <div class="map-cell cell-path"></div>
+                    <div class="map-cell cell-herb">🌿<span class="cell-label">灵草地</span></div>
+                    <div class="map-cell cell-path"></div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 20px; padding: 15px; background: #f7fafc; border-radius: 8px;">
+            <h3 style="margin-bottom: 10px; color: #5a67d8;">地图图例说明：</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 14px;">
+                <div>🧙 凡人村（起点）</div>
+                <div>⬜ 道路</div>
+                <div>🌿 灵草地（获得灵草卡）</div>
+                <div>💎 灵石矿（获得灵石卡）</div>
+                <div>🔮 灵兽林（获得兽核卡）</div>
+                <div>💊 丹房（炼制丹药）</div>
+                <div>📜 藏经阁（学习功法）</div>
+                <div>⚡ 天劫区（抽取天劫卡）</div>
+                <div>✨ 飞升台（胜利目标）</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 资源卡 -->
+    <div class="section">
+        <div class="section-title">💎 资源卡 (基础材料)</div>
+        <div class="cards-container">
+            <div class="card card-resource">
+                <div class="card-title">灵石</div>
+                <div class="card-icon">💎</div>
+                <div class="card-desc">基础货币<br>用于学习功法<br>数量：15张</div>
+            </div>
+
+            <div class="card card-resource">
+                <div class="card-title">灵草</div>
+                <div class="card-icon">🌿</div>
+                <div class="card-desc">基础资源<br>用于炼丹和修炼<br>数量：15张</div>
+            </div>
+
+            <div class="card card-resource">
+                <div class="card-title">兽核</div>
+                <div class="card-icon">🔮</div>
+                <div class="card-desc">高级资源<br>用于学习强力功法<br>数量：10张</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 功法卡 -->
+    <div class="section">
+        <div class="section-title">📜 功法卡 (修炼技能)</div>
+        <div class="cards-container">
+            <div class="card card-technique">
+                <div class="card-title">御剑术</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-desc">消耗：灵石×3<br>效果：跳过1个天劫区<br>（永久功法）</div>
+            </div>
+
+            <div class="card card-technique">
+                <div class="card-title">护体罡气</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-desc">消耗：灵石×2+灵草×1<br>效果：抵消1次天劫<br>（永久功法）</div>
+            </div>
+
+            <div class="card card-technique">
+                <div class="card-title">遁术</div>
+                <div class="card-icon">💨</div>
+                <div class="card-desc">消耗：灵草×3<br>效果：额外移动3步<br>（本回合有效）</div>
+            </div>
+
+            <div class="card card-technique">
+                <div class="card-title">炼丹术</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-desc">消耗：灵石×2+兽核×1<br>效果：2灵草→1丹药<br>（永久功法）</div>
+            </div>
+
+            <div class="card card-technique">
+                <div class="card-title">神识探查</div>
+                <div class="card-icon">👁️</div>
+                <div class="card-desc">消耗：灵石×4<br>效果：查看下张天劫卡<br>（永久功法）</div>
+            </div>
+
+            <div class="card card-technique">
+                <div class="card-title">天地无极</div>
+                <div class="card-icon">✨</div>
+                <div class="card-desc">消耗：灵石×5+兽核×2<br>效果：飞升时多掷1次<br>（终极功法）</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 丹药卡 -->
+    <div class="section">
+        <div class="section-title">💊 丹药卡 (辅助消耗品)</div>
+        <div class="cards-container">
+            <div class="card card-pill">
+                <div class="card-title">回春丹</div>
+                <div class="card-icon">💊💚</div>
+                <div class="card-desc">炼制：灵草×2<br>效果：恢复1张资源卡<br>（使用后丢弃）</div>
+            </div>
+
+            <div class="card card-pill">
+                <div class="card-title">聚灵丹</div>
+                <div class="card-icon">💊💎</div>
+                <div class="card-desc">炼制：灵草×3<br>效果：本回合灵石+1<br>（使用后丢弃）</div>
+            </div>
+
+            <div class="card card-pill">
+                <div class="card-title">破境丹</div>
+                <div class="card-icon">💊✨</div>
+                <div class="card-desc">炼制：灵草×4+兽核×1<br>效果：获得1张功法卡<br>（使用后丢弃）</div>
+            </div>
+
+            <div class="card card-pill">
+                <div class="card-title">避劫丹</div>
+                <div class="card-icon">💊🛡️</div>
+                <div class="card-desc">炼制：灵草×3+灵石×1<br>效果：本回合不触发天劫<br>（使用后丢弃）</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 天劫卡 -->
+    <div class="section">
+        <div class="section-title">⚡ 天劫卡 (修炼障碍)</div>
+        <div class="cards-container">
+            <div class="card card-tribulation">
+                <div class="card-title">雷劫</div>
+                <div class="card-icon">⚡🌩️</div>
+                <div class="card-desc">效果：失去2张灵石卡<br>应对：护体罡气</div>
+            </div>
+
+            <div class="card card-tribulation">
+                <div class="card-title">心魔</div>
+                <div class="card-icon">⚡🧠</div>
+                <div class="card-desc">效果：本回合无法行动<br>应对：避劫丹</div>
+            </div>
+
+            <div class="card card-tribulation">
+                <div class="card-title">夺宝</div>
+                <div class="card-icon">⚡🏴☠️</div>
+                <div class="card-desc">效果：失去1张功法/丹药<br>应对：护体罡气</div>
+            </div>
+
+            <div class="card card-tribulation">
+                <div class="card-title">灵气枯竭</div>
+                <div class="card-icon">⚡🚫</div>
+                <div class="card-desc">效果：下回合无资源<br>应对：回春丹</div>
+            </div>
+
+            <div class="card card-tribulation">
+                <div class="card-title">走火入魔</div>
+                <div class="card-icon">⚡🔥</div>
+                <div class="card-desc">效果：失去所有灵草卡<br>应对：护体罡气</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 飞升卡 -->
+    <div class="section">
+        <div class="section-title">✨ 飞升卡 (终极目标)</div>
+        <div class="cards-container">
+            <div class="card card-ascension">
+                <div class="card-title">飞升</div>
+                <div class="card-icon">✨</div>
+                <div class="card-desc">到达飞升台✨<br>拥有3张功法卡<br>掷骰子≥5<br>即可飞升成仙！</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- 玩家棋子 -->
+    <div class="section">
+        <div class="section-title">🧙 玩家棋子 (修真者)</div>
+        <div class="pieces-container">
+            <div class="piece piece-red">🔴</div>
+            <div class="piece piece-blue">🔵</div>
+            <div class="piece piece-green">🟢</div>
+            <div class="piece piece-yellow">🟡</div>
+        </div>
+        <div style="margin-top: 20px; padding: 15px; background: #f7fafc; border-radius: 8px; text-align: center;">
+            <p style="font-size: 14px; color: #4a5568;">打印后剪下棋子，或使用硬币、小物件等替代</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div style="text-align: center; padding: 20px; color: #718096;">
+            <h2>🎯 修仙争霸</h2>
+            <p style="margin-top: 10px; font-size: 16px;">在修仙世界中加入这场争霸</p>
+            <p style="margin-top: 5px; font-size: 14px;">你，能否率先飞升成仙？</p>
+            <p style="margin-top: 15px; font-size: 12px;">打印完成后，请参照 README.md 了解完整规则</p>
+        </div>
+    </div>
+
+</body>
+</html>
