@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>怪物厨师 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #555;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* ===== 地图样式 ===== */
+        .floor-map {
+            margin-bottom: 25px;
+        }
+
+        .floor-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .path-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 15px;
+            background: #1a1a2e;
+            border-radius: 10px;
+        }
+
+        .path-node {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .path-arrow {
+            font-size: 20px;
+            color: #aaa;
+            flex-shrink: 0;
+        }
+
+        .node-label {
+            font-size: 9px;
+            color: white;
+            margin-top: 2px;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .node-start { background: #4caf50; }
+        .node-ingredient { background: #ff9800; }
+        .node-monster { background: #e53935; }
+        .node-cooking { background: #ff6f00; }
+        .node-trap { background: #9c27b0; }
+        .node-exit { background: #2196f3; }
+        .node-boss { background: #ff5722; }
+
+        /* ===== 卡牌网格 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        @media print {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-icon {
+            font-size: 26px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 10px;
+            color: #888;
+        }
+
+        .card.ingredient {
+            border-color: #ff9800;
+            background: #fff8e1;
+        }
+
+        .card.monster {
+            border-color: #e53935;
+            background: #ffebee;
+        }
+
+        .card.dish {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .card.tool {
+            border-color: #607d8b;
+            background: #eceff1;
+        }
+
+        .card.event {
+            border-color: #2196f3;
+            background: #e3f2fd;
+        }
+
+        .card.trap {
+            border-color: #9c27b0;
+            background: #f3e5f5;
+        }
+
+        /* ===== 玩家棋子 ===== */
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 3px solid #333;
+            color: white;
+            font-weight: bold;
+        }
+
+        .piece-circle.blue { background: #2196f3; }
+        .piece-circle.red { background: #f44336; }
+        .piece-circle.green { background: #4caf50; }
+        .piece-circle.purple { background: #9c27b0; }
+
+        .piece-label {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ===== 体力标记 ===== */
+        .hp-tracker {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 10px;
+            border: 2px solid #e53935;
+        }
+
+        .hp-label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .hp-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #e53935;
+        }
+
+        .hp-coins {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .hp-coin {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ffcdd2;
+            border: 2px solid #e53935;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        /* ===== 使用说明 ===== */
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #37474f;
+        }
+
+        .monster-stats {
+            font-size: 10px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            .print-hint {
+                display: none !important;
+            }
+            .section {
+                box-shadow: none;
+                margin-bottom: 10px;
+                page-break-inside: avoid;
+            }
+            .container {
+                max-width: 100%;
+            }
+            h1 { font-size: 1.5em; }
+            h2 { margin: 15px 0 10px; }
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍳 怪物厨师 (Monster Chef) - 打印文档</h1>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可以使用普通纸张打印</li>
+                <li>打印后按虚线裁剪使用</li>
+                <li>建议将卡牌<strong>塑封</strong>以延长使用寿命</li>
+            </ul>
+        </div>
+
+        <!-- ===== 游戏地图 ===== -->
+        <div class="section">
+            <h2>🗺️ 游戏地图（5层地下城）</h2>
+
+            <!-- 第1层 -->
+            <div class="floor-map">
+                <div class="floor-title">第1层「入口走廊」— 7个节点（新手层）</div>
+                <div class="path-container">
+                    <div class="path-node node-start">🟢<span class="node-label">起点</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-cooking">🟠<span class="node-label">烹饪</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-trap">🟣<span class="node-label">陷阱</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-exit">🔵<span class="node-label">出口</span></div>
+                </div>
+            </div>
+
+            <!-- 第2层 -->
+            <div class="floor-map">
+                <div class="floor-title">第2层「毒菌洞穴」— 8个节点</div>
+                <div class="path-container">
+                    <div class="path-node node-start">🟢<span class="node-label">起点</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-trap">🟣<span class="node-label">陷阱</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-cooking">🟠<span class="node-label">烹饪</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-exit">🔵<span class="node-label">出口</span></div>
+                </div>
+            </div>
+
+            <!-- 第3层 -->
+            <div class="floor-map">
+                <div class="floor-title">第3层「精灵花园」— 9个节点</div>
+                <div class="path-container">
+                    <div class="path-node node-start">🟢<span class="node-label">起点</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-cooking">🟠<span class="node-label">烹饪</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-trap">🟣<span class="node-label">陷阱</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-cooking">🟠<span class="node-label">烹饪</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-exit">🔵<span class="node-label">出口</span></div>
+                </div>
+            </div>
+
+            <!-- 第4层 -->
+            <div class="floor-map">
+                <div class="floor-title">第4层「石像鬼回廊」— 10个节点</div>
+                <div class="path-container">
+                    <div class="path-node node-start">🟢<span class="node-label">起点</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-trap">🟣<span class="node-label">陷阱</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-cooking">🟠<span class="node-label">烹饪</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-trap">🟣<span class="node-label">陷阱</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">怪物</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-exit">🔵<span class="node-label">出口</span></div>
+                </div>
+            </div>
+
+            <!-- 第5层 -->
+            <div class="floor-map">
+                <div class="floor-title">第5层「红龙巢穴」— Boss层</div>
+                <div class="path-container">
+                    <div class="path-node node-start">🟢<span class="node-label">起点</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-ingredient">🟡<span class="node-label">食材</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-monster">🔴<span class="node-label">守卫</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-cooking">🟠<span class="node-label">烹饪</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-trap">🟣<span class="node-label">陷阱</span></div>
+                    <div class="path-arrow">➡️</div>
+                    <div class="path-node node-boss">⭐<span class="node-label">红龙Boss</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 食材卡 ===== -->
+        <div class="section page-break">
+            <h2>🥬 食材卡（基础材料）</h2>
+            <div class="cards-grid">
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🥩</span><span class="card-title">红肉</span></div><div class="card-description">怪物红肉类食材<br>用途：烹饪主菜料理</div><div class="card-footer">食材卡 · 红肉</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🥩</span><span class="card-title">红肉</span></div><div class="card-description">怪物红肉类食材<br>用途：烹饪主菜料理</div><div class="card-footer">食材卡 · 红肉</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🥩</span><span class="card-title">红肉</span></div><div class="card-description">怪物红肉类食材<br>用途：烹饪主菜料理</div><div class="card-footer">食材卡 · 红肉</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🐟</span><span class="card-title">白肉</span></div><div class="card-description">怪物鱼类/鸟类食材<br>用途：烹饪清淡料理</div><div class="card-footer">食材卡 · 白肉</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🐟</span><span class="card-title">白肉</span></div><div class="card-description">怪物鱼类/鸟类食材<br>用途：烹饪清淡料理</div><div class="card-footer">食材卡 · 白肉</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🐟</span><span class="card-title">白肉</span></div><div class="card-description">怪物鱼类/鸟类食材<br>用途：烹饪清淡料理</div><div class="card-footer">食材卡 · 白肉</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🥬</span><span class="card-title">蔬菜</span></div><div class="card-description">精灵野菜食材<br>用途：烹饪副菜/沙拉</div><div class="card-footer">食材卡 · 蔬菜</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🥬</span><span class="card-title">蔬菜</span></div><div class="card-description">精灵野菜食材<br>用途：烹饪副菜/沙拉</div><div class="card-footer">食材卡 · 蔬菜</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🥬</span><span class="card-title">蔬菜</span></div><div class="card-description">精灵野菜食材<br>用途：烹饪副菜/沙拉</div><div class="card-footer">食材卡 · 蔬菜</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🌶️</span><span class="card-title">香料</span></div><div class="card-description">稀有调味料<br>用途：提升料理效果</div><div class="card-footer">食材卡 · 香料</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🌶️</span><span class="card-title">香料</span></div><div class="card-description">稀有调味料<br>用途：提升料理效果</div><div class="card-footer">食材卡 · 香料</div></div>
+                <div class="card ingredient"><div class="card-header"><span class="card-icon">🌶️</span><span class="card-title">香料</span></div><div class="card-description">稀有调味料<br>用途：提升料理效果</div><div class="card-footer">食材卡 · 香料</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 怪物卡 ===== -->
+        <div class="section page-break">
+            <h2>👹 怪物卡（战斗对象）</h2>
+            <div class="cards-grid">
+                <div class="card monster"><div class="card-header"><span class="card-icon">🟢</span><span class="card-title">史莱姆</span></div><div class="card-description">战斗力：2-3<br>掉落：🥩×1</div><div class="monster-stats">出现：第1层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">🐜</span><span class="card-title">巨型蚂蚁</span></div><div class="card-description">战斗力：3-4<br>掉落：🥩×1 + 🥬×1</div><div class="monster-stats">出现：第1-2层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">🍄</span><span class="card-title">毒蘑菇</span></div><div class="card-description">战斗力：2-4<br>掉落：🥬×2</div><div class="monster-stats">出现：第1-2层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">🦎</span><span class="card-title">火蜥蜴</span></div><div class="card-description">战斗力：4-5<br>掉落：🥩×2</div><div class="monster-stats">出现：第2-3层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">🦇</span><span class="card-title">暗影蝙蝠</span></div><div class="card-description">战斗力：3-5<br>掉落：🐟×1</div><div class="monster-stats">出现：第2-3层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">👺</span><span class="card-title">石像鬼</span></div><div class="card-description">战斗力：5-6<br>掉落：🥩×2 + 🌶️×1</div><div class="monster-stats">出现：第3-4层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">🐠</span><span class="card-title">深海鱼人</span></div><div class="card-description">战斗力：4-6<br>掉落：🐟×2 + 🥬×1</div><div class="monster-stats">出现：第3-4层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">🐕</span><span class="card-title">地狱犬</span></div><div class="card-description">战斗力：6-7<br>掉落：🥩×3</div><div class="monster-stats">出现：第4层</div><div class="card-footer">怪物卡</div></div>
+                <div class="card monster"><div class="card-header"><span class="card-icon">🐉</span><span class="card-title">红龙（Boss）</span></div><div class="card-description">战斗力：10-12<br>全员围攻！受到5点伤害即倒下</div><div class="monster-stats">出现：第5层</div><div class="card-footer">Boss卡</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 料理卡 ===== -->
+        <div class="section page-break">
+            <h2>🍽️ 料理卡（烹饪成果）</h2>
+            <div class="cards-grid">
+                <div class="card dish"><div class="card-header"><span class="card-icon">🍢</span><span class="card-title">烤肉串</span></div><div class="card-description">需要：🥩×2<br>效果：恢复体力 3点</div><div class="card-footer">料理卡</div></div>
+                <div class="card dish"><div class="card-header"><span class="card-icon">🍲</span><span class="card-title">药草汤</span></div><div class="card-description">需要：🥬×2<br>效果：恢复体力 2点 + 解毒</div><div class="card-footer">料理卡</div></div>
+                <div class="card dish"><div class="card-header"><span class="card-icon">🐟</span><span class="card-title">烤全鱼</span></div><div class="card-description">需要：🐟×2<br>效果：恢复体力 4点</div><div class="card-footer">料理卡</div></div>
+                <div class="card dish"><div class="card-header"><span class="card-icon">🍖</span><span class="card-title">怪物大餐</span></div><div class="card-description">需要：🥩×3<br>效果：恢复5点 + 攻击+1</div><div class="card-footer">料理卡</div></div>
+                <div class="card dish"><div class="card-header"><span class="card-icon">🥗</span><span class="card-title">海鲜沙拉</span></div><div class="card-description">需要：🐟×1 + 🥬×2<br>效果：恢复3点 + 防御+1</div><div class="card-footer">料理卡</div></div>
+                <div class="card dish"><div class="card-header"><span class="card-icon">🍛</span><span class="card-title">香料炖肉</span></div><div class="card-description">需要：🥩×2 + 🌶️×1<br>效果：恢复4点 + 攻击+2</div><div class="card-footer">料理卡</div></div>
+                <div class="card dish"><div class="card-header"><span class="card-icon">🍚</span><span class="card-title">复活饭</span></div><div class="card-description">需要：🥩×1+🐟×1+🥬×1<br>效果：复活倒地玩家（体力5点）</div><div class="card-footer">料理卡 · 稀有</div></div>
+                <div class="card dish"><div class="card-header"><span class="card-icon">🍷</span><span class="card-title">龙血酒</span></div><div class="card-description">需要：🥩×3 + 🌶️×2<br>效果：全体恢复5点（仅Boss战）</div><div class="card-footer">料理卡 · Boss专用</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 厨具卡 & 事件卡 & 陷阱卡 ===== -->
+        <div class="section page-break">
+            <h2>🔪 厨具卡 + 📜 事件卡 + ⚡ 陷阱卡</h2>
+            <div class="cards-grid">
+                <div class="card tool"><div class="card-header"><span class="card-icon">🔪</span><span class="card-title">菜刀</span></div><div class="card-description">烹饪时食材消耗-1<br>起始分配每玩家1张</div><div class="card-footer">厨具卡</div></div>
+                <div class="card tool"><div class="card-header"><span class="card-icon">🍳</span><span class="card-title">平底锅</span></div><div class="card-description">烹饪主菜料理效果+1<br>在第1层食材点获取</div><div class="card-footer">厨具卡</div></div>
+                <div class="card tool"><div class="card-header"><span class="card-icon">🍲</span><span class="card-title">炖锅</span></div><div class="card-description">烹饪汤类料理效果+1<br>在第2层烹饪站获取</div><div class="card-footer">厨具卡</div></div>
+                <div class="card tool"><div class="card-header"><span class="card-icon">🧂</span><span class="card-title">调味瓶</span></div><div class="card-description">使用香料时效果翻倍<br>稀有掉落</div><div class="card-footer">厨具卡 · 稀有</div></div>
+
+                <div class="card event"><div class="card-header"><span class="card-icon">💎</span><span class="card-title">意外发现</span></div><div class="card-description">全体获得1张随机食材卡</div><div class="card-footer">事件卡</div></div>
+                <div class="card event"><div class="card-header"><span class="card-icon">💧</span><span class="card-title">地下泉</span></div><div class="card-description">全体恢复2点体力</div><div class="card-footer">事件卡</div></div>
+                <div class="card event"><div class="card-header"><span class="card-icon">🧙</span><span class="card-title">神秘商人</span></div><div class="card-description">可交换食材卡（3换2）</div><div class="card-footer">事件卡</div></div>
+                <div class="card event"><div class="card-header"><span class="card-icon">🌪️</span><span class="card-title">魔力风暴</span></div><div class="card-description">丢弃1张手牌，否则失去2点体力</div><div class="card-footer">事件卡</div></div>
+
+                <div class="card trap"><div class="card-header"><span class="card-icon">☠️</span><span class="card-title">毒雾</span></div><div class="card-description">失去2点体力，获得"中毒"状态</div><div class="card-footer">陷阱卡</div></div>
+                <div class="card trap"><div class="card-header"><span class="card-icon">🪨</span><span class="card-title">落石</span></div><div class="card-description">失去3点体力（骰子5以上可躲避）</div><div class="card-footer">陷阱卡</div></div>
+                <div class="card trap"><div class="card-header"><span class="card-icon">🕳️</span><span class="card-title">暗洞</span></div><div class="card-description">退回本层起点</div><div class="card-footer">陷阱卡</div></div>
+                <div class="card trap"><div class="card-header"><span class="card-icon">👁️</span><span class="card-title">怪物偷袭</span></div><div class="card-description">强制进行一场额外战斗</div><div class="card-footer">陷阱卡</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 玩家棋子 & 体力标记 ===== -->
+        <div class="section page-break">
+            <h2>👤 玩家棋子 + 游戏配件</h2>
+            <div style="margin-bottom: 25px;">
+                <div style="font-weight:bold; margin-bottom:10px;">玩家棋子（4色）</div>
+                <div class="player-pieces">
+                    <div class="piece"><div class="piece-circle blue">1</div><div class="piece-label">玩家1</div></div>
+                    <div class="piece"><div class="piece-circle red">2</div><div class="piece-label">玩家2</div></div>
+                    <div class="piece"><div class="piece-circle green">3</div><div class="piece-label">玩家3</div></div>
+                    <div class="piece"><div class="piece-circle purple">4</div><div class="piece-label">玩家4</div></div>
+                </div>
+            </div>
+
+            <div>
+                <div style="font-weight:bold; margin-bottom:10px;">共享体力标记</div>
+                <div class="hp-tracker">
+                    <div class="hp-label">HP：</div>
+                    <div class="hp-value">20</div>
+                    <div class="hp-coins">
+                        <div class="hp-coin">5</div>
+                        <div class="hp-coin">5</div>
+                        <div class="hp-coin">5</div>
+                        <div class="hp-coin">5</div>
+                    </div>
+                    <div style="font-size:12px; color:#888; margin-left:10px;">（用硬币代表，每枚=5点）</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <div style="font-weight:bold; margin-bottom:10px;">骰子模板</div>
+                <div style="display:flex; gap:15px;">
+                    <div style="width:55px;height:55px;background:white;border:3px solid #333;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;">🎲</div>
+                    <div style="width:55px;height:55px;background:white;border:3px solid #333;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;">🎲</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 使用说明 ===== -->
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将5层地下城地图打印出来，可拼接为长卷轴或分楼层使用</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子：</strong>裁剪玩家棋子，或者使用硬币/小物件代替</li>
+                <li><strong>体力追踪：</strong>用纸笔记录，或用硬币（每枚代表5点体力）</li>
+                <li><strong>骰子：</strong>如果没有骰子，可以使用手机骰子应用或打印的骰子模板</li>
+                <li><strong>开始游戏：</strong>每位玩家选择棋子放在第1层起点，体力设为20点，分发起始卡牌</li>
+                <li><strong>卡牌管理：</strong>食材卡上限5张/人，料理卡和厨具卡不限</li>
+            </ul>
+        </div>
+
+        <div style="text-align:center; margin-top:30px; color:#888; font-size:13px;">
+            🍳 怪物厨师 Monster Chef · 灵感来源于《迷宫饭》(Dungeon Meshi)<br>
+            合作类桌游 · 2-4人 · 45-75分钟
+        </div>
+    </div>
+</body>
+</html>
