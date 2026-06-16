@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟侦探社 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .print-hint strong {
+            color: #856404;
+        }
+
+        .print-hint ul {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        /* 游戏地图样式 */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 80px);
+            grid-template-rows: repeat(7, 80px);
+            gap: 2px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .map-cell {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #333;
+            font-size: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .map-cell.start { background: #3498db; color: white; }
+        .map-cell.road { background: #ecf0f1; }
+        .map-cell.clue { background: #2ecc71; color: white; }
+        .map-cell.skill { background: #9b59b6; color: white; }
+        .map-cell.crisis { background: #e74c3c; color: white; }
+        .map-cell.evidence { background: #f39c12; color: white; }
+        .map-cell.building { background: #34495e; color: white; }
+
+        /* 卡牌样式 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .card {
+            width: 120px;
+            height: 180px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .card.clue-card { background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; }
+        .card.skill-card { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; }
+        .card.crisis-card { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .card.evidence-card { background: linear-gradient(135deg, #f39c12, #d35400); color: white; }
+
+        .card-icon {
+            font-size: 36px;
+            margin: 10px 0;
+        }
+
+        .card-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .card-desc {
+            font-size: 11px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 玩家棋子样式 */
+        .pieces-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .piece {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .piece.p1 { background: #e74c3c; }
+        .piece.p2 { background: #3498db; }
+        .piece.p3 { background: #2ecc71; }
+        .piece.p4 { background: #f39c12; }
+        .piece.p5 { background: #9b59b6; }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .section-title {
+                color: black !important;
+            }
+        }
+
+        @page {
+            margin: 1cm;
+        }
+    </style>
+</head>
+<body>
+    <h1>🕵️ 虚拟侦探社 - 打印道具</h1>
+
+    <div class="print-hint">
+        <strong>⚠️ 重要打印提示：</strong>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印</li>
+            <li>打印后可裁剪并塑封，增加耐用性</li>
+        </ul>
+    </div>
+
+    <!-- 游戏地图 -->
+    <div class="section">
+        <div class="section-title">🗺️ 游戏地图</div>
+        <div class="game-map">
+            <div class="map-cell building">🏢<br>数据中心</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell clue">💾<br>线索点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell clue">🔍<br>线索点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell evidence">📁<br>证据点</div>
+
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell start">🎮<br>起点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell skill">🌐<br>技能点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell skill">💻<br>技能点</div>
+            <div class="map-cell road">⬛</div>
+
+            <div class="map-cell building">🏙️<br>中央广场</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell crisis">⚠️<br>危机点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell building">🏰<br>豪华别墅</div>
+
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell skill">🌐<br>技能点</div>
+            <div class="map-cell skill">💻<br>技能点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell start">🎮<br>起点</div>
+            <div class="map-cell crisis">⚠️<br>危机点</div>
+            <div class="map-cell road">⬛</div>
+
+            <div class="map-cell evidence">📁<br>证据点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell clue">🔍<br>线索点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell clue">💾<br>线索点</div>
+
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell crisis">⚠️<br>危机点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell evidence">📁<br>证据点</div>
+            <div class="map-cell skill">🌐<br>技能点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell clue">🔍<br>线索点</div>
+
+            <div class="map-cell building">🕳️<br>地下基地</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell start">🎮<br>起点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell skill">💻<br>技能点</div>
+            <div class="map-cell road">⬛</div>
+            <div class="map-cell building">🏢<br>数据中心</div>
+        </div>
+    </div>
+
+    <!-- 线索卡 -->
+    <div class="section">
+        <div class="section-title">🔍 线索卡 (30张)</div>
+        <div class="cards-container">
+            <div class="card clue-card">
+                <div class="card-icon">🌐</div>
+                <div class="card-name">IP地址</div>
+                <div class="card-desc">追踪黑客位置</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">💰</div>
+                <div class="card-name">交易记录</div>
+                <div class="card-desc">发现资金流向</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">📹</div>
+                <div class="card-name">监控录像</div>
+                <div class="card-desc">确认嫌疑人行踪</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">🔐</div>
+                <div class="card-name">加密文件</div>
+                <div class="card-desc">需要破解密码</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">💬</div>
+                <div class="card-name">内部消息</div>
+                <div class="card-desc">了解组织内部</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">📧</div>
+                <div class="card-name">邮件记录</div>
+                <div class="card-desc">发现通信痕迹</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">📱</div>
+                <div class="card-name">通话记录</div>
+                <div class="card-desc">追踪联系人</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">💳</div>
+                <div class="card-name">支付凭证</div>
+                <div class="card-desc">确认资金去向</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">🗂️</div>
+                <div class="card-name">档案文件</div>
+                <div class="card-desc">了解背景信息</div>
+            </div>
+            <div class="card clue-card">
+                <div class="card-icon">🖼️</div>
+                <div class="card-name">现场照片</div>
+                <div class="card-desc">确认犯罪现场</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #7f8c8d;">（打印时请复制此卡片，每个类型打印3张，共30张）</p>
+    </div>
+
+    <!-- 技能卡 -->
+    <div class="section">
+        <div class="section-title">💻 技能卡 (20张)</div>
+        <div class="cards-container">
+            <div class="card skill-card">
+                <div class="card-icon">💻</div>
+                <div class="card-name">黑客入侵</div>
+                <div class="card-desc">查看并移除1张危机卡</div>
+            </div>
+            <div class="card skill-card">
+                <div class="card-icon">📊</div>
+                <div class="card-name">数据分析</div>
+                <div class="card-desc">额外获得1条线索</div>
+            </div>
+            <div class="card skill-card">
+                <div class="card-icon">🔓</div>
+                <div class="card-name">密码破解</div>
+                <div class="card-desc">解锁加密文件</div>
+            </div>
+            <div class="card skill-card">
+                <div class="card-icon">📍</div>
+                <div class="card-name">追踪定位</div>
+                <div class="card-desc">直接移动到任意位置</div>
+            </div>
+            <div class="card skill-card">
+                <div class="card-icon">🎭</div>
+                <div class="card-name">伪装潜入</div>
+                <div class="card-desc">本回合免疫危机效果</div>
+            </div>
+            <div class="card skill-card">
+                <div class="card-icon">🔍</div>
+                <div class="card-name">深度搜索</div>
+                <div class="card-desc">查看牌库顶3张牌</div>
+            </div>
+            <div class="card skill-card">
+                <div class="card-icon">🛡️</div>
+                <div class="card-name">防火墙</div>
+                <div class="card-desc">保护所有玩家免受危机</div>
+            </div>
+            <div class="card skill-card">
+                <div class="card-icon">⚡</div>
+                <div class="card-name">快速响应</div>
+                <div class="card-desc">本回合额外行动1次</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #7f8c8d;">（打印时请复制此卡片，每个类型打印2-3张，共20张）</p>
+    </div>
+
+    <!-- 危机卡 -->
+    <div class="section">
+        <div class="section-title">⚠️ 危机卡 (15张)</div>
+        <div class="cards-container">
+            <div class="card crisis-card">
+                <div class="card-icon">🛡️</div>
+                <div class="card-name">系统防火墙</div>
+                <div class="card-desc">所有玩家本回合无法移动</div>
+            </div>
+            <div class="card crisis-card">
+                <div class="card-icon">💾</div>
+                <div class="card-name">数据损坏</div>
+                <div class="card-desc">随机丢失1条线索</div>
+            </div>
+            <div class="card crisis-card">
+                <div class="card-icon">👁️</div>
+                <div class="card-name">身份暴露</div>
+                <div class="card-desc">犯罪倒计时-2</div>
+            </div>
+            <div class="card crisis-card">
+                <div class="card-icon">⚡</div>
+                <div class="card-name">黑客反击</div>
+                <div class="card-desc">失去1张技能卡</div>
+            </div>
+            <div class="card crisis-card">
+                <div class="card-icon">🔌</div>
+                <div class="card-name">电力中断</div>
+                <div class="card-desc">本回合无法使用技能</div>
+            </div>
+            <div class="card crisis-card">
+                <div class="card-icon">🚨</div>
+                <div class="card-name">警报触发</div>
+                <div class="card-desc">所有玩家后退2步</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #7f8c8d;">（打印时请复制此卡片，每个类型打印2-3张，共15张）</p>
+    </div>
+
+    <!-- 证据卡 -->
+    <div class="section">
+        <div class="section-title">📁 证据卡 (10张)</div>
+        <div class="cards-container">
+            <div class="card evidence-card">
+                <div class="card-icon">📋</div>
+                <div class="card-name">犯罪计划书</div>
+                <div class="card-desc">可以直接推理出真相</div>
+            </div>
+            <div class="card evidence-card">
+                <div class="card-icon">💸</div>
+                <div class="card-name">资金流向图</div>
+                <div class="card-desc">所有线索效果翻倍</div>
+            </div>
+            <div class="card evidence-card">
+                <div class="card-icon">👥</div>
+                <div class="card-name">内部人员名单</div>
+                <div class="card-desc">查看危机卡堆顶3张</div>
+            </div>
+            <div class="card evidence-card">
+                <div class="card-icon">📸</div>
+                <div class="card-name">幕后黑手照片</div>
+                <div class="card-desc">犯罪倒计时暂停2回合</div>
+            </div>
+            <div class="card evidence-card">
+                <div class="card-icon">🔑</div>
+                <div class="card-name">主密码</div>
+                <div class="card-desc">解锁所有加密文件</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #7f8c8d;">（打印时请复制此卡片，每个类型打印2张，共10张）</p>
+    </div>
+
+    <!-- 玩家棋子 -->
+    <div class="section">
+        <div class="section-title">🎮 玩家棋子 (5个)</div>
+        <div class="pieces-container">
+            <div class="piece p1">1</div>
+            <div class="piece p2">2</div>
+            <div class="piece p3">3</div>
+            <div class="piece p4">4</div>
+            <div class="piece p5">5</div>
+        </div>
+        <p style="text-align: center; color: #7f8c8d;">打印后裁剪，建议使用卡纸增加耐用性</p>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; color: #7f8c8d;">
+        <p>🕵️ 虚拟侦探社 - 合作破案，阻止犯罪！</p>
+        <p>打印日期：2026-06-16</p>
+    </div>
+</body>
+</html>
