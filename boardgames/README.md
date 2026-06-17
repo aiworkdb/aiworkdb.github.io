@@ -82,6 +82,7 @@ boardgames/
 | [怪兽守护者](category/cooperative/kaiju-defenders/README.md) | 合作 | 2-4人 | 45-60分钟 | 中等 |
 | [怪物厨师](category/cooperative/monster-chef/README.md) | 合作 | 2-4人 | 45-75分钟 | 中等 |
 | [虚拟侦探社](category/cooperative/virtual-detective/README.md) | 合作 | 2-5人 | 45-70分钟 | 中等 |
+| [女巫的花园](category/strategy/witches-garden/README.md) | 策略 | 2-4人 | 45-60分钟 | 中等 |
 
 ## 添加新桌游
 
