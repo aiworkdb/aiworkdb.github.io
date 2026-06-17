@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>女巫的花园 - 打印道具</title>
+<style>
+    @media print {
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .print-hint { display: none !important; }
+        .page-break { page-break-before: always; }
+        body { margin: 0; padding: 0; }
+        .card-grid { gap: 4px !important; }
+    }
+    body {
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        background: #f5f0ff;
+        padding: 20px;
+        color: #333;
+    }
+    .print-hint {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    .print-hint strong { color: #856404; }
+    .section-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 30px 0 15px 0;
+        padding: 8px 16px;
+        background: linear-gradient(90deg, #6a3093, #a044ff);
+        color: white;
+        border-radius: 6px;
+    }
+    .page-break { height: 0; }
+    /* 游戏地图样式 */
+    .game-map {
+        background: #e8f5e9;
+        border: 3px solid #4caf50;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        text-align: center;
+    }
+    .map-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        max-width: 600px;
+        margin: 15px auto;
+    }
+    .map-cell {
+        border: 2px solid #795548;
+        border-radius: 8px;
+        padding: 15px 8px;
+        font-size: 13px;
+        font-weight: bold;
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .map-cell .emoji { font-size: 28px; margin-bottom: 4px; }
+    .cell-shop { background: #e3f2fd; }
+    .cell-order { background: #fff8e1; }
+    .cell-guild { background: #f3e5f5; }
+    .cell-farm { background: #e8f5e9; }
+    .cell-event { background: #fffde7; }
+    .cell-market { background: #fff3e0; }
+    .cell-home { background: #fce4ec; }
+    .cell-festival { background: linear-gradient(135deg, #fce4ec, #e8eaf6, #e0f7fa); }
+    .cell-forest { background: #e8f5e9; }
+    /* 花园板样式 */
+    .garden-board {
+        background: #e8f5e9;
+        border: 3px solid #4caf50;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        display: inline-block;
+    }
+    .garden-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+    }
+    .garden-cell {
+        width: 65px;
+        height: 65px;
+        border: 2px dashed #81c784;
+        border-radius: 6px;
+        background: #f1f8e9;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+    }
+    .garden-header {
+        display: grid;
+        grid-template-columns: 30px repeat(5, 1fr);
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+    .garden-header-label {
+        text-align: center;
+        font-weight: bold;
+        font-size: 13px;
+        color: #4caf50;
+    }
+    .garden-row-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 13px;
+        color: #4caf50;
+    }
+    /* 卡牌通用样式 */
+    .card-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 15px 0;
+        justify-content: flex-start;
+    }
+    .card {
+        border: 2px solid #333;
+        border-radius: 8px;
+        width: 160px;
+        min-height: 100px;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 12px;
+        box-shadow: 1px 2px 4px rgba(0,0,0,0.15);
+        page-break-inside: avoid;
+    }
+    .card-title {
+        font-weight: bold;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    .card-emoji { font-size: 32px; margin: 4px 0; }
+    .card-desc { font-size: 10px; color: #555; margin-top: 4px; }
+    .card-type {
+        font-size: 9px;
+        padding: 1px 6px;
+        border-radius: 8px;
+        background: rgba(0,0,0,0.1);
+        margin-top: 4px;
+    }
+    /* 卡牌颜色类型 */
+    .card-seed { background: #e8f5e9; border-color: #4caf50; }
+    .card-ingredient { background: #fff3e0; border-color: #ff9800; }
+    .card-tool { background: #e3f2fd; border-color: #2196f3; }
+    .card-order { background: #fce4ec; border-color: #e91e63; }
+    .card-event { background: #fff8e1; border-color: #ffc107; }
+    /* 棋子样式 */
+    .player-pieces {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin: 15px 0;
+    }
+    .piece {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 3px solid #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    .piece-red { background: #e53935; }
+    .piece-blue { background: #1e88e5; }
+    .piece-green { background: #43a047; }
+    .piece-purple { background: #8e24a; }
+    /* 标记物样式 */
+    .tokens {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 15px 0;
+    }
+    .token {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        border: 2px solid #333;
+    }
+    .token-rep { background: #ffd54f; color: #e65100; }
+    .token-coin { background: #fff176; color: #f57f17; border: 2px dashed #f9a825; }
+    /* 打印说明标签 */
+    .print-label {
+        font-size: 10px;
+        color: #999;
+        text-align: center;
+        margin: 5px 0 10px 0;
+        font-style: italic;
+    }
+</style>
+</head>
+<body>
+
+<!-- 打印提示（打印时自动隐藏） -->
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（Chrome：更多设置→背景图形）</li>
+        <li>卡牌建议使用<strong>卡纸（180g以上）</strong>打印，增加耐用性</li>
+        <li>地图和花园板建议使用<strong>普通A4纸</strong>打印</li>
+        <li>打印后请裁剪卡牌，并可使用塑封机延长使用寿命</li>
+    </ul>
+</div>
+
+<!-- 页面标题 -->
+<h1 style="text-align:center; color:#6a3093; margin-bottom:5px;">🧙 女巫的花园 — 打印道具集</h1>
+<p style="text-align:center; color:#888; margin-bottom:30px;">Witch's Garden — Printable Game Components</p>
+
+<!-- ==================== 游戏地图 ==================== -->
+<div class="section-title">🗺️ 游戏地图（公共村庄区）</div>
+<p class="print-label">建议用A4纸打印1份，放在桌面中央</p>
+<div class="game-map">
+    <div style="font-weight:bold; margin-bottom:10px; font-size:16px;">魔法村庄 — 公共行动区（共12格，顺时针/逆时针移动）</div>
+    <div class="map-grid">
+        <div class="map-cell cell-shop"><div class="emoji">🏪</div>魔法商店<br><small>买种子/工具</small></div>
+        <div class="map-cell cell-order"><div class="emoji">📋</div>订单公告栏<br><small>接取委托</small></div>
+        <div class="map-cell cell-guild"><div class="emoji">🏛️</div>女巫公会<br><small>提交订单得声誉</small></div>
+        <div class="map-cell cell-farm"><div class="emoji">🌾</div>农田区<br><small>免费得种子</small></div>
+        <div class="map-cell cell-event"><div class="emoji">⚡</div>事件格<br><small>抽取事件卡</small></div>
+        <div class="map-cell cell-market"><div class="emoji">💰</div>市场区<br><small>出售原料换金币</small></div>
+        <div class="map-cell cell-home"><div class="emoji">🏠</div>玩家家<br><small>安全休息点</small></div>
+        <div class="map-cell cell-festival"><div class="emoji">🎪</div>节日广场<br><small>全员得工具卡</small></div>
+        <div class="map-cell cell-forest"><div class="emoji">🌳</div>魔法森林<br><small>买稀有种子</small></div>
+    </div>
+    <div style="margin-top:15px; font-size:13px; color:#555;">
+        📌 地图共9个功能格（实际游戏可用12格环绕排列，空白格为道路格⬛可安全经过）
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 个人花园板 ==================== -->
+<div class="section-title">🌱 个人花园板（每人1张）</div>
+<p class="print-label">建议用A4纸打印，每位玩家1张；可塑封重复用</p>
+<div style="text-align:center;">
+    <div class="garden-board">
+        <div style="font-weight:bold; margin-bottom:10px; font-size:15px;">🌸 我的魔法花园 🌸</div>
+        <div class="garden-header">
+            <div></div>
+            <div class="garden-header-label">A</div>
+            <div class="garden-header-label">B</div>
+            <div class="garden-header-label">C</div>
+            <div class="garden-header-label">D</div>
+            <div class="garden-header-label">E</div>
+        </div>
+        <div style="display:grid; grid-template-columns: 30px 1fr; gap:4px;">
+            <div class="garden-row-label">1</div>
+            <div class="garden-grid">
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+            </div>
+            <div class="garden-row-label">2</div>
+            <div class="garden-grid">
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+            </div>
+            <div class="garden-row-label">3</div>
+            <div class="garden-grid">
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+            </div>
+            <div class="garden-row-label">4</div>
+            <div class="garden-grid">
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+            </div>
+            <div class="garden-row-label">5</div>
+            <div class="garden-grid">
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+                <div class="garden-cell">[ ]</div>
+            </div>
+        </div>
+        <div style="margin-top:10px; font-size:11px; color:#777;">用铅笔在格中写下植物名称和成熟倒计时，收获后擦除</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 种子卡 ==================== -->
+<div class="section-title">🌱 种子卡（种植用）</div>
+<p class="print-label">建议用卡纸打印，每张剪下；共4种，各打印3-5张</p>
+<div class="card-grid">
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🥕</div>
+        <div class="card-title">胡萝卜种子</div>
+        <div>成熟时间：2回合</div>
+        <div class="card-desc">收获得🥕胡萝卜×1<br>可在农田区免费获得</div>
+    </div>
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🥕</div>
+        <div class="card-title">胡萝卜种子</div>
+        <div>成熟时间：2回合</div>
+        <div class="card-desc">收获得🥕胡萝卜×1<br>可在农田区免费获得</div>
+    </div>
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🥕</div>
+        <div class="card-title">胡萝卜种子</div>
+        <div>成熟时间：2回合</div>
+        <div class="card-desc">收获得🥕胡萝卜×1<br>可在农田区免费获得</div>
+    </div>
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🌙</div>
+        <div class="card-title">月光草种子</div>
+        <div>成熟时间：3回合</div>
+        <div class="card-desc">收获得🌙月光草×1<br>商店花2金币购买</div>
+    </div>
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🌙</div>
+        <div class="card-title">月光草种子</div>
+        <div>成熟时间：3回合</div>
+        <div class="card-desc">收获得🌙月光草×1<br>商店花2金币购买</div>
+    </div>
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🌶️</div>
+        <div class="card-title">龙焰椒种子</div>
+        <div>成熟时间：4回合</div>
+        <div class="card-desc">收获得🌶️龙焰椒×1<br>商店花3金币购买</div>
+    </div>
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🌶️</div>
+        <div class="card-title">龙焰椒种子</div>
+        <div>成熟时间：4回合</div>
+        <div class="card-desc">收获得🌶️龙焰椒×1<br>商店花3金币购买</div>
+    </div>
+    <div class="card card-seed">
+        <div class="card-type">种子卡</div>
+        <div class="card-emoji">🧚</div>
+        <div class="card-title">精灵花种子</div>
+        <div>成熟时间：5回合</div>
+        <div class="card-desc">收获得🧚精灵花粉×1<br>魔法森林花2金币</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 原料卡 ==================== -->
+<div class="section-title">🧪 原料卡（酿造用）</div>
+<p class="print-label">建议用卡纸打印；收获植物后获得，用于完成订单</p>
+<div class="card-grid">
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🥕</div>
+        <div class="card-title">胡萝卜</div>
+        <div style="font-size:20px; color:#e65100;">价值：★</div>
+        <div class="card-desc">基础原料<br>用于青铜订单</div>
+    </div>
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🥕</div>
+        <div class="card-title">胡萝卜</div>
+        <div style="font-size:20px; color:#e65100;">价值：★</div>
+        <div class="card-desc">基础原料<br>用于青铜订单</div>
+    </div>
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🥕</div>
+        <div class="card-title">胡萝卜</div>
+        <div style="font-size:20px; color:#e65100;">价值：★</div>
+        <div class="card-desc">基础原料<br>用于青铜订单</div>
+    </div>
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🌙</div>
+        <div class="card-title">月光草</div>
+        <div style="font-size:20px; color:#1565c0;">价值：★★</div>
+        <div class="card-desc">中级原料<br>用于白银订单</div>
+    </div>
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🌙</div>
+        <div class="card-title">月光草</div>
+        <div style="font-size:20px; color:#1565c0;">价值：★★</div>
+        <div class="card-desc">中级原料<br>用于白银订单</div>
+    </div>
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🌶️</div>
+        <div class="card-title">龙焰椒</div>
+        <div style="font-size:20px; color:#b71c1c;">价值：★★★</div>
+        <div class="card-desc">高级原料<br>用于黄金订单</div>
+    </div>
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🌶️</div>
+        <div class="card-title">龙焰椒</div>
+        <div style="font-size:20px; color:#b71c1c;">价值：★★★</div>
+        <div class="card-desc">高级原料<br>用于黄金订单</div>
+    </div>
+    <div class="card card-ingredient">
+        <div class="card-type">原料卡</div>
+        <div class="card-emoji">🧚</div>
+        <div class="card-title">精灵花粉</div>
+        <div style="font-size:20px; color:#6a1b9a;">价值：★★★★</div>
+        <div class="card-desc">稀有原料<br>用于传说订单</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 工具卡 ==================== -->
+<div class="section-title">🔧 工具卡（辅助道具）</div>
+<p class="print-label">建议用卡纸打印；可在自己回合任意时刻使用</p>
+<div class="card-grid">
+    <div class="card card-tool">
+        <div class="card-type">工具卡</div>
+        <div class="card-emoji">💧</div>
+        <div class="card-title">魔法水壶</div>
+        <div class="card-desc">使1格植物<br><strong>立即成熟</strong><br>（无论还需几回合）<br><br>🔄 限用1次</div>
+    </div>
+    <div class="card card-tool">
+        <div class="card-type">工具卡</div>
+        <div class="card-emoji">💧</div>
+        <div class="card-title">魔法水壶</div>
+        <div class="card-desc">使1格植物<br><strong>立即成熟</strong><br>（无论还需几回合）<br><br>🔄 限用1次</div>
+    </div>
+    <div class="card card-tool">
+        <div class="card-type">工具卡</div>
+        <div class="card-emoji">✨</div>
+        <div class="card-title">加速肥料</div>
+        <div class="card-desc">使1格植物的<br>成熟时间<br><strong>-1回合</strong><br><br>🔄 限用1次</div>
+    </div>
+    <div class="card card-tool">
+        <div class="card-type">工具卡</div>
+        <div class="card-emoji">✨</div>
+        <div class="card-title">加速肥料</div>
+        <div class="card-desc">使1格植物的<br>成熟时间<br><strong>-1回合</strong><br><br>🔄 限用1次</div>
+    </div>
+    <div class="card card-tool">
+        <div class="card-type">工具卡</div>
+        <div class="card-emoji">🧚</div>
+        <div class="card-title">守护精灵</div>
+        <div class="card-desc">保护1格植物<br>下次<strong>事件卡</strong>效果<br>对该格<strong>无效</strong><br><br>🔄 限用1次</div>
+    </div>
+    <div class="card card-tool">
+        <div class="card-type">工具卡</div>
+        <div class="card-emoji">🧚</div>
+        <div class="card-title">守护精灵</div>
+        <div class="card-desc">保护1格植物<br>下次<strong>事件卡</strong>效果<br>对该格<strong>无效</strong><br><br>🔄 限用1次</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 订单卡 ==================== -->
+<div class="section-title">📋 订单卡（村民委托）</div>
+<p class="print-label">建议用卡纸打印；在订单公告栏抽取，完成后提交得声誉</p>
+<div class="card-grid">
+    <div class="card card-order">
+        <div class="card-type">🥉 青铜订单</div>
+        <div class="card-emoji">🥕🥕</div>
+        <div class="card-title">胡萝卜蛋糕</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🥕×2</div>
+        <div style="color:#e65100; font-weight:bold;">奖励：⭐×1 🪙×2</div>
+    </div>
+    <div class="card card-order">
+        <div class="card-type">🥉 青铜订单</div>
+        <div class="card-emoji">🥕🥕</div>
+        <div class="card-title">胡萝卜蛋糕</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🥕×2</div>
+        <div style="color:#e65100; font-weight:bold;">奖励：⭐×1 🪙×2</div>
+    </div>
+    <div class="card card-order">
+        <div class="card-type">🥈 白银订单</div>
+        <div class="card-emoji">🌙🌙</div>
+        <div class="card-title">月光药剂</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🌙×2</div>
+        <div style="color:#1565c0; font-weight:bold;">奖励：⭐×2 🪙×3</div>
+    </div>
+    <div class="card card-order">
+        <div class="card-type">🥈 白银订单</div>
+        <div class="card-emoji">🌙🌙</div>
+        <div class="card-title">月光药剂</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🌙×2</div>
+        <div style="color:#1565c0; font-weight:bold;">奖励：⭐×2 🪙×3</div>
+    </div>
+    <div class="card card-order">
+        <div class="card-type">🥇 黄金订单</div>
+        <div class="card-emoji">🌶️🌶️</div>
+        <div class="card-title">火焰护符</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🌶️×2</div>
+        <div style="color:#b71c1c; font-weight:bold;">奖励：⭐×3 🪙×5</div>
+    </div>
+    <div class="card card-order">
+        <div class="card-type">💎 传说订单</div>
+        <div class="card-emoji">🧚🌶️</div>
+        <div class="card-title">精灵祝福</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🧚×1 🌶️×1</div>
+        <div style="color:#6a1b9a; font-weight:bold;">奖励：⭐×5 🪙×8</div>
+    </div>
+    <div class="card card-order">
+        <div class="card-type">💎 传说订单</div>
+        <div class="card-emoji">🧚🌙</div>
+        <div class="card-title">自然和谐</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🧚×1 🌙×2</div>
+        <div style="color:#6a1b9a; font-weight:bold;">奖励：⭐×5 🪙×8</div>
+    </div>
+    <div class="card card-order">
+        <div class="card-type">🥇 黄金订单</div>
+        <div class="card-emoji">🌙🌙🌙</div>
+        <div class="card-title">智慧药剂</div>
+        <div style="font-size:13px; margin:4px 0;">需要：🌙×3</div>
+        <div style="color:#b71c1c; font-weight:bold;">奖励：⭐×3 🪙×5</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 事件卡 ==================== -->
+<div class="section-title">⚡ 事件卡（随机事件）</div>
+<p class="print-label">建议用卡纸打印；停留在事件格时抽取1张，立即执行</p>
+<div class="card-grid">
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">🌧️</div>
+        <div class="card-title">丰收之雨</div>
+        <div class="card-desc"><strong>所有玩家：</strong><br>花园中每格植物<br>成熟时间 <strong>-1</strong><br>（最少为0，即可收获）</div>
+    </div>
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">🐛</div>
+        <div class="card-title">害虫来袭</div>
+        <div class="card-desc"><strong>触发者：</strong><br>选择自己花园中<br>1格植物，<br>摧毁它（回收种子）</div>
+    </div>
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">🌪️</div>
+        <div class="card-title">魔法风旋</div>
+        <div class="card-desc"><strong>触发者：</strong><br>可<strong>免费移动</strong><br>至任意格子<br>（不消耗骰子点数）</div>
+    </div>
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">🧚</div>
+        <div class="card-title">精灵的礼物</div>
+        <div class="card-desc"><strong>触发者：</strong><br>免费获得<br>1张<strong>稀有种子</strong><br>（龙焰椒或精灵花）</div>
+    </div>
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">⛈️</div>
+        <div class="card-title">风暴破坏</div>
+        <div class="card-desc"><strong>所有玩家：</strong><br>如有<strong>守护精灵</strong>保护<br>则无效；否则<br>摧毁1格植物</div>
+    </div>
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">🧞</div>
+        <div class="card-title">宝藏商人</div>
+        <div class="card-desc"><strong>触发者：</strong><br>可以<strong>半价</strong><br>购买1张工具卡<br>（商店原价的一半）</div>
+    </div>
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">🌈</div>
+        <div class="card-title">彩虹祝福</div>
+        <div class="card-desc"><strong>所有玩家：</strong><br>每位玩家获得<br>1张<strong>随机原料卡</strong><br>（从供应堆抽取）</div>
+    </div>
+    <div class="card card-event">
+        <div class="card-type">事件卡</div>
+        <div class="card-emoji">🦊</div>
+        <div class="card-title">狡猾狐狸</div>
+        <div class="card-desc"><strong>触发者：</strong><br>选择1位其他玩家<br>随机<strong>偷取</strong>1张<br>手牌（不公示）</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 玩家棋子 ==================== -->
+<div class="section-title">🧍 玩家棋子</div>
+<p class="print-label">建议用卡纸打印后剪下，或用硬币/乐高人偶代替</p>
+<div class="player-pieces">
+    <div class="piece piece-red">🔴</div>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-weight:bold;">红方玩家</div>
+        <div style="font-size:12px; color:#888;">用红色棋子</div>
+    </div>
+    <div class="piece piece-blue">🔵</div>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-weight:bold;">蓝方玩家</div>
+        <div style="font-size:12px; color:#888;">用蓝色棋子</div>
+    </div>
+    <div class="piece piece-green">🟢</div>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-weight:bold;">绿方玩家</div>
+        <div style="font-size:12px; color:#888;">用绿色棋子</div>
+    </div>
+    <div class="piece piece-purple">🟣</div>
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-weight:bold;">紫方玩家</div>
+        <div style="font-size:12px; color:#888;">用紫色棋子</div>
+    </div>
+</div>
+
+<!-- ==================== 标记物 ==================== -->
+<div class="page-break"></div>
+<div class="section-title">⭐ 标记物（声誉与金币）</div>
+<p class="print-label">建议用卡纸打印后剪下，或用硬币/筹码代替</p>
+<div style="margin:15px 0;">
+    <h3 style="color:#e65100;">声誉标记 ⭐（先到20个者获胜）</h3>
+    <div class="tokens">
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+        <div class="token token-rep">⭐</div>
+    </div>
+    <p style="font-size:12px; color:#888;">共需准备20个声誉标记，可用黄色筹码/硬币代替</p>
+</div>
+<div style="margin:15px 0;">
+    <h3 style="color:#f57f17;">金币标记 🪙（游戏内货币）</h3>
+    <div class="tokens">
+        <div class="token token-coin">🪙</div>
+        <div class="token token-coin">🪙</div>
+        <div class="token token-coin">🪙</div>
+        <div class="token token-coin">🪙</div>
+        <div class="token token-coin">🪙</div>
+        <div class="token token-coin">🪙</div>
+        <div class="token token-coin">🪙</div>
+        <div class="token token-coin">🪙</div>
+    </div>
+    <p style="font-size:12px; color:#888;">共需准备30个金币标记，可用1元硬币/筹码代替</p>
+</div>
+
+<!-- ==================== 价格参考表 ==================== -->
+<div class="page-break"></div>
+<div class="section-title">💰 价格参考表（魔法商店）</div>
+<p class="print-label">此页不打印，仅供主持游戏时参考；或截图保存至手机</p>
+<table style="width:100%; border-collapse:collapse; margin:15px 0; font-size:14px;">
+    <tr style="background:#6a3093; color:white;">
+        <th style="padding:8px; border:1px solid #999;">物品</th>
+        <th style="padding:8px; border:1px solid #999;">价格</th>
+        <th style="padding:8px; border:1px solid #999;">说明</th>
+    </tr>
+    <tr>
+        <td style="padding:8px; border:1px solid #999;">🥕 胡萝卜种子</td>
+        <td style="padding:8px; border:1px solid #999; text-align:center;">1 🪙</td>
+        <td style="padding:8px; border:1px solid #999;">成熟2回合，收获得🥕×1</td>
+    </tr>
+    <tr style="background:#f9f9f9;">
+        <td style="padding:8px; border:1px solid #999;">🌙 月光草种子</td>
+        <td style="padding:8px; border:1px solid #999; text-align:center;">2 🪙</td>
+        <td style="padding:8px; border:1px solid #999;">成熟3回合，收获得🌙×1</td>
+    </tr>
+    <tr>
+        <td style="padding:8px; border:1px solid #999;">🌶️ 龙焰椒种子</td>
+        <td style="padding:8px; border:1px solid #999; text-align:center;">3 🪙</td>
+        <td style="padding:8px; border:1px solid #999;">成熟4回合，收获得🌶️×1</td>
+    </tr>
+    <tr style="background:#f9f9f9;">
+        <td style="padding:8px; border:1px solid #999;">🧚 精灵花种子</td>
+        <td style="padding:8px; border:1px solid #999; text-align:center;">2 🪙<br><small>（仅在魔法森林）</small></td>
+        <td style="padding:8px; border:1px solid #999;">成熟5回合，收获得🧚×1</td>
+    </tr>
+    <tr>
+        <td style="padding:8px; border:1px solid #999;">💧 魔法水壶</td>
+        <td style="padding:8px; border:1px solid #999; text-align:center;">2 🪙</td>
+        <td style="padding:8px; border:1px solid #999;">使1格植物立即成熟</td>
+    </tr>
+    <tr style="background:#f9f9f9;">
+        <td style="padding:8px; border:1px solid #999;">✨ 加速肥料</td>
+        <td style="padding:8px; border:1px solid #999; text-align:center;">2 🪙</td>
+        <td style="padding:8px; border:1px solid #999;">使1格植物成熟时间-1</td>
+    </tr>
+    <tr>
+        <td style="padding:8px; border:1px solid #999;">🧚 守护精灵</td>
+        <td style="padding:8px; border:1px solid #999; text-align:center;">3 🪙</td>
+        <td style="padding:8px; border:1px solid #999;">保护1格植物免受害事件</td>
+    </tr>
+</table>
+
+<div style="margin-top:30px; text-align:center; color:#999; font-size:12px;">
+    <p>🧙 女巫的花园 — Witch's Garden</p>
+    <p>打印完毕！祝游戏愉快 🎉</p>
+</div>
+
+</body>
+</html>
