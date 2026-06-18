@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际走私商 - 打印道具</title>
+    <style>
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .print-hint {
+                display: none !important;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .cards-container {
+                margin: 0;
+                padding: 5mm;
+            }
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .print-hint strong {
+            color: #856404;
+        }
+        
+        .print-hint ul {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 30px 0 20px 0;
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+        }
+        
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            width: 63mm;
+            height: 88mm;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: white;
+            page-break-inside: avoid;
+        }
+        
+        /* 货物卡样式 */
+        .card-goods {
+            border: 3px solid #28a745;
+        }
+        
+        .card-goods .card-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .card-goods .card-icon {
+            font-size: 48px;
+            text-align: center;
+            padding: 15px 0;
+        }
+        
+        .card-goods .card-body {
+            padding: 10px;
+            flex-grow: 1;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .card-goods .card-value {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 5px;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #155724;
+            margin: 5px 10px;
+        }
+        
+        .card-goods .card-footer {
+            background: #f8f9fa;
+            padding: 8px;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* 飞船卡样式 */
+        .card-ship {
+            border: 3px solid #007bff;
+        }
+        
+        .card-ship .card-header {
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .card-ship .card-icon {
+            font-size: 48px;
+            text-align: center;
+            padding: 15px 0;
+        }
+        
+        .card-ship .card-body {
+            padding: 10px;
+            flex-grow: 1;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .card-ship .card-slots {
+            background: #cce5ff;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: #004085;
+            margin: 5px 10px;
+        }
+        
+        .card-ship .card-footer {
+            background: #f8f9fa;
+            padding: 8px;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* 事件卡样式 */
+        .card-event {
+            border: 3px solid #dc3545;
+        }
+        
+        .card-event .card-header {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .card-event .card-icon {
+            font-size: 48px;
+            text-align: center;
+            padding: 15px 0;
+        }
+        
+        .card-event .card-body {
+            padding: 10px;
+            flex-grow: 1;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .card-event .card-effect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-radius: 5px;
+            padding: 8px;
+            margin: 5px 10px;
+            font-size: 12px;
+            color: #721c24;
+        }
+        
+        .card-event .card-footer {
+            background: #f8f9fa;
+            padding: 8px;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* 行动卡样式 */
+        .card-action {
+            border: 3px solid #6f42c1;
+        }
+        
+        .card-action .card-header {
+            background: linear-gradient(135deg, #6f42c1, #e83e8c);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .card-action .card-icon {
+            font-size: 48px;
+            text-align: center;
+            padding: 15px 0;
+        }
+        
+        .card-action .card-body {
+            padding: 10px;
+            flex-grow: 1;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .card-action .card-effect {
+            background: #e2d9f3;
+            border: 2px solid #6f42c1;
+            border-radius: 5px;
+            padding: 8px;
+            margin: 5px 10px;
+            font-size: 12px;
+            color: #3a1d5e;
+        }
+        
+        .card-action .card-footer {
+            background: #f8f9fa;
+            padding: 8px;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* 角色卡样式 */
+        .card-role {
+            border: 3px solid #fd7e14;
+        }
+        
+        .card-role .card-header {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .card-role .card-icon {
+            font-size: 48px;
+            text-align: center;
+            padding: 15px 0;
+        }
+        
+        .card-role .card-body {
+            padding: 10px;
+            flex-grow: 1;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .card-role .card-skill {
+            background: #fff3cd;
+            border: 2px solid #fd7e14;
+            border-radius: 5px;
+            padding: 8px;
+            margin: 5px 10px;
+            font-size: 12px;
+            color: #856404;
+        }
+        
+        .card-role .card-footer {
+            background: #f8f9fa;
+            padding: 8px;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .card-desc {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <strong>⚠️ 重要打印提示：</strong>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌建议使用<strong>卡纸（200g）</strong>打印，增加耐用性</li>
+            <li>打印后沿边框裁剪，可考虑塑封</li>
+            <li>建议使用彩色打印，卡牌效果更佳</li>
+        </ul>
+    </div>
+    
+    <div class="section-title">📦 货物卡（共60张，建议打印30-60张）</div>
+    <div class="cards-container">
+        <!-- 外星钻石 x10 -->
+        <div class="card card-goods">
+            <div class="card-header">💎 外星钻石</div>
+            <div class="card-icon">💎</div>
+            <div class="card-body">
+                <div class="card-title">类型：高价值文物</div>
+                <div class="card-desc">来自仙女座星系的稀有钻石，价值连城但极其危险。</div>
+            </div>
+            <div class="card-value">价值：8-12</div>
+            <div class="card-footer">⚠️ 风险：高 | 出售时掷骰子，1-2价值减半</div>
+        </div>
+        
+        <div class="card card-goods">
+            <div class="card-header">💎 外星钻石</div>
+            <div class="card-icon">💎</div>
+            <div class="card-body">
+                <div class="card-title">类型：高价值文物</div>
+                <div class="card-desc">来自仙女座星系的稀有钻石，价值连城但极其危险。</div>
+            </div>
+            <div class="card-value">价值：8-12</div>
+            <div class="card-footer">⚠️ 风险：高 | 出售时掷骰子，1-2价值减半</div>
+        </div>
+        
+        <!-- 违禁药剂 x10 -->
+        <div class="card card-goods">
+            <div class="card-header">🧪 违禁药剂</div>
+            <div class="card-icon">🧪</div>
+            <div class="card-body">
+                <div class="card-title">类型：生化制品</div>
+                <div class="card-desc">黑市热销的增强药剂，效果强大但被联邦严令禁止。</div>
+            </div>
+            <div class="card-value">价值：6-10</div>
+            <div class="card-footer">💡 特殊：可当行动卡使用（抵消一次检查）</div>
+        </div>
+        
+        <div class="card card-goods">
+            <div class="card-header">🧪 违禁药剂</div>
+            <div class="card-icon">🧪</div>
+            <div class="card-body">
+                <div class="card-title">类型：生化制品</div>
+                <div class="card-desc">黑市热销的增强药剂，效果强大但被联邦严令禁止。</div>
+            </div>
+            <div class="card-value">价值：6-10</div>
+            <div class="card-footer">💡 特殊：可当行动卡使用（抵消一次检查）</div>
+        </div>
+        
+        <!-- 盗版芯片 x10 -->
+        <div class="card card-goods">
+            <div class="card-header">📱 盗版芯片</div>
+            <div class="card-icon">📱</div>
+            <div class="card-body">
+                <div class="card-title">类型：电子设备</div>
+                <div class="card-desc">破解版的神经网络芯片，需求稳定，风险较低。</div>
+            </div>
+            <div class="card-value">价值：4-7</div>
+            <div class="card-footer">✅ 风险：低 | 适合新手运输</div>
+        </div>
+        
+        <div class="card card-goods">
+            <div class="card-header">📱 盗版芯片</div>
+            <div class="card-icon">📱</div>
+            <div class="card-body">
+                <div class="card-title">类型：电子设备</div>
+                <div class="card-desc">破解版的神经网络芯片，需求稳定，风险较低。</div>
+            </div>
+            <div class="card-value">价值：4-7</div>
+            <div class="card-footer">✅ 风险：低 | 适合新手运输</div>
+        </div>
+        
+        <!-- 外星文物 x5 -->
+        <div class="card card-goods">
+            <div class="card-header">🎨 外星文物</div>
+            <div class="card-icon">🎨</div>
+            <div class="card-body">
+                <div class="card-title">类型：古代遗物</div>
+                <div class="card-desc">远古外星文明的文物，价值极高但被联盟严密监控。</div>
+            </div>
+            <div class="card-value">价值：10-15</div>
+            <div class="card-footer">⚠️⚠️ 风险：极高 | 被查获直接失去回合</div>
+        </div>
+        
+        <!-- 生化样本 x10 -->
+        <div class="card card-goods">
+            <div class="card-header">⚗️ 生化样本</div>
+            <div class="card-icon">⚗️</div>
+            <div class="card-body">
+                <div class="card-title">类型：科研物资</div>
+                <div class="card-desc">稀有外星生物的基因样本，科研黑市需求旺盛。</div>
+            </div>
+            <div class="card-value">价值：7-11</div>
+            <div class="card-footer">💡 特殊：可以复制一张对手的货物卡</div>
+        </div>
+        
+        <div class="card card-goods">
+            <div class="card-header">⚗️ 生化样本</div>
+            <div class="card-icon">⚗️</div>
+            <div class="card-body">
+                <div class="card-title">类型：科研物资</div>
+                <div class="card-desc">稀有外星生物的基因样本，科研黑市需求旺盛。</div>
+            </div>
+            <div class="card-value">价值：7-11</div>
+            <div class="card-footer">💡 特殊：可以复制一张对手的货物卡</div>
+        </div>
+        
+        <!-- 军用零件 x15 -->
+        <div class="card card-goods">
+            <div class="card-header">🔧 军用零件</div>
+            <div class="card-icon">🔧</div>
+            <div class="card-body">
+                <div class="card-title">类型：军火物资</div>
+                <div class="card-desc">联盟禁用武器的核心零件，利润可观，中等风险。</div>
+            </div>
+            <div class="card-value">价值：5-9</div>
+            <div class="card-footer">⚠️ 风险：中 | 军事星港特供</div>
+        </div>
+        
+        <div class="card card-goods">
+            <div class="card-header">🔧 军用零件</div>
+            <div class="card-icon">🔧</div>
+            <div class="card-body">
+                <div class="card-title">类型：军火物资</div>
+                <div class="card-desc">联盟禁用武器的核心零件，利润可观，中等风险。</div>
+            </div>
+            <div class="card-value">价值：5-9</div>
+            <div class="card-footer">⚠️ 风险：中 | 军事星港特供</div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <div class="section-title">🚀 飞船卡（共20张，每种飞船4张）</div>
+    <div class="cards-container">
+        <!-- 猎鹰号 x4 -->
+        <div class="card card-ship">
+            <div class="card-header">🦅 猎鹰号</div>
+            <div class="card-icon">🦅</div>
+            <div class="card-body">
+                <div class="card-title">特殊能力</div>
+                <div class="card-desc">躲避联盟检查时，判定点数+2（例如需要≥4，实际只需≥2）</div>
+            </div>
+            <div class="card-slots">货物槽：3个</div>
+            <div class="card-footer">适合：新手玩家 | 稳健型策略</div>
+        </div>
+        
+        <div class="card card-ship">
+            <div class="card-header">🦅 猎鹰号</div>
+            <div class="card-icon">🦅</div>
+            <div class="card-body">
+                <div class="card-title">特殊能力</div>
+                <div class="card-desc">躲避联盟检查时，判定点数+2（例如需要≥4，实际只需≥2）</div>
+            </div>
+            <div class="card-slots">货物槽：3个</div>
+            <div class="card-footer">适合：新手玩家 | 稳健型策略</div>
+        </div>
+        
+        <!-- 章鱼号 x4 -->
+        <div class="card card-ship">
+            <div class="card-header">🐙 章鱼号</div>
+            <div class="card-icon">🐙</div>
+            <div class="card-body">
+                <div class="card-title">特殊能力</div>
+                <div class="card-desc">可以携带1个额外货物（比其他飞船多1个货物槽）</div>
+            </div>
+            <div class="card-slots">货物槽：4个</div>
+            <div class="card-footer">适合：老手玩家 | 货物积累型策略</div>
+        </div>
+        
+        <div class="card card-ship">
+            <div class="card-header">🐙 章鱼号</div>
+            <div class="card-icon">🐙</div>
+            <div class="card-body">
+                <div class="card-title">特殊能力</div>
+                <div class="card-desc">可以携带1个额外货物（比其他飞船多1个货物槽）</div>
+            </div>
+            <div class="card-slots">货物槽：4个</div>
+            <div class="card-footer">适合：老手玩家 | 货物积累型策略</div>
+        </div>
+        
+        <!-- 闪电号 x4 -->
+        <div class="card card-ship">
+            <div class="card-header">⚡ 闪电号</div>
+            <div class="card-icon">⚡</div>
+            <div class="card-body">
+                <div class="card-title">特殊能力</div>
+                <div class="card-desc">每回合可以额外行动1次（购买或出售各1次）</div>
+            </div>
+            <div class="card-slots">货物槽：2个</div>
+            <div class="card-footer">适合：激进型玩家 | 快速流转策略</div>
+        </div>
+        
+        <!-- 堡垒号 x4 -->
+        <div class="card card-ship">
+            <div class="card-header">🛡️ 堡垒号</div>
+            <div class="card-icon">🛡️</div>
+            <div class="card-body">
+                <div class="card-title">特殊能力</div>
+                <div class="card-desc">被联盟查获时，可以保留1个货物（随机选择）</div>
+            </div>
+            <div class="card-slots">货物槽：3个</div>
+            <div class="card-footer">适合：保守型玩家 | 防御型策略</div>
+        </div>
+        
+        <!-- 幻影号 x4 -->
+        <div class="card card-ship">
+            <div class="card-header">🎭 幻影号</div>
+            <div class="card-icon">🎭</div>
+            <div class="card-body">
+                <div class="card-title">特殊能力</div>
+                <div class="card-desc">可以查看事件卡堆顶部的1张卡，并决定是否放置到当前事件</div>
+            </div>
+            <div class="card-slots">货物槽：3个</div>
+            <div class="card-footer">适合：策略型玩家 | 信息优势策略</div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <div class="section-title">⚡ 事件卡（共30张）</div>
+    <div class="cards-container">
+        <!-- 联盟巡逻 x5 -->
+        <div class="card card-event">
+            <div class="card-header">🚔 联盟巡逻</div>
+            <div class="card-icon">🚔</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">太空联盟加强巡逻，所有玩家需要进行躲避检定！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家掷骰子，点数≥4或通过</div>
+            <div class="card-footer">💡 应对：使用行动卡或掷骰子≥4</div>
+        </div>
+        
+        <div class="card card-event">
+            <div class="card-header">🚔 联盟巡逻</div>
+            <div class="card-icon">🚔</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">太空联盟加强巡逻，所有玩家需要进行躲避检定！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家掷骰子，点数≥4或通过</div>
+            <div class="card-footer">💡 应对：使用行动卡或掷骰子≥4</div>
+        </div>
+        
+        <!-- 陨石带 x3 -->
+        <div class="card card-event">
+            <div class="card-header">🌪️ 陨石带</div>
+            <div class="card-icon">🌪️</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">飞船穿越陨石带，受到损伤，丢失货物！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家失去1个随机货物</div>
+            <div class="card-footer">⚠️ 无法应对 | 运气成分</div>
+        </div>
+        
+        <!-- 黑市狂欢 x4 -->
+        <div class="card card-event">
+            <div class="card-header">💰 黑市狂欢</div>
+            <div class="card-icon">💰</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">黑市需求暴涨，所有违禁品价格飙升！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有货物价值+2（本回合结算）</div>
+            <div class="card-footer">✅ 利好事件 | 及时出售</div>
+        </div>
+        
+        <div class="card card-event">
+            <div class="card-header">💰 黑市狂欢</div>
+            <div class="card-icon">💰</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">黑市需求暴涨，所有违禁品价格飙升！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有货物价值+2（本回合结算）</div>
+            <div class="card-footer">✅ 利好事件 | 及时出售</div>
+        </div>
+        
+        <!-- 机械故障 x3 -->
+        <div class="card card-event">
+            <div class="card-header">🔧 机械故障</div>
+            <div class="card-icon">🔧</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">飞船引擎故障，本回合无法执行任何行动！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：本回合无法行动（可打维修卡）</div>
+            <div class="card-footer">💡 应对：使用"快速维修"行动卡</div>
+        </div>
+        
+        <!-- 星港节日 x4 -->
+        <div class="card card-event">
+            <div class="card-header">🎰 星港节日</div>
+            <div class="card-icon">🎰</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">星港举办狂欢节，所有走私商获得免费货物！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家免费获得1个随机货物</div>
+            <div class="card-footer">✅ 利好事件 | 增加货物</div>
+        </div>
+        
+        <div class="card card-event">
+            <div class="card-header">🎰 星港节日</div>
+            <div class="card-icon">🎰</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">星港举办狂欢节，所有走私商获得免费货物！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家免费获得1个随机货物</div>
+            <div class="card-footer">✅ 利好事件 | 增加货物</div>
+        </div>
+        
+        <!-- 联盟突击 x3 -->
+        <div class="card card-event">
+            <div class="card-header">👮 联盟突击</div>
+            <div class="card-icon">👮</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">联盟发起突袭，持有最多货物的玩家将被重点检查！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：货物最多的玩家被查获2个货物</div>
+            <div class="card-footer">💡 应对：提前出售货物或分散风险</div>
+        </div>
+        
+        <!-- 超空间隧道 x4 -->
+        <div class="card card-event">
+            <div class="card-header">🌌 超空间隧道</div>
+            <div class="card-icon">🌌</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">发现稳定的超空间隧道，所有飞船可以加速航行！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家本回合可以额外行动1次</div>
+            <div class="card-footer">✅ 利好事件 | 加速流转</div>
+        </div>
+        
+        <div class="card card-event">
+            <div class="card-header">🌌 超空间隧道</div>
+            <div class="card-icon">🌌</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">发现稳定的超空间隧道，所有飞船可以加速航行！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家本回合可以额外行动1次</div>
+            <div class="card-footer">✅ 利好事件 | 加速流转</div>
+        </div>
+        
+        <!-- 情报泄露 x4 -->
+        <div class="card card-event">
+            <div class="card-header">📡 情报泄露</div>
+            <div class="card-icon">📡</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">联盟获得情报，所有玩家的货物被曝光！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家展示当前持有的货物卡</div>
+            <div class="card-footer">⚠️ 战略影响 | 信息透明</div>
+        </div>
+        
+        <div class="card card-event">
+            <div class="card-header">📡 情报泄露</div>
+            <div class="card-icon">📡</div>
+            <div class="card-body">
+                <div class="card-title">事件效果</div>
+                <div class="card-desc">联盟获得情报，所有玩家的货物被曝光！</div>
+            </div>
+            <div class="card-effect">⚡ 效果：所有玩家展示当前持有的货物卡</div>
+            <div class="card-footer">⚠️ 战略影响 | 信息透明</div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <div class="section-title">🎯 行动卡（共40张，每种8张）</div>
+    <div class="cards-container">
+        <!-- 紧急跃迁 x5 -->
+        <div class="card card-action">
+            <div class="card-header">💨 紧急跃迁</div>
+            <div class="card-icon">💨</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">启动超空间引擎，立即跳跃到安全区域，躲避联盟检查。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：立即躲避本回合的联盟检查</div>
+            <div class="card-footer">🕐 使用时机：被检查时</div>
+        </div>
+        
+        <div class="card card-action">
+            <div class="card-header">💨 紧急跃迁</div>
+            <div class="card-icon">💨</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">启动超空间引擎，立即跳跃到安全区域，躲避联盟检查。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：立即躲避本回合的联盟检查</div>
+            <div class="card-footer">🕐 使用时机：被检查时</div>
+        </div>
+        
+        <!-- 伪装信号 x5 -->
+        <div class="card card-action">
+            <div class="card-header">🎭 伪装信号</div>
+            <div class="card-icon">🎭</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">发射伪造的船舶信号，让联盟雷达无法锁定你的飞船。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：本回合不会被联盟发现（无需检定）</div>
+            <div class="card-footer">🕐 使用时机：回合开始时</div>
+        </div>
+        
+        <div class="card card-action">
+            <div class="card-header">🎭 伪装信号</div>
+            <div class="card-icon">🎭</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">发射伪造的船舶信号，让联盟雷达无法锁定你的飞船。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：本回合不会被联盟发现（无需检定）</div>
+            <div class="card-footer">🕐 使用时机：回合开始时</div>
+        </div>
+        
+        <!-- 快速维修 x5 -->
+        <div class="card card-action">
+            <div class="card-header">🔧 快速维修</div>
+            <div class="card-icon">🔧</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">紧急修复飞船故障，让飞船重新投入使用。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：修复机械故障，本回合可以正常行动</div>
+            <div class="card-footer">🕐 使用时机：抽到故障事件时</div>
+        </div>
+        
+        <!-- 黑市交易 x5 -->
+        <div class="card card-action">
+            <div class="card-header">🎰 黑市交易</div>
+            <div class="card-icon">🎰</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">联系黑市商人，获得稀有货物，无需支付信用点。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：免费获得1个随机货物卡</div>
+            <div class="card-footer">🕐 使用时机：任意时机</div>
+        </div>
+        
+        <div class="card card-action">
+            <div class="card-header">🎰 黑市交易</div>
+            <div class="card-icon">🎰</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">联系黑市商人，获得稀有货物，无需支付信用点。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：免费获得1个随机货物卡</div>
+            <div class="card-footer">🕐 使用时机：任意时机</div>
+        </div>
+        
+        <!-- 侦察 x5 -->
+        <div class="card card-action">
+            <div class="card-header">👁️ 侦察</div>
+            <div class="card-icon">👁️</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">使用高精度扫描仪，查看对手的隐藏货物。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：查看对手1张货物卡（可选择查看哪张）</div>
+            <div class="card-footer">🕐 使用时机：任意时机</div>
+        </div>
+        
+        <div class="card card-action">
+            <div class="card-header">👁️ 侦察</div>
+            <div class="card-icon">👁️</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">使用高精度扫描仪，查看对手的隐藏货物。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：查看对手1张货物卡（可选择查看哪张）</div>
+            <div class="card-footer">🕐 使用时机：任意时机</div>
+        </div>
+        
+        <!-- 电磁脉冲 x5 -->
+        <div class="card card-action">
+            <div class="card-header">💣 电磁脉冲</div>
+            <div class="card-icon">💣</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">发射电磁脉冲，瘫痪对手的电子设备，阻止其使用行动卡。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：对手本回合无法使用行动卡</div>
+            <div class="card-footer">🕐 使用时机：对手回合</div>
+        </div>
+        
+        <!-- 秘密交易 x5 -->
+        <div class="card card-action">
+            <div class="card-header">🤝 秘密交易</div>
+            <div class="card-icon">🤝</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">与对手进行秘密交易，交换货物，互惠互利。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：与对手交换1个货物卡（双方同意）</div>
+            <div class="card-footer">🕐 使用时机：任意时机</div>
+        </div>
+        
+        <!-- 加密货物 x5 -->
+        <div class="card card-action">
+            <div class="card-header">🔒 加密货物</div>
+            <div class="card-icon">🔒</div>
+            <div class="card-body">
+                <div class="card-title">行动效果</div>
+                <div class="card-desc">使用量子加密技术，保护货物不被联盟扫描到。</div>
+            </div>
+            <div class="card-effect">⚡ 效果：本回合货物不会被查获</div>
+            <div class="card-footer">🕐 使用时机：被查获时</div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <div class="section-title">👤 角色卡（共10张，每种角色1张，建议每种打印2张备用）</div>
+    <div class="cards-container">
+        <!-- 优雅骗子 -->
+        <div class="card card-role">
+            <div class="card-header">🎩 优雅骗子</div>
+            <div class="card-icon">🎩</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">风度翩翩的骗子，总能以更高的价格出售货物。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：出售货物时，价值+1</div>
+            <div class="card-footer">适合：喜欢出售获利的玩家</div>
+        </div>
+        
+        <!-- 机械天才 -->
+        <div class="card card-role">
+            <div class="card-header">🔧 机械天才</div>
+            <div class="card-icon">🔧</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">天才机械师，能快速修复任何飞船故障。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：可以忽略1次机械故障事件</div>
+            <div class="card-footer">适合：稳健型玩家</div>
+        </div>
+        
+        <!-- 情报贩子 -->
+        <div class="card card-role">
+            <div class="card-header">👁️ 情报贩子</div>
+            <div class="card-icon">👁️</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">消息灵通的情报商人，总能提前知道危险。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：回合开始时免费侦察1次</div>
+            <div class="card-footer">适合：策略型玩家</div>
+        </div>
+        
+        <!-- 前军人 -->
+        <div class="card card-role">
+            <div class="card-header">💪 前军人</div>
+            <div class="card-icon">💪</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">退役的联盟士兵，知道如何应对联盟的搜查。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：被查获时可以选择保留1个货物</div>
+            <div class="card-footer">适合：防御型玩家</div>
+        </div>
+        
+        <!-- 伪装大师 -->
+        <div class="card card-role">
+            <div class="card-header">🎭 伪装大师</div>
+            <div class="card-icon">🎭</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">易容和伪装专家，能提前知道即将发生的事件。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：可以随时查看事件卡堆顶部的1张卡</div>
+            <div class="card-footer">适合：信息控制型玩家</div>
+        </div>
+    </div>
+    
+    <div class="cards-container">
+        <!-- 赌徒 -->
+        <div class="card card-role">
+            <div class="card-header">🎰 赌徒</div>
+            <div class="card-icon">🎰</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">疯狂的赌徒，相信运气胜过一切。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：掷骰子代替躲避检定，掷出6时价值翻倍</div>
+            <div class="card-footer">适合：喜欢风险的玩家</div>
+        </div>
+        
+        <!-- 金融家 -->
+        <div class="card card-role">
+            <div class="card-header">💰 金融家</div>
+            <div class="card-icon">💰</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">精明的金融家，擅长投资和理财。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：游戏结束时信用点额外+10%</div>
+            <div class="card-footer">适合：长期策略型玩家</div>
+        </div>
+        
+        <!-- 老船长 -->
+        <div class="card card-role">
+            <div class="card-header">🚀 老船长</div>
+            <div class="card-icon">🚀</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">经验丰富的老船长，拥有更大的货舱。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：初始多1个货物槽（共4个）</div>
+            <div class="card-footer">适合：货物积累型玩家</div>
+        </div>
+        
+        <!-- 间谍 -->
+        <div class="card card-role">
+            <div class="card-header">🕵️ 间谍</div>
+            <div class="card-icon">🕵️</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">潜伏的间谍，擅长收集情报和渗透。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：可以查看对手的角色卡</div>
+            <div class="card-footer">适合：心理战型玩家</div>
+        </div>
+        
+        <!-- 神枪手 -->
+        <div class="card card-role">
+            <div class="card-header">🎯 神枪手</div>
+            <div class="card-icon">🎯</div>
+            <div class="card-body">
+                <div class="card-title">角色定位</div>
+                <div class="card-desc">精准的神枪手，能击落对手的行动卡。</div>
+            </div>
+            <div class="card-skill">🎯 被动技能：可以"击落"对手的1张行动卡（每回合1次）</div>
+            <div class="card-footer">适合：对抗型玩家</div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <div class="section-title">🎲 信用点代币模板（可复制打印，自行裁剪）</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 30px;">
+        <!-- 信用点代币 x48 -->
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+        <div style="width: 40mm; height: 20mm; border: 2px solid #ffc107; border-radius: 5px; background: linear-gradient(135deg, #fff9e6, #ffeaa7); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #856404;">💰 1 信用点</div>
+    </div>
+    
+    <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
+        <p>--- 打印完毕 ---</p>
+        <p>感谢使用《星际走私商》打印道具！祝游戏愉快！</p>
+        <p>建议：使用卡纸打印，剪切后塑封，增加耐用性。</p>
+    </div>
+</body>
+</html>
