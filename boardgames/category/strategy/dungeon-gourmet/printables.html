@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迷宫美食家 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #555;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            background: #3e2723;
+            padding: 12px;
+            border-radius: 12px;
+            aspect-ratio: 7/8;
+        }
+
+        .map-cell {
+            background: #8d6e63;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border-radius: 6px;
+            position: relative;
+            color: white;
+            font-weight: bold;
+        }
+
+        .map-cell.start {
+            background: #4caf50;
+        }
+
+        .map-cell.exit {
+            background: #ff9800;
+        }
+
+        .map-cell.path {
+            background: #a1887f;
+        }
+
+        .map-cell.ingredient-meat {
+            background: #e53935;
+        }
+
+        .map-cell.ingredient-fish {
+            background: #1e88e5;
+        }
+
+        .map-cell.ingredient-mushroom {
+            background: #8d6e63;
+        }
+
+        .map-cell.ingredient-herb {
+            background: #66bb6a;
+        }
+
+        .map-cell.campfire {
+            background: #ff5722;
+        }
+
+        .map-cell.recipe {
+            background: #ffc107;
+        }
+
+        .map-cell.trap {
+            background: #d32f2f;
+        }
+
+        .map-cell.event {
+            background: #9c27b0;
+        }
+
+        .cell-label {
+            position: absolute;
+            bottom: 1px;
+            right: 2px;
+            font-size: 8px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #666;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 10px;
+            color: #888;
+        }
+
+        .card.ingredient {
+            border-color: #ff9800;
+        }
+
+        .card.recipe {
+            border-color: #9c27b0;
+        }
+
+        .card.meal {
+            border-color: #4caf50;
+        }
+
+        .card.trap {
+            border-color: #f44336;
+        }
+
+        .card.event {
+            border-color: #673ab7;
+        }
+
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 3px solid #333;
+            color: white;
+            font-weight: bold;
+        }
+
+        .piece-circle.blue {
+            background: #2196f3;
+        }
+
+        .piece-circle.red {
+            background: #f44336;
+        }
+
+        .piece-circle.green {
+            background: #4caf50;
+        }
+
+        .piece-circle.yellow {
+            background: #ffeb3b;
+            color: #333;
+        }
+
+        .piece-label {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .tokens-grid {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .token {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffd700;
+            border: 2px solid #ffa000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #37474f;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .print-hint {
+                display: none;
+            }
+            .section {
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍳 迷宫美食家 - 打印文档</h1>
+        
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可以使用普通纸张打印</li>
+                <li>打印后按虚线裁剪使用</li>
+                <li>建议打印2-3份卡牌，方便多人游戏</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ 游戏地图（7×8网格）</h2>
+            <div class="game-map">
+                <div class="map-cell start">🚪<span class="cell-label">入口</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-meat">🥩<span class="cell-label">肉类</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell campfire">🍲<span class="cell-label">篝火</span></div>
+                <div class="map-cell path">⬜</div>
+                
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell event">🎲<span class="cell-label">事件</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell recipe">📜<span class="cell-label">食谱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-fish">🐟<span class="cell-label">鱼类</span></div>
+                
+                <div class="map-cell ingredient-fish">🐟<span class="cell-label">鱼类</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-meat">🥩<span class="cell-label">肉类</span></div>
+                <div class="map-cell campfire">🍲<span class="cell-label">篝火</span></div>
+                
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell campfire">🍲<span class="cell-label">篝火</span></div>
+                <div class="map-cell ingredient-herb">🌿<span class="cell-label">香草</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell event">🎲<span class="cell-label">事件</span></div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-mushroom">🍄<span class="cell-label">蘑菇</span></div>
+                
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-fish">🐟<span class="cell-label">鱼类</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell campfire">🍲<span class="cell-label">篝火</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell recipe">📜<span class="cell-label">食谱</span></div>
+                
+                <div class="map-cell ingredient-mushroom">🍄<span class="cell-label">蘑菇</span></div>
+                <div class="map-cell event">🎲<span class="cell-label">事件</span></div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-herb">🌿<span class="cell-label">香草</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell campfire">🍲<span class="cell-label">篝火</span></div>
+                
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-fish">🐟<span class="cell-label">鱼类</span></div>
+                <div class="map-cell campfire">🍲<span class="cell-label">篝火</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">陷阱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-herb">🌿<span class="cell-label">香草</span></div>
+                
+                <div class="map-cell event">🎲<span class="cell-label">事件</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell recipe">📜<span class="cell-label">食谱</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell ingredient-herb">🌿<span class="cell-label">香草</span></div>
+                <div class="map-cell path">⬜</div>
+                <div class="map-cell exit">🎰<span class="cell-label">出口</span></div>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                <strong>地图说明：</strong>🚪入口 → 探索地下城 → 🍲烹饪美食 → 🎰出口获胜！
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>🥩 食材卡片（示例）</h2>
+            <div class="cards-grid">
+                <div class="card ingredient">
+                    <div class="card-header">
+                        <span class="card-icon">🥩</span>
+                        <span class="card-title">魔兽肉</span>
+                    </div>
+                    <div class="card-description">击败魔兽获得<br>用于烹饪肉类料理</div>
+                    <div class="card-footer">食材卡</div>
+                </div>
+                <div class="card ingredient">
+                    <div class="card-header">
+                        <span class="card-icon">🥩</span>
+                        <span class="card-title">魔兽肉</span>
+                    </div>
+                    <div class="card-description">击败魔兽获得<br>用于烹饪肉类料理</div>
+                    <div class="card-footer">食材卡</div>
+                </div>
+                <div class="card ingredient">
+                    <div class="card-header">
+                        <span class="card-icon">🐟</span>
+                        <span class="card-title">迷宫鱼</span>
+                    </div>
+                    <div class="card-description">击败鱼怪获得<br>用于烹饪鱼类料理</div>
+                    <div class="card-footer">食材卡</div>
+                </div>
+                <div class="card ingredient">
+                    <div class="card-header">
+                        <span class="card-icon">🐟</span>
+                        <span class="card-title">迷宫鱼</span>
+                    </div>
+                    <div class="card-description">击败鱼怪获得<br>用于烹饪鱼类料理</div>
+                    <div class="card-footer">食材卡</div>
+                </div>
+                <div class="card ingredient">
+                    <div class="card-header">
+                        <span class="card-icon">🍄</span>
+                        <span class="card-title">魔法蘑菇</span>
+                    </div>
+                    <div class="card-description">击败蘑菇怪获得<br>用于烹饪蘑菇料理</div>
+                    <div class="card-footer">食材卡</div>
+                </div>
+                <div class="card ingredient">
+                    <div class="card-header">
+                        <span class="card-icon">🌿</span>
+                        <span class="card-title">奇异香草</span>
+                    </div>
+                    <div class="card-description">采集香草获得<br>用于烹饪香草料理</div>
+                    <div class="card-footer">食材卡</div>
+                </div>
+            </div>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                💡 提示：总共需要打印40张食材卡（肉类/鱼类/蘑菇/香草各10张）
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>📜 食谱卡片（完整10张）</h2>
+            <div class="cards-grid">
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜🥩🥩</span>
+                        <span class="card-title">烤肉大餐</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>魔兽肉×2<br><strong>效果：</strong>下一次移动+2步</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜🐟🐟</span>
+                        <span class="card-title">烤鱼盛宴</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>迷宫鱼×2<br><strong>效果：</strong>下一次战斗自动胜利</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜🍄</span>
+                        <span class="card-title">蘑菇汤</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>魔法蘑菇×1<br><strong>效果：</strong>查看下一张陷阱卡</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜🌿</span>
+                        <span class="card-title">香草沙拉</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>奇异香草×1<br><strong>效果：</strong>额外掷一次骰子</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜🥩🐟</span>
+                        <span class="card-title">肉鱼大餐</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>魔兽肉×1+迷宫鱼×1<br><strong>效果：</strong>获得2个能力令牌</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜🍄🌿</span>
+                        <span class="card-title">蘑菇香草汤</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>魔法蘑菇×1+奇异香草×1<br><strong>效果：</strong>复制其他玩家的食材卡</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜👑</span>
+                        <span class="card-title">豪华全餐</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>全部食材各×1<br><strong>效果：</strong>⭐传奇料理！获胜条件-1</div>
+                    <div class="card-footer">食谱卡 - 传奇</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜❓</span>
+                        <span class="card-title">神秘料理</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>任意食材×3<br><strong>效果：</strong>随机获得一种效果</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜💚</span>
+                        <span class="card-title">恢复料理</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>魔兽肉×1+魔法蘑菇×1<br><strong>效果：</strong>移除所有陷阱效果</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📜⚡</span>
+                        <span class="card-title">速度料理</span>
+                    </div>
+                    <div class="card-description"><strong>需要：</strong>迷宫鱼×1+奇异香草×1<br><strong>效果：</strong>连续掷两次骰子（取大值）</div>
+                    <div class="card-footer">食谱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🍳 料理卡片（示例）</h2>
+            <div class="cards-grid">
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">🍳</span>
+                        <span class="card-title">烤肉</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>下一次移动+2步<br><em>使用后丢弃</em></div>
+                    <div class="card-footer">料理卡 - 普通</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">🐟🔥</span>
+                        <span class="card-title">烤鱼</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>下一次战斗自动胜利<br><em>使用后丢弃</em></div>
+                    <div class="card-footer">料理卡 - 普通</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">🍲</span>
+                        <span class="card-title">蘑菇汤</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>查看下一张陷阱卡<br><em>使用后丢弃</em></div>
+                    <div class="card-footer">料理卡 - 普通</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">🥗</span>
+                        <span class="card-title">香草沙拉</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>额外掷一次骰子<br><em>使用后丢弃</em></div>
+                    <div class="card-footer">料理卡 - 普通</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">🍽️</span>
+                        <span class="card-title">肉鱼大餐</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>获得2个能力令牌<br><em>永久保留</em></div>
+                    <div class="card-footer">料理卡 - 高级</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">👑</span>
+                        <span class="card-title">豪华全餐</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>⭐传奇料理！<br>获胜条件-1<br><em>永久保留</em></div>
+                    <div class="card-footer">料理卡 - 传奇</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">速度药剂</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>连续掷两次骰子<br><em>使用后丢弃</em></div>
+                    <div class="card-footer">料理卡 - 普通</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️🥩</span>
+                        <span class="card-title">防御烤肉</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>免疫下一次陷阱<br><em>使用后丢弃</em></div>
+                    <div class="card-footer">料理卡 - 普通</div>
+                </div>
+                <div class="card meal">
+                    <div class="card-header">
+                        <span class="card-icon">💚🍲</span>
+                        <span class="card-title">治愈汤</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>移除所有负面效果<br><em>使用后丢弃</em></div>
+                    <div class="card-footer">料理卡 - 高级</div>
+                </div>
+            </div>
+            <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                💡 提示：总共需要打印15张料理卡（普通10张 + 高级3张 + 传奇2张）
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ 陷阱卡片（完整8张）</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🕳️</span>
+                        <span class="card-title">地洞</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>后退3步<br><strong>应对：</strong>使用"防御烤肉"免疫</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">☠️</span>
+                        <span class="card-title">毒气</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>失去1张食材卡<br><strong>应对：</strong>使用"治愈汤"恢复</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🧱</span>
+                        <span class="card-title">迷宫墙壁</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>本回合无法移动<br><strong>应对：</strong>使用"速度药剂"额外移动</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">👹</span>
+                        <span class="card-title">怪物袭击</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>战斗失败，失去1回合<br><strong>应对：</strong>使用"烤鱼"自动胜利</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">✅</span>
+                        <span class="card-title">陷阱失效</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>无效果（空陷阱）<br>运气好！</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🦠</span>
+                        <span class="card-title">食材腐烂</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>随机失去1张食材卡<br><strong>应对：</strong>无法应对</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🌫️</span>
+                        <span class="card-title">迷路</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>下次移动方向相反<br><strong>应对：</strong>使用"烤肉"+2步补偿</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header">
+                        <span class="card-icon">🔥❌</span>
+                        <span class="card-title">篝火熄灭</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>下一个篝火点无法使用<br><strong>应对：</strong>需要等待下一轮</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎲 事件卡片（完整5张）</h2>
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">💎</span>
+                        <span class="card-title">宝藏发现</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>获得1张随机食材卡</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🧙</span>
+                        <span class="card-title">神秘商人</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>可以用2张食材卡交换1张食谱卡</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🌍</span>
+                        <span class="card-title">地下城震动</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>所有玩家位置随机交换</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🌧️</span>
+                        <span class="card-title">食材雨</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>所有玩家获得1张随机食材卡</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">✨</span>
+                        <span class="card-title">能力觉醒</span>
+                    </div>
+                    <div class="card-description"><strong>效果：</strong>获得1个能力令牌⭐</div>
+                    <div class="card-footer">事件卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece">
+                    <div class="piece-circle blue">1</div>
+                    <div class="piece-label">玩家1</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle red">2</div>
+                    <div class="piece-label">玩家2</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle green">3</div>
+                    <div class="piece-label">玩家3</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle yellow">4</div>
+                    <div class="piece-label">玩家4</div>
+                </div>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                💡 提示：也可以用硬币、纽扣、小物件等代替棋子
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>⭐ 能力令牌</h2>
+            <div class="tokens-grid">
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+                <div class="token">⭐</div>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                💡 提示：能力令牌用于标记玩家获得的永久能力，可以用硬币或筹码代替
+            </p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏地图打印出来，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子：</strong>裁剪玩家棋子，或者使用硬币/小物件代替</li>
+                <li><strong>准备令牌：</strong>打印能力令牌，或者用硬币/筹码代替</li>
+                <li><strong>骰子：</strong>如果没有骰子，可以使用手机骰子应用或打印骰子模板</li>
+                <li><strong>开始游戏：</strong>每位玩家选择一个棋子放在入口🚪，分发初始食材卡</li>
+                <li><strong>卡牌数量：</strong>根据玩家人数参考README.md中的"参考打印数量"表格</li>
+            </ul>
+        </div>
+
+        <div class="instructions" style="background: #fff3e0; border-color: #ffcc02;">
+            <h3>🎯 快速上手指南</h3>
+            <ul>
+                <li><strong>目标：</strong>第一位烹饪出3道"传奇料理"（豪华全餐）并到达出口的玩家获胜！</li>
+                <li><strong>核心玩法：</strong>掷骰子移动 → 击败怪物获得食材 → 在篝火处烹饪料理 → 使用料理获得能力 → 到达出口获胜</li>
+                <li><strong>新手提示：</strong>优先收集食材和食谱，合理使用料理卡，注意手牌上限7张</li>
+                <li><strong>游戏时长：</strong>2人约45分钟，4人约60分钟</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
