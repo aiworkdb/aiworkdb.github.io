@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>咒力对决 - 打印道具</title>
+<style>
+/* ===== 全局打印优化 ===== */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint { display: none !important; }
+    .page-break { page-break-after: always; }
+    .no-break { page-break-inside: avoid; }
+    body { margin: 0; padding: 0; }
+    .card-grid { gap: 4px !important; }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    padding: 20px;
+}
+
+/* ===== 打印提示 ===== */
+.print-hint {
+    background: #2d2d5e;
+    border: 2px solid #ff6b9d;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    max-width: 800px;
+}
+.print-hint h2 { color: #ff6b9d; margin-bottom: 10px; }
+.print-hint ul { padding-left: 20px; line-height: 2; }
+.print-hint strong { color: #ff6b9d; }
+
+/* ===== 页面标题 ===== */
+.page-title {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    margin-bottom: 30px;
+    border: 2px solid #ff6b9d;
+}
+.page-title h1 { font-size: 2em; color: #ff6b9d; }
+.page-title p { color: #aaa; margin-top: 8px; }
+
+/* ===== 卡牌网格 ===== */
+.section-title {
+    font-size: 1.4em;
+    padding: 10px 20px;
+    margin: 30px 0 15px 0;
+    border-left: 6px solid;
+    border-radius: 0 8px 8px 0;
+    background: rgba(255,255,255,0.05);
+}
+.section-title.attack { border-color: #ff4444; color: #ff6666; }
+.section-title.defense { border-color: #4488ff; color: #66aaff; }
+.section-title.domain { border-color: #aa44ff; color: #bb66ff; }
+.section-title.tool { border-color: #44ff88; color: #66ff99; }
+.section-title.panel { border-color: #ffaa44; color: #ffcc66; }
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+/* ===== 卡牌样式 ===== */
+.card {
+    width: 100%;
+    aspect-ratio: 63 / 88;
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.2);
+    cursor: default;
+    transition: transform 0.2s;
+}
+.card:hover { transform: scale(1.03); z-index: 1; }
+
+/* 攻击术式卡 */
+.card.attack {
+    background: linear-gradient(135deg, #2d0000 0%, #4a0000 40%, #2d0000 100%);
+    border-color: #ff4444;
+}
+.card.attack .card-icon { color: #ff4444; }
+.card.attack .card-type { background: #ff4444; }
+
+/* 防御术式卡 */
+.card.defense {
+    background: linear-gradient(135deg, #00002d 0%, #00004a 40%, #00002d 100%);
+    border-color: #4488ff;
+}
+.card.defense .card-icon { color: #4488ff; }
+.card.defense .card-type { background: #4488ff; }
+
+/* 领域卡 */
+.card.domain {
+    background: linear-gradient(135deg, #1a0030 0%, #2d004a 40%, #1a0030 100%);
+    border-color: #aa44ff;
+}
+.card.domain .card-icon { color: #aa44ff; font-size: 2em; }
+.card.domain .card-type { background: #aa44ff; }
+
+/* 咒具卡（装备） */
+.card.tool {
+    background: linear-gradient(135deg, #002d00 0%, #004a00 40%, #002d00 100%);
+    border-color: #44ff88;
+}
+.card.tool .card-icon { color: #44ff88; }
+.card.tool .card-type { background: #44ff88; color: #000; }
+
+/* 卡牌内部元素 */
+.card-type {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    text-align: center;
+    font-size: 0.65em;
+    font-weight: bold;
+    padding: 2px;
+    color: #fff;
+    letter-spacing: 2px;
+}
+.card-icon {
+    font-size: 1.8em;
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1;
+}
+.card-name {
+    text-align: center;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin: 4px 0 2px 0;
+    color: #fff;
+}
+.card-cost {
+    position: absolute;
+    top: 16px; right: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7em;
+    color: #ffd700;
+    font-weight: bold;
+}
+.card-effect {
+    font-size: 0.6em;
+    color: #ccc;
+    text-align: center;
+    line-height: 1.3;
+    margin-top: auto;
+    padding-top: 2px;
+}
+.card-damage {
+    position: absolute;
+    bottom: 4px; right: 6px;
+    background: #ff4444;
+    color: #fff;
+    border-radius: 50%;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75em;
+    font-weight: bold;
+}
+.card-heal {
+    position: absolute;
+    bottom: 4px; right: 6px;
+    background: #44ff88;
+    color: #000;
+    border-radius: 50%;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7em;
+    font-weight: bold;
+}
+
+/* ===== 玩家面板 ===== */
+.panel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.player-panel {
+    background: linear-gradient(135deg, #1a1a3e 0%, #2a2a4e 100%);
+    border: 2px solid #ff6b9d;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+.player-panel h3 {
+    color: #ff6b9d;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+.hp-track, .mp-track {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin: 8px 0;
+}
+.hp-dot, .mp-dot {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid;
+}
+.hp-dot { border-color: #ff4444; background: #331111; }
+.mp-dot { border-color: #4488ff; background: #111133; }
+.track-label { color: #aaa; font-size: 0.85em; margin-top: 4px; }
+
+/* ===== 指示物模板 ===== */
+.token-section {
+    margin-bottom: 30px;
+}
+.token-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+.token {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5em;
+    margin: 0 auto;
+    border: 3px solid;
+}
+.token.curse { background: #1a0030; border-color: #aa44ff; color: #aa44ff; }
+.token.hp { background: #2d0000; border-color: #ff4444; color: #ff4444; }
+
+/* ===== 裁剪参考线 ===== */
+.card::before, .card::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.08);
+}
+@media print {
+    .card::before, .card::after { display: none; }
+}
+
+/* ===== 卡片背面 ===== */
+.card-back-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 30px;
+}
+.card-back {
+    aspect-ratio: 63/88;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    border: 2px solid #ff6b9d;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2em;
+}
+.card-back-inner {
+    width: 80%; height: 80%;
+    border: 2px solid rgba(255,107,157,0.4);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #ff6b9d;
+}
+
+/* ===== 切割辅助线 ===== */
+.cut-guide {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+}
+@media print {
+    .cut-guide { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 打印提示 ===== -->
+<div class="print-hint">
+    <h2>⚠️ 重要打印提示</h2>
+    <ul>
+        <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（Chrome：更多设置→背景图形）</li>
+        <li>卡牌建议使用<strong>200g-300g卡纸</strong>打印，增加手感</li>
+        <li>打印后沿卡牌边缘裁剪，建议使用<strong>圆角器</strong>处理边角</li>
+        <li>卡牌背面可打印后贴于卡牌背面，或直接使用空白卡纸背面</li>
+        <li>领域卡尺寸较大，建议使用A4纸单独打印后塑封</li>
+    </ul>
+</div>
+
+<!-- ===== 页面标题 ===== -->
+<div class="page-title">
+    <h1>🔮 咒力对决 · 打印道具</h1>
+    <p>Curse Clash — Printable Components</p>
+</div>
+
+<!-- ===== 攻击术式卡 ===== -->
+<h2 class="section-title attack">⚔️ 攻击术式卡（共24张）</h2>
+<div class="card-grid no-break">
+
+    <!-- 冲击术式 x4 -->
+    <div class="card attack">
+        <div class="card-type">攻击术式</div>
+        <div class="card-cost">1</div>
+        <div class="card-icon">⚔️</div>
+        <div class="card-name">冲击术式</div>
+        <div class="card-effect">基础攻击术式<br>对目标造成2点伤害</div>
+        <div class="card-damage">2</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">1</div><div class="card-icon">⚔️</div><div class="card-name">冲击术式</div><div class="card-effect">基础攻击术式<br>对目标造成2点伤害</div><div class="card-damage">2</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">1</div><div class="card-icon">⚔️</div><div class="card-name">冲击术式</div><div class="card-effect">基础攻击术式<br>对目标造成2点伤害</div><div class="card-damage">2</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">1</div><div class="card-icon">⚔️</div><div class="card-name">冲击术式</div><div class="card-effect">基础攻击术式<br>对目标造成2点伤害</div><div class="card-damage">2</div></div>
+
+    <!-- 咒力贯穿 x4 -->
+    <div class="card attack">
+        <div class="card-type">攻击术式</div>
+        <div class="card-cost">2</div>
+        <div class="card-icon">💥</div>
+        <div class="card-name">咒力贯穿</div>
+        <div class="card-effect">无视目标防御术式<br>造成3点直接伤害</div>
+        <div class="card-damage">3</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">2</div><div class="card-icon">💥</div><div class="card-name">咒力贯穿</div><div class="card-effect">无视目标防御术式<br>造成3点直接伤害</div><div class="card-damage">3</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">2</div><div class="card-icon">💥</div><div class="card-name">咒力贯穿</div><div class="card-effect">无视目标防御术式<br>造成3点直接伤害</div><div class="card-damage">3</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">2</div><div class="card-icon">💥</div><div class="card-name">咒力贯穿</div><div class="card-effect">无视目标防御术式<br>造成3点直接伤害</div><div class="card-damage">3</div></div>
+
+    <!-- 多重术式 x3 -->
+    <div class="card attack">
+        <div class="card-type">攻击术式</div>
+        <div class="card-cost">2</div>
+        <div class="card-icon">🎲</div>
+        <div class="card-name">多重术式</div>
+        <div class="card-effect">掷1个骰子<br>造成对应次数的1点伤害</div>
+        <div class="card-damage">?</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">2</div><div class="card-icon">🎲</div><div class="card-name">多重术式</div><div class="card-effect">掷1个骰子<br>造成对应次数的1点伤害</div><div class="card-damage">?</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">2</div><div class="card-icon">🎲</div><div class="card-name">多重术式</div><div class="card-effect">掷1个骰子<br>造成对应次数的1点伤害</div><div class="card-damage">?</div></div>
+
+    <!-- 暗劲术式 x3 -->
+    <div class="card attack">
+        <div class="card-type">攻击术式</div>
+        <div class="card-cost">3</div>
+        <div class="card-icon">🌑</div>
+        <div class="card-name">暗劲术式</div>
+        <div class="card-effect">造成4点伤害<br>下回合可额外发动1次攻击</div>
+        <div class="card-damage">4</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">3</div><div class="card-icon">🌑</div><div class="card-name">暗劲术式</div><div class="card-effect">造成4点伤害<br>下回合可额外发动1次攻击</div><div class="card-damage">4</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">3</div><div class="card-icon">🌑</div><div class="card-name">暗劲术式</div><div class="card-effect">造成4点伤害<br>下回合可额外发动1次攻击</div><div class="card-damage">4</div></div>
+
+    <!-- 爆裂术式 x3 -->
+    <div class="card attack">
+        <div class="card-type">攻击术式</div>
+        <div class="card-cost">3</div>
+        <div class="card-icon">💣</div>
+        <div class="card-name">爆裂术式</div>
+        <div class="card-effect">造成5点伤害<br>自身受到1点反噬伤害</div>
+        <div class="card-damage">5</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">3</div><div class="card-icon">💣</div><div class="card-name">爆裂术式</div><div class="card-effect">造成5点伤害<br>自身受到1点反噬伤害</div><div class="card-damage">5</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">3</div><div class="card-icon">💣</div><div class="card-name">爆裂术式</div><div class="card-effect">造成5点伤害<br>自身受到1点反噬伤害</div><div class="card-damage">5</div></div>
+
+    <!-- 连击术式 x3 -->
+    <div class="card attack">
+        <div class="card-type">攻击术式</div>
+        <div class="card-cost">4</div>
+        <div class="card-icon">🔥</div>
+        <div class="card-name">连击术式</div>
+        <div class="card-effect">造成6点伤害<br>若上回合使用过攻击术式，伤害+2</div>
+        <div class="card-damage">6</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">4</div><div class="card-icon">🔥</div><div class="card-name">连击术式</div><div class="card-effect">造成6点伤害<br>若上回合使用过攻击术式，伤害+2</div><div class="card-damage">6</div></div>
+    <div class="card attack"><div class="card-type">攻击术式</div><div class="card-cost">4</div><div class="card-icon">🔥</div><div class="card-name">连击术式</div><div class="card-effect">造成6点伤害<br>若上回合使用过攻击术式，伤害+2</div><div class="card-damage">6</div></div>
+
+    <!-- 咒葬 x2（强力攻击） -->
+    <div class="card attack">
+        <div class="card-type">攻击术式 · 稀有</div>
+        <div class="card-cost">5</div>
+        <div class="card-icon">⚰️</div>
+        <div class="card-name">咒葬</div>
+        <div class="card-effect">造成7点伤害<br>如目标HP≤3，直接将其HP降至0</div>
+        <div class="card-damage">7</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式 · 稀有</div><div class="card-cost">5</div><div class="card-icon">⚰️</div><div class="card-name">咒葬</div><div class="card-effect">造成7点伤害<br>如目标HP≤3，直接将其HP降至0</div><div class="card-damage">7</div></div>
+
+    <!-- 天与暴击 x2 -->
+    <div class="card attack">
+        <div class="card-type">攻击术式 · 稀有</div>
+        <div class="card-cost">6</div>
+        <div class="card-icon">⚡</div>
+        <div class="card-name">天与暴击</div>
+        <div class="card-effect">造成8点伤害<br>消耗所有剩余咒力，每点额外+1伤害</div>
+        <div class="card-damage">8+</div>
+    </div>
+    <div class="card attack"><div class="card-type">攻击术式 · 稀有</div><div class="card-cost">6</div><div class="card-icon">⚡</div><div class="card-name">天与暴击</div><div class="card-effect">造成8点伤害<br>消耗所有剩余咒力，每点额外+1伤害</div><div class="card-damage">8+</div></div>
+
+</div>
+
+<!-- 分页 -->
+<div class="page-break"></div>
+
+<!-- ===== 防御术式卡 ===== -->
+<h2 class="section-title defense">🛡️ 防御术式卡（共16张）</h2>
+<div class="card-grid no-break">
+
+    <!-- 咒力护盾 x4 -->
+    <div class="card defense">
+        <div class="card-type">防御术式</div>
+        <div class="card-cost">1</div>
+        <div class="card-icon">🛡️</div>
+        <div class="card-name">咒力护盾</div>
+        <div class="card-effect">抵挡2点即将受到的伤害<br>可在敌方攻击宣言后使用</div>
+        <div class="card-heal" style="background:#4488ff;">2</div>
+    </div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">1</div><div class="card-icon">🛡️</div><div class="card-name">咒力护盾</div><div class="card-effect">抵挡2点即将受到的伤害</div><div class="card-heal" style="background:#4488ff;">2</div></div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">1</div><div class="card-icon">🛡️</div><div class="card-name">咒力护盾</div><div class="card-effect">抵挡2点即将受到的伤害</div><div class="card-heal" style="background:#4488ff;">2</div></div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">1</div><div class="card-icon">🛡️</div><div class="card-name">咒力护盾</div><div class="card-effect">抵挡2点即将受到的伤害</div><div class="card-heal" style="background:#4488ff;">2</div></div>
+
+    <!-- 反弹术式 x3 -->
+    <div class="card defense">
+        <div class="card-type">防御术式</div>
+        <div class="card-cost">2</div>
+        <div class="card-icon">🔄</div>
+        <div class="card-name">反弹术式</div>
+        <div class="card-effect">抵挡3点伤害<br>对攻击者造成1点反弹伤害</div>
+        <div class="card-heal" style="background:#4488ff;">3</div>
+    </div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">2</div><div class="card-icon">🔄</div><div class="card-name">反弹术式</div><div class="card-effect">抵挡3点伤害<br>对攻击者造成1点反弹伤害</div><div class="card-heal" style="background:#4488ff;">3</div></div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">2</div><div class="card-icon">🔄</div><div class="card-name">反弹术式</div><div class="card-effect">抵挡3点伤害<br>对攻击者造成1点反弹伤害</div><div class="card-heal" style="background:#4488ff;">3</div></div>
+
+    <!-- 治愈术式 x4 -->
+    <div class="card defense">
+        <div class="card-type">防御术式</div>
+        <div class="card-cost">2</div>
+        <div class="card-icon">💚</div>
+        <div class="card-name">治愈术式</div>
+        <div class="card-effect">恢复3点HP<br>HP上限为10，超出部分无效</div>
+        <div class="card-heal">+3</div>
+    </div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">2</div><div class="card-icon">💚</div><div class="card-name">治愈术式</div><div class="card-effect">恢复3点HP</div><div class="card-heal">+3</div></div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">2</div><div class="card-icon">💚</div><div class="card-name">治愈术式</div><div class="card-effect">恢复3点HP</div><div class="card-heal">+3</div></div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">2</div><div class="card-icon">💚</div><div class="card-name">治愈术式</div><div class="card-effect">恢复3点HP</div><div class="card-heal">+3</div></div>
+
+    <!-- 闪避术式 x3 -->
+    <div class="card defense">
+        <div class="card-type">防御术式</div>
+        <div class="card-cost">1</div>
+        <div class="card-icon">💨</div>
+        <div class="card-name">闪避术式</div>
+        <div class="card-effect">本回合所有攻击对你无效<br>（每回合限发动1次）</div>
+        <div class="card-heal" style="background:#8888ff; font-size:0.6em;">ALL</div>
+    </div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">1</div><div class="card-icon">💨</div><div class="card-name">闪避术式</div><div class="card-effect">本回合所有攻击对你无效</div><div class="card-heal" style="background:#8888ff; font-size:0.6em;">ALL</div></div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">1</div><div class="card-icon">💨</div><div class="card-name">闪避术式</div><div class="card-effect">本回合所有攻击对你无效</div><div class="card-heal" style="background:#8888ff; font-size:0.6em;">ALL</div></div>
+
+    <!-- 吸收术式 x2 -->
+    <div class="card defense">
+        <div class="card-type">防御术式</div>
+        <div class="card-cost">3</div>
+        <div class="card-icon">🌀</div>
+        <div class="card-name">吸收术式</div>
+        <div class="card-effect">抵挡本回合所有伤害<br>并将伤害值转化为等量咒力</div>
+        <div class="card-heal" style="background:#aa44ff;">ABS</div>
+    </div>
+    <div class="card defense"><div class="card-type">防御术式</div><div class="card-cost">3</div><div class="card-icon">🌀</div><div class="card-name">吸收术式</div><div class="card-effect">抵挡本回合所有伤害<br>并将伤害值转化为等量咒力</div><div class="card-heal" style="background:#aa44ff;">ABS</div></div>
+
+</div>
+
+<div class="page-break"></div>
+
+<!-- ===== 领域卡 ===== -->
+<h2 class="section-title domain">🌀 领域卡（共8张）</h2>
+<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin-bottom:30px;">
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域</div>
+        <div class="card-cost" style="color:#ffd700;">5</div>
+        <div class="card-icon">🏰</div>
+        <div class="card-name" style="font-size:1.1em;">牢不可破的监狱</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗5咒力展开领域<br>
+            <strong>效果：</strong>敌方本回合无法使用攻击术式卡<br>
+            <strong>持续：</strong>至你下回合结束<br>
+            <strong>深阵区加成：</strong>持续至下下回合结束
+        </div>
+    </div>
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域</div>
+        <div class="card-cost" style="color:#ffd700;">6</div>
+        <div class="card-icon">🧠</div>
+        <div class="card-name" style="font-size:1.1em;">无量空处</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗6咒力展开领域<br>
+            <strong>效果：</strong>查看敌方手牌，并选择1张丢弃<br>
+            <strong>持续：</strong>至你下回合结束<br>
+            <strong>深阵区加成：</strong>可丢弃2张敌方手牌
+        </div>
+    </div>
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域</div>
+        <div class="card-cost" style="color:#ffd700;">5</div>
+        <div class="card-icon">🔥</div>
+        <div class="card-name" style="font-size:1.1em;">尽宴之间</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗5咒力展开领域<br>
+            <strong>效果：</strong>本回合你所有攻击术式伤害+1<br>
+            <strong>持续：</strong>至你下回合结束<br>
+            <strong>深阵区加成：</strong>伤害+2（而非+1）
+        </div>
+    </div>
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域</div>
+        <div class="card-cost" style="color:#ffd700;">6</div>
+        <div class="card-icon">⛪</div>
+        <div class="card-name" style="font-size:1.1em;">伏魔殿</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗6咒力展开领域<br>
+            <strong>效果：</strong>敌方每回合自动失去1HP<br>
+            <strong>持续：</strong>至你下回合结束（约2回合）<br>
+            <strong>深阵区加成：</strong>每回合失去2HP
+        </div>
+    </div>
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域 · 强化</div>
+        <div class="card-cost" style="color:#ffd700;">7</div>
+        <div class="card-icon">🧠✨</div>
+        <div class="card-name" style="font-size:1.1em;">无量空处·改</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗7咒力展开领域<br>
+            <strong>效果：</strong>查看敌方手牌并丢弃2张<br>
+            <strong>持续：</strong>至你下回合结束<br>
+            <em>组合了"无量空处"的强化版本</em>
+        </div>
+    </div>
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域</div>
+        <div class="card-cost" style="color:#ffd700;">7</div>
+        <div class="card-icon">⚖️</div>
+        <div class="card-name" style="font-size:1.1em;">自业咒罚</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗7咒力展开领域<br>
+            <strong>效果：</strong>敌方上回合对你造成的伤害50%反弹<br>
+            <strong>持续：</strong>至你下回合结束<br>
+            <strong>反弹伤害上限：</strong>5点
+        </div>
+    </div>
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域</div>
+        <div class="card-cost" style="color:#ffd700;">5</div>
+        <div class="card-icon">🌫️</div>
+        <div class="card-name" style="font-size:1.1em;">咒雾迷阵</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗5咒力展开领域<br>
+            <strong>效果：</strong>敌方本回合抽取2张牌（而非1张），但必须丢弃1张<br>
+            <strong>持续：</strong>至你下回合结束
+        </div>
+    </div>
+
+    <div class="card domain" style="aspect-ratio:auto; min-height:160px; padding:15px;">
+        <div class="card-type">领域 · 终极</div>
+        <div class="card-cost" style="color:#ffd700;">8</div>
+        <div class="card-icon">🌌</div>
+        <div class="card-name" style="font-size:1.1em;">虚空之狱</div>
+        <div class="card-effect" style="font-size:0.75em; margin-top:10px;">
+            消耗8咒力展开领域（最高消耗）<br>
+            <strong>效果：</strong>敌方本回合无法展开领域，且所有术式消耗+1<br>
+            <strong>持续：</strong>至你下下回合结束
+        </div>
+    </div>
+
+</div>
+
+<div class="page-break"></div>
+
+<!-- ===== 咒具卡（装备） ===== -->
+<h2 class="section-title tool">🔧 咒具卡（共12张）</h2>
+<div class="card-grid no-break">
+
+    <!-- 游云 x3 -->
+    <div class="card tool">
+        <div class="card-type">咒具 · 装备</div>
+        <div class="card-cost">2</div>
+        <div class="card-icon">☁️</div>
+        <div class="card-name">咒具·游云</div>
+        <div class="card-effect">装备后持续生效<br><strong>效果：</strong>你所有攻击术式伤害永久+1<br>（同名咒具限装备1件）</div>
+    </div>
+    <div class="card tool"><div class="card-type">咒具 · 装备</div><div class="card-cost">2</div><div class="card-icon">☁️</div><div class="card-name">咒具·游云</div><div class="card-effect">攻击术式伤害永久+1</div></div>
+    <div class="card tool"><div class="card-type">咒具 · 装备</div><div class="card-cost">2</div><div class="card-icon">☁️</div><div class="card-name">咒具·游云</div><div class="card-effect">攻击术式伤害永久+1</div></div>
+
+    <!-- 天与咒缚 x2 -->
+    <div class="card tool">
+        <div class="card-type">咒具 · 装备</div>
+        <div class="card-cost">3</div>
+        <div class="card-icon">🔗</div>
+        <div class="card-name">咒具·天与咒缚</div>
+        <div class="card-effect">装备后持续生效<br><strong>效果：</strong>每回合咒力恢复额外+1点<br>（咒力上限仍为8）</div>
+    </div>
+    <div class="card tool"><div class="card-type">咒具 · 装备</div><div class="card-cost">3</div><div class="card-icon">🔗</div><div class="card-name">咒具·天与咒缚</div><div class="card-effect">每回合咒力恢复额外+1点</div></div>
+
+    <!-- 解除咒具 x2 -->
+    <div class="card tool">
+        <div class="card-type">咒具 · 装备/即时</div>
+        <div class="card-cost">1</div>
+        <div class="card-icon">🔓</div>
+        <div class="card-name">咒具·解除</div>
+        <div class="card-effect">可即时使用<br><strong>效果：</strong>解除敌方1件已装备的咒具（将其放入弃牌堆）</div>
+    </div>
+    <div class="card tool"><div class="card-type">咒具 · 装备/即时</div><div class="card-cost">1</div><div class="card-icon">🔓</div><div class="card-name">咒具·解除</div><div class="card-effect">解除敌方1件已装备咒具</div></div>
+
+    <!-- 阵罗 x3 -->
+    <div class="card tool">
+        <div class="card-type">咒具 · 装备</div>
+        <div class="card-cost">2</div>
+        <div class="card-icon">🏯</div>
+        <div class="card-name">咒具·阵罗</div>
+        <div class="card-effect">装备后持续生效<br><strong>效果：</strong>你所有防御术式效果+1（护盾额外抵挡+1，治愈额外恢复+1）</div>
+    </div>
+    <div class="card tool"><div class="card-type">咒具 · 装备</div><div class="card-cost">2</div><div class="card-icon">🏯</div><div class="card-name">咒具·阵罗</div><div class="card-effect">防御术式效果+1</div></div>
+    <div class="card tool"><div class="card-type">咒具 · 装备</div><div class="card-cost">2</div><div class="card-icon">🏯</div><div class="card-name">咒具·阵罗</div><div class="card-effect">防御术式效果+1</div></div>
+
+    <!-- 九十九由良 x2 -->
+    <div class="card tool">
+        <div class="card-type">咒具 · 装备</div>
+        <div class="card-cost">4</div>
+        <div class="card-icon">💎</div>
+        <div class="card-name">咒具·九十九由良</div>
+        <div class="card-effect">装备后持续生效<br><strong>效果：</strong>HP上限+3（从10提升至13）<br>装备时立即恢复3点HP</div>
+    </div>
+    <div class="card tool"><div class="card-type">咒具 · 装备</div><div class="card-cost">4</div><div class="card-icon">💎</div><div class="card-name">咒具·九十九由良</div><div class="card-effect">HP上限+3，装备时立即恢复3HP</div></div>
+
+</div>
+
+<div class="page-break"></div>
+
+<!-- ===== 玩家面板 ===== -->
+<h2 class="section-title panel">🎮 玩家面板（每位玩家1张）</h2>
+<div class="panel-grid">
+    <div class="player-panel">
+        <h3>🔮 玩家A · 咒术师</h3>
+        <div class="track-label">❤️ 生命值 (HP)</div>
+        <div class="hp-track">
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+        </div>
+        <div class="track-label">✨ 咒力值 (MP)</div>
+        <div class="mp-track">
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+        </div>
+        <div style="margin-top:15px; color:#aaa; font-size:0.85em;">
+            已装备咒具：____<br>
+            当前展开领域：____
+        </div>
+    </div>
+
+    <div class="player-panel">
+        <h3>🔮 玩家B · 咒术师</h3>
+        <div class="track-label">❤️ 生命值 (HP)</div>
+        <div class="hp-track">
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+            <div class="hp-dot" style="background:#ff4444;"></div>
+        </div>
+        <div class="track-label">✨ 咒力值 (MP)</div>
+        <div class="mp-track">
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+            <div class="mp-dot"></div>
+        </div>
+        <div style="margin-top:15px; color:#aaa; font-size:0.85em;">
+            已装备咒具：____<br>
+            当前展开领域：____
+        </div>
+    </div>
+</div>
+
+<!-- ===== 指示物模板 ===== -->
+<h2 class="section-title" style="border-color:#ffd700; color:#ffd700;">✨ 指示物打印模板</h2>
+<p style="color:#aaa; margin-bottom:15px;">裁剪后使用，建议用不同颜色纸片或硬币代替亦可。</p>
+<div class="token-grid">
+    <div class="token curse">✨</div>
+    <div class="token curse">✨</div>
+    <div class="token curse">✨</div>
+    <div class="token curse">✨</div>
+    <div class="token curse">✨</div>
+    <div style="color:#ccc; text-align:center; margin-top:8px;">咒力指示物（×30，紫色）</div>
+</div>
+<div class="token-grid" style="margin-top:20px;">
+    <div class="token hp">❤️</div>
+    <div class="token hp">❤️</div>
+    <div class="token hp">❤️</div>
+    <div class="token hp">❤️</div>
+    <div class="token hp">❤️</div>
+    <div style="color:#ccc; text-align:center; margin-top:8px;">生命指示物（×20，红色，可用纸笔代替）</div>
+</div>
+
+<!-- ===== 卡牌背面 ===== -->
+<div class="page-break"></div>
+<h2 class="section-title domain">🃏 卡牌背面（可选打印）</h2>
+<p style="color:#aaa; margin-bottom:15px;">如希望卡牌双面打印，可打印此页并贴于卡牌背面。</p>
+<div class="card-back-grid">
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+    <div class="card-back"><div class="card-back-inner">🔮</div></div>
+</div>
+
+</body>
+</html>
