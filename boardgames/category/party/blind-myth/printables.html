@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盲盒神话 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'SimHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 32px;
+            color: #333;
+            margin: 30px 0;
+            page-break-before: always;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #555;
+            margin: 20px 0;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            page-break-before: always;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 160px;
+            height: 220px;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            position: relative;
+            page-break-inside: avoid;
+        }
+
+        .card-header {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .card-icon {
+            font-size: 64px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-footer {
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .card-set {
+            font-size: 10px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .card-rarity {
+            font-size: 10px;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .rare {
+            background: #ffd700;
+            color: #333;
+        }
+
+        .common {
+            background: #808080;
+            color: white;
+        }
+
+        .hidden {
+            background: #ff1493;
+            color: white;
+        }
+
+        /* 西游记套装 - 橙红色系 */
+        .set-journey {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            border: 3px solid #ff4500;
+        }
+
+        /* 封神榜套装 - 紫蓝色系 */
+        .set-fengshen {
+            background: linear-gradient(135deg, #6a0dad, #4169e1);
+            color: white;
+            border: 3px solid #4b0082;
+        }
+
+        /* 山海经套装 - 绿色系 */
+        .set-shanhaijing {
+            background: linear-gradient(135deg, #2e8b57, #3cb371);
+            color: white;
+            border: 3px solid #228b22;
+        }
+
+        /* 白蛇传套装 - 粉色系 */
+        .set-baishe {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: 3px solid #c71585;
+        }
+
+        /* 行动卡 - 黄色系 */
+        .card-action {
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #333;
+            border: 3px solid #ff8c00;
+        }
+
+        /* 稀有卡 - 紫色系 */
+        .card-rare {
+            background: linear-gradient(135deg, #9370db, #8a2be2);
+            color: white;
+            border: 3px solid #7b68ee;
+        }
+
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-hint {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .page-title {
+                page-break-before: always;
+            }
+
+            .section-title {
+                page-break-before: always;
+            }
+
+            .cards-grid {
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌建议使用<strong>卡纸（200g）</strong>打印，增加耐用性</li>
+            <li>打印后沿边框裁剪，即可获得精美卡牌</li>
+            <li>建议使用彩色打印，卡牌效果更佳</li>
+        </ul>
+    </div>
+
+    <div class="instructions">
+        <h3>📦 盲盒神话 - 打印说明</h3>
+        <p><strong>游戏配件清单：</strong></p>
+        <ul>
+            <li>🃏 人物卡 × 32张（4套神话，每套8张）</li>
+            <li>🎴 行动卡 × 20张（5种行动，每种4张）</li>
+            <li>⭐ 稀有卡 × 8张（8种特殊能力）</li>
+            <li>💰 金币代币 × 60枚（可用硬币替代）</li>
+            <li>🎲 盲盒骰 × 1颗（可用普通骰子替代）</li>
+        </ul>
+        <p><strong>打印建议：</strong></p>
+        <ul>
+            <li>人物卡和行动卡：使用卡纸打印，双面打印效果更佳</li>
+            <li>稀有卡：建议使用塑封，增加耐用性</li>
+            <li>金币代币：可使用硬币、豆子或打印的圆形代币</li>
+        </ul>
+    </div>
+
+    <h1 class="page-title">🎁 盲盒神话 - 人物卡</h1>
+
+    <!-- 西游记套装 -->
+    <h2 class="section-title">🐵 第一套：西游记（橙红色系）</h2>
+    <div class="cards-grid">
+        <div class="card set-journey">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">孙悟空</div>
+            <div class="card-icon">🐵</div>
+            <div class="card-footer">齐天大圣</div>
+        </div>
+        <div class="card set-journey">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">猪八戒</div>
+            <div class="card-icon">🐷</div>
+            <div class="card-footer">天蓬元帅</div>
+        </div>
+        <div class="card set-journey">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">白龙马</div>
+            <div class="card-icon">🐴</div>
+            <div class="card-footer">敖烈三太子</div>
+        </div>
+        <div class="card set-journey">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">唐僧</div>
+            <div class="card-icon">👲</div>
+            <div class="card-footer">唐三藏</div>
+        </div>
+        <div class="card set-journey">
+            <span class="card-rarity rare">稀有</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">如来佛祖</div>
+            <div class="card-icon">🧙‍♂️</div>
+            <div class="card-footer">西天佛祖</div>
+        </div>
+        <div class="card set-journey">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">牛魔王</div>
+            <div class="card-icon">👹</div>
+            <div class="card-footer">平天大圣</div>
+        </div>
+        <div class="card set-journey">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">铁扇公主</div>
+            <div class="card-icon">👸</div>
+            <div class="card-footer">罗刹女</div>
+        </div>
+        <div class="card set-journey">
+            <span class="card-rarity hidden">隐藏</span>
+            <span class="card-set">西游记</span>
+            <div class="card-header">金箍棒</div>
+            <div class="card-icon">🔮</div>
+            <div class="card-footer">如意金箍棒</div>
+        </div>
+    </div>
+
+    <!-- 封神榜套装 -->
+    <h2 class="section-title">⚡ 第二套：封神榜（紫蓝色系）</h2>
+    <div class="cards-grid">
+        <div class="card set-fengshen">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">哪吒</div>
+            <div class="card-icon">⚡</div>
+            <div class="card-footer">三太子</div>
+        </div>
+        <div class="card set-fengshen">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">姜子牙</div>
+            <div class="card-icon">🎣</div>
+            <div class="card-footer">太公望</div>
+        </div>
+        <div class="card set-fengshen">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">二郎神</div>
+            <div class="card-icon">👁️</div>
+            <div class="card-footer">杨戬</div>
+        </div>
+        <div class="card set-fengshen">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">妲己</div>
+            <div class="card-icon">🦊</div>
+            <div class="card-footer">千年狐妖</div>
+        </div>
+        <div class="card set-fengshen">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">雷震子</div>
+            <div class="card-icon">⚡</div>
+            <div class="card-footer">雷部正神</div>
+        </div>
+        <div class="card set-fengshen">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">黄飞虎</div>
+            <div class="card-icon">🐯</div>
+            <div class="card-footer">武成王</div>
+        </div>
+        <div class="card set-fengshen">
+            <span class="card-rarity rare">稀有</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">申公豹</div>
+            <div class="card-icon">🧙‍♂️</div>
+            <div class="card-footer">炼气士</div>
+        </div>
+        <div class="card set-fengshen">
+            <span class="card-rarity hidden">隐藏</span>
+            <span class="card-set">封神榜</span>
+            <div class="card-header">打神鞭</div>
+            <div class="card-icon">🪄</div>
+            <div class="card-footer">番天印</div>
+        </div>
+    </div>
+
+    <!-- 山海经套装 -->
+    <h2 class="section-title">🐉 第三套：山海经异兽（绿色系）</h2>
+    <div class="cards-grid">
+        <div class="card set-shanhaijing">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">麒麟</div>
+            <div class="card-icon">🦄</div>
+            <div class="card-footer">仁兽麒麟</div>
+        </div>
+        <div class="card set-shanhaijing">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">凤凰</div>
+            <div class="card-icon">🦅</div>
+            <div class="card-footer">百鸟之王</div>
+        </div>
+        <div class="card set-shanhaijing">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">玄武</div>
+            <div class="card-icon">🐢</div>
+            <div class="card-footer">北方守护神</div>
+        </div>
+        <div class="card set-shanhaijing">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">白虎</div>
+            <div class="card-icon">🐅</div>
+            <div class="card-footer">西方守护神</div>
+        </div>
+        <div class="card set-shanhaijing">
+            <span class="card-rarity rare">稀有</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">九尾狐</div>
+            <div class="card-icon">🦊</div>
+            <div class="card-footer">青丘之狐</div>
+        </div>
+        <div class="card set-shanhaijing">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">相柳</div>
+            <div class="card-icon">🐍</div>
+            <div class="card-footer">九头蛇身</div>
+        </div>
+        <div class="card set-shanhaijing">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">饕餮</div>
+            <div class="card-icon">👹</div>
+            <div class="card-footer">贪食恶兽</div>
+        </div>
+        <div class="card set-shanhaijing">
+            <span class="card-rarity hidden">隐藏</span>
+            <span class="card-set">山海经</span>
+            <div class="card-header">混沌</div>
+            <div class="card-icon">🌫️</div>
+            <div class="card-footer">无面之神</div>
+        </div>
+    </div>
+
+    <!-- 白蛇传套装 -->
+    <h2 class="section-title">🐍 第四套：白蛇传（粉色系）</h2>
+    <div class="cards-grid">
+        <div class="card set-baishe">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">白素贞</div>
+            <div class="card-icon">🐍</div>
+            <div class="card-footer">白蛇仙子</div>
+        </div>
+        <div class="card set-baishe">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">小青</div>
+            <div class="card-icon">💚</div>
+            <div class="card-footer">青蛇姑娘</div>
+        </div>
+        <div class="card set-baishe">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">许仙</div>
+            <div class="card-icon">👨</div>
+            <div class="card-footer">钱塘书生</div>
+        </div>
+        <div class="card set-baishe">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">法海</div>
+            <div class="card-icon">🧙‍♂️</div>
+            <div class="card-footer">金山寺住持</div>
+        </div>
+        <div class="card set-baishe">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">许仕林</div>
+            <div class="card-icon">👦</div>
+            <div class="card-footer">文曲星下凡</div>
+        </div>
+        <div class="card set-baishe">
+            <span class="card-rarity common">普通</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">蛤蟆精</div>
+            <div class="card-icon">🐸</div>
+            <div class="card-footer">王府管家</div>
+        </div>
+        <div class="card set-baishe">
+            <span class="card-rarity rare">稀有</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">观音菩萨</div>
+            <div class="card-icon">🙏</div>
+            <div class="card-footer">救苦救难</div>
+        </div>
+        <div class="card set-baishe">
+            <span class="card-rarity hidden">隐藏</span>
+            <span class="card-set">白蛇传</span>
+            <div class="card-header">雷峰塔</div>
+            <div class="card-icon">🗼</div>
+            <div class="card-footer">镇压妖邪</div>
+        </div>
+    </div>
+
+    <h1 class="page-title">🎴 盲盒神话 - 行动卡</h1>
+
+    <h2 class="section-title">🎲 行动卡（共20张）</h2>
+    <div class="cards-grid">
+        <div class="card card-action">
+            <div class="card-header">🔄 强制交易</div>
+            <div class="card-icon">🔄</div>
+            <div class="card-footer">选择一名玩家，强制交换一张手牌</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🔄 强制交易</div>
+            <div class="card-icon">🔄</div>
+            <div class="card-footer">选择一名玩家，强制交换一张手牌</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🔄 强制交易</div>
+            <div class="card-icon">🔄</div>
+            <div class="card-footer">选择一名玩家，强制交换一张手牌</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🔄 强制交易</div>
+            <div class="card-icon">🔄</div>
+            <div class="card-footer">选择一名玩家，强制交换一张手牌</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💰 金币抢夺</div>
+            <div class="card-icon">💰</div>
+            <div class="card-footer">支付3金币，抢夺他人一张指定卡</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💰 金币抢夺</div>
+            <div class="card-icon">💰</div>
+            <div class="card-footer">支付3金币，抢夺他人一张指定卡</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💰 金币抢夺</div>
+            <div class="card-icon">💰</div>
+            <div class="card-footer">支付3金币，抢夺他人一张指定卡</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💰 金币抢夺</div>
+            <div class="card-icon">💰</div>
+            <div class="card-footer">支付3金币，抢夺他人一张指定卡</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🍀 幸运再抽</div>
+            <div class="card-icon">🍀</div>
+            <div class="card-footer">本次购买盲盒免费，再抽一次</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🍀 幸运再抽</div>
+            <div class="card-icon">🍀</div>
+            <div class="card-footer">本次购买盲盒免费，再抽一次</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🍀 幸运再抽</div>
+            <div class="card-icon">🍀</div>
+            <div class="card-footer">本次购买盲盒免费，再抽一次</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🍀 幸运再抽</div>
+            <div class="card-icon">🍀</div>
+            <div class="card-footer">本次购买盲盒免费，再抽一次</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💀 价格诅咒</div>
+            <div class="card-icon">💀</div>
+            <div class="card-footer">目标玩家下次购买盲盒价格翻倍</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💀 价格诅咒</div>
+            <div class="card-icon">💀</div>
+            <div class="card-footer">目标玩家下次购买盲盒价格翻倍</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💀 价格诅咒</div>
+            <div class="card-icon">💀</div>
+            <div class="card-footer">目标玩家下次购买盲盒价格翻倍</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">💀 价格诅咒</div>
+            <div class="card-icon">💀</div>
+            <div class="card-footer">目标玩家下次购买盲盒价格翻倍</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🎁 金币丰收</div>
+            <div class="card-icon">🎁</div>
+            <div class="card-footer">所有玩家获得2金币</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🎁 金币丰收</div>
+            <div class="card-icon">🎁</div>
+            <div class="card-footer">所有玩家获得2金币</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🎁 金币丰收</div>
+            <div class="card-icon">🎁</div>
+            <div class="card-footer">所有玩家获得2金币</div>
+        </div>
+        <div class="card card-action">
+            <div class="card-header">🎁 金币丰收</div>
+            <div class="card-icon">🎁</div>
+            <div class="card-footer">所有玩家获得2金币</div>
+        </div>
+    </div>
+
+    <h1 class="page-title">⭐ 盲盒神话 - 稀有卡</h1>
+
+    <h2 class="section-title">🌟 稀有卡（共8张，拥有特殊能力）</h2>
+    <div class="cards-grid">
+        <div class="card card-rare">
+            <div class="card-header">🔮 预言家</div>
+            <div class="card-icon">🔮</div>
+            <div class="card-footer">查看盲盒袋顶的3张卡<br>使用时机：购买盲盒前</div>
+        </div>
+        <div class="card card-rare">
+            <div class="card-header">📋 复制者</div>
+            <div class="card-icon">📋</div>
+            <div class="card-footer">复制一张已拥有的普通卡<br>使用时机：自己回合</div>
+        </div>
+        <div class="card card-rare">
+            <div class="card-header">🛡️ 守护者</div>
+            <div class="card-icon">🛡️</div>
+            <div class="card-footer">本回合免疫抢夺和交易<br>使用时机：被威胁时</div>
+        </div>
+        <div class="card card-rare">
+            <div class="card-header">💎 富豪</div>
+            <div class="card-icon">💎</div>
+            <div class="card-footer">下次购买盲盒免费<br>使用时机：购买盲盒前</div>
+        </div>
+        <div class="card card-rare">
+            <div class="card-header">🔃 交换者</div>
+            <div class="card-icon">🔃</div>
+            <div class="card-footer">与牌堆顶的卡交换手牌<br>使用时机：自己回合</div>
+        </div>
+        <div class="card card-rare">
+            <div class="card-header">👁️ 窥视者</div>
+            <div class="card-icon">👁️</div>
+            <div class="card-footer">查看一名玩家的手牌<br>使用时机：自己回合</div>
+        </div>
+        <div class="card card-rare">
+            <div class="card-header">💣 毁灭者</div>
+            <div class="card-icon">💣</div>
+            <div class="card-footer">销毁一张行动卡<br>使用时机：行动卡生效前</div>
+        </div>
+        <div class="card card-rare">
+            <div class="card-header">⭐ 幸运星</div>
+            <div class="card-icon">⭐</div>
+            <div class="card-footer">重新掷盲盒骰<br>使用时机：购买盲盒后</div>
+        </div>
+    </div>
+
+    <div class="instructions" style="margin-top: 30px;">
+        <h3>🎨 打印建议</h3>
+        <p>1. <strong>卡纸选择</strong>：建议使用200g或300g卡纸打印，卡牌更耐用</p>
+        <p>2. <strong>双面打印</strong>：如果打印机支持，可以双面打印，背面加上logo或说明</p>
+        <p>3. <strong>塑封保护</strong>：打印后可以塑封，延长使用寿命</p>
+        <p>4. <strong>裁剪技巧</strong>：使用切纸刀比剪刀更整齐</p>
+        <p>5. <strong>收纳建议</strong>：使用卡牌收纳盒或自制纸盒存放</p>
+        <p>6. <strong>金币代币</strong>：可以使用硬币、麻将牌、豆子等替代</p>
+    </div>
+
+</body>
+</html>
