@@ -1,939 +1,556 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>芙莉莲的旅程 - 打印道具</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>芙莉莲的旅程 - 打印道具</title>
+<style>
+    @media print {
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        h1 {
-            text-align: center;
-            color: #5a67d8;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #718096;
-            margin-bottom: 30px;
-            font-size: 1.2em;
-        }
-
-        .print-hint {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 3px solid #f59e0b;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .print-hint strong {
-            color: #92400e;
-            font-size: 1.3em;
-            display: block;
-            margin-bottom: 15px;
-        }
-
-        .print-hint ul {
-            margin-left: 25px;
-            line-height: 2;
-        }
-
-        .print-hint li {
-            color: #78350f;
-            font-size: 1.05em;
-        }
-
-        .section {
-            margin: 50px 0;
-            page-break-before: always;
-        }
-
-        .section-title {
-            font-size: 2em;
-            color: #5a67d8;
-            border-bottom: 4px solid #5a67d8;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .game-map {
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            border: 4px solid #5a67d8;
-            border-radius: 15px;
-            padding: 40px;
-            margin: 30px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
-        .map-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .map-cell {
-            aspect-ratio: 1;
-            border: 3px solid #5a67d8;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 3em;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-
-        .map-cell:hover {
-            transform: scale(1.05);
-        }
-
-        .map-cell.label {
-            font-size: 0.3em;
-            color: #5a67d8;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .card {
-            border: 4px solid #5a67d8;
-            border-radius: 15px;
-            padding: 20px;
-            background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-        }
-
-        .card-header {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #5a67d8;
-            margin-bottom: 12px;
-            border-bottom: 3px solid #e2e8f0;
-            padding-bottom: 10px;
-            text-align: center;
-        }
-
-        .card-icon {
-            font-size: 3em;
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .card-info {
-            font-size: 0.95em;
-            line-height: 1.6;
-            color: #4a5568;
-        }
-
-        .card-info strong {
-            color: #2d3748;
-        }
-
-        .player-pieces {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .piece {
-            width: 120px;
-            height: 120px;
-            border: 5px solid #5a67d8;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .piece-label {
-            font-size: 0.35em;
-            color: #5a67d8;
-            font-weight: bold;
-            margin-top: 8px;
-        }
-
-        .role-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .role-card {
-            border: 5px solid #5a67d8;
-            border-radius: 15px;
-            padding: 25px;
-            background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-
-        .role-card-header {
-            font-size: 1.6em;
-            font-weight: bold;
-            color: #5a67d8;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .role-card-icon {
-            font-size: 4em;
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .role-card-info {
-            font-size: 1em;
-            line-height: 1.8;
-            color: #4a5568;
-        }
-
-        .role-card-info ul {
-            margin-left: 20px;
-        }
-
-        @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            body {
-                background: white;
-                padding: 0;
-            }
-
-            .container {
-                box-shadow: none;
-                padding: 20px;
-            }
-
-            .print-hint {
-                display: none;
-            }
-
-            .section {
-                page-break-before: always;
-            }
-
-            .card, .role-card {
-                break-inside: avoid;
-            }
-        }
-
-        @page {
-            margin: 20mm;
-            size: A4;
-        }
-    </style>
+        .print-hint { display: none !important; }
+        .page-break { page-break-before: always; }
+        .no-break { page-break-inside: avoid; }
+        body { margin: 0; padding: 10px; }
+        .card-grid { gap: 4px !important; }
+    }
+    body {
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        background: #f5f0eb;
+        padding: 20px;
+        color: #333;
+    }
+    .print-hint {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    .print-hint strong { color: #856404; }
+    .print-hint li { margin: 5px 0; }
+    h1 {
+        text-align: center;
+        color: #5a3d2b;
+        border-bottom: 3px solid #8b6f47;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    h2 {
+        color: #6b4226;
+        border-left: 5px solid #8b6f47;
+        padding-left: 10px;
+        margin-top: 30px;
+        background: #ede4d4;
+        padding: 8px 10px;
+        border-radius: 0 8px 8px 0;
+    }
+    /* 地图样式 */
+    .map-container {
+        background: #faf3e0;
+        border: 3px solid #8b6f47;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        text-align: center;
+    }
+    .map-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #5a3d2b;
+        margin-bottom: 15px;
+    }
+    .map-route {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        margin: 10px 0;
+    }
+    .map-stop {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        min-width: 260px;
+        justify-content: center;
+        font-size: 15px;
+    }
+    .map-arrow {
+        font-size: 20px;
+        color: #8b6f47;
+    }
+    .map-start { background: #d4edda; border: 2px solid #28a745; color: #155724; }
+    .map-forest { background: #d1ecf1; border: 2px solid #17a2b8; color: #0c5460; }
+    .map-mountain { background: #e2d9c1; border: 2px solid #6c757d; color: #495057; }
+    .map-village { background: #fff3cd; border: 2px solid #ffc107; color: #856404; }
+    .map-desert { background: #fce4b8; border: 2px solid #e67e22; color: #7d4a00; }
+    .map-sea { background: #cce5ff; border: 2px solid #004085; color: #004085; }
+    .map-city { background: #e2d9f3; border: 2px solid #6f42c1; color: #6f42c1; }
+    .map-end { background: #f8d7da; border: 2px solid #dc3545; color: #721c24; }
+    .map-key {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+        font-size: 13px;
+    }
+    .map-key span {
+        background: white;
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+    /* 卡牌通用样式 */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin: 15px 0;
+    }
+    .card {
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        position: relative;
+        overflow: hidden;
+        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    .card-icon {
+        font-size: 28px;
+        margin: 6px 0;
+    }
+    .card-name {
+        font-weight: bold;
+        font-size: 13px;
+        margin: 4px 0 2px;
+    }
+    .card-type {
+        font-size: 10px;
+        opacity: 0.8;
+        margin-bottom: 4px;
+    }
+    .card-desc {
+        font-size: 10px;
+        line-height: 1.3;
+        text-align: left;
+        padding: 0 4px;
+    }
+    .card-cost {
+        font-size: 10px;
+        margin-top: 4px;
+        font-weight: bold;
+    }
+    /* 魔法卡颜色 */
+    .spell-1 { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #4caf50; }
+    .spell-2 { background: linear-gradient(135deg, #e3f2fd, #bbdefb); border: 2px solid #2196f3; }
+    .spell-3 { background: linear-gradient(135deg, #f3e5f5, #e1bee7); border: 2px solid #9c27b0; }
+    .spell-4 { background: linear-gradient(135deg, #424242, #616161); border: 2px solid #212121; color: white; }
+    /* 魔物卡颜色 */
+    .monster-normal { background: linear-gradient(135deg, #ffebee, #ffcdd2); border: 2px solid #f44336; }
+    .monster-elite { background: linear-gradient(135deg, #fce4ec, #f8bbd0); border: 2px solid #e91e63; }
+    .monster-boss { background: linear-gradient(135deg, #fff8e1, #ffecb3); border: 2px solid #ff9800; }
+    /* 事件卡颜色 */
+    .event-friendly { background: linear-gradient(135deg, #e8eaf6, #c5cae9); border: 2px solid #3f51b5; }
+    .event-danger { background: linear-gradient(135deg, #fbe9e7, #ffccbc); border: 2px solid #ff5722; }
+    .event-choice { background: linear-gradient(135deg, #f3e5f5, #e1bee7); border: 2px solid #9c27b0; }
+    /* 委托卡颜色 */
+    .quest-d { background: linear-gradient(135deg, #f5f5f5, #e0e0e0); border: 2px solid #9e9e9e; }
+    .quest-c { background: linear-gradient(135deg, #e8eaf6, #c5cae9); border: 2px solid #3f51b5; }
+    .quest-b { background: linear-gradient(135deg, #fff8e1, #ffecb3); border: 2px solid #ff9800; }
+    /* 地形卡 */
+    .terrain-card { background: linear-gradient(135deg, #f1f8e9, #dcedc8); border: 2px solid #689f38; }
+    /* 角色卡 */
+    .character-card {
+        background: linear-gradient(135deg, #fff9c4, #fff176);
+        border: 3px solid #f9a825;
+        border-radius: 12px;
+        padding: 12px;
+        min-height: 180px;
+    }
+    .char-name { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
+    .char-stats { font-size: 12px; text-align: left; margin: 6px 0; }
+    .char-ability { font-size: 11px; background: rgba(0,0,0,0.08); padding: 6px; border-radius: 6px; margin-top: 6px; }
+    /* 棋子 */
+    .pawn-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 15px 0;
+        justify-content: center;
+    }
+    .pawn {
+        width: 60px;
+        height: 80px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        position: relative;
+    }
+    .pawn-label {
+        font-size: 10px;
+        font-weight: bold;
+        margin-top: 4px;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    /* 资源token */
+    .token-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin: 15px 0;
+    }
+    .token {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        position: relative;
+    }
+    .token-label {
+        position: absolute;
+        bottom: -16px;
+        font-size: 10px;
+        font-weight: bold;
+        color: #333;
+        white-space: nowrap;
+    }
+    .section { margin: 20px 0; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎮 芙莉莲的旅程</h1>
-        <p class="subtitle">Frieren's Journey - 打印道具</p>
 
-        <div class="print-hint">
-            <strong>⚠️ 重要打印提示：</strong>
-            <ul>
-                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
-                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
-                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
-                <li>打印后可裁剪并塑封，延长使用寿命</li>
-                <li>建议分别打印各章节，按需打印所需道具</li>
-            </ul>
-        </div>
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+        <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，裁剪后可使用</li>
+        <li>地图建议用A4普通纸打印，可拼接使用</li>
+        <li>打印后建议用塑封膜塑封，增加耐用性</li>
+    </ul>
+</div>
 
-        <!-- 游戏地图 -->
-        <div class="section">
-            <h2 class="section-title">🗺️ 游戏地图</h2>
-            <div class="game-map">
-                <div class="map-grid">
-                    <div class="map-cell">
-                        🏘️
-                        <span class="map-cell label">出发村</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        📜
-                        <span class="map-cell label">任务点</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        🌲
-                        <span class="map-cell label">森林</span>
-                    </div>
+<h1>🧙 芙莉莲的旅程 — 打印道具</h1>
 
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        ⚔️
-                        <span class="map-cell label">战斗点</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        🔮
-                        <span class="map-cell label">魔法点</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-
-                    <div class="map-cell">
-                        🏔️
-                        <span class="map-cell label">山脉</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        🎯
-                        <span class="map-cell label">中心点</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        🏰
-                        <span class="map-cell label">城堡</span>
-                    </div>
-
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        👹
-                        <span class="map-cell label">怪物点</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        ✨
-                        <span class="map-cell label">治愈点</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-
-                    <div class="map-cell">
-                        🌊
-                        <span class="map-cell label">海岸</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        💎
-                        <span class="map-cell label">宝藏点</span>
-                    </div>
-                    <div class="map-cell">
-                        ⬛
-                        <span class="map-cell label">道路</span>
-                    </div>
-                    <div class="map-cell">
-                        🏯
-                        <span class="map-cell label">终点</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 角色卡 -->
-        <div class="section">
-            <h2 class="section-title">👥 角色卡</h2>
-            <div class="role-cards">
-                <div class="role-card">
-                    <div class="role-card-header">芙莉莲</div>
-                    <div class="role-card-icon">🧙‍♀️</div>
-                    <div class="role-card-info">
-                        <strong>生命值：</strong>8<br>
-                        <strong>特殊能力：</strong>可以使用高级魔法，魔法伤害+2<br>
-                        <strong>推荐使用：</strong>魔法攻击输出<br>
-                        <strong>初始手牌：</strong>3张魔法卡
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <div class="role-card-header">费伦</div>
-                    <div class="role-card-icon">📖</div>
-                    <div class="role-card-info">
-                        <strong>生命值：</strong>6<br>
-                        <strong>特殊能力：</strong>可以预知危险，战斗前查看怪物卡<br>
-                        <strong>推荐使用：</strong>战术支援和情报收集<br>
-                        <strong>初始手牌：</strong>3张知识卡
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <div class="role-card-header">修塔尔克</div>
-                    <div class="role-card-icon">⚔️</div>
-                    <div class="role-card-info">
-                        <strong>生命值：</strong>10<br>
-                        <strong>特殊能力：</strong>近战专家，物理伤害+3<br>
-                        <strong>推荐使用：</strong>前排肉盾和物理输出<br>
-                        <strong>初始手牌：</strong>3张装备卡
-                    </div>
-                </div>
-
-                <div class="role-card">
-                    <div class="role-card-header">海塔</div>
-                    <div class="role-card-icon">✨</div>
-                    <div class="role-card-info">
-                        <strong>生命值：</strong>7<br>
-                        <strong>特殊能力：</strong>治愈专家，每回合可恢复2点生命值<br>
-                        <strong>推荐使用：</strong>治疗和辅助<br>
-                        <strong>初始手牌：</strong>3张祈祷卡
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 玩家棋子 -->
-        <div class="section">
-            <h2 class="section-title">🎯 玩家棋子</h2>
-            <div class="player-pieces">
-                <div class="piece">
-                    🧙‍♀️
-                    <span class="piece-label">芙莉莲</span>
-                </div>
-                <div class="piece">
-                    📖
-                    <span class="piece-label">费伦</span>
-                </div>
-                <div class="piece">
-                    ⚔️
-                    <span class="piece-label">修塔尔克</span>
-                </div>
-                <div class="piece">
-                    ✨
-                    <span class="piece-label">海塔</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 魔法卡 -->
-        <div class="section">
-            <h2 class="section-title">🔮 魔法卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">火焰魔法</div>
-                    <div class="card-icon">🔥</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>2<br>
-                        <strong>效果：</strong>造成3点伤害<br>
-                        <strong>类型：</strong>攻击魔法
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">冰结魔法</div>
-                    <div class="card-icon">❄️</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>2<br>
-                        <strong>效果：</strong>造成2点伤害并冻结敌人1回合<br>
-                        <strong>类型：</strong>控制魔法
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">治愈魔法</div>
-                    <div class="card-icon">💚</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>3<br>
-                        <strong>效果：</strong>恢复4点生命值<br>
-                        <strong>类型：</strong>治愈魔法
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">防御魔法</div>
-                    <div class="card-icon">🛡️</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>1<br>
-                        <strong>效果：</strong>本回合受到的伤害减半<br>
-                        <strong>类型：</strong>防御魔法
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">雷击魔法</div>
-                    <div class="card-icon">⚡</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>4<br>
-                        <strong>效果：</strong>造成5点伤害，但消耗所有魔力<br>
-                        <strong>类型：</strong>高级攻击魔法
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">魔术师之杖</div>
-                    <div class="card-icon">🪄</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>0<br>
-                        <strong>效果：</strong>被动：魔法伤害+1<br>
-                        <strong>类型：</strong>装备魔法
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 装备卡 -->
-        <div class="section">
-            <h2 class="section-title">⚔️ 装备卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">勇者之剑</div>
-                    <div class="card-icon">⚔️</div>
-                    <div class="card-info">
-                        <strong>类型：</strong>武器<br>
-                        <strong>效果：</strong>物理伤害+3<br>
-                        <strong>适用：</strong>修塔尔克专用
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">精灵铠甲</div>
-                    <div class="card-icon">🛡️</div>
-                    <div class="card-info">
-                        <strong>类型：</strong>防具<br>
-                        <strong>效果：</strong>受到的伤害-1<br>
-                        <strong>适用：</strong>所有角色
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">速度之靴</div>
-                    <div class="card-icon">👢</div>
-                    <div class="card-info">
-                        <strong>类型：</strong>饰品<br>
-                        <strong>效果：</strong>移动步数+1<br>
-                        <strong>适用：</strong>所有角色
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">力量护腕</div>
-                    <div class="card-icon">💪</div>
-                    <div class="card-info">
-                        <strong>类型：</strong>饰品<br>
-                        <strong>效果：</strong>物理伤害+2<br>
-                        <strong>适用：</strong>修塔尔克专用
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">圣剑</div>
-                    <div class="card-icon">🗡️</div>
-                    <div class="card-info">
-                        <strong>类型：</strong>武器<br>
-                        <strong>效果：</strong>物理伤害+5，但每回合消耗1生命值<br>
-                        <strong>适用：</strong>修塔尔克专属
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 祈祷卡 -->
-        <div class="section">
-            <h2 class="section-title">✨ 祈祷卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">治愈祈祷</div>
-                    <div class="card-icon">💚</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>2<br>
-                        <strong>效果：</strong>恢复3点生命值<br>
-                        <strong>类型：</strong>治愈祈祷
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">净化祈祷</div>
-                    <div class="card-icon">✨</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>3<br>
-                        <strong>效果：</strong>移除所有负面状态<br>
-                        <strong>类型：</strong>净化祈祷
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">守护祈祷</div>
-                    <div class="card-icon">🛡️</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>2<br>
-                        <strong>效果：</strong>本回合所有玩家受到的伤害-1<br>
-                        <strong>类型：</strong>守护祈祷
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">复活祈祷</div>
-                    <div class="card-icon">💫</div>
-                    <div class="card-info">
-                        <strong>消耗魔力：</strong>5<br>
-                        <strong>效果：</strong>复活一名已阵亡的玩家（消耗所有魔力）<br>
-                        <strong>类型：</strong>高级祈祷
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 知识卡 -->
-        <div class="section">
-            <h2 class="section-title">📖 知识卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">魔法知识</div>
-                    <div class="card-icon">📖</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>查看怪物卡的效果<br>
-                        <strong>类型：</strong>情报知识<br>
-                        <strong>使用时机：</strong>战斗前
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">草药知识</div>
-                    <div class="card-icon">🌿</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>在森林地形恢复额外2点生命值<br>
-                        <strong>类型：</strong>生存知识<br>
-                        <strong>使用时机：</strong>停留在森林时
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">战斗技巧</div>
-                    <div class="card-icon">⚔️</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>本回合物理伤害+2<br>
-                        <strong>类型：</strong>战斗知识<br>
-                        <strong>使用时机：</strong>战斗时
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">地图记忆</div>
-                    <div class="card-icon">🗺️</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>查看整个地图布局<br>
-                        <strong>类型：</strong>探索知识<br>
-                        <strong>使用时机：</strong>任意时刻
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 怪物卡 -->
-        <div class="section">
-            <h2 class="section-title">👹 怪物卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">史莱姆</div>
-                    <div class="card-icon">🟢</div>
-                    <div class="card-info">
-                        <strong>生命值：</strong>3<br>
-                        <strong>攻击力：</strong>1<br>
-                        <strong>特殊能力：</strong>无特殊能力<br>
-                        <strong>难度：</strong>简单
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">哥布林</div>
-                    <div class="card-icon">👺</div>
-                    <div class="card-info">
-                        <strong>生命值：</strong>5<br>
-                        <strong>攻击力：</strong>2<br>
-                        <strong>特殊能力：</strong>群体攻击：所有玩家受到1点伤害<br>
-                        <strong>难度：</strong>简单
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">巨魔</div>
-                    <div class="card-icon">👹</div>
-                    <div class="card-info">
-                        <strong>生命值：</strong>8<br>
-                        <strong>攻击力：</strong>3<br>
-                        <strong>特殊能力：</strong>高生命值<br>
-                        <strong>难度：</strong>中等
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">龙</div>
-                    <div class="card-icon">🐉</div>
-                    <div class="card-info">
-                        <strong>生命值：</strong>15<br>
-                        <strong>攻击力：</strong>5<br>
-                        <strong>特殊能力：</strong>火焰攻击：每回合造成2点范围伤害<br>
-                        <strong>难度：</strong>困难
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">魔族</div>
-                    <div class="card-icon">😈</div>
-                    <div class="card-info">
-                        <strong>生命值：</strong>12<br>
-                        <strong>攻击力：</strong>4<br>
-                        <strong>特殊能力：</strong>魔法抗性：魔法伤害减半<br>
-                        <strong>难度：</strong>困难
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">BOSS：魔王</div>
-                    <div class="card-icon">👿</div>
-                    <div class="card-info">
-                        <strong>生命值：</strong>25<br>
-                        <strong>攻击力：</strong>6<br>
-                        <strong>特殊能力：</strong>超强攻击和防御<br>
-                        <strong>难度：</strong>极难
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 事件卡 -->
-        <div class="section">
-            <h2 class="section-title">🎲 事件卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">好天气</div>
-                    <div class="card-icon">☀️</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>本回合移动步数+1<br>
-                        <strong>类型：</strong>正面事件<br>
-                        <strong>持续时间：</strong>1回合
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">暴风雨</div>
-                    <div class="card-icon">⛈️</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>本回合无法移动<br>
-                        <strong>类型：</strong>负面事件<br>
-                        <strong>持续时间：</strong>1回合
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">迷路</div>
-                    <div class="card-icon">🌫️</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>后退2步<br>
-                        <strong>类型：</strong>负面事件<br>
-                        <strong>持续时间：</strong>立即生效
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">遇见商人</div>
-                    <div class="card-icon">🧑‍🦱</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>可以购买装备卡<br>
-                        <strong>类型：</strong>中性事件<br>
-                        <strong>持续时间：</strong>本回合
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">发现宝箱</div>
-                    <div class="card-icon">📦</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>获得1张宝藏卡<br>
-                        <strong>类型：</strong>正面事件<br>
-                        <strong>持续时间：</strong>立即生效
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">同伴受伤</div>
-                    <div class="card-icon">🤕</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>失去2点生命值<br>
-                        <strong>类型：</strong>负面事件<br>
-                        <strong>持续时间：</strong>立即生效
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 任务卡 -->
-        <div class="section">
-            <h2 class="section-title">📜 任务卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">采集草药</div>
-                    <div class="card-icon">🌿</div>
-                    <div class="card-info">
-                        <strong>要求：</strong>在森林地形停留1回合<br>
-                        <strong>奖励：</strong>恢复3点生命值<br>
-                        <strong>难度：</strong>简单
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">击败魔物</div>
-                    <div class="card-icon">⚔️</div>
-                    <div class="card-info">
-                        <strong>要求：</strong>战胜1只怪物<br>
-                        <strong>奖励：</strong>获得2张宝藏卡<br>
-                        <strong>难度：</strong>中等
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">探索遗迹</div>
-                    <div class="card-icon">🏛️</div>
-                    <div class="card-info">
-                        <strong>要求：</strong>到达地图中心<br>
-                        <strong>奖励：</strong>学习1张新魔法卡<br>
-                        <strong>难度：</strong>中等
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">护送村民</div>
-                    <div class="card-icon">🧑‍🤝‍🧑</div>
-                    <div class="card-info">
-                        <strong>要求：</strong>保护NPC到达终点<br>
-                        <strong>奖励：</strong>所有玩家恢复全满生命值<br>
-                        <strong>难度：</strong>困难
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">寻找宝藏</div>
-                    <div class="card-icon">💎</div>
-                    <div class="card-info">
-                        <strong>要求：</strong>到达宝藏点<br>
-                        <strong>奖励：</strong>获得强力装备<br>
-                        <strong>难度：</strong>中等
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 宝藏卡 -->
-        <div class="section">
-            <h2 class="section-title">💎 宝藏卡</h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">魔法水晶</div>
-                    <div class="card-icon">💎</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>魔力值+3<br>
-                        <strong>类型：</strong>资源宝藏<br>
-                        <strong>稀有度：</strong>普通
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">精灵之泉</div>
-                    <div class="card-icon">⛲</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>生命值恢复到全满<br>
-                        <strong>类型：</strong>治愈宝藏<br>
-                        <strong>稀有度：</strong>稀有
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">古代魔法书</div>
-                    <div class="card-icon">📕</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>获得1张高级魔法卡<br>
-                        <strong>类型：</strong>魔法宝藏<br>
-                        <strong>稀有度：</strong>稀有
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">龙之鳞</div>
-                    <div class="card-icon">🐉</div>
-                    <div class="card-info">
-                        <strong>效果：</strong>防御力+2<br>
-                        <strong>类型：</strong>装备宝藏<br>
-                        <strong>稀有度：</strong>史诗
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 50px; color: #718096; font-size: 0.9em;">
-            <p>🎮 芙莉莲的旅程 - 打印道具 | 合作类桌游</p>
-            <p>改编自《葬送的芙莉莲》| 打印时请勾选"背景图形"</p>
-        </div>
+<!-- ==================== 游戏地图 ==================== -->
+<div class="page-break"></div>
+<h2>🗺️ 游戏地图</h2>
+<div class="map-container">
+    <div class="map-title">艾兰大陆旅途路线</div>
+    <div class="map-route">
+        <div class="map-stop map-start">🏰 奥伊伦贝尔（起点）</div>
+        <div class="map-arrow">⬇️ 移动 2-3 步</div>
+        <div class="map-stop map-forest">🌲 艾兰大森林（可采集草药）</div>
+        <div class="map-arrow">⬇️ 移动 2-3 步</div>
+        <div class="map-stop map-mountain">🏔️ 维根山脉（获得魔法石）</div>
+        <div class="map-arrow">⬇️ 移动 2-3 步</div>
+        <div class="map-stop map-village">🏘️ 各各马大公国（村庄·可休息）</div>
+        <div class="map-arrow">⬇️ 移动 3-4 步</div>
+        <div class="map-stop map-desert">🏜️ 南部荒漠（消耗+1）</div>
+        <div class="map-arrow">⬇️ 移动 2-3 步</div>
+        <div class="map-stop map-sea">🌊 西部海岸（事件区）</div>
+        <div class="map-arrow">⬇️ 移动 2-3 步</div>
+        <div class="map-stop map-city">🏛️ 王都（城镇·可交易）</div>
+        <div class="map-arrow">⬇️ 移动 3-4 步</div>
+        <div class="map-stop map-mountain">⛰️ 终焉山脉（高危区域）</div>
+        <div class="map-arrow">⬇️ 移动 2 步</div>
+        <div class="map-stop map-end">🏔️ 天国之地（终点）✨</div>
     </div>
+    <div class="map-key">
+        <span>🏰 起点</span>
+        <span>🌲 森林：采集草药</span>
+        <span>🏔️ 山脉：获得魔法石</span>
+        <span>🏘️ 村庄：休息+委托</span>
+        <span>🏜️ 荒漠：移动消耗+1</span>
+        <span>🌊 海岸：随机事件</span>
+        <span>🏛️ 王都：交易+补充</span>
+        <span>✨ 终点：通关目标</span>
+    </div>
+    <p style="margin-top:15px;font-size:13px;color:#666;">完整旅途需要15-20回合 · 途经6个村庄可休息 · 3处遗迹可学习高级魔法</p>
+</div>
+
+<!-- ==================== 角色卡 ==================== -->
+<div class="page-break"></div>
+<h2>🧙 角色卡（玩家角色）</h2>
+<div class="card-grid">
+    <!-- 芙莉莲 -->
+    <div class="card character-card">
+        <div class="char-name">🧙 芙莉莲</div>
+        <div style="font-size:12px;color:#666;">大魔法师</div>
+        <div class="char-stats">
+            ❤️ HP：6 ｜ 🔵 MP：10<br>
+            ⚔️ 攻击：2 ｜ 🛡️ 防御：2
+        </div>
+        <div class="char-ability">
+            <strong>🌟 特殊能力：魔法精通</strong><br>
+            学习魔法卡时，可查看3张选1张
+        </div>
+        <div style="font-size:10px;margin-top:6px;">🎴 起始魔法：魔法火、防御魔法</div>
+    </div>
+    <!-- 费伦 -->
+    <div class="card character-card" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);border-color:#1976d2;">
+        <div class="char-name">🗡️ 费伦</div>
+        <div style="font-size:12px;color:#666;">勇者弟子</div>
+        <div class="char-stats">
+            ❤️ HP：8 ｜ 🔵 MP：4<br>
+            ⚔️ 攻击：4 ｜ 🛡️ 防御：5
+        </div>
+        <div class="char-ability">
+            <strong>🌟 特殊能力：勇者之剑</strong><br>
+            每回合可额外攻击1次
+        </div>
+        <div style="font-size:10px;margin-top:6px;">⚔️ 起始装备：勇者之剑（攻击+2）</div>
+    </div>
+    <!-- 修塔尔克 -->
+    <div class="card character-card" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:#388e3c;">
+        <div class="char-name">⚔️ 修塔尔克</div>
+        <div style="font-size:12px;color:#666;">年轻战士</div>
+        <div class="char-stats">
+            ❤️ HP：7 ｜ 🔵 MP：5<br>
+            ⚔️ 攻击：3 ｜ 🛡️ 防御：4
+        </div>
+        <div class="char-ability">
+            <strong>🌟 特殊能力：精灵弓箭手</strong><br>
+            远程攻击，可攻击后排魔物
+        </div>
+        <div style="font-size:10px;margin-top:6px;">🏹 起始装备：精灵弓（远程）</div>
+    </div>
+    <!-- 海塔（扩展） -->
+    <div class="card character-card" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);border-color:#f57c00;">
+        <div class="char-name">🛡️ 海塔</div>
+        <div style="font-size:12px;color:#666;">僧侣（扩展角色）</div>
+        <div class="char-stats">
+            ❤️ HP：7 ｜ 🔵 MP：7<br>
+            ⚔️ 攻击：2 ｜ 🛡️ 防御：6
+        </div>
+        <div class="char-ability">
+            <strong>🌟 特殊能力：治愈术</strong><br>
+            每回合可为1个队友回复2HP
+        </div>
+        <div style="font-size:10px;margin-top:6px;">💚 起始魔法：初级治愈术</div>
+    </div>
+</div>
+
+<!-- ==================== 玩家棋子 ==================== -->
+<div class="page-break"></div>
+<h2>🎲 玩家棋子（打印后裁剪使用）</h2>
+<div class="pawn-container">
+    <div class="pawn" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);">🧙<div class="pawn-label">芙莉莲</div></div>
+    <div class="pawn" style="background:linear-gradient(135deg,#1565c0,#0d47a1);">🗡️<div class="pawn-label">费伦</div></div>
+    <div class="pawn" style="background:linear-gradient(135deg,#2e7d32,#1b5e20);">⚔️<div class="pawn-label">修塔尔克</div></div>
+    <div class="pawn" style="background:linear-gradient(135deg,#e65100,#bf360c);">🛡️<div class="pawn-label">海塔</div></div>
+    <div class="pawn" style="background:linear-gradient(135deg,#555,#333);color:white;">📍<div class="pawn-label">旅程标记</div></div>
+    <div class="pawn" style="background:linear-gradient(135deg,#ad1457,#880e4f);color:white;">⏳<div class="pawn-label">时间沙漏</div></div>
+</div>
+
+<!-- ==================== 资源Token ==================== -->
+<div class="page-break"></div>
+<h2>🪙 资源 Token（打印后裁剪，建议用卡纸）</h2>
+<div class="token-grid">
+    <div class="token" style="background:radial-gradient(circle,#a5d6a7,#66bb6a);">🌿<div class="token-label">草药（×15）</div></div>
+    <div class="token" style="background:radial-gradient(circle,#90caf9,#42a5f5);">🔮<div class="token-label">魔法石（×15）</div></div>
+    <div class="token" style="background:radial-gradient(circle,#fff59d,#ffee58);">🪙<div class="token-label">金币（×15）</div></div>
+    <div class="token" style="background:radial-gradient(circle,#ef9a9a,#ef5350);">❤️<div class="token-label">生命值（×8）</div></div>
+    <div class="token" style="background:radial-gradient(circle,#b39ddb,#7e57c2);">🔵<div class="token-label">魔力值（×10）</div></div>
+    <div class="token" style="background:radial-gradient(circle,#ffe082,#ffd54f);">⏳<div class="token-label">时间沙漏（×6）</div></div>
+</div>
+
+<!-- ==================== 魔法卡 I级 ==================== -->
+<div class="page-break"></div>
+<h2>🔮 魔法卡 — 等级I（绿色·基础，共12张）</h2>
+<p style="color:#666;font-size:13px;">消耗1MP · 在遗迹地区学习 · 使用后将卡牌放入墓地堆</p>
+<div class="card-grid">
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">🔥</div><div class="card-name">萨里特的魔法火</div><div class="card-desc">对1个魔物造成3点伤害</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">🛡️</div><div class="card-name">防御魔法</div><div class="card-desc">本回合受到的伤害-2</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">💚</div><div class="card-name">初级治愈术</div><div class="card-desc">回复1个角色2HP</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">👁️</div><div class="card-name">侦察魔法</div><div class="card-desc">查看下1张事件卡/地形卡</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">✨</div><div class="card-name">闪光魔法</div><div class="card-desc">使1个魔物本回合无法攻击</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">💪</div><div class="card-name">力量强化</div><div class="card-desc">本回合攻击力+2</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">🪶</div><div class="card-name">飞行魔法</div><div class="card-desc">跳过1个地形（不触发效果）</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">🐍</div><div class="card-name">解毒魔法</div><div class="card-desc">解除中毒状态</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">🔒</div><div class="card-name">魔法锁</div><div class="card-desc">锁住1个宝箱/门（防御用途）</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">💧</div><div class="card-name">召唤水</div><div class="card-desc">在沙漠地形中回复所有HP</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">🔵</div><div class="card-name">魔法盾</div><div class="card-desc">为1个角色施加2点护盾</div></div>
+    <div class="card spell-1"><div class="card-header"><span>🔮 I级</span><span>1MP</span></div><div class="card-icon">🌟</div><div class="card-name">净化魔法</div><div class="card-desc">解除1个角色的负面状态</div></div>
+</div>
+
+<!-- ==================== 魔法卡 II级 ==================== -->
+<div class="page-break"></div>
+<h2>🔮 魔法卡 — 等级II（蓝色·中级，共10张）</h2>
+<p style="color:#666;font-size:13px;">消耗2MP · 需在遗迹学习（已有3张I级魔法后可学）</p>
+<div class="card-grid">
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">🔷</div><div class="card-name">赞恩的防御结界</div><div class="card-desc">所有角色本回合受到的伤害-3</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">💥</div><div class="card-name">艾泽的爆裂魔法</div><div class="card-desc">对全体魔物造成4点伤害</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">💙</div><div class="card-name">中级治愈术</div><div class="card-desc">回复所有角色2HP</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">⏱️</div><div class="card-name">时间停止</div><div class="card-desc">跳过魔物本回合攻击</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">⚡</div><div class="card-name">魔法雷击</div><div class="card-desc">对1个魔物造成6点伤害</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">👤</div><div class="card-name">隐身魔法</div><div class="card-desc">本回合所有角色无法被魔物锁定</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">💨</div><div class="card-name">召唤风</div><div class="card-desc">移动时额外前进1步</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">🔄</div><div class="card-name">魔力回复</div><div class="card-desc">回复1个角色3MP</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">🪞</div><div class="card-name">魔法镜面</div><div class="card-desc">反弹魔物本回合的魔法攻击</div></div>
+    <div class="card spell-2"><div class="card-header"><span>🔮 II级</span><span>2MP</span></div><div class="card-icon">🪨</div><div class="card-name">大地魔法</div><div class="card-desc">在山脉地形获得额外魔法石×2</div></div>
+</div>
+
+<!-- ==================== 魔法卡 III级 ==================== -->
+<div class="page-break"></div>
+<h2>🔮 魔法卡 — 等级III（紫色·高级，共8张）</h2>
+<p style="color:#666;font-size:13px;">消耗3MP · 高级遗迹或BOSS掉落 · 非常强大</p>
+<div class="card-grid">
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">❄️</div><div class="card-name">梅斯塔的冰封魔法</div><div class="card-desc">冻结1个区域（魔物2回合无法行动）</div></div>
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">🏹</div><div class="card-name">索莉缇尔的魔法箭</div><div class="card-desc">对1个魔物造成8点伤害，无视防御</div></div>
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">💜</div><div class="card-name">全群体治愈术</div><div class="card-desc">回复所有角色全部HP</div></div>
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">🚪</div><div class="card-name">禁忌之门</div><div class="card-desc">直接跳到下一个区域（跳过所有事件）</div></div>
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">🌪️</div><div class="card-name">魔法风暴</div><div class="card-desc">全体魔物-5HP + 全体队员+2HP</div></div>
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">🛡️</div><div class="card-name">完全防御结界</div><div class="card-desc">下2回合所有伤害为0</div></div>
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">🔁</div><div class="card-name">灵魂交换</div><div class="card-desc">交换2个角色的所有HP/MP</div></div>
+    <div class="card spell-3"><div class="card-header"><span>🔮 III级</span><span>3MP</span></div><div class="card-icon">✝️</div><div class="card-name">复活魔法</div><div class="card-desc">将1个倒下的角色复活至3HP</div></div>
+</div>
+
+<!-- ==================== 禁忌魔法卡 ==================== -->
+<div class="page-break"></div>
+<h2>💀 禁忌魔法卡 — 等级IV（黑色·极危险，共6张）</h2>
+<p style="color:#666;font-size:13px;">消耗4MP · 强大但副作用严重 · 累计使用3次触发魔法反噬！</p>
+<div class="card-grid">
+    <div class="card spell-4"><div class="card-header" style="color:#ff5252;"><span>💀 禁忌</span><span>4MP</span></div><div class="card-icon">💀</div><div class="card-name">死灵魔法</div><div class="card-desc">对全体魔物造成10点伤害<br><small>⚠️ 副作用：芙莉莲HP-3</small></div></div>
+    <div class="card spell-4"><div class="card-header" style="color:#ff5252;"><span>💀 禁忌</span><span>4MP</span></div><div class="card-icon">⏳</div><div class="card-name">时间倒流</div><div class="card-desc">撤销本回合所有负面事件<br><small>⚠️ 副作用：随机失去1张魔法卡</small></div></div>
+    <div class="card spell-4"><div class="card-header" style="color:#ff5252;"><span>💀 禁忌</span><span>4MP</span></div><div class="card-icon">❤️</div><div class="card-name">灵魂献祭</div><div class="card-desc">全队HP/MP完全回复<br><small>⚠️ 副作用：芙莉莲HP变为1</small></div></div>
+    <div class="card spell-4"><div class="card-header" style="color:#ff5252;"><span>💀 禁忌</span><span>4MP</span></div><div class="card-icon">🌑</div><div class="card-name">虚空魔法</div><div class="card-desc">直接击败当前区域BOSS<br><small>⚠️ 副作用：全体MP归零</small></div></div>
+    <div class="card spell-4"><div class="card-header" style="color:#ff5252;"><span>💀 禁忌</span><span>4MP</span></div><div class="card-icon">⚡</div><div class="card-name">天罚魔法</div><div class="card-desc">对1个魔物造成15点伤害<br><small>⚠️ 副作用：本回合无法行动</small></div></div>
+    <div class="card spell-4"><div class="card-header" style="color:#ff5252;"><span>💀 禁忌</span><span>4MP</span></div><div class="card-icon">🌟</div><div class="card-name">禁忌·永生</div><div class="card-desc">全队3回合内HP不减少<br><small>⚠️ 游戏结束后全员HP永久-2</small></div></div>
+</div>
+
+<!-- ==================== 魔物卡 普通 ==================== -->
+<div class="page-break"></div>
+<h2>👹 魔物卡 — 普通（红色边框，共15张）</h2>
+<div class="card-grid">
+    <div class="card monster-normal"><div class="card-header"><span>👺 普通</span><span>HP 3</span></div><div class="card-icon">👺</div><div class="card-name">哥布林</div><div class="card-desc">攻击力1，无特殊能力<br>🎁 金币×1</div></div>
+    <div class="card monster-normal"><div class="card-header"><span>👺 普通</span><span>HP 4</span></div><div class="card-icon">🐺</div><div class="card-name">巨狼</div><div class="card-desc">攻击力2，优先攻击HP最低者<br>🎁 金币×1，草药×1</div></div>
+    <div class="card monster-normal"><div class="card-header"><span>👺 普通</span><span>HP 5</span></div><div class="card-icon">🌺</div><div class="card-name">食人花</div><div class="card-desc">攻击附带中毒（每回合HP-1）<br>🎁 魔法石×1</div></div>
+    <div class="card monster-normal"><div class="card-header"><span>👺 普通</span><span>HP 6</span></div><div class="card-icon">🗿</div><div class="card-name">石像鬼</div><div class="card-desc">防御力+3<br>🎁 金币×2</div></div>
+    <div class="card monster-normal"><div class="card-header"><span>👺 普通</span><span>HP 4</span></div><div class="card-icon">🟢</div><div class="card-name">魔法史莱姆</div><div class="card-desc">免疫物理攻击<br>🎁 魔法石×2</div></div>
+    <div class="card monster-normal"><div class="card-header"><span>👺 普通</span><span>HP 5</span></div><div class="card-icon">💀</div><div class="card-name">骸骨战士</div><div class="card-desc">每回合自动回复1HP<br>🎁 金币×2，武器碎片×1</div></div>
+</div>
+
+<!-- ==================== 魔物卡 精英 ==================== -->
+<div class="page-break"></div>
+<h2>👹 魔物卡 — 精英（深红边框，共10张）</h2>
+<div class="card-grid">
+    <div class="card monster-elite"><div class="card-header"><span>🔥 精英</span><span>HP 8</span></div><div class="card-icon">🔥</div><div class="card-name">火焰精灵</div><div class="card-desc">攻击附带燃烧效果<br>🎁 魔法石×3，金币×2</div></div>
+    <div class="card monster-elite"><div class="card-header"><span>🔥 精英</span><span>HP 10</span></div><div class="card-icon">❄️</div><div class="card-name">冰霜巨魔</div><div class="card-desc">攻击附带冻结（跳过1回合）<br>🎁 魔法石×3，草药×2</div></div>
+    <div class="card monster-elite"><div class="card-header"><span>🔥 精英</span><span>HP 7</span></div><div class="card-icon">🗡️</div><div class="card-name">暗影刺客</div><div class="card-desc">优先攻击后排角色<br>🎁 金币×3，暗影斗篷</div></div>
+    <div class="card monster-elite"><div class="card-header"><span>🔥 精英</span><span>HP 15</span></div><div class="card-icon">🪨</div><div class="card-name">岩石巨人</div><div class="card-desc">防御+5，每2回合攻击1次<br>🎁 魔法石×5</div></div>
+    <div class="card monster-elite"><div class="card-header"><span>🔥 精英</span><span>HP 12</span></div><div class="card-icon">🐉</div><div class="card-name">龙族幼崽</div><div class="card-desc">攻击可选1个或全体<br>🎁 龙之鳞片，金币×5</div></div>
+</div>
+
+<!-- ==================== 魔物卡 BOSS ==================== -->
+<div class="page-break"></div>
+<h2>👹 魔物卡 — BOSS（金色边框，共5张）</h2>
+<div class="card-grid">
+    <div class="card monster-boss"><div class="card-header"><span>🏆 BOSS</span><span>HP 25</span></div><div class="card-icon">🏆</div><div class="card-name">魔王将军</div><div class="card-desc">每回合攻击2次，召唤1只小怪<br>🎁 禁忌魔法×1，金币×10</div></div>
+    <div class="card monster-boss"><div class="card-header"><span>🏆 BOSS</span><span>HP 30</span></div><div class="card-icon">🏛️</div><div class="card-name">远古守护者</div><div class="card-desc">免疫I级魔法<br>🎁 III级魔法×2，魔法石×8</div></div>
+    <div class="card monster-boss"><div class="card-header"><span>🏆 BOSS</span><span>HP 40</span></div><div class="card-icon">🐲</div><div class="card-name">终焉魔龙</div><div class="card-desc">每回合全体攻击，免疫II级以下魔法<br>🎁 通关奖励·完美结局</div></div>
+</div>
+
+<!-- ==================== 事件卡 友好 ==================== -->
+<div class="page-break"></div>
+<h2>📜 事件卡 — 友好（蓝色，共8张）</h2>
+<div class="card-grid">
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">🏘️</div><div class="card-name">热心村民</div><div class="card-desc">获得草药×2，HP+1</div></div>
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">🌿</div><div class="card-name">魔法植物园</div><div class="card-desc">获得魔法石×2，可学习1张新魔法</div></div>
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">♨️</div><div class="card-name">温泉疗养</div><div class="card-desc">全队HP/MP完全回复</div></div>
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">🏛️</div><div class="card-name">古老遗迹</div><div class="card-desc">从魔法卡堆中选1张加入手牌</div></div>
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">🎉</div><div class="card-name">丰收祭典</div><div class="card-desc">获得金币×3，全体攻击力+1（本区域）</div></div>
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">🧙</div><div class="card-name">流浪魔法师</div><div class="card-desc">可以与其他玩家交换1张魔法卡</div></div>
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">🧝</div><div class="card-name">精灵的指引</div><div class="card-desc">查看下2张地形卡，选择最佳路线</div></div>
+    <div class="card event-friendly"><div class="card-header"><span>📗 友好</span></div><div class="card-icon">💧</div><div class="card-name">神秘泉水</div><div class="card-desc">随机1个角色的某项能力永久+1</div></div>
+</div>
+
+<!-- ==================== 事件卡 危险 ==================== -->
+<div class="page-break"></div>
+<h2>📜 事件卡 — 危险（橙色，共8张）</h2>
+<div class="card-grid">
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">⛈️</div><div class="card-name">暴风雨</div><div class="card-desc">全队HP-1，本回合移动-1</div></div>
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">👹</div><div class="card-name">魔物袭击</div><div class="card-desc">立即触发1次魔物战斗</div></div>
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">🍞</div><div class="card-name">食物短缺</div><div class="card-desc">失去金币×2（没有则HP-2）</div></div>
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">🗺️</div><div class="card-name">迷路</div><div class="card-desc">退回上1个区域</div></div>
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">🐊</div><div class="card-name">毒沼泽</div><div class="card-desc">全队中毒（3回合内每回合HP-1）</div></div>
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">🗡️</div><div class="card-name">盗贼团伙</div><div class="card-desc">失去随机1张手牌（魔法卡或资源）</div></div>
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">📡</div><div class="card-name">魔法干扰</div><div class="card-desc">本区域所有魔法消耗+1MP</div></div>
+    <div class="card event-danger"><div class="card-header"><span>📕 危险</span></div><div class="card-icon">🕳️</div><div class="card-name">坍塌的洞穴</div><div class="card-desc">选择：失去2HP 或 失去1件重要物品</div></div>
+</div>
+
+<!-- ==================== 事件卡 抉择 ==================== -->
+<div class="page-break"></div>
+<h2>📜 事件卡 — 抉择（紫色·需团队讨论，共8张）</h2>
+<div class="card-grid">
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">🎭</div><div class="card-name">神秘的旅人</div><div class="card-desc">A: 信任他（获得神秘奖励）<br>B: 拒绝他（无事发生）</div></div>
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">🏘️</div><div class="card-name">村庄的求助</div><div class="card-desc">A: 接受委托（进入战斗）<br>B: 继续赶路（时间-1）</div></div>
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">📕</div><div class="card-name">古老的魔法书</div><div class="card-desc">A: 学习它（获得随机魔法，可能有副作用）<br>B: 放下它（安全）</div></div>
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">🐺</div><div class="card-name">受伤的魔物</div><div class="card-desc">A: 救治它（成为盟友，战斗+1）<br>B: 忽略它（正常通过）</div></div>
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">🗺️</div><div class="card-name">分岔路口</div><div class="card-desc">A: 走大路（安全但慢，时间-2）<br>B: 走小路（危险但快）</div></div>
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">💧</div><div class="card-name">珍贵的魔法药</div><div class="card-desc">A: 给芙莉莲（MP+5）<br>B: 平分给全队（每人HP+2）</div></div>
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">🧝</div><div class="card-name">精灵的考验</div><div class="card-desc">A: 接受考验（战斗增强但危险）<br>B: 礼貌拒绝（获得小奖励）</div></div>
+    <div class="card event-choice"><div class="card-header"><span>📝 抉择</span></div><div class="card-icon">❄️</div><div class="card-name">终焉山脉的暴风雪</div><div class="card-desc">A: 消耗时间强行通过<br>B: 在村庄等待（时间-3但安全）</div></div>
+</div>
+
+<!-- ==================== 委托卡 ==================== -->
+<div class="page-break"></div>
+<h2>🏘️ 委托卡（共18张）</h2>
+<div class="card-grid">
+    <div class="card quest-d"><div class="card-header"><span>📜 D级</span></div><div class="card-icon">🌿</div><div class="card-name">采集药草</div><div class="card-desc">消耗1回合，获得草药×3<br>🎁 HP+2，金币×1</div></div>
+    <div class="card quest-d"><div class="card-header"><span>📜 D级</span></div><div class="card-icon">👺</div><div class="card-name">讨伐哥布林</div><div class="card-desc">击败1只哥布林<br>🎁 金币×2</div></div>
+    <div class="card quest-d"><div class="card-header"><span>📜 D级</span></div><div class="card-icon">📦</div><div class="card-name">护送商人</div><div class="card-desc">安全通过1个区域<br>🎁 金币×3</div></div>
+    <div class="card quest-c"><div class="card-header"><span>📜 C级</span></div><div class="card-icon">🏛️</div><div class="card-name">调查遗迹</div><div class="card-desc">消耗1回合<br>🎁 魔法卡×1</div></div>
+    <div class="card quest-c"><div class="card-header"><span>📜 C级</span></div><div class="card-icon">🔥</div><div class="card-name">讨伐火焰精灵</div><div class="card-desc">击败1只火焰精灵<br>🎁 魔法石×3，金币×2</div></div>
+    <div class="card quest-c"><div class="card-header"><span>📜 C级</span></div><div class="card-icon">📕</div><div class="card-name">寻找失落的魔法书</div><div class="card-desc">消耗2回合<br>🎁 可选择1张II级魔法</div></div>
+    <div class="card quest-b"><div class="card-header"><span>📜 B级</span></div><div class="card-icon">🗡️</div><div class="card-name">讨伐暗影刺客</div><div class="card-desc">击败1只暗影刺客<br>🎁 暗影斗篷，金币×5</div></div>
+    <div class="card quest-b"><div class="card-header"><span>📜 B级</span></div><div class="card-icon">🏛️</div><div class="card-name">探索远古遗迹</div><div class="card-desc">消耗2回合，需战斗<br>🎁 III级魔法×1，魔法石×5</div></div>
+    <div class="card quest-b"><div class="card-header"><span>📜 B级</span></div><div class="card-icon">🏆</div><div class="card-name">讨伐魔王将军</div><div class="card-desc">击败魔王将军<br>🎁 禁忌魔法×1，完美结局进度+1</div></div>
+</div>
+
+<!-- ==================== 地形卡 ==================== -->
+<div class="page-break"></div>
+<h2>🗺️ 地形卡（共20张）</h2>
+<div class="card-grid">
+    <div class="card terrain-card"><div class="card-header"><span>🌲 森林</span></div><div class="card-icon">🌲</div><div class="card-name">艾兰大森林</div><div class="card-desc">可采集草药（每位玩家+1草药）<br>移动消耗：正常</div></div>
+    <div class="card terrain-card"><div class="card-header"><span>🏔️ 山脉</span></div><div class="card-icon">⛰️</div><div class="card-name">维根山脉</div><div class="card-desc">移动消耗+1，但可获得魔法石×2<br>建议：费伦开路</div></div>
+    <div class="card terrain-card"><div class="card-header"><span>🏘️ 村庄</span></div><div class="card-icon">🏘️</div><div class="card-name">各各马大公国</div><div class="card-desc">可休息（完全回复HP/MP）<br>可接取委托</div></div>
+    <div class="card terrain-card"><div class="card-header"><span>🏜️ 荒漠</span></div><div class="card-icon">🏜️</div><div class="card-name">南部荒漠</div><div class="card-desc">移动消耗+1，每回合HP-1（脱水）<br>建议：准备充足的草药</div></div>
+    <div class="card terrain-card"><div class="card-header"><span>🌊 海岸</span></div><div class="card-icon">🌊</div><div class="card-name">西部海岸</div><div class="card-desc">抽取2张事件卡，选择1个生效<br>风险与机遇并存！</div></div>
+    <div class="card terrain-card"><div class="card-header"><span>🏛️ 王都</span></div><div class="card-icon">🏛️</div><div class="card-name">王都</div><div class="card-desc">可交易资源（3金币=1魔法石）<br>可补充物资</div></div>
+</div>
+
+<div style="text-align:center;margin-top:40px;color:#888;font-size:12px;">
+    芙莉莲的旅程 · 打印道具 · 设计灵感来源于《葬送的芙莉莲》· 同人创作非商业用途
+</div>
+
 </body>
 </html>

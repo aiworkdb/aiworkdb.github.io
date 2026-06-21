@@ -86,6 +86,7 @@ boardgames/
 | [星际走私商](category/card/stellar-smugglers/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
 | [咒力对决](category/card/curse-clash/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
 | [迷宫美食家](category/strategy/dungeon-gourmet/README.md) | 策略 | 2-4人 | 45-60分钟 | 中等 |
+| [芙莉莲的旅程](category/cooperative/frieren-journey/README.md) | 合作 | 1-4人 | 60-90分钟 | 中等/困难 |
 
 ## 添加新桌游
 
