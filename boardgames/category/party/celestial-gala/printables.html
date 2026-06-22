@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天庭年会 - 打印道具</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    background: #f5f0e8;
+    padding: 20px;
+    color: #333;
+  }
+
+  .print-hint {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  .print-hint strong { color: #856404; }
+  .print-hint ul { margin: 8px 0 0 20px; }
+  .print-hint li { margin: 4px 0; }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #8b0000;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    margin: 28px 0 14px 0;
+    page-break-after: avoid;
+  }
+  .section-gongpin { background: linear-gradient(135deg, #c9a227, #f0d060); }
+  .section-mapi { background: linear-gradient(135deg, #d44637, #e86050); }
+  .section-yinzha { background: linear-gradient(135deg, #6a1b9a, #9c27b0); }
+  .section-shentong { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+  .section-tianjie { background: linear-gradient(135deg, #e65100, #ff9800); }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 4px; right: 4px; bottom: 4px;
+    border: 1px dashed rgba(255,255,255,0.4);
+    border-radius: 7px;
+    pointer-events: none;
+  }
+
+  .card-emoji { font-size: 36px; margin-bottom: 6px; }
+  .card-name { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+  .card-type { font-size: 11px; color: rgba(255,255,255,0.85); margin-bottom: 4px; }
+  .card-effect { font-size: 11px; color: #fff; line-height: 1.3; padding: 0 4px; }
+  .card-rarity { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+  /* 贡品卡配色 */
+  .gongpin-fan { background: linear-gradient(135deg, #8bc34a, #aed581); }
+  .gongpin-ling { background: linear-gradient(135deg, #2196f3, #64b5f6); }
+  .gongpin-xian { background: linear-gradient(135deg, #9c27b0, #ba68c8); }
+  .gongpin-shen { background: linear-gradient(135deg, #ff6f00, #ffa726); border: 2px solid #ffd700; }
+
+  /* 马屁卡 */
+  .mapi { background: linear-gradient(135deg, #e53935, #ef5350); }
+
+  /* 阴招卡 */
+  .yinzha { background: linear-gradient(135deg, #4a148c, #7b1fa2); }
+
+  /* 神通卡 */
+  .shentong { background: linear-gradient(135deg, #0d47a1, #1976d2); }
+
+  /* 天劫卡 */
+  .tianjie { background: linear-gradient(135deg, #bf360c, #e64a19); }
+
+  .page-break { page-break-before: always; }
+
+  /* 切裁指引 */
+  .cut-guide {
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    margin: 6px 0 14px 0;
+    font-style: italic;
+  }
+
+  /* 面子计数器 */
+  .tracker-section {
+    margin-top: 28px;
+    padding: 16px;
+    background: linear-gradient(135deg, #fff8e1, #ffecb3);
+    border-radius: 10px;
+    border: 2px solid #ffc107;
+  }
+  .tracker-title { font-size: 18px; font-weight: bold; color: #8b0000; margin-bottom: 10px; text-align: center; }
+  .tracker-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .tracker-player {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  .tracker-player-name { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
+  .tracker-dots { font-size: 18px; letter-spacing: 2px; }
+
+  /* 令牌样式 */
+  .token-section {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .token {
+    display: inline-block;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, #ffd700, #ff8c00);
+    border-radius: 50%;
+    line-height: 120px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #8b0000;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    border: 3px solid #b8860b;
+  }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none !important; }
+    body { background: #fff; padding: 8px; }
+    .card { box-shadow: none; border: 1px solid #ccc; }
+    .page-break { page-break-before: always; }
+    @page { margin: 8mm; size: A4; }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（Chrome：更多设置→背景图形）</li>
+    <li>卡牌建议使用<strong>卡纸</strong>打印，增加手感和耐用性</li>
+    <li>打印后沿卡片边缘裁剪，建议塑封以长期使用</li>
+    <li>本页面已按A4纸优化，每页约6-9张卡牌</li>
+  </ul>
+</div>
+
+<h1>🏯 天庭年会 — 打印道具包</h1>
+<p class="subtitle">Celestial Gala — Printable Cards | 派对类桌游 | 4-8人</p>
+
+<!-- ==================== 贡品卡 ==================== -->
+<div class="section-title section-gongpin">🎁 贡品卡（24张）— 献给玉帝的珍宝</div>
+<p class="cut-guide">↓ 裁剪指引：每张卡约 6×9cm，沿卡片边框裁剪 ↓</p>
+
+<div class="cards-grid">
+  <div class="card gongpin-fan"><div class="card-emoji">🍑</div><div class="card-name">蟠桃</div><div class="card-type">贡品·凡品</div><div class="card-effect">面子值 +1</div><div class="card-rarity">✦ 凡品</div></div>
+  <div class="card gongpin-fan"><div class="card-emoji">💊</div><div class="card-name">仙丹</div><div class="card-type">贡品·凡品</div><div class="card-effect">面子值 +1</div><div class="card-rarity">✦ 凡品</div></div>
+  <div class="card gongpin-fan"><div class="card-emoji">🍑</div><div class="card-name">蟠桃</div><div class="card-type">贡品·凡品</div><div class="card-effect">面子值 +1</div><div class="card-rarity">✦ 凡品</div></div>
+  <div class="card gongpin-fan"><div class="card-emoji">💊</div><div class="card-name">仙丹</div><div class="card-type">贡品·凡品</div><div class="card-effect">面子值 +1</div><div class="card-rarity">✦ 凡品</div></div>
+  <div class="card gongpin-fan"><div class="card-emoji">🍑</div><div class="card-name">蟠桃</div><div class="card-type">贡品·凡品</div><div class="card-effect">面子值 +1</div><div class="card-rarity">✦ 凡品</div></div>
+  <div class="card gongpin-fan"><div class="card-emoji">💊</div><div class="card-name">仙丹</div><div class="card-type">贡品·凡品</div><div class="card-effect">面子值 +1</div><div class="card-rarity">✦ 凡品</div></div>
+
+  <div class="card gongpin-ling"><div class="card-emoji">🍄</div><div class="card-name">灵芝</div><div class="card-type">贡品·灵品</div><div class="card-effect">面子值 +2<br>可抵消1张阴招</div><div class="card-rarity">✦✦ 灵品</div></div>
+  <div class="card gongpin-ling"><div class="card-emoji">🔮</div><div class="card-name">夜明珠</div><div class="card-type">贡品·灵品</div><div class="card-effect">面子值 +2</div><div class="card-rarity">✦✦ 灵品</div></div>
+  <div class="card gongpin-ling"><div class="card-emoji">🍄</div><div class="card-name">灵芝</div><div class="card-type">贡品·灵品</div><div class="card-effect">面子值 +2<br>可抵消1张阴招</div><div class="card-rarity">✦✦ 灵品</div></div>
+  <div class="card gongpin-ling"><div class="card-emoji">🔮</div><div class="card-name">夜明珠</div><div class="card-type">贡品·灵品</div><div class="card-effect">面子值 +2</div><div class="card-rarity">✦✦ 灵品</div></div>
+
+  <div class="card gongpin-xian"><div class="card-emoji">🏏</div><div class="card-name">定海神针</div><div class="card-type">贡品·仙品</div><div class="card-effect">面子值 +4<br>可抢先出手</div><div class="card-rarity">✦✦✦ 仙品</div></div>
+  <div class="card gongpin-xian"><div class="card-emoji">💎</div><div class="card-name">九转金丹</div><div class="card-type">贡品·仙品</div><div class="card-effect">面子值 +4<br>额外+2效果</div><div class="card-rarity">✦✦✦ 仙品</div></div>
+  <div class="card gongpin-xian"><div class="card-emoji">🏏</div><div class="card-name">定海神针</div><div class="card-type">贡品·仙品</div><div class="card-effect">面子值 +4<br>可抢先出手</div><div class="card-rarity">✦✦✦ 仙品</div></div>
+  <div class="card gongpin-xian"><div class="card-emoji">💎</div><div class="card-name">九转金丹</div><div class="card-type">贡品·仙品</div><div class="card-effect">面子值 +4<br>额外+2效果</div><div class="card-rarity">✦✦✦ 仙品</div></div>
+
+  <div class="card gongpin-shen"><div class="card-emoji">🌳</div><div class="card-name">混沌灵根</div><div class="card-type">贡品·神品</div><div class="card-effect">面子值 +8<br>全场其他玩家-1</div><div class="card-rarity">✦✦✦✦ 神品</div></div>
+  <div class="card gongpin-shen"><div class="card-emoji">🏆</div><div class="card-name">先天至宝</div><div class="card-type">贡品·神品</div><div class="card-effect">面子值 +10<br>立即额外回合</div><div class="card-rarity">✦✦✦✦ 神品</div></div>
+  <div class="card gongpin-shen"><div class="card-emoji">🌳</div><div class="card-name">混沌灵根</div><div class="card-type">贡品·神品</div><div class="card-effect">面子值 +8<br>全场其他玩家-1</div><div class="card-rarity">✦✦✦✦ 神品</div></div>
+  <div class="card gongpin-shen"><div class="card-emoji">🏆</div><div class="card-name">先天至宝</div><div class="card-type">贡品·神品</div><div class="card-effect">面子值 +10<br>立即额外回合</div><div class="card-rarity">✦✦✦✦ 神品</div></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 马屁卡 ==================== -->
+<div class="section-title section-mapi">🗣️ 马屁卡（16张）— 当场拍马屁</div>
+<p class="cut-guide">↓ 马屁卡：拍得越响，面子越多 😂 ↓</p>
+
+<div class="cards-grid">
+  <div class="card mapi"><div class="card-emoji">👏</div><div class="card-name">陛下圣明！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +1<br>无附加条件</div></div>
+  <div class="card mapi"><div class="card-emoji">👏</div><div class="card-name">陛下圣明！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +1<br>无附加条件</div></div>
+  <div class="card mapi"><div class="card-emoji">👏</div><div class="card-name">陛下圣明！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +1<br>无附加条件</div></div>
+  <div class="card mapi"><div class="card-emoji">🎉</div><div class="card-name">陛下千秋万代！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +2<br>需弃1张手牌</div></div>
+  <div class="card mapi"><div class="card-emoji">🎉</div><div class="card-name">陛下千秋万代！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +2<br>需弃1张手牌</div></div>
+  <div class="card mapi"><div class="card-emoji">💇</div><div class="card-name">陛下发型特别帅！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +2<br>无附加条件</div></div>
+
+  <div class="card mapi"><div class="card-emoji">💇</div><div class="card-name">陛下发型特别帅！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +2<br>无附加条件</div></div>
+  <div class="card mapi"><div class="card-emoji">😅</div><div class="card-name">当年大闹天宫<br>全靠陛下仁义！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +3<br>需弃2张手牌</div></div>
+  <div class="card mapi"><div class="card-emoji">😅</div><div class="card-name">当年大闹天宫<br>全靠陛下仁义！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +3<br>需弃2张手牌</div></div>
+  <div class="card mapi"><div class="card-emoji">✨</div><div class="card-name">陛下比西天如来<br>还耀眼！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +4<br>可被阴招打断</div></div>
+  <div class="card mapi"><div class="card-emoji">✨</div><div class="card-name">陛下比西天如来<br>还耀眼！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +4<br>可被阴招打断</div></div>
+  <div class="card mapi"><div class="card-emoji">🙇</div><div class="card-name">臣愿为陛下<br>赴汤蹈火！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +3<br>下次可先手</div></div>
+
+  <div class="card mapi"><div class="card-emoji">🙇</div><div class="card-name">臣愿为陛下<br>赴汤蹈火！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +3<br>下次可先手</div></div>
+  <div class="card mapi"><div class="card-emoji">🎊</div><div class="card-name">天庭因陛下<br>而光芒万丈！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +3<br>全场其他玩家+1（合作）</div></div>
+  <div class="card mapi"><div class="card-emoji">🎊</div><div class="card-name">天庭MACES陛下<br>而光芒万丈！</div><div class="card-type">马屁卡</div><div class="card-effect">面子值 +3<br>全场其他玩家+1（合作）</div></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 阴招卡 ==================== -->
+<div class="section-title section-yinzha">🗡️ 阴招卡（14张）— 背后捅刀子</div>
+<p class="cut-guide">↓ 嘘……别让他发现是你干的 😏 ↓</p>
+
+<div class="cards-grid">
+  <div class="card yinzha"><div class="card-emoji">📢</div><div class="card-name">散播谣言</div><div class="card-type">阴招卡</div><div class="card-effect">目标本回合面子值-2</div></div>
+  <div class="card yinzha"><div class="card-emoji">📢</div><div class="card-name">散播谣言</div><div class="card-type">阴招卡</div><div class="card-effect">目标本回合面子值-2</div></div>
+  <div class="card yinzha"><div class="card-emoji">📢</div><div class="card-name">散播谣言</div><div class="card-type">阴招卡</div><div class="card-effect">目标本回合面子值-2</div></div>
+  <div class="card yinzha"><div class="card-emoji">🎭</div><div class="card-name">偷换贡品</div><div class="card-type">阴招卡</div><div class="card-effect">目标贡品卡→蟠桃<br>可被神通卡揭发</div></div>
+  <div class="card yinzha"><div class="card-emoji">🎭</div><div class="card-name">偷换贡品</div><div class="card-type">阴招卡</div><div class="card-effect">目标贡品卡→蟠桃<br>可被神通卡揭发</div></div>
+  <div class="card yinzha"><div class="card-emoji">🍻</div><div class="card-name">灌酒劝醉</div><div class="card-type">阴招卡</div><div class="card-effect">目标下回合无法出马屁卡</div></div>
+
+  <div class="card yinzha"><div class="card-emoji">🍻</div><div class="card-name">灌酒劝醉</div><div class="card-type">阴招卡</div><div class="card-effect">目标下回合无法出马屁卡</div></div>
+  <div class="card yinzha"><div class="card-emoji">📝</div><div class="card-name">告御状</div><div class="card-type">阴招卡</div><div class="card-effect">直接扣除目标2点面子<br>可用御前申辩抵消</div></div>
+  <div class="card yinzha"><div class="card-emoji">📝</div><div class="card-name">告御状</div><div class="card-type">阴招卡</div><div class="card-effect">直接扣除目标2点面子<br>可用御前申辩抵消</div></div>
+  <div class="card yinzha"><div class="card-emoji">🔥</div><div class="card-name">天庭热搜</div><div class="card-type">阴招卡</div><div class="card-effect">目标本回合面子值减半<br>需弃2张牌可抵消</div></div>
+  <div class="card yinzha"><div class="card-emoji">🔥</div><div class="card-name">天庭热搜</div><div class="card-type">阴招卡</div><div class="card-effect">目标本回合面子值减半<br>需弃2张牌可抵消</div></div>
+  <div class="card yinzha"><div class="card-emoji">💥</div><div class="card-name">神仙打架</div><div class="card-type">阴招卡</div><div class="card-effect">随机交换两名玩家面子值<br>无人能应对</div></div>
+
+  <div class="card yinzha"><div class="card-emoji">💥</div><div class="card-name">神仙打架</div><div class="card-type">阴招卡</div><div class="card-effect">随机交换两名玩家面子值<br>无人能应对</div></div>
+  <div class="card yinzha"><div class="card-emoji">🤐</div><div class="card-name">封口咒</div><div class="card-type">阴招卡</div><div class="card-effect">目标下回合不能出神通卡</div></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 神通卡 ==================== -->
+<div class="section-title section-shentong">✨ 神通卡（10张）— 神仙特殊能力</div>
+<p class="cut-guide">↓ 神通卡：一张逆转乾坤！每局限用一次 ↓</p>
+
+<div class="cards-grid">
+  <div class="card shentong"><div class="card-emoji">🐒</div><div class="card-name">七十二变</div><div class="card-type">神通卡</div><div class="card-effect">复制场上任意一张卡的效果</div></div>
+  <div class="card shentong"><div class="card-emoji">☁️</div><div class="card-name">筋斗云</div><div class="card-type">神通卡</div><div class="card-effect">跳过本回合所有阴招</div></div>
+  <div class="card shentong"><div class="card-emoji">👁️</div><div class="card-name">火眼金睛</div><div class="card-type">神通卡</div><div class="card-effect">查看一名玩家手牌</div></div>
+  <div class="card shentong"><div class="card-emoji">📜</div><div class="card-name">御前申辩</div><div class="card-type">神通卡</div><div class="card-effect">抵消告御状/天庭热搜</div></div>
+  <div class="card shentong"><div class="card-emoji">🌟</div><div class="card-name">大显神通</div><div class="card-type">神通卡</div><div class="card-effect">本回合所有卡牌效果翻倍</div></div>
+  <div class="card shentong"><div class="card-emoji">🎊</div><div class="card-name">天降祥瑞</div><div class="card-type">神通卡</div><div class="card-effect">所有玩家+1面子（合作）</div></div>
+
+  <div class="card shentong"><div class="card-emoji">🌙</div><div class="card-name">偷天换日</div><div class="card-type">神通卡</div><div class="card-effect">与任意玩家交换手牌</div></div>
+  <div class="card shentong"><div class="card-emoji">🔱</div><div class="card-name">法力无边</div><div class="card-type">神通卡</div><div class="card-effect">强制重掷贡品骰子</div></div>
+  <div class="card shentong"><div class="card-emoji">⚡</div><div class="card-name">天神下凡</div><div class="card-type">神通卡</div><div class="card-effect">本回合可出2张贡品卡</div></div>
+  <div class="card shentong"><div class="card-emoji">🌀</div><div class="card-name">万法归宗</div><div class="card-type">神通卡</div><div class="card-effect">抵消全场所有阴招（当回合）</div></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 天劫卡 ==================== -->
+<div class="section-title section-tianjie">⚡ 天劫卡（8张）— 天庭随机事件</div>
+<p class="cut-guide">↓ 每回合翻开一张，天威难测！ ↓</p>
+
+<div class="cards-grid">
+  <div class="card tianjie"><div class="card-emoji">⚡</div><div class="card-name">雷劫降临</div><div class="card-type">天劫卡</div><div class="card-effect">面子值最低的玩家-2</div></div>
+  <div class="card tianjie"><div class="card-emoji">🍑</div><div class="card-name">蟠桃会提前</div><div class="card-type">天劫卡</div><div class="card-effect">本回合贡品卡面子值翻倍</div></div>
+  <div class="card tianjie"><div class="card-emoji">😊</div><div class="card-name">玉帝心情好</div><div class="card-type">天劫卡</div><div class="card-effect">所有马屁卡面子值+1</div></div>
+  <div class="card tianjie"><div class="card-emoji">👹</div><div class="card-name">妖怪入侵</div><div class="card-type">天劫卡</div><div class="card-effect">随机一名玩家失去1张手牌</div></div>
+  <div class="card tianjie"><div class="card-emoji">📃</div><div class="card-name">天条大赦</div><div class="card-type">天劫卡</div><div class="card-effect">本回合所有阴招卡失效</div></div>
+  <div class="card tianjie"><div class="card-emoji">💊</div><div class="card-name">仙丹过期</div><div class="card-type">天劫卡</div><div class="card-effect">持有仙品以上贡品者-1面子</div></div>
+
+  <div class="card tianjie"><div class="card-emoji">📊</div><div class="card-name">天庭KPI考核</div><div class="card-type">天劫卡</div><div class="card-effect">面子值最高玩家需弃1张手牌</div></div>
+  <div class="card tianjie"><div class="card-emoji">👸</div><div class="card-name">王母娘娘发话</div><div class="card-type">天劫卡</div><div class="card-effect">嫦娥等女性神仙本回合+2面子</div></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ==================== 游戏配件 ==================== -->
+<div class="section-title" style="background:linear-gradient(135deg,#555,#888);">🎯 游戏配件 — 面子计数器 & 玉帝令牌</div>
+
+<div class="tracker-section">
+  <div class="tracker-title">📊 面子计数器（打印后自行填写）</div>
+  <div class="tracker-grid">
+    <div class="tracker-player"><div class="tracker-player-name">二郎神</div><div class="tracker-dots">⭕⭕⭕ ⭕⭕⭕<br>⭕⭕⭕ ⭕⭕⭕</div><div style="font-size:11px;color:#999;margin-top:4px;">面子值：___/15</div></div>
+    <div class="tracker-player"><div class="tracker-player-name">哪吒</div><div class="tracker-dots">⭕⭕⭕ ⭕⭕⭕<br>⭕⭕⭕ ⭕⭕⭕</div><div style="font-size:11px;color:#999;margin-top:4px;">面子值：___/15</div></div>
+    <div class="tracker-player"><div class="tracker-player-name">嫦娥</div><div class="tracker-dots">⭕⭕⭕ ⭕⭕⭕<br>⭕⭕⭕ ⭕⭕⭕</div><div style="font-size:11px;color:#999;margin-top:4px;">面子值：___/15</div></div>
+    <div class="tracker-player"><div class="tracker-player-name">孙悟空</div><div class="tracker-dots">⭕⭕⭕ ⭕⭕⭕<br>⭕⭕⭕ ⭕⭕⭕</div><div style="font-size:11px;color:#999;margin-top:4px;">面子值：___/15</div></div>
+  </div>
+  <p style="text-align:center;margin-top:12px;font-size:12px;color:#888;">更多玩家：自行在纸上记录面子值，或用硬币/棋子代替</p>
+</div>
+
+<div class="token-section">
+  <p style="font-size:16px;font-weight:bold;color:#8b0000;margin-bottom:14px;">👑 玉皇大帝令牌（值日天神标记）</p>
+  <div class="token">玉帝<br>令牌</div>
+  <p style="margin-top:12px;font-size:12px;color:#888;">打印后裁剪，可用硬币或瓶盖代替</p>
+</div>
+
+<!-- ==================== 使用说明 ==================== -->
+<div class="page-break"></div>
+<div style="padding:20px;background:#fff;border-radius:10px;border:2px solid #ddd;">
+  <h2 style="color:#8b0000;text-align:center;margin-bottom:16px;">📖 快速上手指南</h2>
+  
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div style="background:#f9f9f9;padding:12px;border-radius:8px;">
+      <h3 style="color:#c9a227;font-size:15px;margin-bottom:8px;">🎯 胜利条件</h3>
+      <p style="font-size:13px;line-height:1.6;">任意玩家面子值达到<strong>15点</strong>立即获胜！合作模式中全员共同对抗天劫。</p>
+    </div>
+    <div style="background:#f9f9f9;padding:12px;border-radius:8px;">
+      <h3 style="color:#d44637;font-size:15px;margin-bottom:8px;">🗣️ 马屁技巧</h3>
+      <p style="font-size:13px;line-height:1.6;">马屁卡可<strong>随时</strong>打（别人回合也能打！），抓住时机拍马屁是制胜关键。</p>
+    </div>
+    <div style="background:#f9f9f9;padding:12px;border-radius:8px;">
+      <h3 style="color:#6a1b9a;font-size:15px;margin-bottom:8px;">🗡️ 阴招时机</h3>
+      <p style="font-size:13px;line-height:1.6;">在对手快要获胜时集中火力打阴招！留1-2张应急，别一次全打完。</p>
+    </div>
+    <div style="background:#f9f9f9;padding:12px;border-radius:8px;">
+      <h3 style="color:#1565c0;font-size:15px;margin-bottom:8px;">✨ 神通保命</h3>
+      <p style="font-size:13px;line-height:1.6;">被阴招针对时用神通卡化解，灵芝也能抵消1次阴招，合理分配资源！</p>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;padding:12px;background:#fff8e1;border-radius:8px;border-left:4px solid #ffc107;">
+    <h3 style="color:#8b0000;font-size:14px;margin-bottom:6px;">💡 新手推荐玩法</h3>
+    <p style="font-size:13px;line-height:1.5;">第一次玩？建议先玩<strong>快速模式</strong>（面子值改10点胜利），熟悉后再挑战完整模式。也可以先不打阴招卡，只玩贡品+马屁，降低复杂度。</p>
+  </div>
+</div>
+
+</body>
+</html>
