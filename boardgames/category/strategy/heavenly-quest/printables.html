@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天命取经 - 打印道具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .print-hint h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-hint {
+                display: none;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .page {
+                page-break-after: always;
+            }
+        }
+
+        .page {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #8b4513;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #654321;
+            margin: 20px 0 15px 0;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        /* 游戏地图样式 */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            grid-template-rows: repeat(5, 100px);
+            gap: 2px;
+            margin: 20px auto;
+            width: fit-content;
+            background: #8b4513;
+            padding: 2px;
+            border-radius: 8px;
+        }
+
+        .map-cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            background: #fff;
+            border: 2px solid #8b4513;
+            border-radius: 4px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .map-cell .label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .cell-start { background: #fff3cd; }
+        .cell-resource { background: #d1ecf1; }
+        .cell-divine { background: #e2d9f3; }
+        .cell-demon { background: #f8d7da; }
+        .cell-immortal { background: #fff3cd; }
+        .cell-scripture { background: #f5f5f5; }
+        .cell-end { background: #fff3cd; }
+
+        /* 卡牌样式 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 200px);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .card {
+            width: 200px;
+            height: 280px;
+            border: 3px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #333;
+        }
+
+        .card-icon {
+            font-size: 64px;
+            margin: 15px 0;
+        }
+
+        .card-name {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.4;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-footer {
+            font-size: 11px;
+            text-align: center;
+            width: 100%;
+            padding-top: 8px;
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        /* 卡牌类型颜色 */
+        .card-resource { background: linear-gradient(135deg, #d1ecf1 0%, #a8dadc 100%); }
+        .card-divine { background: linear-gradient(135deg, #e2d9f3 0%, #c9b8e8 100%); }
+        .card-spell { background: linear-gradient(135deg, #f8d7da 0%, #f5b7b1 100%); }
+        .card-demon { background: linear-gradient(135deg, #d4edda 0%, #a3d9a5 100%); color: #155724; }
+        .card-artifact { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); }
+        .card-scripture { background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%); }
+
+        /* 玩家棋子样式 */
+        .pieces-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            border: 4px solid #333;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            margin: 10px;
+        }
+
+        .piece-red { background: #dc3545; color: white; }
+        .piece-blue { background: #007bff; color: white; }
+        .piece-green { background: #28a745; color: white; }
+        .piece-yellow { background: #ffc107; color: #333; }
+
+        /* 天命令牌样式 */
+        .tokens-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .token {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            border: 4px solid #8b4513;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示：</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+            <li>打印后可裁剪卡牌和棋子，建议塑封延长使用寿命</li>
+            <li>游戏地图建议用A3纸张打印，获得更大游戏版面</li>
+        </ul>
+    </div>
+
+    <!-- 第1页：游戏地图 -->
+    <div class="page">
+        <h1>🎮 天命取经 - 游戏地图</h1>
+        <div class="game-map">
+            <div class="map-cell cell-start">
+                🏯
+                <span class="label">起点<br>大唐</span>
+            </div>
+            <div class="map-cell cell-resource">
+                💎
+                <span class="label">灵石矿</span>
+            </div>
+            <div class="map-cell cell-resource">
+                🌿
+                <span class="label">仙草地</span>
+            </div>
+            <div class="map-cell cell-divine">
+                ⚡
+                <span class="label">法宝洞</span>
+            </div>
+            <div class="map-cell cell-spell">
+                🔥
+                <span class="label">法术台</span>
+            </div>
+
+            <div class="map-cell cell-demon">
+                👹
+                <span class="label">妖魔洞</span>
+            </div>
+            <div class="map-cell cell-immortal">
+                🏆
+                <span class="label">仙人台</span>
+            </div>
+            <div class="map-cell cell-scripture">
+                📜
+                <span class="label">真经阁</span>
+            </div>
+            <div class="map-cell cell-resource">
+                💎
+                <span class="label">灵石矿</span>
+            </div>
+            <div class="map-cell cell-resource">
+                🌿
+                <span class="label">仙草地</span>
+            </div>
+
+            <div class="map-cell cell-divine">
+                ⚡
+                <span class="label">法宝洞</span>
+            </div>
+            <div class="map-cell cell-spell">
+                🔥
+                <span class="label">法术台</span>
+            </div>
+            <div class="map-cell cell-demon">
+                👹
+                <span class="label">妖魔洞</span>
+            </div>
+            <div class="map-cell cell-immortal">
+                🏆
+                <span class="label">仙人台</span>
+            </div>
+            <div class="map-cell cell-scripture">
+                📜
+                <span class="label">真经阁</span>
+            </div>
+
+            <div class="map-cell cell-resource">
+                🌿
+                <span class="label">仙草地</span>
+            </div>
+            <div class="map-cell cell-resource">
+                💎
+                <span class="label">灵石矿</span>
+            </div>
+            <div class="map-cell cell-divine">
+                ⚡
+                <span class="label">法宝洞</span>
+            </div>
+            <div class="map-cell cell-spell">
+                🔥
+                <span class="label">法术台</span>
+            </div>
+            <div class="map-cell cell-demon">
+                👹
+                <span class="label">妖魔洞</span>
+            </div>
+
+            <div class="map-cell cell-immortal">
+                🏆
+                <span class="label">仙人台</span>
+            </div>
+            <div class="map-cell cell-scripture">
+                📜
+                <span class="label">真经阁</span>
+            </div>
+            <div class="map-cell cell-resource">
+                🌿
+                <span class="label">仙草地</span>
+            </div>
+            <div class="map-cell cell-resource">
+                💎
+                <span class="label">灵石矿</span>
+            </div>
+            <div class="map-cell cell-end">
+                🛕
+                <span class="label">终点<br>雷音寺</span>
+            </div>
+        </div>
+
+        <h2>地图说明</h2>
+        <ul style="line-height: 2;">
+            <li><strong>🏯 起点（大唐）</strong>：所有玩家开始的位置</li>
+            <li><strong>💎 灵石矿</strong>：停留可获得1张灵石卡</li>
+            <li><strong>🌿 仙草地</strong>：停留可获得1张仙草卡</li>
+            <li><strong>⚡ 法宝洞</strong>：停留可获得1张神器卡</li>
+            <li><strong>🔥 法术台</strong>：停留可获得1张法术卡</li>
+            <li><strong>👹 妖魔洞</strong>：停留需与妖魔战斗</li>
+            <li><strong>🏆 仙人台</strong>：停留可获得1张法宝卡</li>
+            <li><strong>📜 真经阁</strong>：停留可获得1张真经卡</li>
+            <li><strong>🛕 终点（雷音寺）</strong>：到达并持有3张真经卡即可获胜</li>
+        </ul>
+    </div>
+
+    <!-- 第2页：资源卡 -->
+    <div class="page">
+        <h1>💎 资源卡（灵石卡、仙草卡）</h1>
+        <div class="cards-container">
+            <div class="card card-resource">
+                <div class="card-header">资源卡</div>
+                <div class="card-icon">💎</div>
+                <div class="card-name">灵石卡</div>
+                <div class="card-desc">基础资源卡<br>用于激活神器<br>释放法术<br>战斗消耗</div>
+                <div class="card-footer">获得方式：停留在💎灵石矿</div>
+            </div>
+
+            <div class="card card-resource">
+                <div class="card-header">资源卡</div>
+                <div class="card-icon">🌿</div>
+                <div class="card-name">仙草卡</div>
+                <div class="card-desc">基础资源卡<br>用于恢复天命值<br>炼制丹药<br>（变体规则）</div>
+                <div class="card-footer">获得方式：停留在🌿仙草地</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #666; margin-top: 20px;">打印建议：每种资源卡打印12-20张</p>
+    </div>
+
+    <!-- 第3页：神器卡 -->
+    <div class="page">
+        <h1>⚡ 神器卡</h1>
+        <div class="cards-container">
+            <div class="card card-divine">
+                <div class="card-header">神器卡</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-name">金箍棒</div>
+                <div class="card-desc">装备效果：<br>战斗时骰子+1</div>
+                <div class="card-footer">激活所需：灵石×2</div>
+            </div>
+
+            <div class="card card-divine">
+                <div class="card-header">神器卡</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-name">九齿钉耙</div>
+                <div class="card-desc">装备效果：<br>可无视一个妖魔效果</div>
+                <div class="card-footer">激活所需：灵石×2 + 仙草×1</div>
+            </div>
+
+            <div class="card card-divine">
+                <div class="card-header">神器卡</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-name">降妖宝杖</div>
+                <div class="card-desc">装备效果：<br>战斗胜利后额外获得1张卡</div>
+                <div class="card-footer">激活所需：灵石×3</div>
+            </div>
+
+            <div class="card card-divine">
+                <div class="card-header">神器卡</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-name">筋斗云</div>
+                <div class="card-desc">装备效果：<br>移动步数+2</div>
+                <div class="card-footer">激活所需：灵石×1 + 仙草×2</div>
+            </div>
+
+            <div class="card card-divine">
+                <div class="card-header">神器卡</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-name">火眼金睛</div>
+                <div class="card-desc">装备效果：<br>可查看妖魔卡效果</div>
+                <div class="card-footer">激活所需：仙草×3</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #666; margin-top: 20px;">打印建议：每种神器卡打印3张</p>
+    </div>
+
+    <!-- 第4页：法术卡 -->
+    <div class="page">
+        <h1>🔥 法术卡</h1>
+        <div class="cards-container">
+            <div class="card card-spell">
+                <div class="card-header">法术卡</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-name">七十二变</div>
+                <div class="card-desc">效果：<br>本回合可额外移动一次</div>
+                <div class="card-footer">使用：支付灵石×1</div>
+            </div>
+
+            <div class="card card-spell">
+                <div class="card-header">法术卡</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-name">腾云驾雾</div>
+                <div class="card-desc">效果：<br>跳过任意一格<br>（无视妖魔）</div>
+                <div class="card-footer">使用：支付灵石×1</div>
+            </div>
+
+            <div class="card card-spell">
+                <div class="card-header">法术卡</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-name">定身法</div>
+                <div class="card-desc">效果：<br>妖魔本回合无法攻击</div>
+                <div class="card-footer">使用：支付仙草×1</div>
+            </div>
+
+            <div class="card card-spell">
+                <div class="card-header">法术卡</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-name">身外身法</div>
+                <div class="card-desc">效果：<br>战斗时投掷3颗骰子<br>取最高2颗</div>
+                <div class="card-footer">使用：支付灵石×2</div>
+            </div>
+
+            <div class="card card-spell">
+                <div class="card-header">法术卡</div>
+                <div class="card-icon">🔥</div>
+                <div class="card-name">法天象地</div>
+                <div class="card-desc">效果：<br>本回合战斗无敌</div>
+                <div class="card-footer">使用：支付灵石×3</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #666; margin-top: 20px;">打印建议：每种法术卡打印3张</p>
+    </div>
+
+    <!-- 第5页：妖魔卡 -->
+    <div class="page">
+        <h1">👹 妖魔卡</h1>
+        <div class="cards-container">
+            <div class="card card-demon">
+                <div class="card-header">妖魔卡</div>
+                <div class="card-icon">👹</div>
+                <div class="card-name">小妖</div>
+                <div class="card-desc">战斗力：需要骰子点数≥5<br><br>奖励：灵石×1</div>
+                <div class="card-footer">击败获得奖励</div>
+            </div>
+
+            <div class="card card-demon">
+                <div class="card-header">妖魔卡</div>
+                <div class="card-icon">👹</div>
+                <div class="card-name">山妖</div>
+                <div class="card-desc">战斗力：需要骰子点数≥7<br><br>奖励：灵石×2</div>
+                <div class="card-footer">击败获得奖励</div>
+            </div>
+
+            <div class="card card-demon">
+                <div class="card-header">妖魔卡</div>
+                <div class="card-icon">👹</div>
+                <div class="card-name">河妖</div>
+                <div class="card-desc">战斗力：需要骰子点数≥8<br><br>奖励：仙草×1 + 灵石×1</div>
+                <div class="card-footer">击败获得奖励</div>
+            </div>
+
+            <div class="card card-demon">
+                <div class="card-header">妖魔卡</div>
+                <div class="card-icon">👹</div>
+                <div class="card-name">树妖</div>
+                <div class="card-desc">战斗力：需要骰子点数≥9<br><br>奖励：神器卡×1</div>
+                <div class="card-footer">击败获得奖励</div>
+            </div>
+
+            <div class="card card-demon">
+                <div class="card-header">妖魔卡</div>
+                <div class="card-icon">👹</div>
+                <div class="card-name">大妖</div>
+                <div class="card-desc">战斗力：需要骰子点数≥11<br><br>奖励：法宝卡×1</div>
+                <div class="card-footer">击败获得奖励</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #666; margin-top: 20px;">打印建议：每种妖魔卡打印4张</p>
+    </div>
+
+    <!-- 第6页：法宝卡和真经卡 -->
+    <div class="page">
+        <h1>🏆 法宝卡 & 📜 真经卡</h1>
+        <h2>法宝卡（终极装备）</h2>
+        <div class="cards-container">
+            <div class="card card-artifact">
+                <div class="card-header">法宝卡</div>
+                <div class="card-icon">🏆</div>
+                <div class="card-name">紫金红葫芦</div>
+                <div class="card-desc">效果：<br>可封印一个妖魔<br>使其失效</div>
+                <div class="card-footer">获得方式：停留在🏆仙人台</div>
+            </div>
+
+            <div class="card card-artifact">
+                <div class="card-header">法宝卡</div>
+                <div class="card-icon">🏆</div>
+                <div class="card-name">羊脂玉净瓶</div>
+                <div class="card-desc">效果：<br>恢复所有天命值</div>
+                <div class="card-footer">获得方式：停留在🏆仙人台</div>
+            </div>
+
+            <div class="card card-artifact">
+                <div class="card-header">法宝卡</div>
+                <div class="card-icon">🏆</div>
+                <div class="card-name">幌金绳</div>
+                <div class="card-desc">效果：<br>可束缚妖魔<br>直接获胜</div>
+                <div class="card-footer">获得方式：停留在🏆仙人台</div>
+            </div>
+
+            <div class="card card-artifact">
+                <div class="card-header">法宝卡</div>
+                <div class="card-icon">🏆</div>
+                <div class="card-name">七星剑</div>
+                <div class="card-desc">效果：<br>战斗时骰子点数×2</div>
+                <div class="card-footer">获得方式：停留在🏆仙人台</div>
+            </div>
+        </div>
+
+        <h2>真经卡（胜利目标）</h2>
+        <div class="cards-container">
+            <div class="card card-scripture">
+                <div class="card-header">真经卡</div>
+                <div class="card-icon">📜</div>
+                <div class="card-name">真经</div>
+                <div class="card-desc">收集3张真经卡<br>并到达雷音寺🛕<br>即可获胜！</div>
+                <div class="card-footer">获得方式：停留在📜真经阁</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: #666; margin-top: 20px;">打印建议：法宝卡每种打印2张，真经卡打印5张</p>
+    </div>
+
+    <!-- 第7页：玩家棋子和天命令牌 -->
+    <div class="page">
+        <h1>🎯 玩家棋子和游戏配件</h1>
+
+        <h2>玩家棋子（4个）</h2>
+        <div class="pieces-container">
+            <div class="piece piece-red">🔴</div>
+            <div class="piece piece-blue">🔵</div>
+            <div class="piece piece-green">🟢</div>
+            <div class="piece piece-yellow">🟡</div>
+        </div>
+        <p style="text-align: center; color: #666;">建议使用卡纸打印，裁剪后可使用硬币或小物件替代</p>
+
+        <h2>天命令牌（4个）</h2>
+        <div class="tokens-container">
+            <div class="token">天命值<br>10/10</div>
+            <div class="token">天命值<br>10/10</div>
+            <div class="token">天命值<br>10/10</div>
+            <div class="token">天命值<br>10/10</div>
+        </div>
+        <p style="text-align: center; color: #666;">用于记录玩家的天命值，初始为10点</p>
+
+        <h2>打印说明</h2>
+        <ul style="line-height: 2; margin-top: 20px;">
+            <li><strong>游戏地图</strong>：建议用A3纸张打印，获得更大游戏版面</li>
+            <li><strong>卡牌</strong>：建议用卡纸打印，裁剪后可使用塑封机保护</li>
+            <li><strong>棋子</strong>：建议用卡纸打印，也可用硬币、纽扣等小物件替代</li>
+            <li><strong>天命令牌</strong>：建议用卡纸打印，也可用纸条记录</li>
+            <li><strong>打印设置</strong>：务必勾选"背景图形"选项，确保颜色正确打印</li>
+        </ul>
+    </div>
+
+    <script>
+        // 打印按钮功能
+        function printPage() {
+            window.print();
+        }
+
+        // 自动添加打印按钮
+        window.onload = function() {
+            const btn = document.createElement('button');
+            btn.innerHTML = '🖨️ 打印道具';
+            btn.style.cssText = 'position:fixed;top:20px;right:20px;padding:15px 30px;background:#007bff;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;box-shadow:0 4px 8px rgba(0,0,0,0.2);z-index:1000;';
+            btn.onclick = printPage;
+            document.body.appendChild(btn);
+        };
+    </script>
+</body>
+</html>
