@@ -41,6 +41,7 @@
 | [你说我画](games/communication/draw-guess.md) | 室内 · 智力+趣味 | 2人/组 | 20-30 min | 培训/团建/工作坊 |
 | [画图接龙](games/communication/drawing-relay.md) | 室内 · 趣味+创意 | 4-8人/组 | 20-30 min | 团建/培训/破冰 |
 | [动物城大侦探（改造版）](games/communication/animal-detective.md) | 室内 · 推理+讨论 | 4-12人 | 30-45 min | 培训/团建 |
+| [时间特工（改造版）](games/communication/time-agents.md) | 室内 · 推理+心理博弈 | 6-12人 | 30-45 min | 团建/培训/破冰 |
 
 #### 🤝 团队协作（collaboration）
 | 游戏名称 | 形式 | 人数 | 时长 | 场景标签 |
@@ -51,6 +52,9 @@
 | [风火轮](games/collaboration/wind-fire-wheel.md) | 户外/室内 · 体力+协作 | 8-15人/组 | 30-40 min | 团建/培训 |
 | [人体拼字](games/collaboration/body-letters.md) | 室内/户外 · 体力+创意 | 6-20人/组 | 20-30 min | 团建/培训/破冰 |
 | [岛屿求生（改造版）](games/collaboration/island-survival.md) | 室内 · 策略+协作 | 4-16人 | 45-75 min | 团建/培训/工作坊 |
+| [魔法学院（改造版）](games/collaboration/magic-academy.md) | 室内 · 合作+策略 | 4-8人 | 45-60 min | 团建/培训/工作坊 |
+| [星际矿工（改造版）](games/collaboration/space-miners.md) | 室内 · 合作+危机管理 | 5-8人 | 45-60 min | 团建/培训/工作坊 |
+| [疯狂厨房（改造版）](games/collaboration/crazy-kitchen.md) | 室内 · 合作+时间压力 | 4-8人 | 30-45 min | 团建/培训/破冰 |
 
 #### 🔐 信任建立（trust）
 | 游戏名称 | 形式 | 人数 | 时长 | 场景标签 |
