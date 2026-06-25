@@ -39,6 +39,7 @@ boardgames/
 | [疯狂厨房](category/party/crazy-kitchen/README.md) | 派对 | 3-8人 | 20-30分钟 | 简单 |
 | [植物大战](category/strategy/garden-wars/README.md) | 策略 | 2-4人 | 40-60分钟 | 中等 |
 | [魔法集市](category/card/magic-market/README.md) | 卡牌 | 2-4人 | 30-45分钟 | 中等 |
+| [星际拓荒者](category/cooperative/star-pioneers/README.md) | 合作 | 1-5人 | 45-70分钟 | 中等 |
 | [星际矿工](category/cooperative/space-miners/README.md) | 合作 | 1-5人 | 45-60分钟 | 中等 |
 | [深海探险](category/cooperative/abyss-dive/README.md) | 合作 | 2-5人 | 45-60分钟 | 中等偏难 |
 | [丝绸之路](category/strategy/silk-road/README.md) | 策略 | 2-5人 | 60-90分钟 | 中等偏难 |

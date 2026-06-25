@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际拓荒者 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00d4ff;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        h2 {
+            color: #00d4ff;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00d4ff;
+            font-size: 1.8em;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .print-hint {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #ffc107;
+        }
+
+        .print-hint strong {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .print-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* 游戏地图样式 */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 3px;
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .map-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .map-cell.start {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .map-cell.path {
+            background: #2d3748;
+        }
+
+        .map-cell.resource-mineral {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            box-shadow: 0 0 5px rgba(66, 153, 225, 0.3);
+        }
+
+        .map-cell.resource-energy {
+            background: linear-gradient(135deg, #f6e05e, #ecc94b);
+            box-shadow: 0 0 5px rgba(246, 224, 94, 0.3);
+        }
+
+        .map-cell.resource-bio {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            box-shadow: 0 0 5px rgba(72, 187, 120, 0.3);
+        }
+
+        .map-cell.enemy {
+            background: linear-gradient(135deg, #fc8181, #f56565);
+            box-shadow: 0 0 10px rgba(252, 129, 129, 0.5);
+        }
+
+        .map-cell.build {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            box-shadow: 0 0 5px rgba(159, 122, 234, 0.3);
+        }
+
+        .map-cell.goal {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            box-shadow: 0 0 10px rgba(237, 137, 54, 0.5);
+        }
+
+        .cell-label {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: bold;
+        }
+
+        /* 卡牌网格 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+            transition: transform 0.2s;
+            color: #333;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .card-icon {
+            font-size: 32px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2d3748;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #4a5568;
+            margin: 10px 0;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #718096;
+            font-weight: 600;
+        }
+
+        /* 卡牌类型颜色 */
+        .card.explore {
+            border-color: #4299e1;
+            background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+        }
+
+        .card.resource {
+            border-color: #48bb78;
+        }
+
+        .card.resource-mineral {
+            background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+        }
+
+        .card.resource-energy {
+            background: linear-gradient(135deg, #fefcbf, #fef08a);
+        }
+
+        .card.resource-bio {
+            background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+        }
+
+        .card.equipment {
+            border-color: #9f7aea;
+            background: linear-gradient(135deg, #faf5ff, #e9d8fd);
+        }
+
+        .card.weapon {
+            border-color: #fc8181;
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+        }
+
+        .card.event {
+            border-color: #ed8936;
+            background: linear-gradient(135deg, #fffaf0, #feebc8);
+        }
+
+        .card.goal {
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+        }
+
+        /* 角色卡样式 */
+        .character-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .character-card {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 3px solid #00d4ff;
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            break-inside: avoid;
+        }
+
+        .character-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .character-skill {
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        .character-equip {
+            font-size: 13px;
+            color: #a0aec0;
+        }
+
+        /* 玩家棋子 */
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .piece-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 4px solid #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .piece-circle.blue {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+        }
+
+        .piece-circle.red {
+            background: linear-gradient(135deg, #fc8181, #f56565);
+        }
+
+        .piece-circle.green {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .piece-circle.yellow {
+            background: linear-gradient(135deg, #f6e05e, #ecc94b);
+        }
+
+        .piece-circle.purple {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .piece-label {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* 标记物样式 */
+        .tokens {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .token {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 3px solid;
+            break-inside: avoid;
+        }
+
+        .token.oxygen {
+            background: linear-gradient(135deg, #4fd1c5, #38b2ac);
+            border-color: #319795;
+            color: white;
+        }
+
+        .token.turn {
+            background: linear-gradient(135deg, #a0aec0, #718096);
+            border-color: #4a5568;
+            color: white;
+        }
+
+        .token-label {
+            font-size: 10px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* 使用说明 */
+        .instructions {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .instructions h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 2;
+            color: #e2e8f0;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: #333;
+            }
+            .print-hint {
+                display: none;
+            }
+            .section {
+                background: white;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            h1, h2 {
+                color: #2d3748;
+            }
+            .character-card {
+                background: #f7fafc;
+                color: #333;
+            }
+            .instructions {
+                background: #f7fafc;
+                border-color: #4299e1;
+            }
+            .instructions h3 {
+                color: #2d3748;
+            }
+            .instructions ul {
+                color: #4a5568;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 星际拓荒者 - 打印文档</h1>
+        
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong>（推荐0.5cm或更少）</li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸（200g以上）</strong>打印，增加耐用性</li>
+                <li>游戏地图可以使用普通纸张打印，建议塑封以防水防磨损</li>
+                <li>打印后按卡牌边缘裁剪，可以使用切纸刀获得更直的切边</li>
+                <li>卡牌裁剪后可以考虑用<strong>塑封膜</strong>塑封，使用寿命可延长数倍</li>
+            </ul>
+        </div>
+
+        <!-- 游戏地图 -->
+        <div class="section">
+            <h2>🗺️ 游戏地图（星球表面）</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">8x8六边形网格，使用卡纸打印后裁剪使用</p>
+            <div class="game-map">
+                <!-- 第1行 -->
+                <div class="map-cell start">🚀<span class="cell-label">起点</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-mineral">🪨<span class="cell-label">矿物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-energy">⚡<span class="cell-label">能源</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-bio">🧬<span class="cell-label">生物</span></div>
+                <div class="map-cell path">⬢</div>
+                
+                <!-- 第2行 -->
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell enemy">👾<span class="cell-label">敌人</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-mineral">🪨<span class="cell-label">矿物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell build">🏗️<span class="cell-label">建造</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-energy">⚡<span class="cell-label">能源</span></div>
+                
+                <!-- 第3行 -->
+                <div class="map-cell resource-bio">🧬<span class="cell-label">生物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell enemy">👾<span class="cell-label">敌人</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-mineral">🪨<span class="cell-label">矿物</span></div>
+                <div class="map-cell path">⬢</div>
+                
+                <!-- 第4行 -->
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-energy">⚡<span class="cell-label">能源</span></div>
+                <div class="map-cell resource-bio">🧬<span class="cell-label">生物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell build">🏗️<span class="cell-label">建造</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell enemy">👾<span class="cell-label">敌人</span></div>
+                <div class="map-cell path">⬢</div>
+                
+                <!-- 第5行 -->
+                <div class="map-cell enemy">👾<span class="cell-label">敌人</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-mineral">🪨<span class="cell-label">矿物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-energy">⚡<span class="cell-label">能源</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-bio">🧬<span class="cell-label">生物</span></div>
+                
+                <!-- 第6行 -->
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-bio">🧬<span class="cell-label">生物</span></div>
+                <div class="map-cell enemy">👾<span class="cell-label">敌人</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-mineral">🪨<span class="cell-label">矿物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell build">🏗️<span class="cell-label">建造</span></div>
+                
+                <!-- 第7行 -->
+                <div class="map-cell resource-energy">⚡<span class="cell-label">能源</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-bio">🧬<span class="cell-label">生物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell enemy">👾<span class="cell-label">敌人</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell goal">🎯<span class="cell-label">目标</span></div>
+                
+                <!-- 第8行 -->
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-mineral">🪨<span class="cell-label">矿物</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell resource-energy">⚡<span class="cell-label">能源</span></div>
+                <div class="map-cell path">⬢</div>
+                <div class="map-cell goal">🎯<span class="cell-label">目标</span></div>
+                <div class="map-cell goal">🎯<span class="cell-label">目标</span></div>
+            </div>
+        </div>
+
+        <!-- 角色卡 -->
+        <div class="section">
+            <h2>👤 角色卡（5张）</h2>
+            <div class="character-cards">
+                <div class="character-card">
+                    <div class="character-name">🎖️ 队长</div>
+                    <div class="character-skill">
+                        <strong>技能：</strong>所有玩家额外获得1点行动力
+                    </div>
+                    <div class="character-equip">
+                        <strong>起始装备：</strong>📻 通讯器
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="character-name">🔧 工程师</div>
+                    <div class="character-skill">
+                        <strong>技能：</strong>建造设施费用-1资源
+                    </div>
+                    <div class="character-equip">
+                        <strong>起始装备：</strong>📡 扫描仪
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="character-name">🧬 生物学家</div>
+                    <div class="character-skill">
+                        <strong>技能：</strong>收集生物样本时额外+1
+                    </div>
+                    <div class="character-equip">
+                        <strong>起始装备：</strong>🔬 采集器
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="character-name">⚔️ 战士</div>
+                    <div class="character-skill">
+                        <strong>技能：</strong>武器攻击力+1
+                    </div>
+                    <div class="character-equip">
+                        <strong>起始装备：</strong>🔫 激光枪
+                    </div>
+                </div>
+
+                <div class="character-card">
+                    <div class="character-name">💊 医生</div>
+                    <div class="character-skill">
+                        <strong>技能：</strong>氧气消耗-1（每次最少消耗1点）
+                    </div>
+                    <div class="character-equip">
+                        <strong>起始装备：</strong>🫧 氧气罐
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 探索卡 -->
+        <div class="section">
+            <h2>🗺️ 探索卡（20张）</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">首次进入未知区域时翻开，揭示区域内容</p>
+            <div class="cards-grid">
+                <div class="card explore">
+                    <div class="card-header">
+                        <span class="card-icon">🪨</span>
+                        <span class="card-title">矿物丰富区</span>
+                    </div>
+                    <div class="card-description">获得2张矿物卡</div>
+                    <div class="card-footer">探索卡</div>
+                </div>
+                <div class="card explore">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">能源节点</span>
+                    </div>
+                    <div class="card-description">获得2张能源卡</div>
+                    <div class="card-footer">探索卡</div>
+                </div>
+                <div class="card explore">
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <span class="card-title">外星生物群</span>
+                    </div>
+                    <div class="card-description">获得2张生物样本卡</div>
+                    <div class="card-footer">探索卡</div>
+                </div>
+                <div class="card explore">
+                    <div class="card-header">
+                        <span class="card-icon">👾</span>
+                        <span class="card-title">外星生物巢穴</span>
+                    </div>
+                    <div class="card-description">触发战斗！生命值3点</div>
+                    <div class="card-footer">探索卡 - 战斗</div>
+                </div>
+                <div class="card explore">
+                    <div class="card-header">
+                        <span class="card-icon">🏗️</span>
+                        <span class="card-title">古代遗迹</span>
+                    </div>
+                    <div class="card-description">可建造特殊设施（费用-1）</div>
+                    <div class="card-footer">探索卡 - 建造点</div>
+                </div>
+                <div class="card explore">
+                    <div class="card-header">
+                        <span class="card-icon">💨</span>
+                        <span class="card-title">有毒气体</span>
+                    </div>
+                    <div class="card-description">失去1点氧气</div>
+                    <div class="card-footer">探索卡 - 灾害</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 资源卡 -->
+        <div class="section">
+            <h2>🃏 资源卡</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">用于建造、研究和激活设备</p>
+            
+            <h3 style="color: #4299e1; margin: 20px 0 15px; font-size: 1.2em;">矿物卡（15张）🪨</h3>
+            <div class="cards-grid">
+                <div class="card resource resource-mineral">
+                    <div class="card-header">
+                        <span class="card-icon">🪨</span>
+                        <span class="card-title">外星矿物</span>
+                    </div>
+                    <div class="card-description">坚固的建筑材料，用于建造设施和装备</div>
+                    <div class="card-footer">资源卡 - 矿物</div>
+                </div>
+                <div class="card resource resource-mineral">
+                    <div class="card-header">
+                        <span class="card-icon">🪨</span>
+                        <span class="card-title">外星矿物</span>
+                    </div>
+                    <div class="card-description">坚固的建筑材料，用于建造设施和装备</div>
+                    <div class="card-footer">资源卡 - 矿物</div>
+                </div>
+                <div class="card resource resource-mineral">
+                    <div class="card-header">
+                        <span class="card-icon">🪨</span>
+                        <span class="card-title">外星矿物</span>
+                    </div>
+                    <div class="card-description">坚固的建筑材料，用于建造设施和装备</div>
+                    <div class="card-footer">资源卡 - 矿物</div>
+                </div>
+            </div>
+
+            <h3 style="color: #ecc94b; margin: 20px 0 15px; font-size: 1.2em;">能源卡（15张）⚡</h3>
+            <div class="cards-grid">
+                <div class="card resource resource-energy">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">宇宙能源</span>
+                    </div>
+                    <div class="card-description">驱动设备和武器的能量来源</div>
+                    <div class="card-footer">资源卡 - 能源</div>
+                </div>
+                <div class="card resource resource-energy">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">宇宙能源</span>
+                    </div>
+                    <div class="card-description">驱动设备和武器的能量来源</div>
+                    <div class="card-footer">资源卡 - 能源</div>
+                </div>
+                <div class="card resource resource-energy">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">宇宙能源</span>
+                    </div>
+                    <div class="card-description">驱动设备和武器的能量来源</div>
+                    <div class="card-footer">资源卡 - 能源</div>
+                </div>
+            </div>
+
+            <h3 style="color: #48bb78; margin: 20px 0 15px; font-size: 1.2em;">生物样本卡（10张）🧬</h3>
+            <div class="cards-grid">
+                <div class="card resource resource-bio">
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <span class="card-title">生物样本</span>
+                    </div>
+                    <div class="card-description">外星生物的基因样本，用于研究</div>
+                    <div class="card-footer">资源卡 - 生物样本</div>
+                </div>
+                <div class="card resource resource-bio">
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <span class="card-title">生物样本</span>
+                    </div>
+                    <div class="card-description">外星生物的基因样本，用于研究</div>
+                    <div class="card-footer">资源卡 - 生物样本</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 装备卡 -->
+        <div class="section">
+            <h2>🔧 装备卡（10张）</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">提供特殊能力和行动加成</p>
+            <div class="cards-grid">
+                <div class="card equipment">
+                    <div class="card-header">
+                        <span class="card-icon">📡</span>
+                        <span class="card-title">扫描仪</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>能源×2<br>
+                        <strong>效果：</strong>查看周围3格内的地形
+                    </div>
+                    <div class="card-footer">装备卡</div>
+                </div>
+                <div class="card equipment">
+                    <div class="card-header">
+                        <span class="card-icon">🫧</span>
+                        <span class="card-title">氧气罐</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>矿物×1 + 能源×1<br>
+                        <strong>效果：</strong>团队氧气+2
+                    </div>
+                    <div class="card-footer">装备卡</div>
+                </div>
+                <div class="card equipment">
+                    <div class="card-header">
+                        <span class="card-icon">🦺</span>
+                        <span class="card-title">防护服</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>矿物×2<br>
+                        <strong>效果：</strong>免疫一次环境伤害
+                    </div>
+                    <div class="card-footer">装备卡</div>
+                </div>
+                <div class="card equipment">
+                    <div class="card-header">
+                        <span class="card-icon">🔍</span>
+                        <span class="card-title">探测器</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>能源×1 + 矿物×1<br>
+                        <strong>效果：</strong>揭开相邻区域的探索卡
+                    </div>
+                    <div class="card-footer">装备卡</div>
+                </div>
+                <div class="card equipment">
+                    <div class="card-header">
+                        <span class="card-icon">📻</span>
+                        <span class="card-title">通讯器</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>矿物×1<br>
+                        <strong>效果：</strong>所有玩家额外+1行动力
+                    </div>
+                    <div class="card-footer">装备卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 武器卡 -->
+        <div class="section">
+            <h2>⚔️ 武器卡（8张）</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">用于对抗外星生物</p>
+            <div class="cards-grid">
+                <div class="card weapon">
+                    <div class="card-header">
+                        <span class="card-icon">🔫</span>
+                        <span class="card-title">激光枪</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>能源×2<br>
+                        <strong>攻击力：</strong>2点<br>
+                        <strong>特殊：</strong>无
+                    </div>
+                    <div class="card-footer">武器卡</div>
+                </div>
+                <div class="card weapon">
+                    <div class="card-header">
+                        <span class="card-icon">🗡️</span>
+                        <span class="card-title">等离子刀</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>矿物×1 + 能源×1<br>
+                        <strong>攻击力：</strong>3点<br>
+                        <strong>特殊：</strong>近战武器
+                    </div>
+                    <div class="card-footer">武器卡</div>
+                </div>
+                <div class="card weapon">
+                    <div class="card-header">
+                        <span class="card-icon">💥</span>
+                        <span class="card-title">声波炮</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>能源×3<br>
+                        <strong>攻击力：</strong>4点<br>
+                        <strong>特殊：</strong>可攻击相邻格子敌人
+                    </div>
+                    <div class="card-footer">武器卡</div>
+                </div>
+                <div class="card weapon">
+                    <div class="card-header">
+                        <span class="card-icon">🕸️</span>
+                        <span class="card-title">陷阱</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需资源：</strong>矿物×2<br>
+                        <strong>攻击力：</strong>1点<br>
+                        <strong>特殊：</strong>布置后自动触发
+                    </div>
+                    <div class="card-footer">武器卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 事件卡 -->
+        <div class="section">
+            <h2>⚠️ 事件卡（12张）</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">每回合抽取，增加游戏挑战</p>
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">☀️</span>
+                        <span class="card-title">太阳风暴</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>所有玩家失去1点行动力<br>
+                        <strong>应对：</strong>使用1张能源卡抵消
+                    </div>
+                    <div class="card-footer">事件卡 - 环境</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">☄️</span>
+                        <span class="card-title">陨石雨</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>随机破坏一个已探索区域<br>
+                        <strong>应对：</strong>无法阻止，需重新探索
+                    </div>
+                    <div class="card-footer">事件卡 - 灾害</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">💨</span>
+                        <span class="card-title">氧气泄漏</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>团队氧气-2<br>
+                        <strong>应对：</strong>使用氧气罐补充
+                    </div>
+                    <div class="card-footer">事件卡 - 紧急</div>
+                </div>
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">👾</span>
+                        <span class="card-title">外星袭击</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>所有外星生物区域生成新敌人<br>
+                        <strong>应对：</strong>需要战斗清除
+                    </div>
+                    <div class="card-footer">事件卡 - 战斗</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 目标卡 -->
+        <div class="section">
+            <h2>🎯 目标卡（5张）</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">完成3个目标即可获胜！</p>
+            <div class="cards-grid">
+                <div class="card goal">
+                    <div class="card-header">
+                        <span class="card-icon">🗺️</span>
+                        <span class="card-title">勘测星球</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>完成条件：</strong>探索80%以上的地图区域<br>
+                        <strong>难度：</strong>⭐⭐⭐
+                    </div>
+                    <div class="card-footer">目标卡</div>
+                </div>
+                <div class="card goal">
+                    <div class="card-header">
+                        <span class="card-icon">🧬</span>
+                        <span class="card-title">收集样本</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>完成条件：</strong>收集10个生物样本<br>
+                        <strong>难度：</strong>⭐⭐
+                    </div>
+                    <div class="card-footer">目标卡</div>
+                </div>
+                <div class="card goal">
+                    <div class="card-header">
+                        <span class="card-icon">🏗️</span>
+                        <span class="card-title">建立基地</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>完成条件：</strong>在3个建造点建立设施<br>
+                        <strong>难度：</strong>⭐⭐⭐
+                    </div>
+                    <div class="card-footer">目标卡</div>
+                </div>
+                <div class="card goal">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-title">击败威胁</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>完成条件：</strong>清除所有外星生物<br>
+                        <strong>难度：</strong>⭐⭐⭐⭐
+                    </div>
+                    <div class="card-footer">目标卡</div>
+                </div>
+                <div class="card goal">
+                    <div class="card-header">
+                        <span class="card-icon">📡</span>
+                        <span class="card-title">发射信号</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>完成条件：</strong>在目标点使用5个能源卡<br>
+                        <strong>难度：</strong>⭐⭐⭐
+                    </div>
+                    <div class="card-footer">目标卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 玩家棋子 -->
+        <div class="section">
+            <h2>👤 玩家棋子（5个）</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">打印后裁剪，或使用硬币/小物件代替</p>
+            <div class="player-pieces">
+                <div class="piece">
+                    <div class="piece-circle blue">1</div>
+                    <div class="piece-label">玩家1 - 队长</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle red">2</div>
+                    <div class="piece-label">玩家2 - 工程师</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle green">3</div>
+                    <div class="piece-label">玩家3 - 生物学家</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle yellow">4</div>
+                    <div class="piece-label">玩家4 - 战士</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle purple">5</div>
+                    <div class="piece-label">玩家5 - 医生</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 标记物 -->
+        <div class="section">
+            <h2>📍 游戏标记物</h2>
+            <p style="color: #a0aec0; margin-bottom: 15px;">用于追踪游戏状态</p>
+            <div class="tokens">
+                <div class="token oxygen">
+                    🫧
+                    <div class="token-label">氧气标记</div>
+                </div>
+                <div class="token turn">
+                    🔄
+                    <div class="token-label">回合标记</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="instructions">
+            <h3>📋 打印和使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏地图打印在A4卡纸上，建议塑封以防水防磨损。地图可以重复使用。</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议使用切纸刀获得更直的切边。卡牌标准尺寸为63mm×88mm（扑克大小）。</li>
+                <li><strong>卡牌塑封：</strong>裁剪后使用塑封膜塑封，或用胶带包裹边缘，可大幅延长使用寿命。</li>
+                <li><strong>准备棋子：</strong>打印玩家棋子页面，裁剪后使用。或者直接用硬币、纽扣、小物件代替，只要能区分颜色即可。</li>
+                <li><strong>标记物：</strong>氧气标记和回合标记可以用硬币代替，用贴纸标记数值。</li>
+                <li><strong>卡牌数量：</strong>根据玩家人数参考README中的"参考打印数量"表格，不必打印所有卡牌。</li>
+                <li><strong>收纳：</strong>准备一个小盒子或信封存放卡牌和棋子，方便下次游戏。</li>
+                <li><strong>开始游戏：</strong>按照README中的"准备阶段"步骤设置游戏，祝你们探索顺利！</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 20px; color: #a0aec0;">
+            <p>🚀 星际拓荒者 - 合作生存桌游</p>
+            <p style="font-size: 12px; margin-top: 5px;">打印日期：2026-06-25</p>
+        </div>
+    </div>
+</body>
+</html>
