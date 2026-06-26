@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>轮回地下城 - 打印道具</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+    color: #333;
+  }
+  
+  .print-hint {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .print-hint strong { color: #856404; }
+  
+  .section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .section h2 {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+  }
+  
+  /* Game Map */
+  .game-map {
+    display: block;
+    margin: 0 auto;
+    max-width: 800px;
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 20px;
+    color: white;
+  }
+  
+  .floor {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .floor-label {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .room {
+    width: 90px;
+    height: 70px;
+    border: 2px solid;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .room-1f { background: #2d6a4f; border-color: #40916c; }
+  .room-2f { background: #1b4332; border-color: #2d6a4f; }
+  .room-3f { background: #4a148c; border-color: #6a1b9a; }
+  .room-4f { background: #7b2d26; border-color: #9b3d36; }
+  .room-5f { background: #7b0000; border-color: #ff0000; }
+  .room-boss { background: #ff0000; border-color: #ff4444; animation: pulse 2s infinite; }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  /* Cards */
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .card {
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-inside: avoid;
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .card-icon { font-size: 24px; }
+  
+  .card-body { font-size: 12px; flex-grow: 1; }
+  .card-footer { font-size: 10px; color: #666; margin-top: 5px; }
+  
+  /* Card Types */
+  .card-treasure { background: #fff9e6; border-color: #ffd700; }
+  .card-monster { background: #ffe6e6; border-color: #ff4444; }
+  .card-trap { background: #f0e6ff; border-color: #8844ff; }
+  .card-event { background: #e6f3ff; border-color: #4488ff; }
+  .card-weapon { background: #ffe6e6; border-color: #cc0000; }
+  .card-armor { background: #e6ffe6; border-color: #00cc00; }
+  .card-consumable { background: #fff0e6; border-color: #ff8800; }
+  .card-skill { background: #f0e6ff; border-color: #6600cc; }
+  .card-memory { background: #e6ffff; border-color: #00cccc; }
+  
+  /* Player Board */
+  .player-board {
+    border: 3px solid #333;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 10px;
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+    display: inline-block;
+    width: 300px;
+    vertical-align: top;
+  }
+  
+  .player-board h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    padding: 5px;
+    background: white;
+    border-radius: 4px;
+  }
+  
+  .equipment-slot {
+    border: 1px dashed #999;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 3px 0;
+    min-height: 30px;
+    font-size: 12px;
+  }
+  
+  /* Player Token */
+  .player-token {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin: 5px;
+  }
+  
+  /* Page Break */
+  .page-break { page-break-after: always; }
+  
+  /* Print Styles */
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    
+    body { background: white; padding: 0; }
+    .print-hint { display: none; }
+    .section { box-shadow: none; page-break-inside: avoid; }
+    .game-map { max-width: 100%; }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .cards-container { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .player-board { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Print Hint -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+    <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+    <li>打印后可裁剪并塑封，延长使用寿命</li>
+  </ul>
+</div>
+
+<!-- Section 1: Game Map -->
+<div class="section">
+  <h2>🗺️ 游戏地图</h2>
+  <div class="game-map">
+    <div style="text-align: center; font-size: 18px; margin-bottom: 15px;">🏰 轮回地下城</div>
+    
+    <!-- Floor 5 -->
+    <div class="floor">
+      <div class="floor-label" style="color: #ff4444;">5F</div>
+      <div class="room room-5f room-boss">
+        <div>👁️</div>
+        <div>Boss房</div>
+      </div>
+      <div class="room room-5f">
+        <div>⚔️</div>
+        <div>5F-2</div>
+      </div>
+      <div class="room room-5f">
+        <div>🟢</div>
+        <div>5F-3</div>
+      </div>
+      <div class="room room-5f">
+        <div>🪤</div>
+        <div>5F-4</div>
+      </div>
+      <div class="room room-5f">
+        <div>🔮</div>
+        <div>5F-5</div>
+      </div>
+    </div>
+    
+    <!-- Floor 4 -->
+    <div class="floor">
+      <div class="floor-label" style="color: #ff8844;">4F</div>
+      <div class="room room-4f">
+        <div>⚔️</div>
+        <div>4F-1</div>
+      </div>
+      <div class="room room-4f">
+        <div>🟢</div>
+        <div>4F-2</div>
+      </div>
+      <div class="room room-4f">
+        <div>🪤</div>
+        <div>4F-3</div>
+      </div>
+      <div class="room room-4f">
+        <div>⚔️</div>
+        <div>4F-4</div>
+      </div>
+      <div class="room room-4f">
+        <div>🔮</div>
+        <div>4F-5</div>
+      </div>
+    </div>
+    
+    <!-- Floor 3 -->
+    <div class="floor">
+      <div class="floor-label" style="color: #cc44ff;">3F</div>
+      <div class="room room-3f">
+        <div>🟢</div>
+        <div>3F-1</div>
+      </div>
+      <div class="room room-3f">
+        <div>⚔️</div>
+        <div>3F-2</div>
+      </div>
+      <div class="room room-3f">
+        <div>🟢</div>
+        <div>3F-3</div>
+      </div>
+      <div class="room room-3f">
+        <div>🪤</div>
+        <div>3F-4</div>
+      </div>
+      <div class="room room-3f">
+        <div>⚔️</div>
+        <div>3F-5</div>
+      </div>
+    </div>
+    
+    <!-- Floor 2 -->
+    <div class="floor">
+      <div class="floor-label" style="color: #44ff44;">2F</div>
+      <div class="room room-2f">
+        <div>⚔️</div>
+        <div>2F-1</div>
+      </div>
+      <div class="room room-2f">
+        <div>🟢</div>
+        <div>2F-2</div>
+      </div>
+      <div class="room room-2f">
+        <div>⚔️</div>
+        <div>2F-3</div>
+      </div>
+      <div class="room room-2f">
+        <div>🟢</div>
+        <div>2F-4</div>
+      </div>
+      <div class="room room-2f">
+        <div>🪤</div>
+        <div>2F-5</div>
+      </div>
+    </div>
+    
+    <!-- Floor 1 -->
+    <div class="floor">
+      <div class="floor-label" style="color: #44ff88;">1F</div>
+      <div class="room room-1f" style="border: 3px solid #ffd700;">
+        <div>🚪</div>
+        <div>入口</div>
+      </div>
+      <div class="room room-1f">
+        <div>🟢</div>
+        <div>1F-2</div>
+      </div>
+      <div class="room room-1f">
+        <div>⚔️</div>
+        <div>1F-3</div>
+      </div>
+      <div class="room room-1f">
+        <div>🟢</div>
+        <div>1F-4</div>
+      </div>
+      <div class="room room-1f">
+        <div>🔮</div>
+        <div>1F-5</div>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 15px; font-size: 12px; color: #aaa;">
+      🟢宝箱 ⚔️怪物 🪤陷阱 🔮事件 👁️Boss
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 2: Room Event Cards -->
+<div class="section">
+  <h2>🎴 房间事件卡（40张）</h2>
+  
+  <h3 style="color: #cc9900; margin-top: 15px;">🟢 宝箱房卡（10张）</h3>
+  <div class="cards-container">
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>金币宝箱</strong><br>
+        获得 3-5 金币<br>
+        🎲 掷骰子：1-3获得3金币，4-6获得5金币
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-01</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>装备宝箱</strong><br>
+        抽取 1 张战利品卡<br>
+        可从武器/防具/消耗品中选择
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-02</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>神秘宝箱</strong><br>
+        抽取 2 张战利品卡<br>
+        选择其中 1 张保留，另1张丢弃
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-03</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>记忆宝箱</strong><br>
+        获得 1 个记忆碎片<br>
+        用于轮回间永久升级
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-04</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>生命宝箱</strong><br>
+        恢复 2 点 HP<br>
+        最多恢复到初始HP
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-05</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>钻石宝箱</strong><br>
+        获得 8 金币<br>
+        但有 30% 几率是陷阱！
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-06</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>技能宝箱</strong><br>
+        抽取 1 张技能卡<br>
+        学习后可使用特殊技能
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-07</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>金币雨</strong><br>
+        所有玩家各获得 3 金币<br>
+        合作游戏的福利！
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-08</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>远古宝箱</strong><br>
+        抽取 1 张稀有战利品<br>
+        （武器或防具+2以上）
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-09</div>
+    </div>
+    
+    <div class="card card-treasure">
+      <div class="card-header"><span>宝箱房</span><span class="card-icon">🟢</span></div>
+      <div class="card-body">
+        <strong>祝福宝箱</strong><br>
+        所有玩家恢复 2 HP<br>
+        并获得 1 个记忆碎片
+      </div>
+      <div class="card-footer">类型：宝箱房 | 编号：T-10</div>
+    </div>
+  </div>
+  
+  <div class="page-break"></div>
+  
+  <h3 style="color: #cc0000; margin-top: 15px;">⚔️ 怪物房卡（15张）</h3>
+  <div class="cards-container">
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>史莱姆</strong> 🟢<br>
+        HP: 3 | 攻击: 1<br>
+        <hr style="margin: 5px 0;">
+        特殊：无<br>
+        奖励：2-3 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-01</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>骷髅兵</strong> 💀<br>
+        HP: 5 | 攻击: 2<br>
+        <hr style="margin: 5px 0;">
+        特殊：无<br>
+        奖励：3-4 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-02</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>哥布林</strong> 👺<br>
+        HP: 4 | 攻击: 2<br>
+        <hr style="margin: 5px 0;">
+        特殊：闪避1次攻击<br>
+        奖励：3 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-03</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>蝙蝠群</strong> 🦇<br>
+        HP: 3 | 攻击: 1<br>
+        <hr style="margin: 5px 0;">
+        特殊：先攻（必定先攻击）<br>
+        奖励：2 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-04</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>石像鬼</strong> 🗿<br>
+        HP: 8 | 攻击: 2<br>
+        <hr style="margin: 5px 0;">
+        特殊：防御+1（减1伤害）<br>
+        奖励：4-5 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-05</div>
+    </div>
+    
+    <div class="card card-monster" style="border-color: #ff6600; border-width: 3px;">
+      <div class="card-header"><span>精英怪物</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>暗影刺客</strong> 🗡️<br>
+        HP: 10 | 攻击: 3<br>
+        <hr style="margin: 5px 0;">
+        特殊：暴击（骰出6时伤害x2）<br>
+        奖励：抽取1张战利品卡
+      </div>
+      <div class="card-footer">类型：精英怪物 | 编号：M-06</div>
+    </div>
+    
+    <div class="card card-monster" style="border-color: #ff6600; border-width: 3px;">
+      <div class="card-header"><span>精英怪物</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>火焰骑士</strong> 🔥<br>
+        HP: 12 | 攻击: 3<br>
+        <hr style="margin: 5px 0;">
+        特殊：火焰（额外1点伤害）<br>
+        奖励：抽取1张战利品卡
+      </div>
+      <div class="card-footer">类型：精英怪物 | 编号：M-07</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>僵尸</strong> 🧟<br>
+        HP: 6 | 攻击: 2<br>
+        <hr style="margin: 5px 0;">
+        特殊：中毒（攻击附带中毒）<br>
+        奖励：3-4 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-08</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>幽灵</strong> 👻<br>
+        HP: 5 | 攻击: 2<br>
+        <hr style="margin: 5px 0;">
+        特殊：闪避50%物理攻击<br>
+        奖励：3 金币 + 1记忆碎片
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-09</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>巨魔</strong> 👹<br>
+        HP: 10 | 攻击: 3<br>
+        <hr style="margin: 5px 0;">
+        特殊：每回合恢复1HP<br>
+        奖励：5-6 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-10</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>巫师</strong> 🧙<br>
+        HP: 4 | 攻击: 3<br>
+        <hr style="margin: 5px 0;">
+        特殊：魔法攻击（无视护甲）<br>
+        奖励：4 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-11</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>石魔</strong> 🪨<br>
+        HP: 15 | 攻击: 2<br>
+        <hr style="margin: 5px 0;">
+        特殊：高HP，低攻击<br>
+        奖励：5 金币
+      </div>
+      <div class="card-footer">类型：普通怪物 | 编号：M-12</div>
+    </div>
+    
+    <div class="card card-monster" style="border-color: #ff6600; border-width: 3px;">
+      <div class="card-header"><span>精英怪物</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>暗黑法师</strong> 🧙♂️<br>
+        HP: 8 | 攻击: 4<br>
+        <hr style="margin: 5px 0;">
+        特殊：每回合施放魔法（2点AOE）<br>
+        奖励：抽取1张技能卡
+      </div>
+      <div class="card-footer">类型：精英怪物 | 编号：M-13</div>
+    </div>
+    
+    <div class="card card-monster" style="border-color: #ff0000; border-width: 4px; background: #ffcccc;">
+      <div class="card-header"><span>⚠️ BOSS</span><span class="card-icon">👁️</span></div>
+      <div class="card-body">
+        <strong>轮回守护者</strong><br>
+        HP: 20 | 攻击: 3<br>
+        <hr style="margin: 5px 0;">
+        特殊：每回合恢复1HP<br>
+        全体攻击<br>
+        奖励：胜利！打破轮回！
+      </div>
+      <div class="card-footer">类型：Boss | 编号：BOSS-01</div>
+    </div>
+    
+    <div class="card card-monster">
+      <div class="card-header"><span>怪物房</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>双头龙</strong> 🐉<br>
+        HP: 18 | 攻击: 4<br>
+        <hr style="margin: 5px 0;">
+        特殊：2次攻击/回合<br>
+        （备用Boss，困难模式使用）
+      </div>
+      <div class="card-footer">类型：隐藏Boss | 编号：BOSS-02</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 3: Trap & Event Cards -->
+<div class="section">
+  <h2>🪤 陷阱房卡 & 🔮 事件房卡</h2>
+  
+  <h3 style="color: #8844ff; margin-top: 15px;">🪤 陷阱房卡（8张）</h3>
+  <div class="cards-container">
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>尖刺陷阱</strong><br>
+        效果：受到 2 点伤害<br>
+        <hr style="margin: 5px 0;">
+        应对：消耗1个工具卡解除<br>
+        或掷骰子≥4免除
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-01</div>
+    </div>
+    
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>毒气室</strong><br>
+        效果：中毒（下2场战斗-1攻击）<br>
+        <hr style="margin: 5px 0;">
+        应对：使用解毒剂<br>
+        或掷骰子≥5免除
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-02</div>
+    </div>
+    
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>落石</strong><br>
+        效果：受到 1-3 点随机伤害<br>
+        <hr style="margin: 5px 0;">
+        应对：敏捷判定（骰子≥4免除）<br>
+        🎲 骰子1-2=3伤害，3-4=2伤害，5-6=1伤害
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-03</div>
+    </div>
+    
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>迷宫</strong><br>
+        效果：被迫返回本层入口<br>
+        <hr style="margin: 5px 0;">
+        应对：使用地图道具<br>
+        或失去1回合重新移动
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-04</div>
+    </div>
+    
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>黑暗陷阱</strong><br>
+        效果：下1场战斗视野受限<br>
+        （攻击骰子-1）<br>
+        <hr style="margin: 5px 0;">
+        应对：使用照明道具
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-05</div>
+    </div>
+    
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>传送陷阱</strong><br>
+        效果：随机传送到某层某房<br>
+        <hr style="margin: 5px 0;">
+        可能是好事也可能是坏事！<br>
+        🎲 掷骰子决定去向
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-06</div>
+    </div>
+    
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>盗贼陷阱</strong><br>
+        效果：失去 1 件随机装备<br>
+        <hr style="margin: 5px 0;">
+        应对：掷骰子≥5避免<br>
+        或主动丢弃1件装备
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-07</div>
+    </div>
+    
+    <div class="card card-trap">
+      <div class="card-header"><span>陷阱房</span><span class="card-icon">🪤</span></div>
+      <div class="card-body">
+        <strong>时间陷阱</strong><br>
+        效果：失去 1 个行动点（本回合）<br>
+        <hr style="margin: 5px 0;">
+        应对：无法避免<br>
+        时间被偷走了！
+      </div>
+      <div class="card-footer">类型：陷阱 | 编号：TR-08</div>
+    </div>
+  </div>
+  
+  <div class="page-break"></div>
+  
+  <h3 style="color: #4488ff; margin-top: 15px;">🔮 事件房卡（7张）</h3>
+  <div class="cards-container">
+    <div class="card card-event">
+      <div class="card-header"><span>事件房</span><span class="card-icon">🔮</span></div>
+      <div class="card-body">
+        <strong>神秘商人</strong> 🧙<br>
+        效果：可花费金币购买战利品卡<br>
+        <hr style="margin: 5px 0;">
+        商品：<br>
+        - 武器卡（5-15金币）<br>
+        - 防具卡（5-15金币）<br>
+        - 消耗品卡（3-8金币）
+      </div>
+      <div class="card-footer">类型：事件 | 编号：E-01</div>
+    </div>
+    
+    <div class="card card-event">
+      <div class="card-header"><span>事件房</span><span class="card-icon">🔮</span></div>
+      <div class="card-body">
+        <strong>休息营地</strong> 🏕️<br>
+        效果：恢复所有HP<br>
+        <hr style="margin: 5px 0;">
+        额外效果：<br>
+        - 恢复所有负面状态<br>
+        - 获得1个记忆碎片（50%几率）
+      </div>
+      <div class="card-footer">类型：事件 | 编号：E-02</div>
+    </div>
+    
+    <div class="card card-event">
+      <div class="card-header"><span>事件房</span><span class="card-icon">🔮</span></div>
+      <div class="card-body">
+        <strong>记忆泉水</strong> 💧<br>
+        效果：获得 1 个记忆碎片<br>
+        <hr style="margin: 5px 0;">
+        额外效果：<br>
+        - 恢复2 HP<br>
+        - 永久增加1点最大HP
+      </div>
+      <div class="card-footer">类型：事件 | 编号：E-03</div>
+    </div>
+    
+    <div class="card card-event">
+      <div class="card-header"><span>事件房</span><span class="card-icon">🔮</span></div>
+      <div class="card-body">
+        <strong>诅咒房间</strong> 👻<br>
+        效果：失去 1 件随机装备<br>
+        <hr style="margin: 5px 0;">
+        额外效果：<br>
+        - 所有玩家各失去1金币<br>
+        - 获得1个记忆碎片（补偿）
+      </div>
+      <div class="card-footer">类型：事件 | 编号：E-04</div>
+    </div>
+    
+    <div class="card card-event">
+      <div class="card-header"><span>事件房</span><span class="card-icon">🔮</span></div>
+      <div class="card-body">
+        <strong>强化祭坛</strong> ⬆️<br>
+        效果：强化1件装备（+1攻击或防御）<br>
+        <hr style="margin: 5px 0;">
+        消耗：3 金币<br>
+        或 1 个记忆碎片<br>
+        可强化多次！
+      </div>
+      <div class="card-footer">类型：事件 | 编号：E-05</div>
+    </div>
+    
+    <div class="card card-event">
+      <div class="card-header"><span>事件房</span><span class="card-icon">🔮</span></div>
+      <div class="card-body">
+        <strong>训练场</strong> 💪<br>
+        效果：永久增加1点攻击或防御<br>
+        <hr style="margin: 5px 0;">
+        消耗：2 个记忆碎片<br>
+        每个玩家限1次/轮回
+      </div>
+      <div class="card-footer">类型：事件 | 编号：E-06</div>
+    </div>
+    
+    <div class="card card-event">
+      <div class="card-header"><span>事件房</span><span class="card-icon">🔮</span></div>
+      <div class="card-body">
+        <strong>时空裂缝</strong> 🌀<br>
+        效果：立即进入下一层<br>
+        <hr style="margin: 5px 0;">
+        风险：<br>
+        - 跳过当前层剩余房间<br>
+        - 可能装备不足应对强敌
+      </div>
+      <div class="card-footer">类型：事件 | 编号：E-07</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 4: Loot Cards -->
+<div class="section">
+  <h2>🎴 战利品卡（30张）</h2>
+  
+  <h3 style="color: #cc0000; margin-top: 15px;">🗡️ 武器卡（8张）</h3>
+  <div class="cards-container">
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">🗡️</span></div>
+      <div class="card-body">
+        <strong>铁剑</strong><br>
+        攻击: +1<br>
+        <hr style="margin: 5px 0;">
+        描述：基础铁制武器<br>
+        适合新手冒险者
+      </div>
+      <div class="card-footer">价格：5金币 | 编号：W-01</div>
+    </div>
+    
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">⚔️</span></div>
+      <div class="card-body">
+        <strong>银剑</strong><br>
+        攻击: +2<br>
+        <hr style="margin: 5px 0;">
+        特殊：对亡灵+1攻击<br>
+        描述：对不死族特攻
+      </div>
+      <div class="card-footer">价格：10金币 | 编号：W-02</div>
+    </div>
+    
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">🔥</span></div>
+      <div class="card-body">
+        <strong>火焰剑</strong><br>
+        攻击: +2<br>
+        <hr style="margin: 5px 0;">
+        特殊：燃烧（额外1点伤害）<br>
+        描述：剑身燃烧着永恒之火
+      </div>
+      <div class="card-footer">价格：12金币 | 编号：W-03</div>
+    </div>
+    
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">⚡</span></div>
+      <div class="card-body">
+        <strong>雷电斧</strong><br>
+        攻击: +3<br>
+        <hr style="margin: 5px 0;">
+        特殊：击晕（怪物跳过1回合）<br>
+        描述：雷霆万钧！
+      </div>
+      <div class="card-footer">价格：15金币 | 编号：W-04</div>
+    </div>
+    
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">🏹</span></div>
+      <div class="card-body">
+        <strong>精灵弓</strong><br>
+        攻击: +2<br>
+        <hr style="margin: 5px 0;">
+        特殊：先攻（必定先攻击）<br>
+        描述：精灵族精致武器
+      </div>
+      <div class="card-footer">价格：10金币 | 编号：W-05</div>
+    </div>
+    
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">🗡️</span></div>
+      <div class="card-body">
+        <strong>匕首 x2</strong><br>
+        攻击: +1 x2<br>
+        <hr style="margin: 5px 0;">
+        特殊：可装备2把（+2攻击）<br>
+        描述：双持匕首，攻速快
+      </div>
+      <div class="card-footer">价格：5金币/把 | 编号：W-06</div>
+    </div>
+    
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">🔨</span></div>
+      <div class="card-body">
+        <strong>巨锤</strong><br>
+        攻击: +3<br>
+        <hr style="margin: 5px 0;">
+        特殊：破防（无视护甲）<br>
+        描述：一锤入魂！
+      </div>
+      <div class="card-footer">价格：15金币 | 编号：W-07</div>
+    </div>
+    
+    <div class="card card-weapon">
+      <div class="card-header"><span>武器</span><span class="card-icon">🪄</span></div>
+      <div class="card-body">
+        <strong>魔法杖</strong><br>
+        攻击: +2<br>
+        <hr style="margin: 5px 0;">
+        特殊：可施展魔法（AOE）<br>
+        描述：魔力增幅器
+      </div>
+      <div class="card-footer">价格：12金币 | 编号：W-08</div>
+    </div>
+  </div>
+  
+  <div class="page-break"></div>
+  
+  <h3 style="color: #00cc00; margin-top: 15px;">🛡️ 防具卡（8张）</h3>
+  <div class="cards-container">
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">🛡️</span></div>
+      <div class="card-body">
+        <strong>皮甲</strong><br>
+        防御: +1<br>
+        <hr style="margin: 5px 0;">
+        描述：基础皮革护甲<br>
+        轻便灵活
+      </div>
+      <div class="card-footer">价格：5金币 | 编号：A-01</div>
+    </div>
+    
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">🛡️</span></div>
+      <div class="card-body">
+        <strong>铁甲</strong><br>
+        防御: +2<br>
+        <hr style="margin: 5px 0;">
+        特殊：重量（-1速度）<br>
+        描述：重型铁制护甲
+      </div>
+      <div class="card-footer">价格：10金币 | 编号：A-02</div>
+    </div>
+    
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">🧥</span></div>
+      <div class="card-body">
+        <strong>魔抗斗篷</strong><br>
+        防御: +1<br>
+        <hr style="margin: 5px 0;">
+        特殊：魔法抗性（减1魔法伤害）<br>
+        描述：对抗魔法攻击
+      </div>
+      <div class="card-footer">价格：10金币 | 编号：A-03</div>
+    </div>
+    
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">🧚</span></div>
+      <div class="card-body">
+        <strong>精灵披风</strong><br>
+        防御: +1<br>
+        <hr style="margin: 5px 0;">
+        特殊：闪避+1（20%闪避率）<br>
+        描述：精灵族轻盈披风
+      </div>
+      <div class="card-footer">价格：12金币 | 编号：A-04</div>
+    </div>
+    
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">🛡️</span></div>
+      <div class="card-body">
+        <strong>盾牌</strong><br>
+        防御: +2<br>
+        <hr style="margin: 5px 0;">
+        特殊：格挡（减1伤害/次）<br>
+        描述：坚固的塔盾
+      </div>
+      <div class="card-footer">价格：10金币 | 编号：A-05</div>
+    </div>
+    
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">⛑️</span></div>
+      <div class="card-body">
+        <strong>头盔</strong><br>
+        防御: +1<br>
+        <hr style="margin: 5px 0;">
+        特殊：防爆击（免疫暴击）<br>
+        描述：保护头部要害
+      </div>
+      <div class="card-footer">价格：8金币 | 编号：A-06</div>
+    </div>
+    
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">👢</span></div>
+      <div class="card-body">
+        <strong>迅风靴</strong><br>
+        防御: +0<br>
+        <hr style="margin: 5px 0;">
+        特殊：速度+1（额外行动点）<br>
+        描述：穿上如风般迅捷
+      </div>
+      <div class="card-footer">价格：6金币 | 编号：A-07</div>
+    </div>
+    
+    <div class="card card-armor">
+      <div class="card-header"><span>防具</span><span class="card-icon">📿</span></div>
+      <div class="card-body">
+        <strong>守护护符</strong><br>
+        防御: +0<br>
+        <hr style="margin: 5px 0;">
+        特殊：免疫诅咒<br>
+        描述：神圣护身符
+      </div>
+      <div class="card-footer">价格：15金币 | 编号：A-08</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 5: Consumables & Skills -->
+<div class="section">
+  <h3 style="color: #ff8800; margin-top: 15px;">🧪 消耗品卡（8张）</h3>
+  <div class="cards-container">
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">🧪</span></div>
+      <div class="card-body">
+        <strong>治疗药水</strong><br>
+        效果：恢复 3 HP<br>
+        <hr style="margin: 5px 0;">
+        使用时机：任意时刻<br>
+        描述：红色药水，苦涩但有效
+      </div>
+      <div class="card-footer">价格：3金币 | 编号：C-01</div>
+    </div>
+    
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">💚</span></div>
+      <div class="card-body">
+        <strong>解毒剂</strong><br>
+        效果：解除中毒状态<br>
+        <hr style="margin: 5px 0;">
+        使用时机：中毒时<br>
+        描述：绿色透明液体
+      </div>
+      <div class="card-footer">价格：3金币 | 编号：C-02</div>
+    </div>
+    
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">💣</span></div>
+      <div class="card-body">
+        <strong>炸弹</strong><br>
+        效果：对怪物造成 3 点伤害<br>
+        <hr style="margin: 5px 0;">
+        使用时机：战斗中使用<br>
+        描述：一次性爆炸物
+      </div>
+      <div class="card-footer">价格：4金币 | 编号：C-03</div>
+    </div>
+    
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">📜</span></div>
+      <div class="card-body">
+        <strong>魔法卷轴</strong><br>
+        效果：立即击败1个普通怪物<br>
+        <hr style="margin: 5px 0;">
+        使用时机：遇到怪物时<br>
+        描述：一次性魔法
+      </div>
+      <div class="card-footer">价格：5金币 | 编号：C-04</div>
+    </div>
+    
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">📃</span></div>
+      <div class="card-body">
+        <strong>传送卷轴</strong><br>
+        效果：传送到本层任意房间<br>
+        <hr style="margin: 5px 0;">
+        使用时机：探索房间前<br>
+        描述：避开危险房间
+      </div>
+      <div class="card-footer">价格：4金币 | 编号：C-05</div>
+    </div>
+    
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">💎</span></div>
+      <div class="card-body">
+        <strong>记忆碎片</strong><br>
+        效果：获得 1 个记忆碎片<br>
+        <hr style="margin: 5px 0;">
+        使用时机：任意时刻<br>
+        描述：发光的记忆结晶
+      </div>
+      <div class="card-footer">不可购买 | 编号：C-06</div>
+    </div>
+    
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">💠</span></div>
+      <div class="card-body">
+        <strong>强化石</strong><br>
+        效果：强化1件装备（+1攻击或防御）<br>
+        <hr style="margin: 5px 0;">
+        使用时机：任意时刻<br>
+        描述：神秘的强化材料
+      </div>
+      <div class="card-footer">价格：6金币 | 编号：C-07</div>
+    </div>
+    
+    <div class="card card-consumable">
+      <div class="card-header"><span>消耗品</span><span class="card-icon">📖</span></div>
+      <div class="card-body">
+        <strong>复活卷轴</strong><br>
+        效果：阵亡后自动复活（1次）<br>
+        <hr style="margin: 5px 0;">
+        使用时机：阵亡时自动触发<br>
+        描述：最后的救命稻草
+      </div>
+      <div class="card-footer">价格：8金币 | 编号：C-08</div>
+    </div>
+  </div>
+  
+  <div class="page-break"></div>
+  
+  <h3 style="color: #6600cc; margin-top: 15px;">✨ 技能卡（6张）</h3>
+  <div class="cards-container">
+    <div class="card card-skill">
+      <div class="card-header"><span>技能</span><span class="card-icon">✨</span></div>
+      <div class="card-body">
+        <strong>二连击</strong><br>
+        效果：1回合攻击 2 次<br>
+        <hr style="margin: 5px 0;">
+        学习条件：2 记忆碎片<br>
+        使用：消耗1 AP
+      </div>
+      <div class="card-footer">类型：主动技能 | 编号：S-01</div>
+    </div>
+    
+    <div class="card card-skill">
+      <div class="card-header"><span>技能</span><span class="card-icon">✨</span></div>
+      <div class="card-body">
+        <strong>治愈术</strong><br>
+        效果：消耗1AP恢复 2 HP<br>
+        <hr style="margin: 5px 0;">
+        学习条件：1 记忆碎片<br>
+        可治疗队友
+      </div>
+      <div class="card-footer">类型：主动技能 | 编号：S-02</div>
+    </div>
+    
+    <div class="card card-skill">
+      <div class="card-header"><span>技能</span><span class="card-icon">✨</span></div>
+      <div class="card-body">
+        <strong>火焰风暴</strong><br>
+        效果：对全体敌人造成 2 点伤害<br>
+        <hr style="margin: 5px 0;">
+        学习条件：3 记忆碎片<br>
+        使用：消耗1 AP
+      </div>
+      <div class="card-footer">类型：主动技能 | 编号：S-03</div>
+    </div>
+    
+    <div class="card card-skill">
+      <div class="card-header"><span>技能</span><span class="card-icon">✨</span></div>
+      <div class="card-body">
+        <strong>铁壁防御</strong><br>
+        效果：本回合受到 0 伤害<br>
+        <hr style="margin: 5px 0;">
+        学习条件：2 记忆碎片<br>
+        使用：消耗1 AP
+      </div>
+      <div class="card-footer">类型：主动技能 | 编号：S-04</div>
+    </div>
+    
+    <div class="card card-skill">
+      <div class="card-header"><span>技能</span><span class="card-icon">✨</span></div>
+      <div class="card-body">
+        <strong>精准射击</strong><br>
+        效果：下次攻击必中且暴击（x2伤害）<br>
+        <hr style="margin: 5px 0;">
+        学习条件：2 记忆碎片<br>
+        使用：消耗1 AP
+      </div>
+      <div class="card-footer">类型：主动技能 | 编号：S-05</div>
+    </div>
+    
+    <div class="card card-skill">
+      <div class="card-header"><span>技能</span><span class="card-icon">✨</span></div>
+      <div class="card-body">
+        <strong>时间回溯</strong><br>
+        效果：撤销上一次行动<br>
+        <hr style="margin: 5px 0;">
+        学习条件：4 记忆碎片<br>
+        使用：消耗1 AP<br>
+        逆转失败！
+      </div>
+      <div class="card-footer">类型：主动技能 | 编号：S-06</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 6: Memory Shard Cards -->
+<div class="section">
+  <h2>💎 记忆碎片卡（永久升级，20张）</h2>
+  <div class="cards-container">
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">❤️</span></div>
+      <div class="card-body">
+        <strong>初始HP +2</strong><br>
+        效果：每轮回合开始HP +2<br>
+        <hr style="margin: 5px 0;">
+        描述：强化生命力<br>
+        推荐：新手首选
+      </div>
+      <div class="card-footer">价格：2碎片 | 编号：MS-01</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">💰</span></div>
+      <div class="card-body">
+        <strong>初始金币 +3</strong><br>
+        效果：每轮回合开始获得 3 金币<br>
+        <hr style="margin: 5px 0;">
+        描述：财富积累<br>
+        推荐：装备流
+      </div>
+      <div class="card-footer">价格：2碎片 | 编号：MS-02</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">⚡</span></div>
+      <div class="card-body">
+        <strong>额外行动点</strong><br>
+        效果：每回合多 1 个行动点<br>
+        <hr style="margin: 5px 0;">
+        描述：时间管理大师<br>
+        推荐：高优先级
+      </div>
+      <div class="card-footer">价格：3碎片 | 编号：MS-03</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">🍀</span></div>
+      <div class="card-body">
+        <strong>幸运儿</strong><br>
+        效果：宝箱房奖励 +1<br>
+        <hr style="margin: 5px 0;">
+        描述：好运常伴<br>
+        推荐：宝箱流
+      </div>
+      <div class="card-footer">价格：2碎片 | 编号：MS-04</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">🗡️</span></div>
+      <div class="card-body">
+        <strong>老兵</strong><br>
+        效果：初始获得 1 把铁剑<br>
+        <hr style="margin: 5px 0;">
+        描述：战斗经验丰富<br>
+        推荐：攻击流
+      </div>
+      <div class="card-footer">价格：3碎片 | 编号：MS-05</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">🛡️</span></div>
+      <div class="card-body">
+        <strong>铁壁</strong><br>
+        效果：初始获得 1 件皮甲<br>
+        <hr style="margin: 5px 0;">
+        描述：防御意识强<br>
+        推荐：防御流
+      </div>
+      <div class="card-footer">价格：3碎片 | 编号：MS-06</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">📚</span></div>
+      <div class="card-body">
+        <strong>快速学习</strong><br>
+        效果：升级打折 20%<br>
+        <hr style="margin: 5px 0;">
+        描述：学习效率超高<br>
+        推荐：后期必点
+      </div>
+      <div class="card-footer">价格：4碎片 | 编号：MS-07</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">🔥</span></div>
+      <div class="card-body">
+        <strong>不死鸟</strong><br>
+        效果：第一次阵亡时复活<br>
+        <hr style="margin: 5px 0;">
+        描述：涅槃重生<br>
+        推荐：独狼玩家
+      </div>
+      <div class="card-footer">价格：5碎片 | 编号：MS-08</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">🎯</span></div>
+      <div class="card-body">
+        <strong>精准打击</strong><br>
+        效果：攻击骰子 +1<br>
+        <hr style="margin: 5px 0;">
+        描述：箭无虚发<br>
+        推荐：攻击流进阶
+      </div>
+      <div class="card-footer">价格：3碎片 | 编号：MS-09</div>
+    </div>
+    
+    <div class="card card-memory">
+      <div class="card-header"><span>永久升级</span><span class="card-icon">🧪</span></div>
+      <div class="card-body">
+        <strong>炼金术士</strong><br>
+        效果：消耗品效果 +1<br>
+        <hr style="margin: 5px 0;">
+        描述：药水大师<br>
+        推荐：消耗品流
+      </div>
+      <div class="card-footer">价格：3碎片 | 编号：MS-10</div>
+    </div>
+  </div>
+  
+  <p style="margin-top: 15px; color: #666; font-style: italic;">
+    💡 提示：记忆碎片卡在购买后永久保留，不受轮回影响。每位玩家最多可携带5个记忆碎片升级。
+  </p>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 7: Player Boards -->
+<div class="section">
+  <h2>🎮 玩家面板（4个）</h2>
+  <p style="margin-bottom: 15px; color: #666;">
+    每位玩家需要1个玩家面板，用于记录HP、金币、装备等信息。打印后可用透明胶保护。
+  </p>
+  
+  <div style="text-align: center;">
+    <div class="player-board" style="border-color: #ff4444;">
+      <h3 style="color: #ff4444;">🔴 玩家1</h3>
+      <div class="stat-row"><span>❤️ HP</span><span>10 / 10</span></div>
+      <div class="stat-row"><span>💰 金币</span><span>0</span></div>
+      <div class="stat-row"><span>⚡ 行动点</span><span>2 / 2</span></div>
+      <div class="stat-row"><span>💎 记忆碎片</span><span>0</span></div>
+      <hr style="margin: 10px 0;">
+      <div style="font-weight: bold; margin: 5px 0;">🗡️ 武器栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空（可双持）</div>
+      <div style="font-weight: bold; margin: 5px 0;">🛡️ 防具栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div style="font-weight: bold; margin: 5px 0;">🎒 背包（消耗品）</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+    </div>
+    
+    <div class="player-board" style="border-color: #4444ff;">
+      <h3 style="color: #4444ff;">🔵 玩家2</h3>
+      <div class="stat-row"><span>❤️ HP</span><span>10 / 10</span></div>
+      <div class="stat-row"><span>💰 金币</span><span>0</span></div>
+      <div class="stat-row"><span>⚡ 行动点</span><span>2 / 2</span></div>
+      <div class="stat-row"><span>💎 记忆碎片</span><span>0</span></div>
+      <hr style="margin: 10px 0;">
+      <div style="font-weight: bold; margin: 5px 0;">🗡️ 武器栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空（可双持）</div>
+      <div style="font-weight: bold; margin: 5px 0;">🛡️ 防具栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div style="font-weight: bold; margin: 5px 0;">🎒 背包（消耗品）</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+    </div>
+    
+    <div class="player-board" style="border-color: #44ff44;">
+      <h3 style="color: #44ff44;">🟢 玩家3</h3>
+      <div class="stat-row"><span>❤️ HP</span><span>10 / 10</span></div>
+      <div class="stat-row"><span>💰 金币</span><span>0</span></div>
+      <div class="stat-row"><span>⚡ 行动点</span><span>2 / 2</span></div>
+      <div class="stat-row"><span>💎 记忆碎片</span><span>0</span></div>
+      <hr style="margin: 10px 0;">
+      <div style="font-weight: bold; margin: 5px 0;">🗡️ 武器栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空（可双持）</div>
+      <div style="font-weight: bold; margin: 5px 0;">🛡️ 防具栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div style="font-weight: bold; margin: 5px 0;">🎒 背包（消耗品）</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+    </div>
+    
+    <div class="player-board" style="border-color: #ffaa00;">
+      <h3 style="color: #ffaa00;">🟡 玩家4</h3>
+      <div class="stat-row"><span>❤️ HP</span><span>10 / 10</span></div>
+      <div class="stat-row"><span>💰 金币</span><span>0</span></div>
+      <div class="stat-row"><span>⚡ 行动点</span><span>2 / 2</span></div>
+      <div class="stat-row"><span>💎 记忆碎片</span><span>0</span></div>
+      <hr style="margin: 10px 0;">
+      <div style="font-weight: bold; margin: 5px 0;">🗡️ 武器栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空（可双持）</div>
+      <div style="font-weight: bold; margin: 5px 0;">🛡️ 防具栏</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div style="font-weight: bold; margin: 5px 0;">🎒 背包（消耗品）</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+      <div class="equipment-slot">空</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- Section 8: Player Tokens -->
+<div class="section">
+  <h2>🎯 玩家棋子（打印后裁剪）</h2>
+  <p style="margin-bottom: 15px; color: #666;">
+    打印在卡纸上，裁剪后作为玩家棋子使用。也可以用硬币、纽扣等代替。
+  </p>
+  
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
+    <div style="padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+      <div class="player-token" style="background: #ff4444; color: white; width: 60px; height: 60px; font-size: 30px; margin: 0 auto 10px;">🔴</div>
+      <div>玩家1棋子</div>
+      <div style="font-size: 12px; color: #999;">红色</div>
+    </div>
+    
+    <div style="padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+      <div class="player-token" style="background: #4444ff; color: white; width: 60px; height: 60px; font-size: 30px; margin: 0 auto 10px;">🔵</div>
+      <div>玩家2棋子</div>
+      <div style="font-size: 12px; color: #999;">蓝色</div>
+    </div>
+    
+    <div style="padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+      <div class="player-token" style="background: #44ff44; color: white; width: 60px; height: 60px; font-size: 30px; margin: 0 auto 10px;">🟢</div>
+      <div>玩家3棋子</div>
+      <div style="font-size: 12px; color: #999;">绿色</div>
+    </div>
+    
+    <div style="padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+      <div class="player-token" style="background: #ffaa00; color: white; width: 60px; height: 60px; font-size: 30px; margin: 0 auto 10px;">🟡</div>
+      <div>玩家4棋子</div>
+      <div style="font-size: 12px; color: #999;">黄色</div>
+    </div>
+  </div>
+  
+  <div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+    <h3>📝 打印说明</h3>
+    <ul style="margin-top: 10px; line-height: 1.8;">
+      <li>所有卡牌建议打印在<strong>200g卡纸</strong>上，增加耐用性</li>
+      <li>打印前务必在打印设置中<strong>勾选"背景图形"</strong></li>
+      <li>卡牌打印后可<strong>塑封</strong>，延长使用寿命</li>
+      <li>玩家面板建议<strong>过塑</strong>或用透明胶保护，可用白板笔书写</li>
+      <li>如果没有卡纸，普通A4纸也可以，但建议<strong>双层打印</strong>（两页贴在一起增加厚度）</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>
