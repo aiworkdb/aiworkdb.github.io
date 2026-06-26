@@ -92,6 +92,7 @@ boardgames/
 | [盲盒神话](category/party/blind-myth/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
 | [天庭年会](category/party/celestial-gala/README.md) | 派对 | 4-8人 | 20-35分钟 | 简单 |
 | [天命人](category/cooperative/destined-one/README.md) | 合作 | 1-4人 | 60-90分钟 | 中等偏难 |
+| [轮回地下城](category/cooperative/loop-dungeon/README.md) | 合作 | 1-4人 | 45-60分钟 | 中等 |
 
 ## 添加新桌游
 
