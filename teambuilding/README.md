@@ -32,6 +32,8 @@
 | [名字接龙](games/icebreaker/name-chain.md) | 室内/户外 · 智力 | 任意 | 5-10 min | 团建/培训 |
 | [盲盒神话（改造版）](games/icebreaker/blind-box-myth.md) | 室内 · 卡牌+交易 | 4-8人/组 | 30-40 min | 团建/培训/破冰 |
 | [美食挑战赛（改造版）](games/icebreaker/food-challenge.md) | 室内 · 卡牌+趣味 | 4-7人/组 | 30-40 min | 团建/培训/破冰 |
+| [探险家日记（改造版）](games/icebreaker/explorer-journal.md) | 室内 · 分享+故事 | 6-16人 | 30-45 min | 团建/培训/破冰 |
+| [台词之王（改造版）](games/icebreaker/line-master.md) | 室内 · 表演+即兴 | 6-20人 | 30-50 min | 团建/培训/破冰 |
 
 #### 💬 沟通表达（communication）
 | 游戏名称 | 形式 | 人数 | 时长 | 场景标签 |
@@ -42,6 +44,7 @@
 | [画图接龙](games/communication/drawing-relay.md) | 室内 · 趣味+创意 | 4-8人/组 | 20-30 min | 团建/培训/破冰 |
 | [动物城大侦探（改造版）](games/communication/animal-detective.md) | 室内 · 推理+讨论 | 4-12人 | 30-45 min | 培训/团建 |
 | [时间特工（改造版）](games/communication/time-agents.md) | 室内 · 推理+心理博弈 | 6-12人 | 30-45 min | 团建/培训/破冰 |
+| [谣言工厂（改造版）](games/communication/rumor-factory.md) | 室内 · 倾听+传递 | 6-16人 | 30-45 min | 团建/培训/信任建设 |
 
 #### 🤝 团队协作（collaboration）
 | 游戏名称 | 形式 | 人数 | 时长 | 场景标签 |

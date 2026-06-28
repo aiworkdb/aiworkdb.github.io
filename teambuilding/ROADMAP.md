@@ -1,7 +1,7 @@
 # 团建 & 培训资料库 · 建设规划
 
-> 最新进度更新：2026-06-25  
-> 下一步规划更新：2026-06-25
+> 最新进度更新：2026-06-26  
+> 下一步规划更新：2026-06-26
 
 ---
 
@@ -13,9 +13,10 @@
 | README 总索引 | ✅ 100% | 27款游戏已入库 |
 | 教练使用指南 | ✅ 100% | guide.md 完整 |
 | 教练工具箱 | ✅ 100% | 4个文件完整 |
-| 游戏库 | ✅ 117% | **27款**（目标23款，超额完成） |
+| 游戏库 | ✅ 130% | **30款**（目标23款，超额完成） |
 | 团建流程方案 | ✅ 133% | **4套**（目标3套，超额完成） |
-| 现有桌游改造 | 🟡 40% | 4款已改造，还有更多可改造 |
+| 现有桌游改造 | ✅ 100% | 7款已改造，优先清单完成 |
+| HTML 版本 | 🟡 50% | **5款**已完成（目标10款，完成50%） |
 | 上线部署 | ✅ 100% | https://aiworkdb.github.io/teambuilding/ |
 
 ---
@@ -24,31 +25,38 @@
 
 ### 游戏库（27款）
 
-#### 🧊 破冰热场（5款）
+#### 🧊 破冰热场（7款）
 1. 人类宾果 `icebreaker/human-bingo.md`
 2. 两真一假 `icebreaker/two-truths-one-lie.md`
 3. 名字接龙 `icebreaker/name-chain.md`
 4. 盲盒神话（改造）`icebreaker/blind-box-myth.md`
 5. 美食挑战赛（改造）`icebreaker/food-challenge.md`
+6. 探险家日记（改造）`icebreaker/explorer-journal.md`
+7. 台词之王（改造）`icebreaker/line-master.md`
 
 #### 🔐 信任建立（2款）
 1. 信任背摔 `trust/trust-fall.md`
 2. 盲行 `trust/blind-walk.md`
 
-#### 💬 沟通表达（5款）
+#### 💬 沟通表达（7款）
 1. 盲人方阵 `communication/blind-polygon.md`
 2. 传话游戏 `communication/telephone-game.md`
 3. 你说我画 `communication/draw-guess.md`
 4. 画图接龙 `communication/drawing-relay.md`
 5. 动物城大侦探（改造）`communication/animal-detective.md`
+6. 时间特工（改造）`communication/time-agents.md`
+7. 谣言工厂（改造）`communication/rumor-factory.md`
 
-#### 🤝 团队协作（6款）
+#### 🤝 团队协作（9款）
 1. 人结 `collaboration/human-knot.md`
 2. 齐眉棍 `collaboration/eyebrow-stick.md`
 3. 珠行万里 `collaboration/ball-relay.md`
 4. 风火轮 `collaboration/wind-fire-wheel.md`
 5. 人体拼字 `collaboration/body-letters.md`
 6. 岛屿求生（改造）`collaboration/island-survival.md`
+7. 魔法学院（改造）`collaboration/magic-academy.md`
+8. 星际矿工（改造）`collaboration/space-miners.md`
+9. 疯狂厨房（改造）`collaboration/crazy-kitchen.md`
 
 #### 👑 领导力（3款）
 1. 红黑游戏 `leadership/red-black-game.md`
@@ -158,11 +166,11 @@
 ## 📅 执行计划
 
 ### 本周任务（2026-06-25 至 2026-07-01）
-- [ ] 改造现有桌游 × 7 款（任务1）
-- [ ] 创建 HTML 版本 × 5 款（任务2开始）
+- [x] 改造现有桌游 × 7 款（任务1） - ✅ 已完成（7/7）
+- [x] 创建 HTML 版本 × 5 款（任务2开始） - ✅ 已完成（5/10）
 
 ### 下周任务（2026-07-02 至 2026-07-08）
-- [ ] 完成 HTML 版本 × 10 款（任务2完成）
+- [ ] 完成 HTML 版本 × 5 款（任务2完成，累计10/10）
 - [ ] 添加搜索和筛选功能（任务3）
 
 ### 后续任务（2026-07-09 起）
