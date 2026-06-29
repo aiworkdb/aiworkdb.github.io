@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神经对决 - 打印道具</title>
+    <style>
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .print-hint {
+                display: none;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+            .card {
+                break-inside: avoid;
+            }
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #fff;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .print-hint {
+            background: #ff6b35;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ffd700;
+        }
+        
+        .print-hint h2 {
+            margin-top: 0;
+            color: white;
+        }
+        
+        .print-hint ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #00ffff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #1e2640 0%, #0d1320 100%);
+            border: 2px solid #00ffff;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+        }
+        
+        .card-type-attack {
+            border-color: #ff4444;
+        }
+        
+        .card-type-attack::before {
+            background: linear-gradient(90deg, #ff4444, #ff8888);
+        }
+        
+        .card-type-defense {
+            border-color: #4444ff;
+        }
+        
+        .card-type-defense::before {
+            background: linear-gradient(90deg, #4444ff, #8888ff);
+        }
+        
+        .card-type-support {
+            border-color: #44ff44;
+        }
+        
+        .card-type-support::before {
+            background: linear-gradient(90deg, #44ff44, #88ff88);
+        }
+        
+        .card-type-virus {
+            border-color: #ff00ff;
+        }
+        
+        .card-type-virus::before {
+            background: linear-gradient(90deg, #ff00ff, #ff88ff);
+        }
+        
+        .card-icon {
+            font-size: 48px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .card-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .card-cost {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ffd700;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .card-rarity {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .rarity-common {
+            background: #808080;
+            color: white;
+        }
+        
+        .rarity-rare {
+            background: #0066ff;
+            color: white;
+        }
+        
+        .rarity-epic {
+            background: #9900ff;
+            color: white;
+        }
+        
+        .rarity-legendary {
+            background: #ff8c00;
+            color: white;
+        }
+        
+        .card-effect {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+        
+        .card-flavor {
+            font-size: 11px;
+            font-style: italic;
+            color: #aaa;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .tokens-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .token {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .token-computing {
+            background: linear-gradient(145deg, #ffd700, #ff8c00);
+            color: #000;
+        }
+        
+        .token-life {
+            background: linear-gradient(145deg, #ff4444, #cc0000);
+            color: white;
+        }
+        
+        .instructions {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .instructions h3 {
+            color: #00ffff;
+            margin-top: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hint">
+        <h2>⚠️ 重要打印提示</h2>
+        <ul>
+            <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+            <li>卡牌建议使用<strong>卡纸</strong>打印（200g以上）</li>
+            <li>打印后沿边框裁剪，可使用卡牌套保护</li>
+            <li>算力代币可用硬币或其他小物件替代</li>
+        </ul>
+    </div>
+    
+    <h1 style="text-align: center; color: #00ffff; text-shadow: 0 0 20px #00ffff; margin-bottom: 10px;">
+        🎮 神经对决 - 打印道具
+    </h1>
+    <p style="text-align: center; color: #aaa; margin-bottom: 40px;">
+        赛博朋克卡牌对战游戏 | 2089年的黑客对决
+    </p>
+    
+    <div class="instructions">
+        <h3>📋 打印说明</h3>
+        <p><strong>建议打印顺序：</strong></p>
+        <ol>
+            <li>先打印<strong>算力代币</strong>和<strong>生命值标记</strong>（用厚纸或卡纸）</li>
+            <li>再打印<strong>数据源卡</strong>（游戏基础资源）</li>
+            <li>然后打印<strong>AI程序卡</strong>（攻击型、防御型、辅助型）</li>
+            <li>接着打印<strong>病毒卡</strong>和<strong>防火墙卡</strong></li>
+            <li>最后打印<strong>黑客工具卡</strong>（特殊能力卡）</li>
+        </ol>
+        <p><strong>完整卡牌数量：</strong></p>
+        <ul>
+            <li>AI程序卡：60张（攻击型24张 + 防御型18张 + 辅助型18张）</li>
+            <li>病毒卡：30张</li>
+            <li>防火墙卡：30张</li>
+            <li>数据源卡：40张</li>
+            <li>黑客工具卡：20张</li>
+            <li>总计：180张</li>
+        </ul>
+        <p><strong>提示：</strong>本页面包含各类卡牌的示例，您可以根据需要复制卡牌元素来创建完整的180张卡牌。</p>
+    </div>
+    
+    <!-- 数据源卡 -->
+    <div class="section">
+        <h2 class="section-title">💾 数据源卡（40张）</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">数据源卡提供算力资源，是打出其他卡牌的基础。</p>
+        
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">💾</div>
+                <div class="card-name">低阶数据源</div>
+                <div class="card-cost">1</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>提供1点算力<br>
+                    <strong>类型：</strong>资源卡
+                </div>
+                <div class="card-flavor">"基础算力，足够运行简单程序。"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">💾</div>
+                <div class="card-name">低阶数据源</div>
+                <div class="card-cost">2</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>提供2点算力<br>
+                    <strong>类型：</strong>资源卡
+                </div>
+                <div class="card-flavor">"稳定的基础算力供应。"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">💿</div>
+                <div class="card-name">中阶数据源</div>
+                <div class="card-cost">3</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>提供3点算力<br>
+                    <strong>类型：</strong>资源卡
+                </div>
+                <div class="card-flavor">"中级算力核心，运行复杂程序。"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">💿</div>
+                <div class="card-name">中阶数据源</div>
+                <div class="card-cost">4</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>提供4点算力<br>
+                    <strong>类型：</strong>资源卡
+                </div>
+                <div class="card-flavor">"高性能算力模块。"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🌐</div>
+                <div class="card-name">高阶数据源</div>
+                <div class="card-cost">5</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>提供5点算力<br>
+                    <strong>类型：</strong>资源卡
+                </div>
+                <div class="card-flavor">"顶级算力阵列，无所不能。"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🌐</div>
+                <div class="card-name">高阶数据源</div>
+                <div class="card-cost">6</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>提供6点算力<br>
+                    <strong>类型：</strong>资源卡
+                </div>
+                <div class="card-flavor">"量子算力核心，终极能量！"</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 攻击型AI程序卡 -->
+    <div class="section">
+        <h2 class="section-title">🔴 攻击型AI程序卡（24张）</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">攻击型AI程序用于对对手造成伤害。</p>
+        
+        <div class="cards-grid">
+            <div class="card card-type-attack">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-name">基础攻击程序</div>
+                <div class="card-cost">2</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>造成2点伤害<br>
+                    <strong>类型：</strong>攻击型AI
+                </div>
+                <div class="card-flavor">"最基础的攻击病毒。"</div>
+            </div>
+            
+            <div class="card card-type-attack">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">⚔️</div>
+                <div class="card-name">基础攻击程序</div>
+                <div class="card-cost">2</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>造成2点伤害<br>
+                    <strong>类型：</strong>攻击型AI
+                </div>
+                <div class="card-flavor">"简单粗暴，但有效。"</div>
+            </div>
+            
+            <div class="card card-type-attack">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🗡️</div>
+                <div class="card-name">进阶攻击程序</div>
+                <div class="card-cost">4</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>造成4点伤害<br>
+                    <strong>类型：</strong>攻击型AI
+                </div>
+                <div class="card-flavor">"强化版攻击程序。"</div>
+            </div>
+            
+            <div class="card card-type-attack">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">💥</div>
+                <div class="card-name">终极攻击程序</div>
+                <div class="card-cost">6</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>造成8点伤害<br>
+                    <strong>类型：</strong>攻击型AI
+                </div>
+                <div class="card-flavor">"毁灭性的攻击！"</div>
+            </div>
+            
+            <div class="card card-type-attack">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🦠</div>
+                <div class="card-name">病毒攻击程序</div>
+                <div class="card-cost">3</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>造成3点伤害+植入1张病毒<br>
+                    <strong>类型：</strong>攻击型AI
+                </div>
+                <div class="card-flavor">"攻击附带病毒，双重打击！"</div>
+            </div>
+            
+            <div class="card card-type-attack">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🎯</div>
+                <div class="card-name">多重攻击程序</div>
+                <div class="card-cost">5</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>造成3点伤害×2次<br>
+                    <strong>类型：</strong>攻击型AI
+                </div>
+                <div class="card-flavor">"双重攻击，防不胜防！"</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 防御型AI程序卡 -->
+    <div class="section">
+        <h2 class="section-title">🔵 防御型AI程序卡（18张）</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">防御型AI程序用于保护自己，增加护甲。</p>
+        
+        <div class="cards-grid">
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-name">基础防火墙</div>
+                <div class="card-cost">2</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>获得2点护甲<br>
+                    <strong>类型：</strong>防御型AI
+                </div>
+                <div class="card-flavor">"基础的防护程序。"</div>
+            </div>
+            
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🔒</div>
+                <div class="card-name">进阶防火墙</div>
+                <div class="card-cost">4</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>获得4点护甲<br>
+                    <strong>类型：</strong>防御型AI
+                </div>
+                <div class="card-flavor">"强化防护系统。"</div>
+            </div>
+            
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🧠</div>
+                <div class="card-name">智能防御系统</div>
+                <div class="card-cost">5</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>获得3点护甲+反弹1点伤害<br>
+                    <strong>类型：</strong>防御型AI
+                </div>
+                <div class="card-flavor">"会反击的防火墙！"</div>
+            </div>
+            
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🔄</div>
+                <div class="card-name">自适应护盾</div>
+                <div class="card-cost">3</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>获得2点护甲+抽1张牌<br>
+                    <strong>类型：</strong>防御型AI
+                </div>
+                <div class="card-flavor">"防御的同时补充手牌。"</div>
+            </div>
+            
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-legendary">传说</div>
+                <div class="card-icon">🏰</div>
+                <div class="card-name">绝对防御</div>
+                <div class="card-cost">7</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>获得10点护甲<br>
+                    <strong>类型：</strong>防御型AI
+                </div>
+                <div class="card-flavor">"无敌的防御！"</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 辅助型AI程序卡 -->
+    <div class="section">
+        <h2 class="section-title">🟢 辅助型AI程序卡（18张）</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">辅助型AI程序提供特殊能力，增强战术灵活性。</p>
+        
+        <div class="cards-grid">
+            <div class="card card-type-support">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">⛏️</div>
+                <div class="card-name">数据采矿</div>
+                <div class="card-cost">2</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>抽2张数据源卡<br>
+                    <strong>类型：</strong>辅助型AI
+                </div>
+                <div class="card-flavor">"挖掘更多算力资源。"</div>
+            </div>
+            
+            <div class="card card-type-support">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-name">程序优化</div>
+                <div class="card-cost">3</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>本回合打出AI程序费用-1<br>
+                    <strong>类型：</strong>辅助型AI
+                </div>
+                <div class="card-flavor">"优化代码，降低能耗。"</div>
+            </div>
+            
+            <div class="card card-type-support">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">👁️</div>
+                <div class="card-name">算力窃取</div>
+                <div class="card-cost">4</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>获得对手1个数据源<br>
+                    <strong>类型：</strong>辅助型AI
+                </div>
+                <div class="card-flavor">"窃取对手的算力！"</div>
+            </div>
+            
+            <div class="card card-type-support">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🧬</div>
+                <div class="card-name">AI进化</div>
+                <div class="card-cost">5</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>将手牌中1张AI程序属性+2<br>
+                    <strong>类型：</strong>辅助型AI
+                </div>
+                <div class="card-flavor">"进化你的AI程序！"</div>
+            </div>
+            
+            <div class="card card-type-support">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🔄</div>
+                <div class="card-name">系统重置</div>
+                <div class="card-cost">6</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>重置所有防火墙<br>
+                    <strong>类型：</strong>辅助型AI
+                </div>
+                <div class="card-flavor">"恢复所有防御系统。"</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 病毒卡 -->
+    <div class="section">
+        <h2 class="section-title">💀 病毒卡（30张）</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">病毒卡用于干扰对手，破坏他们的计划。</p>
+        
+        <div class="cards-grid">
+            <div class="card card-type-virus">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">💀</div>
+                <div class="card-name">破坏病毒</div>
+                <div class="card-cost">3</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>摧毁对手1张已部署的AI程序<br>
+                    <strong>应对：</strong>需要"杀毒程序"或消耗2点护甲
+                </div>
+                <div class="card-flavor">"删除对手的程序！"</div>
+            </div>
+            
+            <div class="card card-type-virus">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">⚡</div>
+                <div class="card-name">干扰病毒</div>
+                <div class="card-cost">2</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>对手下回合无法使用特殊能力<br>
+                    <strong>应对：</strong>需要"防火墙"或消耗1点护甲
+                </div>
+                <div class="card-flavor">"让对手失去特殊能力！"</div>
+            </div>
+            
+            <div class="card card-type-virus">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">👁️</div>
+                <div class="card-name">窃取病毒</div>
+                <div class="card-cost">4</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>查看对手手牌并选择1张丢弃<br>
+                    <strong>应对：</strong>需要"加密程序"或消耗3点护甲
+                </div>
+                <div class="card-flavor">"窥探并破坏对手的手牌！"</div>
+            </div>
+            
+            <div class="card card-type-virus">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🦠</div>
+                <div class="card-name">超级病毒</div>
+                <div class="card-cost">5</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>摧毁对手2张已部署的AI程序<br>
+                    <strong>应对：</strong>需要"高级杀毒程序"或消耗4点护甲
+                </div>
+                <div class="card-flavor">"双重破坏！"</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 防火墙卡 -->
+    <div class="section">
+        <h2 class="section-title">🛡️ 防火墙卡（30张）</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">防火墙卡用于保护自己，抵御攻击和病毒。</p>
+        
+        <div class="cards-grid">
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">🛡️</div>
+                <div class="card-name">基础防火墙</div>
+                <div class="card-cost">2</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>抵挡1次攻击或病毒<br>
+                    <strong>可升级为：</strong>多层防火墙
+                </div>
+                <div class="card-flavor">"最基础的防护。"</div>
+            </div>
+            
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🔒</div>
+                <div class="card-name">高级防火墙</div>
+                <div class="card-cost">4</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>抵挡2次攻击或病毒<br>
+                    <strong>可升级为：</strong>智能防火墙
+                </div>
+                <div class="card-flavor">"更强的防护。"</div>
+            </div>
+            
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">🧠</div>
+                <div class="card-name">智能防火墙</div>
+                <div class="card-cost">6</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>抵挡攻击并反弹1点伤害<br>
+                    <strong>等级：</strong>最高级防火墙
+                </div>
+                <div class="card-flavor">"会反击的防火墙！"</div>
+            </div>
+            
+            <div class="card card-type-defense">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🔐</div>
+                <div class="card-name">加密防火墙</div>
+                <div class="card-cost">3</div>
+                <div class="card-effect">
+                    <strong>效果：</strong>抵挡1次攻击+防止手牌被查看<br>
+                    <strong>特殊：</strong>对抗窃取病毒
+                </div>
+                <div class="card-flavor">"加密保护！"</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 黑客工具卡 -->
+    <div class="section">
+        <h2 class="section-title">🔧 黑客工具卡（20张）</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">黑客工具卡提供特殊能力，往往能逆转局势。</p>
+        
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🔓</div>
+                <div class="card-name">破解工具</div>
+                <div class="card-cost">- </div>
+                <div class="card-effect">
+                    <strong>效果：</strong>忽略对手1个防火墙效果<br>
+                    <strong>使用时机：</strong>攻击时
+                </div>
+                <div class="card-flavor">"破解敌人的防御！"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-rare">稀有</div>
+                <div class="card-icon">🎯</div>
+                <div class="card-name">入侵工具</div>
+                <div class="card-cost">- </div>
+                <div class="card-effect">
+                    <strong>效果：</strong>直接造成3点伤害（无视护甲）<br>
+                    <strong>使用时机：</strong>任意时机
+                </div>
+                <div class="card-flavor">"直接入侵系统！"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-common">普通</div>
+                <div class="card-icon">🔐</div>
+                <div class="card-name">防御工具</div>
+                <div class="card-cost">- </div>
+                <div class="card-effect">
+                    <strong>效果：</strong>本回合受到的伤害-2<br>
+                    <strong>使用时机：</strong>对手攻击时
+                </div>
+                <div class="card-flavor">"紧急防御措施。"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">💾</div>
+                <div class="card-name">数据备份</div>
+                <div class="card-cost">- </div>
+                <div class="card-effect">
+                    <strong>效果：</strong>从弃牌堆回收1张卡<br>
+                    <strong>使用时机：</strong>任意时机
+                </div>
+                <div class="card-flavor">"恢复删除的数据！"</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-rarity rarity-epic">史诗</div>
+                <div class="card-icon">💥</div>
+                <div class="card-name">系统崩溃</div>
+                <div class="card-cost">- </div>
+                <div class="card-effect">
+                    <strong>效果：</strong>对手所有防火墙失效1回合<br>
+                    <strong>使用时机：</strong>任意时机
+                </div>
+                <div class="card-flavor">"让对手的防御全面崩溃！"</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 算力代币和生命值标记 -->
+    <div class="section">
+        <h2 class="section-title">🎯 游戏代币</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">打印后裁剪，用于记录算力和生命值。</p>
+        
+        <div class="instructions">
+            <h3>📋 代币打印说明</h3>
+            <p><strong>算力代币：</strong>打印后裁剪，每位玩家需要10-15个。也可用硬币、棋子等替代。</p>
+            <p><strong>生命值标记：</strong>可用纸笔记录生命值，无需打印。</p>
+        </div>
+        
+        <h3 style="color: #ffd700; margin-top: 30px;">算力代币（建议打印12个）</h3>
+        <div class="tokens-section">
+            <div class="token token-computing">1</div>
+            <div class="token token-computing">2</div>
+            <div class="token token-computing">3</div>
+            <div class="token token-computing">5</div>
+            <div class="token token-computing">10</div>
+        </div>
+        
+        <h3 style="color: #ff4444; margin-top: 30px;">生命值标记（建议用纸笔记录）</h3>
+        <div class="tokens-section">
+            <div class="token token-life">❤️</div>
+        </div>
+        <p style="color: #aaa; margin-top: 20px;">
+            生命值可用纸笔记录（起始20点），无需打印实体标记。<br>
+            如果需要实体标记，可以打印数字卡片（1-20）来记录生命值。
+        </p>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- 卡牌背面设计 -->
+    <div class="section">
+        <h2 class="section-title">🎴 卡牌背面设计</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">建议所有卡牌使用统一的背面设计，增加游戏质感。</p>
+        
+        <div class="card" style="max-width: 300px; margin: 0 auto;">
+            <div style="height: 200px; background: linear-gradient(145deg, #0a0e27 0%, #1a1f3a 100%); border: 2px solid #00ffff; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 255, 255, 0.1) 10px, rgba(0, 255, 255, 0.1) 20px);"></div>
+                <div style="text-align: center; z-index: 1;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🧠</div>
+                    <div style="font-size: 24px; font-weight: bold; color: #00ffff; text-shadow: 0 0 10px #00ffff;">NEURAL CLASH</div>
+                    <div style="font-size: 14px; color: #aaa; margin-top: 5px;">神经对决</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions" style="margin-top: 30px;">
+            <h3>📋 双面打印说明</h3>
+            <p>如果您的打印机支持双面打印，可以：</p>
+            <ol>
+                <li>先打印卡牌正面（本页面上方的内容）</li>
+                <li>然后打印卡牌背面（上面的设计）</li>
+                <li>确保正面对齐背面</li>
+            </ol>
+            <p>如果无法双面打印，可以：</p>
+            <ol>
+                <li>打印卡牌正面</li>
+                <li>在卡牌背面贴上装饰贴纸或使用统一颜色的卡纸</li>
+            </ol>
+        </div>
+    </div>
+    
+    <div style="margin-top: 50px; padding: 30px; background: rgba(0, 255, 255, 0.1); border-radius: 15px; text-align: center;">
+        <h2 style="color: #00ffff; margin-bottom: 20px;">🎮 打印完成！</h2>
+        <p style="font-size: 18px; line-height: 1.6;">
+            恭喜！您已经打印了《神经对决》的所有道具。<br>
+            现在可以邀请朋友一起加入2089年的赛博空间对决！<br>
+            <br>
+            <strong>记住：</strong>在赛博空间中，唯一的限制是你的想象力！<br>
+            <br>
+            <span style="color: #ffd700;">祝你好运，黑客！</span>
+        </p>
+    </div>
+</body>
+</html>
