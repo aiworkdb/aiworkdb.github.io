@@ -2,7 +2,7 @@
 title: "一日团建流程方案 · 完整模板"
 author: "AIWorkDB"
 source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.html"
-cover: "https://placehold.co/1200x630/6C5CE7/white?text=Flow"
+cover: "https://via.placeholder.com/1200x630/6C5CE7/FFFFFF?text=One+Day""https://placehold.co/1200x630/6C5CE7/white?text=Flow"
 
 ---
 

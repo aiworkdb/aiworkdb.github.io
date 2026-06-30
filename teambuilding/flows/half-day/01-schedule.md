@@ -2,7 +2,7 @@
 title: "半日团建流程模板"
 author: "AIWorkDB"
 source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.html"
-cover: "https://placehold.co/1200x630/6C5CE7/white?text=Flow"
+cover: "https://via.placeholder.com/1200x630/00B894/FFFFFF?text=Half+Day""https://placehold.co/1200x630/6C5CE7/white?text=Flow"
 
 ---
 
