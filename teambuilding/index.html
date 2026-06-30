@@ -44,9 +44,16 @@
     .tool-icon { font-size: 1.3em; }
     .tool-name { font-size: 0.9em; font-weight: 600; }
     
-    .search-box { margin: 24px 0 32px; }
+    .search-box { margin: 24px 0 16px; }
     .search-box input { width: 100%; padding: 12px 16px; border: 1px solid #d0d5e0; border-radius: 8px; font-size: 0.95em; background: #fff; }
     .search-box input:focus { outline: none; border-color: #5b8cfe; box-shadow: 0 0 0 3px rgba(91,140,254,0.18); }
+    
+    .filters { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+    .filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-label { font-size: 0.85em; color: #666; margin-right: 4px; line-height: 32px; }
+    .filter-btn { padding: 6px 14px; border: 1px solid #d0d5e0; border-radius: 6px; background: #fff; color: #555; font-size: 0.85em; cursor: pointer; transition: all 0.2s; }
+    .filter-btn:hover { border-color: #5b8cfe; color: #5b8cfe; }
+    .filter-btn.active { background: #5b8cfe; color: #fff; border-color: #5b8cfe; }
     
     .footer { text-align: center; padding: 32px 20px; color: #888; font-size: 0.85em; }
     .footer a { color: #5b8cfe; }
@@ -58,7 +65,7 @@
   <h1>🏕️ 团建 & 培训游戏库</h1>
   <p>面向培训老师、团建教练的实用游戏与流程资源库。所有游戏统一收录，通过标签区分使用场景。</p>
   <div class="stats">
-    <div class="stat"><div class="stat-n">27</div><div class="stat-l">款游戏</div></div>
+    <div class="stat"><div class="stat-n">32</div><div class="stat-l">款游戏</div></div>
     <div class="stat"><div class="stat-n">4</div><div class="stat-l">套流程方案</div></div>
     <div class="stat"><div class="stat-n">4</div><div class="stat-l">个教练工具</div></div>
   </div>
@@ -68,6 +75,33 @@
 
   <div class="search-box">
     <input type="text" id="search" placeholder="搜索游戏名称、目的标签或场景…" oninput="filterCards()">
+  </div>
+  
+  <div class="filters">
+    <div class="filter-group">
+      <span class="filter-label">分类：</span>
+      <button class="filter-btn active" onclick="toggleFilter('category', 'all', this)">全部</button>
+      <button class="filter-btn" onclick="toggleFilter('category', 'icebreaker', this)">🧊 破冰</button>
+      <button class="filter-btn" onclick="toggleFilter('category', 'communication', this)">💬 沟通</button>
+      <button class="filter-btn" onclick="toggleFilter('category', 'collaboration', this)">🤝 协作</button>
+      <button class="filter-btn" onclick="toggleFilter('category', 'trust', this)">🔐 信任</button>
+      <button class="filter-btn" onclick="toggleFilter('category', 'leadership', this)">👑 领导力</button>
+      <button class="filter-btn" onclick="toggleFilter('category', 'creativity', this)">💡 创意</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">人数：</span>
+      <button class="filter-btn active" onclick="toggleFilter('people', 'all', this)">全部</button>
+      <button class="filter-btn" onclick="toggleFilter('people', 'small', this)"><10人</button>
+      <button class="filter-btn" onclick="toggleFilter('people', 'medium', this)">10-20人</button>
+      <button class="filter-btn" onclick="toggleFilter('people', 'large', this)">20+人</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">时长：</span>
+      <button class="filter-btn active" onclick="toggleFilter('duration', 'all', this)">全部</button>
+      <button class="filter-btn" onclick="toggleFilter('duration', 'short', this)"><30min</button>
+      <button class="filter-btn" onclick="toggleFilter('duration', 'medium', this)">30-60min</button>
+      <button class="filter-btn" onclick="toggleFilter('duration', 'long', this)">60+min</button>
+    </div>
   </div>
 
   <!-- 游戏库 -->
@@ -79,76 +113,161 @@
     <!-- 破冰热场 -->
     <div style="font-weight:600;color:#555;margin:18px 0 10px;">🧊 破冰热场（icebreaker）</div>
     <div class="grid" id="grid-icebreaker">
-      <a href="games/icebreaker/human-bingo.html" class="card">
+      <a href="games/icebreaker/human-bingo.html" class="card" data-people="small" data-duration="short">
         <div class="card-icon">🎯</div>
         <div class="card-title">人类宾果</div>
         <div class="card-desc">零道具、任意人数、即拿即用。最经典的破冰游戏。</div>
         <div class="card-tags"><span class="tag">室内</span><span class="tag">5–15 min</span><span class="tag">团建/培训</span></div>
       </a>
-      <a href="games/icebreaker/two-truths-one-lie.html" class="card">
+      <a href="games/icebreaker/two-truths-one-lie.html" class="card" data-people="small" data-duration="short">
         <div class="card-icon">🤥</div>
         <div class="card-title">两真一假</div>
         <div class="card-desc">深度了解彼此、笑声多，适合培训开场。</div>
         <div class="card-tags"><span class="tag">室内</span><span class="tag">10–20 min</span><span class="tag">团建/培训</span></div>
       </a>
-      <a href="games/icebreaker/name-chain.html" class="card">
+      <a href="games/icebreaker/name-chain.html" class="card" data-people="small" data-duration="short">
         <div class="card-icon">🔗</div>
         <div class="card-title">名字接龙</div>
         <div class="card-desc">超快热身，记住所有人的名字，能量瞬间拉满。</div>
         <div class="card-tags"><span class="tag">室内/户外</span><span class="tag">5–10 min</span><span class="tag">团建/培训</span></div>
       </a>
-      <a href="games/icebreaker/blind-box-myth.html" class="card">
+      <a href="games/icebreaker/blind-box-myth.html" class="card" data-people="medium" data-duration="medium">
         <div class="card-icon">📦</div>
         <div class="card-title">盲盒神话（改造版）</div>
         <div class="card-desc">卡牌交易游戏团建改造版，体验分享与共赢思维。</div>
         <div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span><span class="tag">团建/培训</span></div>
       </a>
-      <a href="games/icebreaker/food-challenge.html" class="card">
+      <a href="games/icebreaker/food-challenge.html" class="card" data-people="medium" data-duration="medium">
         <div class="card-icon">🍳</div>
         <div class="card-title">美食挑战赛（改造版）</div>
         <div class="card-desc">厨房竞赛游戏改造，在欢笑中体验分工与接纳不完美。</div>
         <div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span><span class="tag">团建/培训</span></div>
+      </a>
+      <a href="games/icebreaker/explorer-journal.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">🗺️</div>
+        <div class="card-title">探险家手记（改造版）</div>
+        <div class="card-desc">旅行主题卡牌游戏改造，在分享经历中加深团队了解。</div>
+        <div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span><span class="tag">团建/培训</span></div>
+      </a>
+      <a href="games/icebreaker/line-master.html" class="card" data-people="medium" data-duration="short">
+        <div class="card-icon">🎭</div>
+        <div class="card-title">台词之王（改造版）</div>
+        <div class="card-desc">用电影台词猜谜的聚会游戏改造，轻松破冰、笑声不断。</div>
+        <div class="card-tags"><span class="tag">室内</span><span class="tag">20–30 min</span><span class="tag">团建/培训</span></div>
       </a>
     </div>
     
     <!-- 沟通表达 -->
     <div style="font-weight:600;color:#555;margin:18px 0 10px;">💬 沟通表达（communication）</div>
     <div class="grid" id="grid-communication">
-      <a href="games/communication/blind-polygon.html" class="card">
+      <a href="games/communication/blind-polygon.html" class="card" data-people="medium" data-duration="medium">
         <div class="card-icon">📐</div>
         <div class="card-title">盲人方阵</div>
         <div class="card-desc">经典沟通游戏，复盘价值极高，培训首选。</div>
         <div class="card-tags"><span class="tag">室内/户外</span><span class="tag">30–45 min</span><span class="tag">团建/培训</span></div>
       </a>
-      <a href="games/communication/telephone-game.html" class="card">
+      <a href="games/communication/telephone-game.html" class="card" data-people="medium" data-duration="short">
         <div class="card-icon">📞</div>
         <div class="card-title">传话游戏</div>
         <div class="card-desc">用笑声看见「信息失真」的真相，理解精准沟通的重要性。</div>
         <div class="card-tags"><span class="tag">室内/户外</span><span class="tag">15–25 min</span><span class="tag">培训/团建</span></div>
       </a>
-      <a href="games/communication/draw-guess.html" class="card">
+      <a href="games/communication/draw-guess.html" class="card" data-people="small" data-duration="medium">
         <div class="card-icon">✏️</div>
         <div class="card-title">你说我画</div>
         <div class="card-desc">一人描述一人画图，看懂「表达」和「倾听」之间的鸿沟。</div>
         <div class="card-tags"><span class="tag">室内</span><span class="tag">20–30 min</span><span class="tag">培训/团建</span></div>
       </a>
-      <a href="games/communication/drawing-relay.html" class="card">
+      <a href="games/communication/drawing-relay.html" class="card" data-people="small" data-duration="medium">
         <div class="card-icon">🎨</div>
         <div class="card-title">画图接龙</div>
         <div class="card-desc">每人画 10 秒接力完成一幅画，看懂接力协作与放任控制欲的平衡。</div>
         <div class="card-tags"><span class="tag">室内</span><span class="tag">20–30 min</span><span class="tag">团建/培训</span></div>
       </a>
-      <a href="games/communication/animal-detective.html" class="card">
+      <a href="games/communication/animal-detective.html" class="card" data-people="medium" data-duration="medium">
         <div class="card-icon">🕵️</div>
         <div class="card-title">动物城大侦探（改造版）</div>
         <div class="card-desc">将派对推理游戏转化为沟通表达 + 团队协作的团建游戏。</div>
         <div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span><span class="tag">培训/团建</span></div>
       </a>
+      <a href="games/communication/time-agents.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">⏰</div><div class="card-title">时间特工（改造版）</div><div class="card-desc">在心理博弈中体验信任沟通，适合中高层管理团队。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
+      </a>
+      <a href="games/communication/rumor-factory.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">📢</div><div class="card-title">谣言工厂（改造版）</div><div class="card-desc">用"传递失真"讨论沟通规范，直观看到信息是怎么失真的。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
+      </a>
+    <!-- 团队协作 -->
+    <div style="font-weight:600;color:#555;margin:18px 0 10px;">🤝 团队协作（collaboration）</div>
+    <div class="grid" id="grid-collaboration">
+      <a href="games/collaboration/human-knot.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">🧩</div><div class="card-title">人结</div><div class="card-desc">在"解不开"中体验真实协作，复盘价值极高。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">30–45 min</span></div>
+      </a>
+      <a href="games/collaboration/eyebrow-stick.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">📏</div><div class="card-title">齐眉棍</div><div class="card-desc">"每个人都对，但结果错了"的经典协作困境。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–30 min</span></div>
+      </a>
+      <a href="games/collaboration/ball-relay.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">⚽</div><div class="card-title">珠行万里</div><div class="card-desc">一个环节失误全体重来，体验责任共担。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–30 min</span></div>
+      </a>
+      <a href="games/collaboration/wind-fire-wheel.html" class="card" data-people="large" data-duration="medium">
+        <div class="card-icon">🌪️</div><div class="card-title">风火轮</div><div class="card-desc">报纸履带接力，在"一定会坏"中体验一起修。</div><div class="card-tags"><span class="tag">户外</span><span class="tag">30–40 min</span></div>
+      </a>
+      <a href="games/collaboration/island-survival.html" class="card" data-people="medium" data-duration="long">
+        <div class="card-icon">🏝️</div><div class="card-title">岛屿求生（改造版）</div><div class="card-desc">资源有限下的团队协作决策桌游改造。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
+      </a>
+      <a href="games/collaboration/magic-academy.html" class="card" data-people="medium" data-duration="long">
+        <div class="card-icon">🧙</div><div class="card-title">魔法学院（改造版）</div><div class="card-desc">角色分工合作通关的桌游改造，适合深度协作体验。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
+      </a>
+      <a href="games/collaboration/space-miners.html" class="card" data-people="medium" data-duration="long">
+        <div class="card-icon">🚀</div><div class="card-title">星际矿工（改造版）</div><div class="card-desc">资源竞争与团队协作平衡的桌游改造。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
+      </a>
+      <a href="games/collaboration/crazy-kitchen.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">🍳</div><div class="card-title">疯狂厨房（改造版）</div><div class="card-desc">时间压力下的流水线协作，体验瓶颈工位。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
+      </a>
+      <a href="games/collaboration/body-letters.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">✋</div><div class="card-title">人体拼字</div><div class="card-desc">用身体拼出团队目标，热身破冰两用。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–30 min</span></div>
+      </a>
     </div>
-    
-    <!-- 更多游戏提示 -->
-    <div style="background:#eef2ff;padding:14px 18px;border-radius:8px;font-size:0.88em;color:#334;margin-top:18px;">
-      💡 完整游戏索引请查看 <a href="README.md" style="color:#3366cc;font-weight:600;">README.md</a>，含全部 27 款游戏的检索表格。
+
+    <!-- 信任建立 -->
+    <div style="font-weight:600;color:#555;margin:18px 0 10px;">🤖 信任建立（trust）</div>
+    <div class="grid" id="grid-trust">
+      <a href="games/trust/trust-fall.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">🤝</div><div class="card-title">信任背摔</div><div class="card-desc">"敢不敢把后背交给队友"，深度信任体验。</div><div class="card-tags"><span class="tag">户外</span><span class="tag">20–40 min</span></div>
+      </a>
+      <a href="games/trust/blind-walk.html" class="card" data-people="small" data-duration="medium">
+        <div class="card-icon">👀</div><div class="card-title">盲行</div><div class="card-desc">蒙眼信任引导，体验交出控制权与肩负责任。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–35 min</span></div>
+      </a>
+    </div>
+
+    <!-- 领导力 -->
+    <div style="font-weight:600;color:#555;margin:18px 0 10px;">👑 领导力（leadership）</div>
+    <div class="grid" id="grid-leadership">
+      <a href="games/leadership/red-black-game.html" class="card" data-people="medium" data-duration="long">
+        <div class="card-icon">⚫</div><div class="card-title">红黑游戏</div><div class="card-desc">竞争vs合作的根本张力，中高层管理团队首选。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
+      </a>
+      <a href="games/leadership/tangram.html" class="card" data-people="large" data-duration="long">
+        <div class="card-icon">🧩</div><div class="card-title">七巧板</div><div class="card-desc">信息孤岛与领导力的经典大型体验游戏。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–90 min</span></div>
+      </a>
+      <a href="games/leadership/silent-leader.html" class="card" data-people="small" data-duration="medium">
+        <div class="card-icon">🤫</div><div class="card-title">沉默领袖</div><div class="card-desc">不能说话如何领导团队，体验非权力影响力。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span></div>
+      </a>
+    </div>
+
+    <!-- 创意与解决问题 -->
+    <div style="font-weight:600;color:#555;margin:18px 0 10px;">💡 创意与解决问题（creativity & problem-solving）</div>
+    <div class="grid" id="grid-creativity">
+      <a href="games/creativity/10-yuan-idea.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">💰</div><div class="card-title">10元买创意</div><div class="card-desc">资源受限下激发团队想象力，打破不敢提想法氛围。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">30–45 min</span></div>
+      </a>
+      <a href="games/creativity/newspaper-tower.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">🗞️</div><div class="card-title">报纸塔挑战</div><div class="card-desc">有限材料下的创新与团队协作，动手又动脑。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span></div>
+      </a>
+      <a href="games/problem-solving/desert-survival.html" class="card" data-people="medium" data-duration="medium">
+        <div class="card-icon">🏜️</div><div class="card-title">沙漠逃生</div><div class="card-desc">在意见不一致时体验团队共识决策。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
+      </a>
+      <a href="games/problem-solving/egg-drop.html" class="card" data-people="medium" data-duration="long">
+        <div class="card-icon">🥚</div><div class="card-title">鸡蛋坠落挑战</div><div class="card-desc">不确定性中解决问题，体验失败与迭代。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
+      </a>
     </div>
   </div>
 
@@ -240,15 +359,87 @@
 </div>
 
 <script>
+// 当前筛选状态
+var currentFilters = {
+  category: 'all',
+  people: 'all',
+  duration: 'all'
+};
+
+function toggleFilter(type, value, btn) {
+  // 更新筛选状态
+  currentFilters[type] = value;
+  
+  // 更新按钮样式
+  var filterGroup = btn.parentElement;
+  filterGroup.querySelectorAll('.filter-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  
+  // 重新筛选
+  filterCards();
+}
+
 function filterCards() {
   var q = document.getElementById('search').value.toLowerCase();
-  var grids = document.querySelectorAll('.grid, .tool-grid');
-  grids.forEach(function(g) {
-    var cards = g.querySelectorAll('.card, .tool-card');
-    cards.forEach(function(c) {
-      var t = c.innerText.toLowerCase();
-      c.style.display = t.indexOf(q) >= 0 || q === '' ? '' : 'none';
+  
+  // 获取所有游戏卡片
+  var grids = document.querySelectorAll('.grid');
+  grids.forEach(function(grid) {
+    var cards = grid.querySelectorAll('.card');
+    cards.forEach(function(card) {
+      var t = card.innerText.toLowerCase();
+      var visible = true;
+      
+      // 关键词搜索
+      if (q !== '' && t.indexOf(q) < 0) {
+        visible = false;
+      }
+      
+      // 分类筛选
+      if (visible && currentFilters.category !== 'all') {
+        var gridId = grid.id;
+        var cardCategory = gridId.replace('grid-', '');
+        if (cardCategory !== currentFilters.category) {
+          visible = false;
+        }
+      }
+      
+      // 人数筛选
+      if (visible && currentFilters.people !== 'all') {
+        var people = card.getAttribute('data-people');
+        if (people !== currentFilters.people) {
+          visible = false;
+        }
+      }
+      
+      // 时长筛选
+      if (visible && currentFilters.duration !== 'all') {
+        var duration = card.getAttribute('data-duration');
+        if (duration !== currentFilters.duration) {
+          visible = false;
+        }
+      }
+      
+      card.style.display = visible ? '' : 'none';
     });
+    
+    // 隐藏空的grid
+    var hasVisibleCards = false;
+    cards = grid.querySelectorAll('.card');
+    cards.forEach(function(card) {
+      if (card.style.display !== 'none') {
+        hasVisibleCards = true;
+      }
+    });
+    
+    // 找到grid的标题（前一个div）
+    var gridTitle = grid.previousElementSibling;
+    if (gridTitle && gridTitle.style.fontWeight === '600') {
+      gridTitle.style.display = hasVisibleCards ? '' : 'none';
+    }
+    grid.style.display = hasVisibleCards ? '' : 'none';
   });
 }
 </script>
