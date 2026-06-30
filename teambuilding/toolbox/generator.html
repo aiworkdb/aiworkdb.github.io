@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>团建方案生成器 - 团建 & 培训游戏库</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; }
+    a { text-decoration: none; color: inherit; }
+    
+    .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 50%, #1a1a2e 100%); color: #fff; padding: 40px 20px 30px; text-align: center; }
+    .hero h1 { font-size: 1.8em; margin-bottom: 8px; }
+    .hero p { font-size: 0.95em; opacity: 0.82; max-width: 600px; margin: 0 auto; }
+    
+    .back-link { display: inline-block; margin-top: 16px; color: #5b8cfe; font-size: 0.9em; }
+    .back-link:hover { text-decoration: underline; }
+    
+    .container { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
+    
+    .generator-card { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .generator-card h2 { font-size: 1.2em; margin-bottom: 20px; color: #1a1a2e; }
+    
+    .form-group { margin-bottom: 20px; }
+    .form-label { font-size: 0.95em; font-weight: 600; margin-bottom: 10px; color: #333; display: block; }
+    .form-hint { font-size: 0.82em; color: #888; margin-top: 4px; }
+    
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-option { padding: 10px 20px; border: 2px solid #d0d5e0; border-radius: 8px; background: #fff; color: #555; font-size: 0.9em; cursor: pointer; transition: all 0.2s; min-width: 100px; text-align: center; }
+    .btn-option:hover { border-color: #5b8cfe; color: #5b8cfe; }
+    .btn-option.active { background: #5b8cfe; color: #fff; border-color: #5b8cfe; }
+    
+    .generate-btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #5b8cfe, #3366cc); color: #fff; border: none; border-radius: 8px; font-size: 1.05em; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 24px; }
+    .generate-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(91,140,254,0.3); }
+    
+    .result-section { display: none; }
+    .result-section.show { display: block; }
+    
+    .timeline { position: relative; padding-left: 30px; margin: 20px 0; }
+    .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #5b8cfe; }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-item::before { content: ''; position: absolute; left: -25px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: #5b8cfe; border: 2px solid #fff; box-shadow: 0 0 0 2px #5b8cfe; }
+    .timeline-time { font-size: 0.85em; color: #5b8cfe; font-weight: 600; margin-bottom: 4px; }
+    .timeline-content { background: #f8f9fc; border-radius: 8px; padding: 14px 16px; }
+    .timeline-content h4 { font-size: 0.95em; margin-bottom: 6px; color: #1a1a2e; }
+    .timeline-content p { font-size: 0.85em; color: #666; line-height: 1.6; }
+    .timeline-content a { color: #5b8cfe; }
+    .timeline-content a:hover { text-decoration: underline; }
+    
+    .game-card { background: #f8f9fc; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 3px solid #5b8cfe; }
+    .game-card h4 { font-size: 0.95em; margin-bottom: 6px; }
+    .game-card h4 a { color: #1a1a2e; }
+    .game-card p { font-size: 0.85em; color: #666; line-height: 1.6; }
+    .game-tags { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .game-tag { font-size: 0.75em; background: #eef2ff; color: #3366cc; padding: 2px 8px; border-radius: 4px; }
+    
+    .materials-list { background: #f8f9fc; border-radius: 8px; padding: 16px; margin-top: 16px; }
+    .materials-list h4 { font-size: 0.95em; margin-bottom: 10px; color: #1a1a2e; }
+    .materials-list ul { list-style: none; padding-left: 0; }
+    .materials-list li { font-size: 0.85em; color: #555; padding: 6px 0; border-bottom: 1px solid #eef2ff; display: flex; align-items: center; gap: 8px; }
+    .materials-list li:last-child { border-bottom: none; }
+    .materials-list li::before { content: '✓'; color: #5b8cfe; font-weight: 700; }
+    
+    .tips-box { background: #fff9e6; border-left: 3px solid #ffc107; border-radius: 6px; padding: 14px 16px; margin-top: 16px; }
+    .tips-box h4 { font-size: 0.9em; margin-bottom: 8px; color: #f57c00; }
+    .tips-box ul { list-style: none; padding-left: 0; }
+    .tips-box li { font-size: 0.85em; color: #666; padding: 4px 0; padding-left: 20px; position: relative; }
+    .tips-box li::before { content: '💡'; position: absolute; left: 0; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
+    .stat-item { background: #f8f9fc; border-radius: 8px; padding: 14px; text-align: center; }
+    .stat-value { font-size: 1.5em; font-weight: 700; color: #5b8cfe; }
+    .stat-label { font-size: 0.8em; color: #888; margin-top: 4px; }
+    
+    .footer { text-align: center; padding: 32px 20px; color: #888; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🎯 团建方案生成器</h1>
+  <p>根据人数、时长和目的，智能推荐游戏组合和时间安排</p>
+  <a href="../index.html" class="back-link">← 返回游戏库首页</a>
+</div>
+
+<div class="container">
+  <div class="generator-card">
+    <h2>📋 填写团建需求</h2>
+    
+    <div class="form-group">
+      <label class="form-label">👥 参与人数</label>
+      <div class="btn-group" id="people-group">
+        <button class="btn-option" data-value="small" onclick="selectOption(this, 'people')"><10人</button>
+        <button class="btn-option" data-value="medium" onclick="selectOption(this, 'people')">10-20人</button>
+        <button class="btn-option" data-value="large" onclick="selectOption(this, 'people')">20-30人</button>
+        <button class="btn-option" data-value="xlarge" onclick="selectOption(this, 'people')">30+人</button>
+      </div>
+      <div class="form-hint">选择合适的参与人数范围</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">⏰ 总时长</label>
+      <div class="btn-group" id="duration-group">
+        <button class="btn-option" data-value="short" onclick="selectOption(this, 'duration')"><1小时</button>
+        <button class="btn-option" data-value="medium" onclick="selectOption(this, 'duration')">1-3小时</button>
+        <button class="btn-option" data-value="long" onclick="selectOption(this, 'duration')">3-6小时</button>
+        <button class="btn-option" data-value="fullday" onclick="selectOption(this, 'duration')">全天(6h+)</button>
+      </div>
+      <div class="form-hint">包含游戏、休息和复盘时间</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">🎯 主要目的</label>
+      <div class="btn-group" id="purpose-group">
+        <button class="btn-option" data-value="icebreaker" onclick="selectOption(this, 'purpose')">🧊 破冰热场</button>
+        <button class="btn-option" data-value="communication" onclick="selectOption(this, 'purpose')">💬 沟通表达</button>
+        <button class="btn-option" data-value="collaboration" onclick="selectOption(this, 'purpose')">🤝 团队协作</button>
+        <button class="btn-option" data-value="trust" onclick="selectOption(this, 'purpose')">🔐 信任建立</button>
+        <button class="btn-option" data-value="leadership" onclick="selectOption(this, 'purpose')">👑 领导力</button>
+        <button class="btn-option" data-value="comprehensive" onclick="selectOption(this, 'purpose')">🎯 综合训练</button>
+      </div>
+      <div class="form-hint">可以选择多个目的（点击"综合训练"可覆盖多个方面）</div>
+    </div>
+    
+    <button class="generate-btn" onclick="generatePlan()">🚀 生成团建方案</button>
+  </div>
+  
+  <div class="result-section" id="result-section">
+    <div class="generator-card">
+      <h2>📊 方案概览</h2>
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+    
+    <div class="generator-card">
+      <h2>⏱️ 时间安排</h2>
+      <div class="timeline" id="timeline"></div>
+    </div>
+    
+    <div class="generator-card">
+      <h2>🎲 推荐游戏</h2>
+      <div id="recommended-games"></div>
+    </div>
+    
+    <div class="generator-card">
+      <h2>📦 物资清单</h2>
+      <div class="materials-list">
+        <h4>所需物资汇总</h4>
+        <ul id="materials-list"></ul>
+      </div>
+    </div>
+    
+    <div class="generator-card">
+      <h2>💡 教练提示</h2>
+      <div class="tips-box" id="tips-box"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>团建 & 培训游戏库 · <a href="https://github.com/aiworkdb/aiworkdb.github.io">GitHub 仓库</a></p>
+</div>
+
+<script>
+// 用户选择
+var userSelections = {
+  people: '',
+  duration: '',
+  purpose: ''
+};
+
+// 游戏数据库
+var gamesDB = [
+  // 破冰热场
+  { id: 'human-bingo', name: '人类宾果', category: 'icebreaker', categoryName: '破冰热场', people: ['small', 'medium'], duration: 15, durationLabel: '5-15 min', materials: ['宾果卡片（可自制）'], indoor: true, outdoor: true, desc: '零道具、任意人数、即拿即用。最经典的破冰游戏。' },
+  { id: 'two-truths-one-lie', name: '两真一假', category: 'icebreaker', categoryName: '破冰热场', people: ['small', 'medium'], duration: 20, durationLabel: '10-20 min', materials: ['无'], indoor: true, outdoor: false, desc: '深度了解彼此、笑声多，适合培训开场。' },
+  { id: 'name-chain', name: '名字接龙', category: 'icebreaker', categoryName: '破冰热场', people: ['small', 'medium'], duration: 10, durationLabel: '5-10 min', materials: ['无'], indoor: true, outdoor: true, desc: '超快热身，记住所有人的名字，能量瞬间拉满。' },
+  { id: 'blind-box-myth', name: '盲盒神话', category: 'icebreaker', categoryName: '破冰热场', people: ['medium'], duration: 40, durationLabel: '30-40 min', materials: ['卡牌'], indoor: true, outdoor: false, desc: '卡牌交易游戏团建改造版，体验分享与共赢思维。' },
+  { id: 'food-challenge', name: '美食挑战赛', category: 'icebreaker', categoryName: '破冰热场', people: ['medium'], duration: 40, durationLabel: '30-40 min', materials: ['卡牌或自制题目'], indoor: true, outdoor: false, desc: '厨房竞赛游戏改造，在欢笑中体验分工与接纳不完美。' },
+  { id: 'explorer-journal', name: '探险家手记', category: 'icebreaker', categoryName: '破冰热场', people: ['medium'], duration: 40, durationLabel: '30-45 min', materials: ['卡牌'], indoor: true, outdoor: false, desc: '旅行主题卡牌游戏改造，在分享经历中加深团队了解。' },
+  { id: 'line-master', name: '台词之王', category: 'icebreaker', categoryName: '破冰热场', people: ['medium'], duration: 25, durationLabel: '20-30 min', materials: ['电影台词卡片'], indoor: true, outdoor: false, desc: '用电影台词猜谜的聚会游戏改造，轻松破冰、笑声不断。' },
+  
+  // 沟通表达
+  { id: 'blind-polygon', name: '盲人方阵', category: 'communication', categoryName: '沟通表达', people: ['medium', 'large'], duration: 40, durationLabel: '30-45 min', materials: ['绳子（长5-10米）', '眼罩'], indoor: true, outdoor: true, desc: '经典沟通游戏，复盘价值极高，培训首选。' },
+  { id: 'telephone-game', name: '传话游戏', category: 'communication', categoryName: '沟通表达', people: ['medium', 'large'], duration: 20, durationLabel: '15-25 min', materials: ['无'], indoor: true, outdoor: true, desc: '用笑声看见「信息失真」的真相，理解精准沟通的重要性。' },
+  { id: 'draw-guess', name: '你说我画', category: 'communication', categoryName: '沟通表达', people: ['small', 'medium'], duration: 25, durationLabel: '20-30 min', materials: ['白板/大纸', '马克笔'], indoor: true, outdoor: false, desc: '一人描述一人画图，看懂「表达」和「倾听」之间的鸿沟。' },
+  { id: 'drawing-relay', name: '画图接龙', category: 'communication', categoryName: '沟通表达', people: ['small', 'medium'], duration: 25, durationLabel: '20-30 min', materials: ['白板/大纸', '马克笔'], indoor: true, outdoor: false, desc: '每人画10秒接力完成一幅画，看懂接力协作与放任控制欲的平衡。' },
+  { id: 'animal-detective', name: '动物城大侦探', category: 'communication', categoryName: '沟通表达', people: ['medium'], duration: 40, durationLabel: '30-45 min', materials: ['推理卡片'], indoor: true, outdoor: false, desc: '将派对推理游戏转化为沟通表达+团队协作的团建游戏。' },
+  { id: 'time-agents', name: '时间特工', category: 'communication', categoryName: '沟通表达', people: ['medium'], duration: 40, durationLabel: '30-45 min', materials: ['卡牌'], indoor: true, outdoor: false, desc: '在心理博弈中体验信任沟通，适合中高层管理团队。' },
+  { id: 'rumor-factory', name: '谣言工厂', category: 'communication', categoryName: '沟通表达', people: ['medium'], duration: 40, durationLabel: '30-45 min', materials: ['无'], indoor: true, outdoor: false, desc: '用"传递失真"讨论沟通规范，直观看到信息是怎么失真的。' },
+  
+  // 团队协作
+  { id: 'human-knot', name: '人结', category: 'collaboration', categoryName: '团队协作', people: ['medium', 'large'], duration: 35, durationLabel: '30-45 min', materials: ['无'], indoor: true, outdoor: true, desc: '在"解不开"中体验真实协作，复盘价值极高。' },
+  { id: 'eyebrow-stick', name: '齐眉棍', category: 'collaboration', categoryName: '团队协作', people: ['medium', 'large'], duration: 25, durationLabel: '20-30 min', materials: ['轻质长棍（可用PVC管或竹竿）'], indoor: true, outdoor: true, desc: '"每个人都对，但结果错了"的经典协作困境。' },
+  { id: 'ball-relay', name: '珠行万里', category: 'collaboration', categoryName: '团队协作', people: ['medium', 'large'], duration: 25, durationLabel: '20-30 min', materials: ['U型槽管道（可用PVC管切半）', '乒乓球/高尔夫球'], indoor: true, outdoor: true, desc: '一个环节失误全体重来，体验责任共担。' },
+  { id: 'wind-fire-wheel', name: '风火轮', category: 'collaboration', categoryName: '团队协作', people: ['large'], duration: 35, durationLabel: '30-40 min', materials: ['大量报纸', '胶带'], indoor: false, outdoor: true, desc: '报纸履带接力，在"一定会坏"中体验一起修。' },
+  { id: 'body-letters', name: '人体拼字', category: 'collaboration', categoryName: '团队协作', people: ['medium', 'large'], duration: 25, durationLabel: '20-30 min', materials: ['无'], indoor: true, outdoor: true, desc: '用身体拼出团队目标，热身破冰两用。' },
+  { id: 'island-survival', name: '岛屿求生', category: 'collaboration', categoryName: '团队协作', people: ['medium'], duration: 60, durationLabel: '45-75 min', materials: ['卡牌或情景卡片'], indoor: true, outdoor: false, desc: '资源有限下的团队协作决策桌游改造。' },
+  { id: 'magic-academy', name: '魔法学院', category: 'collaboration', categoryName: '团队协作', people: ['medium'], duration: 55, durationLabel: '45-60 min', materials: ['卡牌'], indoor: true, outdoor: false, desc: '角色分工合作通关的桌游改造，适合深度协作体验。' },
+  { id: 'space-miners', name: '星际矿工', category: 'collaboration', categoryName: '团队协作', people: ['medium'], duration: 55, durationLabel: '45-60 min', materials: ['卡牌'], indoor: true, outdoor: false, desc: '资源竞争与团队协作平衡的桌游改造。' },
+  { id: 'crazy-kitchen', name: '疯狂厨房', category: 'collaboration', categoryName: '团队协作', people: ['medium'], duration: 35, durationLabel: '30-45 min', materials: ['任务卡片'], indoor: true, outdoor: false, desc: '时间压力下的流水线协作，体验瓶颈工位。' },
+  
+  // 信任建立
+  { id: 'trust-fall', name: '信任背摔', category: 'trust', categoryName: '信任建立', people: ['medium', 'large'], duration: 30, durationLabel: '20-40 min', materials: ['无（需安全垫或软地面）'], indoor: false, outdoor: true, desc: '"敢不敢把后背交给队友"，深度信任体验。' },
+  { id: 'blind-walk', name: '盲行', category: 'trust', categoryName: '信任建立', people: ['small', 'medium'], duration: 25, durationLabel: '20-35 min', materials: ['眼罩'], indoor: true, outdoor: true, desc: '蒙眼信任引导，体验交出控制权与肩负责任。' },
+  
+  // 领导力
+  { id: 'red-black-game', name: '红黑游戏', category: 'leadership', categoryName: '领导力', people: ['medium', 'large'], duration: 55, durationLabel: '45-60 min', materials: ['计分表', '扑克牌（红黑各半）'], indoor: true, outdoor: false, desc: '竞争vs合作的根本张力，中高层管理团队首选。' },
+  { id: 'tangram', name: '七巧板', category: 'leadership', categoryName: '领导力', people: ['large', 'xlarge'], duration: 75, durationLabel: '60-90 min', materials: ['七巧板套装（5-7套）', '任务卡片'], indoor: true, outdoor: false, desc: '信息孤岛与领导力的经典大型体验游戏。' },
+  { id: 'silent-leader', name: '沉默领袖', category: 'leadership', categoryName: '领导力', people: ['small', 'medium'], duration: 35, durationLabel: '30-40 min', materials: ['任务卡片'], indoor: true, outdoor: false, desc: '不能说话如何领导团队，体验非权力影响力。' },
+  
+  // 创意与问题解决
+  { id: '10-yuan-idea', name: '10元买创意', category: 'creativity', categoryName: '创意思维', people: ['medium', 'large'], duration: 35, durationLabel: '30-45 min', materials: ['10元人民币/代币', '创意任务卡'], indoor: true, outdoor: true, desc: '资源受限下激发团队想象力，打破不敢提想法氛围。' },
+  { id: 'newspaper-tower', name: '报纸塔挑战', category: 'creativity', categoryName: '创意思维', people: ['medium', 'large'], duration: 35, durationLabel: '30-40 min', materials: ['大量报纸', '胶带'], indoor: true, outdoor: false, desc: '有限材料下的创新与团队协作，动手又动脑。' },
+  { id: 'desert-survival', name: '沙漠逃生', category: 'problem-solving', categoryName: '问题解决', people: ['medium'], duration: 35, durationLabel: '30-45 min', materials: ['排序清单'], indoor: true, outdoor: false, desc: '在意见不一致时体验团队共识决策。' },
+  { id: 'egg-drop', name: '鸡蛋坠落挑战', category: 'problem-solving', categoryName: '问题解决', people: ['medium', 'large'], duration: 55, durationLabel: '45-60 min', materials: ['生鸡蛋', '保护材料（气球、吸管、胶带等）'], indoor: true, outdoor: true, desc: '不确定性中解决问题，体验失败与迭代。' }
+];
+
+function selectOption(btn, type) {
+  // 更新按钮样式
+  var group = btn.parentElement;
+  group.querySelectorAll('.btn-option').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  
+  // 保存选择
+  userSelections[type] = btn.getAttribute('data-value');
+}
+
+function generatePlan() {
+  // 验证输入
+  if (!userSelections.people || !userSelections.duration || !userSelections.purpose) {
+    alert('请完整填写团建需求（人数、时长、目的）');
+    return;
+  }
+  
+  // 显示结果区域
+  document.getElementById('result-section').classList.add('show');
+  
+  // 根据选择推荐游戏
+  var recommendedGames = recommendGames();
+  
+  // 生成方案概览
+  generateStats(recommendedGames);
+  
+  // 生成时间安排
+  generateTimeline(recommendedGames);
+  
+  // 生成推荐游戏列表
+  generateGameList(recommendedGames);
+  
+  // 生成物资清单
+  generateMaterials(recommendedGames);
+  
+  // 生成教练提示
+  generateTips(recommendedGames);
+  
+  // 滚动到结果区域
+  document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function recommendGames() {
+  var purpose = userSelections.purpose;
+  var people = userSelections.people;
+  var duration = userSelections.duration;
+  
+  // 根据目的筛选游戏
+  var categoryFilter = [];
+  if (purpose === 'comprehensive') {
+    categoryFilter = ['icebreaker', 'communication', 'collaboration', 'trust', 'leadership', 'creativity', 'problem-solving'];
+  } else if (purpose === 'icebreaker') {
+    categoryFilter = ['icebreaker', 'communication'];
+  } else if (purpose === 'communication') {
+    categoryFilter = ['communication', 'trust'];
+  } else if (purpose === 'collaboration') {
+    categoryFilter = ['collaboration', 'creativity', 'problem-solving'];
+  } else if (purpose === 'trust') {
+    categoryFilter = ['trust', 'communication'];
+  } else if (purpose === 'leadership') {
+    categoryFilter = ['leadership', 'collaboration'];
+  }
+  
+  // 筛选符合人数和类别的游戏
+  var filtered = gamesDB.filter(function(game) {
+    var matchPeople = game.people.includes(people) || (people === 'xlarge' && game.people.includes('large'));
+    var matchCategory = categoryFilter.includes(game.category);
+    return matchPeople && matchCategory;
+  });
+  
+  // 根据时长限制游戏数量
+  var maxDuration = 0;
+  if (duration === 'short') maxDuration = 50;
+  else if (duration === 'medium') maxDuration = 150;
+  else if (duration === 'long') maxDuration = 300;
+  else maxDuration = 480; // 全天
+  
+  // 选择游戏组合（不超过总时长）
+  var selected = [];
+  var totalDuration = 0;
+  
+  // 优先选择类别匹配度高的游戏
+  filtered.sort(function(a, b) {
+    var aMatch = categoryFilter[0] === a.category ? 0 : 1;
+    var bMatch = categoryFilter[0] === b.category ? 0 : 1;
+    return aMatch - bMatch;
+  });
+  
+  // 先选一个破冰游戏（如果是综合或破冰目的）
+  if (purpose === 'comprehensive' || purpose === 'icebreaker') {
+    var icebreaker = filtered.find(function(g) { return g.category === 'icebreaker'; });
+    if (icebreaker && totalDuration + icebreaker.duration <= maxDuration) {
+      selected.push(icebreaker);
+      totalDuration += icebreaker.duration;
+    }
+  }
+  
+  // 再选主要目的的游戏
+  for (var i = 0; i < filtered.length && totalDuration < maxDuration - 30; i++) {
+    var game = filtered[i];
+    if (selected.indexOf(game) === -1 && totalDuration + game.duration <= maxDuration - 15) {
+      selected.push(game);
+      totalDuration += game.duration;
+    }
+  }
+  
+  // 如果还有时间，添加一个轻松的游戏作为结尾
+  if (totalDuration < maxDuration - 30) {
+    var funGame = gamesDB.find(function(g) {
+      return g.category === 'icebreaker' && selected.indexOf(g) === -1 && totalDuration + g.duration <= maxDuration;
+    });
+    if (funGame) {
+      selected.push(funGame);
+    }
+  }
+  
+  return selected;
+}
+
+function generateStats(games) {
+  var totalDuration = games.reduce(function(sum, g) { return sum + g.duration; }, 0);
+  var totalMaterials = new Set();
+  games.forEach(function(g) {
+    g.materials.forEach(function(m) { totalMaterials.add(m); });
+  });
+  
+  var html = '';
+  html += '<div class="stat-item"><div class="stat-value">' + games.length + '</div><div class="stat-label">推荐游戏</div></div>';
+  html += '<div class="stat-item"><div class="stat-value">' + totalDuration + '分钟</div><div class="stat-label">游戏总时长</div></div>';
+  html += '<div class="stat-item"><div class="stat-value">' + totalMaterials.size + '</div><div class="stat-label">种物资</div></div>';
+  html += '<div class="stat-item"><div class="stat-value">' + (games.length >= 3 ? '充足' : '适中') + '</div><div class="stat-label">内容丰富度</div></div>';
+  
+  document.getElementById('stats-grid').innerHTML = html;
+}
+
+function generateTimeline(games) {
+  var people = userSelections.people;
+  var duration = userSelections.duration;
+  
+  // 计算总时长（分钟）
+  var totalGameTime = games.reduce(function(sum, g) { return sum + g.duration; }, 0);
+  var totalTime = totalGameTime;
+  if (duration === 'short') totalTime = Math.max(totalTime + 15, 50);
+  else if (duration === 'medium') totalTime = Math.max(totalTime + 30, 120);
+  else if (duration === 'long') totalTime = Math.max(totalTime + 60, 240);
+  else totalTime = Math.max(totalTime + 90, 360);
+  
+  // 生成时间轴
+  var html = '';
+  var currentTime = 0;
+  
+  // 开场
+  html += '<div class="timeline-item">';
+  html += '<div class="timeline-time">第 ' + (currentTime + 5) + ' 分钟</div>';
+  html += '<div class="timeline-content">';
+  html += '<h4>👋 开场 & 分组</h4>';
+  html += '<p>教练自我介绍，说明团建目的和流程。进行分组（建议4-6人一组）。</p>';
+  html += '</div></div>';
+  currentTime += 10;
+  
+  // 游戏环节
+  games.forEach(function(game, index) {
+    var debriefTime = Math.ceil(game.duration * 0.3); // 复盘时间约为游戏时长的30%
+    var endTime = currentTime + game.duration + debriefTime;
+    
+    html += '<div class="timeline-item">';
+    html += '<div class="timeline-time">第 ' + (currentTime + 5) + '-' + (endTime + 5) + ' 分钟</div>';
+    html += '<div class="timeline-content">';
+    html += '<h4>🎮 游戏 ' + (index + 1) + '：<a href="../games/' + game.category + '/' + game.id + '.html" target="_blank">' + game.name + '</a></h4>';
+    html += '<p><strong>类别：</strong>' + game.categoryName + ' | <strong>时长：</strong>' + game.durationLabel + '（含' + debriefTime + '分钟复盘）</p>';
+    html += '<p>' + game.desc + '</p>';
+    html += '</div></div>';
+    
+    currentTime = endTime;
+  });
+  
+  // 总结
+  html += '<div class="timeline-item">';
+  html += '<div class="timeline-time">最后 15-20 分钟</div>';
+  html += '<div class="timeline-content">';
+  html += '<h4>📝 整体复盘 & 总结</h4>';
+  html += '<p>使用4F模型进行整体复盘：Facts（事实）→ Feelings（感受）→ Findings（发现）→ Future（未来）。</p>';
+  html += '<p>👉 参考<a href="../toolbox/debrief.html" target="_blank">复盘引导框架</a>获取详细话术。</p>';
+  html += '</div></div>';
+  
+  document.getElementById('timeline').innerHTML = html;
+}
+
+function generateGameList(games) {
+  var html = '';
+  
+  if (games.length === 0) {
+    html = '<p style="color:#888;font-size:0.9em;">未找到完全匹配的游戏，建议调整人数或目的条件。</p>';
+  } else {
+    games.forEach(function(game, index) {
+      html += '<div class="game-card">';
+      html += '<h4><span style="color:#5b8cfe;margin-right:8px;">' + (index + 1) + '</span><a href="../games/' + game.category + '/' + game.id + '.html" target="_blank">' + game.name + '</a></h4>';
+      html += '<p>' + game.desc + '</p>';
+      html += '<div class="game-tags">';
+      html += '<span class="game-tag">' + game.categoryName + '</span>';
+      html += '<span class="game-tag">⏱️ ' + game.durationLabel + '</span>';
+      html += '<span class="game-tag">' + (game.indoor ? '✅ 室内' : '❌ 室内') + '</span>';
+      html += '<span class="game-tag">' + (game.outdoor ? '✅ 户外' : '❌ 户外') + '</span>';
+      html += '</div></div>';
+    });
+  }
+  
+  document.getElementById('recommended-games').innerHTML = html;
+}
+
+function generateMaterials(games) {
+  var materialsMap = {};
+  
+  games.forEach(function(game) {
+    game.materials.forEach(function(material) {
+      if (material !== '无') {
+        if (!materialsMap[material]) materialsMap[material] = [];
+        materialsMap[material].push(game.name);
+      }
+    });
+  });
+  
+  var html = '';
+  
+  if (Object.keys(materialsMap).length === 0) {
+    html = '<li>本方案无需特殊物资，即拿即用！</li>';
+  } else {
+    Object.keys(materialsMap).forEach(function(material) {
+      var games = materialsMap[material].join('、');
+      html += '<li><strong>' + material + '</strong> <span style="color:#888;font-size:0.9em;">（用于：' + games + '）</span></li>';
+    });
+  }
+  
+  document.getElementById('materials-list').innerHTML = html;
+}
+
+function generateTips(games) {
+  var purpose = userSelections.purpose;
+  var people = userSelections.people;
+  
+  var html = '';
+  html += '<h4>教练操作提示</h4>';
+  html += '<ul>';
+  
+  // 根据人数给提示
+  if (people === 'small') {
+    html += '<li>小组团建，注意让每个人都有发言机会，避免少数人多讲。</li>';
+  } else if (people === 'xlarge') {
+    html += '<li>大团队注意分组管理，建议每组配一名助教或组长维持秩序。</li>';
+  }
+  
+  // 根据目的给提示
+  if (purpose === 'icebreaker') {
+    html += '<li>破冰阶段不要急于深入，先让大家放松、笑起来。</li>';
+    html += '<li>注意观察哪些人比较拘谨，适时引导他们参与。</li>';
+  } else if (purpose === 'leadership') {
+    html += '<li>领导力游戏复盘时要引导管理者反思：你刚才无意识做了什么？</li>';
+    html += '<li>可以使用<a href="../toolbox/debrief.html" target="_blank">复盘引导框架</a>的4F模型深入挖掘。</li>';
+  } else if (purpose === 'collaboration') {
+    html += '<li>协作游戏失败后不要急于给答案，让团队自己反思。</li>';
+    html += '<li>注意观察团队中的"隐形领导者"和"沉默成员"。</li>';
+  }
+  
+  // 通用提示
+  html += '<li>每款游戏后务必进行<a href="../toolbox/debrief.html" target="_blank">复盘</a>，否则游戏只是玩，不是团建。</li>';
+  html += '<li>如果时间紧张，优先保证复盘质量，可以适当压缩游戏时间。</li>';
+  html += '<li>准备好<a href="../toolbox/facilitation.html" target="_blank">引导话术</a>，应对各种突发情况。</li>';
+  html += '</ul>';
+  
+  document.getElementById('tips-box').innerHTML = html;
+}
+
+// 页面加载时恢复选择（如果有）
+window.addEventListener('load', function() {
+  // 可以从URL参数恢复选择
+  var params = new URLSearchParams(window.location.search);
+  var people = params.get('people');
+  var duration = params.get('duration');
+  var purpose = params.get('purpose');
+  
+  if (people) {
+    var btn = document.querySelector('#people-group .btn-option[data-value="' + people + '"]');
+    if (btn) selectOption(btn, 'people');
+  }
+  if (duration) {
+    var btn = document.querySelector('#duration-group .btn-option[data-value="' + duration + '"]');
+    if (btn) selectOption(btn, 'duration');
+  }
+  if (purpose) {
+    var btn = document.querySelector('#purpose-group .btn-option[data-value="' + purpose + '"]');
+    if (btn) selectOption(btn, 'purpose');
+  }
+  
+  // 如果所有参数都有，自动生成
+  if (people && duration && purpose) {
+    generatePlan();
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,17 +1,17 @@
-# 动物城大侦探（团建改造版）
-
-> **原游戏**：[动物城大侦探](../../boardgames/category/party/animal-detective/README.md)
-> **改造目标**：将派对推理游戏转化为沟通表达 + 团队协作的团建游戏
+---
+title: "动物城大侦探（团建改造版）"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/communication/animal-detective.html"
+cover: "https://placehold.co/1200x630/45B7D1/white?text=Communication"
 
 ---
 
-## 1. 概览
+# 动物城大侦探（团建改造版）
 
-| 项目 | 内容 |
-|------|------|
-| **目的标签** | 💬 沟通表达 / 团队协作 |
-| **形式** | 室内 · 推理+讨论 |
-| **人数** | 4–12人（分 2 组） |
+
+> **原游戏**：[动物城大侦探](https://aiworkdb.github.io/teambuilding/boardgames/category/party/animal-detective/README.html)
+
+
 | **时长** | 30–45 min |
 | **场景标签** | 培训 / 团建 / 破冰 |
 | **难度** | ⭐⭐ |
@@ -52,28 +52,7 @@
 ## 3. 引导要点
 
 ### 讲解时
-> "这个游戏不是比谁聪明，是比哪组**更会一起思考**。"
 
-- 强调**全组必须同意**才能行动（强迫沟通）
-- 提醒：有人可能掌握了关键信息但没说出来
-
-### 过程中
-- 观察并记录：
-  - 谁最先分享自己的信息？（主动协作指标）
-  - 有没有人**隐瞒信息**？（现实中也很常见）
-  - 讨论时，是不是只有最活跃的人在说话？
-
-### 复盘时
-- 引导大家发现：**信息不共享 = 团队失败**
-- 对比两组的不同策略
-
----
-
-## 4. 复盘问题（4F 模型）
-
-### Facts（事实）
-- 你们用了几个行动令才破案？中间有哪些关键发现？
-- 谁最先提出了正确的推理方向？
 
 ### Feelings（感受）
 - 当有人隐瞒信息、不分享时，你是什么感受？
@@ -112,24 +91,16 @@
 | 侦探笔记 | 每人 1 张 | 记录推理过程 |
 | 计时器 | 1 个 | 手机即可 |
 
-> 💡 **打印提示**：原游戏有完整的打印文件，直接访问 [printables.html](../../boardgames/category/party/animal-detective/printables.html) 打印即可。
+
+> 💡 **打印提示**：原游戏有完整的打印文件，直接访问 [printables.html](https://aiworkdb.github.io/teambuilding/boardgames/category/party/animal-detective/printables.html) 打印即可。
 
 ---
 
 ## 7. 教练笔记
 
-> 💡 **这个改造版的精髓**：把「对抗性推理」变成「协作性推理」，让团队体验「信息共享」的挑战。
 
-**常见卡点**：
-- 有人**隐瞒信息**不分享 → 教练介入：「如果每个人都这样，你们能破案吗？」
-- 讨论时被**最活跃的人主导** → 教练介入：「你们组有人一直没说话哦，TA 手里可能有关键线索。」
 
-**与工作的连接点**：
-- 信息孤岛 → 部门墙
-- 个人英雄主义 → 团队协作失败
-- 缺乏信息共享机制 → 重复劳动
-
-**原游戏链接**：[动物城大侦探完整规则](../../boardgames/category/party/animal-detective/README.md)
+**原游戏链接**：[动物城大侦探完整规则](https://aiworkdb.github.io/teambuilding/boardgames/category/party/animal-detective/README.html)
 
 ---
 
