@@ -94,6 +94,7 @@ boardgames/
 | [天命人](category/cooperative/destined-one/README.md) | 合作 | 1-4人 | 60-90分钟 | 中等偏难 |
 | [轮回地下城](category/cooperative/loop-dungeon/README.md) | 合作 | 1-4人 | 45-60分钟 | 中等 |
 | [神经对决](category/card/neural-clash/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
+| [量子黑客](category/card/quantum-hacker/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
 
 ## 添加新桌游
 
