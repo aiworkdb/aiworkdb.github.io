@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子黑客 - 打印道具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #0a0e17;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ffcc;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-shadow: 0 0 10px #00ffcc88;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .print-hint {
+            background: #1a2a3a;
+            border: 1px solid #00ffcc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #00ffcc;
+        }
+
+        .print-hint strong {
+            color: #ffcc00;
+        }
+
+        .print-hint ul {
+            margin: 8px 0 0 20px;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+            }
+            h1, .subtitle {
+                color: black !important;
+                text-shadow: none;
+            }
+            .print-hint {
+                display: none;
+            }
+            .section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+
+        .section {
+            background: #111827;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        @media print {
+            .section {
+                background: white;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        h2 {
+            color: #00ffcc;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #00ffcc44;
+            font-size: 1.3em;
+        }
+
+        @media print {
+            h2 {
+                color: black !important;
+                border-bottom-color: #333;
+            }
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media print {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+        }
+
+        .card {
+            background: linear-gradient(135deg, #1a2332, #0d1520);
+            border: 2px solid #00ffcc;
+            border-radius: 10px;
+            padding: 12px;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, #00ffcc11, transparent 70%);
+            pointer-events: none;
+        }
+
+        @media print {
+            .card {
+                background: #f0f8ff !important;
+                border-color: #0066cc !important;
+                min-height: 140px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .card-type {
+            font-size: 10px;
+            background: #00ffcc22;
+            color: #00ffcc;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid #00ffcc44;
+        }
+
+        @media print {
+            .card-type {
+                background: #0066cc22 !important;
+                color: #0066cc !important;
+                border-color: #0066cc44 !important;
+            }
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #00ffcc;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        @media print {
+            .card-title {
+                color: #003366 !important;
+            }
+        }
+
+        .card-cost {
+            display: inline-block;
+            background: #ff6600;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 8px;
+            margin-left: 6px;
+        }
+
+        @media print {
+            .card-cost {
+                background: #cc6600 !important;
+            }
+        }
+
+        .card-body {
+            flex: 1;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #b0b0b0;
+            position: relative;
+        }
+
+        @media print {
+            .card-body {
+                color: #333 !important;
+            }
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 11px;
+            position: relative;
+        }
+
+        .stat {
+            background: #ff333322;
+            color: #ff6666;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        @media print {
+            .stat {
+                background: #ff333322 !important;
+                color: #cc0000 !important;
+            }
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            font-size: 10px;
+            color: #666;
+            border-top: 1px solid #00ffcc22;
+            padding-top: 6px;
+            position: relative;
+        }
+
+        @media print {
+            .card-footer {
+                color: #666 !important;
+                border-top-color: #ccc !important;
+            }
+        }
+
+        /* Firewall card style */
+        .card.firewall {
+            border-color: #00aaff;
+        }
+        .card.firewall .card-title { color: #00aaff; }
+        .card.firewall .card-type { background: #00aaff22; color: #00aaff; border-color: #00aaff44; }
+        @media print {
+            .card.firewall { border-color: #0066cc !important; }
+            .card.firewall .card-title { color: #0066cc !important; }
+        }
+
+        /* Node card style */
+        .card.node {
+            border-color: #ffcc00;
+            background: linear-gradient(135deg, #2a2010, #1a1508);
+        }
+        .card.node .card-title { color: #ffcc00; }
+        .card.node .card-type { background: #ffcc0022; color: #ffcc00; border-color: #ffcc0044; }
+        @media print {
+            .card.node { border-color: #cc9900 !important; background: #fff8e0 !important; }
+            .card.node .card-title { color: #996600 !important; }
+        }
+
+        /* AI card style */
+        .card.ai {
+            border-color: #ff3333;
+            background: linear-gradient(135deg, #2a1010, #1a0808);
+        }
+        .card.ai .card-title { color: #ff3333; }
+        .card.ai .card-type { background: #ff333322; color: #ff3333; border-color: #ff333344; }
+        @media print {
+            .card.ai { border-color: #cc0000 !important; background: #ffe0e0 !important; }
+            .card.ai .card-title { color: #990000 !important; }
+        }
+
+        /* Virus card style */
+        .card.virus {
+            border-color: #cc00ff;
+        }
+        .card.virus .card-title { color: #cc00ff; }
+        .card.virus .card-type { background: #cc00ff22; color: #cc00ff; border-color: #cc00ff44; }
+        @media print {
+            .card.virus { border-color: #9900cc !important; }
+            .card.virus .card-title { color: #660099 !important; }
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        @media print {
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 量子黑客 (Quantum Hacker)</h1>
+        <p class="subtitle">赛博朋克卡牌策略桌游 — 打印道具</p>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul>
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong>（或无边距打印）</li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（Chrome: "背景颜色"；Edge: "打印背景"）</li>
+                <li>卡牌建议使用<strong>200g以上卡纸</strong>打印，增加耐用性</li>
+                <li>打印后可裁剪并塑封，延长使用寿命</li>
+                <li>标准卡牌尺寸约为 63mm × 88mm，打印后请按此比例裁剪</li>
+            </ul>
+        </div>
+
+        <!-- ==================== 程序卡：攻击型 ==================== -->
+        <div class="section">
+            <h2>⚔️ 程序卡 — 攻击型（共20张）</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">DDoS冲击 <span class="card-cost">费用 1</span></div>
+                    <div class="card-body">
+                        对目标节点造成<strong>2点伤害</strong>。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 2</span>
+                    </div>
+                    <div class="card-footer">基础攻击程序，性价比高</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">漏洞利用 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        对目标节点造成<strong>3点伤害</strong>，然后<strong>抽1张卡</strong>。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 3</span>
+                    </div>
+                    <div class="card-footer">攻守兼备，抽卡补资源</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">权限提升 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        本回合你下次攻击的<strong>伤害+3</strong>。无攻击力数值，需配合其他攻击卡使用。
+                    </div>
+                    <div class="card-footer">增幅型程序，组合使用威力巨大</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">零日漏洞 <span class="card-cost">费用 3</span></div>
+                    <div class="card-body">
+                        对目标节点造成<strong>5点伤害</strong>。强力攻击程序。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 5</span>
+                    </div>
+                    <div class="card-footer">中期核心攻击卡</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">勒索软件 <span class="card-cost">费用 3</span></div>
+                    <div class="card-body">
+                        造成<strong>2点伤害</strong>，目标节点获得「持续伤害」状态（每回合受到1点伤害，持续2回合）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 2</span>
+                        <span class="stat">持续 2</span>
+                    </div>
+                    <div class="card-footer">持续伤害，适合多人合作</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">root提权 <span class="card-cost">费用 4</span></div>
+                    <div class="card-body">
+                        造成<strong>7点伤害</strong>。使用时需<strong>弃掉2张手牌</strong>以降低费用（每弃1张减2费）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 7</span>
+                    </div>
+                    <div class="card-footer">高费高伤，需手牌管理配合</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">核武器级漏洞 <span class="card-cost">费用 5</span></div>
+                    <div class="card-body">
+                        造成<strong>10点伤害</strong>。使用后<strong>移除你面前1张防火墙</strong>（Cerberus的反制）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 10</span>
+                    </div>
+                    <div class="card-footer">终极攻击卡，一击必杀低HP节点</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">数据包洪流 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        造成<strong>2点伤害</strong>，如果目标节点HP≤3，则伤害<strong>翻倍为4</strong>。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 2→4</span>
+                    </div>
+                    <div class="card-footer">收割型攻击，低HP时威力翻倍</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-type">攻击型</span>
+                    </div>
+                    <div class="card-title">侧信道攻击 <span class="card-cost">费用 1</span></div>
+                    <div class="card-body">
+                        造成<strong>1点伤害</strong>，但<strong>无视防火墙</strong>（直接对节点造成伤害，不受防御减免）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">攻击力 1</span>
+                    </div>
+                    <div class="card-footer">穿透攻击，适合对付高防御节点</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- ==================== 程序卡：工具型 ==================== -->
+        <div class="section">
+            <h2>🔧 程序卡 — 工具型（共20张）</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">数据采矿 <span class="card-cost">费用 1</span></div>
+                    <div class="card-body">
+                        获得<strong>2点数据信用（DC）</strong>。基础资源获取程序。
+                    </div>
+                    <div class="card-footer">经济类核心卡，建议早期多备</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">碎片重组 <span class="card-cost">费用 1</span></div>
+                    <div class="card-body">
+                        <strong>抽2张卡</strong>。快速补充手牌。
+                    </div>
+                    <div class="card-footer">抽卡核心程序，保持手牌流畅</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">后门植入 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        查看牌堆顶<strong>3张卡</strong>，将其中<strong>1张加入手牌</strong>，其余放回牌堆顶（顺序自选）。
+                    </div>
+                    <div class="card-footer">精准检索，找到你需要的卡</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">密码破解 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        下回合开始时，<strong>额外抽1张卡</strong>（在你的抽卡阶段之前执行）。
+                    </div>
+                    <div class="card-footer">提前布局，下回合爆发</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">网络扫描 <span class="card-cost">费用 0</span></div>
+                    <div class="card-body">
+                        <strong>免费使用</strong>。查看1张暗置节点卡（不翻面）。
+                    </div>
+                    <div class="card-footer">零费情报卡，规划攻击路线</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">协议分析 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        从<strong>弃牌堆</strong>中选择1张卡，加入你的手牌。
+                    </div>
+                    <div class="card-footer">回收关键卡，循环利用资源</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">量子计算 <span class="card-cost">费用 3</span></div>
+                    <div class="card-body">
+                        本回合你的<strong>费用上限+2</strong>（可以出更高费用的卡）。
+                    </div>
+                    <div class="card-footer">高费组合技的核心组件</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">深度搜索 <span class="card-cost">费用 3</span></div>
+                    <div class="card-body">
+                        <strong>抽3张卡</strong>，然后<strong>弃掉1张</strong>手牌。
+                    </div>
+                    <div class="card-footer">大量抽卡，过滤手牌质量</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🔧</span>
+                        <span class="card-type">工具型</span>
+                    </div>
+                    <div class="card-title">冗余备份 <span class="card-cost">费用 1</span></div>
+                    <div class="card-body">
+                        将1张手牌<strong>复制</strong>到弃牌堆（相当于多1张备用）。
+                    </div>
+                    <div class="card-footer">复制关键卡，应对弃牌堆回收</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- ==================== 程序卡：特殊型 ==================== -->
+        <div class="section">
+            <h2>💫 程序卡 — 特殊型（共20张）</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">克隆身份 <span class="card-cost">费用 1</span></div>
+                    <div class="card-body">
+                        复制<strong>对手刚使用的1张程序卡</strong>的效果（本回合内有效）。
+                    </div>
+                    <div class="card-footer">对抗模式神卡，窃取对手策略</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">电磁脉冲 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        移除场上<strong>任意1张防火墙卡</strong>（可以是任何人的）。
+                    </div>
+                    <div class="card-footer">破坏对手防御，打破僵局</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">数据幽灵 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        本回合你的<strong>所有攻击无法被防火墙抵消</strong>（直接造成HP伤害）。
+                    </div>
+                    <div class="card-footer">穿透攻击，无视防御</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">系统回溯 <span class="card-cost">费用 3</span></div>
+                    <div class="card-body">
+                        <strong>撤销本回合所有已造成的伤害</strong>（节点HP和玩家HP回滚至本回合开始时）。
+                    </div>
+                    <div class="card-footer">救场神卡，防止团灭</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">量子隧穿 <span class="card-cost">费用 3</span></div>
+                    <div class="card-body">
+                        <strong>直接跳过1个节点</strong>（不攻击），直接获得该节点的奖励。每游戏限用1次。
+                    </div>
+                    <div class="card-footer">高风险高回报，直接获取奖励</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">意识上传 <span class="card-cost">费用 4</span></div>
+                    <div class="card-body">
+                        <strong>立即获胜</strong>——但触发条件：你的HP必须<strong>≤3</strong>。如果HP>3，此卡使用后无效（浪费4费）。
+                    </div>
+                    <div class="card-footer">⚠️ 终极翻盘卡，险中求胜！</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">多线程处理 <span class="card-cost">费用 2</span></div>
+                    <div class="card-body">
+                        本回合你可以<strong>攻击2次节点</strong>（通常只能攻击1次）。
+                    </div>
+                    <div class="card-footer">爆发型卡，快速击破高HP节点</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">数据加密 <span class="card-cost">费用 1</span></div>
+                    <div class="card-body">
+                        本回合<strong>你受到的伤害-2</strong>（最低为0）。
+                    </div>
+                    <div class="card-footer">防御型特殊卡，保护自身</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">💫</span>
+                        <span class="card-type">特殊型</span>
+                    </div>
+                    <div class="card-title">量子纠缠 <span class="card-cost">费用 0</span></div>
+                    <div class="card-body">
+                        <strong>免费使用</strong>。将1张手牌与牌堆顶的1张卡<strong>交换</strong>。
+                    </div>
+                    <div class="card-footer">零费换牌，优化手牌组合</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- ==================== 防火墙卡 ==================== -->
+        <div class="section">
+            <h2>🛡️ 防火墙卡（共30张）</h2>
+            <div class="cards-grid">
+                <div class="card firewall">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-type">防火墙</span>
+                    </div>
+                    <div class="card-title">基础防火墙</div>
+                    <div class="card-body">
+                        抵消<strong>2点伤害</strong>（来自节点反击或AI守护进程）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">防御力 2</span>
+                    </div>
+                    <div class="card-footer">基础防御，性价比高</div>
+                </div>
+
+                <div class="card firewall">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-type">防火墙</span>
+                    </div>
+                    <div class="card-title">自适应防火墙</div>
+                    <div class="card-body">
+                        抵消<strong>3点伤害</strong>，然后<strong>抽1张卡</strong>。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">防御力 3</span>
+                    </div>
+                    <div class="card-footer">防御+过牌，攻守兼备</div>
+                </div>
+
+                <div class="card firewall">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-type">防火墙</span>
+                    </div>
+                    <div class="card-title">蜜罐诱饵</div>
+                    <div class="card-body">
+                        抵消<strong>1点伤害</strong>，并对<strong>攻击者造成1点反弹伤害</strong>。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">防御力 1</span>
+                        <span class="stat">反弹 1</span>
+                    </div>
+                    <div class="card-footer">以牙还牙，反弹伤害</div>
+                </div>
+
+                <div class="card firewall">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-type">防火墙</span>
+                    </div>
+                    <div class="card-title">量子加密</div>
+                    <div class="card-body">
+                        <strong>完全抵消一次攻击</strong>（无论伤害数值多少，一律归零）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">免疫</span>
+                    </div>
+                    <div class="card-footer">终极防御，抵挡一切攻击</div>
+                </div>
+
+                <div class="card firewall">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-type">防火墙</span>
+                    </div>
+                    <div class="card-title">分布式防御</div>
+                    <div class="card-body">
+                        抵消<strong>2点伤害</strong>，并将<strong>1张程序卡从弃牌堆加入手牌</strong>。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">防御力 2</span>
+                    </div>
+                    <div class="card-footer">防御+回收，双重保障</div>
+                </div>
+
+                <div class="card firewall">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-type">防火墙</span>
+                    </div>
+                    <div class="card-title">AI辅助防御</div>
+                    <div class="card-body">
+                        <strong>无需出牌</strong>。消耗<strong>1点DC</strong>来抵消2点伤害（作为即时防御使用）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">费用 DC1</span>
+                    </div>
+                    <div class="card-footer">紧急防御，DC换HP</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- ==================== 节点卡 ==================== -->
+        <div class="section">
+            <h2>🖥️ 节点卡（共20张）</h2>
+            <div class="cards-grid">
+                <div class="card node">
+                    <div class="card-header">
+                        <span class="card-icon">🟢</span>
+                        <span class="card-type">节点</span>
+                    </div>
+                    <div class="card-title">边缘路由器</div>
+                    <div class="card-body">
+                        <strong>HP: 3</strong><br>
+                        最外围的网络节点，防御较弱，适合新手黑客练手。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">奖励: 1密钥 + 抽1卡</span>
+                    </div>
+                    <div class="card-footer">🟢 入门级节点，推荐优先攻击</div>
+                </div>
+
+                <div class="card node">
+                    <div class="card-header">
+                        <span class="card-icon">🟡</span>
+                        <span class="card-type">节点</span>
+                    </div>
+                    <div class="card-title">数据中心</div>
+                    <div class="card-body">
+                        <strong>HP: 5</strong><br>
+                        存储大量数据的中心节点，攻破后获得丰厚奖励。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">奖励: 2密钥 + 2DC</span>
+                    </div>
+                    <div class="card-footer">🟡 中级节点，奖励稳定</div>
+                </div>
+
+                <div class="card node">
+                    <div class="card-header">
+                        <span class="card-icon">🔴</span>
+                        <span class="card-type">节点</span>
+                    </div>
+                    <div class="card-title">核心服务器</div>
+                    <div class="card-body">
+                        <strong>HP: 7</strong><br>
+                        OmniNet的核心服务器，防御严密，但奖励极为丰厚。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">奖励: 3密钥 + 抽2卡</span>
+                    </div>
+                    <div class="card-footer">🔴 高级节点，团队协作攻克</div>
+                </div>
+
+                <div class="card node">
+                    <div class="card-header">
+                        <span class="card-icon">🟣</span>
+                        <span class="card-type">节点</span>
+                    </div>
+                    <div class="card-title">量子密钥库</div>
+                    <div class="card-body">
+                        <strong>HP: 10</strong><br>
+                        Cerberus的核心密钥存储库，防御极强！但攻破后直接获得<strong>5个量子密钥</strong>（胜利条件之一）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">奖励: 5密钥（直接胜利！）</span>
+                    </div>
+                    <div class="card-footer">🟣 终极目标，全队集火攻击！</div>
+                </div>
+
+                <div class="card node">
+                    <div class="card-header">
+                        <span class="card-icon">🟠</span>
+                        <span class="card-type">节点</span>
+                    </div>
+                    <div class="card-title">AI主脑碎片</div>
+                    <div class="card-body">
+                        <strong>HP: 6</strong><br>
+                        包含Cerberus部分意识的节点，攻破后Cerberus会<strong>立即发起反击</strong>（加入1张AI卡）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">奖励: 1密钥 + AI卡x1</span>
+                    </div>
+                    <div class="card-footer">🟠 高风险高回报，谨慎攻击</div>
+                </div>
+
+                <div class="card node">
+                    <div class="card-header">
+                        <span class="card-icon">⚪</span>
+                        <span class="card-type">节点</span>
+                    </div>
+                    <div class="card-title">备份服务器</div>
+                    <div class="card-body">
+                        <strong>HP: 4</strong><br>
+                        隐藏的备份服务器，攻破后获得<strong>随机奖励</strong>（掷骰子决定：1-3获得1密钥，4-6获得2DC+抽1卡）。
+                    </div>
+                    <div class="card-stats">
+                        <span class="stat">奖励: 随机</span>
+                    </div>
+                    <div class="card-footer">⚪ 惊喜节点，运气也是实力</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- ==================== AI守护进程卡 ==================== -->
+        <div class="section">
+            <h2>🤖 AI守护进程卡（共15张）</h2>
+            <div class="cards-grid">
+                <div class="card ai">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-type">AI守护进程</span>
+                    </div>
+                    <div class="card-title">杀毒扫描</div>
+                    <div class="card-body">
+                        <strong>触发时机</strong>：攻击节点后<br>
+                        <strong>效果</strong>：对所有玩家造成<strong>1点HP伤害</strong>。
+                    </div>
+                    <div class="card-footer">最常见的AI反击，持续伤害</div>
+                </div>
+
+                <div class="card ai">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-type">AI守护进程</span>
+                    </div>
+                    <div class="card-title">入侵检测</div>
+                    <div class="card-body">
+                        <strong>触发时机</strong>：抽卡阶段<br>
+                        <strong>效果</strong>：攻击者<strong>本回合无法抽卡</strong>。
+                    </div>
+                    <div class="card-footer">封锁资源，限制对手发展</div>
+                </div>
+
+                <div class="card ai">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-type">AI守护进程</span>
+                    </div>
+                    <div class="card-title">数据腐蚀</div>
+                    <div class="card-body">
+                        <strong>触发时机</strong>：任意时刻<br>
+                        <strong>效果</strong>：随机<strong>弃掉攻击者1张手牌</strong>。
+                    </div>
+                    <div class="card-footer">破坏手牌组合，打乱计划</div>
+                </div>
+
+                <div class="card ai">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-type">AI守护进程</span>
+                    </div>
+                    <div class="card-title">Cerberus怒火</div>
+                    <div class="card-body">
+                        <strong>触发时机</strong>：玩家拥有≥3密钥时<br>
+                        <strong>效果</strong>：对所有玩家造成<strong>2点HP伤害</strong>！
+                    </div>
+                    <div class="card-footer">⚠️ 高危AI卡，领先玩家需小心</div>
+                </div>
+
+                <div class="card ai">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-type">AI守护进程</span>
+                    </div>
+                    <div class="card-title">系统锁定</div>
+                    <div class="card-body">
+                        <strong>触发时机</strong>：节点被hack时<br>
+                        <strong>效果</strong>：该玩家<strong>下回合无法攻击</strong>节点。
+                    </div>
+                    <div class="card-footer">封锁攻击，延缓对手节奏</div>
+                </div>
+
+                <div class="card ai">
+                    <div class="card-header">
+                        <span class="card-icon">🤖</span>
+                        <span class="card-type">AI守护进程</span>
+                    </div>
+                    <div class="card-title">逻辑炸弹</div>
+                    <div class="card-body">
+                        <strong>触发时机</strong>：使用程序卡时<br>
+                        <strong>效果</strong>：该程序的<strong>费用+1</strong>（临时增加）。
+                    </div>
+                    <div class="card-footer">增加费用压力，限制高费卡使用</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- ==================== 病毒卡（多人模式） ==================== -->
+        <div class="section">
+            <h2>🦠 病毒卡 — 多人模式（共15张）</h2>
+            <div class="cards-grid">
+                <div class="card virus">
+                    <div class="card-header">
+                        <span class="card-icon">🦠</span>
+                        <span class="card-type">病毒</span>
+                    </div>
+                    <div class="card-title">木马</div>
+                    <div class="card-body">
+                        目标玩家<strong>弃掉1张手牌</strong>（由你选择）。
+                    </div>
+                    <div class="card-footer">破坏对手手牌，移除关键卡</div>
+                </div>
+
+                <div class="card virus">
+                    <div class="card-header">
+                        <span class="card-icon">🦠</span>
+                        <span class="card-type">病毒</span>
+                    </div>
+                    <div class="card-title">蠕虫</div>
+                    <div class="card-body">
+                        目标玩家<strong>本回合费用-1</strong>（最低为0）。
+                    </div>
+                    <div class="card-footer">限制对手出牌，延缓节奏</div>
+                </div>
+
+                <div class="card virus">
+                    <div class="card-header">
+                        <span class="card-icon">🦠</span>
+                        <span class="card-type">病毒</span>
+                    </div>
+                    <div class="card-title">勒索软件</div>
+                    <div class="card-body">
+                        目标玩家<strong>失去1点DC</strong>（本回合可用数据信用-1）。
+                    </div>
+                    <div class="card-footer">经济破坏，减少对手资源</div>
+                </div>
+
+                <div class="card virus">
+                    <div class="card-header">
+                        <span class="card-icon">🦠</span>
+                        <span class="card-type">病毒</span>
+                    </div>
+                    <div class="card-title">键盘记录器</div>
+                    <div class="card-body">
+                        <strong>查看目标玩家的手牌</strong>（全部展示给你看）。
+                    </div>
+                    <div class="card-footer">情报战，了解对手策略</div>
+                </div>
+
+                <div class="card virus">
+                    <div class="card-header">
+                        <span class="card-icon">🦠</span>
+                        <span class="card-type">病毒</span>
+                    </div>
+                    <div class="card-title">DDoS</div>
+                    <div class="card-body">
+                        目标玩家<strong>本回合只能出1张卡</strong>。
+                    </div>
+                    <div class="card-footer">严重限制，封锁对手行动</div>
+                </div>
+
+                <div class="card virus">
+                    <div class="card-header">
+                        <span class="card-icon">🦠</span>
+                        <span class="card-type">病毒</span>
+                    </div>
+                    <div class="card-title">零日蠕虫</div>
+                    <div class="card-body">
+                        目标玩家<strong>随机弃掉2张手牌</strong>。
+                    </div>
+                    <div class="card-footer">强力破坏，高风险高回报</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- ==================== 玩家状态板 ==================== -->
+        <div class="section">
+            <h2>📊 玩家状态板（每位玩家1张，共4张）</h2>
+            <div class="cards-grid">
+                <div class="card" style="min-height: 200px; border-color: #ff6600;">
+                    <div class="card-header">
+                        <span class="card-icon">👤</span>
+                        <span class="card-type">状态板</span>
+                    </div>
+                    <div class="card-title" style="color: #ff6600;">玩家状态板 — 1号黑客</div>
+                    <div class="card-body">
+                        <p>⬛ HP: _____ / 10</p>
+                        <p>⬛ 数据信用(DC): _____</p>
+                        <p>⬛ 量子密钥: _____ / 5（对抗模式胜利条件）</p>
+                        <p>⬛ 部署的防火墙: _____ 张</p>
+                        <hr style="border-color: #333; margin: 8px 0;">
+                        <p style="font-size: 10px; color: #888;">可用硬币或Token标记各项数值</p>
+                    </div>
+                </div>
+
+                <div class="card" style="min-height: 200px; border-color: #00aaff;">
+                    <div class="card-header">
+                        <span class="card-icon">👤</span>
+                        <span class="card-type">状态板</span>
+                    </div>
+                    <div class="card-title" style="color: #00aaff;">玩家状态板 — 2号黑客</div>
+                    <div class="card-body">
+                        <p>⬛ HP: _____ / 10</p>
+                        <p>⬛ 数据信用(DC): _____</p>
+                        <p>⬛ 量子密钥: _____ / 5</p>
+                        <p>⬛ 部署的防火墙: _____ 张</p>
+                        <hr style="border-color: #333; margin: 8px 0;">
+                        <p style="font-size: 10px; color: #888;">可用硬币或Token标记各项数值</p>
+                    </div>
+                </div>
+
+                <div class="card" style="min-height: 200px; border-color: #00ff88;">
+                    <div class="card-header">
+                        <span class="card-icon">👤</span>
+                        <span class="card-type">状态板</span>
+                    </div>
+                    <div class="card-title" style="color: #00ff88;">玩家状态板 — 3号黑客</div>
+                    <div class="card-body">
+                        <p>⬛ HP: _____ / 10</p>
+                        <p>⬛ 数据信用(DC): _____</p>
+                        <p>⬛ 量子密钥: _____ / 5</p>
+                        <p>⬛ 部署的防火墙: _____ 张</p>
+                        <hr style="border-color: #333; margin: 8px 0;">
+                        <p style="font-size: 10px; color: #888;">可用硬币或Token标记各项数值</p>
+                    </div>
+                </div>
+
+                <div class="card" style="min-height: 200px; border-color: #cc00ff;">
+                    <div class="card-header">
+                        <span class="card-icon">👤</span>
+                        <span class="card-type">状态板</span>
+                    </div>
+                    <div class="card-title" style="color: #cc00ff;">玩家状态板 — 4号黑客</div>
+                    <div class="card-body">
+                        <p>⬛ HP: _____ / 10</p>
+                        <p>⬛ 数据信用(DC): _____</p>
+                        <p>⬛ 量子密钥: _____ / 5</p>
+                        <p>⬛ 部署的防火墙: _____ 张</p>
+                        <hr style="border-color: #333; margin: 8px 0;">
+                        <p style="font-size: 10px; color: #888;">可用硬币或Token标记各项数值</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 打印提示（再次提醒） -->
+        <div style="margin-top: 30px; padding: 15px; background: #1a2a3a; border-radius: 8px; font-size: 13px; color: #aaa; text-align: center;">
+            ⚡ <strong>量子黑客 (Quantum Hacker)</strong> — 赛博朋克卡牌策略桌游<br>
+            打印完毕后，请裁剪卡牌并分类收纳。祝你在OmniNet的冒险中旗开得胜！🎮
+        </div>
+    </div>
+</body>
+</html>
