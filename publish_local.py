@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 团建文章公众号批量发布脚本
 使用 wenyan-mcp 发布文章到微信公众号
@@ -14,7 +15,14 @@
 
 import subprocess
 import os
+import sys
 import time
+
+# 设置标准输出编码为 UTF-8（解决 Windows 编码问题）
+if sys.platform == "win32":
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # ============ 配置区域 ============
 # 微信公众号配置
@@ -88,16 +96,24 @@ def publish_article(article_file, theme_id="pie"):
     
     try:
         # 调用 wenyan-mcp
+        # 使用 encoding='utf-8' 解决 Windows 编码问题
         result = subprocess.run(
             [WENYAN_PATH],
             input=payload,
             capture_output=True,
             text=True,
+            encoding='utf-8',  # 关键：指定 UTF-8 编码
             env=env,
             timeout=120
         )
         
         output = result.stdout + result.stderr
+        
+        # 检查输出是否有效
+        if not output or output.strip() == "":
+            print(f"❌ 发布失败")
+            print(f"   错误: 无输出（wenyan-mcp 可能未正确运行）")
+            return False, "无输出"
         
         # 检查是否成功
         if "media_id" in output.lower():
