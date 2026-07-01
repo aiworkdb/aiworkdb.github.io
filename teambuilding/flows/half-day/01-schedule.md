@@ -7,6 +7,12 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 ---
 # 半日团建流程模板
 
+![封面](images/cover.png)
+
+
+![封面图](https://placehold.co/1200x400/2D3436/FFFFFF?text=Teambuilding)
+
+
 
 
 | 14:00–14:20 | 开场破冰 | 20 min | 放松气氛、建立安全感 |

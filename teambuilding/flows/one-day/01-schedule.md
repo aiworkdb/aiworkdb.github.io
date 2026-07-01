@@ -7,6 +7,12 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 ---
 # 一日团建流程方案 · 完整模板
 
+![封面](images/cover.png)
+
+
+![封面图](https://placehold.co/1200x400/2D3436/FFFFFF?text=Teambuilding)
+
+
 
 
 | 09:30–10:00 | 破冰一 | [人类宾果](https://aiworkdb.github.io/teambuilding/flows/games/icebreaker/human-bingo.html) | 记住名字、发现共同点 |
