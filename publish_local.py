@@ -96,18 +96,44 @@ def publish_article(article_file, theme_id="pie"):
     
     try:
         # 调用 wenyan-mcp
-        # 使用 encoding='utf-8' 解决 Windows 编码问题
+        # Windows 编码问题终极解决方案：使用文件重定向（避免管道）
+        import tempfile
+        
+        # 创建临时输入文件
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json', encoding='utf-8') as f:
+            f.write(payload)
+            input_file = f.name
+        
+        # 创建临时输出文件
+        output_file = input_file + '.out'
+        
+        # 构建命令：使用文件重定向（避免管道编码问题）
+        # Windows 下需要先切换代码页到 UTF-8 (chcp 65001)
+        cmd = f'chcp 65001 >nul 2>&1 & {WENYAN_PATH} < "{input_file}" > "{output_file}" 2>&1'
+        
+        # 执行命令
         result = subprocess.run(
-            [WENYAN_PATH],
-            input=payload,
-            capture_output=True,
-            text=True,
-            encoding='utf-8',  # 关键：指定 UTF-8 编码
+            cmd,
+            shell=True,
             env=env,
             timeout=120
         )
         
-        output = result.stdout + result.stderr
+        # 读取输出文件（使用 UTF-8 编码）
+        try:
+            with open(output_file, 'r', encoding='utf-8', errors='ignore') as f:
+                output = f.read()
+        except:
+            # 如果 UTF-8 失败，尝试 GBK
+            with open(output_file, 'r', encoding='gbk', errors='ignore') as f:
+                output = f.read()
+        
+        # 清理临时文件
+        try:
+            os.unlink(input_file)
+            os.unlink(output_file)
+        except:
+            pass
         
         # 检查输出是否有效
         if not output or output.strip() == "":
