@@ -1,11 +1,10 @@
 ---
 title: "团建教练使用指南 - 5分钟快速上手"
 author: "AIWorkDB"
+cover: "images/cover.png"
 source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
-cover: "https://via.placeholder.com/1200x630/4ECDC4/FFFFFF?text=Guide""https://placehold.co/1200x630/2D3436/white?text=Teambuilding"
 
 ---
-
 # 教练 / 培训师使用指南
 
 

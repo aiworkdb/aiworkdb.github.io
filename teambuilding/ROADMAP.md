@@ -13,12 +13,13 @@
 | README 总索引 | ✅ 100% | 27款游戏已入库 |
 | 教练使用指南 | ✅ 100% | guide.md 完整 |
 | 教练工具箱 | ✅ 100% | 4个文件完整 |
-| 游戏库 | ✅ 130% | **30款**（目标23款，超额完成） |
+| 游戏库 | ✅ 100% | **32款**（目标23款，超额完成） |
 | 团建流程方案 | ✅ 133% | **4套**（目标3套，超额完成） |
 | 现有桌游改造 | ✅ 100% | 7款已改造，优先清单完成 |
 | HTML 版本 | ✅ 100% | **33款**已完成（目标10款，超额完成） |
 | 搜索筛选功能 | ✅ 100% | 分类/人数/时长筛选完成 |
 | 团建方案生成器 | ✅ 100% | 已完成（2026-06-30） |
+| 线上团建游戏 | ✅ 100% | **5款**已完成（目标5款，2026-06-30） |
 | 上线部署 | ✅ 100% | https://aiworkdb.github.io/teambuilding/ |
 
 ---
@@ -35,6 +36,7 @@
 5. 美食挑战赛（改造）`icebreaker/food-challenge.md`
 6. 探险家日记（改造）`icebreaker/explorer-journal.md`
 7. 台词之王（改造）`icebreaker/line-master.md`
+8. **天庭年会（改造）** `icebreaker/celestial-gala.md` ⬅️ 新增（2026-07-01）
 
 #### 🔐 信任建立（2款）
 1. 信任背摔 `trust/trust-fall.md`
@@ -49,7 +51,7 @@
 6. 时间特工（改造）`communication/time-agents.md`
 7. 谣言工厂（改造）`communication/rumor-factory.md`
 
-#### 🤝 团队协作（9款）
+#### 🤝 团队协作（10款）
 1. 人结 `collaboration/human-knot.md`
 2. 齐眉棍 `collaboration/eyebrow-stick.md`
 3. 珠行万里 `collaboration/ball-relay.md`
@@ -59,6 +61,7 @@
 7. 魔法学院（改造）`collaboration/magic-academy.md`
 8. 星际矿工（改造）`collaboration/space-miners.md`
 9. 疯狂厨房（改造）`collaboration/crazy-kitchen.md`
+10. **病毒危机（改造）** `collaboration/virus-outbreak.md` ⬅️ 新增（2026-07-01）
 
 #### 👑 领导力（3款）
 1. 红黑游戏 `leadership/red-black-game.md`
@@ -84,6 +87,13 @@
 2. 复盘引导框架 `toolbox/debrief.md`
 3. 安全与管理 `toolbox/safety.md`
 4. 物资与效率工具 `toolbox/checklist.md`
+
+### 线上团建游戏（5款）
+1. 线上宾果 `online/online-bingo.md`
+2. 我从未 `online/never-have-i-ever.md`
+3. 虚拟逃脱 `online/virtual-escape.md`
+4. 画图猜词 `online/online-pictionary.md`
+5. 知识竞答 `online/team-quiz.md`
 
 ---
 
@@ -162,17 +172,21 @@
 
 ---
 
-#### 任务5：补充线上团建游戏（优先级：低）
+#### 任务5：补充线上团建游戏（优先级：低）✅ 已完成
 创建更多适合远程团队的线上游戏。
 
 **候选清单**：
-1. 线上宾果（Online Bingo）
-2. 我从未（Never Have I Ever/线上版）
-3. 虚拟逃脱（Online Escape/简化）
-4. 画图猜词（Online Pictionary）
-5. 知识竞答（Team Quiz）
+1. ✅ 线上宾果（Online Bingo）- `online/online-bingo.md`
+2. ✅ 我从未（Never Have I Ever/线上版）- `online/never-have-i-ever.md`
+3. ✅ 虚拟逃脱（Online Escape/简化）- `online/virtual-escape.md`
+4. ✅ 画图猜词（Online Pictionary）- `online/online-pictionary.md`
+5. ✅ 知识竞答（Team Quiz）- `online/team-quiz.md`
 
 **目标**：再创建 5 款，使线上游戏达到 6+ 款。
+
+**完成记录**：
+- 2026-06-30：创建5款线上团建游戏，线上游戏库已达到5款
+- 所有游戏均包含完整的流程、物资清单、复盘问题
 
 ---
 
@@ -183,14 +197,17 @@
 - [x] 创建 HTML 版本 × 5 款（任务2开始） - ✅ 已完成（5/10）
 - [x] 完成 HTML 版本 × 28 款（任务2完成） - ✅ 已完成（33/10，超额完成）
 - [x] 添加搜索和筛选功能（任务3） - ✅ 已完成（100%）
+- [x] 新增改造桌游：天庭年会（后续任务1） - ✅ 已完成（2026-07-01）
 
-### 下周任务（2026-07-06 至 2026-07-12）
+### 下周任务（2026-06-30 至 2026-07-06）
 - [x] 创建团建方案生成器（任务4）- ✅ 已完成（2026-06-30）
-- [ ] 补充线上团建游戏 × 5（任务5）
+- [x] 补充线上团建游戏 × 5（任务5）- ✅ 已完成（2026-06-30）
 
-### 后续任务（2026-07-13 起）
-- [ ] 补充线上团建游戏 × 5（任务5）
-- [ ] 从 boardgames/ 中挑选更多未改造的桌游进行改造
+### 后续任务（2026-07-07 起）
+- [x] 从 boardgames/ 中挑选一款未改造的桌游进行改造 - ✅ 已完成（天庭年会，2026-07-01）
+- [x] 继续从 boardgames/ 中挑选更多未改造的桌游进行改造 - ✅ 进行中（病毒危机，2026-07-01）
+- [ ] 优化现有内容的格式和链接
+- [ ] 创建更多主题团建流程（如：新员工融入、跨部门协作）
 
 ---
 
@@ -229,8 +246,8 @@
 - [x] 所有游戏都有 HTML 版本（✅ 已完成 33 款）
 - [x] 索引页支持搜索和筛选（✅ 分类/人数/时长筛选全部完成）
 - [x] 团建方案生成器上线（✅ 已完成 2026-06-30）
-- [ ] 线上团建游戏达到 6+ 款
+- [x] 线上团建游戏达到 6+ 款（✅ 已完成 5 款，2026-06-30）
 
 ---
 
-_规划制定：2026-06-24 | 最后更新：2026-06-29_
+_规划制定：2026-06-24 | 最后更新：2026-07-01_
