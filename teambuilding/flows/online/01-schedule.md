@@ -9,12 +9,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 
 ![封面](images/cover.png)
 
-
-![封面图](https://placehold.co/1200x400/2D3436/FFFFFF?text=Teambuilding)
-
-
-
-
 | 00:00–00:15 | 线上开场 + 破冰 | 15 min | 打破屏幕隔阂、建立存在感 |
 | 00:15–00:45 | 破冰游戏（线上版） | 30 min | 笑声破冰、记住彼此 |
 | 00:45–01:15 | 核心活动 I | 30 min | 沟通表达 / 信任建立 |
@@ -36,7 +30,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 
 #### 开场白话术模板
 
-
 | [名字接龙](https://aiworkdb.github.io/teambuilding/games/icebreaker/name-chain.html) | 用「轮流说话」代替「排队拍肩」 | 5 min |
 | [人类宾果](https://aiworkdb.github.io/teambuilding/games/icebreaker/human-bingo.html) | **屏幕共享宾果卡**，所有人一起玩 | 10 min |
 | 「背景大揭秘」 | 每人展示虚拟背景并解释 30 秒 | 10 min |
@@ -54,8 +47,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 | 游戏 | 每组私聊传话（用聊天框发私信） | 15 min |
 | 展示 | 回到主会议室，每组展示「变形版」 | 10 min |
 | 复盘 | 快速 4F（只做 Facts + Feelings） | 3 min |
-
-
 
 | 工具准备 | 每人打开 [AWW App](https://awwapp.com) 或 Figma 白板 | 5 min |
 | 分组 | 分 2 人/组（用分组讨论功能） | 2 min |
@@ -91,7 +82,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 | 分组讨论 | 用「分组讨论」功能，10 分钟自由讨论 | 10 min |
 | 达成共识 | 在线文档（腾讯文档/Google Docs）实时编辑 | 8 min |
 | 揭晓答案 | 屏幕共享 Excel，计算偏差分 | 5 min |
-
 
 > 💡 **为什么推荐这个**：线上版「沙漠逃生」反而更好——因为「不能说话」的 limitation 本来就存在（打字）！
 
@@ -130,8 +120,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 **第三步：一句话收尾（5 min）**
 - 按顺序，每人用**1 句话**分享今天最大的收获
 - 教练最后说：
-
-
 
 | **投票工具** | 复盘投票 | Mentimeter / 腾讯投票 |
 | **屏幕共享** | 展示内容 | 会议自带功能 |
@@ -192,6 +180,4 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 | **成本** | 高（场地+餐饮+交通） | 低（几乎为零） |
 | **参与度** | 高（无法「隐身」） | 低（可以「隐身」） |
 | **适用场景** | 本地团队 | 跨城市/远程团队 |
-
-
 
