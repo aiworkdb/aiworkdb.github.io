@@ -1,11 +1,10 @@
 ---
 title: "线上团建流程模板"
 author: "AIWorkDB"
+cover: "images/cover.png"
 source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.html"
-cover: "https://via.placeholder.com/1200x630/FDCB6F/333333?text=Online""https://placehold.co/1200x630/6C5CE7/white?text=Flow"
 
 ---
-
 # 线上团建流程模板
 
 
