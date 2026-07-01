@@ -7,6 +7,12 @@ source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
 ---
 # 教练 / 培训师使用指南
 
+![封面](images/cover.png)
+
+
+![封面图](https://placehold.co/1200x400/2D3436/FFFFFF?text=Teambuilding)
+
+
 
 
    → 5-15min（热身） / 15-30min（课堂插入） / 30-60min（主体活动） / >60min（沙盘/全天）

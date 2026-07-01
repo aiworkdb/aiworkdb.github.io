@@ -7,6 +7,12 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 ---
 # 线上团建流程模板
 
+![封面](images/cover.png)
+
+
+![封面图](https://placehold.co/1200x400/2D3436/FFFFFF?text=Teambuilding)
+
+
 
 
 | 00:00–00:15 | 线上开场 + 破冰 | 15 min | 打破屏幕隔阂、建立存在感 |
