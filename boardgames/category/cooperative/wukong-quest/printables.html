@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大圣西游 - 打印道具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: #1a0a2e;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #c9a0ff;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.8;
+        }
+
+        .print-hint strong {
+            color: #d32f2f;
+            font-size: 16px;
+        }
+
+        .print-hint ul {
+            margin: 8px 0 0 20px;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .print-hint {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            .section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        .section {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: #4a148c;
+            margin: 0 0 18px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #e1bee7;
+            font-size: 1.5em;
+        }
+
+        /* ===== 游戏地图 ===== */
+        .game-map-area {
+            text-align: center;
+        }
+
+        .map-container {
+            display: inline-block;
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            padding: 20px;
+            border-radius: 14px;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 90px);
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .map-cell {
+            width: 90px;
+            height: 72px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            line-height: 1.3;
+            position: relative;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .map-cell .emoji {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+
+        .map-cell .station-name {
+            font-size: 10px;
+            opacity: 0.95;
+        }
+
+        .map-cell .station-num {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 9px;
+            background: rgba(0,0,0,0.4);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell-start { background: linear-gradient(135deg, #ff8f00, #ffc107); }
+        .cell-safe { background: linear-gradient(135deg, #2e7d32, #4caf50); }
+        .cell-normal { background: linear-gradient(135deg, #f57f17, #fbc02d); }
+        .cell-demon { background: linear-gradient(135deg, #b71c1c, #e53935); }
+        .cell-event { background: linear-gradient(135deg, #4a148c, #9c27b0); }
+        .cell-sutra { background: linear-gradient(135deg, #0d47a1, #42a5f5); }
+        .cell-boss { background: linear-gradient(135deg, #880e4f, #e91e63); }
+        .cell-end { background: linear-gradient(135deg, #ff6f00, #ffd600); color: #333; }
+
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: white;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        /* ===== 卡牌通用样式 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .card-emoji {
+            font-size: 38px;
+            margin: 6px 0;
+        }
+
+        .card-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 4px 0;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .card-type {
+            font-size: 11px;
+            opacity: 0.85;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .card-stats {
+            font-size: 12px;
+            color: white;
+            background: rgba(0,0,0,0.25);
+            border-radius: 6px;
+            padding: 4px 8px;
+            margin: 4px 0;
+            width: 100%;
+        }
+
+        .card-desc {
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+
+        /* 卡牌颜色主题 */
+        .card-character { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+        .card-demon { background: linear-gradient(135deg, #b71c1c, #ef5350); }
+        .card-equip { background: linear-gradient(135deg, #e65100, #ff9800); }
+        .card-consume { background: linear-gradient(135deg, #1b5e20, #66bb6a); }
+        .card-sutra { background: linear-gradient(135deg, #311b92, #7e57c2); }
+        .card-calamity { background: linear-gradient(135deg, #4a148c, #ce93d8); }
+        .card-boss { background: linear-gradient(135deg, #880e4f, #f06292); }
+
+        /* ===== 棋子样式 ===== */
+        .pieces-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            text-align: center;
+        }
+
+        .piece {
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-token {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 8px 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        .piece-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .piece-hp {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* 打印分页 */
+        .page-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #4a148c;
+            margin: 10px 0 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐵 大圣西游 🏔️</h1>
+        <p class="subtitle">Wukong's Journey — 打印道具全集</p>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul>
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（Chrome：更多设置→背景图形）</li>
+                <li>卡牌建议使用<strong>200g卡纸</strong>打印，增加耐用性</li>
+                <li>地图建议使用<strong>普通A4纸</strong>，可拼接成大幅地图</li>
+                <li>打印后沿虚线裁剪卡牌，可塑封延长使用寿命</li>
+            </ul>
+        </div>
+
+        <!-- ===== 第1页：游戏地图 ===== -->
+        <div class="section page-break">
+            <h2>🗺️ 游戏地图 — 西天取经路线</h2>
+            <div class="game-map-area">
+                <div class="map-container">
+                    <div class="map-grid">
+                        <!-- 第1行：站点1-5 -->
+                        <div class="map-cell cell-start"><span class="station-num">1</span><span class="emoji">🏯</span><span class="station-name">长安</span></div>
+                        <div class="map-cell cell-normal"><span class="station-num">2</span><span class="emoji">⛰️</span><span class="station-name">五行山</span></div>
+                        <div class="map-cell cell-normal"><span class="station-num">3</span><span class="emoji">🌊</span><span class="station-name">鹰愁涧</span></div>
+                        <div class="map-cell cell-safe"><span class="station-num">4</span><span class="emoji">🏘️</span><span class="station-name">高老庄</span></div>
+                        <div class="map-cell cell-normal"><span class="station-num">5</span><span class="emoji">🌊</span><span class="station-name">流沙河</span></div>
+
+                        <!-- 第2行：站点6-10 -->
+                        <div class="map-cell cell-sutra"><span class="station-num">6</span><span class="emoji">🌳</span><span class="station-name">五庄观</span></div>
+                        <div class="map-cell cell-boss"><span class="station-num">7</span><span class="emoji">💀</span><span class="station-name">白骨洞</span></div>
+                        <div class="map-cell cell-safe"><span class="station-num">8</span><span class="emoji">🏰</span><span class="station-name">西凉女国</span></div>
+                        <div class="map-cell cell-event"><span class="station-num">9</span><span class="emoji">🔥</span><span class="station-name">火焰山</span></div>
+                        <div class="map-cell cell-normal"><span class="station-num">10</span><span class="emoji">🏯</span><span class="station-name">祭赛国</span></div>
+
+                        <!-- 第3行：站点11-15 -->
+                        <div class="map-cell cell-sutra"><span class="station-num">11</span><span class="emoji">🛕</span><span class="station-name">小雷音寺</span></div>
+                        <div class="map-cell cell-demon"><span class="station-num">12</span><span class="emoji">🦁</span><span class="station-name">狮驼岭</span></div>
+                        <div class="map-cell cell-safe"><span class="station-num">13</span><span class="emoji">🦌</span><span class="station-name">比丘国</span></div>
+                        <div class="map-cell cell-demon"><span class="station-num">14</span><span class="emoji">🕳️</span><span class="station-name">无底洞</span></div>
+                        <div class="map-cell cell-boss"><span class="station-num">15</span><span class="emoji">⚔️</span><span class="station-name">灭法国</span></div>
+
+                        <!-- 第4行：站点16-20 -->
+                        <div class="map-cell cell-sutra"><span class="station-num">16</span><span class="emoji">🏛️</span><span class="station-name">天竺国</span></div>
+                        <div class="map-cell cell-normal"><span class="station-num">17</span><span class="emoji">🕌</span><span class="station-name">舍卫国</span></div>
+                        <div class="map-cell cell-safe"><span class="station-num">18</span><span class="emoji">🏰</span><span class="station-name">玉华州</span></div>
+                        <div class="map-cell cell-event"><span class="station-num">19</span><span class="emoji">🎆</span><span class="station-name">金平府</span></div>
+                        <div class="map-cell cell-normal"><span class="station-num">20</span><span class="emoji">🏯</span><span class="station-name">铜台府</span></div>
+
+                        <!-- 第5行：站点21-25 -->
+                        <div class="map-cell cell-boss"><span class="station-num">21</span><span class="emoji">🐒</span><span class="station-name">六耳猕猴</span></div>
+                        <div class="map-cell cell-sutra"><span class="station-num">22</span><span class="emoji">🛕</span><span class="station-name">雷音寺</span></div>
+                        <div class="map-cell cell-safe"><span class="station-num">23</span><span class="emoji">✨</span><span class="station-name">灵山脚下</span></div>
+                        <div class="map-cell cell-demon"><span class="station-num">24</span><span class="emoji">🌀</span><span class="station-name">最终试炼</span></div>
+                        <div class="map-cell cell-end"><span class="station-num">25</span><span class="emoji">🏆</span><span class="station-name">灵山终点</span></div>
+                    </div>
+                </div>
+
+                <div class="map-legend">
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#ff8f00,#ffc107)"></div>起点</div>
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#2e7d32,#4caf50)"></div>安全营地</div>
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#f57f17,#fbc02d)"></div>普通路段</div>
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#b71c1c,#e53935)"></div>妖魔巢穴</div>
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#4a148c,#9c27b0)"></div>劫难事件</div>
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#0d47a1,#42a5f5)"></div>佛经宝地</div>
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#880e4f,#e91e63)"></div>Boss战点</div>
+                    <div class="legend-item"><div class="legend-color" style="background:linear-gradient(135deg,#ff6f00,#ffd600)"></div>终点</div>
+                </div>
+
+                <p style="color:white; margin-top:14px; font-size:13px; line-height:1.6;">
+                    📏 <strong>地图使用说明：</strong>棋子从「长安」出发，沿数字顺序前进。到达妖魔巢穴（红色）需战斗，到达Boss战点（粉色）全员参与Boss战。<br>
+                    🔄 <strong>分支路线：</strong>部分站点可选择绕路（增加步数但避开妖魔）或抄近路（减少步数但触发劫难）。
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== 第2页：角色卡 ===== -->
+        <div class="section page-break">
+            <h2>🐵 角色卡（玩家身份）</h2>
+            <p style="color:#666; margin-bottom:14px; font-size:13px;">每位玩家选择1张角色卡，记录生命值和特殊能力。打印后建议塑封。</p>
+            <div class="cards-grid">
+                <div class="card card-character">
+                    <div class="card-emoji">🐵</div>
+                    <div class="card-name">孙悟空</div>
+                    <div class="card-type">【攻击型】天命人</div>
+                    <div class="card-stats">❤️ 生命：5 &nbsp;|&nbsp; ⚔️ 攻击：+2</div>
+                    <div class="card-desc">
+                        <strong>七十二变：</strong>每回合可额外行动1次<br>
+                        <strong>火眼金睛：</strong>提前查看妖魔卡<br>
+                        <strong>初始装备：</strong>金箍棒（攻击+2）
+                    </div>
+                </div>
+                <div class="card card-character">
+                    <div class="card-emoji">🐷</div>
+                    <div class="card-name">猪八戒</div>
+                    <div class="card-type">【均衡型】天蓬元帅</div>
+                    <div class="card-stats">❤️ 生命：6 &nbsp;|&nbsp; ⚔️ 攻击：+1 &nbsp;|&nbsp; 🛡️ 防御：+1</div>
+                    <div class="card-desc">
+                        <strong>天蓬元帅：</strong>战斗掷骰+1<br>
+                        <strong>贪吃：</strong>营地可额外恢复2生命<br>
+                        <strong>初始装备：</strong>九齿钉耙
+                    </div>
+                </div>
+                <div class="card card-character">
+                    <div class="card-emoji">🧑</div>
+                    <div class="card-name">沙悟净</div>
+                    <div class="card-type">【防御型】卷帘大将</div>
+                    <div class="card-stats">❤️ 生命：7 &nbsp;|&nbsp; 🛡️ 防御：+2</div>
+                    <div class="card-desc">
+                        <strong>卷帘大将：</strong>可替其他玩家承受伤害<br>
+                        <strong>流沙河：</strong>水中战斗优势<br>
+                        <strong>初始装备：</strong>降妖宝杖（防御+2）
+                    </div>
+                </div>
+                <div class="card card-character">
+                    <div class="card-emoji">🐉</div>
+                    <div class="card-name">白龙马</div>
+                    <div class="card-type">【辅助型】龙族三太子</div>
+                    <div class="card-stats">❤️ 生命：4 &nbsp;|&nbsp; 💚 每回合自动+1生命</div>
+                    <div class="card-desc">
+                        <strong>疾风步：</strong>移动步数+2<br>
+                        <strong>龙族血脉：</strong>可跨越任意地形<br>
+                        <strong>初始装备：</strong>龙鳞甲（自动回血）
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 第3页：妖魔卡 ===== -->
+        <div class="section page-break">
+            <h2>👹 妖魔卡（敌人）</h2>
+            <p style="color:#666; margin-bottom:14px; font-size:13px;">停留妖魔巢穴时翻转对应数量妖魔卡，击败获得奖励。</p>
+            <div class="cards-grid">
+                <div class="card card-demon">
+                    <div class="card-emoji">👺</div>
+                    <div class="card-name">小妖</div>
+                    <div class="card-stats">❤️ 生命：2 &nbsp;|&nbsp; ⚔️ 攻击：1</div>
+                    <div class="card-desc">无特殊能力<br><strong>击败奖励：</strong>1法宝卡</div>
+                </div>
+                <div class="card card-demon">
+                    <div class="card-emoji">🐵</div>
+                    <div class="card-name">山魈</div>
+                    <div class="card-stats">❤️ 生命：3 &nbsp;|&nbsp; ⚔️ 攻击：1</div>
+                    <div class="card-desc">逃跑：击败后掷骰1-3则不奖励<br><strong>击败奖励：</strong>1法宝卡</div>
+                </div>
+                <div class="card card-demon">
+                    <div class="card-emoji">🕷️</div>
+                    <div class="card-name">蜘蛛精</div>
+                    <div class="card-stats">❤️ 生命：3 &nbsp;|&nbsp; ⚔️ 攻击：2</div>
+                    <div class="card-desc">毒丝：战斗后玩家下回合攻击-1<br><strong>击败奖励：</strong>1佛经碎片</div>
+                </div>
+                <div class="card card-demon">
+                    <div class="card-emoji">🌪️</div>
+                    <div class="card-name">黄风怪</div>
+                    <div class="card-stats">❤️ 生命：4 &nbsp;|&nbsp; ⚔️ 攻击：2</div>
+                    <div class="card-desc">狂风：玩家最低战斗骰不计入<br><strong>击败奖励：</strong>1法宝+1佛经</div>
+                </div>
+                <div class="card card-demon">
+                    <div class="card-emoji">🔥</div>
+                    <div class="card-name">红孩儿</div>
+                    <div class="card-stats">❤️ 生命：5 &nbsp;|&nbsp; ⚔️ 攻击：3</div>
+                    <div class="card-desc">三昧真火：战斗开始直接-1生命<br><strong>击败奖励：</strong>2法宝卡</div>
+                </div>
+                <div class="card card-demon">
+                    <div class="card-emoji">🐉</div>
+                    <div class="card-name">小青龙</div>
+                    <div class="card-stats">❤️ 生命：4 &nbsp;|&nbsp; ⚔️ 攻击：3</div>
+                    <div class="card-desc">龙息：攻击骰若为双数，伤害×2<br><strong>击败奖励：</strong>1法宝+1佛经</div>
+                </div>
+                <div class="card card-demon">
+                    <div class="card-emoji">🦂</div>
+                    <div class="card-name">蝎子精</div>
+                    <div class="card-stats">❤️ 生命：4 &nbsp;|&nbsp; ⚔️ 攻击：2</div>
+                    <div class="card-desc">尾刺：玩家击败后仍需骰1次，1-3则中毒<br><strong>击败奖励：</strong>1佛经卡</div>
+                </div>
+                <div class="card card-demon">
+                    <div class="card-emoji">🐗</div>
+                    <div class="card-name">野猪妖</div>
+                    <div class="card-stats">❤️ 生命：3 &nbsp;|&nbsp; ⚔️ 攻击：2</div>
+                    <div class="card-desc">冲撞：玩家防御不计入本次战斗<br><strong>击败奖励：</strong>1法宝卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 第4页：Boss卡 + 佛经卡 ===== -->
+        <div class="section page-break">
+            <h2>🐲 Boss卡（终极敌人）</h2>
+            <div class="cards-grid" style="margin-bottom: 24px;">
+                <div class="card card-boss">
+                    <div class="card-emoji">💀</div>
+                    <div class="card-name">白骨夫人</div>
+                    <div class="card-stats">❤️ 生命：7 &nbsp;|&nbsp; ⚔️ 攻击：3</div>
+                    <div class="card-desc">
+                        <strong>分身术：</strong>第一次击败后重生出2个分身（生命3）<br>
+                        <strong>白骨幻境：</strong>每回合1位玩家无法攻击<br>
+                        <strong>击败奖励：</strong>Boss包（2法宝+1佛经）
+                    </div>
+                </div>
+                <div class="card card-boss">
+                    <div class="card-emoji">🐂</div>
+                    <div class="card-name">牛魔王</div>
+                    <div class="card-stats">❤️ 生命：9 &nbsp;|&nbsp; ⚔️ 攻击：4</div>
+                    <div class="card-desc">
+                        <strong>蛮力冲撞：</strong>攻击骰若双6，直接击败1玩家<br>
+                        <strong>火焰山：</strong>战斗场地效果，每回合-1生命<br>
+                        <strong>击败奖励：</strong>Boss包（紫金红葫芦+2法宝）
+                    </div>
+                </div>
+                <div class="card card-boss">
+                    <div class="card-emoji">🐒</div>
+                    <div class="card-name">六耳猕猴</div>
+                    <div class="card-stats">❤️ 生命：8 &nbsp;|&nbsp; ⚔️ 攻击：3</div>
+                    <div class="card-desc">
+                        <strong>真假美猴王：</strong>复制玩家上一回合行动<br>
+                        <strong>紧箍咒反击：</strong>玩家使用法宝时骰1次，1-3则法宝失效<br>
+                        <strong>击败奖励：</strong>Boss包（紧箍咒+2法宝+1佛经）
+                    </div>
+                </div>
+                <div class="card card-boss">
+                    <div class="card-emoji">🌀</div>
+                    <div class="card-name">最终天劫</div>
+                    <div class="card-stats">❤️ 生命：12 &nbsp;|&nbsp; ⚔️ 攻击：5</div>
+                    <div class="card-desc">
+                        <strong>九九八十一难：</strong>每回合召唤1个小妖助战<br>
+                        <strong>天命：</strong>集齐7佛经时，此Boss生命-3<br>
+                        <strong>通关奖励：</strong>取得真经，团队胜利！
+                    </div>
+                </div>
+            </div>
+
+            <h2>📜 佛经卡（收集目标）</h2>
+            <p style="color:#666; margin-bottom:14px; font-size:13px;">收集佛经卡解锁团队增益，集齐7张触发"真经之力"！</p>
+            <div class="cards-grid">
+                <div class="card card-sutra"><div class="card-emoji">📜</div><div class="card-name">《金刚经》</div><div class="card-desc">🛡️ 团队防御+1</div></div>
+                <div class="card card-sutra"><div class="card-emoji">📜</div><div class="card-name">《法华经》</div><div class="card-desc">⚔️ 团队攻击+1</div></div>
+                <div class="card card-sutra"><div class="card-emoji">📜</div><div class="card-name">《楞严经》</div><div class="card-desc">💚 每回合自动恢复1生命</div></div>
+                <div class="card card-sutra"><div class="card-emoji">📜</div><div class="card-name">《华严经》</div><div class="card-desc">🎲 可重新掷1次骰子</div></div>
+                <div class="card card-sutra"><div class="card-emoji">📜</div><div class="card-name">《涅槃经》</div><div class="card-desc">💖 死亡时自动复活（每局1次）</div></div>
+                <div class="card card-sutra"><div class="card-emoji">📜</div><div class="card-name">《般若经》</div><div class="card-desc">🔮 查看任意1张未翻开的卡</div></div>
+                <div class="card card-sutra"><div class="card-emoji">📜</div><div class="card-name">《无量寿经》</div><div class="card-desc">❤️ 生命上限+2（全团）</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 第5页：法宝卡 ===== -->
+        <div class="section page-break">
+            <h2>🪄 法宝卡（装备类）</h2>
+            <div class="cards-grid" style="margin-bottom: 24px;">
+                <div class="card card-equip">
+                    <div class="card-emoji">🪄</div>
+                    <div class="card-name">金箍棒</div>
+                    <div class="card-type">【稀有装备】</div>
+                    <div class="card-desc">⚔️ 攻击+2<br>如意变化：可当绳索使用（移动+3）</div>
+                </div>
+                <div class="card card-equip">
+                    <div class="card-emoji">🔱</div>
+                    <div class="card-name">九齿钉耙</div>
+                    <div class="card-type">【普通装备】</div>
+                    <div class="card-desc">⚔️ 攻击+1 &nbsp; 🛡️ 防御+1<br>农具改造：战斗后可采集资源</div>
+                </div>
+                <div class="card card-equip">
+                    <div class="card-emoji">�杖</div>
+                    <div class="card-name">降妖宝杖</div>
+                    <div class="card-type">【普通装备】</div>
+                    <div class="card-desc">🛡️ 防御+2<br>流沙护体：替相邻玩家承受1伤害</div>
+                </div>
+                <div class="card card-equip">
+                    <div class="card-emoji">📿</div>
+                    <div class="card-name">紧箍咒</div>
+                    <div class="card-type">【稀有装备】</div>
+                    <div class="card-desc">🧠 每回合控制1妖魔跳过1回合<br>（对Boss无效）</div>
+                </div>
+                <div class="card card-equip">
+                    <div class="card-emoji">🏺</div>
+                    <div class="card-name">紫金红葫芦</div>
+                    <div class="card-type">【史诗装备】</div>
+                    <div class="card-desc">🌀 战斗开始时直接吸收1妖魔<br>（每局限1次，对Boss有效但需骰6）</div>
+                </div>
+                <div class="card card-equip">
+                    <div class="card-emoji">🌬️</div>
+                    <div class="card-name">芭蕉扇</div>
+                    <div class="card-type">【稀有装备】</div>
+                    <div class="card-desc">🔥 火焰山路段直接通过<br>💨 战斗时吹退妖魔：攻击-2</div>
+                </div>
+            </div>
+
+            <h2>🍑 法宝卡（消耗类）</h2>
+            <div class="cards-grid">
+                <div class="card card-consume">
+                    <div class="card-emoji">🍑</div>
+                    <div class="card-name">蟠桃</div>
+                    <div class="card-type">【消耗品】×4</div>
+                    <div class="card-desc">💖 恢复2生命值<br>（对阵亡玩家使用：复活+2生命）</div>
+                </div>
+                <div class="card card-consume">
+                    <div class="card-emoji">🍎</div>
+                    <div class="card-name">人参果</div>
+                    <div class="card-type">【消耗品】×2</div>
+                    <div class="card-desc">💖 恢复全部生命值<br>镇元大仙的宝物，万寿无疆！</div>
+                </div>
+                <div class="card card-consume">
+                    <div class="card-emoji">✨</div>
+                    <div class="card-name">佛光护体</div>
+                    <div class="card-type">【消耗品】×3</div>
+                    <div class="card-desc">🛡️ 本回合免疫所有伤害<br>（包括Boss战）</div>
+                </div>
+                <div class="card card-consume">
+                    <div class="card-emoji">☁️</div>
+                    <div class="card-name">筋斗云</div>
+                    <div class="card-type">【消耗品】×2</div>
+                    <div class="card-desc">💨 本回合移动步数×2<br>一个筋斗十万八千里！</div>
+                </div>
+                <div class="card card-consume">
+                    <div class="card-emoji">💧</div>
+                    <div class="card-name">观音甘露</div>
+                    <div class="card-type">【消耗品】×1</div>
+                    <div class="card-desc">💖 复活1位已阵亡的玩家<br>（恢复至满生命值，每局限1次）</div>
+                </div>
+                <div class="card card-consume">
+                    <div class="card-emoji">🔮</div>
+                    <div class="card-name">菩提心</div>
+                    <div class="card-type">【消耗品】×2</div>
+                    <div class="card-desc">📿 本回合团队全员攻击+1<br>菩提本无树，明镜亦非台</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 第6页：劫难卡 + 棋子 ===== -->
+        <div class="section page-break">
+            <h2>⚡ 劫难卡（随机事件）</h2>
+            <p style="color:#666; margin-bottom:14px; font-size:13px;">停留劫难事件点时抽取1张，立即执行效果。福祸相依！</p>
+            <div class="cards-grid" style="margin-bottom: 24px;">
+                <div class="card card-calamity"><div class="card-emoji">🌧️</div><div class="card-name">暴雨倾盆</div><div class="card-desc">⛔ 本回合所有玩家移动-2步<br>（可配合使用筋斗云抵消）</div></div>
+                <div class="card card-calamity"><div class="card-emoji">🌫️</div><div class="card-name">妖雾弥漫</div><div class="card-desc">👹 下1个妖魔战斗力+1<br>（佛光护体可抵消）</div></div>
+                <div class="card card-calamity"><div class="card-emoji">🙏</div><div class="card-name">佛祖显灵</div><div class="card-desc">🎁 全员恢复2生命<br>随机获得1法宝卡<br><strong>（正面劫难！）</strong></div></div>
+                <div class="card card-calamity"><div class="card-emoji">🕸️</div><div class="card-name">误入盘丝洞</div><div class="card-desc">🚫 本回合无法行动，直接跳过<br>（下回合可正常行动）</div></div>
+                <div class="card card-calamity"><div class="card-emoji">☁️💨</div><div class="card-name">筋斗云故障</div><div class="card-desc">🎲 掷骰1次：1-3则后退3步；4-6则无事</div></div>
+                <div class="card card-calamity"><div class="card-emoji">🐒🐒</div><div class="card-name">真假美猴王</div><div class="card-desc">🐵 孙悟空玩家猜拳：输则本回合攻击-2</div></div>
+                <div class="card card-calamity"><div class="card-emoji">🐷🍽️</div><div class="card-name">八戒贪吃</div><div class="card-desc">🤝 猪八戒玩家给其他玩家各1张资源卡<br>（无卡则跳过）</div></div>
+                <div class="card card-calamity"><div class="card-emoji">🧑🏠</div><div class="card-name">悟净思乡</div><div class="card-desc">💪 沙悟净玩家本回合可额外行动1次<br><strong>（正面劫难！）</strong></div></div>
+                <div class="card card-calamity"><div class="card-emoji">🐉⚡</div><div class="card-name">龙马脱缰</div><div class="card-desc">💨 白龙马玩家本回合移动步数×2<br><strong>（正面劫难！）</strong></div></div>
+                <div class="card card-calamity"><div class="card-emoji">😱</div><div class="card-name">唐僧被抓</div><div class="card-desc">⚠️ 全员需本回合结束前击败1妖魔<br>失败：全团-2生命</div></div>
+            </div>
+
+            <h2>🎲 玩家棋子（打印后裁剪）</h2>
+            <div class="pieces-grid">
+                <div class="piece">
+                    <div class="piece-token" style="background:linear-gradient(135deg,#ff6f00,#ffa726);">🐵</div>
+                    <div class="piece-name">孙悟空</div>
+                    <div class="piece-hp">❤️❤️❤️❤️❤️</div>
+                    <div style="font-size:11px;color:#999;margin-top:4px;">攻击+2 | 七十二变</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-token" style="background:linear-gradient(135deg,#e65100,#ff7043);">🐷</div>
+                    <div class="piece-name">猪八戒</div>
+                    <div class="piece-hp">❤️❤️❤️❤️❤️❤️</div>
+                    <div style="font-size:11px;color:#999;margin-top:4px;">均衡 | 天蓬元帅</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-token" style="background:linear-gradient(135deg,#37474f,#546e7a);">🧑</div>
+                    <div class="piece-name">沙悟净</div>
+                    <div class="piece-hp">❤️❤️❤️❤️❤️❤️❤️</div>
+                    <div style="font-size:11px;color:#999;margin-top:4px;">防御+2 | 卷帘大将</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-token" style="background:linear-gradient(135deg,#1565c0,#42a5f5);">🐉</div>
+                    <div class="piece-name">白龙马</div>
+                    <div class="piece-hp">❤️❤️❤️❤️</div>
+                    <div style="font-size:11px;color:#999;margin-top:4px;">疾风步 | 自动回血</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 打印说明 ===== -->
+        <div class="section">
+            <h2>🖨️ 打印与制作指南</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:12px;">
+                <div style="background:#f9fbe7; border-radius:10px; padding:16px;">
+                    <h3 style="color:#33691e; margin:0 0 8px 0; font-size:15px;">📄 推荐打印设置</h3>
+                    <ul style="font-size:13px; line-height:2; color:#444;">
+                        <li><strong>地图：</strong>A4普通纸，彩色打印</li>
+                        <li><strong>角色卡：</strong>A4卡纸（200g），彩色</li>
+                        <li><strong>妖魔卡：</strong>A4卡纸，彩色，每页8张</li>
+                        <li><strong>法宝卡：</strong>A4卡纸，彩色，每页9张</li>
+                        <li><strong>佛经卡：</strong>A4卡纸，彩色，每页7张</li>
+                        <li><strong>棋子：</strong>A4卡纸，彩色，裁剪后可使用</li>
+                    </ul>
+                </div>
+                <div style="background:#e3f2fd; border-radius:10px; padding:16px;">
+                    <h3 style="color:#0d47a1; margin:0 0 8px 0; font-size:15px;">✂️ 制作建议</h3>
+                    <ul style="font-size:13px; line-height:2; color:#444;">
+                        <li>卡牌裁剪后建议用<strong>透明塑封袋</strong>保护</li>
+                        <li>棋子可贴在<strong>瓶盖或小木块</strong>上增加手感</li>
+                        <li>生命值可用<strong>不同颜色豆子</strong>表示</li>
+                        <li>多打印1份备用，防止卡牌磨损</li>
+                        <li>妖魔卡和劫难卡建议<strong>分开存放</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align:center; margin-top:20px; font-size:14px; color:#666;">
+                🏆 祝各位天命人取经顺利，修成正果！<br>
+                <span style="font-size:12px; color:#999;">游戏设计灵感来源于《西游记》与《黑神话：悟空》</span>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
