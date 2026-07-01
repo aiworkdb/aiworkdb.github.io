@@ -9,12 +9,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 
 ![封面](images/cover.png)
 
-
-![封面图](https://placehold.co/1200x400/2D3436/FFFFFF?text=Teambuilding)
-
-
-
-
 | 14:00–14:20 | 开场破冰 | 20 min | 放松气氛、建立安全感 |
 | 14:20–14:50 | 破冰游戏 | 30 min | 打破隔阂、能量激活 |
 | 14:50–15:40 | 核心活动 I | 50 min | 信任建立 / 沟通表达 |
@@ -37,7 +31,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 - [ ] 开场白（见下方话术模板）
 
 #### 开场白话术模板
-
 
 - [名字接龙](https://aiworkdb.github.io/teambuilding/games/icebreaker/name-chain.html)（5–10 min，快速热身）
 - 简单的身体活动（伸展、拍手节奏等）
@@ -74,7 +67,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 |------|------|------|------|
 | 1 | [盲行](https://aiworkdb.github.io/teambuilding/games/trust/blind-walk.html) | 25 min | 建立初步信任 |
 | 2 | [信任背摔](https://aiworkdb.github.io/teambuilding/games/trust/trust-fall.html)（简化版*） | 20 min | 深度信任突破 |
-
 
 > \* 简化版：只做 1.2 米高度，每人只摔 1 次，适合时间紧张的半日团建。
 
@@ -131,7 +123,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 | [人结](https://aiworkdb.github.io/teambuilding/games/collaboration/human-knot.html) | 20 min | 身体协作，笑声多 |
 | [鸡蛋坠落挑战](https://aiworkdb.github.io/teambuilding/games/problem-solving/egg-drop.html)（简化版*） | 15 min | 动手挑战，时间紧时选这个 |
 
-
 > \* 简化版：材料减半，高度降为 2 米，侧重参与而非竞争。
 
 ---
@@ -162,7 +153,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 
 教练最后说：
 
-
 | 人类宾果 | 打印 Bingo 卡片（每人 1 张） |
 | 盲行 | 眼罩（每人 1 个）或红领巾 |
 | 信任背摔 | 瑜伽垫（保护） |
@@ -177,8 +167,6 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 ## 客户沟通模板
 
 ### 活动前 3 天确认邮件
-
-
 
 - 如果观察到参与者疲劳（眼神涣散、动作变慢），插入 3 分钟 energizer（如"321 木头人"）
 
