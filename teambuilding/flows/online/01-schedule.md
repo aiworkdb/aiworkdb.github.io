@@ -18,6 +18,12 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 
 ---
 
+> **线上团建工具准备一览**
+
+![线上工具准备](images/illust-tools.png)
+
+---
+
 ## 详细流程
 
 ### 第一阶段：线上开场（00:00–00:15）
@@ -138,6 +144,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 ---
 
 ## 线上团建特别注意事项
+
+![线上能量管理技巧：常见问题与解决方案](images/illust-energy-tips.png)
 
 ### 能量管理（比线下更难！）
 

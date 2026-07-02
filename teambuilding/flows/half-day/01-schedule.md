@@ -18,6 +18,12 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 
 ---
 
+> **流程总览：半天团建六阶段（约3小时）**
+
+![半天团建六阶段流程](images/illust-6stages.png)
+
+---
+
 ## 详细流程
 
 ### 第一阶段：开场破冰（14:00–14:20）
@@ -81,6 +87,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 |------|------|------|------|
 | 1 | [沙漠逃生](https://aiworkdb.github.io/teambuilding/games/problem-solving/desert-survival.html) | 40 min | 团队决策，讨论激烈 |
 | 2 | 复盘 | 5 min | 快速提炼 1 个关键词 |
+
+![核心活动方案选择：信任 / 沟通 / 问题解决三条路径](images/illust-game-options.png)
 
 #### 教练关键把控点
 - 此阶段**最容易出现情绪波动**（有人被感动、有人被触动）

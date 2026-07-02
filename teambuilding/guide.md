@@ -1,13 +1,13 @@
 ---
 title: "团建教练使用指南 - 5分钟快速上手"
 author: "AIWorkDB"
-cover: "images/cover.png"
+cover: "images/guide-cover.png"
 source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
 
 ---
 # 教练 / 培训师使用指南
 
-![封面](images/cover.png)
+![封面](images/guide-cover.png)
 
    → 5-15min（热身） / 15-30min（课堂插入） / 30-60min（主体活动） / >60min（沙盘/全天）
 ```
@@ -24,6 +24,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
 ## 二、如何引导游戏
 
 ### 开场三步法
+
+![开场三步法：说目的→讲规则→定分组](images/illust-opening-3steps.png)
 
 ```
 第一步：说目的（30秒）
@@ -42,6 +44,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
 
 ### 游戏进行中的教练角色
 
+![教练在活动各阶段的角色演变](images/illust-coach-role.png)
+
 | 阶段 | 教练在做什么 |
 |------|-------------|
 | **开始前** | 检查场地安全、道具就位、分组完成 |
@@ -51,6 +55,7 @@ Findings（发现） →  "这和工作/团队有什么相似的地方？"
 Future（行动）   →  "回到工作中，你会做一件什么不同的事？"
 ```
 
+![4F 复盘模型](images/illust-4f-debrief.png)
 ### 复盘引导话术模板
 
 **开场：**

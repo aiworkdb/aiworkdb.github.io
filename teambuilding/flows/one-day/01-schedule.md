@@ -20,6 +20,12 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 
 ---
 
+> **一日活动时间线总览**
+
+![一天活动时间线总览](images/illust-timeline-overview.png)
+
+---
+
 ## 各环节详细说明
 
 ### 09:00–09:30 到达 & 开场
@@ -135,6 +141,10 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
    希望大家带着这个体验回去。
    团建结束，但团队的旅程才刚开始。"
 ```
+
+---
+
+![物资清单一览](images/illust-materials.png)
 
 ---
 
