@@ -25,7 +25,7 @@ if sys.platform == "win32":
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # ============ 配置区域 ============
-# 微信公众号配置
+# 微信公众号配置（请设置环境变量或在运行前修改）
 WECHAT_APP_ID = os.environ.get("WECHAT_APP_ID", "")
 WECHAT_APP_SECRET = os.environ.get("WECHAT_APP_SECRET", "")
 
