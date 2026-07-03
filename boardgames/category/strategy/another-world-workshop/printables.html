@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>异世界工坊 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #555;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* 游戏地图样式 */
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .board-area {
+            border: 3px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .board-area.workshop {
+            background: linear-gradient(135deg, #d4a574, #c49565);
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .board-area.forest {
+            background: linear-gradient(135deg, #90ee90, #7cc47c);
+        }
+
+        .board-area.mine {
+            background: linear-gradient(135deg, #b0b0b0, #909090);
+        }
+
+        .board-area.ocean {
+            background: linear-gradient(135deg, #87ceeb, #6ab7d6);
+        }
+
+        .board-area.desert {
+            background: linear-gradient(135deg, #ffd700, #ffc107);
+        }
+
+        .board-area.volcano {
+            background: linear-gradient(135deg, #ff6347, #e5533d);
+        }
+
+        .board-area.sky {
+            background: linear-gradient(135deg, #e6e6fa, #d4b5ff);
+        }
+
+        .area-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .area-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .area-materials {
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* 卡牌网格 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-icon {
+            font-size: 28px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #666;
+            margin: 8px 0;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 10px;
+            color: #888;
+        }
+
+        .card.material {
+            border-color: #4fc3f7;
+        }
+
+        .card.recipe {
+            border-color: #8bc34a;
+        }
+
+        .card.adventurer {
+            border-color: #ff9800;
+        }
+
+        .card.event {
+            border-color: #e53935;
+        }
+
+        .card.tool {
+            border-color: #9c27b0;
+        }
+
+        /* 玩家棋子 */
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 3px solid #333;
+            font-weight: bold;
+        }
+
+        .piece-circle.blue {
+            background: #2196f3;
+            color: white;
+        }
+
+        .piece-circle.red {
+            background: #f44336;
+            color: white;
+        }
+
+        .piece-circle.green {
+            background: #4caf50;
+            color: white;
+        }
+
+        .piece-circle.yellow {
+            background: #ffeb3b;
+            color: #333;
+        }
+
+        .piece-label {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* 标记物 */
+        .tokens {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .token {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid #333;
+        }
+
+        .token.reputation {
+            background: #ffd700;
+        }
+
+        .token.coin {
+            background: #ffc107;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #37474f;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            .print-hint {
+                display: none;
+            }
+            .section {
+                box-shadow: none;
+                margin-bottom: 10px;
+                page-break-inside: avoid;
+            }
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 异世界工坊 - 打印文档</h1>
+        
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可以使用普通纸张或卡纸打印</li>
+                <li>打印后按虚线裁剪使用</li>
+                <li>建议将卡牌塑封，延长使用寿命</li>
+            </ul>
+        </div>
+
+        <!-- 第1页：游戏板图 -->
+        <div class="section">
+            <h2>🗺️ 游戏板图</h2>
+            <p style="text-align: center; margin-bottom: 15px; color: #666;">将以下板图打印并拼接，放在桌面中央</p>
+            
+            <div class="game-board">
+                <div class="board-area forest">
+                    <div class="area-icon">🌿</div>
+                    <div class="area-name">精灵森林</div>
+                    <div class="area-materials">材料：精灵木材 🌲 | 魔法草药 🌿</div>
+                    <div style="font-size: 11px; margin-top: 8px; color: #555;">难度：★☆☆ | 抽2张材料卡</div>
+                </div>
+
+                <div class="board-area mine">
+                    <div class="area-icon">💎</div>
+                    <div class="area-name">矮人矿山</div>
+                    <div class="area-materials">材料：秘银矿石 💎 | 璀璨宝石 💠</div>
+                    <div style="font-size: 11px; margin-top: 8px; color: #555;">难度：★★☆ | 抽1-2张材料卡</div>
+                </div>
+
+                <div class="board-area ocean">
+                    <div class="area-icon">🐚</div>
+                    <div class="area-name">海洋王国</div>
+                    <div class="area-materials">材料：深海珍珠 🐚 | 珊瑚丝绸 🧵</div>
+                    <div style="font-size: 11px; margin-top: 8px; color: #555;">难度：★★☆ | 抽1-2张材料卡</div>
+                </div>
+
+                <div class="board-area desert">
+                    <div class="area-icon">🌶️</div>
+                    <div class="area-name">沙漠绿洲</div>
+                    <div class="area-materials">材料：火焰香料 🌶️ | 沙漠丝绸 🧣</div>
+                    <div style="font-size: 11px; margin-top: 8px; color: #555;">难度：★★☆ | 抽1-2张材料卡</div>
+                </div>
+
+                <div class="board-area workshop">
+                    <div class="area-icon">🏠</div>
+                    <div class="area-name">中央工坊区</div>
+                    <div class="area-materials">所有玩家的工坊所在地</div>
+                    <div style="font-size: 11px; margin-top: 8px; color: #555;">安全区 | 制作中心</div>
+                </div>
+
+                <div class="board-area volcano">
+                    <div class="area-icon">🌋</div>
+                    <div class="area-name">火山地带</div>
+                    <div class="area-materials">材料：熔岩结晶 🌋 | 火龙鳞片 🐉</div>
+                    <div style="font-size: 11px; margin-top: 8px; color: #555;">难度：★★★ | 抽1张，30%几率稀有</div>
+                </div>
+
+                <div class="board-area sky">
+                    <div class="area-icon">☁️</div>
+                    <div class="area-name">天空浮岛</div>
+                    <div class="area-materials">材料：天空棉花 ☁️ | 雷电水晶 ⚡</div>
+                    <div style="font-size: 11px; margin-top: 8px; color: #555;">难度：★★★ | 抽1张，30%几率稀有</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 第2页：材料卡 -->
+        <div class="section">
+            <h2>🌿 材料卡片（共12种，每种打印5张）</h2>
+            <div class="cards-grid">
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🌲</span>
+                        <span class="card-title">精灵木材</span>
+                    </div>
+                    <div class="card-description">来自精灵森林的优质木材，适合制作弓箭和法杖</div>
+                    <div class="card-footer">材料卡 | 精灵森林 | 普通</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🌿</span>
+                        <span class="card-title">魔法草药</span>
+                    </div>
+                    <div class="card-description">蕴含魔力的药草，是制作药剂的关键材料</div>
+                    <div class="card-footer">材料卡 | 精灵森林 | 普通</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">💎</span>
+                        <span class="card-title">秘银矿石</span>
+                    </div>
+                    <div class="card-description">矮人矿山出产的稀有金属，质地轻盈坚不可摧</div>
+                    <div class="card-footer">材料卡 | 矮人矿山 | 稀有</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">💠</span>
+                        <span class="card-title">璀璨宝石</span>
+                    </div>
+                    <div class="card-description">散发神秘光芒的宝石，蕴含强大的魔法能量</div>
+                    <div class="card-footer">材料卡 | 矮人矿山 | 稀有</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🐚</span>
+                        <span class="card-title">深海珍珠</span>
+                    </div>
+                    <div class="card-description">海洋深处出产的珍珠，美丽而珍贵</div>
+                    <div class="card-footer">材料卡 | 海洋王国 | 普通</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🧵</span>
+                        <span class="card-title">珊瑚丝绸</span>
+                    </div>
+                    <div class="card-description">由珊瑚纤维编织的丝绸，轻盈而坚韧</div>
+                    <div class="card-footer">材料卡 | 海洋王国 | 普通</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🌶️</span>
+                        <span class="card-title">火焰香料</span>
+                    </div>
+                    <div class="card-description">沙漠绿洲的特产香料，赋予食物魔法般的味道</div>
+                    <div class="card-footer">材料卡 | 沙漠绿洲 | 普通</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🧣</span>
+                        <span class="card-title">沙漠丝绸</span>
+                    </div>
+                    <div class="card-description">沙漠出产的丝绸，能抵御风沙和高温</div>
+                    <div class="card-footer">材料卡 | 沙漠绿洲 | 普通</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="section">
+            <h2>🌿 材料卡片（续）</h2>
+            <div class="cards-grid">
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🌋</span>
+                        <span class="card-title">熔岩结晶</span>
+                    </div>
+                    <div class="card-description">火山地带出产的红色结晶，蕴含火焰之力</div>
+                    <div class="card-footer">材料卡 | 火山地带 | 稀有</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">🐉</span>
+                        <span class="card-title">火龙鳞片</span>
+                    </div>
+                    <div class="card-description">传说级材料，只有在火山深处才能找到</div>
+                    <div class="card-footer">材料卡 | 火山地带 | 传说</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">☁️</span>
+                        <span class="card-title">天空棉花</span>
+                    </div>
+                    <div class="card-description">天空浮岛出产的轻盈棉花，像云朵一样柔软</div>
+                    <div class="card-footer">材料卡 | 天空浮岛 | 稀有</div>
+                </div>
+
+                <div class="card material">
+                    <div class="card-header">
+                        <span class="card-icon">⚡</span>
+                        <span class="card-title">雷电水晶</span>
+                    </div>
+                    <div class="card-description">蕴含雷电之力的水晶，是制作魔导器的关键</div>
+                    <div class="card-footer">材料卡 | 天空浮岛 | 稀有</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 第3页：配方卡 -->
+        <div class="section">
+            <h2>📜 配方卡片（共8种，每种打印3-4张）</h2>
+            <div class="cards-grid">
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">🏹</span>
+                        <span class="card-title">精灵长弓</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>精灵木材×2<br>
+                        <strong>制作难度：</strong>★☆☆<br>
+                        精灵族的传统武器，精准而致命
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+3</div>
+                </div>
+
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">💊</span>
+                        <span class="card-title">治愈药剂</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>魔法草药×2<br>
+                        <strong>制作难度：</strong>★☆☆<br>
+                        恢复生命力的魔法药剂
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+2</div>
+                </div>
+
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-title">秘银铠甲</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>秘银矿石×3<br>
+                        <strong>制作难度：</strong>★★☆<br>
+                        由秘银打造的铠甲，轻便而坚固
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+6</div>
+                </div>
+
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">🪄</span>
+                        <span class="card-title">宝石法杖</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>璀璨宝石×2 + 魔法草药×1<br>
+                        <strong>制作难度：</strong>★★☆<br>
+                        镶嵌宝石的法杖，增强魔法威力
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+5</div>
+                </div>
+
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">📿</span>
+                        <span class="card-title">珍珠项链</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>深海珍珠×2<br>
+                        <strong>制作难度：</strong>★☆☆<br>
+                        美丽的珍珠项链，受到贵族的喜爱
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+3</div>
+                </div>
+
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-title">火焰大剑</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>熔岩结晶×2 + 精灵木材×1<br>
+                        <strong>制作难度：</strong>★★★<br>
+                        剑身燃烧着永恒火焰的传说武器
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+8</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="section">
+            <h2>📜 配方卡片（续）</h2>
+            <div class="cards-grid">
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">🧥</span>
+                        <span class="card-title">天空披风</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>天空棉花×2 + 雷电水晶×1<br>
+                        <strong>制作难度：</strong>★★★<br>
+                        披上后能在天空自由飞翔的魔法披风
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+7</div>
+                </div>
+
+                <div class="card recipe">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-title">传说盾牌</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>所需材料：</strong>火龙鳞片×1 + 秘银矿石×2<br>
+                        <strong>制作难度：</strong>★★★<br>
+                        传说级的盾牌，能抵御龙息的攻击
+                    </div>
+                    <div class="card-footer">配方卡 | 声望+10</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 第4页：冒险者卡 -->
+        <div class="section">
+            <h2>🧙 冒险者卡片（共6种，每种打印3张）</h2>
+            <div class="cards-grid">
+                <div class="card adventurer">
+                    <div class="card-header">
+                        <span class="card-icon">🧝‍♂️</span>
+                        <span class="card-title">精灵弓箭手</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>需求物品：</strong>精灵长弓<br>
+                        <strong>完成奖励：</strong>5金币 + 3声望<br>
+                        来自精灵森林的神射手，需要一把好弓
+                    </div>
+                    <div class="card-footer">冒险者卡</div>
+                </div>
+
+                <div class="card adventurer">
+                    <div class="card-header">
+                        <span class="card-icon">🧔</span>
+                        <span class="card-title">矮人战士</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>需求物品：</strong>秘银铠甲<br>
+                        <strong>完成奖励：</strong>8金币 + 5声望<br>
+                        矮人族的勇猛战士，需要坚固的铠甲
+                    </div>
+                    <div class="card-footer">冒险者卡</div>
+                </div>
+
+                <div class="card adventurer">
+                    <div class="card-header">
+                        <span class="card-icon">🧜‍♀️</span>
+                        <span class="card-title">人鱼法师</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>需求物品：</strong>珍珠项链<br>
+                        <strong>完成奖励：</strong>6金币 + 4声望<br>
+                        来自海洋王国的魔法师，喜欢美丽的饰品
+                    </div>
+                    <div class="card-footer">冒险者卡</div>
+                </div>
+
+                <div class="card adventurer">
+                    <div class="card-header">
+                        <span class="card-icon">🐪</span>
+                        <span class="card-title">沙漠商队</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>需求物品：</strong>火焰香料×2<br>
+                        <strong>完成奖励：</strong>4金币 + 2声望<br>
+                        穿越沙漠的商队，需要香料作为贸易商品
+                    </div>
+                    <div class="card-footer">冒险者卡</div>
+                </div>
+
+                <div class="card adventurer">
+                    <div class="card-header">
+                        <span class="card-icon">🐲</span>
+                        <span class="card-title">火龙骑士</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>需求物品：</strong>传说盾牌<br>
+                        <strong>完成奖励：</strong>12金币 + 8声望<br>
+                        驾驭火龙的骑士，只有最强的装备才能打动他
+                    </div>
+                    <div class="card-footer">冒险者卡</div>
+                </div>
+
+                <div class="card adventurer">
+                    <div class="card-header">
+                        <span class="card-icon">👼</span>
+                        <span class="card-title">天空使者</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>需求物品：</strong>天空披风<br>
+                        <strong>完成奖励：</strong>10金币 + 6声望<br>
+                        来自天空浮岛的使者，需要能飞翔的装备
+                    </div>
+                    <div class="card-footer">冒险者卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 第5页：事件卡和工具卡 -->
+        <div class="section">
+            <h2>⚡ 事件卡片（共5种，每种打印3张）</h2>
+            <div class="cards-grid">
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🌾</span>
+                        <span class="card-title">材料丰收</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>所有玩家额外获得1张材料卡<br>
+                        这是一个好年份，所有异世界的材料都大丰收！
+                    </div>
+                    <div class="card-footer">事件卡 | 正面</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🐪</span>
+                        <span class="card-title">商队来访</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>所有玩家可以出售材料获得金币<br>
+                        大型商队来到工坊区，是变现的好机会！
+                    </div>
+                    <div class="card-footer">事件卡 | 正面</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">👹</span>
+                        <span class="card-title">怪物入侵</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>所有在异世界的棋子退回工坊区<br>
+                        可怕的怪物出现在异世界，探险队不得不撤退！
+                    </div>
+                    <div class="card-footer">事件卡 | 负面</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🌪️</span>
+                        <span class="card-title">魔法风暴</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>所有玩家随机失去1张手牌<br>
+                        强大的魔法风暴席卷所有工坊，吹走了一些材料！
+                    </div>
+                    <div class="card-footer">事件卡 | 负面</div>
+                </div>
+
+                <div class="card event">
+                    <div class="card-header">
+                        <span class="card-icon">🎉</span>
+                        <span class="card-title">节日庆典</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>所有玩家声望+1<br>
+                        异世界联合举办节日庆典，所有工匠都受到表彰！
+                    </div>
+                    <div class="card-footer">事件卡 | 正面</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="section">
+            <h2>🔨 工具卡片（共5种，每种打印4张）</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">🗺️</span>
+                        <span class="card-title">探险地图</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>探险阶段额外抽取1张材料卡<br>
+                        <strong>使用时机：</strong>探险阶段<br>
+                        详细的地图能帮你找到更多材料！
+                    </div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">🔨</span>
+                        <span class="card-title">工匠锤</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>制作物品时节省1份材料<br>
+                        <strong>使用时机：</strong>制作阶段<br>
+                        工匠大师的锤子，能让材料发挥最大效用！
+                    </div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">🌸</span>
+                        <span class="card-title">魅力香水</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>吸引额外1位冒险者<br>
+                        <strong>使用时机：</strong>吸引阶段<br>
+                        迷人的香气能吸引更多冒险者来访！
+                    </div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">🛡️</span>
+                        <span class="card-title">守护符文</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>免疫下一次事件卡负面影响<br>
+                        <strong>使用时机：</strong>任意时机<br>
+                        古老的符文能保护工坊免受灾难！
+                    </div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+
+                <div class="card tool">
+                    <div class="card-header">
+                        <span class="card-icon">📜</span>
+                        <span class="card-title">传送卷轴</span>
+                    </div>
+                    <div class="card-description">
+                        <strong>效果：</strong>棋子直接返回工坊区<br>
+                        <strong>使用时机：</strong>任意时机<br>
+                        紧急时刻使用的传送卷轴，能立即返回安全地带！
+                    </div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 第6页：玩家棋子和标记物 -->
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #666;">裁剪后使用，或用自己的硬币/小物件代替</p>
+            <div class="player-pieces">
+                <div class="piece">
+                    <div class="piece-circle blue">1</div>
+                    <div class="piece-label">玩家1</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle red">2</div>
+                    <div class="piece-label">玩家2</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle green">3</div>
+                    <div class="piece-label">玩家3</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle yellow">4</div>
+                    <div class="piece-label">玩家4</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏆 标记物</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #666;">打印后裁剪，用于记录声望和金币</p>
+            <div class="tokens">
+                <div class="token reputation">⭐</div>
+                <div class="token reputation">⭐</div>
+                <div class="token reputation">⭐</div>
+                <div class="token reputation">⭐</div>
+                <div class="token reputation">⭐</div>
+                <div style="display: flex; align-items: center; margin-left: 20px; font-weight: bold; color: #666;">= 声望标记（打印20个）</div>
+            </div>
+            <div class="tokens" style="margin-top: 20px;">
+                <div class="token coin">💰</div>
+                <div class="token coin">💰</div>
+                <div class="token coin">💰</div>
+                <div class="token coin">💰</div>
+                <div class="token coin">💰</div>
+                <div style="display: flex; align-items: center; margin-left: 20px; font-weight: bold; color: #666;">= 金币标记（打印50个）</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏板图打印出来，建议用A3纸或拼接A4纸，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿着卡牌边缘裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子：</strong>裁剪玩家棋子，或者使用硬币/小物件代替</li>
+                <li><strong>准备标记：</strong>打印并裁剪声望标记和金币标记</li>
+                <li><strong>骰子：</strong>如果没有骰子，可以使用手机骰子应用或打印的骰子模板</li>
+                <li><strong>开始游戏：</strong>每位玩家选择一个棋子放在中央工坊区，分发初始资源卡和金币</li>
+                <li><strong>工坊板：</strong>每位玩家需要一个工坊板来展示制作的物品，可以用A4纸手绘或打印</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding: 20px; color: #888; font-size: 14px;">
+            <p>🌍 异世界工坊 - 成为传奇工匠吧！</p>
+            <p style="margin-top: 10px;">打印完成后，请参考 README.md 了解完整游戏规则</p>
+        </div>
+    </div>
+</body>
+</html>
