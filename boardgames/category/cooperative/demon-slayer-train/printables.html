@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鬼杀队：无限列车 - 打印道具</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+            background: #1a1a2e;
+            color: #333;
+            padding: 20px;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .print-hint strong { color: #856404; }
+        .print-hint ul { margin: 8px 0 0 20px; }
+
+        .section-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 30px 0 16px;
+            color: #f0f0f0;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 8px;
+        }
+
+        /* === 列车地图 === */
+        .train-map {
+            background: #2d2d44;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .train-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+        .train-car {
+            width: 140px;
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: #fff;
+            position: relative;
+            border: 3px solid #555;
+        }
+        .train-car .car-icon { font-size: 28px; margin-bottom: 4px; }
+        .train-car .car-name { font-size: 11px; opacity: 0.9; }
+        .train-car .car-num { position: absolute; top: 4px; left: 8px; font-size: 10px; opacity: 0.7; }
+        .car-1 { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .car-2, .car-3, .car-4, .car-6, .car-8, .car-10 { background: linear-gradient(135deg, #5d6d7e, #34495e); }
+        .car-5 { background: linear-gradient(135deg, #8e44ad, #6c3483); }
+        .car-7 { background: linear-gradient(135deg, #f39c12, #d68910); }
+        .car-9 { background: linear-gradient(135deg, #7f8c8d, #616a6b); }
+        .car-11 { background: linear-gradient(135deg, #c0392b, #922b21); }
+        .car-12 { background: linear-gradient(135deg, #e74c3c, #c0392b); border-color: #ff6b6b; }
+
+        .arrow-between {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            color: #f0f0f0;
+            margin: 0 2px;
+        }
+
+        /* === 卡牌通用 === */
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+        .card {
+            width: 140px;
+            height: 200px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-header {
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+        .card-icon { font-size: 42px; margin: 4px 0; }
+        .card-name {
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .card-desc {
+            font-size: 9px;
+            text-align: center;
+            line-height: 1.3;
+            padding: 0 4px;
+            opacity: 0.85;
+        }
+        .card-atk {
+            position: absolute;
+            bottom: 6px;
+            right: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* 呼吸法卡颜色 */
+        .card-water { background: linear-gradient(160deg, #1a5276, #2980b9); color: #fff; border-color: #1a5276; }
+        .card-thunder { background: linear-gradient(160deg, #9a7d0a, #f1c40f); color: #333; border-color: #9a7d0a; }
+        .card-flame { background: linear-gradient(160deg, #922b21, #e74c3c); color: #fff; border-color: #922b21; }
+        .card-wind { background: linear-gradient(160deg, #1e8449, #2ecc71); color: #fff; border-color: #1e8449; }
+        .card-rock { background: linear-gradient(160deg, #6c3483, #8e44ad); color: #fff; border-color: #6c3483; }
+
+        /* 道具卡 */
+        .card-item { background: linear-gradient(160deg, #f0f0f0, #d5d5d5); color: #333; border-color: #aaa; }
+
+        /* 鬼卡 */
+        .card-demon { background: linear-gradient(160deg, #1c1c1c, #4a0000); color: #ff6b6b; border-color: #ff0000; }
+
+        /* 乘客卡 */
+        .card-passenger { background: linear-gradient(160deg, #fef9e7, #fdebd0); color: #7d6608; border-color: #f39c12; }
+
+        /* 事件卡 */
+        .card-event { background: linear-gradient(160deg, #eaf2f8, #d4e6f1); color: #2e86c1; border-color: #5dade2; }
+
+        /* 车厢卡 */
+        .card-train { background: linear-gradient(160deg, #34495e, #2c3e50); color: #ecf0f1; border-color: #7f8c8d; }
+
+        /* === 棋子 === */
+        .pieces-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+        .piece {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 3px solid #333;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        /* === 标记物 === */
+        .tokens-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+        .token {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            border: 2px solid #333;
+        }
+        .token-icon { font-size: 26px; }
+
+        /* === 打印分页 === */
+        .page-break { page-break-after: always; }
+
+        /* === 打印CSS === */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .print-hint { display: none !important; }
+            body { background: #fff; padding: 0; }
+            .section-title { color: #333; border-bottom-color: #333; }
+            .train-map { background: #f0f0f0; }
+            .page-break { page-break-after: always; height: 0; }
+        }
+
+        .card-sheet {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card-sheet-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 打印提示 -->
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用A4纸张打印，建议设置<strong>最小边距</strong>（推荐0mm-5mm）</li>
+        <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（Chrome：更多设置→背景图形）</li>
+        <li>卡牌建议使用<strong>200g卡纸</strong>打印，增加耐用性</li>
+        <li>棋子建议用<strong>厚卡纸</strong>打印后裁剪，可贴在瓶盖上使用</li>
+        <li>列车地图建议用<strong>普通A4纸</strong>彩色打印</li>
+    </ul>
+</div>
+
+<!-- ========== 列车地图 ========== -->
+<div class="section-title">🚂 列车地图</div>
+<div class="train-map">
+    <div style="text-align:center; color:#f0f0f0; margin-bottom:12px; font-size:14px;">
+        ⬅️ 车头方向 &nbsp;&nbsp; 玩家从左侧第1节出发，向右逐节推进 ➡️
+    </div>
+    <div class="train-container" style="flex-wrap: nowrap;">
+        <div class="train-car car-1"><span class="car-num">1</span><span class="car-icon">🚂</span><span class="car-name">车头（起点）</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-2"><span class="car-num">2</span><span class="car-icon">🚃</span><span class="car-name">普通车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-3"><span class="car-num">3</span><span class="car-icon">🚃</span><span class="car-name">普通车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-4"><span class="car-num">4</span><span class="car-icon">🚃</span><span class="car-name">普通车厢</span></div>
+    </div>
+    <div style="text-align:center; color:#aaa; margin:8px 0; font-size:20px;">↓</div>
+    <div class="train-container" style="flex-wrap: nowrap;">
+        <div class="train-car car-5"><span class="car-num">5</span><span class="car-icon">🛏️</span><span class="car-name">卧铺车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-6"><span class="car-num">6</span><span class="car-icon">🚃</span><span class="car-name">普通车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-7"><span class="car-num">7</span><span class="car-icon">🌟</span><span class="car-name">贵宾车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-8"><span class="car-num">8</span><span class="car-icon">🚃</span><span class="car-name">普通车厢</span></div>
+    </div>
+    <div style="text-align:center; color:#aaa; margin:8px 0; font-size:20px;">↓</div>
+    <div class="train-container" style="flex-wrap: nowrap;">
+        <div class="train-car car-9"><span class="car-num">9</span><span class="car-icon">📦</span><span class="car-name">储物车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-10"><span class="car-num">10</span><span class="car-icon">🚃</span><span class="car-name">普通车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-11"><span class="car-num">11</span><span class="car-icon">🔥</span><span class="car-name">引擎车厢</span></div>
+        <div class="arrow-between">→</div>
+        <div class="train-car car-12"><span class="car-num">12</span><span class="car-icon">😈</span><span class="car-name">核心车厢（BOSS）</span></div>
+    </div>
+    <div style="margin-top:16px; color:#ccc; font-size:12px; line-height:1.8;">
+        <strong style="color:#f0f0f0;">车厢效果说明：</strong><br>
+        🚂 第1节：安全区，可休息回复梦境值<br>
+        🛏️ 第5节：卧铺车厢，停留可回复2点梦境值<br>
+        🌟 第7节：贵宾车厢，可抽取1张高级呼吸法卡<br>
+        📦 第9节：储物车厢，可抽取2张道具卡<br>
+        🔥 第11节：引擎车厢，最终决战前最后一关<br>
+        😈 第12节：核心车厢，与魇梦的最终决战
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========== 呼吸法卡 ========== -->
+<div class="section-title">⚔️ 呼吸法卡（共30张）</div>
+
+<div class="card-sheet">
+    <div class="card-sheet-title">水之呼吸（蓝色）— 共8张</div>
+    <div class="cards-grid">
+        <div class="card card-water">
+            <div class="card-header">水之呼吸·壹</div>
+            <div class="card-icon">🌊</div>
+            <div class="card-name">水面斩击</div>
+            <div class="card-desc">基础攻击<br>可连续攻击2次</div>
+            <div class="card-atk">⚔️2</div>
+        </div>
+        <div class="card card-water">
+            <div class="card-header">水之呼吸·贰</div>
+            <div class="card-icon">🌊</div>
+            <div class="card-name">水车</div>
+            <div class="card-desc">旋转攻击<br>命中后回复1点梦境值</div>
+            <div class="card-atk">⚔️3</div>
+        </div>
+        <div class="card card-water">
+            <div class="card-header">水之呼吸·叁</div>
+            <div class="card-icon">🌊</div>
+            <div class="card-name">生生流转</div>
+            <div class="card-desc">连续水流攻击<br>对全部鬼造成伤害</div>
+            <div class="card-atk">⚔️3</div>
+        </div>
+        <div class="card card-water">
+            <div class="card-header">水之呼吸·肆</div>
+            <div class="card-icon">🌊</div>
+            <div class="card-name">击坠爆流</div>
+            <div class="card-desc">强力下劈<br>伤害+1（骰值+1）</div>
+            <div class="card-atk">⚔️4</div>
+        </div>
+    </div>
+</div>
+
+<div class="card-sheet">
+    <div class="card-sheet-title">雷之呼吸（黄色）— 共6张</div>
+    <div class="cards-grid">
+        <div class="card card-thunder">
+            <div class="card-header">雷之呼吸·壹</div>
+            <div class="card-icon">⚡</div>
+            <div class="card-name">霹雳一闪</div>
+            <div class="card-desc">极速突刺<br>高爆发伤害</div>
+            <div class="card-atk">⚔️5</div>
+        </div>
+        <div class="card card-thunder">
+            <div class="card-header">雷之呼吸·贰</div>
+            <div class="card-icon">⚡</div>
+            <div class="card-name">稻魂</div>
+            <div class="card-desc">连续闪电斩<br>掷2次骰子取高值</div>
+            <div class="card-atk">⚔️4</div>
+        </div>
+        <div class="card card-thunder">
+            <div class="card-header">雷之呼吸·伍</div>
+            <div class="card-icon">⚡</div>
+            <div class="card-name">热界雷</div>
+            <div class="card-desc">超高速连击<br>本回合可再行动1次</div>
+            <div class="card-atk">⚔️5</div>
+        </div>
+    </div>
+</div>
+
+<div class="card-sheet">
+    <div class="card-sheet-title">炎之呼吸（红色）— 共6张</div>
+    <div class="cards-grid">
+        <div class="card card-flame">
+            <div class="card-header">炎之呼吸·壹</div>
+            <div class="card-icon">🔥</div>
+            <div class="card-name">不知火</div>
+            <div class="card-desc">烈焰突刺<br>攻击后回复1点梦境值</div>
+            <div class="card-atk">⚔️3</div>
+        </div>
+        <div class="card card-flame">
+            <div class="card-header">炎之呼吸·叁</div>
+            <div class="card-icon">🔥</div>
+            <div class="card-name">盛炎之翁</div>
+            <div class="card-desc">火焰龙卷<br>范围攻击</div>
+            <div class="card-atk">⚔️4</div>
+        </div>
+        <div class="card card-flame">
+            <div class="card-header">炎之呼吸·玖</div>
+            <div class="card-icon">🔥</div>
+            <div class="card-name">炼狱</div>
+            <div class="card-desc">终极炎技<br>伤害+2</div>
+            <div class="card-atk">⚔️6</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<div class="card-sheet">
+    <div class="card-sheet-title">风之呼吸（绿色）— 共5张</div>
+    <div class="cards-grid">
+        <div class="card card-wind">
+            <div class="card-header">风之呼吸·壹</div>
+            <div class="card-icon">🌪️</div>
+            <div class="card-name">尘旋风·削斩</div>
+            <div class="card-desc">风力斩击<br>可攻击车厢内所有鬼</div>
+            <div class="card-atk">⚔️3</div>
+        </div>
+        <div class="card card-wind">
+            <div class="card-header">风之呼吸·肆</div>
+            <div class="card-icon">🌪️</div>
+            <div class="card-name">升上沙尘岚</div>
+            <div class="card-desc">上升气流攻击<br>伤害范围3-5</div>
+            <div class="card-atk">⚔️3-5</div>
+        </div>
+    </div>
+</div>
+
+<div class="card-sheet">
+    <div class="card-sheet-title">岩之呼吸（棕色）— 共5张</div>
+    <div class="cards-grid">
+        <div class="card card-rock">
+            <div class="card-header">岩之呼吸·壹</div>
+            <div class="card-icon">🪨</div>
+            <div class="card-name">蛇纹岩·崩落</div>
+            <div class="card-desc">重力重击<br>消耗2点行动力</div>
+            <div class="card-atk">⚔️6</div>
+        </div>
+        <div class="card card-rock">
+            <div class="card-header">岩之呼吸·伍</div>
+            <div class="card-icon">🪨</div>
+            <div class="card-name">瓦轮刑部</div>
+            <div class="card-desc">范围重击<br>可清除相邻车厢的鬼</div>
+            <div class="card-atk">⚔️5</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========== 道具卡 ========== -->
+<div class="section-title">🎒 道具卡（共15张）</div>
+
+<div class="card-sheet">
+    <div class="cards-grid">
+        <div class="card card-item">
+            <div class="card-header">道具</div>
+            <div class="card-icon">💊</div>
+            <div class="card-name">回复药</div>
+            <div class="card-desc">使用后<br>回复3点梦境值</div>
+            <div style="font-size:10px; margin-top:4px;">� Hand</div>
+        </div>
+        <div class="card card-item">
+            <div class="card-header">道具</div>
+            <div class="card-icon">🗡️</div>
+            <div class="card-name">日轮刀</div>
+            <div class="card-desc">本回合<br>攻击力+2</div>
+            <div style="font-size:10px; margin-top:4px;">� Hand</div>
+        </div>
+        <div class="card card-item">
+            <div class="card-header">道具</div>
+            <div class="card-icon">🍡</div>
+            <div class="card-name">甘露寺团子</div>
+            <div class="card-desc">全体玩家<br>各回复1点梦境值</div>
+            <div style="font-size:10px; margin-top:4px;">� Hand</div>
+        </div>
+        <div class="card card-item">
+            <div class="card-header">道具</div>
+            <div class="card-icon">🐦</div>
+            <div class="card-name">鎹鸦信使</div>
+            <div class="card-desc">查看下一张<br>事件卡内容</div>
+            <div style="font-size:10px; margin-top:4px;">� Hand</div>
+        </div>
+        <div class="card card-item">
+            <div class="card-header">道具·稀有</div>
+            <div class="card-icon">🔮</div>
+            <div class="card-name">斑纹觉醒</div>
+            <div class="card-desc">本回合所有<br>呼吸法卡攻击力翻倍</div>
+            <div style="font-size:10px; margin-top:4px;">� Hand</div>
+        </div>
+        <div class="card card-item">
+            <div class="card-header">道具</div>
+            <div class="card-icon">🩹</div>
+            <div class="card-name">急救包</div>
+            <div class="card-desc">救回1名<br>陷入永眠的玩家</div>
+            <div style="font-size:10px; margin-top:4px;">� Hand</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========== 鬼卡 ========== -->
+<div class="section-title">👹 鬼卡（共8张）</div>
+
+<div class="card-sheet">
+    <div class="cards-grid">
+        <div class="card card-demon">
+            <div class="card-header">下级鬼</div>
+            <div class="card-icon">👹</div>
+            <div class="card-name">普通恶鬼</div>
+            <div class="card-desc">生命值：4<br>攻击力：1-2<br>无特殊能力</div>
+            <div style="font-size:10px; margin-top:4px;">HP: ❤️❤️❤️❤️</div>
+        </div>
+        <div class="card card-demon">
+            <div class="card-header">下级鬼</div>
+            <div class="card-icon">👹</div>
+            <div class="card-name">普通恶鬼</div>
+            <div class="card-desc">生命值：5<br>攻击力：1-2<br>无特殊能力</div>
+            <div style="font-size:10px; margin-top:4px;">HP: ❤️❤️❤️❤️❤️</div>
+        </div>
+        <div class="card card-demon">
+            <div class="card-header">手的鬼</div>
+            <div class="card-icon">🖐️</div>
+            <div class="card-name">手的血鬼术</div>
+            <div class="card-desc">生命值：7<br>攻击力：2-3<br>每回合自动攻击</div>
+            <div style="font-size:10px; margin-top:4px;">HP: ❤️×7</div>
+        </div>
+        <div class="card card-demon">
+            <div class="card-header">BOSS</div>
+            <div class="card-icon">😈</div>
+            <div class="card-name">魇梦（梦境）</div>
+            <div class="card-desc">生命值：10<br>攻击力：3-4<br>每回合所有玩家-1梦境值</div>
+            <div style="font-size:10px; margin-top:4px;">HP: ❤️×10</div>
+        </div>
+        <div class="card card-demon" style="border-color:#ff0000; box-shadow: 0 0 10px #ff0000;">
+            <div class="card-header">BOSS·觉醒</div>
+            <div class="card-icon">😈🔥</div>
+            <div class="card-name">魇梦（觉醒）</div>
+            <div class="card-desc">生命值：15<br>攻击力：4-5<br>双重能力同时生效</div>
+            <div style="font-size:10px; margin-top:4px;">HP: ❤️×15</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========== 乘客卡 ========== -->
+<div class="section-title">🧑 乘客卡（共12张）</div>
+
+<div class="card-sheet">
+    <div class="cards-grid">
+        <div class="card card-passenger">
+            <div class="card-header">乘客 #1-4</div>
+            <div class="card-icon">🧑</div>
+            <div class="card-name">普通乘客</div>
+            <div class="card-desc">唤醒条件：<br>在该车厢击败1只鬼<br><br>奖励：抽取1张道具卡</div>
+        </div>
+        <div class="card card-passenger">
+            <div class="card-header">乘客 #5-6</div>
+            <div class="card-icon">🗡️</div>
+            <div class="card-name">武士乘客</div>
+            <div class="card-desc">唤醒条件：<br>使用呼吸法卡攻击2次<br><br>奖励：学习1张新呼吸法卡</div>
+        </div>
+        <div class="card card-passenger">
+            <div class="card-header">乘客 #7-8</div>
+            <div class="card-icon">👶</div>
+            <div class="card-name">小孩乘客</div>
+            <div class="card-desc">唤醒条件：<br>未受伤害停留1回合<br><br>奖励：全体回复2点梦境值</div>
+        </div>
+        <div class="card card-passenger">
+            <div class="card-header">乘客 #9-12</div>
+            <div class="card-icon">🥷</div>
+            <div class="card-name">隐队员</div>
+            <div class="card-desc">唤醒条件：<br>使用1张道具卡<br><br>奖励：可额外行动1次</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========== 事件卡 ========== -->
+<div class="section-title">📜 事件卡（共20张）</div>
+
+<div class="card-sheet">
+    <div class="cards-grid">
+        <div class="card card-event">
+            <div class="card-header">事件·普通</div>
+            <div class="card-icon">🌙</div>
+            <div class="card-name">月夜行驶</div>
+            <div class="card-desc">无事发生<br>可安全通过本节车厢</div>
+        </div>
+        <div class="card card-event">
+            <div class="card-header">事件·危险</div>
+            <div class="card-icon">👹</div>
+            <div class="card-name">恶鬼出现！</div>
+            <div class="card-desc">在本车厢放置1只下级鬼<br>立即进行鬼的攻击阶段</div>
+        </div>
+        <div class="card card-event">
+            <div class="card-header">事件·有利</div>
+            <div class="card-icon">💎</div>
+            <div class="card-name">日轮刀发光</div>
+            <div class="card-desc">所有玩家抽取1张呼吸法卡<br>本回合攻击力+1</div>
+        </div>
+        <div class="card card-event">
+            <div class="card-header">事件·恢复</div>
+            <div class="card-icon">💤</div>
+            <div class="card-name">短暂小憩</div>
+            <div class="card-desc">所有玩家回复2点梦境值<br>但本回合无法移动</div>
+        </div>
+        <div class="card card-event">
+            <div class="card-header">事件·BOSS预告</div>
+            <div class="card-icon">😨</div>
+            <div class="card-name">不祥的预感</div>
+            <div class="card-desc">下节车厢必定出现鬼<br>且生命值+2</div>
+        </div>
+        <div class="card card-event">
+            <div class="card-header">事件·奖励</div>
+            <div class="card-icon">🎁</div>
+            <div class="card-name">隐队补给</div>
+            <div class="card-desc">所有玩家抽取1张道具卡<br>可自由分配</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========== 车厢卡 ========== -->
+<div class="section-title">🚃 车厢卡（共12张，背面打印）</div>
+
+<div class="card-sheet">
+    <div style="text-align:center; margin-bottom:12px; color:#333; font-size:13px;">
+        💡 提示：将以下车厢卡打印在卡纸正反面，正面为车厢图案，背面为"未探索"标记
+    </div>
+    <div class="cards-grid">
+        <div class="card card-train">
+            <div class="card-icon">🚂</div>
+            <div class="card-name">第1节：车头</div>
+            <div class="card-desc">安全区<br>可休息回复梦境值</div>
+        </div>
+        <div class="card card-train">
+            <div class="card-icon">🚃</div>
+            <div class="card-name">第2-4,6,8,10节</div>
+            <div class="card-desc">普通车厢<br>抽取事件卡</div>
+        </div>
+        <div class="card card-train" style="background:linear-gradient(160deg,#8e44ad,#6c3483);">
+            <div class="card-icon">🛏️</div>
+            <div class="card-name">第5节：卧铺</div>
+            <div class="card-desc">可回复2点梦境值</div>
+        </div>
+        <div class="card card-train" style="background:linear-gradient(160deg,#f39c12,#d68910);">
+            <div class="card-icon">🌟</div>
+            <div class="card-name">第7节：贵宾</div>
+            <div class="card-desc">抽取高级呼吸法卡</div>
+        </div>
+        <div class="card card-train" style="background:linear-gradient(160deg,#7f8c8d,#616a6b);">
+            <div class="card-icon">📦</div>
+            <div class="card-name">第9节：储物</div>
+            <div class="card-desc">抽取2张道具卡</div>
+        </div>
+        <div class="card card-train" style="background:linear-gradient(160deg,#c0392b,#922b21);">
+            <div class="card-icon">😈</div>
+            <div class="card-name">第12节：核心</div>
+            <div class="card-desc">最终决战<br>对战魇梦！</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========== 玩家棋子 ========== -->
+<div class="section-title">🎯 玩家棋子（共5个，建议用不同颜色卡纸打印）</div>
+
+<div class="card-sheet">
+    <div class="pieces-grid">
+        <div class="piece" style="background:radial-gradient(circle,#e74c3c,#c0392b); border-color:#922b21;">🗡️</div>
+        <div class="piece" style="background:radial-gradient(circle,#3498db,#2980b9); border-color:#1a5276;">🌊</div>
+        <div class="piece" style="background:radial-gradient(circle,#f1c40f,#f39c12); border-color:#9a7d0a;">⚡</div>
+        <div class="piece" style="background:radial-gradient(circle,#2ecc71,#27ae60); border-color:#1e8449;">🌪️</div>
+        <div class="piece" style="background:radial-gradient(circle,#9b59b6,#8e44ad); border-color:#6c3483;">🪨</div>
+    </div>
+    <div style="text-align:center; margin-top:12px; color:#666; font-size:13px;">
+        棋子说明：🗡️炭治郎 &nbsp; 🌊富冈义勇 &nbsp; ⚡我妻善逸 &nbsp; 🌪️嘴平伊之助 &nbsp; 🪨悲鸣屿行冥
+    </div>
+</div>
+
+<!-- ========== 标记物 ========== -->
+<div class="section-title">📍 游戏标记物</div>
+
+<div class="card-sheet">
+    <div class="tokens-grid">
+        <div class="token" style="background:linear-gradient(135deg,#eaf2f8,#d4e6f1); border-color:#5dade2;">
+            <div class="token-icon">💤</div>
+            <div>梦境值标记</div>
+            <div style="font-size:9px; margin-top:2px;">0-10 刻度</div>
+        </div>
+        <div class="token" style="background:linear-gradient(135deg,#fdebd0,#fad7a0); border-color:#f39c12;">
+            <div class="token-icon">🧑</div>
+            <div>乘客标记</div>
+            <div style="font-size:9px; margin-top:2px;">已唤醒</div>
+        </div>
+        <div class="token" style="background:linear-gradient(135deg,#fadbd8,#f1948a); border-color:#e74c3c;">
+            <div class="token-icon">🔄</div>
+            <div>回合标记</div>
+            <div style="font-size:9px; margin-top:2px;">1-15</div>
+        </div>
+        <div class="token" style="background:linear-gradient(135deg,#d5f5e3,#abebc6); border-color:#27ae60;">
+            <div class="token-icon">✅</div>
+            <div>探索完成</div>
+            <div style="font-size:9px; margin-top:2px;">车厢标记</div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== 打印说明 ========== -->
+<div class="section-title">🖨️ 打印说明</div>
+<div style="background:#f0f0f0; border-radius:12px; padding:20px; margin-bottom:30px; font-size:13px; line-height:2;">
+    <strong>📋 推荐打印清单：</strong><br>
+    1. <strong>列车地图</strong>：1张，A4普通纸，彩色打印<br>
+    2. <strong>呼吸法卡</strong>：30张，A4卡纸（每张A4可打印8-9张卡），彩色打印<br>
+    3. <strong>道具卡</strong>：15张，A4卡纸，彩色打印<br>
+    4. <strong>鬼卡</strong>：8张，A4卡纸，彩色打印<br>
+    5. <strong>乘客卡</strong>：12张，A4卡纸，彩色打印<br>
+    6. <strong>事件卡</strong>：20张，A4卡纸，彩色打印<br>
+    7. <strong>车厢卡</strong>：12张，A4卡纸（正反面打印），彩色打印<br>
+    8. <strong>玩家棋子</strong>：5个，厚卡纸，彩色打印后裁剪<br>
+    9. <strong>标记物</strong>：各4-5个，厚卡纸<br><br>
+
+    <strong>✂️ 裁剪建议：</strong><br>
+    - 卡牌标准尺寸：140×200mm（可调整为63×88mm标准扑克尺寸）<br>
+    - 使用切纸刀裁剪，边缘更整齐<br>
+    - 打印后可塑封（120微米塑封膜），增加耐用性<br>
+    - 棋子可贴在瓶盖或麻将牌上使用，手感更佳<br><br>
+
+    <strong>⚙️ 打印设置：</strong><br>
+    - 纸张：A4，建议卡纸200g<br>
+    - 边距：最小（0-5mm）<br>
+    - 背景图形：<strong>务必勾选！</strong><br>
+    - 色彩：彩色<br>
+</div>
+
+</body>
+</html>

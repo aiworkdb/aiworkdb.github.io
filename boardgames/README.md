@@ -98,6 +98,7 @@ boardgames/
 | [量子黑客](category/card/quantum-hacker/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
 | [异世界工坊](category/strategy/another-world-workshop/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等偏难 |
 | [星穹传说](category/cooperative/star-rail-legends/README.md) | 合作 | 1-4人 | 45-70分钟 | 中等 |
+| [鬼杀队：无限列车](category/cooperative/demon-slayer-train/README.md) | 合作 | 2-5人 | 45-70分钟 | 中等 |
 
 ## 添加新桌游
 
