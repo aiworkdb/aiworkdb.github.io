@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咒术师团 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #1a1a2e;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #e0e0ff;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-shadow: 0 2px 10px rgba(100, 100, 255, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        h2 {
+            color: #ddd;
+            margin: 30px 0 15px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #2d2d5e, transparent);
+            border-radius: 8px;
+            font-size: 1.4em;
+        }
+
+        .section {
+            background: #f0f0f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 18px 24px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.8;
+        }
+
+        .print-hint strong {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .print-hint li {
+            margin-left: 20px;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+            }
+            h2 {
+                background: #2d2d5e !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .print-hint {
+                display: none;
+            }
+        }
+
+        /* ===== 游戏地图 ===== */
+        .game-map-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            background: #1a1a3e;
+            padding: 12px;
+            border-radius: 14px;
+            max-width: 500px;
+            aspect-ratio: 1;
+        }
+
+        .map-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border-radius: 6px;
+            position: relative;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            min-height: 55px;
+        }
+
+        .map-cell .cell-label {
+            font-size: 9px;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        .map-cell.start { background: #ffc107; color: #333; }
+        .map-cell.civilian { background: #2196f3; }
+        .map-cell.curse-spawn { background: #d32f2f; }
+        .map-cell.resource { background: #1565c0; }
+        .map-cell.event { background: #f9a825; color: #333; }
+        .map-cell.road { background: #8d6e63; }
+
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            background: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .legend-icon {
+            font-size: 18px;
+        }
+
+        /* ===== 卡牌通用样式 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .card {
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+            min-height: 170px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin: 8px 0;
+        }
+
+        .card-name {
+            font-weight: bold;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+
+        .card-desc {
+            font-size: 10px;
+            opacity: 0.85;
+            line-height: 1.3;
+        }
+
+        .card-cost {
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 4px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        /* 卡牌类型颜色 */
+        .card-curse-power { background: linear-gradient(135deg, #1565c0, #42a5f5); color: white; }
+        .card-technique { background: linear-gradient(135deg, #6a1b9a, #ab47bc); color: white; }
+        .card-curse { background: linear-gradient(135deg, #b71c1c, #ef5350); color: white; }
+        .card-event { background: linear-gradient(135deg, #e65100, #ffb74d); color: white; }
+        .card-support { background: linear-gradient(135deg, #1b5e20, #66bb6a); color: white; }
+        .card-domain { background: linear-gradient(135deg, #01579b, #4fc3f7); color: white; }
+
+        /* ===== 角色卡 ===== */
+        .character-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .character-card {
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            color: white;
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .character-card .char-icon { font-size: 48px; margin: 10px 0; }
+        .character-card .char-name { font-size: 18px; font-weight: bold; margin: 6px 0; }
+        .character-card .char-hp { font-size: 12px; opacity: 0.9; }
+        .character-card .char-skill { font-size: 11px; margin-top: 8px; line-height: 1.4; text-align: left; width: 100%; }
+
+        .char-itadori { background: linear-gradient(135deg, #d32f2f, #ff6659); }
+        .char-megumi { background: linear-gradient(135deg, #1b5e20, #4caf50); }
+        .char-nobara { background: linear-gradient(135deg, #e65100, #ff9800); }
+        .char-gojo { background: linear-gradient(135deg, #1a237e, #3f51b5); }
+
+        /* ===== 棋子 ===== */
+        .pieces-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .piece {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            border: 3px solid white;
+        }
+
+        .piece-label {
+            text-align: center;
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+
+        .piece-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 打印分页 */
+        .page-break {
+            page-break-before: always;
+        }
+
+        @media print {
+            .section {
+                break-inside: avoid;
+            }
+            .cards-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+            }
+            .character-cards {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 咒术师团 - 打印道具</h1>
+        <p class="subtitle">Jujutsu Sorcerers — Printable Game Components</p>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul>
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（Chrome：更多设置 → 背景图形）</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>打印后可裁剪并塑封，延长使用寿命</li>
+                <li>建议先打印1-2张测试效果，确认颜色和尺寸满意后再批量打印</li>
+            </ul>
+        </div>
+
+---
+
+## 🗺️ 游戏地图
+
+<div class="section">
+    <div class="game-map-container">
+        <div class="game-map">
+            <!-- Row 1 -->
+            <div class="map-cell civilian">🏫<span class="cell-label">学校</span></div>
+            <div class="map-cell road">⬜<span class="cell-label">道路</span></div>
+            <div class="map-cell resource">🔵<span class="cell-label">咒力点</span></div>
+            <div class="map-cell road">⬜<span class="cell-label">道路</span></div>
+            <div class="map-cell event">🎲<span class="cell-label">事件点</span></div>
+            <div class="map-cell road">⬜<span class="cell-label">道路</span></div>
+            <div class="map-cell civilian">🏥<span class="cell-label">医院</span></div>
+            <!-- Row 2 -->
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell curse-spawn">👹<span class="cell-label">裂缝</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell resource">🔵</div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell civilian">🏪<span class="cell-label">商店</span></div>
+            <div class="map-cell road">⬜</div>
+            <!-- Row 3 -->
+            <div class="map-cell resource">🔵<span class="cell-label">咒力点</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell civilian">⛩️<span class="cell-label">神社</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell event">🎲<span class="cell-label">事件点</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell road">⬜</div>
+            <!-- Row 4 -->
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell civilian">🏥<span class="cell-label">医院</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell event">🎲<span class="cell-label">事件</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell curse-spawn">👹<span class="cell-label">裂缝</span></div>
+            <div class="map-cell road">⬜</div>
+            <!-- Row 5 -->
+            <div class="map-cell event">🎲<span class="cell-label">事件点</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell resource">🔵<span class="cell-label">咒力点</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell civilian">🎡<span class="cell-label">公园</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell road">⬜</div>
+            <!-- Row 6 -->
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell resource">🔵<span class="cell-label">咒力点</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell curse-spawn">👹<span class="cell-label">裂缝</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell resource">🔵<span class="cell-label">咒力点</span></div>
+            <div class="map-cell road">⬜</div>
+            <!-- Row 7 -->
+            <div class="map-cell civilian">🎡<span class="cell-label">公园</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell civilian">🏪<span class="cell-label">商店</span></div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell road">⬜</div>
+            <div class="map-cell civilian">⛩️<span class="cell-label">神社</span></div>
+        </div>
+    </div>
+
+    <div class="map-legend">
+        <div class="legend-item"><span class="legend-icon">🏫🏥🎡🏪⛩️</span> 平民区（蓝色）</div>
+        <div class="legend-item"><span class="legend-icon">👹</span> 诅咒裂缝（红色）</div>
+        <div class="legend-item"><span class="legend-icon">🔵</span> 咒力点（深蓝）</div>
+        <div class="legend-item"><span class="legend-icon">🎲</span> 事件点（黄色）</div>
+        <div class="legend-item"><span class="legend-icon">⬜</span> 普通道路（棕色）</div>
+    </div>
+</div>
+
+---
+
+## 🃏 咒力卡（基础资源卡）
+
+<div class="section">
+    <p style="margin-bottom:10px; color:#555;">咒力卡是游戏核心资源，用于发动术式。建议打印30张，可重复使用。</p>
+    <div class="cards-grid">
+        <div class="card card-curse-power"><div class="card-icon">🔵</div><div class="card-name">咒力结晶</div><div class="card-desc">基础咒力<br>可用于任何术式</div><div class="card-cost">无消耗</div></div>
+        <div class="card card-curse-power"><div class="card-icon">🔵✨</div><div class="card-name">聚咒之玉</div><div class="card-desc">强力咒力<br>当作2张普通咒力</div><div class="card-cost">稀有</div></div>
+        <div class="card card-curse-power"><div class="card-icon">🔵💀</div><div class="card-name">残秽碎片</div><div class="card-desc">诅咒碎片<br>兑换诅咒情报</div><div class="card-cost">特殊</div></div>
+        <div class="card card-curse-power"><div class="card-icon">🔵</div><div class="card-name">咒力结晶</div><div class="card-desc">基础咒力<br>可用于任何术式</div><div class="card-cost">无消耗</div></div>
+        <div class="card card-curse-power"><div class="card-icon">🔵</div><div class="card-name">咒力结晶</div><div class="card-desc">基础咒力<br>可用于任何术式</div><div class="card-cost">无消耗</div></div>
+        <div class="card card-curse-power"><div class="card-icon">🔵✨</div><div class="card-name">聚咒之玉</div><div class="card-desc">强力咒力<br>当作2张普通咒力</div><div class="card-cost">稀有</div></div>
+    </div>
+    <p style="margin-top:15px; font-size:13px; color:#777; text-align:center;">（此区域可复制粘贴，建议打印足够数量。每张卡尺寸约63×88mm，标准卡牌尺寸）</p>
+</div>
+
+---
+
+## ⚡ 术式卡（技能卡）
+
+<div class="section">
+    <div class="cards-grid">
+        <div class="card card-technique"><div class="card-icon">👊</div><div class="card-name">强化拳</div><div class="card-desc">近战攻击<br>对相邻诅咒<br>造成1点伤害</div><div class="card-cost">消耗1🔵</div></div>
+        <div class="card card-technique"><div class="card-icon">🦘</div><div class="card-name">跳跃斩</div><div class="card-desc">跳跃到任意格子<br>对途经诅咒<br>造成1点伤害</div><div class="card-cost">消耗2🔵</div></div>
+        <div class="card card-technique"><div class="card-icon">🪢</div><div class="card-name">缚之术</div><div class="card-desc">束缚1个诅咒<br>下回合无法移动</div><div class="card-cost">消耗1🔵</div></div>
+        <div class="card card-technique"><div class="card-icon">💚</div><div class="card-name">治愈术</div><div class="card-desc">恢复自身或<br>相邻队友<br>1点生命值</div><div class="card-cost">消耗2🔵</div></div>
+        <div class="card card-technique"><div class="card-icon">💥</div><div class="card-name">咒力爆发</div><div class="card-desc">对3×3范围内<br>所有诅咒<br>造成1点伤害</div><div class="card-cost">消耗3🔵</div></div>
+        <div class="card card-technique"><div class="card-icon">🧹</div><div class="card-name">驱除术</div><div class="card-desc">将1个诅咒<br>推离平民区2格</div><div class="card-cost">消耗1🔵</div></div>
+        <div class="card card-technique"><div class="card-icon">🥊</div><div class="card-name"> diversified 拳</div><div class="card-desc">（虎杖专属）<br>造成2点伤害<br>可连续攻击</div><div class="card-cost">消耗2🔵</div></div>
+        <div class="card card-technique"><div class="card-icon">🐦</div><div class="card-name">式神召唤</div><div class="card-desc">（伏黑专属）<br>召唤式神<br>持续3回合攻击</div><div class="card-cost">消耗3🔵</div></div>
+    </div>
+</div>
+
+---
+
+## 👹 诅咒卡（敌人卡）
+
+<div class="section">
+    <div class="cards-grid">
+        <div class="card card-curse"><div class="card-icon">👹</div><div class="card-name">三级诅咒</div><div class="card-desc">HP: 2 | 攻击: 1<br>祓除奖励: 1张咒力卡</div><div class="card-cost">最弱</div></div>
+        <div class="card card-curse"><div class="card-icon">👿</div><div class="card-name">二级诅咒</div><div class="card-desc">HP: 4 | 攻击: 1<br>祓除奖励: 2张咒力卡</div><div class="card-cost">中等</div></div>
+        <div class="card card-curse"><div class="card-icon">😈</div><div class="card-name">一级诅咒</div><div class="card-desc">HP: 6 | 攻击: 2<br>攻击范围: 2格</div><div class="card-cost">较强</div></div>
+        <div class="card card-curse"><div class="card-icon">💀</div><div class="card-name">特级诅咒</div><div class="card-desc">HP: 10 | 攻击: 3<br>每3回合召唤1个三级诅咒</div><div class="card-cost">BOSS</div></div>
+        <div class="card card-curse"><div class="card-icon">👻</div><div class="card-name">咒灵</div><div class="card-desc">HP: 3 | 攻击: 1<br>可穿过障碍物移动</div><div class="card-cost">特殊</div></div>
+        <div class="card card-curse"><div class="card-icon">🧟</div><div class="card-name">改造人</div><div class="card-desc">HP: 5 | 攻击: 2<br>受伤害时反击1点</div><div class="card-cost">特殊</div></div>
+    </div>
+</div>
+
+---
+
+## 🎲 事件卡
+
+<div class="section">
+    <div class="cards-grid">
+        <div class="card card-event"><div class="card-icon">✨</div><div class="card-name">咒力涌现</div><div class="card-desc">所有玩家<br>各抽1张<br>咒力卡</div><div class="card-cost">有利</div></div>
+        <div class="card card-event"><div class="card-icon">🌋</div><div class="card-name">诅咒暴走</div><div class="card-desc">所有诅咒<br>本回合<br>移动+1格</div><div class="card-cost">不利</div></div>
+        <div class="card card-event"><div class="card-icon">🚶</div><div class="card-name">平民疏散</div><div class="card-desc">1个平民区<br>本回合<br>暂时安全</div><div class="card-cost">有利</div></div>
+        <div class="card card-event"><div class="card-icon">🚁</div><div class="card-name">支援到来</div><div class="card-desc">所有玩家<br>恢复1点<br>生命值</div><div class="card-cost">有利</div></div>
+        <div class="card card-event"><div class="card-icon">🔷</div><div class="card-name">结界展开</div><div class="card-desc">指定3×3区域<br>诅咒<br>无法进入</div><div class="card-cost">有利</div></div>
+        <div class="card card-event"><div class="card-icon">📿</div><div class="card-name">咒物发现</div><div class="card-desc">抽取1张<br>领域卡</div><div class="card-cost">有利</div></div>
+    </div>
+</div>
+
+---
+
+## 🤝 支援卡
+
+<div class="section">
+    <div class="cards-grid">
+        <div class="card card-support"><div class="card-icon">🤲</div><div class="card-name">咒力传递</div><div class="card-desc">将自身1张<br>咒力卡<br>交给队友</div><div class="card-cost">支援</div></div>
+        <div class="card card-support"><div class="card-icon">👥</div><div class="card-name">共同攻击</div><div class="card-desc">2名玩家<br>同时攻击<br>伤害叠加</div><div class="card-cost">支援</div></div>
+        <div class="card card-support"><div class="card-icon">🛡️</div><div class="card-name">掩护</div><div class="card-desc">替相邻队友<br>承受<br>本次伤害</div><div class="card-cost">支援</div></div>
+        <div class="card card-support"><div class="card-icon">💊</div><div class="card-name">紧急治疗</div><div class="card-desc">恢复1名队友<br>1点<br>生命值</div><div class="card-cost">支援</div></div>
+        <div class="card card-support"><div class="card-icon">📋</div><div class="card-name">战术指导</div><div class="card-desc">查看诅咒卡堆<br>顶3张卡<br>重新排列</div><div class="card-cost">支援</div></div>
+    </div>
+</div>
+
+---
+
+## 🏛️ 领域卡
+
+<div class="section">
+    <div class="cards-grid">
+        <div class="card card-domain"><div class="card-icon">🌀</div><div class="card-name">无量空处</div><div class="card-desc">（五条悟领域）<br>所有诅咒<br>本回合无法行动</div><div class="card-cost">消耗5🔵</div></div>
+        <div class="card card-domain"><div class="card-icon">🦅</div><div class="card-name">嵌合暗翳庭</div><div class="card-desc">（伏黑惠领域）<br>式神攻击力<br>加倍，持续3回合</div><div class="card-cost">消耗5🔵</div></div>
+        <div class="card card-domain"><div class="card-icon">🔨</div><div class="card-name">刍灵之域</div><div class="card-desc">（钉崎领域）<br>攻击可同时<br>攻击所有诅咒</div><div class="card-cost">消耗5🔵</div></div>
+        <div class="card card-domain"><div class="card-icon">👊</div><div class="card-name">释魂大权</div><div class="card-desc">（虎杖领域）<br>本回合所有<br>攻击伤害+1</div><div class="card-cost">消耗5🔵</div></div>
+    </div>
+</div>
+
+---
+
+## 👤 角色卡
+
+<div class="section page-break">
+    <p style="margin-bottom:15px; color:#555;">每位玩家选择1张角色卡，建议使用卡纸打印。</p>
+    <div class="character-cards">
+        <div class="character-card char-itadori">
+            <div class="char-icon">👊</div>
+            <div class="char-name">虎杖悠仁</div>
+            <div class="char-hp">❤️❤️❤️ HP: 3</div>
+            <div class="char-skill">
+                <strong>专属术式：</strong> diversified 拳（消耗2🔵）→ 造成2点伤害，可连续攻击<br>
+                <strong>被动：</strong>受到致命伤害时，掷骰子6点可免死1次
+            </div>
+        </div>
+        <div class="character-card char-megumi">
+            <div class="char-icon">🐦</div>
+            <div class="char-name">伏黑惠</div>
+            <div class="char-hp">❤️❤️❤️ HP: 3</div>
+            <div class="char-skill">
+                <strong>专属术式：</strong>式神召唤（消耗3🔵）→ 召唤式神持续3回合自动攻击<br>
+                <strong>被动：</strong>可额外持有1张术式卡
+            </div>
+        </div>
+        <div class="character-card char-nobara">
+            <div class="char-icon">🔨</div>
+            <div class="char-name">钉崎野蔷薇</div>
+            <div class="char-hp">❤️❤️❤️ HP: 3</div>
+            <div class="char-skill">
+                <strong>专属术式：</strong>刍灵咒法（消耗2🔵）→ 远程攻击，无视距离<br>
+                <strong>被动：</strong>攻击诅咒时可额外抽取1张咒力卡
+            </div>
+        </div>
+        <div class="character-card char-gojo">
+            <div class="char-icon">💎</div>
+            <div class="char-name">五条悟</div>
+            <div class="char-hp">❤️❤️❤️❤️ HP: 4</div>
+            <div class="char-skill">
+                <strong>专属术式：</strong>苍/赫（消耗4🔵）→ 造成3点伤害，可穿透多个目标<br>
+                <strong>被动：</strong>每回合可额外移动1格
+            </div>
+        </div>
+    </div>
+</div>
+
+---
+
+## 🎲 棋子打印模板
+
+<div class="section page-break">
+    <p style="margin-bottom:15px; color:#555;">将以下棋子剪下，贴在瓶盖或硬币上即可使用。建议使用卡纸打印。</p>
+    
+    <h3 style="margin:15px 0 10px; color:#444;">咒术师棋子（4个）</h3>
+    <div class="pieces-grid">
+        <div class="piece-wrapper"><div class="piece" style="background:linear-gradient(135deg,#d32f2f,#ff6659);">👊</div><div class="piece-label">虎杖</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:linear-gradient(135deg,#1b5e20,#4caf50);">🐦</div><div class="piece-label">伏黑</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:linear-gradient(135deg,#e65100,#ff9800);">🔨</div><div class="piece-label">钉崎</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:linear-gradient(135deg,#1a237e,#3f51b5);">💎</div><div class="piece-label">五条</div></div>
+    </div>
+
+    <h3 style="margin:25px 0 10px; color:#444;">诅咒棋子（12个）</h3>
+    <div class="pieces-grid">
+        <div class="piece-wrapper"><div class="piece" style="background:#b71c1c; font-size:22px;">👹</div><div class="piece-label">三级诅咒</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#b71c1c; font-size:22px;">👹</div><div class="piece-label">三级诅咒</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#b71c1c; font-size:22px;">👹</div><div class="piece-label">三级诅咒</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#d32f2f; font-size:22px;">👿</div><div class="piece-label">二级诅咒</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#d32f2f; font-size:22px;">👿</div><div class="piece-label">二级诅咒</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#8e0000; font-size:22px;">😈</div><div class="piece-label">一级诅咒</div></div>
+    </div>
+
+    <h3 style="margin:25px 0 10px; color:#444;">平民棋子（8个）</h3>
+    <div class="pieces-grid">
+        <div class="piece-wrapper"><div class="piece" style="background:#1565c0; font-size:22px;">🧑</div><div class="piece-label">平民</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#1565c0; font-size:22px;">🧑</div><div class="piece-label">平民</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#1565c0; font-size:22px;">🧑</div><div class="piece-label">平民</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#1565c0; font-size:22px;">🧑</div><div class="piece-label">平民</div></div>
+    </div>
+
+    <h3 style="margin:25px 0 10px; color:#444;">回合/状态标记（建议使用不同颜色纸片）</h3>
+    <div class="pieces-grid">
+        <div class="piece-wrapper"><div class="piece" style="background:#ffc107; font-size:16px;">R1</div><div class="piece-label">回合1</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#ffc107; font-size:16px;">R2</div><div class="piece-label">回合2</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#ff5722; font-size:16px;">❤️</div><div class="piece-label">生命值</div></div>
+        <div class="piece-wrapper"><div class="piece" style="background:#4caf50; font-size:16px;">✓</div><div class="piece-label">平民受害</div></div>
+    </div>
+</div>
+
+---
+
+## 📝 打印说明
+
+<div class="section">
+    <h3 style="color:#333; margin-bottom:10px;">🖨️ 打印设置建议</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+        <tr style="background:#ddd;"><th style="padding:8px; border:1px solid #ccc;">内容</th><th style="padding:8px; border:1px solid #ccc;">建议纸张</th><th style="padding:8px; border:1px solid #ccc;">打印设置</th></tr>
+        <tr><td style="padding:8px; border:1px solid #ccc;">游戏地图</td><td style="padding:8px; border:1px solid #ccc;">普通A4纸</td><td style="padding:8px; border:1px solid #ccc;">最小边距，勾选背景图形</td></tr>
+        <tr><td style="padding:8px; border:1px solid #ccc;">卡牌（所有类型）</td><td style="padding:8px; border:1px solid #ccc;">200g卡纸</td><td style="padding:8px; border:1px solid #ccc;">最小边距，勾选背景图形</td></tr>
+        <tr><td style="padding:8px; border:1px solid #ccc;">棋子模板</td><td style="padding:8px; border:1px solid #ccc;">200g卡纸</td><td style="padding:8px; border:1px solid #ccc;">裁剪后贴在瓶盖上</td></tr>
+        <tr><td style="padding:8px; border:1px solid #ccc;">角色卡</td><td style="padding:8px; border:1px solid #ccc;">200g卡纸</td><td style="padding:8px; border:1px solid #ccc;">建议塑封</td></tr>
+    </table>
+
+    <h3 style="color:#333; margin:20px 0 10px;">✂️ 裁剪指南</h3>
+    <ul style="line-height:2; color:#555;">
+        <li>卡牌标准尺寸：63×88mm（普通扑克牌尺寸）</li>
+        <li>棋子直径：约40mm，裁剪后贴在瓶盖或硬币上</li>
+        <li>地图建议完整保留，可塑封或装裱</li>
+        <li>建议使用裁纸刀+钢尺，裁剪更整齐</li>
+    </ul>
+</div>
+
+    </div><!-- /container -->
+</body>
+</html>
