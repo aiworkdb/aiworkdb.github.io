@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>怪兽守护者 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #11998e;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #11998e;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #11998e;
+        }
+        .section h3 {
+            color: #38ef7d;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-color: #11998e;
+        }
+        .card h4 {
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background: #11998e;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #11998e;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #11998e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #38ef7d;
+        }
+        .event-card.negative {
+            border-color: #f5576c;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #f8f9fa;
+            border-left: 4px solid #38ef7d;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section {
+            background: #fff3cd;
+            border: 2px dashed #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #ffc107;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦖 怪兽守护者</h1>
+            <div class="subtitle">Kaiju Defenders - 团队协作模拟游戏</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">8-20人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">60-75分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">🎯</div>
+                <div class="label">适合场景</div>
+                <div class="value">团队协作</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h2>🎮 游戏概述</h2>
+                <p>《怪兽守护者》改编自同名合作桌游，是一款<strong>团队协作模拟游戏</strong>。参与者扮演守护城市的巨型怪兽团队，在面对外星入侵时，通过角色分工、资源调配和战术配合，共同保护城市重要设施。</p>
+                <p style="margin-top: 15px;">这款游戏强调<strong>跨部门协作、危机决策、资源优化</strong>，适合团队协作训练、领导力发展、危机管理演练。</p>
+                
+                <div class="highlight">
+                    <h3 style="color: #11998e; margin-bottom: 10px;">🎯 核心学习目标</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>角色认知</strong>：理解不同角色的价值和贡献</li>
+                        <li><strong>资源优化</strong>：在限制条件下做出最优决策</li>
+                        <li><strong>危机沟通</strong>：高压环境下的信息传递和决策</li>
+                        <li><strong>团队协作</strong>：跨越"部门"壁垒，为共同目标努力</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                
+                <h3>基础道具</h3>
+                <table>
+                    <tr>
+                        <th>物品名称</th>
+                        <th>数量</th>
+                        <th>用途</th>
+                    </tr>
+                    <tr>
+                        <td>A4白纸</td>
+                        <td>20张</td>
+                        <td>制作角色卡、事件卡、资源卡</td>
+                    </tr>
+                    <tr>
+                        <td>彩色马克笔</td>
+                        <td>1套</td>
+                        <td>绘制地图、标记状态</td>
+                    </tr>
+                    <tr>
+                        <td>便签纸</td>
+                        <td>2本</td>
+                        <td>传递信息、记录决策</td>
+                    </tr>
+                    <tr>
+                        <td>计时器</td>
+                        <td>1个</td>
+                        <td>控制回合时间</td>
+                    </tr>
+                    <tr>
+                        <td>白板/大纸</td>
+                        <td>1张</td>
+                        <td>绘制城市地图</td>
+                    </tr>
+                </table>
+
+                <div class="print-section">
+                    <h3>🖨️ 打印素材（可选）</h3>
+                    <p>以下素材可以打印以提升体验：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>角色卡</strong>：4种×5张 - 怪兽角色技能说明</li>
+                        <li><strong>事件卡</strong>：15张 - 随机事件</li>
+                        <li><strong>资源卡</strong>：20张 - 能量核心（红/蓝/绿）</li>
+                        <li><strong>建筑标记</strong>：12个 - 城市设施状态</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 城市地图 -->
+            <div class="section">
+                <h2>🗺️ 城市地图设置</h2>
+                <p>在白板或大纸上绘制简化的<strong>城市网格图</strong>（5×5），标注以下要素：</p>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; font-family: monospace; font-size: 1.2em; text-align: center;">
+🏠 🏠 ⬜ 🏭 ⬜<br>
+⬜ 👽 ⬜ 🏠 ⬜<br>
+🏠 ⬜ 🦖 ⬜ 🏭<br>
+⬜ 🏭 ⬜ 👽 ⬜<br>
+🏭 ⬜ 🏠 ⬜ 🚀
+                </div>
+
+                <h3>地图要素说明</h3>
+                <table>
+                    <tr>
+                        <th>要素</th>
+                        <th>图示</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>怪兽巢穴</td>
+                        <td>🦖</td>
+                        <td>所有团队的起始位置</td>
+                    </tr>
+                    <tr>
+                        <td>住宅区</td>
+                        <td>🏠</td>
+                        <td>需要保护的目标（共6个）</td>
+                    </tr>
+                    <tr>
+                        <td>工业区</td>
+                        <td>🏭</td>
+                        <td>提供资源加成</td>
+                    </tr>
+                    <tr>
+                        <td>外星基地</td>
+                        <td>👽</td>
+                        <td>威胁来源（共4个）</td>
+                    </tr>
+                    <tr>
+                        <td>母舰港口</td>
+                        <td>🚀</td>
+                        <td>最终目标</td>
+                    </tr>
+                    <tr>
+                        <td>空地</td>
+                        <td>⬜</td>
+                        <td>可自由移动</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🦖 角色分配</h2>
+                <p>参与者分为 <strong>2-4个怪兽小队</strong>，每队 <strong>3-5人</strong>。每个小队包含以下角色：</p>
+
+                <div class="role-card">
+                    <h4>👑 队长</h4>
+                    <p><strong>职责</strong>：统筹决策</p>
+                    <p><strong>技能</strong>：可查看事件卡堆顶；关键时刻可重新决策</p>
+                </div>
+
+                <div class="role-card">
+                    <h4>📡 通讯员</h4>
+                    <p><strong>职责</strong>：跨队沟通</p>
+                    <p><strong>技能</strong>：可与其他小队传递信息；协调联合行动</p>
+                </div>
+
+                <div class="role-card">
+                    <h4>⚡ 资源官</h4>
+                    <p><strong>职责</strong>：管理能量核心</p>
+                    <p><strong>技能</strong>：优化资源分配；交易资源时获得优势</p>
+                </div>
+
+                <div class="role-card">
+                    <h4>⚔️ 战术员</h4>
+                    <p><strong>职责</strong>：战斗决策</p>
+                    <p><strong>技能</strong>：攻击判定+1；可发动合作攻击</p>
+                </div>
+
+                <div class="role-card">
+                    <h4>🔧 工程师</h4>
+                    <p><strong>职责</strong>：修复建筑</p>
+                    <p><strong>技能</strong>：修复速度×2；可预防性加固</p>
+                </div>
+
+                <p style="margin-top: 15px; color: #666;"><em>注：3人小队可一人兼任多职；5人小队可增加"侦察员"（预判威胁）</em></p>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程</h2>
+
+                <div class="flow-step">
+                    <h4>阶段一：威胁评估（10分钟）</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>背景介绍</strong>：外星舰队已抵达城市外围，需要在10个回合内摧毁母舰或坚持防御</li>
+                        <li><strong>小队组建</strong>：分组并分配角色</li>
+                        <li><strong>初始资源</strong>：每队获得3个能量核心（随机颜色）</li>
+                        <li><strong>地图熟悉</strong>：各队研究地图，制定初步策略</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>阶段二：防御作战（40分钟）</h4>
+                    <p>游戏按<strong>回合制</strong>进行，每回合包含以下步骤：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>情报共享</strong>（1分钟）：各队报告当前位置、资源、威胁</li>
+                        <li><strong>行动决策</strong>（2分钟）：选择移动目标，决定资源使用策略</li>
+                        <li><strong>执行行动</strong>（2分钟）：移动棋子，触发位置事件，发动技能</li>
+                        <li><strong>外星回合</strong>（1分钟）：裁判翻开事件卡，更新威胁状态</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step">
+                    <h4>阶段三：总结复盘（15-20分钟）</h4>
+                    <p>使用"复盘问题清单"进行深度反思（见下方）</p>
+                </div>
+            </div>
+
+            <!-- 核心机制 -->
+            <div class="section">
+                <h2>⚡ 核心机制</h2>
+
+                <h3>能量核心系统</h3>
+                <p>能量核心是发动技能的必需资源，分为三种：</p>
+                <table>
+                    <tr>
+                        <th>类型</th>
+                        <th>颜色</th>
+                        <th>获取方式</th>
+                        <th>用途</th>
+                    </tr>
+                    <tr>
+                        <td>攻击核心</td>
+                        <td>🔴</td>
+                        <td>摧毁外星基地</td>
+                        <td>用于攻击型技能</td>
+                    </tr>
+                    <tr>
+                        <td>防御核心</td>
+                        <td>🔵</td>
+                        <td>修复建筑</td>
+                        <td>用于防御型技能</td>
+                    </tr>
+                    <tr>
+                        <td>移动核心</td>
+                        <td>🟢</td>
+                        <td>停留在特殊地形</td>
+                        <td>用于移动型技能</td>
+                    </tr>
+                </table>
+
+                <h3>合作攻击规则</h3>
+                <div class="card" style="margin-top: 15px;">
+                    <p>多个小队可以同时攻击同一个外星基地：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>每队独立进行攻击判定</li>
+                        <li>任意一队成功即摧毁基地</li>
+                        <li>鼓励跨队协作，共享胜利</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 胜利条件 -->
+            <div class="section">
+                <h2>🏆 胜利条件</h2>
+
+                <div class="card" style="border-color: #38ef7d;">
+                    <h4 style="color: #11998e;">合作胜利（所有小队共同获胜）</h4>
+                    <p><strong>路线一：摧毁母舰</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>至少一队到达母舰港口🚀</li>
+                        <li>连续成功3次攻击判定</li>
+                        <li>可以使用能量核心增加成功率</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>路线二：坚持防御</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>坚持10个回合</li>
+                        <li>住宅区剩余≥3个</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-color: #f5576c; margin-top: 15px;">
+                    <h4 style="color: #f5576c;">失败条件</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>住宅区全部被摧毁（城市健康=0）</li>
+                        <li>超过时间限制（10回合）未完成目标</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 事件卡 -->
+            <div class="section">
+                <h2>📝 事件卡清单</h2>
+
+                <h3 style="color: #38ef7d;">正面事件（帮助）</h3>
+                <div class="event-card positive">
+                    <div class="event-icon">⚡</div>
+                    <div>
+                        <strong>电力恢复</strong>
+                        <p>所有小队获得1个能量核心</p>
+                    </div>
+                </div>
+                <div class="event-card positive">
+                    <div class="event-icon">👥</div>
+                    <div>
+                        <strong>志愿者加入</strong>
+                        <p>本回合行动点+1</p>
+                    </div>
+                </div>
+                <div class="event-card positive">
+                    <div class="event-icon">📡</div>
+                    <div>
+                        <strong>空中侦察</strong>
+                        <p>可查看下一张外星指令卡</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #f5576c; margin-top: 30px;">负面事件（挑战）</h3>
+                <div class="event-card negative">
+                    <div class="event-icon">👽</div>
+                    <div>
+                        <strong>外星增援</strong>
+                        <p>增加1个外星基地</p>
+                    </div>
+                </div>
+                <div class="event-card negative">
+                    <div class="event-icon">💥</div>
+                    <div>
+                        <strong>能量武器</strong>
+                        <p>随机摧毁1个住宅区</p>
+                    </div>
+                </div>
+                <div class="event-card negative">
+                    <div class="event-icon">⚡</div>
+                    <div>
+                        <strong>电磁脉冲</strong>
+                        <p>本回合无法使用能量核心</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 复盘问题 -->
+            <div class="section">
+                <h2>🤔 复盘问题清单</h2>
+
+                <div class="card">
+                    <h4 style="color: #11998e;">事实层面（发生了什么？）</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>你们的策略是什么？是否按预期执行？</li>
+                        <li>哪个时刻最关键？为什么？</li>
+                        <li>资源分配是否合理？有没有浪费？</li>
+                    </ol>
+                </div>
+
+                <div class="card" style="margin-top: 15px;">
+                    <h4 style="color: #11998e;">感受层面（体验如何？）</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px;" start="4">
+                        <li>你在游戏中扮演什么角色？感觉如何？</li>
+                        <li>什么时候感到压力？如何应对？</li>
+                        <li>有没有"啊哈"时刻（突然明白某事）？</li>
+                    </ol>
+                </div>
+
+                <div class="card" style="margin-top: 15px;">
+                    <h4 style="color: #11998e;">学习层面（获得了什么？）</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px;" start="7">
+                        <li>这个游戏和工作中的什么场景相似？</li>
+                        <li>如果重来一次，你们会做什么不同？</li>
+                        <li>如何将今天的经验应用到实际工作中？</li>
+                    </ol>
+                </div>
+
+                <div class="card" style="margin-top: 15px;">
+                    <h4 style="color: #11998e;">行动层面（接下来做什么？）</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px;" start="10">
+                        <li>团队可以立即改进的一件事是什么？</li>
+                        <li>个人可以立即改进的一件事是什么？</li>
+                        <li>一个月后回顾，你们希望记住什么？</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 变体规则 -->
+            <div class="section">
+                <h2>🔄 变体规则</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4 style="color: #11998e;">简化版</h4>
+                        <p>适合新手团队：</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>移除能量核心系统</li>
+                            <li>外星威胁降低</li>
+                            <li>时间延长至12回合</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4 style="color: #11998e;">挑战版</h4>
+                        <p>适合成熟团队：</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>限制为8回合</li>
+                            <li>初始资源减半</li>
+                            <li>信息不完全</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4 style="color: #11998e;">无道具版</h4>
+                        <p>适合临时团建：</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>不使用打印素材</li>
+                            <li>用口述代替卡牌</li>
+                            <li>用手机计时器</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设计思路 -->
+            <div class="section">
+                <h2>💡 设计思路</h2>
+
+                <div class="highlight">
+                    <h3 style="color: #11998e; margin-bottom: 15px;">为什么选择这个游戏？</h3>
+                    <ol style="margin-left: 20px;">
+                        <li><strong>高度合作</strong>：所有玩家目标一致，天然促进团队感</li>
+                        <li><strong>角色互补</strong>：不同技能卡模拟真实工作中的角色分工</li>
+                        <li><strong>危机感</strong>：倒计时机制创造适度压力，激发潜能</li>
+                        <li><strong>可扩展性</strong>：通过调节难度适应不同团队</li>
+                    </ol>
+                </div>
+
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr>
+                        <th>游戏要素</th>
+                        <th>工作场景</th>
+                    </tr>
+                    <tr>
+                        <td>外星威胁</td>
+                        <td>市场竞争、项目截止日期</td>
+                    </tr>
+                    <tr>
+                        <td>能量核心</td>
+                        <td>预算、人力、时间等资源</td>
+                    </tr>
+                    <tr>
+                        <td>角色技能</td>
+                        <td>团队成员的专长</td>
+                    </tr>
+                    <tr>
+                        <td>跨队协作</td>
+                        <td>跨部门合作</td>
+                    </tr>
+                    <tr>
+                        <td>城市健康</td>
+                        <td>客户满意度、项目健康度</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li>原始桌游：boardgames/category/cooperative/kaiju-defenders/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：病毒危机、协作大厨、岛屿求生</li>
+                </ul>
+                <p style="margin-top: 20px; color: #666; font-style: italic;">
+                    改编自合作桌游《怪兽守护者》| 最后更新：2026-07-02
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -108,6 +108,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/"
 | [半日团建模板](flows/half-day/01-schedule.md) | 3–4 小时 | 10–30人 | 快速凝聚 |
 | [主题工作坊模板](flows/workshop/leadership-awakening.md) | 2.5–3 小时 | 12–24人 | 领导力深度培训 |
 | [线上团建模板](flows/online/01-schedule.md) | 2–2.5 小时 | 8–30人 | 远程团队团建 |
+| [新员工融入团建流程](flows/onboarding/01-schedule.md) | 3–4 小时 | 8–20人 | 帮助新员工快速融入团队 |
+| [跨部门协作团建流程](flows/cross-dept/01-schedule.md) | 6–7 小时 | 15–30人 | 打破部门墙，提升跨部门协作效率 |
 
 👉 流程方案在 [`flows/`](flows/) 目录，每套方案包含：时间轴 + 游戏选配 + 引导要点 + 复盘设计。
 
@@ -155,4 +157,4 @@ source_url: "https://aiworkdb.github.io/teambuilding/"
 
 ---
 
-_最后更新：2026-06-25_
+_最后更新：2026-07-04_
