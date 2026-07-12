@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宫廷药师 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f1e8;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5a3e2b;
+            margin-bottom: 6px;
+            font-size: 2.1em;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8a6d4b;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        h2 {
+            color: #5a3e2b;
+            margin: 28px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #c9a86a;
+            font-size: 1.3em;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(90,62,43,0.08);
+            border: 1px solid #e7dcc4;
+        }
+
+        .print-hint {
+            background: #fff6df;
+            border: 1px solid #f0dca0;
+            border-radius: 8px;
+            padding: 15px 18px;
+            margin-bottom: 22px;
+            font-size: 14px;
+            color: #7a5c1e;
+            line-height: 1.7;
+        }
+
+        .print-hint strong {
+            color: #8a5a00;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* ===== 后宫地图 3x3 ===== */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: #3f2f20;
+            padding: 14px;
+            border-radius: 14px;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .map-cell {
+            aspect-ratio: 1.15;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            border-radius: 10px;
+            position: relative;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        .map-cell .cell-name {
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .map-cell .cell-note {
+            font-size: 10px;
+            opacity: 0.92;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .map-cell.pharmacy { background: #4db6ac; }
+        .map-cell.palace  { background: #ec7098; }
+        .map-cell.hall    { background: #d4a017; }
+        .map-cell.garden  { background: #66bb6a; }
+        .map-cell.hospital{ background: #42a5f5; }
+        .map-cell.alchemy { background: #ff8a50; }
+        .map-cell.woods   { background: #a1887f; }
+        .map-cell.corridor{ background: #90a4ae; }
+        .map-cell.cold    { background: #8e6cc0; }
+
+        /* ===== 卡牌网格 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 12px 13px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+            background: #fffdf8;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-icon {
+            font-size: 30px;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 17px;
+            color: #3f2f20;
+        }
+
+        .card-description {
+            flex: 1;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: #555;
+        }
+
+        .card-cost {
+            margin-top: 7px;
+            font-size: 12px;
+            background: #f3ecdb;
+            border-radius: 6px;
+            padding: 5px 8px;
+            color: #6d5230;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 7px;
+            border-top: 1px dashed #ccc;
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+        }
+
+        .card.resource { border-color: #66bb6a; }
+        .card.tool    { border-color: #4db6ac; }
+        .card.trap    { border-color: #e57373; }
+        .card.treasure{ border-color: #d4a017; }
+
+        .card.resource .card-title  { color: #3c8c40; }
+        .card.tool .card-title      { color: #2c8b82; }
+        .card.trap .card-title      { color: #c0392b; }
+        .card.treasure .card-title  { color: #b8860b; }
+
+        /* ===== 玩家棋子 ===== */
+        .player-pieces {
+            display: flex;
+            gap: 34px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            border: 3px solid #3f2f20;
+            box-shadow: inset 0 -4px 8px rgba(0,0,0,0.15);
+        }
+
+        .piece-circle.blue   { background: #5b8def; }
+        .piece-circle.red    { background: #ef5b6b; }
+        .piece-circle.green  { background: #4caf72; }
+        .piece-circle.yellow { background: #f4c84a; }
+
+        .piece-label {
+            margin-top: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #5a3e2b;
+        }
+
+        .instructions {
+            background: #f0f6f1;
+            border: 1px solid #cfe3d4;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #2c8b82;
+            margin-bottom: 12px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.9;
+            color: #37474f;
+        }
+
+        @media print {
+            body { background: white; }
+            .print-hint { display: none; }
+            .section {
+                box-shadow: none;
+                margin-bottom: 12px;
+                break-inside: avoid;
+            }
+            h1, h2 { color: #5a3e2b; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ 宫廷药师 · 打印文档</h1>
+        <div class="subtitle">Court Apothecary — 卡牌策略桌游 · 灵感源自《药屋少女的呢喃》</div>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 8px; margin-left: 20px; line-height: 1.8;">
+                <li>使用 <strong>A4 纸张</strong> 打印，建议设置 <strong>最小边距</strong>。</li>
+                <li>在打印对话框中，务必 <strong>勾选「背景图形」</strong> 选项，否则地图与卡牌的颜色背景将不会打印。</li>
+                <li>卡牌与棋子建议使用 <strong>卡纸（160-200g）</strong> 打印，增加耐用性。</li>
+                <li>游戏地图可用普通纸打印；卡牌打印后沿边框裁剪，建议塑封。</li>
+                <li>按 README 物料清单的「建议打印数量」决定每种卡牌的打印份数。</li>
+            </ul>
+        </div>
+
+        <!-- ============ 地图 ============ -->
+        <div class="section">
+            <h2>🗺️ 后宫地图（3×3 区域平面图）</h2>
+            <div class="game-map">
+                <div class="map-cell pharmacy">
+                    🏥<span class="cell-name">御药房</span><span class="cell-note">起点 · 研配解药</span>
+                </div>
+                <div class="map-cell palace">
+                    👑<span class="cell-name">嫔妃寝宫</span><span class="cell-note">毒案高发</span>
+                </div>
+                <div class="map-cell hall">
+                    🏛️<span class="cell-name">凤仪殿</span><span class="cell-note">破案得声望</span>
+                </div>
+
+                <div class="map-cell garden">
+                    🌿<span class="cell-name">御花园</span><span class="cell-note">采 🌿草本</span>
+                </div>
+                <div class="map-cell hospital">
+                    💧<span class="cell-name">太医院</span><span class="cell-note">采 💧水药</span>
+                </div>
+                <div class="map-cell alchemy">
+                    🔥<span class="cell-name">丹房</span><span class="cell-note">采 🔥火炼</span>
+                </div>
+
+                <div class="map-cell woods">
+                    🪵<span class="cell-name">药林</span><span class="cell-note">采 🪵木本</span>
+                </div>
+                <div class="map-cell corridor">
+                    🎴<span class="cell-name">回廊</span><span class="cell-note">随机事件</span>
+                </div>
+                <div class="map-cell cold">
+                    ☠️<span class="cell-name">冷宫</span><span class="cell-note">采 ☠️毒草·危机</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ 资源卡：药材卡 ============ -->
+        <div class="section">
+            <h2>🌿 资源卡 · 药材卡</h2>
+            <div class="cards-grid">
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🌿</span><span class="card-title">草本</span></div>
+                    <div class="card-description">基础药材。御花园采集。多用于解毒丸、清凉散及温和毒案的破解配方。</div>
+                    <div class="card-footer">资源卡 · 建议 9 张</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💧</span><span class="card-title">水药</span></div>
+                    <div class="card-description">基础药材。太医院采集。多数毒案的核心配方所需。</div>
+                    <div class="card-footer">资源卡 · 建议 9 张</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">火炼</span></div>
+                    <div class="card-description">基础药材。丹房采集。火属性毒案与医典、避毒香所需。</div>
+                    <div class="card-footer">资源卡 · 建议 9 张</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🪵</span><span class="card-title">木本</span></div>
+                    <div class="card-description">基础药材。药林采集。固本类解药（金疮药、醒神汤）所需。</div>
+                    <div class="card-footer">资源卡 · 建议 9 张</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">☠️</span><span class="card-title">毒草</span></div>
+                    <div class="card-description">稀有药材。冷宫采集，有 50% 中毒风险。部分特殊毒案与嫁祸素材。</div>
+                    <div class="card-footer">资源卡 · 建议 9 张</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ 工具卡：解药卡 ============ -->
+        <div class="section">
+            <h2>💊 工具卡 · 解药卡（在御药房研配）</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">💊</span><span class="card-title">解毒丸</span></div>
+                    <div class="card-description">立即解除自身 1 层毒（+1 健康）。</div>
+                    <div class="card-cost">研配：🌿×2 + 💧×1</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🍃</span><span class="card-title">清凉散</span></div>
+                    <div class="card-description">立即从牌库抽 2 张药材卡。</div>
+                    <div class="card-cost">研配：💧×2 + 🌿×1</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🩹</span><span class="card-title">金疮药</span></div>
+                    <div class="card-description">恢复 1 点健康（上限 5）。</div>
+                    <div class="card-cost">研配：🔥×1 + 🪵×2</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🧪</span><span class="card-title">醒神汤</span></div>
+                    <div class="card-description">偷看毒案牌堆顶 2 张（仅自己可见）。</div>
+                    <div class="card-cost">研配：🪵×1 + 💧×1</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">📘</span><span class="card-title">医典</span></div>
+                    <div class="card-description">本回合可在任意区域研配（不限御药房）。</div>
+                    <div class="card-cost">研配：🔥×2 + 🪵×1</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🌬️</span><span class="card-title">避毒香</span></div>
+                    <div class="card-description">接下来 2 回合免疫一切新毒。</div>
+                    <div class="card-cost">研配：🌿×1 + 🪵×1</div>
+                    <div class="card-footer">工具卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ 陷阱卡：毒药·阴谋卡 ============ -->
+        <div class="section">
+            <h2>⚠️ 陷阱卡 · 毒药·阴谋卡</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">💀</span><span class="card-title">鹤顶红</span></div>
+                    <div class="card-description">指定 1 名对手中毒 1 层（-1 健康）。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🐍</span><span class="card-title">慢性毒</span></div>
+                    <div class="card-description">预警：2 回合后该对手中毒 2 层。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🤥</span><span class="card-title">嫁祸</span></div>
+                    <div class="card-description">将你身上的 1 层毒转移给任意对手。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🚫</span><span class="card-title">封锁</span></div>
+                    <div class="card-description">指定 1 个区域，本回合无人可进入。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🗣️</span><span class="card-title">流言</span></div>
+                    <div class="card-description">指定 1 名对手，下回合少移动 1 格 / 少抽 1。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🏹</span><span class="card-title">暗箭</span></div>
+                    <div class="card-description">立即翻开 1 张新毒案并强制生效。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ 宝藏卡：秘方·宝物卡 ============ -->
+        <div class="section">
+            <h2>🏆 宝藏卡 · 秘方·宝物卡</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">📜</span><span class="card-title">失传医书</span></div>
+                    <div class="card-description">立即 +3 声望。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🪡</span><span class="card-title">玉如意</span></div>
+                    <div class="card-description">立即获得 1 次额外行动回合。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🐉</span><span class="card-title">凤凰胆</span></div>
+                    <div class="card-description">万能药材，可顶替任意 1 种药材用于研配/破案。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">⚜️</span><span class="card-title">圣手令</span></div>
+                    <div class="card-description">自动破解当前毒案（无需支付配方），照常得声望。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🐲</span><span class="card-title">蟠龙玉佩</span></div>
+                    <div class="card-description">免疫接下来 1 次中毒。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🏅</span><span class="card-title">御赐金匾</span></div>
+                    <div class="card-description">终局结算时，额外 +1 声望。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ 玩家棋子 ============ -->
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece">
+                    <div class="piece-circle blue">①</div>
+                    <div class="piece-label">药师 · 蓝</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle red">②</div>
+                    <div class="piece-label">药师 · 红</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle green">③</div>
+                    <div class="piece-label">药师 · 绿</div>
+                </div>
+                <div class="piece">
+                    <div class="piece-circle yellow">④</div>
+                    <div class="piece-label">药师 · 黄</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ 使用说明 ============ -->
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将后宫地图打印于桌面中央，作为行动区域。</li>
+                <li><strong>裁剪卡牌：</strong>沿卡牌边框裁剪，按 README 物料清单的份数打印；建议塑封。</li>
+                <li><strong>准备棋子：</strong>裁剪玩家棋子，或用硬币 / 围棋子代替。</li>
+                <li><strong>数值记录：</strong>每位玩家用纸笔或骰子记录「声望」与「健康（初始 3）」。</li>
+                <li><strong>开始游戏：</strong>所有棋子置于御药房，洗好各牌库、翻开首张毒案，发起始手牌即可开局。</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
