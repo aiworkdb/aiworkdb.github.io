@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵能大乱斗 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, sans-serif;
+            background: #f3f0fa;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5e35b1;
+            margin-bottom: 8px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8e7cc3;
+            margin-bottom: 24px;
+            font-size: 0.95em;
+        }
+
+        h2 {
+            color: #5e35b1;
+            margin: 26px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #d1c4e9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(94,53,177,0.06);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* ===== 地图 ===== */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: #311b4f;
+            padding: 15px;
+            border-radius: 12px;
+            aspect-ratio: 1;
+        }
+
+        .map-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border-radius: 6px;
+            position: relative;
+            color: #1a1a1a;
+        }
+
+        .map-cell.start { background: #ffd54f; }
+        .map-cell.path { background: #b0a99f; }
+        .map-cell.resource { background: #ab47bc; color: #fff; }
+        .map-cell.shop { background: #ff9800; }
+        .map-cell.trap { background: #e53935; color: #fff; }
+        .map-cell.treasure { background: #ffca28; }
+        .map-cell.portal { background: #42a5f5; color: #fff; }
+        .map-cell.shrine { background: #66bb6a; }
+        .map-cell.ruin { background: #6d4c41; color: #fff; }
+        .map-cell.beach { background: #26c6da; }
+
+        .cell-label {
+            position: absolute;
+            bottom: 1px;
+            right: 3px;
+            font-size: 9px;
+            color: rgba(0,0,0,0.55);
+        }
+        .map-cell.trap .cell-label,
+        .map-cell.resource .cell-label,
+        .map-cell.portal .cell-label,
+        .map-cell.ruin .cell-label { color: rgba(255,255,255,0.85); }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            margin-top: 14px;
+            font-size: 13px;
+        }
+        .legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+        /* ===== 卡牌 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 14px;
+            min-height: 135px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-icon { font-size: 26px; }
+        .card-title { font-weight: bold; font-size: 15px; }
+
+        .card-description {
+            flex: 1;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+        }
+
+        .card.resource { border-color: #ab47bc; }
+        .card.tool { border-color: #26a69a; }
+        .card.trap { border-color: #e53935; }
+        .card.treasure { border-color: #ffb300; }
+
+        /* ===== 棋子 ===== */
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .piece { display: flex; flex-direction: column; align-items: center; }
+        .piece-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 3px solid #333;
+            color: #fff;
+        }
+        .piece-circle.blue { background: #2196f3; }
+        .piece-circle.red { background: #e53935; }
+        .piece-circle.green { background: #43a047; }
+        .piece-circle.yellow { background: #fdd835; color:#333; }
+        .piece-circle.purple { background: #8e24aa; }
+        .piece-label { margin-top: 8px; font-size: 13px; font-weight: 600; }
+
+        /* ===== 封印指示物 ===== */
+        .seals { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .seal {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: #5e35b1; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; box-shadow: inset 0 0 0 3px #fff;
+        }
+
+        /* ===== 骰子 ===== */
+        .dice-template { display: flex; gap: 20px; }
+        .dice {
+            width: 58px; height: 58px;
+            background: white; border: 3px solid #333; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+        }
+
+        .instructions {
+            background: #ede7f6;
+            border: 1px solid #d1c4e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .instructions h3 { color: #5e35b1; margin-bottom: 12px; }
+        .instructions ul { margin-left: 20px; line-height: 1.8; color: #4527a0; }
+
+        @media print {
+            body { background: white; }
+            .print-hint { display: none; }
+            .section { box-shadow: none; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 灵能大乱斗 — 打印文档</h1>
+        <div class="subtitle">DanDaDan Clash · 取材自热门动漫《DanDaDan（妖怪 × 外星人）》</div>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌、棋子、封印指示物建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可用普通纸张打印</li>
+                <li>打印后按卡片边界裁剪使用，卡牌可塑封延长寿命</li>
+            </ul>
+        </div>
+
+        <!-- ===== 地图 ===== -->
+        <div class="section">
+            <h2>🗺️ 游戏地图（绛酢市 7×7）</h2>
+            <div class="game-map">
+                <div class="map-cell start">🚶<span class="cell-label">起点</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🔆<span class="cell-label">咒力</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell shop">🛠️<span class="cell-label">灵具铺</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell portal">🌀<span class="cell-label">传送</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell shrine">⛩️<span class="cell-label">神社</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">💎<span class="cell-label">宝物</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell resource">🔆<span class="cell-label">咒力</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell ruin">🏚️<span class="cell-label">废楼</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell portal">🌀<span class="cell-label">传送</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🔆<span class="cell-label">咒力</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell beach">🏖️<span class="cell-label">海滩</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell shop">🛠️<span class="cell-label">灵具铺</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🔆<span class="cell-label">咒力</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">💎<span class="cell-label">宝物</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🔆<span class="cell-label">咒力</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell portal">🌀<span class="cell-label">传送</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell portal">🌀<span class="cell-label">传送</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell beach">🏖️<span class="cell-label">海滩</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">💎<span class="cell-label">宝物</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell resource">🔆<span class="cell-label">咒力</span></div>
+            </div>
+            <div class="legend">
+                <span>🚶 起点</span><span>⬛ 街区道路</span><span>🔆 咒力点</span>
+                <span>🛠️ 灵具铺</span><span>⚠️ 险地</span><span>💎 宝物点</span>
+                <span>🌀 传送阵</span><span>⛩️ 神社</span><span>🏚️ 废楼</span><span>🏖️ 海滩</span>
+            </div>
+        </div>
+
+        <!-- ===== 资源卡：咒力 ===== -->
+        <div class="section">
+            <h2>🔆 资源卡片（咒力）</h2>
+            <div class="cards-grid">
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔆</span><span class="card-title">咒力</span></div>
+                    <div class="card-description">核心资源：出现在咒力点、神社、海滩时获得。用于锻造灵具、击退妖怪/外星人、支付特效。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔆</span><span class="card-title">咒力</span></div>
+                    <div class="card-description">核心资源：出现在咒力点、神社、海滩时获得。用于锻造灵具、击退妖怪/外星人、支付特效。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔆</span><span class="card-title">咒力</span></div>
+                    <div class="card-description">核心资源：出现在咒力点、神社、海滩时获得。用于锻造灵具、击退妖怪/外星人、支付特效。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔆</span><span class="card-title">咒力</span></div>
+                    <div class="card-description">核心资源：出现在咒力点、神社、海滩时获得。用于锻造灵具、击退妖怪/外星人、支付特效。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔆</span><span class="card-title">咒力</span></div>
+                    <div class="card-description">核心资源：出现在咒力点、神社、海滩时获得。用于锻造灵具、击退妖怪/外星人、支付特效。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔆</span><span class="card-title">咒力</span></div>
+                    <div class="card-description">核心资源：出现在咒力点、神社、海滩时获得。用于锻造灵具、击退妖怪/外星人、支付特效。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 工具卡：灵具 ===== -->
+        <div class="section">
+            <h2>🧿 灵具卡片（工具）</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🧿</span><span class="card-title">桃式护符</span></div>
+                    <div class="card-description">锻造：咒力 ×2<br>抵消一次妖怪攻击（免疫其负面效果）。</div>
+                    <div class="card-footer">灵具 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🧄</span><span class="card-title">大蒜束</span></div>
+                    <div class="card-description">锻造：咒力 ×1<br>自动驱逐 1 只低级妖怪（地缚灵），并 +3 灵力。</div>
+                    <div class="card-footer">灵具 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">💧</span><span class="card-title">圣水瓶</span></div>
+                    <div class="card-description">锻造：咒力 ×2<br>净化：移除自己所有负面状态。</div>
+                    <div class="card-footer">灵具 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🔮</span><span class="card-title">灵摆</span></div>
+                    <div class="card-description">锻造：咒力 ×3<br>窥探宝物牌库顶 3 张，任选 1 张收入手牌。</div>
+                    <div class="card-footer">灵具 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">👟</span><span class="card-title">涡轮鞋</span></div>
+                    <div class="card-description">锻造：咒力 ×2<br>立即额外移动 3 步（本回合生效）。</div>
+                    <div class="card-footer">灵具 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🧤</span><span class="card-title">灵能拳套</span></div>
+                    <div class="card-description">锻造：咒力 ×3<br>击退实体威力 +2，可硬撼外星人。</div>
+                    <div class="card-footer">灵具 · 工具卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 陷阱卡：妖怪/外星人 ===== -->
+        <div class="section">
+            <h2>👾 妖怪 · 外星人卡片（陷阱）</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">👵</span><span class="card-title">加速老太婆</span></div>
+                    <div class="card-description">妖怪 · 威胁值 2<br>抢走 2 张咒力卡并传送回起点区域。<br>应对：桃式护符抵消 / 支付咒力 ×2 击退（+3）。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">👽</span><span class="card-title">平冢夫人</span></div>
+                    <div class="card-description">外星人 · 威胁值 2<br>绑架：暂停 1 回合。<br>应对：灵能拳套 + 咒力 ×2 击退（+4）。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">💀</span><span class="card-title">地缚灵</span></div>
+                    <div class="card-description">妖怪 · 威胁值 3<br>困住 1 回合。<br>应对：大蒜束免费驱逐（+3）/ 支付咒力 ×3 击退。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🌀</span><span class="card-title">咒语纠缠</span></div>
+                    <div class="card-description">诅咒 · 威胁值 1<br>随机失去 1 张手牌。<br>应对：圣水瓶净化 / 支付咒力 ×1 驱散。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🛸</span><span class="card-title">飞碟光束</span></div>
+                    <div class="card-description">外星人 · 威胁值 3<br>把你移到任意 1 个险地。<br>应对：灵能拳套 + 咒力 ×3 击退（+4）。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">👁️</span><span class="card-title">邪视</span></div>
+                    <div class="card-description">妖怪 · 威胁值 2<br>下个回合移动步数 −2。<br>应对：圣水瓶净化 / 支付咒力 ×2 击退（+3）。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 宝藏卡：灵能宝物 ===== -->
+        <div class="section">
+            <h2>💎 灵能宝物卡片（宝藏）</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">⚽</span><span class="card-title">黄金球</span></div>
+                    <div class="card-description">灵力积分 +5<br>传说宝物！达成即锁定胜势。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">💠</span><span class="card-title">灵能结晶</span></div>
+                    <div class="card-description">灵力积分 +3<br>纯净灵力。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">📜</span><span class="card-title">封印卷轴</span></div>
+                    <div class="card-description">灵力积分 +4<br>同时净化全场 1 个负面状态。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🔯</span><span class="card-title">灵摆碎片</span></div>
+                    <div class="card-description">灵力积分 +2<br>小型灵具残片。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🔋</span><span class="card-title">涡轮核心</span></div>
+                    <div class="card-description">灵力积分 +3<br>永久：之后每个回合移动 +1 步。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 玩家棋子 ===== -->
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece"><div class="piece-circle blue">1</div><div class="piece-label">玩家1</div></div>
+                <div class="piece"><div class="piece-circle red">2</div><div class="piece-label">玩家2</div></div>
+                <div class="piece"><div class="piece-circle green">3</div><div class="piece-label">玩家3</div></div>
+                <div class="piece"><div class="piece-circle yellow">4</div><div class="piece-label">玩家4</div></div>
+                <div class="piece"><div class="piece-circle purple">5</div><div class="piece-label">玩家5</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 封印指示物 ===== -->
+        <div class="section">
+            <h2>🔒 封印指示物（回合标记）</h2>
+            <p style="font-size:13px;color:#666;margin-bottom:12px;">每完成 1 整轮消耗 1 个，耗尽即达回合数上限。按人数取 16 / 18 / 20 个。</p>
+            <div class="seals">
+                <div class="seal">🔒</div><div class="seal">🔒</div><div class="seal">🔒</div>
+                <div class="seal">🔒</div><div class="seal">🔒</div><div class="seal">🔒</div>
+                <div class="seal">🔒</div><div class="seal">🔒</div><div class="seal">🔒</div>
+                <div class="seal">🔒</div><div class="seal">🔒</div><div class="seal">🔒</div>
+                <div class="seal">🔒</div><div class="seal">🔒</div><div class="seal">🔒</div>
+                <div class="seal">🔒</div><div class="seal">🔒</div><div class="seal">🔒</div>
+                <div class="seal">🔒</div><div class="seal">🔒</div>
+            </div>
+        </div>
+
+        <!-- ===== 骰子 ===== -->
+        <div class="section">
+            <h2>🎲 骰子模板</h2>
+            <div class="dice-template">
+                <div class="dice">⚀</div>
+                <div class="dice">⚁</div>
+                <div class="dice">⚂</div>
+                <div class="dice">⚃</div>
+                <div class="dice">⚄</div>
+                <div class="dice">⚅</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏地图打印出来，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿卡片边界裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子与指示物：</strong>裁剪玩家棋子，或用硬币/纽扣代替；封印指示物可用豆子/回形针代替</li>
+                <li><strong>骰子：</strong>若无骰子，可用手机骰子 App 或打印的骰子模板</li>
+                <li><strong>开始游戏：</strong>每人选 1 棋子放起点，各抽 4 张咒力卡，先达 12 灵力积分者胜</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
