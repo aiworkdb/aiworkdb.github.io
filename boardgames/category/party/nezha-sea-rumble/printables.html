@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔童闹海 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, Geneva, Verdana, sans-serif;
+            background: #faf6f0;
+            padding: 20px;
+            color: #2b2b2b;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #c1121f;
+            margin-bottom: 6px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #b08968;
+            margin-bottom: 26px;
+            font-size: 0.95em;
+        }
+
+        h2 {
+            color: #9d0208;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0c097;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            break-inside: avoid;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* ===== 游戏地图 ===== */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: #1d3557;
+            padding: 15px;
+            border-radius: 12px;
+            aspect-ratio: 1;
+        }
+
+        .map-cell {
+            background: #a8dadc;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .map-cell.start { background: #ffd166; }
+        .map-cell.path { background: #cde7f0; }
+        .map-cell.fire { background: #f4978e; }
+        .map-cell.water { background: #48cae4; }
+        .map-cell.wind { background: #80ffdb; }
+        .map-cell.trap { background: #e63946; }
+        .map-cell.shop { background: #b298dc; }
+        .map-cell.treasure { background: #ffd60a; }
+        .map-cell.final { background: #d00000; }
+
+        .cell-label {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 10px;
+            color: rgba(0,0,0,0.55);
+            font-weight: 600;
+        }
+
+        .map-legend {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            font-size: 13px;
+        }
+        .map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+        /* ===== 卡牌 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            padding: 14px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-icon { font-size: 30px; }
+        .card-title { font-weight: bold; font-size: 16px; }
+
+        .card-description {
+            flex: 1;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: #555;
+        }
+
+        .card-cost {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #9d0208;
+            font-weight: 600;
+        }
+
+        .card-footer {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .card.resource { border-color: #fb8500; background: #fff7ef; }
+        .card.tool { border-color: #9d4edd; background: #f8f3ff; }
+        .card.trap { border-color: #e63946; background: #fff5f5; }
+        .card.treasure { border-color: #ffb703; background: #fffbe9; }
+
+        /* ===== 玩家棋子 ===== */
+        .player-pieces {
+            display: flex;
+            gap: 26px;
+            flex-wrap: wrap;
+        }
+
+        .piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .piece-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 3px solid #333;
+        }
+
+        .piece-circle.red { background: #e63946; color: #fff; }
+        .piece-circle.orange { background: #f4a261; color: #fff; }
+        .piece-circle.yellow { background: #ffd166; }
+        .piece-circle.green { background: #52b788; color: #fff; }
+        .piece-circle.blue { background: #4361ee; color: #fff; }
+        .piece-circle.purple { background: #9d4edd; color: #fff; }
+
+        .piece-label {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ===== 骰子模板 ===== */
+        .dice-template { display: flex; gap: 20px; }
+        .dice {
+            width: 62px;
+            height: 62px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        .instructions {
+            background: #fff3e6;
+            border: 1px solid #ffd8a8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 { color: #bc6c25; margin-bottom: 15px; }
+        .instructions ul { margin-left: 20px; line-height: 1.8; color: #5c4a36; }
+
+        @media print {
+            body { background: white; }
+            .print-hint { display: none; }
+            .section { box-shadow: none; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐉 魔童闹海 - 打印文档</h1>
+        <div class="subtitle">Nezha's Sea Rumble · 派对类桌游 · 灵感源自《哪吒之魔童闹海》</div>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图与卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可以使用普通纸张打印</li>
+                <li>打印后按边缘裁剪，卡牌可塑封后使用</li>
+            </ul>
+        </div>
+
+        <!-- ===== 游戏地图 ===== -->
+        <div class="section">
+            <h2>🗺️ 游戏地图（7×7）</h2>
+            <div class="game-map">
+                <div class="map-cell start">🏯<span class="cell-label">陈塘关</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell fire">🔥<span class="cell-label">火灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell wind">🌪️<span class="cell-label">风灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell water">💧<span class="cell-label">水灵</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell water">💧<span class="cell-label">水灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell shop">🏮<span class="cell-label">法宝铺</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell fire">🔥<span class="cell-label">火灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">🐉<span class="cell-label">宝物</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell water">💧<span class="cell-label">水灵</span></div>
+                <div class="map-cell fire">🔥<span class="cell-label">火灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell shop">🏮<span class="cell-label">法宝铺</span></div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell wind">🌪️<span class="cell-label">风灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell fire">🔥<span class="cell-label">火灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell water">💧<span class="cell-label">水灵</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell water">💧<span class="cell-label">水灵</span></div>
+                <div class="map-cell shop">🏮<span class="cell-label">法宝铺</span></div>
+                <div class="map-cell trap">⚠️<span class="cell-label">险地</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell wind">🌪️<span class="cell-label">风灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">🐉<span class="cell-label">宝物</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell water">💧<span class="cell-label">水灵</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell fire">🔥<span class="cell-label">火灵</span></div>
+                <div class="map-cell final">👑<span class="cell-label">龙宫核心</span></div>
+            </div>
+            <div class="map-legend">
+                <span>🏯 陈塘关·起点</span>
+                <span>⬛ 海面道路</span>
+                <span>🔥 火灵灵脉</span>
+                <span>💧 水灵灵脉</span>
+                <span>🌪️ 风灵灵脉</span>
+                <span>⚠️ 险地</span>
+                <span>🏮 法宝铺</span>
+                <span>🐉 龙宫宝物点</span>
+                <span>👑 东海龙宫核心·终点</span>
+            </div>
+        </div>
+
+        <!-- ===== 资源卡 ===== -->
+        <div class="section">
+            <h2>🔥 资源卡片（天地灵气）</h2>
+            <div class="cards-grid">
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">火灵</span></div>
+                    <div class="card-description">基础资源。停在 🔥 火灵灵脉获得。用于炼化风火轮、火尖枪等进攻 / 位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">火灵</span></div>
+                    <div class="card-description">基础资源。停在 🔥 火灵灵脉获得。用于炼化风火轮、火尖枪等进攻 / 位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">火灵</span></div>
+                    <div class="card-description">基础资源。停在 🔥 火灵灵脉获得。用于炼化风火轮、火尖枪等进攻 / 位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">火灵</span></div>
+                    <div class="card-description">基础资源。停在 🔥 火灵灵脉获得。用于炼化风火轮、火尖枪等进攻 / 位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💧</span><span class="card-title">水灵</span></div>
+                    <div class="card-description">基础资源。停在 💧 水灵灵脉获得。用于炼化乾坤圈、莲藕化身、七色宝莲等防御 / 恢复法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💧</span><span class="card-title">水灵</span></div>
+                    <div class="card-description">基础资源。停在 💧 水灵灵脉获得。用于炼化乾坤圈、莲藕化身、七色宝莲等防御 / 恢复法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💧</span><span class="card-title">水灵</span></div>
+                    <div class="card-description">基础资源。停在 💧 水灵灵脉获得。用于炼化乾坤圈、莲藕化身、七色宝莲等防御 / 恢复法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💧</span><span class="card-title">水灵</span></div>
+                    <div class="card-description">基础资源。停在 💧 水灵灵脉获得。用于炼化乾坤圈、莲藕化身、七色宝莲等防御 / 恢复法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🌪️</span><span class="card-title">风灵</span></div>
+                    <div class="card-description">基础资源。停在 🌪️ 风灵灵脉获得。用于炼化混天绫等位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🌪️</span><span class="card-title">风灵</span></div>
+                    <div class="card-description">基础资源。停在 🌪️ 风灵灵脉获得。用于炼化混天绫等位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🌪️</span><span class="card-title">风灵</span></div>
+                    <div class="card-description">基础资源。停在 🌪️ 风灵灵脉获得。用于炼化混天绫等位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🌪️</span><span class="card-title">风灵</span></div>
+                    <div class="card-description">基础资源。停在 🌪️ 风灵灵脉获得。用于炼化混天绫等位移法宝。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 法宝卡（工具卡） ===== -->
+        <div class="section">
+            <h2>🎗️ 法宝卡片（工具卡）</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🎗️</span><span class="card-title">混天绫</span></div>
+                    <div class="card-description">将任意一名对手棋子拉回 2 格（闹海捣蛋）。</div>
+                    <div class="card-cost">炼化：风灵×2</div>
+                    <div class="card-footer">法宝卡 · 位移</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🛞</span><span class="card-title">风火轮</span></div>
+                    <div class="card-description">本回合额外移动 3 格（强化核 +4）。</div>
+                    <div class="card-cost">炼化：火灵×2</div>
+                    <div class="card-footer">法宝卡 · 位移</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🔱</span><span class="card-title">火尖枪</span></div>
+                    <div class="card-description">指定一名对手弃掉 2 张灵气卡（·真 3 张）。</div>
+                    <div class="card-cost">炼化：火灵×1 + 风灵×1</div>
+                    <div class="card-footer">法宝卡 · 进攻</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">⭕</span><span class="card-title">乾坤圈</span></div>
+                    <div class="card-description">获得 1 层护盾，免疫下一次陷阱。</div>
+                    <div class="card-cost">炼化：水灵×2</div>
+                    <div class="card-footer">法宝卡 · 防御</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🪷</span><span class="card-title">莲藕化身</span></div>
+                    <div class="card-description">若本回合被陷阱退回起点，可免疫一次（原地不动）。</div>
+                    <div class="card-cost">炼化：水灵×2 + 火灵×1</div>
+                    <div class="card-footer">法宝卡 · 防御</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🪷✨</span><span class="card-title">七色宝莲</span></div>
+                    <div class="card-description">立即恢复，并额外从法宝库抽 1 张法宝卡。</div>
+                    <div class="card-cost">炼化：水灵×1 + 火灵×1 + 风灵×1</div>
+                    <div class="card-footer">法宝卡 · 恢复</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 陷阱卡 ===== -->
+        <div class="section">
+            <h2>⚠️ 陷阱卡片（龙宫险阻）</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🌊</span><span class="card-title">龙王怒涛</span></div>
+                    <div class="card-description">后退 3 格。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">⚡</span><span class="card-title">天劫</span></div>
+                    <div class="card-description">眩晕，跳过本回合。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🔰</span><span class="card-title">龙宫结界</span></div>
+                    <div class="card-description">本回合无法移动。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">海妖之歌</span></div>
+                    <div class="card-description">随机失去 1 张灵气卡。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">业火</span></div>
+                    <div class="card-description">失去 1 张法宝卡（若无则失 1 灵气卡）。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🌀</span><span class="card-title">迷踪阵</span></div>
+                    <div class="card-description">随机传送至地图任一格。</div>
+                    <div class="card-footer">陷阱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 宝藏卡 ===== -->
+        <div class="section">
+            <h2>🐉 宝藏卡片（龙宫至宝）</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🐉💎</span><span class="card-title">龙珠</span></div>
+                    <div class="card-description">持有者每回合开始额外 +1 移动力（隐形加速器）。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🛡️</span><span class="card-title">万龙甲</span></div>
+                    <div class="card-description">免疫 1 次陷阱（永久）。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🏮</span><span class="card-title">宝莲灯</span></div>
+                    <div class="card-description">每回合恢复 1 张火灵灵气卡。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🎗️</span><span class="card-title">混天绫碎片</span></div>
+                    <div class="card-description">可免费施放 1 次混天绫。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🔱</span><span class="card-title">火尖枪·真</span></div>
+                    <div class="card-description">火尖枪强化：令对手弃 3 张灵气卡。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">⚙️</span><span class="card-title">风火轮核</span></div>
+                    <div class="card-description">风火轮强化：额外移动 +1（共 +4）。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 玩家棋子 ===== -->
+        <div class="section">
+            <h2>👤 玩家棋子（按人数取色）</h2>
+            <div class="player-pieces">
+                <div class="piece"><div class="piece-circle red">1</div><div class="piece-label">玩家1·红</div></div>
+                <div class="piece"><div class="piece-circle orange">2</div><div class="piece-label">玩家2·橙</div></div>
+                <div class="piece"><div class="piece-circle yellow">3</div><div class="piece-label">玩家3·黄</div></div>
+                <div class="piece"><div class="piece-circle green">4</div><div class="piece-label">玩家4·绿</div></div>
+                <div class="piece"><div class="piece-circle blue">5</div><div class="piece-label">玩家5·蓝</div></div>
+                <div class="piece"><div class="piece-circle purple">6</div><div class="piece-label">玩家6·紫</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 骰子模板 ===== -->
+        <div class="section">
+            <h2>🎲 骰子模板</h2>
+            <div class="dice-template">
+                <div class="dice">🎲</div>
+                <div class="dice">🎲</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将 7×7 游戏地图打印出来，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿卡牌边缘裁剪，建议塑封以增加耐用性；资源 / 法宝 / 陷阱 / 宝藏四类卡分开放置</li>
+                <li><strong>准备棋子：</strong>按人数裁剪对应颜色玩家棋子，或用硬币 / 小物件代替</li>
+                <li><strong>骰子：</strong>若没有骰子，可使用手机骰子 APP 或打印的骰子模板</li>
+                <li><strong>开始游戏：</strong>每人取一棋子放陈塘关起点，发初始灵气（2火+2水+1风），掷骰最大者先手</li>
+                <li><strong>目标：</strong>率先抵达 👑 东海龙宫核心者立即获胜！</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

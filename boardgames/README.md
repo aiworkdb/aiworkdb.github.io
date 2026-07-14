@@ -102,6 +102,7 @@ boardgames/
 | [咒术师团](category/cooperative/jujutsu-sorcerers/README.md) | 合作 | 2-4人 | 45-70分钟 | 中等/困难 |
 | [宫廷药师](category/card/court-apothecary/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
 | [灵能大乱斗](category/strategy/dandadan-clash/README.md) | 策略 | 2-5人 | 40-60分钟 | 中等 |
+| [魔童闹海](category/party/nezha-sea-rumble/README.md) | 派对 | 3-6人 | 20-40分钟 | 简单 |
 
 ## 添加新桌游
 
