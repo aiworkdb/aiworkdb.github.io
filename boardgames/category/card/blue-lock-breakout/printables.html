@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蓝色禁区：前锋突围 · 打印道具</title>
+<style>
+  :root {
+    --blue: #1d4 e8;
+    --blue-deep: #0b1f4d;
+    --fire: #ff5a3c;
+    --field: #1faa59;
+    --keeper: #4a6fa5;
+    --gold: #f4b400;
+    --ink: #14233f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: #14233f;
+    background: #f4f6fb;
+  }
+  h1.page-title {
+    text-align: center;
+    color: #0b1f4d;
+    margin: 0 0 4px;
+    font-size: 26px;
+  }
+  .subtitle { text-align:center; color:#5a6b8c; margin-bottom: 18px; font-size: 13px; }
+  .section-title {
+    margin: 26px 0 12px;
+    padding: 6px 14px;
+    background: linear-gradient(90deg, #1d4ed8, #0b1f4d);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 17px;
+    display: inline-block;
+  }
+  .legend { font-size: 12px; color:#5a6b8c; margin: 4px 0 10px; }
+
+  /* 打印提示 */
+  .print-hint {
+    background: #fff7e6;
+    border: 2px dashed #f4b400;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    color: #7a5b00;
+    font-size: 13px;
+  }
+  .print-hint strong { color:#a35b00; }
+
+  /* 通用卡片 */
+  .card-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .card {
+    width: 63mm; height: 88mm;
+    border-radius: 8px;
+    padding: 6px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    page-break-inside: avoid;
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+    display: flex; flex-direction: column;
+  }
+  .card .top {
+    display:flex; justify-content: space-between; align-items:center;
+    font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    opacity: .95;
+  }
+  .card .icon {
+    font-size: 40px; text-align: center; margin: 6px 0 2px;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,.3));
+  }
+  .card .name {
+    text-align:center; font-size: 16px; font-weight: 800;
+    margin: 2px 0; text-shadow: 0 1px 2px rgba(0,0,0,.3);
+  }
+  .card .desc {
+    font-size: 11.5px; line-height: 1.45; text-align:center;
+    background: rgba(255,255,255,.16); border-radius: 6px; padding: 6px;
+    flex: 1; display:flex; align-items:center; justify-content:center;
+  }
+  .card .qty {
+    position:absolute; top:6px; right:6px;
+    background: rgba(0,0,0,.35); border-radius: 50%;
+    width: 22px; height:22px; font-size: 12px;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .card .cat-tag {
+    position:absolute; bottom:6px; left:6px;
+    font-size:10px; opacity:.85;
+  }
+  /* 卡牌分类配色 */
+  .card.resource { background: linear-gradient(160deg, #ff7a45, #d62828); }
+  .card.tool    { background: linear-gradient(160deg, #2ec27e, #0f7a45); }
+  .card.trap    { background: linear-gradient(160deg, #6c8cc7, #2b3f6b); }
+  .card.treasure{ background: linear-gradient(160deg, #ffd24a, #c98a00); color:#3a2a00; }
+  .card.treasure .top, .card.treasure .cat-tag { color:#3a2a00; }
+  .card.treasure .desc { background: rgba(0,0,0,.08); }
+  .card.treasure .name { text-shadow: 0 1px 1px rgba(255,255,255,.4); }
+
+  /* 地图 */
+  .pitch {
+    width: 120px; margin: 0 auto; background:#fff;
+    border: 3px solid #0b1f4d; border-radius: 6px; overflow:hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  .zone {
+    padding: 12px 8px; text-align:center; font-size: 13px; font-weight:700;
+    border-bottom: 2px dashed #c9d2e6; color:#14233f;
+  }
+  .zone:last-child { border-bottom:none; }
+  .zone.goal  { background: linear-gradient(160deg,#ffe08a,#f4b400); }
+  .zone.gk    { background: linear-gradient(160deg,#cfe0ff,#9fb8e8); }
+  .zone.box   { background: linear-gradient(160deg,#d9f5e4,#a8e6c2); }
+  .zone.break { background: linear-gradient(160deg,#fff0c2,#ffe08a); }
+  .zone.mid   { background:#eef3fd; }
+  .zone.pass  { background: linear-gradient(160deg,#dff7e6,#b6eccb); }
+  .zone.own   { background: linear-gradient(160deg,#ffe3df,#ffc2b8); }
+  .zone .emoji { font-size: 20px; display:block; margin-bottom:2px; }
+  .zone .note { font-size:10px; font-weight:500; color:#5a6b8c; display:block; margin-top:2px; }
+
+  /* 棋子 */
+  .tokens { display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+  .token {
+    width: 46mm; height: 30mm; border-radius: 8px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    color:#fff; font-weight:800; font-size:14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.18); page-break-inside: avoid;
+  }
+  .token .dot { width:24px; height:24px; border-radius:50%; background:#fff; box-shadow: inset 0 0 0 3px rgba(0,0,0,.15); }
+  .token.red    { background: linear-gradient(160deg,#ff6b6b,#c0392b); }
+  .token.blue   { background: linear-gradient(160deg,#4d8bff,#1d4ed8); }
+  .token.green  { background: linear-gradient(160deg,#37d67a,#148f4f); }
+  .token.yellow { background: linear-gradient(160deg,#ffd24a,#c98a00); color:#3a2a00; }
+  .token.purple { background: linear-gradient(160deg,#b07cff,#6a2fb8); }
+
+  /* 骰子（立方体展开图） */
+  .die-net {
+    width: 90mm; height: 90mm; margin: 8px;
+    display: grid; grid-template-columns: repeat(3, 30mm); grid-template-rows: repeat(3, 30mm);
+    gap: 0; page-break-inside: avoid;
+  }
+  .die-face {
+    border: 2px solid #0b1f4d; background:#fff;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pip { width:8px; height:8px; border-radius:50%; background:#0b1f4d; position:absolute; }
+  .die-face { position: relative; }
+  .face-1 { grid-column:2; grid-row:1; }
+  .face-2 { grid-column:1; grid-row:2; }
+  .face-3 { grid-column:2; grid-row:2; }
+  .face-4 { grid-column:3; grid-row:2; }
+  .face-5 { grid-column:2; grid-row:3; }
+  .face-6 { grid-column:3; grid-row:1; }
+  .pip-center { position:absolute; }
+  .pip-tl { top:18%; left:18%; }
+  .pip-tr { top:18%; right:18%; }
+  .pip-bl { bottom:18%; left:18%; }
+  .pip-br { bottom:18%; right:18%; }
+  .pip-ml { top:46%; left:18%; }
+  .pip-mr { top:46%; right:18%; }
+
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body { background:#fff; padding:0; }
+    .die-face, .card, .token, .zone, .pitch { box-shadow:none; }
+    .print-hint { display: none; }
+    .section-title { background: #0b1f4d !important; -webkit-print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">⚽ 蓝色禁区：前锋突围</h1>
+<div class="subtitle">Blue Lock: Striker Breakout ｜ 打印道具页（卡牌 + 地图 + 棋子 + 骰子）</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸</strong> 打印，建议在打印设置中选择<strong>最小边距</strong>。</li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"（Background graphics）</strong>，否则卡牌配色会丢失。</li>
+    <li>卡牌、棋子、骰子建议使用 <strong>卡纸</strong> 打印；打印后沿卡片边缘裁剪，卡牌可塑封更耐用。</li>
+    <li>同一类卡牌已按所需数量重复打印，直接裁剪即可，无需手动复制。</li>
+  </ul>
+</div>
+
+<!-- 地图 -->
+<div class="section-title">🗺️ 游戏地图（进球之路）</div>
+<div class="legend">足球从「己方球门」出发，向上推进到「球门」即进球。每点速度前进 1 格，突破区需速度 ≥2 才能进入禁区。</div>
+<div class="pitch">
+  <div class="zone goal"><span class="emoji">⚽</span>球门<span class="note">射门成功即进球</span></div>
+  <div class="zone gk"><span class="emoji">🧤</span>门将区<span class="note">射门判定：射门值 vs 扑救值</span></div>
+  <div class="zone box"><span class="emoji">🔵</span>禁区<span class="note">球到此可发起射门</span></div>
+  <div class="zone break"><span class="emoji">🟡</span>突破区<span class="note">需速度≥2 进入禁区</span></div>
+  <div class="zone mid"><span class="emoji">⚪</span>中场<span class="note">中立，无效果</span></div>
+  <div class="zone pass"><span class="emoji">🟢</span>传球区<span class="note">回合开始球在此额外抽1</span></div>
+  <div class="zone own"><span class="emoji">🥅</span>己方球门<span class="note">起点 / 被抢断退回</span></div>
+</div>
+
+<!-- 自我卡（资源卡） -->
+<div class="section-title">🔥 自我卡（资源卡 · 16张）</div>
+<div class="legend">提供「自我」资源，用于打出技术卡与必杀卡。你越自私，越强。</div>
+<div class="card-wrap" id="resources"></div>
+
+<!-- 技术卡（工具卡） -->
+<div class="section-title">⚽ 技术卡（工具卡 · 20张）</div>
+<div class="legend">提升射门 / 速度 / 技术，是进球的核心手段。标注"本回合"为临时加成，标注"装备"为永久加成。</div>
+<div class="card-wrap" id="tools"></div>
+
+<!-- 拦截卡（陷阱卡） -->
+<div class="section-title">🧤 拦截卡（陷阱卡 · 14张）</div>
+<div class="legend">由门将 / 对手触发，降低你的射门成功率。用「假动作」可抵消其扑救值。</div>
+<div class="card-wrap" id="traps"></div>
+
+<!-- 必杀卡（宝藏卡） -->
+<div class="section-title">👑 必杀卡（宝藏卡 · 6张）</div>
+<div class="legend">一次性逆转战局的王者技能，留到关键球一锤定音。</div>
+<div class="card-wrap" id="treasures"></div>
+
+<!-- 玩家棋子 -->
+<div class="section-title">🧍 玩家棋子（5色前锋）</div>
+<div class="legend">每人选 1 枚代表自己；放在地图旁表示"持球前锋"。</div>
+<div class="tokens">
+  <div class="token red"><span class="dot"></span>红队前锋</div>
+  <div class="token blue"><span class="dot"></span>蓝队前锋</div>
+  <div class="token green"><span class="dot"></span>绿队前锋</div>
+  <div class="token yellow"><span class="dot"></span>黄队前锋</div>
+  <div class="token purple"><span class="dot"></span>紫队前锋</div>
+</div>
+
+<!-- 骰子 -->
+<div class="section-title">🎲 骰子（D6 展开图 · 打印 1-2 份折叠使用）</div>
+<div class="legend">沿虚线折叠并粘贴，即可得到一颗 1-6 点骰子，用于抢断 / 扑救随机波动判定。</div>
+<div class="die-net" id="dieNet"></div>
+
+<script>
+  const resCards = [
+    {name:'自私突破', icon:'🔥', n:4, desc:'立即 +2 自我（机会是我的，谁也别抢）'},
+    {name:'傲慢射门', icon:'😏', n:3, desc:'+1 自我，并抽 1 张技术卡'},
+    {name:'挑衅对手', icon:'🗯️', n:3, desc:'+1 自我'},
+    {name:'觉醒', icon:'🌟', n:2, desc:'+3 自我（真正的前锋，从不谦让）'},
+    {name:'团队背叛', icon:'🔪', n:2, desc:'+2 自我；指定 1 名对手 -1 自我'},
+    {name:'极限自我', icon:'💥', n:2, desc:'+2 自我；若本回合已射门，额外 +2 自我'}
+  ];
+  const toolCards = [
+    {name:'高速盘带', icon:'💨', n:3, desc:'速度 +2（本回合）'},
+    {name:'精准传球', icon:'🎯', n:3, desc:'速度 +1，射门 +1（本回合）'},
+    {name:'暴力抽射', icon:'🦶', n:3, desc:'射门 +3（本回合）'},
+    {name:'凌空抽射', icon:'🤾', n:2, desc:'射门 +2（本回合）'},
+    {name:'假动作', icon:'🌀', n:3, desc:'对手下一次拦截扑救值 -1'},
+    {name:'铁靴（装备）', icon:'👟', n:2, desc:'射门基础值永久 +1'},
+    {name:'风之步', icon:'🌬️', n:2, desc:'速度 +3（本回合）'},
+    {name:'冷静推射', icon:'❄️', n:2, desc:'射门 +1；无拦截干扰时额外 +2'}
+  ];
+  const trapCards = [
+    {name:'钢铁门将', icon:'🧱', n:2, desc:'扑救值 4（用假动作 -1 或堆高射门）'},
+    {name:'飞身扑挡', icon:'🤲', n:3, desc:'扑救值 3（射门值≥4 即破门）'},
+    {name:'后卫包夹', icon:'🛡️', n:3, desc:'本次射门值 -2'},
+    {name:'滑铲抢断', icon:'⚠️', n:2, desc:'弃你 1 张手牌，速度 -2'},
+    {name:'越位陷阱', icon:'🚩', n:2, desc:'本次射门无效（直接失败）'},
+    {name:'心理阴影', icon:'🌑', n:2, desc:'你本回合不能射门'}
+  ];
+  const treasureCards = [
+    {name:'流星射门', icon:'☄️', n:1, desc:'射门 +5，且无视"扑救值-2"惩罚'},
+    {name:'世界波', icon:'🌠', n:1, desc:'射门 +4；除非门将扑救值≥8，否则必进'},
+    {name:'王者气场', icon:'👑', n:1, desc:'本回合你所有射门 +3'},
+    {name:'觉醒·真', icon:'🔆', n:1, desc:'抽 3 张，并 +3 自我'},
+    {name:'绝杀', icon:'⏱️', n:1, desc:'当你落后于榜首时，射门 +4'},
+    {name:'团队核心', icon:'🧠', n:1, desc:'之后每个你的回合自动 +1 自我（持续）'}
+  ];
+
+  function render(containerId, list, cls, catName) {
+    const box = document.getElementById(containerId);
+    list.forEach(c => {
+      for (let i = 0; i < c.n; i++) {
+        const el = document.createElement('div');
+        el.className = 'card ' + cls;
+        el.innerHTML = `
+          <div class="top"><span>${catName}</span><span>${c.icon}</span></div>
+          <div class="icon">${c.icon}</div>
+          <div class="name">${c.name}</div>
+          <div class="desc">${c.desc}</div>
+          <div class="cat-tag">蓝色禁区·前锋突围</div>`;
+        box.appendChild(el);
+      }
+    });
+  }
+  render('resources', resCards, 'resource', '自我卡');
+  render('tools', toolCards, 'tool', '技术卡');
+  render('traps', trapCards, 'trap', '拦截卡');
+  render('treasures', treasureCards, 'treasure', '必杀卡');
+
+  // 骰子展开图：1-6 点
+  const faces = {
+    1: ['pip-center'],
+    2: ['pip-tl','pip-br'],
+    3: ['pip-tl','pip-center','pip-br'],
+    4: ['pip-tl','pip-tr','pip-bl','pip-br'],
+    5: ['pip-tl','pip-tr','pip-center','pip-bl','pip-br'],
+    6: ['pip-tl','pip-tr','pip-ml','pip-mr','pip-bl','pip-br']
+  };
+  const order = ['face-6','face-1','face-2','face-3','face-4','face-5'];
+  const nums = [6,1,2,3,4,5];
+  const net = document.getElementById('dieNet');
+  order.forEach((cls, idx) => {
+    const f = document.createElement('div');
+    f.className = 'die-face ' + cls;
+    faces[nums[idx]].forEach(p => {
+      const d = document.createElement('span');
+      d.className = 'pip ' + p;
+      f.appendChild(d);
+    });
+    net.appendChild(f);
+  });
+</script>
+
+</body>
+</html>

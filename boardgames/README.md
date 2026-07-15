@@ -103,6 +103,7 @@ boardgames/
 | [宫廷药师](category/card/court-apothecary/README.md) | 卡牌 | 2-4人 | 30-50分钟 | 中等 |
 | [灵能大乱斗](category/strategy/dandadan-clash/README.md) | 策略 | 2-5人 | 40-60分钟 | 中等 |
 | [魔童闹海](category/party/nezha-sea-rumble/README.md) | 派对 | 3-6人 | 20-40分钟 | 简单 |
+| [蓝色禁区：前锋突围](category/card/blue-lock-breakout/README.md) | 卡牌 | 2-5人 | 25-40分钟 | 中等 |
 
 ## 添加新桌游
 
