@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>远征33：绘母之末 — 打印道具</title>
+<style>
+  :root{
+    --navy:#0e1430;
+    --navy2:#161f47;
+    --gold:#d8b24a;
+    --gold2:#f0d27a;
+    --ink:#e9edf7;
+    --cyan:#5fd0d8;
+    --orange:#e8943f;
+    --purple:#b07ad6;
+    --green:#6fce8f;
+    --red:#e06a6a;
+    --blue:#6a93e0;
+    --shadow:0 2px 6px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+    background:#f3f1ea;
+    color:#1c2138;
+    padding:24px;
+  }
+  h1{color:var(--navy);border-bottom:3px solid var(--gold);padding-bottom:8px;}
+  h2{color:var(--navy);margin-top:34px;border-left:6px solid var(--gold);padding-left:10px;}
+  .sub{color:#5a607a;margin-top:-6px;}
+  .print-hint{
+    background:#fff7e0;border:1px solid var(--gold);
+    border-radius:10px;padding:14px 18px;margin:16px 0;color:#5a4a16;
+  }
+  .print-hint ul{margin:8px 0 0;padding-left:22px;}
+  .page-break{page-break-before:always;}
+  /* ---- cards ---- */
+  .grid{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+  .card{
+    width:78mm;height:108mm;border-radius:9px;padding:9px 9px 8px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+    display:flex;flex-direction:column;color:#1c2138;
+    border:1px solid rgba(0,0,0,.15);
+  }
+  .card .ttl{font-weight:800;font-size:13.5px;line-height:1.15;display:flex;align-items:center;gap:5px;}
+  .card .ico{font-size:20px;}
+  .card .tag{position:absolute;top:7px;right:8px;font-size:9px;font-weight:700;
+    padding:1px 6px;border-radius:20px;background:rgba(0,0,0,.18);color:#fff;}
+  .card .body{font-size:10.5px;line-height:1.32;margin-top:7px;flex:1;}
+  .card .stat{display:flex;gap:8px;font-size:10px;font-weight:700;margin-top:5px;flex-wrap:wrap;}
+  .card .cost{font-size:9.5px;margin-top:4px;color:#3a3f57;}
+  .card .foot{font-size:8.5px;color:#4a4f68;margin-top:4px;border-top:1px dashed rgba(0,0,0,.18);padding-top:4px;}
+
+  /* card kinds */
+  .res-lumina{background:linear-gradient(160deg,#dff6f8,#a9e4e8);}
+  .res-ember{background:linear-gradient(160deg,#fbe6cf,#f0bf8c);}
+  .skill{background:linear-gradient(160deg,#eef1fb,#cfd8f3);}
+  .trap{background:linear-gradient(160deg,#fbe0e0,#eaa9a9);}
+  .boss{background:linear-gradient(160deg,#f6ecc6,#e9c971);border:2px solid var(--gold);}
+  .treasure{background:linear-gradient(160deg,#f1e3fb,#d6b9ee);}
+  .tag.res{background:#2a7f86;} .tag.sk{background:#3a4ba0;}
+  .tag.tr{background:#9c3030;} .tag.bs{background:#7a5a16;}
+  .tag.tz{background:#6b3f97;}
+
+  /* ---- map ---- */
+  .mapwrap{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;margin-top:14px;}
+  .board{
+    display:grid;grid-template-columns:repeat(5,20mm);grid-template-rows:repeat(8,20mm);
+    gap:3px;background:var(--navy);padding:8px;border-radius:10px;
+  }
+  .cell{width:20mm;height:20mm;border-radius:5px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#0e1430;
+    position:relative;text-align:center;line-height:1;}
+  .cell small{font-size:7px;font-weight:700;margin-top:2px;color:#222;}
+  .c-start{background:var(--gold);}
+  .c-road{background:#39406a;}
+  .c-fight{background:var(--red);color:#fff;}
+  .c-lumina{background:var(--cyan);}
+  .c-ember{background:var(--orange);}
+  .c-treasure{background:var(--purple);color:#fff;}
+  .c-camp{background:var(--green);}
+  .c-event{background:var(--blue);color:#fff;}
+  .c-boss{background:var(--gold2);border:2px solid #8a6f1e;}
+  .c-empty{background:#1a2143;}
+  .legend{font-size:11px;line-height:1.7;background:#fff;border-radius:8px;padding:12px 16px;box-shadow:var(--shadow);}
+  .legend b{color:var(--navy);}
+
+  /* ---- pieces ---- */
+  .pieces{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;}
+  .piece{width:26mm;height:26mm;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;color:#fff;box-shadow:var(--shadow);text-align:center;line-height:1.1;}
+  .p1{background:#d9534f;} .p2{background:#4f7fd9;} .p3{background:#5a9e5a;} .p4{background:#c08adf;}
+  .token{width:34mm;height:34mm;border-radius:50%;background:radial-gradient(circle,#f0d27a,#c79a2e);
+    color:#3a2c08;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-weight:800;box-shadow:var(--shadow);border:3px solid #8a6f1e;}
+  .token small{font-size:8px;font-weight:700;}
+  .d6{width:22mm;height:22mm;background:#fff;border:2px solid var(--navy);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--navy);
+    box-shadow:var(--shadow);}
+</style>
+</head>
+<body>
+
+<h1>🎨 远征33：绘母之末 · 打印道具包</h1>
+<p class="sub">Expedition 33: The Paintress's End — 改编自 TGA 2025 年度最佳游戏《Clair Obscur: Expedition 33》</p>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong>。</li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>（Edge/Chrome：更多设置 → 背景图形）。</li>
+    <li>卡牌与棋子建议用<strong>卡纸</strong>打印，裁剪后可塑封以延长寿命。</li>
+    <li>资源卡（💠/🔥）可按需多印几份；本页每种展示 2 张样张。</li>
+  </ul>
+</div>
+
+<!-- ===================== MAP ===================== -->
+<h2>🗺️ 一、游戏地图（5×8 大陆攀登棋盘）</h2>
+<div class="mapwrap">
+  <div class="board">
+    <!-- 行8 -->
+    <div class="cell c-empty"></div><div class="cell c-empty"></div>
+    <div class="cell c-boss">👑<small>绘母王座</small></div>
+    <div class="cell c-empty"></div><div class="cell c-empty"></div>
+    <!-- 行7 -->
+    <div class="cell c-road"></div><div class="cell c-fight">⚔️<small>钟楼残骸</small></div>
+    <div class="cell c-road"></div><div class="cell c-fight">⚔️<small>焚天祭坛</small></div>
+    <div class="cell c-road"></div>
+    <!-- 行6 -->
+    <div class="cell c-lumina">💠<small>光晶簇</small></div><div class="cell c-road"></div>
+    <div class="cell c-treasure">🎁<small>绘影宝库</small></div><div class="cell c-road"></div>
+    <div class="cell c-ember">🔥<small>余烬泉</small></div>
+    <!-- 行5 -->
+    <div class="cell c-road"></div><div class="cell c-event">❓<small>旧镇广场</small></div>
+    <div class="cell c-road"></div><div class="cell c-camp">🏕️<small>补给营</small></div>
+    <div class="cell c-road"></div>
+    <!-- 行4 -->
+    <div class="cell c-fight">⚔️<small>裂谷守卫</small></div><div class="cell c-road"></div>
+    <div class="cell c-road"></div><div class="cell c-road"></div>
+    <div class="cell c-fight">⚔️<small>王座前卫</small></div>
+    <!-- 行3 -->
+    <div class="cell c-ember">🔥<small>余烬矿</small></div><div class="cell c-road"></div>
+    <div class="cell c-lumina">💠<small>光之神龛</small></div><div class="cell c-road"></div>
+    <div class="cell c-fight">⚔️<small>虚空哨站</small></div>
+    <!-- 行2 -->
+    <div class="cell c-road"></div><div class="cell c-fight">⚔️<small>灰林深处</small></div>
+    <div class="cell c-road"></div><div class="cell c-treasure">🎁<small>萤火宝箱</small></div>
+    <div class="cell c-road"></div>
+    <!-- 行1 -->
+    <div class="cell c-empty"></div><div class="cell c-empty"></div>
+    <div class="cell c-start">🚶<small>海岸营地</small></div>
+    <div class="cell c-empty"></div><div class="cell c-empty"></div>
+  </div>
+  <div class="legend">
+    <b>地形图例</b><br>
+    🚶 起点·海岸营地（黄）<br>
+    ⬛ 道路（灰，安全）<br>
+    ⚔️ 战斗点（红）<br>
+    💠 光之碎片点（青）<br>
+    🔥 余烬点（橙）<br>
+    🎁 宝藏点（紫）<br>
+    🏕️ 营地（绿，休整）<br>
+    ❓ 事件点（蓝）<br>
+    👑 绘母王座·BOSS（金）<br>
+    <br>
+    <b>移动：</b>上下左右相邻格，1 AP = 1 步。
+  </div>
+</div>
+
+<!-- ===================== RESOURCE CARDS ===================== -->
+<h2 class="page-break">💠 二、资源卡（Resources）</h2>
+<p class="sub">核心货币与补给。打印时可按需复制多份（建议 💠×30、🔥×15）。</p>
+<div class="grid">
+  <div class="card res-lumina"><span class="tag res">资源</span>
+    <div class="ttl"><span class="ico">💠</span>光之碎片 Lumina</div>
+    <div class="body">远征的核心能量。用于发动技能卡、激活宝藏效果。</div>
+    <div class="foot">获得：💠点 / 击败Nevron / 营地</div></div>
+  <div class="card res-lumina"><span class="tag res">资源</span>
+    <div class="ttl"><span class="ico">💠</span>光之碎片 Lumina</div>
+    <div class="body">远征的核心能量。用于发动技能卡、激活宝藏效果。</div>
+    <div class="foot">获得：💠点 / 击败Nevron / 营地</div></div>
+  <div class="card res-ember"><span class="tag res">资源</span>
+    <div class="ttl"><span class="ico">🔥</span>余烬 Ember</div>
+    <div class="body">蕴含生机的余烬。用于支付治疗类技能、直接恢复生命。</div>
+    <div class="foot">获得：🔥点 / 宝藏 / 事件</div></div>
+  <div class="card res-ember"><span class="tag res">资源</span>
+    <div class="ttl"><span class="ico">🔥</span>余烬 Ember</div>
+    <div class="body">蕴含生机的余烬。用于支付治疗类技能、直接恢复生命。</div>
+    <div class="foot">获得：🔥点 / 宝藏 / 事件</div></div>
+</div>
+
+<!-- ===================== SKILL CARDS ===================== -->
+<h2 class="page-break">🗡️ 三、技能卡（工具卡 Skill Cards）</h2>
+<p class="sub">消耗行动点（AP）与资源发动。初始手牌 3 张，上限 5。</p>
+<div class="grid">
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">⚔️</span>突刺</div>
+    <div class="body">对目标造成 3 点伤害。</div>
+    <div class="stat"><span>⚡1 AP</span><span>💠1</span><span>🩸3</span></div></div>
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">🪓</span>重斩</div>
+    <div class="body">对目标造成 6 点伤害。</div>
+    <div class="stat"><span>⚡2 AP</span><span>💠2</span><span>🩸6</span></div></div>
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">🌈</span>梯度打击</div>
+    <div class="body">仅敌人「破防」时发动，造成 10 点爆发伤害（破防击败额外掉💠）。</div>
+    <div class="stat"><span>⚡3 AP</span><span>💠3</span><span>🩸10</span></div></div>
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">🛡️</span>守护姿态</div>
+    <div class="body">获得 4 点格挡，抵消下次受到的伤害。</div>
+    <div class="stat"><span>⚡1 AP</span><span>💠0</span><span>🛡️4</span></div></div>
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">✨</span>治疗之光</div>
+    <div class="body">为任意英雄恢复 5 点生命。</div>
+    <div class="stat"><span>⚡2 AP</span><span>🔥1</span><span>➕5</span></div></div>
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">💨</span>疾风步</div>
+    <div class="body">立即额外移动 2 个节点。</div>
+    <div class="stat"><span>⚡1 AP</span><span>💠0</span><span>👣+2</span></div></div>
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">🔥</span>灼烧</div>
+    <div class="body">造成 2 点伤害，并附加每回合 1 点灼烧（持续 2 回合）。</div>
+    <div class="stat"><span>⚡1 AP</span><span>💠1</span><span>🩸2+DoT</span></div></div>
+  <div class="card skill"><span class="tag sk">技能</span>
+    <div class="ttl"><span class="ico">🤝</span>合力一击</div>
+    <div class="body">与相邻英雄共击单一敌人：各自造成 3+3 点伤害。</div>
+    <div class="stat"><span>⚡2 AP</span><span>💠2</span><span>🩸3+3</span></div></div>
+</div>
+
+<!-- ===================== NEVRON TRAP CARDS ===================== -->
+<h2 class="page-break">👹 四、Nevron 敌人卡（陷阱卡）</h2>
+<p class="sub">进入战斗点触发，生命清零方可前进。生命 ≤30% 进入「破防」。</p>
+<div class="grid">
+  <div class="card trap"><span class="tag tr">陷阱</span>
+    <div class="ttl"><span class="ico">🗿</span>石巨像</div>
+    <div class="body">每回合开始获得 2 点格挡。</div>
+    <div class="stat"><span>❤️12</span><span>⚔️3</span></div></div>
+  <div class="card trap"><span class="tag tr">陷阱</span>
+    <div class="ttl"><span class="ico">🗡️</span>画刃</div>
+    <div class="body">战斗首回合额外攻击一次。</div>
+    <div class="stat"><span>❤️8</span><span>⚔️4</span></div></div>
+  <div class="card trap"><span class="tag tr">陷阱</span>
+    <div class="ttl"><span class="ico">⛓️</span>锁链魔</div>
+    <div class="body">命中后，目标下回合 −1 行动点。</div>
+    <div class="stat"><span>❤️10</span><span>⚔️3</span></div></div>
+  <div class="card trap"><span class="tag tr">陷阱</span>
+    <div class="ttl"><span class="ico">🔥</span>焚天者</div>
+    <div class="body">命中附带 1 点灼烧。</div>
+    <div class="stat"><span>❤️9</span><span>⚔️5</span></div></div>
+  <div class="card trap"><span class="tag tr">陷阱</span>
+    <div class="ttl"><span class="ico">👁️</span>虚空之眼</div>
+    <div class="body">每 2 回合使全体英雄 −1 行动点。</div>
+    <div class="stat"><span>❤️11</span><span>⚔️4</span></div></div>
+  <div class="card trap"><span class="tag tr">陷阱</span>
+    <div class="ttl"><span class="ico">🛡️</span>绘母守卫（精英）</div>
+    <div class="body">处于绘母阶段时受到伤害 −3。</div>
+    <div class="stat"><span>❤️14</span><span>⚔️4</span></div></div>
+  <div class="card boss"><span class="tag bs">BOSS</span>
+    <div class="ttl"><span class="ico">👑</span>绘母 The Paintress</div>
+    <div class="body">每 3 个远征日触发「抹除」：远征日 −2，且全体英雄 −2 生命。击败即胜利。</div>
+    <div class="stat"><span>❤️30</span><span>⚔️5</span></div>
+    <div class="foot">放置于 C8 王座</div></div>
+</div>
+
+<!-- ===================== TREASURE CARDS ===================== -->
+<h2 class="page-break">🏆 五、Pictos 宝藏卡（Treasure）</h2>
+<p class="sub">在 🎁 宝藏点抽取，拾取即生效，可叠加。</p>
+<div class="grid">
+  <div class="card treasure"><span class="tag tz">宝藏</span>
+    <div class="ttl"><span class="ico">🛡️</span>钢铁 Picto</div>
+    <div class="body">最大格挡 +2，且每回合自动获得 2 格挡。</div></div>
+  <div class="card treasure"><span class="tag tz">宝藏</span>
+    <div class="ttl"><span class="ico">💨</span>疾风 Picto</div>
+    <div class="body">该英雄每回合 +1 行动点。</div></div>
+  <div class="card treasure"><span class="tag tz">宝藏</span>
+    <div class="ttl"><span class="ico">🌟</span>双生 Lumina</div>
+    <div class="body">手牌上限 +1，每回合多抽 1 张技能卡。</div></div>
+  <div class="card treasure"><span class="tag tz">宝藏</span>
+    <div class="ttl"><span class="ico">🔮</span>虹光宝珠</div>
+    <div class="body">「梯度打击」+5 伤害，且未破防也可发动（额外耗 1💠）。</div></div>
+  <div class="card treasure"><span class="tag tz">宝藏</span>
+    <div class="ttl"><span class="ico">🚩</span>远征旗帜</div>
+    <div class="body">全队每回合各 +1 💠（队共享增益）。</div></div>
+  <div class="card treasure"><span class="tag tz">宝藏</span>
+    <div class="ttl"><span class="ico">💗</span>绘母之核</div>
+    <div class="body">该英雄所有攻击 +2，且每回合自动 +2 生命。</div></div>
+</div>
+
+<!-- ===================== PIECES & TOKENS ===================== -->
+<h2 class="page-break">🧩 六、棋子与道具（Heroes & Tokens）</h2>
+<p class="sub">每位玩家选 1 个颜色棋子放在起点 C1。印后可裁剪或作圆片使用。</p>
+<div class="pieces">
+  <div class="piece p1">🔴<br>英雄 A</div>
+  <div class="piece p2">🔵<br>英雄 B</div>
+  <div class="piece p3">🟢<br>英雄 C</div>
+  <div class="piece p4">🟣<br>英雄 D</div>
+  <div class="token">⏳<small>远征日</small><small>起始 11</small></div>
+  <div class="d6">⚀</div>
+</div>
+<p class="sub" style="margin-top:10px;">提示：未打印骰子可用手机骰子 App；远征日令牌可用纸笔记分替代。</p>
+
+<div class="print-hint" style="margin-top:30px;">
+  <strong>🖨️ 再次提醒：</strong> 打印时务必勾选「背景图形」，并使用卡纸提升耐用度。
+</div>
+
+<style>
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { padding: 0; }
+    h2 { page-break-after: avoid; }
+  }
+</style>
+</body>
+</html>
