@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罪恶都市：莱奥尼达帝国 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, sans-serif;
+            background: #14071f;
+            padding: 20px;
+            color: #2b2b2b;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff2d95;
+            margin-bottom: 4px;
+            font-size: 2em;
+            text-shadow: 0 0 12px rgba(255,45,149,0.4);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00e5ff;
+            margin-bottom: 24px;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            color: #ff2d95;
+            margin: 26px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4a1d4a;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 14px rgba(255,45,149,0.12);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* ===== 地图 ===== */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: #2a0f3d;
+            padding: 15px;
+            border-radius: 12px;
+            aspect-ratio: 1;
+        }
+
+        .map-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border-radius: 6px;
+            position: relative;
+            color: #1a1a1a;
+        }
+
+        .map-cell.start { background: #ffd54f; }
+        .map-cell.path { background: #6b7280; }
+        .map-cell.cash { background: #2ecc71; }
+        .map-cell.asset { background: #f5b400; }
+        .map-cell.arms { background: #ff7043; }
+        .map-cell.police { background: #e53935; color:#fff; }
+        .map-cell.highway { background: #29b6f6; }
+        .map-cell.heist { background: #ab47bc; color:#fff; }
+        .map-cell.beach { background: #26c6da; }
+        .map-cell.treasure { background: #ffd700; }
+
+        .cell-label {
+            position: absolute;
+            bottom: 1px;
+            right: 3px;
+            font-size: 9px;
+            color: rgba(0,0,0,0.6);
+        }
+        .map-cell.police .cell-label,
+        .map-cell.heist .cell-label { color: rgba(255,255,255,0.9); }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            margin-top: 14px;
+            font-size: 13px;
+        }
+        .legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+        /* ===== 卡牌 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 14px;
+            min-height: 135px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-icon { font-size: 26px; }
+        .card-title { font-weight: bold; font-size: 15px; }
+
+        .card-description {
+            flex: 1;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+        }
+
+        .card.resource { border-color: #2ecc71; }
+        .card.tool { border-color: #ff7043; }
+        .card.trap { border-color: #e53935; }
+        .card.treasure { border-color: #f5b400; }
+
+        /* ===== 棋子 ===== */
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .piece { display: flex; flex-direction: column; align-items: center; }
+        .piece-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 3px solid #333;
+            color: #fff;
+        }
+        .piece-circle.blue { background: #29b6f6; }
+        .piece-circle.red { background: #e53935; }
+        .piece-circle.green { background: #43a047; }
+        .piece-circle.yellow { background: #f5b400; color:#333; }
+        .piece-label { margin-top: 8px; font-size: 13px; font-weight: 600; }
+
+        /* ===== 回合标记 ===== */
+        .rounds { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .round {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: #ff2d95; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; box-shadow: inset 0 0 0 3px #fff;
+        }
+
+        /* ===== 热度计 ===== */
+        .heat-track { display:flex; gap:4px; flex-wrap:wrap; align-items:center; margin-top: 6px; }
+        .heat-cell {
+            width: 38px; height: 34px; border-radius: 6px;
+            display:flex; align-items:center; justify-content:center;
+            font-size: 13px; font-weight: 700; color:#fff;
+            background:#607d8b;
+        }
+        .heat-cell.danger { background:#e53935; }
+        .heat-cell.warn { background:#fb8c00; }
+
+        /* ===== 骰子 ===== */
+        .dice-template { display: flex; gap: 20px; }
+        .dice {
+            width: 58px; height: 58px;
+            background: white; border: 3px solid #333; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+        }
+
+        .instructions {
+            background: #2a0f3d;
+            border: 1px solid #4a1d4a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #f3e9ff;
+        }
+        .instructions h3 { color: #00e5ff; margin-bottom: 12px; }
+        .instructions ul { margin-left: 20px; line-height: 1.8; }
+
+        @media print {
+            body { background: white; }
+            .print-hint { display: none; }
+            .section { box-shadow: none; margin-bottom: 10px; }
+            .instructions { background:#f3e9ff; color:#333; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌴 罪恶都市：莱奥尼达帝国 — 打印文档</h1>
+        <div class="subtitle">Vice City: Leonida Empire · 取材自当红开放世界游戏 GTA VI（莱奥尼达州 · 罪恶都市）</div>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌、棋子、回合标记建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可用普通纸张打印</li>
+                <li>打印后按卡片边界裁剪使用，卡牌可塑封延长寿命</li>
+            </ul>
+        </div>
+
+        <!-- ===== 地图 ===== -->
+        <div class="section">
+            <h2>🗺️ 游戏地图（罪恶都市 7×7）</h2>
+            <div class="game-map">
+                <div class="map-cell start">🚶<span class="cell-label">老巢</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell cash">💵<span class="cell-label">洗钱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell police">🚨<span class="cell-label">警局</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell asset">🏢<span class="cell-label">地产</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell arms">🔫<span class="cell-label">军火</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell asset">🏢<span class="cell-label">地产</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell police">🚨<span class="cell-label">警局</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell cash">💵<span class="cell-label">洗钱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell highway">🛣️<span class="cell-label">高速</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell heist">💣<span class="cell-label">抢劫</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell cash">💵<span class="cell-label">洗钱</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell police">🚨<span class="cell-label">警局</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell beach">🌴<span class="cell-label">海滩</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell arms">🔫<span class="cell-label">军火</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell asset">🏢<span class="cell-label">地产</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell cash">💵<span class="cell-label">洗钱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell police">🚨<span class="cell-label">警局</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell asset">🏢<span class="cell-label">地产</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell heist">💣<span class="cell-label">抢劫</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell arms">🔫<span class="cell-label">军火</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell highway">🛣️<span class="cell-label">高速</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell cash">💵<span class="cell-label">洗钱</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell police">🚨<span class="cell-label">警局</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell heist">💣<span class="cell-label">抢劫</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell treasure">💎<span class="cell-label">豪宅</span></div>
+            </div>
+            <div class="legend">
+                <span>🚶 老巢</span><span>⬛ 街区</span><span>💵 洗钱点</span>
+                <span>🏢 地产</span><span>🔫 军火铺</span><span>🚨 警局</span>
+                <span>🛣️ 高速</span><span>💣 抢劫点</span><span>🌴 海滩</span><span>💎 群岛豪宅</span>
+            </div>
+        </div>
+
+        <!-- ===== 资源卡：现金 ===== -->
+        <div class="section">
+            <h2>💵 现金卡片（资源）</h2>
+            <div class="cards-grid">
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💵</span><span class="card-title">现金 ×1</span></div>
+                    <div class="card-description">核心货币：在洗钱点抽取、地产每回合产出、抢劫成功获得。用于收购地产、雇佣打手、启动劫案、贿赂警方。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💵</span><span class="card-title">现金 ×1</span></div>
+                    <div class="card-description">核心货币：在洗钱点抽取、地产每回合产出、抢劫成功获得。用于收购地产、雇佣打手、启动劫案、贿赂警方。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💵</span><span class="card-title">现金 ×1</span></div>
+                    <div class="card-description">核心货币：在洗钱点抽取、地产每回合产出、抢劫成功获得。用于收购地产、雇佣打手、启动劫案、贿赂警方。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💵</span><span class="card-title">现金 ×1</span></div>
+                    <div class="card-description">核心货币：在洗钱点抽取、地产每回合产出、抢劫成功获得。用于收购地产、雇佣打手、启动劫案、贿赂警方。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💵</span><span class="card-title">现金 ×1</span></div>
+                    <div class="card-description">核心货币：在洗钱点抽取、地产每回合产出、抢劫成功获得。用于收购地产、雇佣打手、启动劫案、贿赂警方。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">💵</span><span class="card-title">现金 ×1</span></div>
+                    <div class="card-description">核心货币：在洗钱点抽取、地产每回合产出、抢劫成功获得。用于收购地产、雇佣打手、启动劫案、贿赂警方。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 工具卡：装备 ===== -->
+        <div class="section">
+            <h2>🔫 装备卡片（工具 · 军火铺雇佣）</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🔫</span><span class="card-title">突击步枪</span></div>
+                    <div class="card-description">雇佣：💵3<br>抢劫掷骰阈值 −1（更易成功）；可抵消「狙击手」。</div>
+                    <div class="card-footer">装备 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🏎️</span><span class="card-title">跑车</span></div>
+                    <div class="card-description">雇佣：💵3<br>本回合立即额外移动 3 步；可躲避「路障」。</div>
+                    <div class="card-footer">装备 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">💻</span><span class="card-title">黑客</span></div>
+                    <div class="card-description">雇佣：💵3<br>查看警方牌库顶 3 张并弃掉 1 张；可抵消「线人」。</div>
+                    <div class="card-footer">装备 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">👥</span><span class="card-title">打手</span></div>
+                    <div class="card-description">雇佣：💵3<br>抢劫时可重掷一次取高；可抵消「巡逻队」。</div>
+                    <div class="card-footer">装备 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🦺</span><span class="card-title">防弹背心</span></div>
+                    <div class="card-description">雇佣：💵3<br>免疫一次资产损失；可抵消「突袭」「狙击手」。</div>
+                    <div class="card-footer">装备 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🔦</span><span class="card-title">夜视镜</span></div>
+                    <div class="card-description">雇佣：💵3<br>群岛/夜间行动无惩罚；可抵消「缉毒组」。</div>
+                    <div class="card-footer">装备 · 工具卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 陷阱卡：警方 ===== -->
+        <div class="section">
+            <h2>🚨 警方卡片（陷阱）</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🚓</span><span class="card-title">巡逻队</span></div>
+                    <div class="card-description">损失 💵3。<br>应对：用「打手 👥」抵消，或支付 💵2 贿赂。</div>
+                    <div class="card-footer">警方 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🔨</span><span class="card-title">突袭</span></div>
+                    <div class="card-description">失去 1 处已收购地产（无地产则损失 💵4）。<br>应对：「防弹背心 🦺」免疫，或支付 💵4 摆平。</div>
+                    <div class="card-footer">警方 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🕵️</span><span class="card-title">线人</span></div>
+                    <div class="card-description">下个回合移动步数 −2。<br>应对：「黑客 💻」反追踪，或支付 💵2 封口。</div>
+                    <div class="card-footer">警方 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🚧</span><span class="card-title">路障</span></div>
+                    <div class="card-description">暂停 1 回合。<br>应对：「跑车 🏎️」甩开，或支付 💵2 绕行。</div>
+                    <div class="card-footer">警方 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">💊</span><span class="card-title">缉毒组</span></div>
+                    <div class="card-description">热度 +3（立即危险）。<br>应对：「夜视镜 🔦」规避，或支付 💵3。</div>
+                    <div class="card-footer">警方 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🎯</span><span class="card-title">狙击手</span></div>
+                    <div class="card-description">损失 💵5 且帝国声望 −2。<br>应对：「防弹背心 🦺」或「突击步枪 🔫」挡下。</div>
+                    <div class="card-footer">警方 · 陷阱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 宝藏卡：群岛豪宅 ===== -->
+        <div class="section">
+            <h2>💎 群岛豪宅卡片（宝藏）</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🏊</span><span class="card-title">黄金泳池</span></div>
+                    <div class="card-description">帝国声望 +8<br>永久：之后每回合收入 +1💵</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🌸</span><span class="card-title">粉色超跑</span></div>
+                    <div class="card-description">帝国声望 +5<br>永久：之后每回合移动 +1 步</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">💎</span><span class="card-title">钻石项链</span></div>
+                    <div class="card-description">帝国声望 +6<br>纯声望，无额外效果</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">⛵</span><span class="card-title">私人游艇</span></div>
+                    <div class="card-description">帝国声望 +7<br>永久：热度上限 +2（更难被全面突袭）</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🏝️</span><span class="card-title">海岛别墅</span></div>
+                    <div class="card-description">帝国声望 +8<br>地标级资产，纯声望</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🏆</span><span class="card-title">传奇车牌</span></div>
+                    <div class="card-description">帝国声望 +5<br>永久：你所有 🏢 地产收入 +1💵</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 玩家棋子 ===== -->
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece"><div class="piece-circle red">1</div><div class="piece-label">玩家1</div></div>
+                <div class="piece"><div class="piece-circle blue">2</div><div class="piece-label">玩家2</div></div>
+                <div class="piece"><div class="piece-circle green">3</div><div class="piece-label">玩家3</div></div>
+                <div class="piece"><div class="piece-circle yellow">4</div><div class="piece-label">玩家4</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 回合标记 ===== -->
+        <div class="section">
+            <h2>🕐 回合标记（每完成 1 整轮消耗 1 个）</h2>
+            <p style="font-size:13px;color:#666;margin-bottom:12px;">耗尽即达回合上限。按人数取 20 / 22 / 24 个。</p>
+            <div class="rounds">
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div><div class="round">🕐</div><div class="round">🕐</div>
+                <div class="round">🕐</div>
+            </div>
+        </div>
+
+        <!-- ===== 热度计 ===== -->
+        <div class="section">
+            <h2>🔥 热度计（每位玩家 0 → 10）</h2>
+            <p style="font-size:13px;color:#666;margin-bottom:10px;">每回合自然 −1；劫案加热度；达到 10 触发「全面突袭」（损失 💵6 + 1 地产，重置为 4）。</p>
+            <div class="heat-track">
+                <div class="heat-cell">0</div>
+                <div class="heat-cell">1</div>
+                <div class="heat-cell">2</div>
+                <div class="heat-cell">3</div>
+                <div class="heat-cell warn">4</div>
+                <div class="heat-cell warn">5</div>
+                <div class="heat-cell warn">6</div>
+                <div class="heat-cell warn">7</div>
+                <div class="heat-cell warn">8</div>
+                <div class="heat-cell danger">9</div>
+                <div class="heat-cell danger">10</div>
+            </div>
+        </div>
+
+        <!-- ===== 骰子 ===== -->
+        <div class="section">
+            <h2>🎲 骰子模板</h2>
+            <div class="dice-template">
+                <div class="dice">⚀</div>
+                <div class="dice">⚁</div>
+                <div class="dice">⚂</div>
+                <div class="dice">⚃</div>
+                <div class="dice">⚄</div>
+                <div class="dice">⚅</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏地图打印出来，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿卡片边界裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子与标记：</strong>裁剪玩家棋子，或用硬币/纽扣代替；回合标记可用豆子/回形针代替；资产用同色小旗标记</li>
+                <li><strong>热度与计分：</strong>用白板/计分纸记录每位玩家的现金 💵、热度 🔥、帝国声望 ★</li>
+                <li><strong>开始游戏：</strong>每人选 1 棋子放老巢，各抽 8 张现金卡，率先达到 30 帝国声望者胜</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
