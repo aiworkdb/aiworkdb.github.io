@@ -106,6 +106,7 @@ boardgames/
 | [蓝色禁区：前锋突围](category/card/blue-lock-breakout/README.md) | 卡牌 | 2-5人 | 25-40分钟 | 中等 |
 | [远征33：绘母之末](category/cooperative/expedition-33/README.md) | 合作 | 2-4人 | 45-75分钟 | 中等/困难 |
 | [罪恶都市：莱奥尼达帝国](category/strategy/vice-city-empire/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等 |
+| [猎魔女团：黄金结界](category/cooperative/huntrix-honmoon/README.md) | 合作 | 2-4人 | 45-75分钟 | 中等/困难 |
 
 ## 添加新桌游
 

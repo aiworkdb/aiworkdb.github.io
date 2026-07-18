@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猎魔女团：黄金结界 - 打印文档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, sans-serif;
+            background: #140a1f;
+            padding: 20px;
+            color: #2b2b2b;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff4ecd;
+            margin-bottom: 4px;
+            font-size: 2em;
+            text-shadow: 0 0 12px rgba(255,78,205,0.45);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #5ef2ff;
+            margin-bottom: 24px;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            color: #ff4ecd;
+            margin: 26px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4a1d4a;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 14px rgba(255,78,205,0.12);
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* ===== 地图 ===== */
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: #2a0f3d;
+            padding: 15px;
+            border-radius: 12px;
+            aspect-ratio: 1;
+        }
+
+        .map-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border-radius: 6px;
+            position: relative;
+            color: #1a1a1a;
+        }
+
+        .map-cell.start { background: #ffd54f; }
+        .map-cell.path { background: #6b7280; }
+        .map-cell.fan { background: #ffe14d; }
+        .map-cell.rehearsal { background: #4dd0e1; }
+        .map-cell.soul { background: #b14bff; color:#fff; }
+        .map-cell.gate { background: #e53935; color:#fff; }
+        .map-cell.node { background: #42a5f5; }
+        .map-cell.rest { background: #66bb6a; }
+        .map-cell.throne { background: #ffd700; }
+
+        .cell-label {
+            position: absolute;
+            bottom: 1px;
+            right: 3px;
+            font-size: 9px;
+            color: rgba(0,0,0,0.6);
+        }
+        .map-cell.soul .cell-label,
+        .map-cell.gate .cell-label { color: rgba(255,255,255,0.9); }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            margin-top: 14px;
+            font-size: 13px;
+        }
+        .legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+        /* ===== 卡牌 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 14px;
+            min-height: 135px;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-icon { font-size: 26px; }
+        .card-title { font-weight: bold; font-size: 15px; }
+
+        .card-description {
+            flex: 1;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+        }
+
+        .card.resource { border-color: #ffd54f; }
+        .card.resource2 { border-color: #4dd0e1; }
+        .card.resource3 { border-color: #b14bff; }
+        .card.tool { border-color: #ff7043; }
+        .card.trap { border-color: #e53935; }
+        .card.treasure { border-color: #ffb300; }
+
+        /* ===== 棋子 ===== */
+        .player-pieces {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .piece { display: flex; flex-direction: column; align-items: center; }
+        .piece-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 3px solid #333;
+            color: #fff;
+        }
+        .piece-circle.rumi { background: #b14bff; }
+        .piece-circle.mira { background: #42a5f5; }
+        .piece-circle.zoey { background: #ff4ecd; }
+        .piece-circle.mgr { background: #66bb6a; color:#333; }
+        .piece-label { margin-top: 8px; font-size: 13px; font-weight: 600; }
+
+        /* ===== 威胁计 ===== */
+        .threat-track { display:flex; gap:4px; flex-wrap:wrap; align-items:center; margin-top: 6px; }
+        .threat-cell {
+            width: 38px; height: 34px; border-radius: 6px;
+            display:flex; align-items:center; justify-content:center;
+            font-size: 13px; font-weight: 700; color:#fff;
+            background:#607d8b;
+        }
+        .threat-cell.danger { background:#e53935; }
+        .threat-cell.warn { background:#fb8c00; }
+
+        /* ===== 生命值 ===== */
+        .hp-row { display:flex; gap:30px; flex-wrap:wrap; align-items:center; margin-top:6px; }
+        .hp-player { display:flex; align-items:center; gap:6px; font-size:13px; }
+        .hp-heart { color:#e53935; font-size:18px; }
+
+        /* ===== 骰子 ===== */
+        .dice-template { display: flex; gap: 20px; }
+        .dice {
+            width: 58px; height: 58px;
+            background: white; border: 3px solid #333; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+        }
+
+        .instructions {
+            background: #2a0f3d;
+            border: 1px solid #4a1d4a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #f3e9ff;
+        }
+        .instructions h3 { color: #5ef2ff; margin-bottom: 12px; }
+        .instructions ul { margin-left: 20px; line-height: 1.8; }
+
+        @media print {
+            body { background: white; }
+            .print-hint { display: none; }
+            .section { box-shadow: none; margin-bottom: 10px; }
+            .instructions { background:#f3e9ff; color:#333; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 猎魔女团：黄金结界 — 打印文档</h1>
+        <div class="subtitle">Huntrix: Golden Honmoon · 取材自 2025–2026 现象级动画音乐电影《KPop Demon Hunters（HUNTR/X · 猎魔女团）》</div>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌、棋子、威胁计建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图可用普通纸张打印</li>
+                <li>打印后按卡片边界裁剪使用，卡牌可塑封延长寿命</li>
+            </ul>
+        </div>
+
+        <!-- ===== 地图 ===== -->
+        <div class="section">
+            <h2>🗺️ 游戏地图（都市 7×7）</h2>
+            <div class="game-map">
+                <div class="map-cell start">🎤<span class="cell-label">舞台</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell fan">⭐<span class="cell-label">应援</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell gate">🚪<span class="cell-label">恶魔门</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell node">🛡️<span class="cell-label">节点</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell rehearsal">🎵<span class="cell-label">排练</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell node">🛡️<span class="cell-label">节点</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell gate">🚪<span class="cell-label">恶魔门</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell fan">⭐<span class="cell-label">应援</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell soul">🌟<span class="cell-label">灵能</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell rehearsal">🎵<span class="cell-label">排练</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell gate">🚪<span class="cell-label">恶魔门</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell rest">💊<span class="cell-label">休息</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell node">🛡️<span class="cell-label">节点</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell node">🛡️<span class="cell-label">节点</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell fan">⭐<span class="cell-label">应援</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell gate">🚪<span class="cell-label">恶魔门</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell fan">⭐<span class="cell-label">应援</span></div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell rehearsal">🎵<span class="cell-label">排练</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell gate">🚪<span class="cell-label">恶魔门</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell soul">🌟<span class="cell-label">灵能</span></div>
+                <div class="map-cell path">⬛</div>
+
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell rest">💊<span class="cell-label">休息</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell node">🛡️<span class="cell-label">节点</span></div>
+                <div class="map-cell path">⬛</div>
+                <div class="map-cell throne">👑<span class="cell-label">魔王殿</span></div>
+            </div>
+            <div class="legend">
+                <span>🎤 主舞台(HQ)</span><span>⬛ 街区</span><span>⭐ 应援站</span>
+                <span>🎵 排练室</span><span>🌟 灵能井</span><span>🚪 恶魔之门</span>
+                <span>🛡️ 结界节点</span><span>💊 休息室</span><span>👑 魔王殿</span>
+            </div>
+        </div>
+
+        <!-- ===== 资源卡：应援 ===== -->
+        <div class="section">
+            <h2>⭐ 应援卡片（资源）</h2>
+            <div class="cards-grid">
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">⭐</span><span class="card-title">应援 ×1</span></div>
+                    <div class="card-description">战斗与装备核心资源：在应援站抽取、主舞台登台 +2、击退低阶恶魔获得。用于攻击恶魔、在 HQ 装备武器。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">⭐</span><span class="card-title">应援 ×1</span></div>
+                    <div class="card-description">战斗与装备核心资源：在应援站抽取、主舞台登台 +2、击退低阶恶魔获得。用于攻击恶魔、在 HQ 装备武器。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">⭐</span><span class="card-title">应援 ×1</span></div>
+                    <div class="card-description">战斗与装备核心资源：在应援站抽取、主舞台登台 +2、击退低阶恶魔获得。用于攻击恶魔、在 HQ 装备武器。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">⭐</span><span class="card-title">应援 ×1</span></div>
+                    <div class="card-description">战斗与装备核心资源：在应援站抽取、主舞台登台 +2、击退低阶恶魔获得。用于攻击恶魔、在 HQ 装备武器。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">⭐</span><span class="card-title">应援 ×1</span></div>
+                    <div class="card-description">战斗与装备核心资源：在应援站抽取、主舞台登台 +2、击退低阶恶魔获得。用于攻击恶魔、在 HQ 装备武器。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">⭐</span><span class="card-title">应援 ×1</span></div>
+                    <div class="card-description">战斗与装备核心资源：在应援站抽取、主舞台登台 +2、击退低阶恶魔获得。用于攻击恶魔、在 HQ 装备武器。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 资源卡：旋律 ===== -->
+        <div class="section">
+            <h2>🎵 旋律卡片（资源）</h2>
+            <div class="cards-grid">
+                <div class="card resource2">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">旋律 ×1</span></div>
+                    <div class="card-description">结界与治疗资源：在排练室抽取。用于封印结界节点（🛡️，每节点 🎵×3）与在休息室治疗（🎵×1）。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource2">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">旋律 ×1</span></div>
+                    <div class="card-description">结界与治疗资源：在排练室抽取。用于封印结界节点（🛡️，每节点 🎵×3）与在休息室治疗（🎵×1）。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource2">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">旋律 ×1</span></div>
+                    <div class="card-description">结界与治疗资源：在排练室抽取。用于封印结界节点（🛡️，每节点 🎵×3）与在休息室治疗（🎵×1）。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource2">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">旋律 ×1</span></div>
+                    <div class="card-description">结界与治疗资源：在排练室抽取。用于封印结界节点（🛡️，每节点 🎵×3）与在休息室治疗（🎵×1）。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource2">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">旋律 ×1</span></div>
+                    <div class="card-description">结界与治疗资源：在排练室抽取。用于封印结界节点（🛡️，每节点 🎵×3）与在休息室治疗（🎵×1）。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource2">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">旋律 ×1</span></div>
+                    <div class="card-description">结界与治疗资源：在排练室抽取。用于封印结界节点（🛡️，每节点 🎵×3）与在休息室治疗（🎵×1）。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 资源卡：灵能 ===== -->
+        <div class="section">
+            <h2>💜 灵能卡片（资源）</h2>
+            <div class="cards-grid">
+                <div class="card resource3">
+                    <div class="card-header"><span class="card-icon">💜</span><span class="card-title">灵能 ×1</span></div>
+                    <div class="card-description">终极能源：在灵能井抽取、击败高阶恶魔掉落。封印节点必需（每节点 💜×1），亦用于星光杖/和声爆发与对魔王终极一击。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource3">
+                    <div class="card-header"><span class="card-icon">💜</span><span class="card-title">灵能 ×1</span></div>
+                    <div class="card-description">终极能源：在灵能井抽取、击败高阶恶魔掉落。封印节点必需（每节点 💜×1），亦用于星光杖/和声爆发与对魔王终极一击。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource3">
+                    <div class="card-header"><span class="card-icon">💜</span><span class="card-title">灵能 ×1</span></div>
+                    <div class="card-description">终极能源：在灵能井抽取、击败高阶恶魔掉落。封印节点必需（每节点 💜×1），亦用于星光杖/和声爆发与对魔王终极一击。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource3">
+                    <div class="card-header"><span class="card-icon">💜</span><span class="card-title">灵能 ×1</span></div>
+                    <div class="card-description">终极能源：在灵能井抽取、击败高阶恶魔掉落。封印节点必需（每节点 💜×1），亦用于星光杖/和声爆发与对魔王终极一击。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource3">
+                    <div class="card-header"><span class="card-icon">💜</span><span class="card-title">灵能 ×1</span></div>
+                    <div class="card-description">终极能源：在灵能井抽取、击败高阶恶魔掉落。封印节点必需（每节点 💜×1），亦用于星光杖/和声爆发与对魔王终极一击。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource3">
+                    <div class="card-header"><span class="card-icon">💜</span><span class="card-title">灵能 ×1</span></div>
+                    <div class="card-description">终极能源：在灵能井抽取、击败高阶恶魔掉落。封印节点必需（每节点 💜×1），亦用于星光杖/和声爆发与对魔王终极一击。</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 工具卡：武器 ===== -->
+        <div class="section">
+            <h2>🎤 猎魔武器卡片（工具 · 主舞台 HQ 装备）</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🎤</span><span class="card-title">麦剑</span></div>
+                    <div class="card-description">装备：⭐×2<br>近战攻击 +2（等价于 2 点伤害，可直接击退多数恶魔）。</div>
+                    <div class="card-footer">武器 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">心火</span></div>
+                    <div class="card-description">装备：🎵×2<br>远程：对任意 1 个恶魔造成 2 点伤害。</div>
+                    <div class="card-footer">武器 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🛡️</span><span class="card-title">结界护盾</span></div>
+                    <div class="card-description">装备：🎵×2<br>免疫本回合 1 次恶魔攻击，或为同伴恢复 1 点生命。</div>
+                    <div class="card-footer">武器 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">⚡</span><span class="card-title">闪电步</span></div>
+                    <div class="card-description">装备：⭐×2<br>本回合额外移动 3 步，且可无视 1 个恶魔之门。</div>
+                    <div class="card-footer">武器 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">💎</span><span class="card-title">星光杖</span></div>
+                    <div class="card-description">装备：💜×1<br>群体：对同格或相邻 1 个节点上的所有恶魔各造成 1 点伤害。</div>
+                    <div class="card-footer">武器 · 工具卡</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🎶</span><span class="card-title">和声爆发</span></div>
+                    <div class="card-description">装备：💜×1<br>团队增益：指定 1 名同伴的下一次攻击 +2 伤害。</div>
+                    <div class="card-footer">武器 · 工具卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 陷阱卡：恶魔 ===== -->
+        <div class="section">
+            <h2>👹 恶魔卡片（陷阱）</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">👹</span><span class="card-title">小恶鬼</span></div>
+                    <div class="card-description">生命 1<br>若本回合未击退，威胁 +1 并扣你 1 生命。<br>应对：⭐×1 或麦剑 🎤 击退。</div>
+                    <div class="card-footer">恶魔 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🕷️</span><span class="card-title">蛛魔</span></div>
+                    <div class="card-description">生命 1<br>缠缚：你下个回合无法移动。<br>应对：⚡ 闪电步挣脱或 ⭐×1 清除。</div>
+                    <div class="card-footer">恶魔 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">👁️</span><span class="card-title">凝视魔</span></div>
+                    <div class="card-description">生命 2<br>吸走 1 张 🎵 旋律卡。<br>应对：🔥 心火 2 点伤害清除。</div>
+                    <div class="card-footer">恶魔 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">炎魔</span></div>
+                    <div class="card-description">生命 2<br>对你造成 1 点伤害。<br>应对：🛡️ 结界护盾抵消，或麦剑/心火清除。</div>
+                    <div class="card-footer">恶魔 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🌑</span><span class="card-title">暗影</span></div>
+                    <div class="card-description">生命 2<br>回合结束向相邻节点蔓延，若抵达魔王殿则威胁 +2。<br>应对：💎 星光杖群体清除或 ⭐×2 击退。</div>
+                    <div class="card-footer">恶魔 · 陷阱卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">👑</span><span class="card-title">魔王使者</span></div>
+                    <div class="card-description">生命 3（高阶先锋）<br>威胁 +2，封锁 1 个节点无法封印。<br>应对：💎 星光杖 + 麦剑组合清除；击败掉落 💜×1。</div>
+                    <div class="card-footer">恶魔 · 陷阱卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 宝藏卡 ===== -->
+        <div class="section">
+            <h2>🏆 成长奖励卡片（宝藏）</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🏆</span><span class="card-title">黄金结界</span></div>
+                    <div class="card-description">集齐全部 5 节点封印后自动点亮；决战魔王时全队攻击 +1。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">💎</span><span class="card-title">传奇舞台服</span></div>
+                    <div class="card-description">永久：你发动的每一次攻击 +1 伤害。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">⭐</span><span class="card-title">巨星之光</span></div>
+                    <div class="card-description">永久：你每次在应援站/登台额外 +1 张 ⭐。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🎵</span><span class="card-title">天籁之音</span></div>
+                    <div class="card-description">永久：你每次在排练室额外 +1 张 🎵。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">💜</span><span class="card-title">灵魂共鸣</span></div>
+                    <div class="card-description">一次性强心剂：你生命归零时自动回满 1 次。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">👑</span><span class="card-title">胜利王冠</span></div>
+                    <div class="card-description">永久：共享威胁上限 +1（更难被结界吞噬）。</div>
+                    <div class="card-footer">宝藏卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 玩家棋子 ===== -->
+        <div class="section">
+            <h2>👤 玩家棋子（猎魔女团成员）</h2>
+            <div class="player-pieces">
+                <div class="piece"><div class="piece-circle rumi">R</div><div class="piece-label">Rumi（紫）</div></div>
+                <div class="piece"><div class="piece-circle mira">M</div><div class="piece-label">Mira（蓝）</div></div>
+                <div class="piece"><div class="piece-circle zoey">Z</div><div class="piece-label">Zoey（粉）</div></div>
+                <div class="piece"><div class="piece-circle mgr">★</div><div class="piece-label">经纪人（绿）</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 生命值 ===== -->
+        <div class="section">
+            <h2>❤️ 生命值标记（每位玩家 ❤️×3）</h2>
+            <div class="hp-row">
+                <div class="hp-player"><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span>Rumi</span></div>
+                <div class="hp-player"><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span>Mira</span></div>
+                <div class="hp-player"><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span>Zoey</span></div>
+                <div class="hp-player"><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span class="hp-heart">❤️</span><span>经纪人</span></div>
+            </div>
+        </div>
+
+        <!-- ===== 威胁计 ===== -->
+        <div class="section">
+            <h2>🌑 威胁计（共享 0 → 10，达到 10 即失败）</h2>
+            <p style="font-size:13px;color:#666;margin-bottom:10px;">每完整一轮 +1；每封印 1 个结界节点 −1；「胜利王冠」宝藏使上限 +1。</p>
+            <div class="threat-track">
+                <div class="threat-cell">0</div>
+                <div class="threat-cell">1</div>
+                <div class="threat-cell">2</div>
+                <div class="threat-cell">3</div>
+                <div class="threat-cell warn">4</div>
+                <div class="threat-cell warn">5</div>
+                <div class="threat-cell warn">6</div>
+                <div class="threat-cell warn">7</div>
+                <div class="threat-cell warn">8</div>
+                <div class="threat-cell danger">9</div>
+                <div class="threat-cell danger">10</div>
+            </div>
+        </div>
+
+        <!-- ===== 结界封印标记 ===== -->
+        <div class="section">
+            <h2>🛡️ 结界封印标记（共 5 个）</h2>
+            <p style="font-size:13px;color:#666;margin-bottom:12px;">节点恶魔清空后，封印时放置 1 个；集齐 5 个即开启魔王殿 👑。</p>
+            <div class="player-pieces">
+                <div class="piece"><div class="piece-circle mgr" style="border-radius:8px;">🛡️</div><div class="piece-label">封印 1</div></div>
+                <div class="piece"><div class="piece-circle mgr" style="border-radius:8px;">🛡️</div><div class="piece-label">封印 2</div></div>
+                <div class="piece"><div class="piece-circle mgr" style="border-radius:8px;">🛡️</div><div class="piece-label">封印 3</div></div>
+                <div class="piece"><div class="piece-circle mgr" style="border-radius:8px;">🛡️</div><div class="piece-label">封印 4</div></div>
+                <div class="piece"><div class="piece-circle mgr" style="border-radius:8px;">🛡️</div><div class="piece-label">封印 5</div></div>
+            </div>
+        </div>
+
+        <!-- ===== 骰子 ===== -->
+        <div class="section">
+            <h2>🎲 骰子模板</h2>
+            <div class="dice-template">
+                <div class="dice">⚀</div>
+                <div class="dice">⚁</div>
+                <div class="dice">⚂</div>
+                <div class="dice">⚃</div>
+                <div class="dice">⚄</div>
+                <div class="dice">⚅</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将游戏地图打印出来，放在桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿卡片边界裁剪，建议塑封以增加耐用性</li>
+                <li><strong>准备棋子与标记：</strong>裁剪玩家棋子，或用硬币/纽扣代替；威胁计、生命值可用白板/计分纸记录；封印标记可用同色贴纸</li>
+                <li><strong>威胁与生命：</strong>用白板记录共享威胁值 🌑 与每位玩家的生命 ❤️</li>
+                <li><strong>开始游戏：</strong>每人选 1 棋子放主舞台 🎤，各抽 6 张应援卡 ⭐；封印全部 5 节点并击败魔王 👑 即共同胜利</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
