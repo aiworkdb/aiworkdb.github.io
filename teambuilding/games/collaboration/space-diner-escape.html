@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>银河小馆 · 双线突围版 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #f4ece0;
+            background: linear-gradient(135deg, #05080f 0%, #0b0e1c 60%, #1a1308 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0d0f1f;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            overflow: hidden;
+            border: 1px solid #3a2a12;
+        }
+        .header {
+            background: linear-gradient(135deg, #0b1120 0%, #b45309 50%, #f59e0b 100%);
+            color: #fff7e6;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #0a0b18;
+        }
+        .info-card {
+            background: #0d0f1f;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            text-align: center;
+            border: 1px solid #3a2a12;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #7dd3fc;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #f59e0b;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #f59e0b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #38bdf8;
+        }
+        .section h3 {
+            color: #fdba74;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #0a0b18;
+            border: 2px solid #3a2a12;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(245,158,11,0.4);
+            border-color: #f59e0b;
+        }
+        .card h4 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #3a2a12;
+            color: #f4ece0;
+        }
+        th {
+            background: #b45309;
+            color: #fff7e6;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #0a0b18;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #0a0b18 0%, #1a1308 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #fdba74;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #b45309;
+            color: #fff7e6;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: #0d0f1f;
+            border: 2px solid #3a2a12;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #2a9d8f;
+        }
+        .event-card.negative {
+            border-color: #dc2626;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #0a0b18;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #0a0b18 0%, #1a1308 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #38bdf8;
+        }
+        .highlight h3 {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+        .print-section {
+            background: #1a1308;
+            border: 2px dashed #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #f59e0b;
+        }
+        @media print {
+            body { background: white; color: #222; padding: 0; }
+            .container { box-shadow: none; border: none; }
+            .no-print { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 银河小馆 · 双线突围版</h1>
+            <div class="subtitle">Galaxy Diner - 把"前场交付"与"后场稳定"逼成必须并行的双线作战</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">3-5人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">45-75分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">🍳</div>
+                <div class="label">适合场景</div>
+                <div class="value">双线协同·稳定性</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h1 style="display:none;">银河小馆 · 双线突围版</h1>
+                <h2>🎮 游戏概述</h2>
+                <p>《银河小馆 · 双线突围版》改编自合作桌游《星际餐厅大逃亡 Space Diner Escape》。原作的美妙张力在于——玩家既要<strong>前场接待顾客、完成订单、赚取星际信用点</strong>，又要<strong>后场合力修复飞船 4 个关键系统</strong>，6 轮内逃出陨石带；光顾前场赚不到配件，光修船又会被客诉离场。</p>
+                <p style="margin-top: 15px;">这正是真实<strong>产研 / 运维 / 互联网团队的日常缩影</strong>：一边是<strong>前场业务交付（接需求、出活、保客户满意度）</strong>，一边是<strong>后场系统稳定性（修 Bug、还技术债、扛故障）</strong>，而两者争抢的是<strong>同一池有限资源——工时 / 预算 / 人力</strong>。团建版把"飞船系统损坏"译成"稳定性健康度"，把"信用点"译成"团队预算 / 工时池"，把"顾客超时"译成"需求逾期 / 客户流失"，把"6 轮"译成"一个迭代周期 / 交付期限"。</p>
+
+                <div class="highlight">
+                    <h3>🎯 团建改造重点</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>双线作战（核心反转）</strong>：单一目标拆成"前场交付"与"后场稳定"两条必须并行的线</li>
+                        <li><strong>资源零和分配</strong>：信用点只能二选一花在"赚"或"修"——逼团队直面接需求 vs 还技术债的预算博弈</li>
+                        <li><strong>角色互补</strong>：业务 owner / 运维 SRE / 客户成功 PM / 风险 PMO / 技术专家</li>
+                        <li><strong>危机即突发</strong>：陨石撞击 = 线上故障、顾客投诉 = 客诉、系统干扰 = 临时插队需求</li>
+                        <li><strong>稳定性可视</strong>：4 条系统损坏条就是 4 张健康度仪表盘，任一满格 = 事故</li>
+                        <li><strong>复盘框架</strong>：每局结束 4F 复盘，迁移到真实工作的需求与稳定性治理</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 团建目标 -->
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>双线平衡观</h4><p>体感"前场交付"与"后场稳定"必须同时跑，反思是不是总顾一头丢一头</p></div>
+                    <div class="card"><h4>资源博弈</h4><p>看见"接需求赚的钱"和"修系统花的钱"抢同一池预算，体感还债被挤压</p></div>
+                    <div class="card"><h4>角色互补</h4><p>业务 / 运维 / 客户成功 / PMO / 技术专家彼此依赖，"没有谁是无用的位置"</p></div>
+                    <div class="card"><h4>稳定性前移</h4><p>引擎到 3 格就每轮多一张危机牌——体感隐患不修会滚雪球，训练治未病</p></div>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>飞船平面图</td><td>1张</td><td>系统面板 + 餐厅 / 后厨区域</td></tr>
+                    <tr><td>系统损坏条</td><td>4条</td><td>引擎 / 氧气 / 动力 / 导航各 0-5 格</td></tr>
+                    <tr><td>信用点代币</td><td>50枚</td><td>共享预算 / 工时池</td></tr>
+                    <tr><td>角色卡 / 骰子</td><td>5张 / 1-2颗</td><td>职能分工；危机 / 烹饪判定</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>地图</strong>：白纸分两区——上"系统面板"（4 条各 5 格）、下"餐厅 + 后厨"（灶台 / 餐桌 / 服务台 / 商店）</li>
+                        <li><strong>损坏条</strong>：4 张纸条各写 0-5，初始各标 2 格</li>
+                        <li><strong>信用点</strong>：一堆放 10 枚硬币当公共池</li>
+                        <li><strong>卡牌</strong>：便签写名称 + 效果（🌌/🍜/⚠️/🔩），分类面朝下抽</li>
+                        <li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属角色，模拟真实团队的"攻与守"分工与相互依赖（也可按性格由教练分配）：</p>
+
+                <div class="role-card">
+                    <h4>👨‍🍳 厨师长 · 业务 Owner / 交付主力</h4>
+                    <p><strong>被动</strong>：烹饪仅耗 ½ 点</p>
+                    <p><strong>团建映射</strong>：高产出的核心交付手——"冲业务、出活"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🤖 修理机器人 · 运维 / SRE / 架构</h4>
+                    <p><strong>被动</strong>：修复 -1 点且 +1 修复值</p>
+                    <p><strong>团建映射</strong>：稳定性兜底与还债——"修系统、扛故障"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🐙 章鱼服务员 · 客户成功 / 项目经理</h4>
+                    <p><strong>被动</strong>：一次给 2 桌上菜</p>
+                    <p><strong>团建映射</strong>：横向补位、对接需求——"客户成功 / PM"</p>
+                </div>
+                <div class="role-card">
+                    <h4>👩‍🚀 导航员 · PMO / 风险官</h4>
+                    <p><strong>被动</strong>：每轮预览下 1 张危机牌</p>
+                    <p><strong>团建映射</strong>：风险前置、提前规划——"谁在盯隐患"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🧙 星际厨神 · 技术专家 / 架构师</h4>
+                    <p><strong>被动</strong>：把普通料理升精致</p>
+                    <p><strong>团建映射</strong>：流程 / 质量优化——"把普通活做成精品"</p>
+                </div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程（每回合 4 阶段）</h2>
+                <p>每回合依次执行：<strong>① 分配行动点</strong> → <strong>② 行动阶段（每人 4 行动点）</strong> → <strong>③ 检查顾客等待</strong> → <strong>④ 危机事件（轮次 +1）</strong>。</p>
+
+                <div class="flow-step">
+                    <h4>核心机制 · 双线作战（团建灵魂）</h4>
+                    <p>前场<strong>接单烹饪上菜赚信用点</strong>，后场<strong>买配件修系统保稳定</strong>——两条线<strong>缺一不可</strong>。一个人只能在一个区行动，团队必须<strong>把人排兵布阵到双线</strong>。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>资源 · 信用点 = 预算 / 工时池（零和）</h4>
+                    <p>接单赚的、修系统花的，<strong>都是同一池信用点</strong>。钱花在"赚"就少修，花在"修"就少交——这正是"接需求 vs 还技术债"的预算博弈。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>危机 · 系统损坏条 = 稳定性健康度</h4>
+                    <p>引擎到 3 格每轮<strong>多翻 1 张危机牌</strong>（隐患滚雪球）；任一系统到 5 格即<strong>立即失败（线上事故）</strong>。游戏逼团队"稳定性前移"。</p>
+                </div>
+
+                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
+                <table>
+                    <tr><th>共享轨道</th><th>初始</th><th>警告 / 失败阈值</th></tr>
+                    <tr><td>系统损坏（4条）</td><td>各2格</td><td>3格 = 每轮多1张危机牌；5格 = 立即失败（事故）</td></tr>
+                    <tr><td>公共信用点</td><td>10点</td><td>买配件 / 接单周转；归零且无收入 = 失败</td></tr>
+                    <tr><td>顾客等待</td><td>2桌在途</td><td>超时 = 投诉扣信用点（客户流失）</td></tr>
+                    <tr><td>轮次计数</td><td>第1轮</td><td>达6轮未达标 = 失败（交付期限到）</td></tr>
+                </table>
+                <p style="color:#f59e0b; margin-top:10px;">⚠️ <strong>关键</strong>：胜负不取决于"谁做菜最多"，而取决于"<strong>前场交付与后场稳定是否双线达标</strong>"——光挣不修会出事，光修不交会被客诉。</p>
+            </div>
+
+            <!-- 团建引导 -->
+            <div class="section">
+                <h2>💡 团建引导提示</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>游戏前（5分钟）</h4><p>双线定调："既要接单交付，又要在 6 轮内把 4 个系统修健康，缺一不可。"</p></div>
+                    <div class="card"><h4>游戏中（观察）</h4><p>记录：双线是否失衡？预算怎么花？谁在兜底稳定性？隐患前移了吗？前后台吵没吵？</p></div>
+                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟；把"双线平衡"迁移到真实工作。</p></div>
+                </div>
+            </div>
+
+            <!-- 变体玩法 -->
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，记录"双线是否失衡、预算流向、谁在兜底稳定性"，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>设60分钟 / 6 轮沙漏，以"是否双线达标"判胜负，适合时间有限团建。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每2回合轮换角色，体验"冲交付"与"修系统"两类职能，强化前后台相互理解。</p></div>
+                    <div class="card"><h4>无声前场</h4><p>部分回合禁言接单 / 修系统，凸显"提前约定、显性同步"对双线协作的价值。</p></div>
+                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，强制"业务 / 技术 / 职能"跨界搭档，专为打破部门墙设计。</p></div>
+                    <div class="card"><h4>真实技术债叠加</h4><p>把系统损坏条换成当前真实技术债/隐患便签，每修1格=还1项债，便签变技术债治理看板。</p></div>
+                    <div class="card"><h4>真实需求池叠加</h4><p>把订单卡换成当前在途需求/客户承诺便签，超时=真实客诉，复盘直接盘点需求优先级。</p></div>
+                </div>
+            </div>
+
+            <!-- 难度调整 -->
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <table>
+                    <tr><th>模式</th><th>调整</th><th>适合</th></tr>
+                    <tr><td>简单</td><td>损坏降至1格、耐心+1轮、信用点15、危机堆减4张</td><td>新团队/非玩家</td></tr>
+                    <tr><td>标准（推荐）</td><td>损坏各2格、信用点10、共6轮、四系统各≤1格+信用点≥5+无超时</td><td>大多数团建</td></tr>
+                    <tr><td>困难</td><td>损坏各3格、每轮2张危机牌、四系统全0格+信用点≥20、去幸运顾客</td><td>运维/SRE/架构团队</td></tr>
+                </table>
+            </div>
+
+            <!-- 工作场景映射 -->
+            <div class="section">
+                <h2>🗺️ 游戏要素 → 工作场景</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>双线作战</h4><p>前场交付 + 后场稳定并行，体感"既要又要"的平衡术</p></div>
+                    <div class="card"><h4>预算零和</h4><p>接需求产出 vs 修系统投入，抢同一池工时 / 预算</p></div>
+                    <div class="card"><h4>稳定性前移</h4><p>隐患 3 格就滚雪球，训练"治未病"而非救火</p></div>
+                    <div class="card"><h4>角色互补</h4><p>业务/运维/客户成功/PMO/技术专家相互依赖</p></div>
+                </div>
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>前场接单烹饪</td><td>业务交付 / 需求验收 / 出活回款</td></tr>
+                    <tr><td>后场修系统</td><td>稳定性治理 / 还技术债 / 扛线上故障</td></tr>
+                    <tr><td>公共信用点</td><td>团队预算 / 工时池（零和分配）</td></tr>
+                    <tr><td>系统损坏条</td><td>稳定性健康度仪表盘 / 隐患可视化</td></tr>
+                    <tr><td>危机事件</td><td>线上故障 / 客诉 / 临时插队需求</td></tr>
+                    <tr><td>6 轮期限</td><td>迭代周期 / 交付期限</td></tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li><a href="space-diner-escape.md" style="color:#fdba74;">完整团建版规则（Markdown）</a></li>
+                    <li>原始桌游：boardgames/category/cooperative/space-diner-escape/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：星际灯塔守护者、星际医疗队、轮回地下城、天命人</li>
+                </ul>
+                <p style="margin-top: 20px; color: #7dd3fc; font-style: italic;">
+                    改编自合作桌游《星际餐厅大逃亡 Space Diner Escape》（太空流浪餐厅"银河小馆"穿越陨石带、双线经营 + 修复）| 最后更新：2026-07-18
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

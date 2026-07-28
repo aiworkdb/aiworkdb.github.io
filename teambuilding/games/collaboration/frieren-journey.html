@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>芙莉莲的旅程 - 团建游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: #333;
+            background: linear-gradient(135deg, #3c096c 0%, #5a189a 100%);
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #5a189a 0%, #9d4edd 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header .subtitle { font-size: 1.2em; opacity: 0.92; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 30px; background: #f8f9fa; }
+        .info-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .info-card .icon { font-size: 2em; margin-bottom: 10px; }
+        .info-card .label { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+        .info-card .value { font-size: 1.2em; font-weight: bold; color: #5a189a; }
+        .content { padding: 40px; }
+        .section { margin-bottom: 40px; }
+        .section h2 { color: #5a189a; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #5a189a; }
+        .section h3 { color: #7b2cbf; margin-top: 20px; margin-bottom: 15px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+        .card { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px; padding: 20px; transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.15); border-color: #9d4edd; }
+        .card h4 { color: #5a189a; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+        th { background: #5a189a; color: white; font-weight: 600; }
+        tr:hover { background: #f8f9fa; }
+        .role-card { background: linear-gradient(135deg, #f8f9fa 0%, #efe0fa 100%); border-left: 4px solid #9d4edd; padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .role-card h4 { color: #5a189a; margin-bottom: 10px; }
+        .tag { display: inline-block; background: #5a189a; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; margin: 5px 5px 5px 0; }
+        .journey-step { background: #f8f9fa; border-left: 5px solid #9d4edd; border-radius: 10px; padding: 14px 20px; margin: 10px 0; display: flex; align-items: center; gap: 15px; }
+        .journey-step .depth { font-size: 1.1em; font-weight: bold; color: #5a189a; min-width: 130px; }
+        .journey-step .desc { flex: 1; }
+        .flow-step { background: #f8f9fa; border-left: 4px solid #9d4edd; padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .flow-step h4 { color: #5a189a; margin-bottom: 10px; }
+        .highlight { background: linear-gradient(120deg, #e0aaff 0%, #f3d9ff 100%); padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .print-section { background: #fff3cd; border: 2px dashed #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .print-section h3 { color: #ffc107; }
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; } .no-print { display: none; } }
+        @media (max-width: 768px) { .header h1 { font-size: 1.8em; } .info-grid { grid-template-columns: 1fr; } .card-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧙 芙莉莲的旅程</h1>
+            <div class="subtitle">Frieren's Journey - 慢旅途中的团队协作与抉择</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card"><div class="icon">👥</div><div class="label">人数</div><div class="value">2-4人</div></div>
+            <div class="info-card"><div class="icon">⏱️</div><div class="label">时长</div><div class="value">60-90分钟</div></div>
+            <div class="info-card"><div class="icon">🎯</div><div class="label">适合场景</div><div class="value">团队协作·目标共识</div></div>
+            <div class="info-card"><div class="icon">📊</div><div class="label">难度</div><div class="value">中等</div></div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>🎮 游戏概述</h2>
+                <p>《芙莉莲的旅程》改编自同名合作桌游（灵感源于《葬送的芙莉莲》）。一支冒险小队沿着艾兰大陆的旅途路线，穿越森林、山脉、荒漠与海岸，最终抵达传说中的<strong>「天国之地」</strong>。途中需收集魔法、战斗护队、完成村庄委托，并在有限的<strong>时间沙漏</strong>内抵达终点。</p>
+                <p style="margin-top: 15px;">所有玩家<strong>共享时间、共享胜负</strong>——抉择事件必须团队讨论共同决定。这是一款关于<strong>角色互补、目标共识与时间取舍</strong>的绝佳团建载体，旅途的「慢」恰恰是深度沟通的留白。</p>
+                <div class="highlight">
+                    <h3 style="color:#5a189a; margin-bottom:10px;">🎯 团建改造重点</h3>
+                    <ul style="margin-left:20px;">
+                        <li><strong>合作而非竞争</strong>：共享时间沙漏、共享资源、共享胜负</li>
+                        <li><strong>角色互补</strong>：4种专属职能，模拟真实团队分工</li>
+                        <li><strong>目标共识</strong>：抉择事件强迫团队对齐价值观与优先级</li>
+                        <li><strong>时间管理</strong>：有限回合模拟项目 deadline 与节奏压力</li>
+                        <li><strong>复盘框架</strong>：每局结束用 4F 框架反思抉择与取舍</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>角色互补</h4><p>体验输出、坦克、远程、治疗四类职能的依赖关系</p></div>
+                    <div class="card"><h4>目标共识</h4><p>在「赶路 vs 接委托」的取舍中达成团队共识</p></div>
+                    <div class="card"><h4>时间管理</h4><p>在沙漏告急时学会取舍与优先级排序</p></div>
+                    <div class="card"><h4>深度沟通</h4><p>二选一抉择事件锻炼表达、倾听与妥协</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>旅途地图</td><td>1张</td><td>线性路线 + 8个区域节点</td></tr>
+                    <tr><td>玩家棋子</td><td>4个</td><td>标记每位角色旅途位置</td></tr>
+                    <tr><td>角色卡</td><td>4张</td><td>芙莉莲/费伦/修塔尔克/海塔</td></tr>
+                    <tr><td>HP/MP 标记</td><td>各4个</td><td>追踪每位玩家状态</td></tr>
+                    <tr><td>时间沙漏 token</td><td>6个</td><td>旅途时间限制（有限回合）</td></tr>
+                    <tr><td>事件卡/委托卡/地形卡</td><td>各若干</td><td>旅途遭遇、村庄委托、地形效果</td></tr>
+                    <tr><td>骰子</td><td>1颗</td><td>移动判定（1d6）</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left:20px; margin-top:10px;">
+                        <li><strong>地图</strong>：白纸画起点→终点的线性路线，标出8个区域名</li>
+                        <li><strong>卡牌</strong>：便签写事件/委托名称与效果，面朝下抽</li>
+                        <li><strong>角色卡</strong>：直接写字说明职责</li>
+                        <li><strong>沙漏</strong>：6枚硬币，每到达新区消耗1枚</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属角色，对应团队中的典型职能分工与相互依赖：</p>
+                <div class="role-card"><h4>🧙 芙莉莲（魔法核心 / 输出·辅助）</h4><p><strong>职责</strong>：团队魔法输出与辅助｜<strong>被动</strong>：「魔法精通」学魔法时查看3选1｜<strong>观察点</strong>：专业能力与资源节制的平衡</p></div>
+                <div class="role-card"><h4>🗡️ 费伦（坦克 / 主输出）</h4><p><strong>职责</strong>：吸引火力、承担风险｜<strong>被动</strong>：「勇者之剑」每回合额外攻击1次｜<strong>观察点</strong>：保护他人、扛住压力的意愿</p></div>
+                <div class="role-card"><h4>⚔️ 修塔尔克（远程输出 / 灵活支援）</h4><p><strong>职责</strong>：侦察与灵活补位｜<strong>被动</strong>：「精灵弓箭手」可攻击后排｜<strong>观察点</strong>：信息侦察与随机应变</p></div>
+                <div class="role-card"><h4>🛡️ 海塔（治疗 / 支援 · 扩展）</h4><p><strong>职责</strong>：兜底保障队友｜<strong>被动</strong>：「治愈术」每回合为1队友回2HP｜<strong>观察点</strong>：隐性价值与"被需要感"</p></div>
+                <p style="margin-top:15px; color:#666;"><em>提示：首轮自由选角，次轮轮换角色，体验「输出」与「守护」两类职能的不同压力。</em></p>
+            </div>
+
+            <div class="section">
+                <h2>🗺️ 旅途地图（8个区域）</h2>
+                <p>团队从 🏰<strong>奥伊伦贝尔</strong> 出发，沿线性路线前进，最终抵达 🏔️<strong>天国之地</strong>。时间沙漏 token 用尽前必须到达终点——否则团队失败。</p>
+                <div class="journey-step"><div class="depth">🏰 奥伊伦贝尔</div><div class="desc"><strong>起点</strong>｜整备出发，接取初始委托｜无风险</div></div>
+                <div class="journey-step"><div class="depth">🌲 艾兰大森林</div><div class="desc"><strong>森林</strong>｜可采集草药（回复HP）</div></div>
+                <div class="journey-step"><div class="depth">🏔️ 维根山脉</div><div class="desc"><strong>山脉</strong>｜移动消耗+1，但获得魔法石</div></div>
+                <div class="journey-step"><div class="depth">🏘️ 各各马大公国</div><div class="desc"><strong>村庄</strong>｜休息（完全回复HP/MP）＋接委托</div></div>
+                <div class="journey-step"><div class="depth">🏜️ 南部荒漠</div><div class="desc"><strong>荒漠</strong>｜移动需掷骰>3，否则停留原地</div></div>
+                <div class="journey-step"><div class="depth">🌊 西部海岸</div><div class="desc"><strong>海岸</strong>｜可交易资源、补充物资</div></div>
+                <div class="journey-step"><div class="depth">🏛️ 王都</div><div class="desc"><strong>遗迹</strong>｜学习新魔法（抽魔法卡）</div></div>
+                <div class="journey-step"><div class="depth">⛰️ 终焉山脉 → 🏔️ 天国之地</div><div class="desc"><strong>终点</strong>｜到达即触发结局评级｜唯一</div></div>
+            </div>
+
+            <div class="section">
+                <h2>🎲 游戏流程（每回合）</h2>
+                <div class="flow-step"><h4>阶段1：移动阶段（团队讨论）</h4><p>当前玩家掷骰（1d6）沿路线前进；经过村庄可短暂停留接委托或休息。</p></div>
+                <div class="flow-step"><h4>阶段2：地形揭示</h4><p>到达新区域抽取地形卡，触发对应效果（草药/魔法石/风险等）。</p></div>
+                <div class="flow-step"><h4>阶段3：事件阶段（关键沟通点）</h4><p>友好事件立即得好处；危险事件立即承受后果；<strong>抉择事件需团队讨论共同决定</strong>——这是复盘最丰富的素材。</p></div>
+                <div class="flow-step"><h4>阶段4：委托阶段（可选）</h4><p>在村庄可接取委托卡，完成后获得奖励与声望，影响结局评级。</p></div>
+                <div class="flow-step"><h4>阶段5：遭遇阶段（如触发战斗）</h4><p>抽魔物卡进入战斗，<strong>魔物攻击目标由团队共同决定</strong>（优先保护HP低者）。</p></div>
+                <div class="flow-step"><h4>阶段6：学习阶段</h4><p>在遗迹/魔法塔消耗魔法石学习新魔法。</p></div>
+                <div class="flow-step"><h4>阶段7：回合结束</h4><p>消耗1个时间 token；token 用尽触发「时间耗尽」，3回合内未达终点即团队失败。</p></div>
+            </div>
+
+            <div class="section">
+                <h2>🏆 胜利与失败</h2>
+                <table>
+                    <tr><th>结局</th><th>条件</th></tr>
+                    <tr><td>🏆 完美结局</td><td>抵达「天国之地」且完成 ≥3 个B级委托</td></tr>
+                    <tr><td>🎯 标准结局</td><td>抵达「天国之地」</td></tr>
+                    <tr><td>🌟 隐藏结局</td><td>集齐 8 张 II 级以上魔法卡且全员存活到达</td></tr>
+                </table>
+                <p style="margin-top:10px; color:#666;"><strong>失败</strong>：时间沙漏用尽且3回合内未达终点 / 全员HP归零且无「复活魔法」 / 累计失败5次委托。</p>
+            </div>
+
+            <div class="section">
+                <h2>🤔 复盘框架（4F）</h2>
+                <div class="card"><h4 style="color:#5a189a;">事实 Facts</h4><ul style="margin-left:20px; margin-top:10px;"><li>哪个抉择事件引发最大分歧？时间沙漏最早在哪段路程告急？</li><li>委托优先级是如何定的？赶路还是接委托？</li></ul></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#5a189a;">感受 Feelings</h4><ul style="margin-left:20px; margin-top:10px;"><li>扮演[角色]让你感觉如何？被保护/被忽视的时刻是什么？</li><li>时间耗尽压力下你的情绪如何变化？</li></ul></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#5a189a;">发现 Findings</h4><ul style="margin-left:20px; margin-top:10px;"><li>谁的意见被忽略？"赶路 vs 接委托"的取舍反映了什么？</li><li>角色轮换后，你对其他职能的理解有何变化？</li></ul></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#5a189a;">迁移 Future</h4><ul style="margin-left:20px; margin-top:10px;"><li>这段旅途像你工作中的哪个项目？</li><li>我们可以立即改进协作的一件事是什么？</li></ul></div>
+            </div>
+
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超4人时多出玩家任观察员，记录协作过程，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>沙漏压缩至45分钟，时间到即时结算，增加紧迫感。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每2区域轮换角色，体验"输出"与"守护"两类职能，强调换位思考。</p></div>
+                    <div class="card"><h4>沉默旅途</h4><p>抉择事件后回合仅用写字/肢体沟通，凸显非语言沟通。</p></div>
+                    <div class="card"><h4>剧情模式</h4><p>按动漫顺序解锁区域，加入"经典台词"情感卡，建立联结、破冰。</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>简单模式</h4><p>沙漏8个、敌人HP-20%。适合新团队/非游戏爱好者。</p></div>
+                    <div class="card"><h4>标准模式</h4><p>沙漏6个。适合大多数团建场景。</p></div>
+                    <div class="card"><h4>困难模式</h4><p>沙漏4个、敌人HP+30%、攻击+1、50%双重事件。适合高层/抗压主题。</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 设计思路</h2>
+                <div class="highlight">
+                    <h3 style="color:#5a189a; margin-bottom:15px;">为什么选这个游戏？</h3>
+                    <ol style="margin-left:20px;">
+                        <li><strong>旅途感</strong>：不是打败BOSS，而是享受沿途协作与成长</li>
+                        <li><strong>高度合作</strong>：共享时间与胜负，天然促进团队感</li>
+                        <li><strong>角色互补</strong>：4种职能卡模拟真实团队分工</li>
+                        <li><strong>抉择即复盘</strong>：每个二选一都是价值观与优先级的暴露</li>
+                    </ol>
+                </div>
+                <h3 style="margin-top:30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>时间沙漏</td><td>固定交付周期 / 项目 deadline</td></tr>
+                    <tr><td>8个区域</td><td>项目时间线的里程碑</td></tr>
+                    <tr><td>抉择事件</td><td>需对齐优先级与价值观的岔路口</td></tr>
+                    <tr><td>4种角色</td><td>团队成员的职能专长</td></tr>
+                    <tr><td>村庄休息</td><td>阶段性复盘与团队补给</td></tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left:20px;">
+                    <li>原始桌游：boardgames/category/cooperative/frieren-journey/</li>
+                    <li>类似游戏：末日种子库、深海探险、病毒危机、岛屿求生</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                </ul>
+                <p style="margin-top:20px; color:#666; font-style:italic;">改编自合作桌游《芙莉莲的旅程》| 最后更新：2026-07-12</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

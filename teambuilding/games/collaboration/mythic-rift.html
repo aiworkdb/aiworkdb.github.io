@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神话裂隙 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #161033 0%, #2a1a4a 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #6d28d9 0%, #22d3ee 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f1ecfd;
+        }
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #7c3aed;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #22d3ee;
+        }
+        .section h3 {
+            color: #9333ea;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f1ecfd;
+            border: 2px solid #e3d7fb;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-color: #22d3ee;
+        }
+        .card h4 {
+            color: #7c3aed;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e3d7fb;
+        }
+        th {
+            background: #6d28d9;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f1ecfd;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #f1ecfd 0%, #f6f2fe 100%);
+            border-left: 4px solid #eab308;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #7c3aed;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #7c3aed;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: white;
+            border: 2px solid #e3d7fb;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #2a9d8f;
+        }
+        .event-card.negative {
+            border-color: #e76f51;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #f1ecfd;
+            border-left: 4px solid #22d3ee;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #7c3aed;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #e9defb 0%, #d9c9f5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section {
+            background: #f1ecfd;
+            border: 2px dashed #b794f4;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #9333ea;
+        }
+        .map-layer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f1ecfd;
+            border-left: 5px solid #7c3aed;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin: 10px 0;
+        }
+        .map-layer .depth {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #7c3aed;
+            min-width: 90px;
+        }
+        .map-layer .desc {
+            flex: 1;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .no-print { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 神话裂隙</h1>
+            <div class="subtitle">Mythic Rift - 角色互补与心智韧性的协作团建游戏</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">3-5人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">60-90分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">🎯</div>
+                <div class="label">适合场景</div>
+                <div class="value">协作·心智韧性·角色互补</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等（偏难可选）</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h2>🎮 游戏概述</h2>
+                <p>《神话裂隙》改编自合作桌游《Mythic Rift》。玩家扮演来自不同神话世界的"神话猎人"——孙悟空、赫拉克勒斯、托尔、拉、须佐之男，联手探索连接各神话世界的神秘裂隙，收集远古神器，合作封印企图入侵的远古邪神"混沌之主"。</p>
+                <p style="margin-top: 15px;">游戏以<strong>合作为核心</strong>——所有人共享胜负，只要团队"理智值"见底、全队在混沌侵蚀中崩溃，任务即刻失败。三条章节层层推进、三位 Boss 逐一降临、神器与技能需要跨角色组合，每一刻都在考验团队的角色互补、信息共享与协同决策。这片裂隙正如一支面临复杂挑战的团队——持续下降的理智值是团队心智水位与心理安全的晴雨表，三位 Boss 是项目里程碑上接连出现的硬骨头，而"混沌之主"正是那道必须合力攻克的核心难题。</p>
+
+                <div class="highlight">
+                    <h3 style="color: #7c3aed; margin-bottom: 10px;">🎯 团建改造重点</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>合作而非竞争</strong>：共享理智值、共享裂隙能量、共享胜负</li>
+                        <li><strong>角色互补</strong>：5种神话职能，模拟真实团队角色互补</li>
+                        <li><strong>心智韧性</strong>：理智值引导团队觉察"谁在照顾全局状态、拉回崩溃同伴"</li>
+                        <li><strong>信息共享</strong>：神器效果与 Boss 弱点全队公开，别让队友蒙在鼓里</li>
+                        <li><strong>阶段推进</strong>：三条章节对应项目里程碑，觉察"冲刺 vs 透支团队"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 团建目标 -->
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>角色互补认知</h4><p>体验攻坚 / 守护 / 范围 / 疗愈 / 控制五类职能的边界与依赖</p></div>
+                    <div class="card"><h4>心智韧性</h4><p>理智持续下降时，团队是否有人主动"补位"、拉回崩溃或沉默的同伴</p></div>
+                    <div class="card"><h4>信息共享</h4><p>神器与 Boss 弱点全队可见，训练主动同步情报、别让队友硬扛</p></div>
+                    <div class="card"><h4>节奏管理</h4><p>在"推进章节"与"回复理智"间权衡，觉察团队能量水位</p></div>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>裂隙拼板</td><td>24 块</td><td>组成六边形裂隙空间（含能量节点💎/神器遗迹⭐/混沌裂隙🌀/营地🏕️）</td></tr>
+                    <tr><td>理智值 / 能量标记</td><td>各 1 套</td><td>追踪团队理智轨道(0-10)与共享裂隙能量池</td></tr>
+                    <tr><td>玩家 / Boss 棋子</td><td>3-5 / 3</td><td>标记猎人位置（硬币）；Boss 用骰子</td></tr>
+                    <tr><td>神器 / 技能 / 事件 / Boss 卡</td><td>20/30/30/3 张</td><td>增强、攻击、增变数、章节决战</td></tr>
+                    <tr><td>角色卡</td><td>5 张</td><td>孙悟空/赫拉克勒斯/托尔/拉/须佐之男</td></tr>
+                    <tr><td>骰子</td><td>2 颗</td><td>攻击与事件检定（2d6）</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>地图</strong>：白纸画六边形或九宫格当需要裂隙，放下能量/神器/裂隙/营地标记位</li>
+                        <li><strong>理智/能量</strong>：纸条写 0-10 刻度当轨道，硬币当标记</li>
+                        <li><strong>卡牌</strong>：便签写名称+效果，分类面朝下抽</li>
+                        <li><strong>棋子</strong>：硬币=玩家、骰子=Boss；骰子可用手机 APP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属职能，映射真实团队中的角色分工（也可按性格由教练分配）：</p>
+
+                <div class="role-card">
+                    <h4>🐵 孙悟空 · 攻坚 / 破局者</h4>
+                    <p><strong>被动</strong>：高攻击近战 —— 团队里的"主攻手"，把硬骨头啃下来。</p>
+                </div>
+                <div class="role-card">
+                    <h4>💪 赫拉克勒斯 · 守护 / 稳定者</h4>
+                    <p><strong>被动</strong>：高防御 + 复活 —— 团队承压时的"定海神针"，稳住基本盘。</p>
+                </div>
+                <div class="role-card">
+                    <h4>⚡ 托尔 · 范围 / 催化剂</h4>
+                    <p><strong>被动</strong>：雷电范围伤害 —— 团队里的"扩散破壁者"，一次撬动全局。</p>
+                </div>
+                <div class="role-card">
+                    <h4>☀️ 拉 · 疗愈 / 增益者</h4>
+                    <p><strong>被动</strong>：治疗与增益 —— 团队的"充电宝"，提振状态与士气。</p>
+                </div>
+                <div class="role-card">
+                    <h4>🌊 须佐之男 · 控制 / 调度者</h4>
+                    <p><strong>被动</strong>：水系控制场地 —— 团队的"节奏掌控者"，安排进退与时序。</p>
+                </div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程（每回合 4 阶段）</h2>
+                <div class="flow-step">
+                    <h4>阶段1 · 恢复</h4>
+                    <p>所有玩家恢复行动点、抽 1 张技能卡。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段2 · 行动</h4>
+                    <p>按行动点顺序：移动 / 探索神器遗迹 / 采集能量 / 战斗 / 使用技能卡 / 装备神器 / 传递卡牌（相邻互传免费）。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段3 · 事件</h4>
+                    <p>停留在混沌裂隙时抽事件卡并执行效果（利好或危机）。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段4 · 结束</h4>
+                    <p>检查理智值（团队理智降为 0 即崩溃）；检查胜利条件；章节标记推进。</p>
+                </div>
+
+                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
+                <table>
+                    <tr><th>共享轨道</th><th>初始</th><th>失败阈值</th></tr>
+                    <tr><td>团队理智值</td><td>10 / 10</td><td>达到 0 即全队因"集体倦怠 / 心智崩溃"失败</td></tr>
+                    <tr><td>裂隙能量</td><td>共享池</td><td>资源枯竭将无力合成神器、僵局难破</td></tr>
+                    <tr><td>推进章节</td><td>3 章</td><td>章节失败条件触发（累计折损过多）即全队失败</td></tr>
+                </table>
+                <p style="color:#9333ea; margin-top:10px;">⚠️ <strong>关键</strong>：理智值是团队状态的晴雨表——比起个人战力，它更考验"是否有人在乎全局状态"。能量节点提醒：资源要共享、要有人统筹，别让攻坚手"弹尽粮绝"。</p>
+            </div>
+
+            <!-- 团建引导 -->
+            <div class="section">
+                <h2>💡 团建引导提示</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>游戏前（5分钟）</h4><p>介绍主题："混沌与理智值就是项目压力与 deadline"；强调理智值与能量是团队的，不是某人的。</p></div>
+                    <div class="card"><h4>游戏中（观察）</h4><p>记录：谁在采资源统筹？谁在兜底？理智值谁在意？有人崩溃时团队反应？</p></div>
+                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟，引导反思分工与心智韧性。</p></div>
+                </div>
+            </div>
+
+            <!-- 变体玩法 -->
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>设90分钟时间盒，时间到以是否封印混沌之主判胜负，适合时间有限团建。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每封印一位 Boss 轮换角色，体验"攻坚"与"疗愈/守护"两类职能。</p></div>
+                    <div class="card"><h4>无声裂隙</h4><p>部分章节推进禁言，凸显非语言沟通与提前约定。</p></div>
+                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，专为"打破部门墙"设计。</p></div>
+                </div>
+            </div>
+
+            <!-- 难度调整 -->
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <table>
+                    <tr><th>模式</th><th>理智上限</th><th>调整</th><th>适合</th></tr>
+                    <tr><td>简单</td><td>12</td><td>每人3行动点，增加"团结"神器全队恢复</td><td>新团队/非玩家</td></tr>
+                    <tr><td>标准（推荐）</td><td>10</td><td>默认配置</td><td>大多数团建</td></tr>
+                    <tr><td>困难</td><td>8</td><td>Boss生命+30%、特殊增强、负面事件翻倍</td><td>管理层/抗压主题</td></tr>
+                </table>
+            </div>
+
+            <!-- 工作场景映射 -->
+            <div class="section">
+                <h2>🗺️ 游戏要素 → 工作场景</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>高度合作</h4><p>共享理智与能量、共享胜负，天然促进团队感</p></div>
+                    <div class="card"><h4>角色互补</h4><p>5种神话职能卡模拟真实团队分工</p></div>
+                    <div class="card"><h4>心智韧性</h4><p>理智值持续下降，模拟团队心智水位与心理安全</p></div>
+                    <div class="card"><h4>阶段推进</h4><p>三章封印隐喻项目里程碑式交付</p></div>
+                </div>
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>理智值</td><td>团队心智水位 / 心理安全 / 能量水位</td></tr>
+                    <tr><td>裂隙能量</td><td>团队共享资源 / 预算 / Capacity 统筹</td></tr>
+                    <tr><td>三章封印</td><td>项目阶段性里程碑，逐一攻克</td></tr>
+                    <tr><td>混沌之主</td><td>核心难题 / 上线危机 / 关键风险</td></tr>
+                    <tr><td>5种角色</td><td>团队成员的职能专长（攻坚/守护/范围/疗愈/控制）</td></tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li><a href="mythic-rift.md">完整团建版规则（Markdown）</a></li>
+                    <li>原始桌游：boardgames/category/cooperative/mythic-rift/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：鬼杀队：无限列车、幽灵古堡、大圣西游、芙莉莲的旅程、末日种子库</li>
+                </ul>
+                <p style="margin-top: 20px; color: #777; font-style: italic;">
+                    改编自合作桌游《神话裂隙 Mythic Rift》（多神话题材 + 危机封印主题）| 最后更新：2026-07-14
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

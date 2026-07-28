@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猎人小队 · 协同升级版 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e8e2f0;
+            background: linear-gradient(135deg, #05080f 0%, #0b0e1c 60%, #140a1e 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0d0f1f;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            overflow: hidden;
+            border: 1px solid #2a2148;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1430 0%, #4c1d95 45%, #c8a046 100%);
+            color: #fff7e6;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #0a0b18;
+        }
+        .info-card {
+            background: #0d0f1f;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            text-align: center;
+            border: 1px solid #2a2148;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #a78bfa;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #d4a017;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #d4a017;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #7c3aed;
+        }
+        .section h3 {
+            color: #c4b5fd;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #0a0b18;
+            border: 2px solid #2a2148;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(124,58,157,0.4);
+            border-color: #a78bfa;
+        }
+        .card h4 {
+            color: #d4a017;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2a2148;
+            color: #e8e2f0;
+        }
+        th {
+            background: #4c1d95;
+            color: #fff7e6;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #0a0b18;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #0a0b18 0%, #16122e 100%);
+            border-left: 4px solid #c8a046;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #c4b5fd;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #4c1d95;
+            color: #fff7e6;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: #0d0f1f;
+            border: 2px solid #2a2148;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #2a9d8f;
+        }
+        .event-card.negative {
+            border-color: #dc2626;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #0a0b18;
+            border-left: 4px solid #d4a017;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #d4a017;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #0a0b18 0%, #16122e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #7c3aed;
+        }
+        .highlight h3 {
+            color: #d4a017;
+            margin-bottom: 10px;
+        }
+        .print-section {
+            background: #16122e;
+            border: 2px dashed #d4a017;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #d4a017;
+        }
+        @media print {
+            body { background: white; color: #222; padding: 0; }
+            .container { box-shadow: none; border: none; }
+            .no-print { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ 猎人小队 · 协同升级版</h1>
+            <div class="subtitle">Hunter Squad - 把"我独自升级"改写成"团队一起升级"的能力建设团建游戏</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">3-5人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">45-75分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⚔️</div>
+                <div class="label">适合场景</div>
+                <div class="value">协同升级·传帮带</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h1 style="display:none;">猎人小队 · 协同升级版</h1>
+                <h2>🎮 游戏概述</h2>
+                <p>《猎人小队 · 协同升级版》改编自合作桌游《独行猎人 Solo Leveling Hunters》（改编自动漫《我独自升级》）。原作里每位玩家都是独自刷副本、靠击杀升级的个人英雄；团建版里，玩家组成一支<strong>猎人小队，组队深入 5 层地下城，分工清怪、共享经验与装备、搭伙打 Boss，把"我独自升级"彻底改写成"团队一起升级"</strong>。</p>
+                <p style="margin-top: 15px;">在团建语境下，地下城就是一支<strong>正在爬坡 / 攻坚的团队</strong>：怪物是业务风险与能力短板，Boss 是那个绕不过去的里程碑；能不能让<strong>全员一起升起来、而不是只有少数人在扛</strong>，正是真实工作中"共同成长 vs 能者多劳"的缩影。原作最迷人的"升级系统"，恰是团队里"能力成长"的绝妙隐喻——只不过我们把它反转为：<strong>你的成长不是孤立的，团队的传帮带、经验共享、搭子制度，会把每个人的成长曲线都拉得更陡</strong>。</p>
+
+                <div class="highlight">
+                    <h3>🎯 团建改造重点</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>协同升级（核心反转）</strong>：经验入团队池、按需分配——"传帮带让成长更陡"</li>
+                        <li><strong>角色互补</strong>：兜底 / 攻坚 / 点杀 / 补给 / 统筹，映射真实团队的攻守与调度</li>
+                        <li><strong>资源流向</strong>：把好装备 / 经验给最需要的人，而非囤积</li>
+                        <li><strong>搭子带练</strong>：新手绑资深搭子经验加成——还原师徒 / buddy 系统的价值</li>
+                        <li><strong>复盘框架</strong>：每局结束 4F 复盘，把"升级与成长"迁移到真实工作的能力建设</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 团建目标 -->
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>协同升级观</h4><p>体验"经验共享 + 传帮带"比"各练各的"成长更快，反思是否总靠少数人在扛</p></div>
+                    <div class="card"><h4>角色互补</h4><p>看见兜底 / 攻坚 / 补给 / 统筹的相互依赖，体感"没有谁是无用的位置"</p></div>
+                    <div class="card"><h4>资源流向</h4><p>把好装备 / 经验给最需要的人，训练"资源去到最产生价值的地方"</p></div>
+                    <div class="card"><h4>带练文化</h4><p>搭子模式下新手持资深搭子加成——体感师徒 / buddy 系统是加速器</p></div>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>地下城地图</td><td>1张</td><td>5 层网格，标注怪物 / 事件 / 宝藏 / 休息点</td></tr>
+                    <tr><td>经验池轨迹</td><td>1张</td><td>团队共享经验值（每 100 升 1 级）</td></tr>
+                    <tr><td>士气轨迹</td><td>1张</td><td>队伍士气值（初始10，低则崩）</td></tr>
+                    <tr><td>角色卡 / 骰子</td><td>5张 / 1-2颗</td><td>职能分工；战斗 / 事件判定</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>地图</strong>：白纸分 5 段（入门→进阶→熟练→精通→突破），各段摆"怪"便签</li>
+                        <li><strong>经验/士气</strong>：纸条写经验 0-300、士气 0-10 当轨迹</li>
+                        <li><strong>卡牌</strong>：便签写名称 + 效果（👹/⚔️/✨），分类面朝下抽</li>
+                        <li><strong>Boss</strong>：第 5 段中心写"🐲 Boss（300 血）"</li>
+                        <li><strong>骰子</strong>：手机骰子 APP，或 1-20 数字卡抽签</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属角色，模拟真实团队中的"攻守与调度"分工与相互依赖（也可按性格由教练分配）：</p>
+
+                <div class="role-card">
+                    <h4>🛡️ 剑士 · 质量 / 中台 / 风险兜底</h4>
+                    <p><strong>被动</strong>：承受伤害+1、替队友挡刀</p>
+                    <p><strong>团建映射</strong>：稳底盘、兜底——"风险兜底与系统守护"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🔮 法师 · 业务攻坚 / 技术突破</h4>
+                    <p><strong>被动</strong>：范围伤害、群体秒怪</p>
+                    <p><strong>团建映射</strong>：主攻手、攻坚——"业务突破手"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🏹 弓箭手 · 精准突破 / 要事第一</h4>
+                    <p><strong>被动</strong>：必中弱点、点杀关键</p>
+                    <p><strong>团建映射</strong>：抓关键窗口——"要事第一"</p>
+                </div>
+                <div class="role-card">
+                    <h4>✨ 牧师 · 情绪补给 / 资源协调</h4>
+                    <p><strong>被动</strong>：群体治疗、共享 MP</p>
+                    <p><strong>团建映射</strong>：心理安全与补给——"PMO / 后勤"</p>
+                </div>
+                <div class="role-card">
+                    <h4>📜 战术指挥 · 统筹 / PMO / Leader</h4>
+                    <p><strong>被动</strong>：预看事件、分配经验</p>
+                    <p><strong>团建映射</strong>：调度与传帮带——"谁在负责让大家一起成长"</p>
+                </div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程（每回合 4 阶段）</h2>
+                <p>每回合依次执行：<strong>① 事件阶段</strong> → <strong>② 行动阶段（每人 2 行动点）</strong> → <strong>③ 结算阶段（经验入池！）</strong> → <strong>④ 结束阶段（回合 +1）</strong>。</p>
+
+                <div class="flow-step">
+                    <h4>核心机制 · 协同升级（团建灵魂）</h4>
+                    <p>击败怪物获得经验<strong>进入团队池，而非个人</strong>；每 100 经验可升 1 级，按需分配给最该成长的人。没有人把经验独吞、没有新人被晾着，全员才升得起来——这正是"传帮带让成长更陡"的体感。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>地图 · 5 层地下城 = 能力进阶五阶段</h4>
+                    <p>入门→进阶→熟练→精通→突破；越深层怪物越强，<strong>必须靠角色互补 + 经验共享才打得过</strong>。一个人再强也顶不住 Boss——"团队成长 > 个人英雄"。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>危机 · 队伍士气 = 团队状态 / 离职潮</h4>
+                    <p>光催进度不打气，士气归零团队就崩。游戏逼团队在"催里程碑"与"养人"之间找平衡。</p>
+                </div>
+
+                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
+                <table>
+                    <tr><th>共享轨道</th><th>初始</th><th>警告 / 失败阈值</th></tr>
+                    <tr><td>团队经验池</td><td>0</td><td>每 100 升 1 级（能力基线）；全员满级即"团队出师"</td></tr>
+                    <tr><td>队伍士气</td><td>10</td><td>≤3 低迷警报；≤0 即失败（离职潮 / 团队崩）</td></tr>
+                    <tr><td>副本深度</td><td>第1层</td><td>清完 5 层 + 击败 Boss = 胜利</td></tr>
+                    <tr><td>回合计数器</td><td>0</td><td>达 30 塌陷 = 失败（交付期限到了）</td></tr>
+                </table>
+                <p style="color:#d4a017; margin-top:10px;">⚠️ <strong>关键</strong>：胜负不取决于"谁杀怪最多"，而取决于"经验有没有共享、装备有没有给对人、新人有没有被带起来、士气有没有守住"。</p>
+            </div>
+
+            <!-- 团建引导 -->
+            <div class="section">
+                <h2>💡 团建引导提示</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>游戏前（5分钟）</h4><p>反转主题："今天不玩《我独自升级》，玩《我们一起升级》——经验进团队池，谁最需要就分给谁。"</p></div>
+                    <div class="card"><h4>游戏中（观察）</h4><p>记录：经验流向了谁？谁在兜底？装备去哪了？新人怎样？士气几了（养人 vs 催进度）？</p></div>
+                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟；把"升级与成长"迁移到真实工作的能力建设。</p></div>
+                </div>
+            </div>
+
+            <!-- 变体玩法 -->
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，记录"经验流向、谁在兜底、新人是否被带"，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>设60分钟 / 30 回合沙漏，以"是否清完 5 层 + 击败 Boss"判胜负，适合时间有限团建。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每2回合轮换角色，体验"兜底"与"攻坚 / 补给 / 统筹"几类职能。</p></div>
+                    <div class="card"><h4>无声副本</h4><p>部分回合禁言，凸显"提前约定、显性同步"对配合型协作的价值。</p></div>
+                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，专为"打破部门墙"设计。</p></div>
+                    <div class="card"><h4>真实能力短板叠加</h4><p>把怪物换成当前能力短板/待提升项便签，每击败1只=突破一项，便签变能力改进看板。</p></div>
+                    <div class="card"><h4>新人带练</h4><p>标1-2名新人与资深绑搭子（经验+20%、共享MP），复盘重点："怎么让新人最快成长"。</p></div>
+                </div>
+            </div>
+
+            <!-- 难度调整 -->
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <table>
+                    <tr><th>模式</th><th>调整</th><th>适合</th></tr>
+                    <tr><td>简单</td><td>怪物减半、士气12、经验80/级、回合上限40</td><td>新团队/非玩家</td></tr>
+                    <tr><td>标准（推荐）</td><td>怪物标准、士气10、经验100/级、回合上限30、Boss300血</td><td>大多数团建</td></tr>
+                    <tr><td>困难</td><td>怪物×1.5、士气8、回合上限22、Boss450血、禁囤装备</td><td>业务攻坚/冲刺团队</td></tr>
+                </table>
+            </div>
+
+            <!-- 工作场景映射 -->
+            <div class="section">
+                <h2>🗺️ 游戏要素 → 工作场景</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>协同升级</h4><p>经验共享 + 传帮带，体感"团队成长 > 个人英雄"</p></div>
+                    <div class="card"><h4>角色互补</h4><p>攻守与调度相互依赖，体感"没有谁是无用的位置"</p></div>
+                    <div class="card"><h4>资源流向</h4><p>好装备给最需要的人，而非囤积 / 谁强归谁</p></div>
+                    <div class="card"><h4>带练文化</h4><p>搭子模式让新人成长更陡，buddy 系统是加速器</p></div>
+                </div>
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>地下城 5 层</td><td>团队能力进阶：入门→进阶→熟练→精通→突破</td></tr>
+                    <tr><td>团队经验池</td><td>组织知识 / 经验的共享与传承（传帮带）</td></tr>
+                    <tr><td>队伍士气</td><td>团队状态 / 离职潮（催进度 vs 养人的平衡）</td></tr>
+                    <tr><td>搭子带练</td><td>师徒制 / buddy 系统 / 新人培养机制</td></tr>
+                    <tr><td>战术指挥分配经验</td><td>Leader/PMO 的培养调度权（警惕经验流回老员工）</td></tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li><a href="solo-hunter-squad.md" style="color:#c4b5fd;">完整团建版规则（Markdown）</a></li>
+                    <li>原始桌游：boardgames/category/cooperative/solo-level-ing-hunters/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：轮回地下城、星际医疗队、天命人、咒术回战：术师联携</li>
+                </ul>
+                <p style="margin-top: 20px; color: #a78bfa; font-style: italic;">
+                    改编自合作桌游《独行猎人 Solo Leveling Hunters》（改编自动漫《我独自升级》的合作地下城桌游）| 最后更新：2026-07-17
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

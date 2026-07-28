@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鬼杀队：无限列车 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1a0d0d 0%, #2d1418 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #8B1A1A 0%, #C9A227 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f7ece9;
+        }
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #8B1A1A;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #8B1A1A;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #C9A227;
+        }
+        .section h3 {
+            color: #b5423a;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f7ece9;
+            border: 2px solid #f0d9d4;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-color: #C9A227;
+        }
+        .card h4 {
+            color: #8B1A1A;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0d9d4;
+        }
+        th {
+            background: #8B1A1A;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f7ece9;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #f7ece9 0%, #faf0f0 100%);
+            border-left: 4px solid #C9A227;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #8B1A1A;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #8B1A1A;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: white;
+            border: 2px solid #f0d9d4;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #2a9d8f;
+        }
+        .event-card.negative {
+            border-color: #e76f51;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #f7ece9;
+            border-left: 4px solid #C9A227;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #8B1A1A;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #f3dcd9 0%, #efc9c3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section {
+            background: #f7ece9;
+            border: 2px dashed #d49a92;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #b5423a;
+        }
+        .map-layer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f7ece9;
+            border-left: 5px solid #8B1A1A;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin: 10px 0;
+        }
+        .map-layer .depth {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #8B1A1A;
+            min-width: 90px;
+        }
+        .map-layer .desc {
+            flex: 1;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .no-print { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 鬼杀队：无限列车</h1>
+            <div class="subtitle">Demon Slayer: Infinity Train - 角色互补与相互扶持的协作团建游戏</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">3-5人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">45-75分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">🎯</div>
+                <div class="label">适合场景</div>
+                <div class="value">协作·相互扶持·节奏管理</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h2>🎮 游戏概述</h2>
+                <p>《鬼杀队：无限列车》改编自合作桌游《Demon Slayer: Infinity Train》。玩家扮演一队鬼杀队剑士，登上被下弦之壹·魇梦控制的神秘列车，在梦中与现实中穿梭，逐节车厢唤醒被控制的乘客，最终合力讨伐恶鬼、守护全车。</p>
+                <p style="margin-top: 15px;">游戏以<strong>合作为核心</strong>——所有人共享胜负，只要团队"清醒度"归零、全队陷入永眠，任务即刻失败。12 节车厢逐节推进、每位乘客需要被唤醒、魇梦在车尾虎视眈眈，每一刻都在考验团队的信息共享、分工协作与相互扶持。这趟列车正如一支处在高压项目中的团队——持续下降的清醒度是团队士气的晴雨表，沉睡的乘客是"掉队的同事"，车尾的魇梦是最棘手的那道核心难题。</p>
+
+                <div class="highlight">
+                    <h3 style="color: #8B1A1A; margin-bottom: 10px;">🎯 团建改造重点</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>合作而非竞争</strong>：共享清醒度、共享唤醒进度、共享胜负</li>
+                        <li><strong>角色分工</strong>：5种专属职能，模拟真实团队角色互补</li>
+                        <li><strong>相互扶持</strong>：清醒度引导团队觉察"谁在照顾全局士气、拉回掉队同伴"</li>
+                        <li><strong>信息共享</strong>：呼吸法卡与情报跨车厢同步，别让队友蒙在鼓里</li>
+                        <li><strong>节奏管理</strong>：清醒度与回合数双约束，隐喻推进与能量的平衡</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 团建目标 -->
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>角色互补认知</h4><p>体验侦察 / 守护 / 突击 / 破局 / 激励五类职能的边界与依赖</p></div>
+                    <div class="card"><h4>相互扶持</h4><p>清醒持续下降时，团队是否有人主动"补位"、拉回掉队或沉默的同伴</p></div>
+                    <div class="card"><h4>信息共享</h4><p>呼吸法卡与线索全队可见，训练主动同步情报、别让队友乱撞</p></div>
+                    <div class="card"><h4>节奏管理</h4><p>在"推进车厢"与"回复清醒度"间权衡，觉察团队能量水位</p></div>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>车厢地图卡</td><td>12 张</td><td>组成 12 节车厢线性列车（含车头🚂/核心车厢😈）</td></tr>
+                    <tr><td>乘客标记</td><td>12 个</td><td>标记已唤醒乘客（每节车厢 1 名）</td></tr>
+                    <tr><td>玩家 / 鬼棋子</td><td>3-5 / 若干</td><td>标记剑士位置（硬币）；鬼用骰子</td></tr>
+                    <tr><td>清醒度 / 回合标记</td><td>各 1 个</td><td>追踪团队清醒轨道(0-10)与第几回合(共15)</td></tr>
+                    <tr><td>呼吸法 / 道具 / 鬼 / 事件 / 乘客卡</td><td>30/15/8/20/12 张</td><td>攻击、回复、施压、增变数、唤醒乘客</td></tr>
+                    <tr><td>骰子</td><td>2 颗</td><td>攻击与事件检定（2d6）</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>地图</strong>：白纸画 12 格横线当车厢，第1节车头、第12节核心车厢，其余背面朝上</li>
+                        <li><strong>清醒/回合</strong>：纸条写 0-10 刻度当轨道，硬币当标记</li>
+                        <li><strong>卡牌</strong>：便签写名称+效果，分类面朝下抽</li>
+                        <li><strong>棋子</strong>：硬币=玩家、骰子=鬼；骰子可用手机 APP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属职能，映射真实团队中的角色分工（也可按性格由教练分配）：</p>
+
+                <div class="role-card">
+                    <h4>🌊 炭治郎 · 侦察 / 感知者</h4>
+                    <p><strong>被动</strong>：探索车厢额外抽 1 张 —— 团队风险的"雷达"，提前嗅到问题。</p>
+                </div>
+                <div class="role-card">
+                    <h4>🛡️ 义勇 · 守护 / 稳定者</h4>
+                    <p><strong>被动</strong>：起始手牌 +1 —— 团队承压时的"定海神针"，稳住基本盘。</p>
+                </div>
+                <div class="role-card">
+                    <h4>⚡ 善逸 · 突击 / 执行者</h4>
+                    <p><strong>被动</strong>：雷之呼吸高爆发单体伤害 —— 团队里的"攻坚手"，把事干成。</p>
+                </div>
+                <div class="role-card">
+                    <h4>🌪️ 伊之助 · 破局 / 机动者</h4>
+                    <p><strong>被动</strong>：风之呼吸可攻击车厢内所有鬼 —— 专啃硬骨头的"破壁人"。</p>
+                </div>
+                <div class="role-card">
+                    <h4>🔥 炼狱 · 激励 / 疗愈者</h4>
+                    <p><strong>被动</strong>：炎之呼吸攻击后回复 1 点团队清醒度 —— 团队的"充电宝"，提振士气。</p>
+                </div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程（每回合 3 阶段）</h2>
+                <div class="flow-step">
+                    <h4>阶段1 · 探索 / 行动</h4>
+                    <p>起始玩家顺时针，每人轮流行动（标准 2 行动点）：移动车厢 / 唤醒乘客 / 攻击鬼 / 使用道具 / 休息回复 / 传递卡牌（同车厢互传免费）。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段2 · 鬼的阶段</h4>
+                    <p>场上的鬼对所在车厢玩家造成伤害（清醒度等价下降）；同时所有玩家失去 1 点清醒度（梦境衰减）。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段3 · 回合结束</h4>
+                    <p>回合标记 +1，检查胜负，传递起始玩家标记。</p>
+                </div>
+
+                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
+                <table>
+                    <tr><th>共享轨道</th><th>初始</th><th>失败阈值</th></tr>
+                    <tr><td>团队清醒度</td><td>10 / 10</td><td>达到 0 即全队因"集体倦怠 / 目标失焦"失败</td></tr>
+                    <tr><td>推进回合</td><td>15</td><td>第 15 回合结束仍未击败魇梦即失败</td></tr>
+                </table>
+                <p style="color:#b5423a; margin-top:10px;">⚠️ <strong>关键</strong>：清醒度是团队状态的晴雨表——比起个人战力，它更考验"是否有人在乎全局士气"。唤醒乘客则提醒：沉默的同事需要被看见、被邀请参与。</p>
+            </div>
+
+            <!-- 团建引导 -->
+            <div class="section">
+                <h2>💡 团建引导提示</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>游戏前（5分钟）</h4><p>介绍主题："鬼和清醒度就是项目压力与 deadline"；强调清醒度与唤醒进度是团队的，不是某人的。</p></div>
+                    <div class="card"><h4>游戏中（观察）</h4><p>记录：谁在预警风险？谁在兜底？清醒度谁在意？有人掉队时团队反应？</p></div>
+                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟，引导反思分工与相互扶持。</p></div>
+                </div>
+            </div>
+
+            <!-- 变体玩法 -->
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>设60分钟沙漏，时间到以是否击败魇梦判胜负，适合时间有限团建。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每2车厢轮换角色，体验"侦察"与"激励/守护"两类职能。</p></div>
+                    <div class="card"><h4>无声车厢</h4><p>部分车厢推进禁言，凸显非语言沟通与提前约定。</p></div>
+                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，专为"打破部门墙"设计。</p></div>
+                </div>
+            </div>
+
+            <!-- 难度调整 -->
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <table>
+                    <tr><th>模式</th><th>清醒上限</th><th>调整</th><th>适合</th></tr>
+                    <tr><td>简单</td><td>12</td><td>每回合3行动点，增加"隐队支援"复活卡</td><td>新团队/非玩家</td></tr>
+                    <tr><td>标准（推荐）</td><td>10</td><td>默认配置</td><td>大多数团建</td></tr>
+                    <tr><td>困难</td><td>8</td><td>第6节起每节2鬼，魇梦觉醒每回合耗1清醒</td><td>管理层/抗压主题</td></tr>
+                </table>
+            </div>
+
+            <!-- 工作场景映射 -->
+            <div class="section">
+                <h2>🗺️ 游戏要素 → 工作场景</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>高度合作</h4><p>共享清醒度与唤醒进度、共享胜负，天然促进团队感</p></div>
+                    <div class="card"><h4>角色互补</h4><p>5种职能卡模拟真实团队分工</p></div>
+                    <div class="card"><h4>能量管理</h4><p>清醒度持续下降，模拟团队士气与能量水位</p></div>
+                    <div class="card"><h4>同伴扶持</h4><p>唤醒乘客机制隐喻"拉回掉队/沉默同事"</p></div>
+                </div>
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>清醒度</td><td>团队士气 / 凝聚力 / 能量水位</td></tr>
+                    <tr><td>唤醒乘客</td><td>把沉默 / 掉队同事拉回对话与共识</td></tr>
+                    <tr><td>12 节车厢</td><td>项目的阶段里程碑，逐节推进</td></tr>
+                    <tr><td>魇梦</td><td>核心难题 / 上线危机 / 关键风险</td></tr>
+                    <tr><td>5种角色</td><td>团队成员的职能专长（侦察/守护/突击/破局/激励）</td></tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li><a href="demon-slayer-train.md">完整团建版规则（Markdown）</a></li>
+                    <li>原始桌游：boardgames/category/cooperative/demon-slayer-train/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：末日种子库、深海探险、芙莉莲的旅程、大圣西游、幽灵古堡</li>
+                </ul>
+                <p style="margin-top: 20px; color: #777; font-style: italic;">
+                    改编自合作桌游《鬼杀队：无限列车 Demon Slayer: Infinity Train》（动漫合作 + 危机突破主题）| 最后更新：2026-07-14
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

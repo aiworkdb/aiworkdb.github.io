@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>末日种子库 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2d6a4f 0%, #52b788 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2d6a4f;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #2d6a4f;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2d6a4f;
+        }
+        .section h3 {
+            color: #40916c;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-color: #2d6a4f;
+        }
+        .card h4 {
+            color: #2d6a4f;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background: #2d6a4f;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #2d6a4f;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #2d6a4f;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #2d6a4f;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #2a9d8f;
+        }
+        .event-card.negative {
+            border-color: #e76f51;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #f8f9fa;
+            border-left: 4px solid #52b788;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #2d6a4f;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #b7e4c7 0%, #d8f3dc 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section {
+            background: #fff3cd;
+            border: 2px dashed #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #ffc107;
+        }
+        .map-layer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f8f9fa;
+            border-left: 5px solid #2d6a4f;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin: 10px 0;
+        }
+        .map-layer .depth {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2d6a4f;
+            min-width: 90px;
+        }
+        .map-layer .desc {
+            flex: 1;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .no-print { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 末日种子库</h1>
+            <div class="subtitle">Doomsday Vault - 团队协作与资源管理模拟游戏</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">3-6人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">60-75分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">🎯</div>
+                <div class="label">适合场景</div>
+                <div class="value">团队协作·资源管理</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h2>🎮 游戏概述</h2>
+                <p>《末日种子库》改编自同名合作桌游。公元2048年，全球生态连锁崩溃，人类最后的希望埋藏在永冻层深处的<strong>全球种子库</strong>。玩家扮演种子库的守护者团队，在生命支持系统逐步衰竭的极限环境下远征探险、收集濒危物种、维护系统运转。</p>
+                <p style="margin-top: 15px;">所有玩家<strong>通力合作</strong>——分配电力、维持温度、保障氧气，在系统完全崩溃前保存足够多的植物物种。这是一个关于<strong>资源协作与危机取舍</strong>的绝佳团建载体。</p>
+
+                <div class="highlight">
+                    <h3 style="color: #2d6a4f; margin-bottom: 10px;">🎯 团建改造重点</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>合作而非竞争</strong>：共享系统状态、共享资源库、共享胜负</li>
+                        <li><strong>角色分工</strong>：5种专属职责，模拟真实团队职能</li>
+                        <li><strong>共享资源管理</strong>：三系统在崩溃边缘考验共同决策</li>
+                        <li><strong>危机应对</strong>：事件卡不断施压，模拟真实 deadline</li>
+                        <li><strong>复盘框架</strong>：每局结束引导反思采集与守护的权衡</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 团建目标 -->
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>共享资源管理</h4><p>在系统濒临崩溃时共同制定策略与优先级</p></div>
+                    <div class="card"><h4>角色分工</h4><p>体验不同角色的职责边界与相互依赖</p></div>
+                    <div class="card"><h4>压力沟通</h4><p>在系统告警的紧迫中清晰表达、同步信息</p></div>
+                    <div class="card"><h4>危机决策</h4><p>权衡"再采一批 vs 先保系统"，学会取舍</p></div>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>种子库主面板</td><td>1张</td><td>3条系统轨道（电力/温度/氧气）+物种库</td></tr>
+                    <tr><td>远征地图</td><td>1张</td><td>基地+6个远征地点节点</td></tr>
+                    <tr><td>玩家棋子 / 行动点指示物</td><td>5个 / 每人4个</td><td>标记位置与每回合AP</td></tr>
+                    <tr><td>系统状态指示物</td><td>12个</td><td>标记3条系统轨道当前值</td></tr>
+                    <tr><td>种子卡</td><td>50张</td><td>普通20/稀有16/史诗10/传说4</td></tr>
+                    <tr><td>资源卡</td><td>60张</td><td>能量18/食物18/医疗12/零件12</td></tr>
+                    <tr><td>事件卡 / 角色卡</td><td>24张 / 5张</td><td>每回合事件；5位守护者技能</td></tr>
+                    <tr><td>骰子</td><td>1颗</td><td>远征搜索判定（1d6）</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>系统轨道</strong>：纸上画3条进度条，用笔画标记当前值</li>
+                        <li><strong>卡牌</strong>：便签写名称与效果，面朝下抽</li>
+                        <li><strong>地图</strong>：白纸画基地与6地点节点并连线</li>
+                        <li><strong>事件卡</strong>：教练口述效果</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属角色，模拟真实团队中的职能分工与相互依赖：</p>
+
+                <div class="role-card">
+                    <h4>👷‍♀️ 首席工程师</h4>
+                    <p><strong>职责</strong>：维护系统、修复损伤</p>
+                    <p><strong>被动</strong>：修复系统效果+1｜<strong>主动</strong>：「紧急重启」将任一系统恢复到上限一半</p>
+                </div>
+                <div class="role-card">
+                    <h4>🌾 植物学家</h4>
+                    <p><strong>职责</strong>：专注种子入库</p>
+                    <p><strong>被动</strong>：入库资源需求-1（每类至多-1）｜<strong>主动</strong>：「绿色奇迹」任意1张种子卡无视资源直接入库</p>
+                </div>
+                <div class="role-card">
+                    <h4>🛡️ 安全主管</h4>
+                    <p><strong>职责</strong>：防控风险与事件</p>
+                    <p><strong>被动</strong>：免疫远征地点特殊风险｜<strong>主动</strong>：「全面封锁」取消本次事件卡效果并销毁</p>
+                </div>
+                <div class="role-card">
+                    <h4>📦 后勤官</h4>
+                    <p><strong>职责</strong>：保障资源供给</p>
+                    <p><strong>被动</strong>：资源交换比优化（2:1代替3:1）｜<strong>主动</strong>：「战时配给」每人各得 ⚡×1+🍖×1+💊×1</p>
+                </div>
+                <div class="role-card">
+                    <h4>🧭 野外探险家</h4>
+                    <p><strong>职责</strong>：外出采集种子</p>
+                    <p><strong>被动</strong>：移动与远征搜索各省1 AP｜<strong>主动</strong>：「极限生存」本次远征免风险且搜索+1张</p>
+                </div>
+                <p style="margin-top: 15px; color: #666;"><em>提示：3人局推荐 探险家+后勤官+植物学家；首轮自由选角，次轮可轮换角色体验不同职能。</em></p>
+            </div>
+
+            <!-- 游戏地图 -->
+            <div class="section">
+                <h2>🗺️ 远征地图（7个地点）</h2>
+                <p>团队从🏠<strong>基地营地</strong>（安全区）出发，沿连线移动到相邻地点搜索种子，回合结束自动返回基地。</p>
+
+                <div class="map-layer"><div class="depth">🏠 基地</div><div class="desc"><strong>基地营地</strong>｜安全｜恢复1HP；免费存取资源库｜无风险</div></div>
+                <div class="map-layer"><div class="depth">🌿 亚马逊</div><div class="desc"><strong>亚马逊废墟</strong>｜★★☆｜高概率普通/稀有种子｜毒虫叮咬（失1HP或1食物）</div></div>
+                <div class="map-layer"><div class="depth">❄️ 西伯利亚</div><div class="desc"><strong>西伯利亚冻土</strong>｜★☆☆｜耐寒物种；必得1能量｜严寒冻伤（需1食物或失1HP）</div></div>
+                <div class="map-layer"><div class="depth">🦁 非洲</div><div class="desc"><strong>非洲草原</strong>｜★★★｜高概率稀有/史诗｜野生动物袭击（失2HP）</div></div>
+                <div class="map-layer"><div class="depth">🏝️ 太平洋</div><div class="desc"><strong>太平洋环礁</strong>｜★★☆｜稀有沿海物种；可能得设备｜海啸警报（弃种子或失2HP）</div></div>
+                <div class="map-layer"><div class="depth">⛰️ 喜马拉雅</div><div class="desc"><strong>喜马拉雅山谷</strong>｜★★★★｜极高概率稀有/史诗/传说｜高原反应+雪崩（需1医疗+1食物，否则-3HP）</div></div>
+                <div class="map-layer"><div class="depth">🫒 地中海</div><div class="desc"><strong>地中海遗迹</strong>｜★★★｜栽培遗产种子；可能出传说｜辐射泄漏（需1零件修复，否则-2HP）</div></div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程</h2>
+                <div class="flow-step">
+                    <h4>阶段一：准备与守护启动（10分钟）</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>布置面板</strong>：三系统置于 电力10/温度8/氧气9</li>
+                        <li><strong>选角分工</strong>：每位玩家选择一个角色</li>
+                        <li><strong>初始资源</strong>：公共库 ⚡×6🍖×6💊×4🔧×4；每人 ⚡×2🍖×2 + 随机3张种子</li>
+                        <li><strong>明确目标</strong>：保存 ≥25 种不同物种，在系统崩溃前达成</li>
+                    </ul>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段二：守护远征（40分钟）</h4>
+                    <p>玩家轮流行动，每回合约 <strong>4个行动点</strong>：移动 / 远征搜索 / 发电 / 配给 / 调配 / 搜索零件 / 入库 / 修复系统 / 治疗 / 传递资源；回合末抽1张事件卡并执行。</p>
+                    <p style="margin-top: 10px;"><strong>系统危机</strong>：任意系统归零产生严重负面叠加；<strong>2个及以上系统同时归零</strong>团队立即失败。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段三：总结复盘（15分钟）</h4>
+                    <p>使用下方 4F 框架进行深度反思（事实→感受→发现→迁移）。</p>
+                </div>
+            </div>
+
+            <!-- 复盘框架 -->
+            <div class="section">
+                <h2>🤔 复盘框架（4F）</h2>
+                <div class="card">
+                    <h4 style="color: #2d6a4f;">事实 Facts（发生了什么？）</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>哪条系统最早告急？最关键的取舍决策是什么？谁提出的？</li>
+                        <li>资源分配是共同商议，还是某人替大家决定？</li>
+                    </ul>
+                </div>
+                <div class="card" style="margin-top: 15px;">
+                    <h4 style="color: #2d6a4f;">感受 Feelings（体验如何？）</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>系统一路告警时，你最紧张/最有安全感的时刻是什么？</li>
+                        <li>扮演[角色]让你感觉如何？是否被需要？</li>
+                    </ul>
+                </div>
+                <div class="card" style="margin-top: 15px;">
+                    <h4 style="color: #2d6a4f;">发现 Findings（学到了什么？）</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>谁的意见被忽视了？面对系统崩溃我们怎么处理的？</li>
+                        <li>如果重来一次，外出采集与守护系统的节奏会怎么调整？</li>
+                    </ul>
+                </div>
+                <div class="card" style="margin-top: 15px;">
+                    <h4 style="color: #2d6a4f;">迁移 Future（接下来做什么？）</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>这个游戏让你联想到工作中的哪个场景？</li>
+                        <li>我们可以做哪些改变？一件能立即改进的事是什么？</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 变体规则 -->
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>观察员模式</h4>
+                        <p>超6人时多出玩家任观察员，记录协作过程，复盘时提供第三方视角。</p>
+                    </div>
+                    <div class="card">
+                        <h4>限时挑战</h4>
+                        <p>沙漏55分钟，时间到即时结算，增加紧迫感与决策压力。</p>
+                    </div>
+                    <div class="card">
+                        <h4>角色轮换</h4>
+                        <p>每2回合轮换角色，体验"外出"与"守护"两类职能，强调换位思考。</p>
+                    </div>
+                    <div class="card">
+                        <h4>沉默守护</h4>
+                        <p>系统告警后的回合不能说话，仅肢体/写字，凸显非语言沟通。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 难度调整 -->
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>简单模式</h4>
+                        <p>三系统各+2、移除4张最严危机、胜利降至20种。适合新手团队。</p>
+                    </div>
+                    <div class="card">
+                        <h4>标准模式</h4>
+                        <p>电力10/温度8/氧气9、胜利25种。适合大多数团建场景。</p>
+                    </div>
+                    <div class="card">
+                        <h4>困难模式</h4>
+                        <p>三系统各-2、加入选择事件、胜利升至30种。适合高层/抗压主题。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设计思路 -->
+            <div class="section">
+                <h2>💡 设计思路</h2>
+                <div class="highlight">
+                    <h3 style="color: #2d6a4f; margin-bottom: 15px;">为什么选这个游戏？</h3>
+                    <ol style="margin-left: 20px;">
+                        <li><strong>高度合作</strong>：共享系统与胜负，天然促进团队感</li>
+                        <li><strong>角色互补</strong>：5种职能卡模拟真实团队分工</li>
+                        <li><strong>危机渐进</strong>：系统逐一告警，模拟项目推进中的风险累积</li>
+                        <li><strong>取舍即终点</strong>：广度优先取胜，呼应"抗风险靠覆盖面"</li>
+                    </ol>
+                </div>
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>三系统（电/温/氧）</td><td>预算、人力、时间等公共资源</td></tr>
+                    <tr><td>事件卡</td><td>突发风险、竞争对手、政策变化</td></tr>
+                    <tr><td>5种角色</td><td>团队成员的职能专长</td></tr>
+                    <tr><td>公共资源库</td><td>共享的团队资产与知识库</td></tr>
+                    <tr><td>25种不同物种</td><td>多样化储备 vs 单点堆量</td></tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li>原始桌游：boardgames/category/cooperative/doomsday-vault/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：病毒危机、岛屿求生、星际矿工、深海探险</li>
+                </ul>
+                <p style="margin-top: 20px; color: #666; font-style: italic;">
+                    改编自合作桌游《末日种子库 Doomsday Vault》| 最后更新：2026-07-12
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

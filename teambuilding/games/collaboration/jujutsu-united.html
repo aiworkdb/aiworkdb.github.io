@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咒术回战：术师联携 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #ece6f5;
+            background: linear-gradient(135deg, #0e0a14 0%, #1a1230 60%, #2a0f1a 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #15101e;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            overflow: hidden;
+            border: 1px solid #2e2040;
+        }
+        .header {
+            background: linear-gradient(135deg, #5b21b6 0%, #9d174d 60%, #7f1d1d 100%);
+            color: #f3e8ff;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #1a1228;
+        }
+        .info-card {
+            background: #15101e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 1px solid #2e2040;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #9d8bb5;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #c4b5fd;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #c4b5fd;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #7c2d92;
+        }
+        .section h3 {
+            color: #e879a8;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #1a1228;
+            border: 2px solid #2e2040;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(139,92,246,0.3);
+            border-color: #a78bfa;
+        }
+        .card h4 {
+            color: #c4b5fd;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2e2040;
+            color: #ece6f5;
+        }
+        th {
+            background: #5b21b6;
+            color: #f3e8ff;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #1a1228;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #1a1228 0%, #241636 100%);
+            border-left: 4px solid #a78bfa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #c4b5fd;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #7c2d92;
+            color: #f3e8ff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: #15101e;
+            border: 2px solid #2e2040;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #2a9d8f;
+        }
+        .event-card.negative {
+            border-color: #e76f51;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #1a1228;
+            border-left: 4px solid #b8860b;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #c4b5fd;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #2e2040 0%, #3d1f50 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #7c2d92;
+        }
+        .highlight h3 {
+            color: #c4b5fd;
+            margin-bottom: 10px;
+        }
+        .print-section {
+            background: #241636;
+            border: 2px dashed #b8860b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #c4b5fd;
+        }
+        @media print {
+            body { background: white; color: #222; padding: 0; }
+            .container { box-shadow: none; border: none; }
+            .no-print { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 咒术回战：术师联携</h1>
+            <div class="subtitle">Jujutsu United - 角色互补与共享资源管理的协作防御团建游戏</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">3-5人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">45-75分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">🎯</div>
+                <div class="label">适合场景</div>
+                <div class="value">团队协作·风险管理</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h1 style="display:none;">咒术回战：术师联携</h1>
+                <h2>🎮 游戏概述</h2>
+                <p>《咒术回战：术师联携》改编自合作桌游《咒术师团 Jujutsu Sorcerers》（灵感来自《咒术回战》）。玩家扮演一队咒术师，在遭受诅咒侵袭的都市里，合理分工、互相支援，在平民受害之前把从裂缝中涌出的诅咒全部祓除。</p>
+                <p style="margin-top: 15px;">在团建语境下，这座都市就是一支处在高压交付期的团队：不断涌出的诅咒是<strong>层出不穷的风险与问题</strong>；裂缝是<strong>反复出现的问题源头</strong>（流程缺陷 / 高频故障）；平民区是<strong>客户、干系人与口碑</strong>；咒力点是<strong>有限的资源（人力 / 预算 / 注意力）</strong>；而"平民受害数"正是<strong>团队对外的损伤 metric</strong>——比起个人战力，它更考验"我们是否有人始终盯着全局风险、主动把资源递到最需要的队友手里"。</p>
+
+                <div class="highlight">
+                    <h3>🎯 团建改造重点</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>合作而非竞争</strong>：共享平民受害数、共享咒力池、共享胜负</li>
+                        <li><strong>角色分工</strong>：4种专属职责，模拟真实团队职能互补</li>
+                        <li><strong>风险前移</strong>：裂缝持续涌出诅咒、平民区持续承压，模拟问题累积</li>
+                        <li><strong>共享资源管理</strong>：咒力池需汇聚多人咒力祓除强敌，暴露"谁在囤积"</li>
+                        <li><strong>复盘框架</strong>：每局结束引导反思前置防御 vs 临时救火的权衡</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 团建目标 -->
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>角色互补认知</h4><p>体验攻坚 / 控场 / 远程支援 / 统领的职责边界与依赖</p></div>
+                    <div class="card"><h4>风险前移</h4><p>觉察团队是否有人主动"治未病"而非只救火</p></div>
+                    <div class="card"><h4>共享资源管理</h4><p>咒力池汇聚多人力量，反思"资源是否卡在某人手里"</p></div>
+                    <div class="card"><h4>信息共享</h4><p>支援卡与战术指导全队可见，训练主动同步情报</p></div>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>都市战棋盘</td><td>1张</td><td>7×7 网格（平民区/裂缝/咒力点/事件点）</td></tr>
+                    <tr><td>玩家/诅咒/平民棋子</td><td>3-5/12/8个</td><td>标记咒术师、诅咒、平民位置</td></tr>
+                    <tr><td>受害/回合标记</td><td>各1个</td><td>受害轨道(0-5)与回合(1-15)追踪</td></tr>
+                    <tr><td>共享咒力池</td><td>1个碗</td><td>汇聚多人咒力祓除强敌</td></tr>
+                    <tr><td>术式/诅咒/事件/支援/领域卡</td><td>各若干</td><td>技能、敌人、随机事件、互助、领域</td></tr>
+                    <tr><td>骰子</td><td>1颗</td><td>移动步数及攻击检定（1d6）</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>地图</strong>：方格纸画 7×7，标注 5 平民区 / 3 裂缝 / 5 咒力点 / 4 事件点</li>
+                        <li><strong>受害/回合</strong>：纸条刻度+硬币标记</li>
+                        <li><strong>咒力池</strong>：小碗代表，便签写数值投入</li>
+                        <li><strong>卡牌</strong>：便签写名称+效果，分类面朝下抽</li>
+                        <li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属角色，模拟真实团队中的职能分工与相互依赖（也可按性格由教练分配）：</p>
+
+                <div class="role-card">
+                    <h4>🥊 虎杖悠仁 · 攻坚手 / 业务突破手</h4>
+                    <p><strong>被动</strong>：diversified 拳（近战高爆发连续攻击），把硬骨头啃下</p>
+                    <p><strong>团建映射</strong>：团队里的"攻坚手"——把最难的事干成</p>
+                </div>
+                <div class="role-card">
+                    <h4>🐦 伏黑惠 · 控场守护 / 风险兜底</h4>
+                    <p><strong>被动</strong>：式神召唤（持续自动攻击）+ 缚之术（冻结威胁）</p>
+                    <p><strong>团建映射</strong>：团队"定海神针"——筑防线、稳基本盘、治未病</p>
+                </div>
+                <div class="role-card">
+                    <h4>🔨 钉崎野蔷薇 · 远程支援 / 信息侦察</h4>
+                    <p><strong>被动</strong>：刍灵咒法（远程无视距离攻击），跨域触达</p>
+                    <p><strong>团建映射</strong>："机动兵"——横向团队/职能部门的及时补位</p>
+                </div>
+                <div class="role-card">
+                    <h4>💎 五条悟 · 全能统领 / 凝聚决策</h4>
+                    <p><strong>被动</strong>：苍/赫（最高单体穿透伤害）+ 领域增益（团队增益）</p>
+                    <p><strong>团建映射</strong>：启发式领导者——关键时定调，但要警惕"单点决策"</p>
+                </div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程（每回合5阶段）</h2>
+                <div class="flow-step">
+                    <h4>阶段1 · 诅咒行动</h4>
+                    <p>所有诅咒向最近平民区移动 1-2 格，相邻则伤害咒术师，进入平民区受害 +1。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段2 · 事件</h4>
+                    <p>翻开 1 张事件卡（咒力涌现/诅咒暴走/平民疏散/支援到来/结界展开等）。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段3 · 玩家行动（限2行动点）</h4>
+                    <p>移动 / 祓除诅咒 / 收集咒力（投入共享池）/ 休息 / 支援队友 / 开启领域。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段4 · 诅咒生成</h4>
+                    <p>每处裂缝生成 1 个新诅咒；满格则下回合生成更强诅咒（风险累积）。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>阶段5 · 回合结算</h4>
+                    <p>受害标记 +1；检查共享轨道；回合标记 +1；传递起始玩家。</p>
+                </div>
+
+                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
+                <table>
+                    <tr><th>共享轨道</th><th>初始</th><th>失败阈值</th></tr>
+                    <tr><td>平民受害数</td><td>0 / 5</td><td>达到 5 即整座城市信任崩塌（客户/口碑全面受损）</td></tr>
+                    <tr><td>推进回合</td><td>15</td><td>第 15 回合结束仍未祓除全部诅咒即失败</td></tr>
+                </table>
+                <p style="color:#e879a8; margin-top:10px;">⚠️ <strong>关键</strong>：受害数是团队对外的"损伤 metric"——比起个人战力，更考验"是否有人始终盯着全局风险、主动把资源递到最需要的队友手里"。</p>
+            </div>
+
+            <!-- 团建引导 -->
+            <div class="section">
+                <h2>💡 团建引导提示</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>游戏前（5分钟）</h4><p>介绍主题："诅咒是风险、裂缝是问题源头、平民区是客户口碑"；强调受害数是团队的，不是某个人的。</p></div>
+                    <div class="card"><h4>游戏中（观察）</h4><p>记录：谁在治未病？谁在兜底？咒力池谁在意？掉血时互相支援还是各顾各？</p></div>
+                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟，引导反思风险治理与资源统筹。</p></div>
+                </div>
+            </div>
+
+            <!-- 变体玩法 -->
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>设60分钟沙漏，以祓除进度判胜负，适合时间有限团建。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每2回合轮换角色，体验"攻坚"与"控场/远程"两类职能。</p></div>
+                    <div class="card"><h4>无声结界</h4><p>部分回合禁言，凸显非语言沟通与提前约定。</p></div>
+                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，专为"打破部门墙"设计。</p></div>
+                </div>
+            </div>
+
+            <!-- 难度调整 -->
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <table>
+                    <tr><th>模式</th><th>受害上限</th><th>调整</th><th>适合</th></tr>
+                    <tr><td>简单</td><td>7</td><td>诅咒生命-1，移除2张严酷事件，取消回合限制</td><td>新团队/非玩家</td></tr>
+                    <tr><td>标准（推荐）</td><td>5</td><td>默认配置（3裂缝各生1诅咒）</td><td>大多数团建</td></tr>
+                    <tr><td>困难</td><td>3</td><td>诅咒攻击+1、每回合生4诅咒、第12回合出特级漏瑚</td><td>管理层/风控主题</td></tr>
+                </table>
+            </div>
+
+            <!-- 工作场景映射 -->
+            <div class="section">
+                <h2>🗺️ 游戏要素 → 工作场景</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>高度合作</h4><p>共享受害数与咒力池、共享胜负，天然促进团队感</p></div>
+                    <div class="card"><h4>角色互补</h4><p>一套职能卡模拟真实团队分工</p></div>
+                    <div class="card"><h4>风险前移</h4><p>裂缝持续涌诅咒、平民区承压，模拟问题累积</p></div>
+                    <div class="card"><h4>资源统筹</h4><p>咒力池机制暴露"资源卡点"问题</p></div>
+                </div>
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>平民区</td><td>客户 / 干系人 / 口碑</td></tr>
+                    <tr><td>诅咒裂缝</td><td>反复出现的问题源头（流程缺陷/高频故障）</td></tr>
+                    <tr><td>平民受害数</td><td>对外的损伤 metric（客户/口碑受损）</td></tr>
+                    <tr><td>共享咒力池</td><td>汇聚多人的关键力量 / 资源统筹</td></tr>
+                    <tr><td>特级诅咒</td><td>关键风险节点 / 上线危机</td></tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li><a href="jujutsu-united.md" style="color:#c4b5fd;">完整团建版规则（Markdown）</a></li>
+                    <li>原始桌游：boardgames/category/cooperative/jujutsu-sorcerers/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：鬼杀队：无限列车、神话裂隙、幽灵古堡、天命人</li>
+                </ul>
+                <p style="margin-top: 20px; color: #9d8bb5; font-style: italic;">
+                    改编自合作桌游《咒术师团 Jujutsu Sorcerers》（咒术回战主题）| 最后更新：2026-07-15
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

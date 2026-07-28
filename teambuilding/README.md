@@ -71,6 +71,29 @@ source_url: "https://aiworkdb.github.io/teambuilding/"
 | [魔法学院（改造版）](games/collaboration/magic-academy.md) | 室内 · 合作+策略 | 4-8人 | 45-60 min | 团建/培训/工作坊 |
 | [星际矿工（改造版）](games/collaboration/space-miners.md) | 室内 · 合作+危机管理 | 5-8人 | 45-60 min | 团建/培训/工作坊 |
 | [疯狂厨房（改造版）](games/collaboration/crazy-kitchen.md) | 室内 · 合作+时间压力 | 4-8人 | 30-45 min | 团建/培训/破冰 |
+| [病毒危机（改造版）](games/collaboration/virus-outbreak.md) | 室内 · 合作+危机管理 | 4-12人 | 45-60 min | 团建/培训/工作坊 |
+| [协作大厨（改造版）](games/collaboration/team-chef.md) | 室内 · 合作+流水线 | 4-8人 | 30-45 min | 团建/培训/工作坊 |
+| [怪兽守护者（改造版）](games/collaboration/kaiju-defenders.md) | 室内 · 合作+危机管理 | 8-20人 | 60-75 min | 团建/培训/工作坊 |
+| [绝密行动（改造版）](games/collaboration/secret-mission.md) | 室内 · 合作+隐秘协作 | 4-8人 | 45-60 min | 团建/培训/工作坊 |
+| [基因疗法攻坚（改造版）](games/collaboration/gene-therapy.md) | 室内 · 合作+研发模拟 | 5-10人 | 60-75 min | 团建/培训/工作坊 |
+| [怪物厨师（改造版）](games/collaboration/monster-chef.md) | 室内 · 合作+烹饪协作 | 3-6人 | 50-70 min | 团建/培训/破冰 |
+| [深海探险（改造版）](games/collaboration/abyss-dive.md) | 室内 · 合作+资源管理 | 3-6人 | 50-70 min | 团建/培训/工作坊 |
+| [末日种子库（改造版）](games/collaboration/doomsday-vault.md) | 室内 · 合作+危机管理 | 3-6人 | 60-75 min | 团建/培训/工作坊 |
+| [芙莉莲的旅程（改造版）](games/collaboration/frieren-journey.md) | 室内 · 合作+目标共识 | 2-4人 | 60-90 min | 团建/培训/工作坊 |
+| [大圣西游（改造版）](games/collaboration/wukong-quest.md) | 室内 · 合作+角色互补 | 4-6人 | 60-90 min | 团建/培训/工作坊 |
+| [幽灵古堡（改造版）](games/collaboration/ghost-castle.md) | 室内 · 合作+危机救援 | 3-5人 | 45-75 min | 团建/培训/工作坊 |
+| [鬼杀队：无限列车（改造版）](games/collaboration/demon-slayer-train.md) | 室内 · 合作+危机突破 | 3-5人 | 45-75 min | 团建/培训/工作坊 |
+| [神话裂隙（改造版）](games/collaboration/mythic-rift.md) | 室内 · 合作+心智韧性 | 3-5人 | 60-90 min | 团建/培训/工作坊 |
+| [天命人（改造版）](games/collaboration/destined-one.md) | 室内 · 合作+资源管理 | 4-6人 | 60-90 min | 团建/培训/工作坊 |
+| [咒术回战：术师联携（改造版）](games/collaboration/jujutsu-united.md) | 室内 · 合作+风险治理 | 3-5人 | 45-75 min | 团建/培训/工作坊 |
+| [轮回地下城（改造版）](games/collaboration/loop-dungeon.md) | 室内 · 合作+复盘迭代 | 3-5人 | 45-60 min | 团建/培训/工作坊 |
+| [星际医疗队（改造版）](games/collaboration/stellar-medics.md) | 室内 · 合作+危机管控 | 3-5人 | 45-70 min | 团建/培训/工作坊 |
+| [远征33号（改造版）](games/collaboration/expedition-33.md) | 室内 · 合作+目标共识 | 2-4人 | 45-75 min | 团建/培训/工作坊 |
+| [星际灯塔守护者（改造版）](games/collaboration/stellar-lighthouse.md) | 室内 · 合作+长期守护 | 3-5人 | 45-70 min | 团建/培训/工作坊 |
+| [猎人小队（改造版）](games/collaboration/solo-hunter-squad.md) | 室内 · 合作+能力提升 | 3-5人 | 45-75 min | 团建/培训/工作坊 |
+| [银河小馆（改造版）](games/collaboration/space-diner-escape.md) | 室内 · 合作+双线协同 | 3-5人 | 45-75 min | 团建/培训/工作坊 |
+| [星际拓荒者（改造版）](games/collaboration/star-pioneers.md) | 室内 · 合作+从0到1拓荒 | 3-5人 | 45-70 min | 团建/培训/工作坊 |
+| [黄金结界（改造版）](games/collaboration/huntrix-honmoon.md) | 室内 · 合作+文化守护 | 3-5人 | 45-75 min | 团建/培训/工作坊 |
 
 #### 🔐 信任建立（trust）
 | 游戏名称 | 形式 | 人数 | 时长 | 场景标签 |
@@ -157,4 +180,4 @@ source_url: "https://aiworkdb.github.io/teambuilding/"
 
 ---
 
-_最后更新：2026-07-04_
+_最后更新：2026-07-17_

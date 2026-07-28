@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际医疗队 · 生死救援协作版 - 团建游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e3f0f5;
+            background: linear-gradient(135deg, #04111a 0%, #0a1f2e 60%, #071a17 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0c1a26;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            overflow: hidden;
+            border: 1px solid #134e4a;
+        }
+        .header {
+            background: linear-gradient(135deg, #0e7490 0%, #059669 55%, #f59e0b 100%);
+            color: #f0fffb;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #0e2230;
+        }
+        .info-card {
+            background: #0c1a26;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 1px solid #134e4a;
+        }
+        .info-card .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .info-card .label {
+            font-size: 0.9em;
+            color: #7dd3c8;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #5eead4;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #5eead4;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #0e7490;
+        }
+        .section h3 {
+            color: #fbbf24;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #0e2230;
+            border: 2px solid #134e4a;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(14,116,144,0.3);
+            border-color: #2dd4bf;
+        }
+        .card h4 {
+            color: #5eead4;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #134e4a;
+            color: #e3f0f5;
+        }
+        th {
+            background: #0e7490;
+            color: #f0fffb;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #0e2230;
+        }
+        .role-card {
+            background: linear-gradient(135deg, #0e2230 0%, #123042 100%);
+            border-left: 4px solid #2dd4bf;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .role-card h4 {
+            color: #5eead4;
+            margin-bottom: 10px;
+        }
+        .tag {
+            display: inline-block;
+            background: #0e7490;
+            color: #f0fffb;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+        }
+        .event-card {
+            background: #0c1a26;
+            border: 2px solid #134e4a;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .event-card.positive {
+            border-color: #2a9d8f;
+        }
+        .event-card.negative {
+            border-color: #e11d48;
+        }
+        .event-icon {
+            font-size: 2em;
+        }
+        .flow-step {
+            background: #0e2230;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .flow-step h4 {
+            color: #5eead4;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #0e2230 0%, #123042 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #0e7490;
+        }
+        .highlight h3 {
+            color: #5eead4;
+            margin-bottom: 10px;
+        }
+        .print-section {
+            background: #123042;
+            border: 2px dashed #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .print-section h3 {
+            color: #5eead4;
+        }
+        @media print {
+            body { background: white; color: #222; padding: 0; }
+            .container { box-shadow: none; border: none; }
+            .no-print { display: none; }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .info-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 星际医疗队 · 生死救援协作版</h1>
+            <div class="subtitle">Stellar Medics - 优先级分诊与风险前移的危机管控合作团建游戏</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="icon">👥</div>
+                <div class="label">人数</div>
+                <div class="value">3-5人</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⏱️</div>
+                <div class="label">时长</div>
+                <div class="value">45-70分钟</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">🚨</div>
+                <div class="label">适合场景</div>
+                <div class="value">危机管控·风险治理</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">📊</div>
+                <div class="label">难度</div>
+                <div class="value">中等</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 游戏概述 -->
+            <div class="section">
+                <h1 style="display:none;">星际医疗队 · 生死救援协作版</h1>
+                <h2>🎮 游戏概述</h2>
+                <p>《星际医疗队 · 生死救援协作版》改编自合作桌游《星际医疗队 Stellar Medics》（宇宙科幻 + 医疗救援主题）。玩家扮演宇宙医疗飞船「星途号」上的不同岗位专家：在有限回合内，诊断并治疗舱内 <strong>8 名危重病患</strong>、控制 <strong>4 条病毒扩散路线</strong>、修复随机发生的飞船故障，在倒计时归零前完成全部救治与撤离。</p>
+                <p style="margin-top: 15px;">在团建语境下，「星途号」就是一支正在应对危机（交付期限、线上故障、口碑风险）的团队：<strong>8 名病患是待交付的任务 / 待支持的人，病毒是正在扩散的风险，飞船故障是流程 / 系统漏洞，倒计时是交付期限</strong>。先救谁、资源给谁，正是真实工作中"优先级管理 + 风险治理 + 横向补位"的缩影。</p>
+
+                <div class="highlight">
+                    <h3>🎯 团建改造重点</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>角色互补</strong>：5 种专属职能（攻坚 / 协调 / 兜底 / 分析 / 统筹）映射真实团队分工</li>
+                        <li><strong>优先级分诊</strong>：重症病患每回合自动掉血，逼团队先保最危处——体感"要事第一"</li>
+                        <li><strong>风险前移</strong>：先控病毒再治疗，否则疗效被抵消——映射"治未病 vs 救火"</li>
+                        <li><strong>信息共享</strong>：允许公开手牌与计划，暴露"信息黑箱"造成的重复与错配</li>
+                        <li><strong>复盘框架</strong>：每局结束 4F 复盘，把"分诊决策"迁移到真实工作</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 团建目标 -->
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>优先级分诊</h4><p>资源有限时练习"先保最危处"，反思是否常平均用力而非要事第一</p></div>
+                    <div class="card"><h4>风险前移</h4><p>体验"先控病毒再治疗"省力，建立"治未病 vs 救火"的取舍直觉</p></div>
+                    <div class="card"><h4>信息共享</h4><p>把手牌/位置/计划大声讲出，打破信息黑箱带来的重复与错配</p></div>
+                    <div class="card"><h4>角色互补</h4><p>5 种职能缺谁都崩，体感真实团队里"每个岗位都不可替代"</p></div>
+                </div>
+            </div>
+
+            <!-- 物料准备 -->
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>飞船地图</td><td>1张</td><td>3×5 舱室网格（指挥/手术/重症/病房/维修间）</td></tr>
+                    <tr><td>病患板块</td><td>8个</td><td>代表 8 名不同状态、不同病症的病患</td></tr>
+                    <tr><td>病毒/故障标记</td><td>30/15个</td><td>标记病毒扩散与飞船故障舱室</td></tr>
+                    <tr><td>医疗资源/能量方块</td><td>40/20个</td><td>治疗与修复所需资源</td></tr>
+                    <tr><td>倒计时轨迹</td><td>1张</td><td>20 格游戏进度计时器（交付期限）</td></tr>
+                    <tr><td>角色卡 / 骰子</td><td>5张 / 1-2颗</td><td>职能分工；决定危机事件发生舱室</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>地图</strong>：白纸画 3 行 5 列网格，标注各舱室</li>
+                        <li><strong>病患</strong>：写 8 张小卡（编号+血量+隐藏病症），简化版正面朝上</li>
+                        <li><strong>标记</strong>：红色豆子=病毒，灰色纸片=故障</li>
+                        <li><strong>卡牌</strong>：便签写名称+效果，分类面朝下抽</li>
+                        <li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 角色分配 -->
+            <div class="section">
+                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+                <p>每位玩家承担一个专属角色，模拟真实团队中的职能分工与相互依赖（也可按性格由教练分配）：</p>
+
+                <div class="role-card">
+                    <h4>👨‍⚕️ 船医 · 攻坚手 / 业务专家</h4>
+                    <p><strong>被动</strong>：用药效果+1、可连带治 2 名相邻病患</p>
+                    <p><strong>团建映射</strong>：团队里的"攻坚手"——把最难的问题解决掉</p>
+                </div>
+                <div class="role-card">
+                    <h4>👩‍⚕️ 护士长 · 协调者 / 项目协调</h4>
+                    <p><strong>被动</strong>：每回合多摸 1 牌、可把手牌分享给相邻玩家</p>
+                    <p><strong>团建映射</strong>：让信息与资源在团队里流动——"链接者"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🔧 工程师 · 工程 / 中台 / 运维</h4>
+                    <p><strong>被动</strong>：维修效果+1、每回合免费清 1 故障</p>
+                    <p><strong>团建映射</strong>：稳底盘、治未病——"风险兜底与系统守护"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🔬 生化学家 · 分析 / 质量 / 研究</h4>
+                    <p><strong>被动</strong>：诊断多翻 1 张、实验室合成加速</p>
+                    <p><strong>团建映射</strong>：看清问题本质再下手——"质量与分析赋能"</p>
+                </div>
+                <div class="role-card">
+                    <h4>🧑‍✈️ 船长 · Leader / PM</h4>
+                    <p><strong>被动</strong>：全体每回合各+1行动、指挥舱额外摸牌</p>
+                    <p><strong>团建映射</strong>：定方向、加资源、凝聚团队——但要警惕"单点调度"</p>
+                </div>
+            </div>
+
+            <!-- 游戏流程 -->
+            <div class="section">
+                <h2>🎲 游戏流程（每回合 4 阶段）</h2>
+                <p>每回合依次执行：<strong>① 补充资源</strong> → <strong>② 玩家行动（每人 3 次，船长 4 次）</strong> → <strong>③ 病毒扩散</strong> → <strong>④ 危机事件 + 倒计时 -1</strong>。</p>
+
+                <div class="flow-step">
+                    <h4>核心机制 · 优先级分诊（团建灵魂）</h4>
+                    <p>重症舱 A4 的 3 名病患<strong>每回合自动掉血</strong>；某舱室病毒堆到 3 个触发「感染警报」全场 -1。团队必须决定<strong>先救最危的、还是先控病毒</strong>——这正是对"要事第一 + 风险前移"最直观的体感。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>地图 · 星途号 = 多线作战的团队</h4>
+                    <p>指挥舱=决策中枢；手术室=攻坚现场（治疗翻倍）；重症舱=最危任务；隔离舱=风险隔离区；维修间=底座守护（免费清故障）；补给/医药库=资源储备。</p>
+                </div>
+                <div class="flow-step">
+                    <h4>危机 · 病毒 = 正在扩散的风险</h4>
+                    <p>从重症舱沿 4 条路线蔓延，不阻断就持续吞血。<strong>先控病毒再治疗</strong>才省力——恰似真实工作中"治未病 vs 救火"的消耗差。</p>
+                </div>
+
+                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
+                <table>
+                    <tr><th>共享轨道</th><th>初始</th><th>失败阈值</th></tr>
+                    <tr><td>病患存活数（8 名）</td><td>8</td><td>任一归零即失败（任务/人被拖垮）</td></tr>
+                    <tr><td>倒计时（交付期限）</td><td>20 回合</td><td>归零即失败（期限耗尽）</td></tr>
+                    <tr><td>舱室病毒量</td><td>少量</td><td>任一舱室≥5 即失败（风险失控）</td></tr>
+                    <tr><td>动力舱故障</td><td>0</td><td>达 5 即失败（底层系统崩盘）</td></tr>
+                </table>
+                <p style="color:#fbbf24; margin-top:10px;">⚠️ <strong>关键</strong>：胜负不取决于"谁会治疗"，而取决于"有没有先把手伸去阻断扩散"。每一次正确的分诊与兜底，都在让团队离全员撤离更近一步。</p>
+            </div>
+
+            <!-- 团建引导 -->
+            <div class="section">
+                <h2>💡 团建引导提示</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>游戏前（5分钟）</h4><p>介绍主题："星途号就是多线作战的团队，病患是待办、病毒是风险、倒计时是期限"；强调先保最危处、鼓励大声沟通。</p></div>
+                    <div class="card"><h4>游戏中（观察）</h4><p>记录：谁在做分诊？谁在信息黑箱？谁在兜底（清故障/补资源）？船长是否单点？风险有没有前移？</p></div>
+                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟；把"分诊与兜底"迁移到真实工作危机。</p></div>
+                </div>
+            </div>
+
+            <!-- 变体玩法 -->
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，记录分诊与兜底行为，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>设45分钟沙漏，以"是否全员存活撤离"判胜负，适合时间有限团建。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每2回合轮换角色，体验"攻坚"与"兜底/协调"两类职能。</p></div>
+                    <div class="card"><h4>无声求援</h4><p>部分回合禁言，凸显"提前约定、显性同步"对协作的价值。</p></div>
+                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，专为"打破部门墙"设计。</p></div>
+                    <div class="card"><h4>真实风险叠加</h4><p>把病患卡换成当前真实待办/风险，游戏变风险盘点会，便签直接变改进看板。</p></div>
+                </div>
+            </div>
+
+            <!-- 难度调整 -->
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <table>
+                    <tr><th>模式</th><th>调整</th><th>适合</th></tr>
+                    <tr><td>简单</td><td>移氧气泄漏卡、病患血+1、倒计时25、病症正面朝上</td><td>新团队/非玩家</td></tr>
+                    <tr><td>标准（推荐）</td><td>倒计时20、每人3行动（船长4）、隐藏病症完整</td><td>大多数团建</td></tr>
+                    <tr><td>困难</td><td>每回合翻2危机卡、重症每回合+2病毒、禁交换手牌</td><td>管理层/风险治理</td></tr>
+                </table>
+            </div>
+
+            <!-- 工作场景映射 -->
+            <div class="section">
+                <h2>🗺️ 游戏要素 → 工作场景</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>高度合作</h4><p>共享胜负、共享倒计时与病毒，天然促进团队感</p></div>
+                    <div class="card"><h4>优先级分诊</h4><p>先保最危处，体感"要事第一"的资源取舍</p></div>
+                    <div class="card"><h4>风险前移</h4><p>先控病毒再治疗，建立"治未病 vs 救火"直觉</p></div>
+                    <div class="card"><h4>信息共享</h4><p>公开手牌与计划，打破信息黑箱</p></div>
+                </div>
+                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>星途号飞船</td><td>一支多线作战、应对危机的团队 / 项目</td></tr>
+                    <tr><td>8 名病患</td><td>待交付的任务 / 待支持的同事或客户</td></tr>
+                    <tr><td>病毒扩散</td><td>正在扩散的风险 / 负面问题（口碑、故障）</td></tr>
+                    <tr><td>飞船故障</td><td>流程 / 系统漏洞（底层不牢则全面崩）</td></tr>
+                    <tr><td>倒计时</td><td>交付期限 / 关键里程碑</td></tr>
+                    <tr><td>船长加行动</td><td>Leader 的资源调度权（警惕单点故障）</td></tr>
+                </table>
+            </div>
+
+            <!-- 相关资源 -->
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left: 20px;">
+                    <li><a href="stellar-medics.md" style="color:#5eead4;">完整团建版规则（Markdown）</a></li>
+                    <li>原始桌游：boardgames/category/cooperative/stellar-medics/</li>
+                    <li>教练工具箱：teambuilding/toolbox/</li>
+                    <li>类似游戏：深海探险、末日种子库、幽灵古堡、轮回地下城</li>
+                </ul>
+                <p style="margin-top: 20px; color: #7dd3c8; font-style: italic;">
+                    改编自合作桌游《星际医疗队 Stellar Medics》（宇宙科幻 + 医疗救援合作主题）| 最后更新：2026-07-16
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

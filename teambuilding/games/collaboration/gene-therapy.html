@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基因疗法攻坚 - 团建游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #023e8a 0%, #0096c7 100%); padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #0096c7 0%, #48cae4 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header .subtitle { font-size: 1.2em; opacity: 0.92; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 30px; background: #f8f9fa; }
+        .info-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .info-card .icon { font-size: 2em; margin-bottom: 10px; }
+        .info-card .label { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+        .info-card .value { font-size: 1.2em; font-weight: bold; color: #0096c7; }
+        .content { padding: 40px; }
+        .section { margin-bottom: 40px; }
+        .section h2 { color: #0096c7; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #0096c7; }
+        .section h3 { color: #00b4d8; margin-top: 20px; margin-bottom: 15px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+        .card { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px; padding: 20px; transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.15); border-color: #48cae4; }
+        .card h4 { color: #0096c7; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+        th { background: #0096c7; color: white; font-weight: 600; }
+        tr:hover { background: #f8f9fa; }
+        .role-card { background: linear-gradient(135deg, #f8f9fa 0%, #caf0f8 100%); border-left: 4px solid #0096c7; padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .role-card h4 { color: #0096c7; margin-bottom: 10px; }
+        .tag { display: inline-block; background: #0096c7; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; margin: 5px 5px 5px 0; }
+        .lab-zone { background: #f8f9fa; border-left: 5px solid #48cae4; border-radius: 10px; padding: 14px 20px; margin: 10px 0; display: flex; align-items: center; gap: 15px; }
+        .lab-zone .icon { font-size: 1.6em; }
+        .lab-zone .desc { flex: 1; }
+        .flow-step { background: #f8f9fa; border-left: 4px solid #48cae4; padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .flow-step h4 { color: #0096c7; margin-bottom: 10px; }
+        .highlight { background: linear-gradient(120deg, #ade8f4 0%, #caf0f8 100%); padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .print-section { background: #fff3cd; border: 2px dashed #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .print-section h3 { color: #ffc107; }
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; } }
+        @media (max-width: 768px) { .header h1 { font-size: 1.8em; } .info-grid { grid-template-columns: 1fr; } .card-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧬 基因疗法攻坚</h1>
+            <div class="subtitle">Gene Therapy Sprint - 时间压力下的科研协作与风险决策</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card"><div class="icon">👥</div><div class="label">人数</div><div class="value">4-8人</div></div>
+            <div class="info-card"><div class="icon">⏱️</div><div class="label">时长</div><div class="value">60-75分钟</div></div>
+            <div class="info-card"><div class="icon">🎯</div><div class="label">适合场景</div><div class="value">研发协作·项目管理</div></div>
+            <div class="info-card"><div class="icon">📊</div><div class="label">难度</div><div class="value">中等</div></div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>🎮 游戏概述</h2>
+                <p>《基因疗法攻坚》模拟基因疗法研发的紧急攻关：罕见病患者等待救命疗法，团队必须在<strong>病毒扩散的时钟</strong>下完成从测序、编辑、测试到临床试验的全流程研发。</p>
+                <p style="margin-top:15px;">在<strong>时间压力</strong>与<strong>资源限制</strong>下，团队体验<strong>分工研发、信息共享、风险决策</strong>——这是研发团队、项目管理者与创新工作坊的理想团建载体。</p>
+                <div class="highlight">
+                    <h3 style="color:#0096c7; margin-bottom:10px;">🎯 团建改造重点</h3>
+                    <ul style="margin-left:20px;">
+                        <li><strong>专业分工</strong>：6种科研角色，模拟真实研发团队的职能边界</li>
+                        <li><strong>信息共享</strong>：测序数据不共享 → 编辑设计失误，复刻"信息孤岛"</li>
+                        <li><strong>风险决策</strong>：病毒进度共享，考验共同取舍与优先级</li>
+                        <li><strong>压力沟通</strong>：倒计时下保持理性、清晰表达</li>
+                        <li><strong>复盘框架</strong>：事实→感受→学习→迁移四步深度反思</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>专业分工</h4><p>体验测序、编辑、测试、分析、临床、管理的职能差异</p></div>
+                    <div class="card"><h4>信息共享</h4><p>打破信息孤岛，体会"数据不共享"的真实代价</p></div>
+                    <div class="card"><h4>风险决策</h4><p>在病毒时钟下权衡研发速度与安全性</p></div>
+                    <div class="card"><h4>压力管理</h4><p>在时间压力下保持冷静与科学判断</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>A3 研发实验室地图</td><td>1张</td><td>6个功能区主版图</td></tr>
+                    <tr><td>玩家角色卡</td><td>6张</td><td>不同科研角色与能力</td></tr>
+                    <tr><td>基因序列卡</td><td>50张</td><td>患者基因数据（正常/突变/靶点）</td></tr>
+                    <tr><td>编辑工具卡</td><td>30张</td><td>CRISPR/Cas9 等编辑工具</td></tr>
+                    <tr><td>病毒进度标记</td><td>1个</td><td>追踪病毒扩散（0-10）</td></tr>
+                    <tr><td>科研进度标记</td><td>20个</td><td>记录研究进度</td></tr>
+                    <tr><td>事件卡 / 骰子</td><td>15张 / 1颗</td><td>实验室突发事件 / 判定</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left:20px; margin-top:10px;">
+                        <li><strong>地图</strong>：白纸画 2×3 六宫格，标功能区名</li>
+                        <li><strong>卡牌</strong>：便签写基因/工具/事件名称与效果，面朝下抽</li>
+                        <li><strong>进度</strong>：白板记录病毒进度与科研进度</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🧑‍🔬 角色分配（团建核心）</h2>
+                <div class="role-card"><h4>🧬 基因测序师</h4><p><strong>职责</strong>：数据收集｜<strong>被动</strong>：每回合额外抽1张基因序列卡｜<strong>观察点</strong>：信息获取与整理能力</p></div>
+                <div class="role-card"><h4>🔬 编辑工具专家</h4><p><strong>职责</strong>：技术研发｜<strong>被动</strong>：使用工具卡成功率+20%｜<strong>观察点</strong>：专业技能与问题解决</p></div>
+                <div class="role-card"><h4>🧪 安全测试员</h4><p><strong>职责</strong>：质量控制｜<strong>被动</strong>：提前发现安全风险避免失败｜<strong>观察点</strong>：风险意识与预防思维</p></div>
+                <div class="role-card"><h4>📊 数据分析师</h4><p><strong>职责</strong>：进度追踪｜<strong>被动</strong>：查看病毒/科研进度详情｜<strong>观察点</strong>：全局观与系统思维</p></div>
+                <div class="role-card"><h4>💉 临床研究员</h4><p><strong>职责</strong>：实践验证｜<strong>被动</strong>：临床试验效率+1｜<strong>观察点</strong>：执行力与结果导向</p></div>
+                <div class="role-card"><h4>📋 项目经理</h4><p><strong>职责</strong>：资源协调｜<strong>被动</strong>：每回合重新分配1张手牌｜<strong>观察点</strong>：资源调配与协调能力</p></div>
+                <p style="margin-top:15px; color:#666;"><em>提示：让参与者自主选择角色，观察其选择反映了什么职业背景或性格特点。</em></p>
+            </div>
+
+            <div class="section">
+                <h2>🧪 研发实验室布局（6区）</h2>
+                <div class="lab-zone"><div class="icon">🧬</div><div class="desc"><strong>基因测序区</strong>｜收集基因序列｜团建点：信息收集的重要性</div></div>
+                <div class="lab-zone"><div class="icon">🔬</div><div class="desc"><strong>编辑工具区</strong>｜设计编辑方案｜团建点：技术方案讨论</div></div>
+                <div class="lab-zone"><div class="icon">🧪</div><div class="desc"><strong>安全测试区</strong>｜测试疗法安全性｜团建点：风险管理与质控</div></div>
+                <div class="lab-zone"><div class="icon">📊</div><div class="desc"><strong>数据分析区</strong>｜分析研发进度｜团建点：数据驱动决策</div></div>
+                <div class="lab-zone"><div class="icon">💉</div><div class="desc"><strong>临床试验区</strong>｜验证疗法效果｜团建点：从理论到实践的跨越</div></div>
+                <div class="lab-zone"><div class="icon">📋</div><div class="desc"><strong>项目管理区</strong>｜资源协调｜团建点：优先级与资源决策</div></div>
+            </div>
+
+            <div class="section">
+                <h2>🎲 游戏流程（每回合）</h2>
+                <div class="flow-step"><h4>阶段1：团队讨论（3分钟）</h4><p>本回合优先推进哪个环节？谁去哪个功能区？卡牌如何分配？如何应对事件？</p></div>
+                <div class="flow-step"><h4>阶段2：执行行动（5-7分钟）</h4><p>每人每回合 3 个行动点：收集基因/设计编辑/安全测试/分析数据/临床试验/资源交换/项目协调。</p></div>
+                <div class="flow-step"><h4>阶段3：病毒扩散（2-3分钟）</h4><p>病毒进度+1（达10即失败）；翻开事件卡：好消息/坏消息/实验意外/技术突破。</p></div>
+                <div class="flow-step"><h4>阶段4：简短复盘（1-2分钟）</h4><p>技术路线是否最优？有无更好方案？协作是否顺畅？</p></div>
+            </div>
+
+            <div class="section">
+                <h2>🏆 胜利与失败</h2>
+                <table>
+                    <tr><th>结果</th><th>条件</th></tr>
+                    <tr><td>✅ 团队胜利</td><td>按顺序完成 5 个研发环节：测序→编辑→安全测试→临床试验→疗法批准</td></tr>
+                    <tr><td>❌ 团队失败</td><td>病毒进度达10 / 安全测试连续失败3次 / 8回合仍未完成</td></tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🤔 复盘框架</h2>
+                <div class="card"><h4 style="color:#0096c7;">事实 Facts</h4><ul style="margin-left:20px; margin-top:10px;"><li>游戏结果是什么？完成了几个研发环节？</li><li>哪个环节最耗时？为什么？</li></ul></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#0096c7;">感受 Feelings</h4><ul style="margin-left:20px; margin-top:10px;"><li>扮演[角色]让你有什么感受？最有压力/成就感的时刻？</li><li>对团队研发协作满意吗？</li></ul></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#0096c7;">发现 Findings</h4><ul style="margin-left:20px; margin-top:10px;"><li>技术讨论是否充分？专业优势是否发挥？</li><li>如何平衡研发速度与安全性？压力下决策质量如何？</li></ul></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#0096c7;">迁移 Future</h4><ul style="margin-left:20px; margin-top:10px;"><li>游戏让你想到研发工作中的哪些场景？</li><li>可以立即改进的研发协作方式是什么？</li></ul></div>
+            </div>
+
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>跨学科挑战</h4><p>只用专业术语解释方案，他人须"翻译"才能执行，体验沟通壁垒。</p></div>
+                    <div class="card"><h4>资源受限</h4><p>起始手牌减半，强制协作与交换，训练受限下的创新。</p></div>
+                    <div class="card"><h4>伦理困境</h4><p>加入伦理决策卡，争议方案需全员一致通过，讨论价值观冲突。</p></div>
+                    <div class="card"><h4>竞速模式</h4><p>严格时限+病毒加速，观察时间压力下的团队协作。</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>简单模式</h4><p>病毒每回合+0.5或研发环节减少，聚焦协作体验。</p></div>
+                    <div class="card"><h4>标准模式</h4><p>病毒每回合+1、8回合上限。适合多数团建场景。</p></div>
+                    <div class="card"><h4>困难模式</h4><p>病毒每回合+2、加入伦理抉择，适合高压/管理主题。</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 设计思路</h2>
+                <div class="highlight">
+                    <h3 style="color:#0096c7; margin-bottom:15px;">为什么选这个游戏？</h3>
+                    <ol style="margin-left:20px;">
+                        <li><strong>真实映射研发</strong>：测序→编辑→测试→临床的研发流即项目流</li>
+                        <li><strong>信息孤岛可见</strong>：数据不共享直接导致下游失误</li>
+                        <li><strong>共享风险</strong>：病毒进度是共同 deadline</li>
+                        <li><strong>决策即复盘</strong>：每个研发取舍都是管理议题</li>
+                    </ol>
+                </div>
+                <h3 style="margin-top:30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>病毒进度</td><td>项目 deadline / 竞品 / 市场风险</td></tr>
+                    <tr><td>基因序列卡</td><td>需求与数据信息</td></tr>
+                    <tr><td>6种角色</td><td>研发团队的职能专长</td></tr>
+                    <tr><td>事件卡</td><td>突发风险与意外机会</td></tr>
+                    <tr><td>5个研发环节</td><td>端到端交付流程</td></tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left:20px;">
+                    <li>引导话术库：teambuilding/toolbox/facilitation.md</li>
+                    <li>复盘引导框架：teambuilding/toolbox/debrief.md</li>
+                    <li>类似游戏：病毒危机、星际矿工、末日种子库</li>
+                </ul>
+                <p style="margin-top:20px; color:#666; font-style:italic;">改编自合作桌游《基因编辑实验室》| 最后更新：2026-07-12</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

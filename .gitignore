@@ -61,3 +61,13 @@ out/
 # 日志目录
 logs/
 *.log
+
+# 敏感信息文件（包含微信 AppID/AppSecret、本地路径、IP 等）
+publish_batch.py
+publish_mcp_direct.py
+publish_via_mcp.py
+LOCAL_PUBLISH_GUIDE.md
+发布状态总结.md
+CLOUD_ENV_LIMITATION.md
+PUBLISH_REPORT.md
+teambuilding/ROADMAP.md

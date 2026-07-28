@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>怪物厨师 - 团建游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #9d0208 0%, #e85d04 100%); padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #e85d04 0%, #f48c06 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header .subtitle { font-size: 1.2em; opacity: 0.94; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 30px; background: #f8f9fa; }
+        .info-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .info-card .icon { font-size: 2em; margin-bottom: 10px; }
+        .info-card .label { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+        .info-card .value { font-size: 1.2em; font-weight: bold; color: #e85d04; }
+        .content { padding: 40px; }
+        .section { margin-bottom: 40px; }
+        .section h2 { color: #e85d04; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #e85d04; }
+        .section h3 { color: #f48c06; margin-top: 20px; margin-bottom: 15px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+        .card { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px; padding: 20px; transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.15); border-color: #f48c06; }
+        .card h4 { color: #e85d04; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+        th { background: #e85d04; color: white; font-weight: 600; }
+        tr:hover { background: #f8f9fa; }
+        .role-card { background: linear-gradient(135deg, #f8f9fa 0%, #ffecd1 100%); border-left: 4px solid #f48c06; padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .role-card h4 { color: #e85d04; margin-bottom: 10px; }
+        .tag { display: inline-block; background: #e85d04; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; margin: 5px 5px 5px 0; }
+        .floor-step { background: #f8f9fa; border-left: 5px solid #f48c06; border-radius: 10px; padding: 14px 20px; margin: 10px 0; display: flex; align-items: center; gap: 15px; }
+        .floor-step .depth { font-size: 1.1em; font-weight: bold; color: #e85d04; min-width: 90px; }
+        .floor-step .desc { flex: 1; }
+        .flow-step { background: #f8f9fa; border-left: 4px solid #f48c06; padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .flow-step h4 { color: #e85d04; margin-bottom: 10px; }
+        .highlight { background: linear-gradient(120deg, #ffd6a5 0%, #ffe8c2 100%); padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .print-section { background: #fff3cd; border: 2px dashed #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .print-section h3 { color: #ffc107; }
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; } }
+        @media (max-width: 768px) { .header h1 { font-size: 1.8em; } .info-grid { grid-template-columns: 1fr; } .card-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👨‍🍳 怪物厨师</h1>
+            <div class="subtitle">Monster Chef - 地下城中的协作烹饪与资源管理</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card"><div class="icon">👥</div><div class="label">人数</div><div class="value">3-6人</div></div>
+            <div class="info-card"><div class="icon">⏱️</div><div class="label">时长</div><div class="value">50-70分钟</div></div>
+            <div class="info-card"><div class="icon">🎯</div><div class="label">适合场景</div><div class="value">协作·沟通·资源</div></div>
+            <div class="info-card"><div class="icon">📊</div><div class="label">难度</div><div class="value">中等</div></div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>🎮 游戏概述</h2>
+                <p>《怪物厨师》改编自同名合作桌游（灵感源于《迷宫饭》）。一群误入地下城的冒险者，为了生存并深入探索，必须——<strong>狩猎怪物、采集食材、现场烹饪、大快朵颐</strong>，最终击败第5层的红龙。</p>
+                <p style="margin-top:15px;">所有玩家<strong>共享体力、共享胜负</strong>。在有限的食材与体力下共同决策，这是一款关于<strong>角色分工、资源管理与风险沟通</strong>的轻松而深刻的团建载体。</p>
+                <div class="highlight">
+                    <h3 style="color:#e85d04; margin-bottom:10px;">🎯 团建改造重点</h3>
+                    <ul style="margin-left:20px;">
+                        <li><strong>合作而非竞争</strong>：共享体力池、共享胜利与失败</li>
+                        <li><strong>角色分工</strong>：6种专属职责，模拟真实团队职能</li>
+                        <li><strong>资源管理</strong>：有限食材与体力考验共同决策</li>
+                        <li><strong>风险沟通</strong>：不确定性中清晰表达判断</li>
+                        <li><strong>复盘框架</strong>：直觉→角色→决策→迁移四步反思</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 团建目标</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>协作决策</h4><p>在资源有限下共同制定策略</p></div>
+                    <div class="card"><h4>角色分工</h4><p>体验不同角色的职责与价值</p></div>
+                    <div class="card"><h4>风险沟通</h4><p>在不确定中清晰表达判断</p></div>
+                    <div class="card"><h4>团队复盘</h4><p>从游戏过程反思真实协作模式</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📦 物料准备</h2>
+                <table>
+                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
+                    <tr><td>游戏地图（5层简化版）</td><td>1张</td><td>地下城探索地图</td></tr>
+                    <tr><td>玩家棋子</td><td>6个</td><td>代表玩家位置</td></tr>
+                    <tr><td>共享体力标记</td><td>1个</td><td>队伍体力（起始25）</td></tr>
+                    <tr><td>骰子</td><td>2颗</td><td>战斗/事件判定</td></tr>
+                    <tr><td>食材卡（红肉/白肉/蔬菜/香料）</td><td>各10张</td><td>烹饪基础食材</td></tr>
+                    <tr><td>怪物卡/料理卡/厨具卡/事件卡/陷阱卡</td><td>若干</td><td>战斗/烹饪/随机事件</td></tr>
+                </table>
+                <div class="print-section">
+                    <h3>🖨️ 无打印方案（临时团建）</h3>
+                    <ul style="margin-left:20px; margin-top:10px;">
+                        <li><strong>食材</strong>：4种不同颜色小物件，每种20个</li>
+                        <li><strong>怪物</strong>：纸上列名称与战力，抽签决定</li>
+                        <li><strong>地图</strong>：A3纸手绘5层，用棋子移动</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🧑‍🍳 角色分配（团建核心）</h2>
+                <div class="role-card"><h4>🎖️ 队长</h4><p><strong>职责</strong>：协调决策（体力分配/风险）｜<strong>被动</strong>：每局3次为任意玩家提供额外骰子</p></div>
+                <div class="role-card"><h4>⚔️ 战斗专家</h4><p><strong>职责</strong>：战斗决策｜<strong>被动</strong>：战斗骰上限+1</p></div>
+                <div class="role-card"><h4>🍳 厨师</h4><p><strong>职责</strong>：烹饪决策｜<strong>被动</strong>：烹饪判定≥3即成功</p></div>
+                <div class="role-card"><h4>🧭 侦察员</h4><p><strong>职责</strong>：地图信息｜<strong>被动</strong>：提前查看下个节点类型</p></div>
+                <div class="role-card"><h4>💊 医务员</h4><p><strong>职责</strong>：关注体力｜<strong>被动</strong>：起点休息时体力恢复+1</p></div>
+                <div class="role-card"><h4>📦 物资管理员</h4><p><strong>职责</strong>：管理食材/料理卡｜<strong>被动</strong>：起始多1张食材卡</p></div>
+                <p style="margin-top:15px; color:#666;"><em>提示：首轮自由选角，次轮轮换角色，体验不同职责。</em></p>
+            </div>
+
+            <div class="section">
+                <h2>🗺️ 游戏地图（5层）</h2>
+                <p>地下城共 5 层线性路径，通关第5层 Boss（红龙）即胜利。每层含食材点、怪物巢穴、烹饪站、陷阱与出口。</p>
+                <div class="floor-step"><div class="depth">🟢 起点</div><div class="desc">每层开始，可休息恢复体力</div></div>
+                <div class="floor-step"><div class="depth">🟡 食材点</div><div class="desc">停留获得1张随机食材卡</div></div>
+                <div class="floor-step"><div class="depth">🔴 怪物巢穴</div><div class="desc">停留战斗，胜利后获得食材</div></div>
+                <div class="floor-step"><div class="depth">🟠 烹饪站</div><div class="desc">消耗食材烹饪1道料理</div></div>
+                <div class="floor-step"><div class="depth">🟣 陷阱</div><div class="desc">抽取陷阱卡，承受效果</div></div>
+                <div class="floor-step"><div class="depth">🔵 出口</div><div class="desc">全体到达后进入下一层</div></div>
+                <div class="floor-step"><div class="depth">⭐ Boss房</div><div class="desc">第5层终点，与红龙决战！</div></div>
+            </div>
+
+            <div class="section">
+                <h2>🎲 游戏流程（每回合）</h2>
+                <div class="flow-step"><h4>1. 移动阶段</h4><p>当前玩家掷1骰，沿本层路径前进，停在目标节点执行效果。</p></div>
+                <div class="flow-step"><h4>2. 节点事件</h4><p>依节点类型执行：休息/取食材/战斗/烹饪/陷阱/进层/Boss战。</p></div>
+                <div class="flow-step"><h4>3. 战斗规则</h4><p>掷2骰总和≥怪物战力即胜；可邀请他人协助（骰子相加）。失败-2体力。</p></div>
+                <div class="flow-step"><h4>4. 烹饪规则</h4><p>在烹饪站消耗食材，掷1骰≥4成功获得料理卡（厨具卡可提升）。</p></div>
+                <div class="flow-step"><h4>5. 食用料理</h4><p>回合内随时食用，恢复体力或获得 Buff（攻击/防御仅下场战斗有效）。</p></div>
+                <div class="flow-step"><h4>6. 回合结束</h4><p>体力≤0即失败；全体到达出口进下一层。</p></div>
+            </div>
+
+            <div class="section">
+                <h2>🐉 Boss战（第5层红龙）</h2>
+                <table>
+                    <tr><th>要点</th><th>规则</th></tr>
+                    <tr><td>红龙战斗力</td><td>基础10（困难12）</td></tr>
+                    <tr><td>全员围攻</td><td>每回合依次掷2骰，总和≥10造成1点伤害</td></tr>
+                    <tr><td>红龙反击</td><td>每回合随机攻击1人，-2体力</td></tr>
+                    <tr><td>胜利</td><td>红龙受5点伤害倒下 → 全员胜利</td></tr>
+                    <tr><td>失败</td><td>共享体力降至0 → 全员失败</td></tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🤔 复盘框架</h2>
+                <div class="card"><h4 style="color:#e85d04;">1. 直觉反应（3分钟）</h4><p>游戏结束后，用1个词或1句话描述你现在的感受。</p></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#e85d04;">2. 角色体验（5分钟）</h4><p>分享你担任[角色]的体验：职责是什么？是否需要他人支持？他们提供了吗？</p></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#e85d04;">3. 关键决策反思（5分钟）</h4><p>举例关键决策点（如是否在Boss战前用"龙血酒"）：如何决策？有分歧如何处理？</p></div>
+                <div class="card" style="margin-top:15px;"><h4 style="color:#e85d04;">4. 迁移到工作（2分钟）</h4><p>这个游戏让你联想到工作中的哪个场景？我们可以做哪些改变？</p></div>
+            </div>
+
+            <div class="section">
+                <h2>🔄 变体玩法</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>观察员模式</h4><p>超6人时多出玩家任观察员，记录协作过程，复盘提供第三方视角。</p></div>
+                    <div class="card"><h4>限时挑战</h4><p>沙漏50分钟，超时即失败，适合时间有限的团建。</p></div>
+                    <div class="card"><h4>角色轮换</h4><p>每通过2层轮换角色，强调换位思考。</p></div>
+                    <div class="card"><h4>无声协作</h4><p>第3-4层不能说话，凸显非语言沟通。</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚙️ 难度调整</h2>
+                <div class="card-grid">
+                    <div class="card"><h4>简单模式</h4><p>体力35、红龙战力8、烹饪≥3成功。适合新团队。</p></div>
+                    <div class="card"><h4>标准模式</h4><p>体力25、红龙战力10、烹饪≥4成功。推荐。</p></div>
+                    <div class="card"><h4>困难模式</h4><p>体力20、红龙战力12且反击+1、加饥饿机制。适合高管/抗压主题。</p></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 设计思路</h2>
+                <div class="highlight">
+                    <h3 style="color:#e85d04; margin-bottom:15px;">为什么选这个游戏？</h3>
+                    <ol style="margin-left:20px;">
+                        <li><strong>轻松氛围</strong>：烹饪+冒险降低防御心，适合破冰</li>
+                        <li><strong>共享资源</strong>：体力池强制共同决策</li>
+                        <li><strong>角色互补</strong>：6种职能卡模拟真实分工</li>
+                        <li><strong>决策即复盘</strong>：用/不用料理都是取舍议题</li>
+                    </ol>
+                </div>
+                <h3 style="margin-top:30px;">与工作场景的映射</h3>
+                <table>
+                    <tr><th>游戏要素</th><th>工作场景</th></tr>
+                    <tr><td>共享体力</td><td>团队共同的精力/预算/时间</td></tr>
+                    <tr><td>食材卡</td><td>分散的资源与信息</td></tr>
+                    <tr><td>6种角色</td><td>团队成员的职能专长</td></tr>
+                    <tr><td>红龙Boss</td><td>共同攻关的关键目标</td></tr>
+                    <tr><td>Boss前用料理</td><td>关键节点的资源预留决策</td></tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🔗 相关资源</h2>
+                <ul style="margin-left:20px;">
+                    <li>引导话术库：teambuilding/toolbox/facilitation.md</li>
+                    <li>复盘引导框架：teambuilding/toolbox/debrief.md</li>
+                    <li>类似游戏：协作大厨、疯狂厨房、怪兽守护者</li>
+                </ul>
+                <p style="margin-top:20px; color:#666; font-style:italic;">改编自合作桌游《怪物厨师》（灵感：《迷宫饭》）| 最后更新：2026-07-12</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
