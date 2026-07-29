@@ -4,10 +4,12 @@
 
 ## 项目简介
 
-本项目是一个资源收集与创作平台，主要包含两大模块：
+本项目是一个资源收集与创作平台，主要包含以下模块：
 
 - **AI 工具导航**：系统性整理和收录各类优质 AI 工具
 - **桌游设计**：提供桌游设计文档、开发工具和可打印素材
+- **AI 笔记增强**：浏览器扩展，为 AI 笔记平台提供 Markdown 渲染、Mermaid 图表、代码高亮等功能
+- **小游戏**：休闲小游戏集合
 
 ---
 
@@ -17,20 +19,25 @@
 aiworkdb.github.io/
 ├── README.md                    # 本文件，项目索引
 ├── LICENSE                      # 开源协议
+├── CNAME                         # 自定义域名
 ├── aitool.md                    # AI 工具导航大全
 ├── wechat-51.md                 # 微信相关文档
 ├── boardgames/                  # 桌游项目目录
 │   ├── README.md                # 桌游索引目录
 │   ├── development-guide.md      # 桌游开发规范文档
-│   ├── wechat-project.md        # 桌游微信推广项目
 │   ├── category/                # 按类别分类的桌游
-│   │   ├── strategy/           # 策略类桌游（13款）
-│   │   ├── party/              # 派对类桌游（11款）
-│   │   ├── card/               # 卡牌类桌游（9款）
-│   │   └── cooperative/         # 合作类桌游（11款）
+│   │   ├── strategy/           # 策略类桌游（23款）
+│   │   ├── party/              # 派对类桌游（16款）
+│   │   ├── card/               # 卡牌类桌游（16款）
+│   │   └── cooperative/         # 合作类桌游（30款）
 │   └── tools/                   # 桌游工具集
 │       ├── README.md           # 工具说明文档
 │       └── card-maker.html     # 卡牌生成器
+├── ainote/                      # AI 笔记浏览器扩展
+│   ├── manifest.json           # 扩展清单
+│   ├── background.js           # 后台脚本
+│   ├── content.js              # 内容脚本
+│   └── ...                     # 渲染器、样式、依赖库等
 ├── game/                        # 小游戏
 │   ├── README.md               # 游戏索引
 │   ├── gravity-flip.html       # 重力翻转游戏
@@ -73,11 +80,11 @@ aiworkdb.github.io/
 
 | 类别 | 数量 | 说明 |
 | :--- | :--- | :--- |
-| 🎯 策略类 | 13款 | 需要深思熟虑的策略游戏 |
-| 🎉 派对类 | 11款 | 适合聚会娱乐的轻松游戏 |
-| 🃏 卡牌类 | 9款 | 以卡牌为核心机制的游戏 |
-| 🤝 合作类 | 11款 | 玩家共同对抗游戏系统的游戏 |
-| **总计** | **44款** | 持续更新中 |
+| 🎯 策略类 | 23款 | 需要深思熟虑的策略游戏 |
+| 🎉 派对类 | 16款 | 适合聚会娱乐的轻松游戏 |
+| 🃏 卡牌类 | 16款 | 以卡牌为核心机制的游戏 |
+| 🤝 合作类 | 30款 | 玩家共同对抗游戏系统的游戏 |
+| **总计** | **85款** | 持续更新中 |
 
 #### 主要资源
 
@@ -97,10 +104,27 @@ aiworkdb.github.io/
 | 魔法学院 | 合作 | 2-4人 | 45-60分钟 | 中等 | [查看详情](boardgames/category/cooperative/magic-academy/README.md) |
 | 时间特工 | 派对 | 4-8人 | 20-40分钟 | 中等 | [查看详情](boardgames/category/party/time-agents/README.md) |
 | 文明密语 | 卡牌 | 2-5人 | 30-50分钟 | 中等 | [查看详情](boardgames/category/card/civilization-cipher/README.md) |
+| 芙莉莲的旅程 | 合作 | 2-4人 | 45-90分钟 | 中等 | [查看详情](boardgames/category/cooperative/frieren-journey/README.md) |
+| 天命人 | 合作 | 1-4人 | 60-90分钟 | 中等偏难 | [查看详情](boardgames/category/cooperative/destined-one/README.md) |
+| 远征33：绘母之末 | 合作 | 2-4人 | 45-75分钟 | 中等/困难 | [查看详情](boardgames/category/cooperative/expedition-33/README.md) |
 
 #### 可用工具
 
 - 🃏 **[卡牌生成器](boardgames/tools/card-maker.html)**：可视化创建和打印桌游卡牌，支持多种卡牌类型和自定义样式
+
+---
+
+### AI 笔记浏览器扩展
+
+🧩 **[ainote/](ainote/)** - AI 笔记增强浏览器扩展
+
+为 AI 笔记平台提供强大的内容渲染能力：
+
+- 📝 **Markdown 渲染**：完整支持 Markdown 语法
+- 📊 **Mermaid 图表**：流程图、时序图、类图等可视化
+- 🎨 **代码高亮**：支持多种编程语言的语法高亮
+- 🧮 **KaTeX 公式**：数学公式渲染
+- 📐 **Graphviz / D2**：图形可视化支持
 
 ---
 
@@ -123,7 +147,7 @@ aiworkdb.github.io/
 
 ### 桌游设计
 
-1. **浏览现有桌游**：查看 [boardgames/README.md](boardgames/README.md) 了解已收录的桌游
+1. **浏览现有桌游**：查看 [boardgames/README.md](boardgames/README.md) 了解已收录的 85 款桌游
 2. **使用工具**：打开 [卡牌生成器](boardgames/tools/card-maker.html) 创建自定义卡牌
 3. **添加新桌游**：参考 [开发规范](boardgames/development-guide.md) 创建新桌游项目
 
@@ -138,6 +162,7 @@ aiworkdb.github.io/
 - 📚 **系统性整理**：AI 工具按功能分类，便于查找
 - 🎮 **开箱即用**：桌游提供完整的可打印素材
 - 🛠️ **工具完善**：提供卡牌生成器等实用工具
+- 🧩 **浏览器扩展**：AI 笔记增强扩展，提升阅读体验
 - 📖 **文档详细**：每个项目都有完整的说明文档
 - 🆓 **免费使用**：所有资源可免费使用和打印
 - 🎯 **持续更新**：桌游库持续扩充，涵盖多种类型
@@ -154,4 +179,4 @@ aiworkdb.github.io/
 
 ---
 
-*最后更新：2026-05-13*
+*最后更新：2026-07-29*
