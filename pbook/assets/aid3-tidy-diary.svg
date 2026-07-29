@@ -1,0 +1,302 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595 842" width="595" height="842">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&amp;display=swap');
+      text { font-family: 'Noto Sans CJK SC', 'Noto Sans SC', sans-serif; }
+    </style>
+    <!-- 暖橙渐变 -->
+    <linearGradient id="orangeGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF7F50;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFB347;stop-opacity:1"/>
+    </linearGradient>
+    <!-- 背景渐变 -->
+    <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF9F0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFF0E0;stop-opacity:1"/>
+    </linearGradient>
+    <!-- 莫兰迪绿渐变 -->
+    <linearGradient id="greenGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6B8E23;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:#6B8E23;stop-opacity:0.15"/>
+    </linearGradient>
+    <!-- 脚印 -->
+    <g id="footprint3">
+      <ellipse cx="0" cy="0" rx="6" ry="9" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="-5" cy="-12" r="3" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="0" cy="-14" r="2.5" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="5" cy="-12" r="3" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="9" cy="-9" r="2.5" fill="#FF7F50" opacity="0.5"/>
+    </g>
+    <!-- 表情：开心 -->
+    <g id="face-happy">
+      <circle cx="0" cy="0" r="10" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
+      <circle cx="-3" cy="-2" r="1.5" fill="#333"/>
+      <circle cx="3" cy="-2" r="1.5" fill="#333"/>
+      <path d="M-4,3 Q0,7 4,3" fill="none" stroke="#333" stroke-width="1" stroke-linecap="round"/>
+    </g>
+    <!-- 表情：一般 -->
+    <g id="face-neutral">
+      <circle cx="0" cy="0" r="10" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
+      <circle cx="-3" cy="-2" r="1.5" fill="#333"/>
+      <circle cx="3" cy="-2" r="1.5" fill="#333"/>
+      <line x1="-4" y1="4" x2="4" y2="4" stroke="#333" stroke-width="1" stroke-linecap="round"/>
+    </g>
+    <!-- 表情：难过 -->
+    <g id="face-sad">
+      <circle cx="0" cy="0" r="10" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>
+      <circle cx="-3" cy="-2" r="1.5" fill="#333"/>
+      <circle cx="3" cy="-2" r="1.5" fill="#333"/>
+      <path d="M-4,5 Q0,2 4,5" fill="none" stroke="#333" stroke-width="1" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="595" height="842" fill="url(#bgGrad3)" rx="12"/>
+
+  <!-- 剪切线边框 -->
+  <rect x="12" y="12" width="571" height="818" fill="none" stroke="#CCCCCC" stroke-width="0.5" stroke-dasharray="8,4" rx="8"/>
+
+  <!-- ===== 顶部标题区 ===== -->
+  <g transform="translate(297, 38)">
+    <!-- 装饰脚印 -->
+    <use href="#footprint3" x="-135" y="0" transform="scale(0.7)"/>
+    <use href="#footprint3" x="130" y="2" transform="scale(0.7) rotate(-12)"/>
+    <text x="0" y="12" text-anchor="middle" font-size="32" font-weight="700" fill="#FF7F50">我的整理日记</text>
+    <line x1="-140" y1="24" x2="140" y2="24" stroke="#6B8E23" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- 副标题 -->
+  <text x="297" y="80" text-anchor="middle" font-size="12" fill="#A0937D">每天帮玩具找家，看看一周能帮多少件物品回家！</text>
+
+  <!-- ===== 一周7天打卡区 ===== -->
+  <g transform="translate(30, 100)">
+    <!-- 表格区域标题 -->
+    <text x="267" y="0" text-anchor="middle" font-size="14" font-weight="700" fill="#6B8E23">一周整理打卡</text>
+
+    <!-- 表头 -->
+    <g transform="translate(0, 15)">
+      <rect x="0" y="0" width="535" height="30" fill="#6B8E23" rx="8" ry="8"/>
+      <text x="30" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">星期</text>
+      <text x="100" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">日期</text>
+      <text x="280" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">我今天整理了什么</text>
+      <text x="430" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">心情</text>
+      <text x="505" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">印章</text>
+    </g>
+
+    <!-- 星期一 -->
+    <g transform="translate(0, 50)">
+      <rect x="0" y="0" width="535" height="65" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8" rx="4"/>
+      <text x="30" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7F50">星期一</text>
+      <rect x="62" y="8" width="65" height="22" fill="#FFF" stroke="#DDD" stroke-width="1" rx="4"/>
+      <text x="94" y="24" text-anchor="middle" font-size="10" fill="#BBB">月/日</text>
+      <!-- 画/写区域 -->
+      <rect x="145" y="8" width="240" height="48" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="6" stroke-dasharray="3,2"/>
+      <text x="265" y="38" text-anchor="middle" font-size="9" fill="#DDD">在这里画一画或写一写吧~</text>
+      <!-- 心情 -->
+      <g transform="translate(390, 18) scale(0.7)">
+        <use href="#face-happy"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">开心</text>
+      </g>
+      <g transform="translate(430, 18) scale(0.7)">
+        <use href="#face-neutral"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">一般</text>
+      </g>
+      <g transform="translate(470, 18) scale(0.7)">
+        <use href="#face-sad"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">难过</text>
+      </g>
+      <!-- 印章格 -->
+      <circle cx="505" cy="30" r="18" fill="none" stroke="#FF7F50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+      <text x="505" y="55" text-anchor="middle" font-size="8" fill="#CCC">印章格</text>
+    </g>
+
+    <!-- 星期二 -->
+    <g transform="translate(0, 120)">
+      <rect x="0" y="0" width="535" height="65" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8" rx="4"/>
+      <text x="30" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7F50">星期二</text>
+      <rect x="62" y="8" width="65" height="22" fill="#FFF" stroke="#DDD" stroke-width="1" rx="4"/>
+      <text x="94" y="24" text-anchor="middle" font-size="10" fill="#BBB">月/日</text>
+      <rect x="145" y="8" width="240" height="48" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="6" stroke-dasharray="3,2"/>
+      <text x="265" y="38" text-anchor="middle" font-size="9" fill="#DDD">在这里画一画或写一写吧~</text>
+      <g transform="translate(390, 18) scale(0.7)">
+        <use href="#face-happy"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">开心</text>
+      </g>
+      <g transform="translate(430, 18) scale(0.7)">
+        <use href="#face-neutral"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">一般</text>
+      </g>
+      <g transform="translate(470, 18) scale(0.7)">
+        <use href="#face-sad"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">难过</text>
+      </g>
+      <circle cx="505" cy="30" r="18" fill="none" stroke="#FF7F50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+      <text x="505" y="55" text-anchor="middle" font-size="8" fill="#CCC">印章格</text>
+    </g>
+
+    <!-- 星期三 -->
+    <g transform="translate(0, 190)">
+      <rect x="0" y="0" width="535" height="65" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8" rx="4"/>
+      <text x="30" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7F50">星期三</text>
+      <rect x="62" y="8" width="65" height="22" fill="#FFF" stroke="#DDD" stroke-width="1" rx="4"/>
+      <text x="94" y="24" text-anchor="middle" font-size="10" fill="#BBB">月/日</text>
+      <rect x="145" y="8" width="240" height="48" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="6" stroke-dasharray="3,2"/>
+      <text x="265" y="38" text-anchor="middle" font-size="9" fill="#DDD">在这里画一画或写一写吧~</text>
+      <g transform="translate(390, 18) scale(0.7)">
+        <use href="#face-happy"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">开心</text>
+      </g>
+      <g transform="translate(430, 18) scale(0.7)">
+        <use href="#face-neutral"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">一般</text>
+      </g>
+      <g transform="translate(470, 18) scale(0.7)">
+        <use href="#face-sad"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">难过</text>
+      </g>
+      <circle cx="505" cy="30" r="18" fill="none" stroke="#FF7F50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+      <text x="505" y="55" text-anchor="middle" font-size="8" fill="#CCC">印章格</text>
+    </g>
+
+    <!-- 星期四 -->
+    <g transform="translate(0, 260)">
+      <rect x="0" y="0" width="535" height="65" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8" rx="4"/>
+      <text x="30" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7F50">星期四</text>
+      <rect x="62" y="8" width="65" height="22" fill="#FFF" stroke="#DDD" stroke-width="1" rx="4"/>
+      <text x="94" y="24" text-anchor="middle" font-size="10" fill="#BBB">月/日</text>
+      <rect x="145" y="8" width="240" height="48" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="6" stroke-dasharray="3,2"/>
+      <text x="265" y="38" text-anchor="middle" font-size="9" fill="#DDD">在这里画一画或写一写吧~</text>
+      <g transform="translate(390, 18) scale(0.7)">
+        <use href="#face-happy"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">开心</text>
+      </g>
+      <g transform="translate(430, 18) scale(0.7)">
+        <use href="#face-neutral"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">一般</text>
+      </g>
+      <g transform="translate(470, 18) scale(0.7)">
+        <use href="#face-sad"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">难过</text>
+      </g>
+      <circle cx="505" cy="30" r="18" fill="none" stroke="#FF7F50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+      <text x="505" y="55" text-anchor="middle" font-size="8" fill="#CCC">印章格</text>
+    </g>
+
+    <!-- 星期五 -->
+    <g transform="translate(0, 330)">
+      <rect x="0" y="0" width="535" height="65" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8" rx="4"/>
+      <text x="30" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7F50">星期五</text>
+      <rect x="62" y="8" width="65" height="22" fill="#FFF" stroke="#DDD" stroke-width="1" rx="4"/>
+      <text x="94" y="24" text-anchor="middle" font-size="10" fill="#BBB">月/日</text>
+      <rect x="145" y="8" width="240" height="48" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="6" stroke-dasharray="3,2"/>
+      <text x="265" y="38" text-anchor="middle" font-size="9" fill="#DDD">在这里画一画或写一写吧~</text>
+      <g transform="translate(390, 18) scale(0.7)">
+        <use href="#face-happy"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">开心</text>
+      </g>
+      <g transform="translate(430, 18) scale(0.7)">
+        <use href="#face-neutral"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">一般</text>
+      </g>
+      <g transform="translate(470, 18) scale(0.7)">
+        <use href="#face-sad"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">难过</text>
+      </g>
+      <circle cx="505" cy="30" r="18" fill="none" stroke="#FF7F50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+      <text x="505" y="55" text-anchor="middle" font-size="8" fill="#CCC">印章格</text>
+    </g>
+
+    <!-- 星期六 -->
+    <g transform="translate(0, 400)">
+      <rect x="0" y="0" width="535" height="65" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8" rx="4"/>
+      <text x="30" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7F50">星期六</text>
+      <rect x="62" y="8" width="65" height="22" fill="#FFF" stroke="#DDD" stroke-width="1" rx="4"/>
+      <text x="94" y="24" text-anchor="middle" font-size="10" fill="#BBB">月/日</text>
+      <rect x="145" y="8" width="240" height="48" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="6" stroke-dasharray="3,2"/>
+      <text x="265" y="38" text-anchor="middle" font-size="9" fill="#DDD">在这里画一画或写一写吧~</text>
+      <g transform="translate(390, 18) scale(0.7)">
+        <use href="#face-happy"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">开心</text>
+      </g>
+      <g transform="translate(430, 18) scale(0.7)">
+        <use href="#face-neutral"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">一般</text>
+      </g>
+      <g transform="translate(470, 18) scale(0.7)">
+        <use href="#face-sad"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">难过</text>
+      </g>
+      <circle cx="505" cy="30" r="18" fill="none" stroke="#FF7F50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+      <text x="505" y="55" text-anchor="middle" font-size="8" fill="#CCC">印章格</text>
+    </g>
+
+    <!-- 星期日 -->
+    <g transform="translate(0, 470)">
+      <rect x="0" y="0" width="535" height="65" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8" rx="4"/>
+      <text x="30" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7F50">星期日</text>
+      <rect x="62" y="8" width="65" height="22" fill="#FFF" stroke="#DDD" stroke-width="1" rx="4"/>
+      <text x="94" y="24" text-anchor="middle" font-size="10" fill="#BBB">月/日</text>
+      <rect x="145" y="8" width="240" height="48" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="6" stroke-dasharray="3,2"/>
+      <text x="265" y="38" text-anchor="middle" font-size="9" fill="#DDD">在这里画一画或写一写吧~</text>
+      <g transform="translate(390, 18) scale(0.7)">
+        <use href="#face-happy"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">开心</text>
+      </g>
+      <g transform="translate(430, 18) scale(0.7)">
+        <use href="#face-neutral"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">一般</text>
+      </g>
+      <g transform="translate(470, 18) scale(0.7)">
+        <use href="#face-sad"/>
+        <text x="0" y="22" text-anchor="middle" font-size="8" fill="#999">难过</text>
+      </g>
+      <circle cx="505" cy="30" r="18" fill="none" stroke="#FF7F50" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+      <text x="505" y="55" text-anchor="middle" font-size="8" fill="#CCC">印章格</text>
+    </g>
+
+    <!-- 列分隔线 -->
+    <line x1="55" y1="50" x2="55" y2="535" stroke="#DDD" stroke-width="0.5"/>
+    <line x1="138" y1="50" x2="138" y2="535" stroke="#DDD" stroke-width="0.5"/>
+    <line x1="395" y1="50" x2="395" y2="535" stroke="#DDD" stroke-width="0.5"/>
+    <line x1="480" y1="50" x2="480" y2="535" stroke="#DDD" stroke-width="0.5"/>
+
+    <!-- 表格外框 -->
+    <rect x="0" y="0" width="535" height="535" fill="none" stroke="#6B8E23" stroke-width="1.5" rx="8"/>
+  </g>
+
+  <!-- ===== 底部一周总结区 ===== -->
+  <g transform="translate(40, 680)">
+    <!-- 莫兰迪绿色圆角框 -->
+    <rect x="0" y="0" width="515" height="140" fill="url(#greenGrad3)" stroke="#6B8E23" stroke-width="2" rx="16" ry="16"/>
+    <!-- 装饰边角 -->
+    <circle cx="16" cy="16" r="5" fill="#6B8E23" opacity="0.2"/>
+    <circle cx="499" cy="16" r="5" fill="#6B8E23" opacity="0.2"/>
+    <circle cx="16" cy="124" r="5" fill="#6B8E23" opacity="0.2"/>
+    <circle cx="499" cy="124" r="5" fill="#6B8E23" opacity="0.2"/>
+
+    <!-- 标题 -->
+    <text x="257" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#6B8E23">一周总结</text>
+    <line x1="180" y1="36" x2="335" y2="36" stroke="#6B8E23" stroke-width="1" opacity="0.3"/>
+
+    <!-- 总结内容 -->
+    <!-- 脚印装饰 -->
+    <use href="#footprint3" x="18" y="58" transform="scale(0.45)"/>
+    <text x="257" y="62" text-anchor="middle" font-size="14" fill="#6B8E23" font-weight="500">本周我帮  <tspan fill="#FF7F50" font-weight="700" font-size="18">___</tspan>  件物品找到了家！</text>
+
+    <use href="#footprint3" x="18" y="90" transform="scale(0.45)"/>
+    <text x="257" y="94" text-anchor="middle" font-size="14" fill="#6B8E23" font-weight="500">我是  <tspan fill="#FF7F50" font-weight="700" font-size="18">___</tspan>  级整理魔法师！</text>
+
+    <use href="#footprint3" x="18" y="122" transform="scale(0.45)"/>
+    <text x="257" y="126" text-anchor="middle" font-size="14" fill="#6B8E23" font-weight="500">下周我想帮  <tspan fill="#FF7F50" font-weight="700" font-size="18">__________</tspan>  找到家。</text>
+  </g>
+
+  <!-- ===== 底部打印建议 ===== -->
+  <g transform="translate(297, 870)">
+    <text x="0" y="0" text-anchor="middle" font-size="8" fill="#BBB">打印建议：建议使用A4纸张打印，彩色效果更佳 | 剪切线为虚线标注处 | 适合3-6岁儿童</text>
+    <text x="0" y="12" text-anchor="middle" font-size="8" fill="#BBB">绘本《玩具的家在哪里？》配套教具 · 小步绘本</text>
+  </g>
+
+  <!-- 装饰脚印 -->
+  <use href="#footprint3" x="45" y="825" transform="scale(0.55) rotate(-18)"/>
+  <use href="#footprint3" x="555" y="828" transform="scale(0.55) rotate(12)"/>
+</svg>

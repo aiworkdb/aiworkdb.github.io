@@ -9,6 +9,7 @@
 - **AI 工具导航**：系统性整理和收录各类优质 AI 工具
 - **桌游设计**：提供桌游设计文档、开发工具和可打印素材
 - **AI 笔记增强**：浏览器扩展，为 AI 笔记平台提供 Markdown 渲染、Mermaid 图表、代码高亮等功能
+- **儿童绘本**：互动绘本设计与教具资源（小步绘本品牌）
 - **小游戏**：休闲小游戏集合
 
 ---
@@ -38,6 +39,13 @@ aiworkdb.github.io/
 │   ├── background.js           # 后台脚本
 │   ├── content.js              # 内容脚本
 │   └── ...                     # 渲染器、样式、依赖库等
+├── pbook/                       # 儿童绘本（小步绘本）
+│   ├── story.md                 # 绘本故事内容
+│   ├── parent-sop.md            # 家长引导话术SOP
+│   ├── task-cards.md            # 练习任务卡
+│   ├── teaching-aids.md         # 互动教具方案
+│   ├── picture-book-tidy-*.html # 绘本HTML版本
+│   └── assets/                  # 素材资源（图片、SVG教具）
 ├── game/                        # 小游戏
 │   ├── README.md               # 游戏索引
 │   ├── gravity-flip.html       # 重力翻转游戏
@@ -128,6 +136,24 @@ aiworkdb.github.io/
 
 ---
 
+### 儿童绘本（小步绘本）
+
+📚 **[pbook/](pbook/)** - 互动儿童绘本设计与教具资源
+
+**品牌**：小步绘本 | **主题**：生活习惯 / 整理收纳 | **适龄**：3-6岁
+
+#### 资源清单
+
+| 资源 | 说明 | 链接 |
+| :--- | :--- | :--- |
+| 绘本故事 | 《玩具的家在哪里？》完整故事内容与画面描述 | [story.md](pbook/story.md) |
+| 家长SOP | 逐页共读引导话术（情绪教练三步法） | [parent-sop.md](pbook/parent-sop.md) |
+| 任务卡 | 5个递进式生活实践任务 | [task-cards.md](pbook/task-cards.md) |
+| 教具方案 | 3页互动教具（寻家地图、魔法师证书、整理日记） | [teaching-aids.md](pbook/teaching-aids.md) |
+| 绘本HTML | 可交互的绘本网页版本 | [v1](pbook/picture-book-tidy-v1.html) / [v2](pbook/picture-book-tidy-v2.html) / [v3](pbook/picture-book-tidy-v3.html) |
+
+---
+
 ### 小游戏
 
 🎮 **[game/](game/)** - 休闲小游戏集合
@@ -163,6 +189,7 @@ aiworkdb.github.io/
 - 🎮 **开箱即用**：桌游提供完整的可打印素材
 - 🛠️ **工具完善**：提供卡牌生成器等实用工具
 - 🧩 **浏览器扩展**：AI 笔记增强扩展，提升阅读体验
+- 📚 **儿童绘本**：互动绘本设计，配套家长SOP、任务卡和教具
 - 📖 **文档详细**：每个项目都有完整的说明文档
 - 🆓 **免费使用**：所有资源可免费使用和打印
 - 🎯 **持续更新**：桌游库持续扩充，涵盖多种类型

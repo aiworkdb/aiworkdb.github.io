@@ -1,0 +1,316 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595 842" width="595" height="842">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&amp;display=swap');
+      text { font-family: 'Noto Sans CJK SC', 'Noto Sans SC', sans-serif; }
+    </style>
+    <!-- 暖橙渐变 -->
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF7F50;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFB347;stop-opacity:1"/>
+    </linearGradient>
+    <!-- 背景渐变 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF9F0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFF0E0;stop-opacity:1"/>
+    </linearGradient>
+    <!-- 脚印 -->
+    <g id="footprint">
+      <ellipse cx="0" cy="0" rx="6" ry="9" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="-5" cy="-12" r="3" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="0" cy="-14" r="2.5" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="5" cy="-12" r="3" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="9" cy="-9" r="2.5" fill="#FF7F50" opacity="0.5"/>
+    </g>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="595" height="842" fill="url(#bgGrad)" rx="12"/>
+
+  <!-- 剪切线边框 -->
+  <rect x="12" y="12" width="571" height="818" fill="none" stroke="#CCCCCC" stroke-width="0.5" stroke-dasharray="8,4" rx="8"/>
+
+  <!-- ===== 顶部标题区 ===== -->
+  <g transform="translate(297, 40)">
+    <!-- 装饰脚印 -->
+    <use href="#footprint" x="-120" y="0" transform="scale(0.8)"/>
+    <use href="#footprint" x="100" y="0" transform="scale(0.8) rotate(-15)"/>
+    <text x="0" y="12" text-anchor="middle" font-size="32" font-weight="700" fill="#FF7F50">我的物品寻家地图</text>
+    <line x1="-140" y1="24" x2="140" y2="24" stroke="#6B8E23" stroke-width="2" stroke-linecap="round"/>
+    <!-- 小装饰星星 -->
+    <polygon points="-150,10 -146,4 -142,10 -148,6 -144,6" fill="#FFD700"/>
+    <polygon points="146,8 150,2 154,8 148,4 152,4" fill="#FFD700"/>
+  </g>
+
+  <!-- ===== 房间俯视图区域 ===== -->
+  <g transform="translate(40, 80)">
+    <!-- 房间外框 -->
+    <rect x="0" y="0" width="515" height="390" fill="#FFFDF8" stroke="#E0D5C0" stroke-width="2" rx="15" ry="15"/>
+    <!-- 房间标签 -->
+    <text x="257" y="22" text-anchor="middle" font-size="14" fill="#A0937D" font-weight="500">— 我的房间俯视图 —</text>
+
+    <!-- ===== 四个"家" ===== -->
+
+    <!-- 左上：床的家 -->
+    <g transform="translate(25, 40)">
+      <rect x="0" y="0" width="220" height="150" fill="none" stroke="#FF7F50" stroke-width="2.5" stroke-dasharray="10,5" rx="18"/>
+      <text x="110" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#FF7F50">床的家</text>
+      <!-- 床俯视图 -->
+      <g transform="translate(50, 40)">
+        <!-- 床垫 -->
+        <rect x="0" y="0" width="120" height="80" fill="#FFDAB9" stroke="#E8A87C" stroke-width="1.5" rx="8"/>
+        <!-- 枕头 -->
+        <rect x="10" y="8" width="45" height="25" fill="#FFE4C4" stroke="#E8A87C" stroke-width="1" rx="6"/>
+        <rect x="65" y="8" width="45" height="25" fill="#FFE4C4" stroke="#E8A87C" stroke-width="1" rx="6"/>
+        <!-- 被子 -->
+        <rect x="5" y="40" width="110" height="35" fill="#FFB6C1" stroke="#E8899A" stroke-width="1" rx="5" opacity="0.7"/>
+        <!-- 被子花纹 -->
+        <circle cx="40" cy="57" r="5" fill="none" stroke="#E8899A" stroke-width="0.8"/>
+        <circle cx="70" cy="57" r="5" fill="none" stroke="#E8899A" stroke-width="0.8"/>
+        <circle cx="55" cy="50" r="5" fill="none" stroke="#E8899A" stroke-width="0.8"/>
+      </g>
+      <text x="110" y="140" text-anchor="middle" font-size="11" fill="#C49A6C">床上用品放这里哦~</text>
+    </g>
+
+    <!-- 右上：书架的家 -->
+    <g transform="translate(270, 40)">
+      <rect x="0" y="0" width="220" height="150" fill="none" stroke="#FF7F50" stroke-width="2.5" stroke-dasharray="10,5" rx="18"/>
+      <text x="110" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#FF7F50">书架的家</text>
+      <!-- 书架俯视图 -->
+      <g transform="translate(50, 35)">
+        <!-- 书架外框 -->
+        <rect x="0" y="0" width="120" height="90" fill="#DEB887" stroke="#C49A6C" stroke-width="1.5" rx="3"/>
+        <!-- 层板 -->
+        <line x1="0" y1="30" x2="120" y2="30" stroke="#C49A6C" stroke-width="2"/>
+        <line x1="0" y1="60" x2="120" y2="60" stroke="#C49A6C" stroke-width="2"/>
+        <!-- 书本（各层不同颜色） -->
+        <rect x="5" y="5" width="12" height="22" fill="#87CEEB" rx="1" transform="rotate(-3, 11, 16)"/>
+        <rect x="20" y="5" width="10" height="22" fill="#FFB6C1" rx="1" transform="rotate(2, 25, 16)"/>
+        <rect x="33" y="5" width="14" height="22" fill="#98FB98" rx="1"/>
+        <rect x="50" y="5" width="11" height="22" fill="#DDA0DD" rx="1" transform="rotate(-2, 55, 16)"/>
+        <!-- 第二层 -->
+        <rect x="8" y="35" width="13" height="22" fill="#F0E68C" rx="1"/>
+        <rect x="24" y="35" width="10" height="22" fill="#ADD8E6" rx="1" transform="rotate(1, 29, 46)"/>
+        <!-- 第三层 -->
+        <rect x="10" y="65" width="15" height="22" fill="#FFA07A" rx="1" transform="rotate(-1, 17, 76)"/>
+        <rect x="28" y="65" width="12" height="22" fill="#90EE90" rx="1"/>
+      </g>
+      <text x="110" y="140" text-anchor="middle" font-size="11" fill="#C49A6C">绘本和书放这里~</text>
+    </g>
+
+    <!-- 左下：玩具箱的家 -->
+    <g transform="translate(25, 210)">
+      <rect x="0" y="0" width="220" height="150" fill="none" stroke="#FF7F50" stroke-width="2.5" stroke-dasharray="10,5" rx="18"/>
+      <text x="110" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#FF7F50">玩具箱的家</text>
+      <!-- 敞口玩具箱俯视图 -->
+      <g transform="translate(55, 35)">
+        <!-- 箱子底部 -->
+        <rect x="0" y="10" width="110" height="85" fill="#FFEFD5" stroke="#DEB887" stroke-width="2" rx="5"/>
+        <!-- 箱子左壁 -->
+        <line x1="0" y1="10" x2="-5" y2="0" stroke="#DEB887" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 箱子右壁 -->
+        <line x1="110" y1="10" x2="115" y2="0" stroke="#DEB887" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 箱子后壁 -->
+        <line x1="0" y1="10" x2="110" y2="10" stroke="#DEB887" stroke-width="2"/>
+        <!-- 箱子里的玩具轮廓 -->
+        <circle cx="30" cy="40" r="10" fill="#FFD700" opacity="0.4" stroke="#DAA520" stroke-width="1"/>
+        <rect x="55" y="30" width="20" height="20" fill="#FF69B4" opacity="0.3" stroke="#FF1493" stroke-width="1" rx="2" transform="rotate(10, 65, 40)"/>
+        <polygon points="75,55 85,35 95,55 80,45" fill="#87CEEB" opacity="0.4" stroke="#4682B4" stroke-width="1"/>
+      </g>
+      <text x="110" y="140" text-anchor="middle" font-size="11" fill="#C49A6C">玩具们的家在这里~</text>
+    </g>
+
+    <!-- 右下：衣柜的家 -->
+    <g transform="translate(270, 210)">
+      <rect x="0" y="0" width="220" height="150" fill="none" stroke="#FF7F50" stroke-width="2.5" stroke-dasharray="10,5" rx="18"/>
+      <text x="110" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#FF7F50">衣柜的家</text>
+      <!-- 衣柜俯视图（格子） -->
+      <g transform="translate(50, 35)">
+        <!-- 衣柜外框 -->
+        <rect x="0" y="0" width="120" height="90" fill="#F5F0E8" stroke="#C49A6C" stroke-width="2" rx="4"/>
+        <!-- 分格 -->
+        <line x1="40" y1="0" x2="40" y2="90" stroke="#C49A6C" stroke-width="1.5"/>
+        <line x1="80" y1="0" x2="80" y2="90" stroke="#C49A6C" stroke-width="1.5"/>
+        <line x1="0" y1="45" x2="120" y2="45" stroke="#C49A6C" stroke-width="1.5"/>
+        <!-- 格子里的衣物 -->
+        <!-- 左上：叠好的衣服 -->
+        <rect x="8" y="8" width="24" height="16" fill="#FFB6C1" rx="2"/>
+        <rect x="8" y="26" width="24" height="12" fill="#DDA0DD" rx="2"/>
+        <!-- 中上：衣服 -->
+        <rect x="48" y="10" width="24" height="28" fill="#87CEEB" rx="2"/>
+        <!-- 右上：裤子 -->
+        <rect x="88" y="8" width="24" height="34" fill="#90EE90" rx="2"/>
+        <!-- 左下：鞋 -->
+        <ellipse cx="16" cy="65" rx="10" ry="16" fill="#DEB887" opacity="0.7" stroke="#C49A6C" stroke-width="1"/>
+        <ellipse cx="32" cy="65" rx="10" ry="16" fill="#DEB887" opacity="0.7" stroke="#C49A6C" stroke-width="1"/>
+        <!-- 中下 -->
+        <rect x="48" y="50" width="24" height="34" fill="#F0E68C" rx="2" opacity="0.6"/>
+        <!-- 右下 -->
+        <rect x="88" y="50" width="24" height="34" fill="#FFA07A" rx="2" opacity="0.6"/>
+      </g>
+      <text x="110" y="140" text-anchor="middle" font-size="11" fill="#C49A6C">衣服鞋子放这里~</text>
+    </g>
+  </g>
+
+  <!-- ===== 中间散落物品区 ===== -->
+  <g transform="translate(40, 475)">
+    <text x="257" y="0" text-anchor="middle" font-size="14" font-weight="700" fill="#6B8E23">▼ 找一找，这些迷路的物品 ▼</text>
+
+    <!-- 红色小汽车 -->
+    <g transform="translate(30, 18)">
+      <rect x="0" y="0" width="70" height="55" fill="#FFF9F0" stroke="#DDD" stroke-width="1" rx="10" stroke-dasharray="4,3"/>
+      <!-- 车身 -->
+      <rect x="12" y="18" width="46" height="18" fill="#FF4444" rx="6"/>
+      <!-- 车顶 -->
+      <rect x="20" y="10" width="28" height="12" fill="#FF6666" rx="4"/>
+      <!-- 车窗 -->
+      <rect x="24" y="12" width="8" height="7" fill="#87CEEB" rx="2"/>
+      <rect x="36" y="12" width="8" height="7" fill="#87CEEB" rx="2"/>
+      <!-- 车轮 -->
+      <circle cx="22" cy="38" r="6" fill="#333"/>
+      <circle cx="22" cy="38" r="3" fill="#666"/>
+      <circle cx="48" cy="38" r="6" fill="#333"/>
+      <circle cx="48" cy="38" r="3" fill="#666"/>
+      <text x="35" y="52" text-anchor="middle" font-size="9" fill="#FF4444" font-weight="600">红色小汽车</text>
+    </g>
+
+    <!-- 蓝色绘本 -->
+    <g transform="translate(120, 18)">
+      <rect x="0" y="0" width="70" height="55" fill="#FFF9F0" stroke="#DDD" stroke-width="1" rx="10" stroke-dasharray="4,3"/>
+      <!-- 书本 -->
+      <rect x="15" y="8" width="35" height="30" fill="#4A90D9" rx="2" transform="rotate(-5, 32, 23)"/>
+      <rect x="17" y="10" width="31" height="26" fill="#5BA0E9" rx="1" transform="rotate(-5, 32, 23)"/>
+      <!-- 书上的星星 -->
+      <polygon points="32,18 34,23 39,23 35,26 37,31 32,28 27,31 29,26 25,23 30,23" fill="#FFD700" transform="rotate(-5, 32, 23) scale(0.6) translate(18, 10)"/>
+      <text x="35" y="52" text-anchor="middle" font-size="9" fill="#4A90D9" font-weight="600">蓝色绘本</text>
+    </g>
+
+    <!-- 彩色积木 -->
+    <g transform="translate(210, 18)">
+      <rect x="0" y="0" width="70" height="55" fill="#FFF9F0" stroke="#DDD" stroke-width="1" rx="10" stroke-dasharray="4,3"/>
+      <!-- 积木堆 -->
+      <rect x="18" y="28" width="14" height="14" fill="#FF6B6B" rx="1" transform="rotate(-3, 25, 35)"/>
+      <rect x="30" y="25" width="14" height="14" fill="#4ECDC4" rx="1" transform="rotate(2, 37, 32)"/>
+      <rect x="22" y="15" width="14" height="14" fill="#FFD93D" rx="1" transform="rotate(5, 29, 22)"/>
+      <rect x="38" y="12" width="14" height="14" fill="#A78BFA" rx="1"/>
+      <!-- 积木上的圆点 -->
+      <circle cx="25" cy="35" r="2" fill="#FFF" opacity="0.6"/>
+      <circle cx="37" cy="32" r="2" fill="#FFF" opacity="0.6"/>
+      <text x="35" y="52" text-anchor="middle" font-size="9" fill="#A78BFA" font-weight="600">彩色积木</text>
+    </g>
+
+    <!-- 彩笔盒 -->
+    <g transform="translate(300, 18)">
+      <rect x="0" y="0" width="70" height="55" fill="#FFF9F0" stroke="#DDD" stroke-width="1" rx="10" stroke-dasharray="4,3"/>
+      <!-- 彩笔盒 -->
+      <rect x="14" y="22" width="40" height="20" fill="#FFF" stroke="#CCC" stroke-width="1" rx="3"/>
+      <!-- 彩笔 -->
+      <rect x="18" y="8" width="4" height="18" fill="#FF4444" rx="1"/>
+      <rect x="24" y="6" width="4" height="20" fill="#FF8C00" rx="1"/>
+      <rect x="30" y="7" width="4" height="19" fill="#4169E1" rx="1"/>
+      <rect x="36" y="8" width="4" height="18" fill="#32CD32" rx="1"/>
+      <rect x="42" y="6" width="4" height="20" fill="#9400D3" rx="1"/>
+      <!-- 笔尖 -->
+      <polygon points="18,8 20,8 19,4" fill="#FF4444"/>
+      <polygon points="24,6 26,6 25,2" fill="#FF8C00"/>
+      <polygon points="30,7 32,7 31,3" fill="#4169E1"/>
+      <polygon points="36,8 38,8 37,4" fill="#32CD32"/>
+      <polygon points="42,6 44,6 43,2" fill="#9400D3"/>
+      <text x="35" y="52" text-anchor="middle" font-size="9" fill="#4169E1" font-weight="600">一盒彩笔</text>
+    </g>
+
+    <!-- 小外套 -->
+    <g transform="translate(390, 18)">
+      <rect x="0" y="0" width="70" height="55" fill="#FFF9F0" stroke="#DDD" stroke-width="1" rx="10" stroke-dasharray="4,3"/>
+      <!-- 外套 -->
+      <path d="M20,10 L35,8 L50,10 L52,30 L48,38 L42,38 L42,25 L28,25 L28,38 L22,38 L18,30 Z" fill="#FF9F43" stroke="#E67E22" stroke-width="1" rx="3"/>
+      <!-- 领口 -->
+      <path d="M28,10 L35,16 L42,10" fill="none" stroke="#E67E22" stroke-width="1.5"/>
+      <!-- 口袋 -->
+      <rect x="22" y="26" width="6" height="5" fill="none" stroke="#E67E22" stroke-width="0.8" rx="1"/>
+      <rect x="40" y="26" width="6" height="5" fill="none" stroke="#E67E22" stroke-width="0.8" rx="1"/>
+      <text x="35" y="52" text-anchor="middle" font-size="9" fill="#FF9F43" font-weight="600">小外套</text>
+    </g>
+
+    <!-- 小拖鞋 -->
+    <g transform="translate(15, 80)">
+      <rect x="0" y="0" width="70" height="55" fill="#FFF9F0" stroke="#DDD" stroke-width="1" rx="10" stroke-dasharray="4,3"/>
+      <!-- 左拖鞋 -->
+      <ellipse cx="26" cy="30" rx="12" ry="16" fill="#FFB6C1" stroke="#FF69B4" stroke-width="1" transform="rotate(-15, 26, 30)"/>
+      <ellipse cx="26" cy="22" rx="5" ry="4" fill="#FF69B4" opacity="0.6" transform="rotate(-15, 26, 30)"/>
+      <!-- 右拖鞋 -->
+      <ellipse cx="48" cy="30" rx="12" ry="16" fill="#FFB6C1" stroke="#FF69B4" stroke-width="1" transform="rotate(15, 48, 30)"/>
+      <ellipse cx="48" cy="22" rx="5" ry="4" fill="#FF69B4" opacity="0.6" transform="rotate(15, 48, 30)"/>
+      <text x="35" y="52" text-anchor="middle" font-size="9" fill="#FF69B4" font-weight="600">小拖鞋</text>
+    </g>
+  </g>
+
+  <!-- ===== 底部物品回家记录表 ===== -->
+  <g transform="translate(40, 630)">
+    <!-- 标题 -->
+    <text x="257" y="0" text-anchor="middle" font-size="16" font-weight="700" fill="#6B8E23">物品回家记录表</text>
+    <!-- 引导文字 -->
+    <text x="257" y="22" text-anchor="middle" font-size="11" fill="#A0937D">每送一件物品回家，就在格子里打勾，看看你能送几件回家！</text>
+
+    <!-- 表格 -->
+    <g transform="translate(10, 35)">
+      <!-- 表头背景 -->
+      <rect x="0" y="0" width="495" height="28" fill="#6B8E23" rx="6" ry="6"/>
+      <text x="50" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">物品名称</text>
+      <text x="250" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">它的家在哪里</text>
+      <text x="440" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#FFF">回家成功打勾</text>
+
+      <!-- 第1行 -->
+      <rect x="0" y="30" width="495" height="32" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8"/>
+      <text x="50" y="51" text-anchor="middle" font-size="11" fill="#FF4444">红色小汽车</text>
+      <text x="250" y="51" text-anchor="middle" font-size="11" fill="#666">玩具箱</text>
+      <text x="440" y="51" text-anchor="middle" font-size="20" fill="#CCC">☐</text>
+
+      <!-- 第2行 -->
+      <rect x="0" y="62" width="495" height="32" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8"/>
+      <text x="50" y="83" text-anchor="middle" font-size="11" fill="#4A90D9">蓝色绘本</text>
+      <text x="250" y="83" text-anchor="middle" font-size="11" fill="#666">书架</text>
+      <text x="440" y="83" text-anchor="middle" font-size="20" fill="#CCC">☐</text>
+
+      <!-- 第3行 -->
+      <rect x="0" y="94" width="495" height="32" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8"/>
+      <text x="50" y="115" text-anchor="middle" font-size="11" fill="#A78BFA">彩色积木</text>
+      <text x="250" y="115" text-anchor="middle" font-size="11" fill="#666">玩具箱</text>
+      <text x="440" y="115" text-anchor="middle" font-size="20" fill="#CCC">☐</text>
+
+      <!-- 第4行 -->
+      <rect x="0" y="126" width="495" height="32" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8"/>
+      <text x="50" y="147" text-anchor="middle" font-size="11" fill="#4169E1">一盒彩笔</text>
+      <text x="250" y="147" text-anchor="middle" font-size="11" fill="#666">书架 / 桌子</text>
+      <text x="440" y="147" text-anchor="middle" font-size="20" fill="#CCC">☐</text>
+
+      <!-- 第5行 -->
+      <rect x="0" y="158" width="495" height="32" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8"/>
+      <text x="50" y="179" text-anchor="middle" font-size="11" fill="#FF9F43">小外套</text>
+      <text x="250" y="179" text-anchor="middle" font-size="11" fill="#666">衣柜</text>
+      <text x="440" y="179" text-anchor="middle" font-size="20" fill="#CCC">☐</text>
+
+      <!-- 第6行 -->
+      <rect x="0" y="190" width="495" height="32" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8" rx="0"/>
+      <text x="50" y="211" text-anchor="middle" font-size="11" fill="#FF69B4">小拖鞋</text>
+      <text x="250" y="211" text-anchor="middle" font-size="11" fill="#666">衣柜 / 门口</text>
+      <text x="440" y="211" text-anchor="middle" font-size="20" fill="#CCC">☐</text>
+
+      <!-- 表格外框 -->
+      <rect x="0" y="0" width="495" height="222" fill="none" stroke="#6B8E23" stroke-width="1.5" rx="6"/>
+      <!-- 列分隔线 -->
+      <line x1="140" y1="30" x2="140" y2="222" stroke="#DDD" stroke-width="0.8"/>
+      <line x1="370" y1="30" x2="370" y2="222" stroke="#DDD" stroke-width="0.8"/>
+    </g>
+  </g>
+
+  <!-- ===== 底部打印建议 ===== -->
+  <g transform="translate(297, 870)">
+    <text x="0" y="0" text-anchor="middle" font-size="8" fill="#BBB">打印建议：建议使用A4纸张打印，彩色效果更佳 | 剪切线为虚线标注处 | 适合3-6岁儿童</text>
+    <text x="0" y="12" text-anchor="middle" font-size="8" fill="#BBB">绘本《玩具的家在哪里？》配套教具 · 小步绘本</text>
+  </g>
+
+  <!-- 装饰脚印 -->
+  <use href="#footprint" x="50" y="830" transform="scale(0.6) rotate(-20)"/>
+  <use href="#footprint" x="550" y="835" transform="scale(0.6) rotate(10)"/>
+</svg>
