@@ -145,6 +145,88 @@
       margin: 2rem 0 0.8rem;
     }
 
+    /* === Book Reader (Left-Right Flip) === */
+    .book-reader {
+      position: relative;
+      overflow: hidden;
+      margin: 0 -0.5rem;
+      padding: 0 0.5rem;
+    }
+    .book-slider {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    .book-slider.no-anim {
+      transition: none;
+    }
+    .book-slider > .book-page {
+      flex: 0 0 100%;
+      min-width: 100%;
+      margin: 0;
+      min-height: 60vh;
+      justify-content: flex-start;
+    }
+
+    /* Flip arrows */
+    .flip-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 249, 240, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 12px rgba(61, 43, 31, 0.15);
+      color: var(--accent);
+      font-size: 1.4rem;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flip-arrow:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-50%) scale(1.12);
+      box-shadow: 0 4px 16px rgba(255, 127, 80, 0.4);
+    }
+    .flip-arrow:active { transform: translateY(-50%) scale(0.92); }
+    .flip-arrow.flip-left { left: 0.3rem; }
+    .flip-arrow.flip-right { right: 0.3rem; }
+    .flip-arrow.flip-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Page indicator dots */
+    .page-dots {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: center;
+      align-items: center;
+      margin: 1.2rem 0 0.5rem;
+    }
+    .page-dots .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--rule);
+      cursor: pointer;
+      transition: all 0.25s;
+      border: none;
+      padding: 0;
+    }
+    .page-dots .dot.dot-active {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+    .page-dots .dot:hover { background: var(--accent); }
+
     /* === Story Pages === */
     .story-nav {
       display: flex;
@@ -635,20 +717,26 @@
 
       <!-- Quick Nav -->
       <div class="story-nav">
-        <a href="#p1">1</a>
-        <a href="#p2">2</a>
-        <a href="#p3">3</a>
-        <a href="#p4">4</a>
-        <a href="#p5">5</a>
-        <a href="#p6">6</a>
-        <a href="#p7">7</a>
-        <a href="#p8">8</a>
-        <a href="#p9">9</a>
-        <a href="#p10">10</a>
-        <a href="#p11">11</a>
+        <a href="#p1" onclick="goToPage(0);return false;">1</a>
+        <a href="#p2" onclick="goToPage(1);return false;">2</a>
+        <a href="#p3" onclick="goToPage(2);return false;">3</a>
+        <a href="#p4" onclick="goToPage(3);return false;">4</a>
+        <a href="#p5" onclick="goToPage(4);return false;">5</a>
+        <a href="#p6" onclick="goToPage(5);return false;">6</a>
+        <a href="#p7" onclick="goToPage(6);return false;">7</a>
+        <a href="#p8" onclick="goToPage(7);return false;">8</a>
+        <a href="#p9" onclick="goToPage(8);return false;">9</a>
+        <a href="#p10" onclick="goToPage(9);return false;">10</a>
+        <a href="#p11" onclick="goToPage(10);return false;">11</a>
       </div>
 
       <h2 class="section-title">绘本故事</h2>
+
+      <!-- Book Reader: Left-Right Flip -->
+      <div class="book-reader" id="bookReader">
+        <button class="flip-arrow flip-left flip-hidden" id="flipLeft" onclick="flipPrev()">‹</button>
+        <button class="flip-arrow flip-right" id="flipRight" onclick="flipNext()">›</button>
+        <div class="book-slider" id="bookSlider">
 
       <!-- P1 -->
       <div class="book-page" id="p1">
@@ -787,6 +875,12 @@
           <p class="mantra">每件东西都有家，送它回家不迷路！</p>
         </div>
       </div>
+
+        </div><!-- /book-slider -->
+      </div><!-- /book-reader -->
+
+      <!-- Page indicator dots -->
+      <div class="page-dots" id="pageDots"></div>
 
     </div>
 
@@ -991,8 +1085,8 @@
     }
 
     /* ========================================
-       自动朗读 + 自动翻页系统
-       基于 Web Speech API，无需任何外部依赖
+       左右翻页 + 自动朗读系统
+       基于 Web Speech API + CSS Transform
        ======================================== */
 
     var pages = [];          // 页面数据 [{id, text, title}]
@@ -1002,9 +1096,9 @@
     var utterance = null;    // 当前 SpeechSynthesisUtterance
     var autoAdvanceTimer = null; // 翻页延迟计时器
 
-    // 初始化：收集所有绘本页面
+    // 初始化：收集所有绘本页面 + 生成指示点
     function initPages() {
-      var bookPages = document.querySelectorAll('#tab-story .book-page');
+      var bookPages = document.querySelectorAll('#bookSlider .book-page');
       pages = [];
       bookPages.forEach(function(page) {
         var textEl = page.querySelector('.page-text');
@@ -1018,6 +1112,74 @@
         });
       });
       document.getElementById('pbTotalPages').textContent = pages.length;
+
+      // 生成页面指示点
+      var dotsContainer = document.getElementById('pageDots');
+      dotsContainer.innerHTML = '';
+      pages.forEach(function(_, i) {
+        var dot = document.createElement('button');
+        dot.className = 'dot' + (i === 0 ? ' dot-active' : '');
+        dot.onclick = function() { goToPage(i); };
+        dotsContainer.appendChild(dot);
+      });
+
+      updateFlipArrows();
+    }
+
+    // === 翻页核心：CSS Transform 滑动 ===
+    function flipToPage(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= pages.length) idx = pages.length - 1;
+      currentPage = idx;
+
+      var slider = document.getElementById('bookSlider');
+      slider.style.transform = 'translateX(-' + (idx * 100) + '%)';
+
+      updateFlipArrows();
+      updateUI();
+    }
+
+    // 更新左右箭头显示状态
+    function updateFlipArrows() {
+      var leftBtn = document.getElementById('flipLeft');
+      var rightBtn = document.getElementById('flipRight');
+      if (currentPage <= 0) {
+        leftBtn.classList.add('flip-hidden');
+      } else {
+        leftBtn.classList.remove('flip-hidden');
+      }
+      if (currentPage >= pages.length - 1) {
+        rightBtn.classList.add('flip-hidden');
+      } else {
+        rightBtn.classList.remove('flip-hidden');
+      }
+    }
+
+    // 翻到指定页（导航点/数字点击）
+    function goToPage(idx) {
+      speechSynthesis.cancel();
+      if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+      flipToPage(idx);
+      if (isPlaying || isPaused) {
+        isPaused = false;
+        isPlaying = true;
+        document.getElementById('pbPlayBtn').textContent = '⏸';
+        speakCurrentPage();
+      }
+    }
+
+    // 左翻
+    function flipPrev() {
+      if (currentPage > 0) {
+        goToPage(currentPage - 1);
+      }
+    }
+
+    // 右翻
+    function flipNext() {
+      if (currentPage < pages.length - 1) {
+        goToPage(currentPage + 1);
+      }
     }
 
     // 检查浏览器支持
@@ -1043,15 +1205,12 @@
     // 获取中文语音
     function getChineseVoice() {
       var voices = speechSynthesis.getVoices();
-      // 优先选择中文女声
       var preferred = voices.find(function(v) {
         return v.lang === 'zh-CN' && /female|女|ting|yaoyao|huihui|kangkang/i.test(v.name);
       });
       if (preferred) return preferred;
-      // 其次任意 zh-CN
       var zhVoice = voices.find(function(v) { return v.lang === 'zh-CN'; });
       if (zhVoice) return zhVoice;
-      // 再其次任意 zh 开头
       var zhAny = voices.find(function(v) { return v.lang && v.lang.startsWith('zh'); });
       return zhAny || null;
     }
@@ -1070,16 +1229,13 @@
         storyTab.classList.add('active');
       }
 
-      // 初始化页面数据
       if (pages.length === 0) initPages();
       if (pages.length === 0) return;
 
-      // 显示控制栏，隐藏浮动按钮
       document.getElementById('playFab').classList.add('hidden');
       document.getElementById('playBar').classList.add('visible');
       document.body.classList.add('playing');
 
-      // 如果当前不在任何页面上，从第一页开始
       if (currentPage >= pages.length) currentPage = 0;
 
       isPlaying = true;
@@ -1100,10 +1256,8 @@
       var page = pages[currentPage];
       updateUI();
 
-      // 取消之前的朗读
       speechSynthesis.cancel();
 
-      // 创建新的朗读任务
       utterance = new SpeechSynthesisUtterance(page.text);
       utterance.lang = 'zh-CN';
       utterance.rate = parseFloat(document.getElementById('pbSpeed').value);
@@ -1111,16 +1265,13 @@
       var voice = getChineseVoice();
       if (voice) utterance.voice = voice;
 
-      // 朗读开始
       utterance.onstart = function() {
-        // 滚动到当前页面
-        scrollToPage(currentPage);
+        // 翻到当前页（CSS 动画）
+        flipToPage(currentPage);
       };
 
-      // 朗读结束 → 自动翻到下一页
       utterance.onend = function() {
         if (!isPlaying || isPaused) return;
-        // 延迟 1.2 秒后翻页，给孩子看图的时间
         autoAdvanceTimer = setTimeout(function() {
           currentPage++;
           if (currentPage < pages.length) {
@@ -1131,11 +1282,9 @@
         }, 1200);
       };
 
-      // 错误处理
       utterance.onerror = function(e) {
         console.warn('朗读出错:', e.error);
         if (e.error === 'interrupted' || e.error === 'canceled') return;
-        // 其他错误：跳到下一页
         currentPage++;
         if (currentPage < pages.length) {
           setTimeout(speakCurrentPage, 500);
@@ -1147,21 +1296,11 @@
       speechSynthesis.speak(utterance);
     }
 
-    // 滚动到指定页面
-    function scrollToPage(idx) {
-      var page = pages[idx];
-      if (!page) return;
-      var rect = page.el.getBoundingClientRect();
-      var scrollTop = window.pageYOffset + rect.top - 80;
-      window.scrollTo({ top: scrollTop, behavior: 'smooth' });
-    }
-
     // 更新 UI 状态
     function updateUI() {
       var page = pages[currentPage];
       if (!page) return;
 
-      // 更新页码
       document.getElementById('pbPageNum').textContent = currentPage + 1;
       document.getElementById('pbTitle').textContent = page.title || ('第' + (currentPage + 1) + '页');
 
@@ -1177,30 +1316,32 @@
       });
       if (page.textEl) page.textEl.classList.add('reading');
 
-      // 更新导航高亮
+      // 更新导航数字高亮
       document.querySelectorAll('.story-nav a').forEach(function(a) {
         a.classList.remove('nav-active');
       });
       var navLink = document.querySelector('.story-nav a[href="#' + page.id + '"]');
       if (navLink) navLink.classList.add('nav-active');
+
+      // 更新指示点高亮
+      document.querySelectorAll('.page-dots .dot').forEach(function(d, i) {
+        d.classList.toggle('dot-active', i === currentPage);
+      });
     }
 
     // 播放/暂停切换
     function togglePlay() {
       if (!isPlaying) {
-        // 从暂停恢复
         if (currentPage < pages.length) {
           isPlaying = true;
           isPaused = false;
           document.getElementById('pbPlayBtn').textContent = '⏸';
           speakCurrentPage();
         } else {
-          // 重新开始
           currentPage = 0;
           startAutoPlay();
         }
       } else {
-        // 暂停
         isPaused = true;
         isPlaying = false;
         speechSynthesis.cancel();
@@ -1209,45 +1350,22 @@
       }
     }
 
-    // 上一页
+    // 上一页（控制栏按钮）
     function prevPage() {
       if (currentPage > 0) {
-        speechSynthesis.cancel();
-        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-        currentPage--;
-        if (isPlaying || isPaused) {
-          isPaused = false;
-          isPlaying = true;
-          document.getElementById('pbPlayBtn').textContent = '⏸';
-          speakCurrentPage();
-        } else {
-          updateUI();
-          scrollToPage(currentPage);
-        }
+        goToPage(currentPage - 1);
       }
     }
 
-    // 下一页
+    // 下一页（控制栏按钮）
     function nextPage() {
       if (currentPage < pages.length - 1) {
-        speechSynthesis.cancel();
-        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-        currentPage++;
-        if (isPlaying || isPaused) {
-          isPaused = false;
-          isPlaying = true;
-          document.getElementById('pbPlayBtn').textContent = '⏸';
-          speakCurrentPage();
-        } else {
-          updateUI();
-          scrollToPage(currentPage);
-        }
+        goToPage(currentPage + 1);
       }
     }
 
     // 改变语速
     function changeSpeed() {
-      // 实时改变需要重新朗读当前页
       if (isPlaying && !isPaused) {
         speechSynthesis.cancel();
         setTimeout(speakCurrentPage, 200);
@@ -1262,7 +1380,6 @@
       if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
       document.getElementById('pbPlayBtn').textContent = '▶';
 
-      // 移除高亮
       document.querySelectorAll('.book-page').forEach(function(el) {
         el.classList.remove('reading-current');
       });
@@ -1280,30 +1397,68 @@
       document.getElementById('playBar').classList.remove('visible');
       document.getElementById('playFab').classList.remove('hidden');
       document.body.classList.remove('playing');
-      currentPage = 0;
     }
 
-    // 键盘快捷键
+    // === 触摸滑动支持 ===
+    var touchStartX = 0;
+    var touchEndX = 0;
+    var touchStartY = 0;
+    var touchEndY = 0;
+
+    var reader = document.getElementById('bookReader');
+    reader.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    reader.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      var deltaX = touchEndX - touchStartX;
+      var deltaY = touchEndY - touchStartY;
+      // 只响应水平滑动（水平位移 > 垂直位移 且 > 50px）
+      if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) {
+          flipPrev();
+        } else {
+          flipNext();
+        }
+      }
+    }, { passive: true });
+
+    // === 键盘快捷键（绘本 Tab 下始终生效）===
     document.addEventListener('keydown', function(e) {
-      // 只在播放栏可见时响应
-      if (!document.getElementById('playBar').classList.contains('visible')) return;
+      // 只在绘本故事 Tab 可见时响应
+      var storyTab = document.getElementById('tab-story');
+      if (!storyTab.classList.contains('active')) return;
+
+      // 如果焦点在输入框/选择框中，不拦截
+      var tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+
       switch(e.key) {
         case ' ':
         case 'Spacebar':
           e.preventDefault();
-          togglePlay();
+          if (document.getElementById('playBar').classList.contains('visible')) {
+            togglePlay();
+          } else {
+            startAutoPlay();
+          }
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          prevPage();
+          flipPrev();
           break;
         case 'ArrowRight':
           e.preventDefault();
-          nextPage();
+          flipNext();
           break;
         case 'Escape':
-          e.preventDefault();
-          stopAutoPlay();
+          if (document.getElementById('playBar').classList.contains('visible')) {
+            e.preventDefault();
+            stopAutoPlay();
+          }
           break;
       }
     });
