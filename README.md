@@ -40,12 +40,23 @@ aiworkdb.github.io/
 │   ├── content.js              # 内容脚本
 │   └── ...                     # 渲染器、样式、依赖库等
 ├── pbook/                       # 儿童绘本（小步绘本）
-│   ├── story.md                 # 绘本故事内容
+│   ├── story.md                 # 绘本1：《玩具的家在哪里？》故事内容
 │   ├── parent-sop.md            # 家长引导话术SOP
 │   ├── task-cards.md            # 练习任务卡
 │   ├── teaching-aids.md         # 互动教具方案
-│   ├── picture-book-tidy-*.html # 绘本HTML版本
-│   └── assets/                  # 素材资源（图片、SVG教具）
+│   ├── picture-book-tidy-*.html # 绘本1 HTML版本（v1/v2/v3）
+│   ├── minnie-birthday/         # 绘本2：《米妮的生日派对》（情绪管理主题）
+│   │   ├── picture-book-minnie-v1.html
+│   │   └── assets/              # 32张图片 + 3个SVG教具
+│   └── assets/                  # 绘本1 素材资源（图片、SVG教具）
+├── docs/                        # 项目文档
+│   ├── 本地发布指南.md          # 本地发布说明
+│   ├── 快速开始.md              # 快速上手指南
+│   └── ...                      # 其他文档
+├── scripts/                     # 工具脚本
+│   ├── publish_*.py             # 发布相关脚本
+│   ├── fix_*.py                 # 文章修复脚本
+│   └── ...                      # 其他工具脚本
 ├── game/                        # 小游戏
 │   ├── README.md               # 游戏索引
 │   ├── gravity-flip.html       # 重力翻转游戏
@@ -140,17 +151,25 @@ aiworkdb.github.io/
 
 📚 **[pbook/](pbook/)** - 互动儿童绘本设计与教具资源
 
-**品牌**：小步绘本 | **主题**：生活习惯 / 整理收纳 | **适龄**：3-6岁
+#### 绘本1：《玩具的家在哪里？》
 
-#### 资源清单
+**主题**：生活习惯 / 整理收纳 | **适龄**：3-6岁
 
 | 资源 | 说明 | 链接 |
 | :--- | :--- | :--- |
-| 绘本故事 | 《玩具的家在哪里？》完整故事内容与画面描述 | [story.md](pbook/story.md) |
+| 绘本故事 | 完整故事内容与画面描述 | [story.md](pbook/story.md) |
 | 家长SOP | 逐页共读引导话术（情绪教练三步法） | [parent-sop.md](pbook/parent-sop.md) |
 | 任务卡 | 5个递进式生活实践任务 | [task-cards.md](pbook/task-cards.md) |
 | 教具方案 | 3页互动教具（寻家地图、魔法师证书、整理日记） | [teaching-aids.md](pbook/teaching-aids.md) |
 | 绘本HTML | 可交互的绘本网页版本 | [v1](pbook/picture-book-tidy-v1.html) / [v2](pbook/picture-book-tidy-v2.html) / [v3](pbook/picture-book-tidy-v3.html) |
+
+#### 绘本2：《米妮的生日派对》
+
+**主题**：情绪管理 | **适龄**：3-6岁
+
+| 资源 | 说明 | 链接 |
+| :--- | :--- | :--- |
+| 绘本HTML | 32页完整绘本（含3个互动教具：情绪温度计、呼吸魔法、情绪日记） | [查看绘本](pbook/minnie-birthday/picture-book-minnie-v1.html) |
 
 ---
 
@@ -206,4 +225,4 @@ aiworkdb.github.io/
 
 ---
 
-*最后更新：2026-07-29*
+*最后更新：2026-07-31*

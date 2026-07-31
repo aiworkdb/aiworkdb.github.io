@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>《米妮的生日派对》— 小步绘本</title>
+
+  <style>
+
+    @font-face {
+      font-family: 'BricolageGrotesque';
+      src: url('./_shared/fonts/BricolageGrotesque-Regular.ttf') format('truetype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'BricolageGrotesque';
+      src: url('./_shared/fonts/BricolageGrotesque-Bold.ttf') format('truetype');
+      font-weight: 700;
+    }
+    @font-face {
+      font-family: 'WorkSans';
+      src: url('./_shared/fonts/WorkSans-Regular.ttf') format('truetype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'WorkSans';
+      src: url('./_shared/fonts/WorkSans-Bold.ttf') format('truetype');
+      font-weight: 700;
+    }
+    @font-face {
+      font-family: 'WorkSans';
+      src: url('./_shared/fonts/WorkSans-Italic.ttf') format('truetype');
+      font-weight: 400;
+      font-style: italic;
+    }
+  
+  </style>
+
+  <style>
+
+    :root {
+      --bg: #FFF9F0;
+      --bg2: #FFF3E0;
+      --ink: #3D2B1F;
+      --muted: #8B7355;
+      --rule: #E8D5C4;
+      --accent: #FF7F50;
+      --accent2: #6B8E23;
+      --pink: #FFB6C1;
+      --blue: #87CEEB;
+      --yellow: #FFD700;
+      --green: #98FB98;
+      --purple: #DDA0DD;
+      --gray: #C0C0C0;
+      --font: 'BricolageGrotesque', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
+      --font-body: 'WorkSans', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
+      --max: 960px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.8;
+      padding: 0;
+    }
+    article.page {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* === Cover === */
+    .cover {
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
+      border-radius: 0 0 24px 24px;
+      margin-bottom: 3rem;
+    }
+    .cover .brand {
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+    .cover h1 {
+      font-family: var(--font);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+    .cover .subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .cover .meta-tags {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    .cover .tag {
+      padding: 0.25rem 0.8rem;
+      border: 1px solid var(--rule);
+      border-radius: 16px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      background: var(--bg);
+    }
+
+    /* === Section Headings === */
+    h2.section-title {
+      font-family: var(--font);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: center;
+      margin: 3rem 0 1.5rem;
+      position: relative;
+    }
+    h2.section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--accent2);
+      border-radius: 2px;
+      margin: 0.6rem auto 0;
+    }
+    h3.sub-title {
+      font-family: var(--font);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 2rem 0 0.8rem;
+    }
+
+    /* === Book Reader (Left-Right Flip) === */
+    .book-reader {
+      position: relative;
+      overflow: hidden;
+      margin: 0 -0.5rem;
+      padding: 0 0.5rem;
+    }
+    .book-slider {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    .book-slider.no-anim {
+      transition: none;
+    }
+    .book-slider > .book-page {
+      flex: 0 0 100%;
+      min-width: 100%;
+      margin: 0;
+      min-height: 60vh;
+      justify-content: flex-start;
+    }
+
+    /* Flip arrows */
+    .flip-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 249, 240, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 12px rgba(61, 43, 31, 0.15);
+      color: var(--accent);
+      font-size: 1.4rem;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flip-arrow:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-50%) scale(1.12);
+      box-shadow: 0 4px 16px rgba(255, 127, 80, 0.4);
+    }
+    .flip-arrow:active { transform: translateY(-50%) scale(0.92); }
+    .flip-arrow.flip-left { left: 0.3rem; }
+    .flip-arrow.flip-right { right: 0.3rem; }
+    .flip-arrow.flip-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Page indicator dots */
+    .page-dots {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: center;
+      align-items: center;
+      margin: 1.2rem 0 0.5rem;
+    }
+    .page-dots .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--rule);
+      cursor: pointer;
+      transition: all 0.25s;
+      border: none;
+      padding: 0;
+    }
+    .page-dots .dot.dot-active {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+    .page-dots .dot:hover { background: var(--accent); }
+
+    /* === Story Pages === */
+    .story-nav {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .story-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .story-nav a:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .book-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2rem 0;
+      padding: 2rem 1.5rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(61,43,31,0.06);
+      scroll-margin-top: 2rem;
+    }
+    .book-page .page-num {
+      position: absolute;
+      transform: translateY(-2.5rem);
+      font-family: var(--font);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    .book-page img {
+      width: 100%;
+      max-width: 700px;
+      aspect-ratio: 3 / 4;
+      height: auto;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(61,43,31,0.1);
+    }
+    .book-page .page-text {
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+      line-height: 1.8;
+      text-align: center;
+      color: var(--ink);
+      max-width: 600px;
+    }
+    .book-page .page-sop {
+      margin-top: 1.2rem;
+      width: 100%;
+      max-width: 600px;
+      border-top: 1px dashed var(--rule);
+      padding-top: 1rem;
+    }
+    .book-page .sop-item {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+      align-items: flex-start;
+    }
+    .book-page .sop-item:last-child { margin-bottom: 0; }
+    .book-page .sop-tag {
+      flex-shrink: 0;
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1.6;
+      white-space: nowrap;
+    }
+    .sop-tag-before { background: #E8F5E9; color: #2E7D32; }
+    .sop-tag-during { background: #FFF3E0; color: #E65100; }
+    .sop-tag-after { background: #FCE4EC; color: #C62828; }
+    .book-page .sop-item p {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+
+    /* === Teaching Aids === */
+    .aid-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 2px 8px rgba(61,43,31,0.05);
+      border-left: 4px solid var(--accent2);
+    }
+    .aid-card .aid-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .aid-card .aid-badge {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      background: var(--accent2);
+      color: #fff;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .aid-card h4 {
+      font-family: var(--font);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .aid-card .aid-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+    .aid-card p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 0.5rem;
+    }
+    .aid-card .print-tip {
+      margin-top: 0.8rem;
+      padding: 0.5rem 0.8rem;
+      background: var(--bg2);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .aid-card .aid-header { justify-content: flex-start; }
+    .aid-card .print-btn {
+      margin-left: auto;
+      padding: 0.3rem 0.8rem;
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      background: var(--bg);
+      color: var(--accent);
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .aid-card .print-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .aid-card .aid-preview {
+      margin: 1rem 0;
+      text-align: center;
+    }
+    .aid-card .aid-preview img {
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(61,43,31,0.08);
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 1px solid var(--rule);
+    }
+    .aid-card .aid-preview img:hover { transform: scale(1.02); }
+
+    /* === Task Cards === */
+    .task-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 2px 8px rgba(61,43,31,0.05);
+      border-left: 4px solid var(--accent);
+    }
+    .task-card .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .task-card .task-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .task-card .difficulty {
+      padding: 0.15rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .diff-easy { background: #E8F5E9; color: #2E7D32; }
+    .diff-mid { background: #FFF3E0; color: #E65100; }
+    .diff-hard { background: #FCE4EC; color: #C62828; }
+
+    .task-card h4 {
+      font-family: var(--font);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .task-card ol {
+      padding-left: 1.2rem;
+      margin: 0.5rem 0;
+    }
+    .task-card ol li {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 0.3rem;
+    }
+    .task-card .tip {
+      margin-top: 0.8rem;
+      padding: 0.6rem 0.8rem;
+      background: var(--bg2);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--ink);
+      border-left: 3px solid var(--accent2);
+    }
+
+    /* === Tabs === */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 2.5rem 0 1.5rem;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 0.5rem 1.2rem;
+      border: 2px solid var(--rule);
+      border-radius: 24px;
+      background: var(--bg);
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: var(--accent); }
+    .tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* === Back Cover === */
+    .back-cover {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(135deg, var(--bg2) 0%, var(--bg) 100%);
+      border-radius: 16px;
+      margin: 3rem 0 2rem;
+    }
+    .back-cover h3 {
+      font-family: var(--font);
+      font-size: 1.4rem;
+      color: var(--accent2);
+      margin-bottom: 1rem;
+    }
+    .mantra-card {
+      display: inline-block;
+      padding: 1.5rem 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(61,43,31,0.08);
+      margin: 1rem auto;
+      max-width: 500px;
+    }
+    .mantra-card .home-icons {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .mantra-card .home-icons span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      font-size: 1.3rem;
+    }
+    .mantra-card p {
+      font-size: 0.95rem;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+    .mantra-card .mantra {
+      font-family: var(--font);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-top: 0.5rem;
+    }
+
+    /* === Footer === */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--rule);
+      margin-top: 2rem;
+    }
+    footer .footer-brand {
+      font-family: var(--font);
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 600px) {
+      .cover h1 { font-size: 2rem; }
+      .book-page { padding: 1.5rem 1rem; }
+      .book-page .page-text { font-size: 1rem; }
+      h2.section-title { font-size: 1.4rem; }
+      .aid-card .print-btn { margin-left: 0; margin-top: 0.3rem; }
+    }
+
+    /* === Auto-Play Control Bar === */
+    .play-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1.2rem;
+      background: rgba(255, 249, 240, 0.97);
+      backdrop-filter: blur(12px);
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(61, 43, 31, 0.12);
+      border-top: 1px solid var(--rule);
+      z-index: 9999;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: var(--max);
+      width: calc(100% - 2rem);
+    }
+    .play-bar.visible { transform: translateX(-50%) translateY(0); }
+    .play-bar .pb-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .play-bar .pb-btn:hover { transform: scale(1.08); box-shadow: 0 2px 8px rgba(255, 127, 80, 0.4); }
+    .play-bar .pb-btn:active { transform: scale(0.95); }
+    .play-bar .pb-btn.pb-secondary { background: var(--bg2); color: var(--ink); width: 36px; height: 36px; font-size: 0.95rem; }
+    .play-bar .pb-btn.pb-play { width: 50px; height: 50px; font-size: 1.3rem; }
+    .play-bar .pb-info {
+      flex: 1;
+      text-align: center;
+      font-family: var(--font);
+      font-size: 0.85rem;
+      color: var(--muted);
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .play-bar .pb-info .pb-page { color: var(--accent); font-weight: 700; }
+    .play-bar .pb-speed {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .play-bar .pb-speed select {
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 0.2rem 0.4rem;
+      font-size: 0.8rem;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    /* Floating launch button */
+    .play-fab {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255, 127, 80, 0.35);
+      z-index: 9998;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .play-fab:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(255, 127, 80, 0.5); }
+    .play-fab.hidden { opacity: 0; pointer-events: none; transform: scale(0.8); }
+
+    /* Reading highlight on story text */
+    .book-page .page-text.reading {
+      background: linear-gradient(180deg, rgba(255, 127, 80, 0.08) 0%, transparent 100%);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      margin-top: calc(1.5rem - 0.5rem);
+    }
+
+    /* Dim SOP during playback */
+    body.playing .book-page .page-sop { opacity: 0.35; transition: opacity 0.4s; }
+    body.playing .book-page.reading-current .page-sop { opacity: 1; }
+    body.playing .book-page { opacity: 0.5; transition: opacity 0.4s; }
+    body.playing .book-page.reading-current { opacity: 1; }
+
+    /* Progress dots in nav */
+    .story-nav a.nav-active {
+      background: var(--accent) !important;
+      color: #fff !important;
+      transform: scale(1.15);
+    }
+
+    /* === Immersive Reading Mode === */
+    .immersive-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1.2rem;
+      border: 2px solid var(--accent);
+      border-radius: 24px;
+      background: transparent;
+      color: var(--accent);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-left: 0.8rem;
+      vertical-align: middle;
+    }
+    .immersive-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .immersive-btn:active { transform: scale(0.95); }
+
+    /* Fullscreen overlay */
+    .immersive-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #1a1410;
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.4s ease;
+    }
+    .immersive-overlay.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .immersive-overlay .im-reader {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
+      height: 100%;
+      max-height: calc(100vh - 4rem);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .immersive-overlay .im-slider {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .immersive-overlay .im-page {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: imPageIn 0.5s ease;
+    }
+    .immersive-overlay .im-page.active { display: flex; }
+    @keyframes imPageIn {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .immersive-overlay .im-page img {
+      max-width: 100%;
+      max-height: 65vh;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .immersive-overlay .im-page .im-text {
+      margin-top: 1rem;
+      font-size: 1.15rem;
+      line-height: 1.8;
+      text-align: center;
+      color: #FFF9F0;
+      max-width: 600px;
+      padding: 0 1rem;
+    }
+    .immersive-overlay .im-page .im-text.reading {
+      background: rgba(255, 127, 80, 0.12);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+    }
+
+    /* === Landscape / Wide Screen Adaptation === */
+    /* 横屏沉浸式：图片左 + 文字右 */
+    @media (min-aspect-ratio: 4/3) {
+      .immersive-overlay .im-reader {
+        max-width: 1200px;
+      }
+      .immersive-overlay .im-page {
+        flex-direction: row;
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+      .immersive-overlay .im-page img {
+        max-width: 45%;
+        max-height: 75vh;
+        flex-shrink: 0;
+      }
+      .immersive-overlay .im-page .im-text {
+        margin-top: 0;
+        max-width: 50%;
+        text-align: left;
+        font-size: 1.25rem;
+        align-self: center;
+      }
+      .immersive-overlay .im-page .im-text.reading {
+        padding: 1rem 1.2rem;
+      }
+      .im-arrow.im-left { left: 0.3rem; }
+      .im-arrow.im-right { right: 0.3rem; }
+    }
+
+    /* 竖屏手机：图片占满，文字在下方 */
+    @media (max-width: 600px) and (max-aspect-ratio: 3/4) {
+      .immersive-overlay .im-page img {
+        max-height: 55vh;
+      }
+      .immersive-overlay .im-page .im-text {
+        font-size: 1rem;
+        margin-top: 0.6rem;
+      }
+      .im-arrow {
+        width: 44px;
+        height: 44px;
+        font-size: 1.3rem;
+      }
+    }
+
+    /* 主阅读器横屏优化：图片+文字左右布局 */
+    @media (min-width: 768px) and (min-aspect-ratio: 4/3) {
+      .book-slider > .book-page {
+        flex-direction: row;
+        gap: 2rem;
+        text-align: left;
+        align-items: flex-start;
+        padding: 1.5rem 2rem;
+      }
+      .book-slider > .book-page img {
+        width: 45%;
+        max-width: 400px;
+        max-height: 70vh;
+        flex-shrink: 0;
+      }
+      .book-slider > .book-page .page-text {
+        margin-top: 0;
+        text-align: left;
+        max-width: none;
+        flex: 1;
+        font-size: 1.2rem;
+      }
+      .book-slider > .book-page .page-sop {
+        max-width: none;
+      }
+      .book-reader {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+    }
+
+    /* Immersive flip arrows */
+    .im-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 249, 240, 0.15);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 1.6rem;
+      cursor: pointer;
+      z-index: 10001;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .im-arrow:hover {
+      background: var(--accent);
+      transform: translateY(-50%) scale(1.12);
+    }
+    .im-arrow:active { transform: translateY(-50%) scale(0.92); }
+    .im-arrow.im-left { left: 0.5rem; }
+    .im-arrow.im-right { right: 0.5rem; }
+    .im-arrow.im-hidden { opacity: 0; pointer-events: none; }
+
+    /* Immersive top bar */
+    .im-topbar {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .im-topbar .im-counter {
+      color: rgba(255, 249, 240, 0.6);
+      font-family: var(--font);
+      font-size: 0.9rem;
+    }
+    .im-topbar .im-counter .im-cur { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
+    .im-topbar .im-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .im-topbar .im-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 249, 240, 0.12);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .im-topbar .im-btn:hover { background: var(--accent); transform: scale(1.08); }
+    .im-topbar .im-btn.im-exit:hover { background: #e74c3c; }
+
+    /* Immersive bottom dots */
+    .im-dots {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: center;
+      margin-top: 0.8rem;
+    }
+    .im-dots .im-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 249, 240, 0.25);
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+      padding: 0;
+    }
+    .im-dots .im-dot.active {
+      background: var(--accent);
+      width: 20px;
+      border-radius: 4px;
+    }
+  
+  </style>
+</head>
+<body>
+  <article class="page">
+
+
+    <div class="cover">
+      <span class="brand">小步绘本</span>
+      <h1>米妮的生日派对</h1>
+      <p class="subtitle">一个关于生气、和好与感恩的温暖童话</p>
+      <div class="meta-tags">
+        <span class="tag">情绪管理</span>
+        <span class="tag">适龄 3-6 岁</span>
+        <span class="tag">32 页绘本</span>
+        <span class="tag">暖橙+莫兰迪绿</span>
+      </div>
+    </div>
+
+
+    <!-- === Tabs === -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('story')">绘本故事</button>
+      <button class="tab-btn" onclick="switchTab('aids')">互动教具</button>
+      <button class="tab-btn" onclick="switchTab('tasks')">任务卡</button>
+    </div>
+
+    <!-- === Tab: Story === -->
+    <div id="tab-story" class="tab-content active">
+
+      <!-- Quick Nav -->
+      <div class="story-nav">
+<a href="#p1" onclick="goToPage(0);return false;">1</a><a href="#p2" onclick="goToPage(1);return false;">2</a><a href="#p3" onclick="goToPage(2);return false;">3</a><a href="#p4" onclick="goToPage(3);return false;">4</a><a href="#p5" onclick="goToPage(4);return false;">5</a><a href="#p6" onclick="goToPage(5);return false;">6</a><a href="#p7" onclick="goToPage(6);return false;">7</a><a href="#p8" onclick="goToPage(7);return false;">8</a><a href="#p9" onclick="goToPage(8);return false;">9</a><a href="#p10" onclick="goToPage(9);return false;">10</a><a href="#p11" onclick="goToPage(10);return false;">11</a><a href="#p12" onclick="goToPage(11);return false;">12</a><a href="#p13" onclick="goToPage(12);return false;">13</a><a href="#p14" onclick="goToPage(13);return false;">14</a><a href="#p15" onclick="goToPage(14);return false;">15</a><a href="#p16" onclick="goToPage(15);return false;">16</a><a href="#p17" onclick="goToPage(16);return false;">17</a><a href="#p18" onclick="goToPage(17);return false;">18</a><a href="#p19" onclick="goToPage(18);return false;">19</a><a href="#p20" onclick="goToPage(19);return false;">20</a><a href="#p21" onclick="goToPage(20);return false;">21</a><a href="#p22" onclick="goToPage(21);return false;">22</a><a href="#p23" onclick="goToPage(22);return false;">23</a><a href="#p24" onclick="goToPage(23);return false;">24</a><a href="#p25" onclick="goToPage(24);return false;">25</a><a href="#p26" onclick="goToPage(25);return false;">26</a><a href="#p27" onclick="goToPage(26);return false;">27</a><a href="#p28" onclick="goToPage(27);return false;">28</a><a href="#p29" onclick="goToPage(28);return false;">29</a><a href="#p30" onclick="goToPage(29);return false;">30</a><a href="#p31" onclick="goToPage(30);return false;">31</a><a href="#p32" onclick="goToPage(31);return false;">32</a>
+      </div>
+
+      <h2 class="section-title">绘本故事 <button class="immersive-btn" onclick="enterImmersive()">⛶ 沉浸阅读</button></h2>
+
+      <!-- Book Reader: Left-Right Flip -->
+      <div class="book-reader" id="bookReader">
+        <button class="flip-arrow flip-left flip-hidden" id="flipLeft" onclick="flipPrev()">‹</button>
+        <button class="flip-arrow flip-right" id="flipRight" onclick="flipNext()">›</button>
+        <div class="book-slider" id="bookSlider">
+
+
+      <!-- P1 -->
+      <div class="book-page" id="p1">
+        <img src="assets/P1.jpg" alt="P1 生日早晨">
+        <p class="page-text">太阳公公爬上了窗台，米妮一下子睁开了眼睛。今天是个特别的日子——是她的生日！"今天是我的生日！"米妮开心得想大叫。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P2 -->
+      <div class="book-page" id="p2">
+        <img src="assets/P2.jpg" alt="P2 兴奋得跳起来">
+        <p class="page-text">米妮从床上"嗖"地跳了起来，心里像有一百只蝴蝶在飞。她的心跳得好快好快，脸上的笑容怎么也停不下来。"我太开心了！"她转了一个圈又一个圈。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P3 -->
+      <div class="book-page" id="p3">
+        <img src="assets/P3.jpg" alt="P3 穿上最美的裙子">
+        <p class="page-text">米妮穿上她最爱的红色波点裙，戴上粉色的蝴蝶结。她在镜子前左看看、右看看，觉得自己今天美极了。"嗯！完美！"她对着镜子里的自己眨了眨眼。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P4 -->
+      <div class="book-page" id="p4">
+        <img src="assets/P4.jpg" alt="P4 期待的心情">
+        <p class="page-text">"不知道朋友们什么时候来呢？"米妮趴在窗台上，望着窗外的云朵。等待的感觉好漫长呀，但心里那种甜甜的期待，就像含着一颗糖果。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P5 -->
+      <div class="book-page" id="p5">
+        <img src="assets/P5.jpg" alt="P5 和米奇一起做蛋糕">
+        <p class="page-text">"米奇哥哥，我们来做一个超级大蛋糕吧！"米妮拉着米奇走进厨房。他们一起打鸡蛋、搅面糊、加白糖。米妮搅啊搅，搅得手臂都酸了，但心里美滋滋的。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P6 -->
+      <div class="book-page" id="p6">
+        <img src="assets/P6.jpg" alt="P6 装饰蛋糕">
+        <p class="page-text">蛋糕烤好了，金黄金黄的！米妮小心翼翼地挤上奶油，又一颗一颗地放上彩色糖果。最后，她插上了五根彩色蜡烛。"这是我们一起做的蛋糕，一定是最香的！"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P7 -->
+      <div class="book-page" id="p7">
+        <img src="assets/P7.jpg" alt="P7 布置客厅">
+        <p class="page-text">接下来是布置客厅！米妮吹气球，吹得脸都红了。她把彩带挂在墙上，又把气球系在椅子上。红色、黄色、蓝色、绿色……整个客厅变得像彩虹一样漂亮！</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P8 -->
+      <div class="book-page" id="p8">
+        <img src="assets/P8.jpg" alt="P8 一切准备就绪">
+        <p class="page-text">米妮站在客厅中央，深吸一口气，又慢慢吐出来。蛋糕在桌上，气球在飘，彩带在摇。"一切准备就绪！"她拍拍手，"现在，只等朋友们来了！"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P9 -->
+      <div class="book-page" id="p9">
+        <img src="assets/P9.jpg" alt="P9 第一个朋友——乐迪">
+        <p class="page-text">"叮咚——"门铃响了！米妮飞快地跑去开门。哇！是超级飞侠乐迪！他从天上飞下来，红色的翅膀在阳光下闪闪发光。"米妮，生日快乐！"乐迪张开双臂。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P10 -->
+      <div class="book-page" id="p10">
+        <img src="assets/P10.jpg" alt="P10 乐迪的礼物">
+        <p class="page-text">乐迪从背后拿出一架精致的小飞机模型，是橙色的，和乐迪长得一模一样！"这是我从世界各地飞来给你带的礼物！"米妮紧紧抱住乐迪："谢谢你，乐迪！我好喜欢！"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P11 -->
+      <div class="book-page" id="p11">
+        <img src="assets/P11.jpg" alt="P11 汪汪队来了">
+        <p class="page-text">"叮咚——"又有人来了！是汪汪队的阿奇和天天！阿奇穿着蓝色的警服，威风凛凛；天天穿着粉色的飞行背心，摇着尾巴。"生日快乐，米妮！"他们齐声喊道。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P12 -->
+      <div class="book-page" id="p12">
+        <img src="assets/P12.jpg" alt="P12 朋友们的礼物">
+        <p class="page-text">阿奇送给米妮一幅画，画的是大家一起在草地上奔跑的场景。"这是我画的，虽然画得不太像……"阿奇不好意思地说。米妮说："画得太棒了！"天天送了一个会发光的飞盘，"晚上也可以玩哦！"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P13 -->
+      <div class="book-page" id="p13">
+        <img src="assets/P13.jpg" alt="P13 唐老鸭和高飞">
+        <p class="page-text">"嘎嘎嘎！我们来了！"唐老鸭蹦蹦跳跳地冲进门来。高飞跟在后面，笑呵呵的，手里抱着一个大大的礼盒。"米妮，生日快乐！"高飞把礼盒递给米妮。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P14 -->
+      <div class="book-page" id="p14">
+        <img src="assets/P14.jpg" alt="P14 一起跳舞">
+        <p class="page-text">大家都到齐了！米妮、米奇、乐迪、阿奇、天天、唐老鸭、高飞，手拉手围成一个大圆圈。他们唱啊、跳啊、笑啊，快乐充满了整个房间。米妮觉得，这是她最幸福的一天。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P15 -->
+      <div class="book-page" id="p15">
+        <img src="assets/P15.jpg" alt="P15 意外发生了">
+        <p class="page-text">可是，就在大家跳得最开心的时候——高飞转圈转得太猛了，"砰"地撞到了桌子！桌子猛地一晃，蛋糕也跟着摇摇晃晃……"小心！"大家一起喊。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P16 -->
+      <div class="book-page" id="p16">
+        <img src="assets/P16.jpg" alt="P16 蛋糕掉了">
+        <p class="page-text">时间好像变慢了。米妮眼睁睁地看着蛋糕——那个她和米奇一起做的、插着五根蜡烛的漂亮蛋糕——从桌子上滑了下来。"啪！"奶油溅得到处都是，糖果滚了一地。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P17 -->
+      <div class="book-page" id="p17">
+        <img src="assets/P17.jpg" alt="P17 米妮的脸变了">
+        <p class="page-text">米妮的脸一下子涨得通红。她的眼睛里蓄满了泪水，嘴唇抿得紧紧的，两只小拳头攥得指甲都掐进了肉里。她心里有一团火在烧，好烫好烫。"我的蛋糕……"她的声音在发抖。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P18 -->
+      <div class="book-page" id="p18">
+        <img src="assets/P18.jpg" alt="P18 躲到角落">
+        <p class="page-text">米妮不想让朋友们看到自己哭。她转身跑到角落里，蹲下来，把脸埋进膝盖里。她觉得又生气又难过，心里像打翻了一碗苦药，又苦又涩。"我不要理任何人……"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P19 -->
+      <div class="book-page" id="p19">
+        <img src="assets/P19.jpg" alt="P19 唐老鸭说错话">
+        <p class="page-text">唐老鸭走过来，挠挠头说："呃……蛋糕没了也没关系吧，反正也就是个蛋糕嘛。"米妮听了，心里更难受了。那不是"就是个蛋糕"，那是她和米奇一起做的蛋糕呀！她的眼泪掉得更凶了。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P20 -->
+      <div class="book-page" id="p20">
+        <img src="assets/P20.jpg" alt="P20 生气的滋味">
+        <p class="page-text">米妮从来没有这么生气过。她觉得心里像有一团乱糟糟的毛线，怎么也理不顺。生气的感觉好难受好难受，像胸口压着一块大石头，喘不过气来。"我讨厌这种感觉……"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P21 -->
+      <div class="book-page" id="p21">
+        <img src="assets/P21.jpg" alt="P21 乐迪的陪伴">
+        <p class="page-text">这时，乐迪轻轻飞到米妮身边。他没有说话，只是安静地蹲下来，把一只翅膀搭在米妮的肩上。过了好一会儿，他才轻声说："米妮，生气是正常的。蛋糕掉了，谁都会难过的。我陪你。"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P22 -->
+      <div class="book-page" id="p22">
+        <img src="assets/P22.jpg" alt="P22 情绪温度计">
+        <p class="page-text">阿奇走过来，拿出一张"情绪温度计"卡片。"米妮，你看，这是我们的情绪温度计。绿色是平静，黄色是有点难过，橙色是生气，红色是非常生气。你现在在哪个颜色？"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P23 -->
+      <div class="book-page" id="p23">
+        <img src="assets/P23.jpg" alt="P23 深呼吸">
+        <p class="page-text">米妮看了看温度计，指了指红色。然后，她想起妈妈教过的方法——深呼吸。她闭上眼睛，吸气——一、二、三，呼气——一、二、三。像吹气球一样，把心里的热气慢慢吹出去。一次、两次、三次……心里的火，慢慢小了。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P24 -->
+      <div class="book-page" id="p24">
+        <img src="assets/P24.jpg" alt="P24 天天的主意">
+        <p class="page-text">天天摇着尾巴走过来说："米妮，我们一起做一个新蛋糕好不好？我帮你找水果！"米妮抬起头，眼睛还是红红的，但里面开始有了一点光。"真的可以吗？"她小声问。"当然可以！"大家一起说。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P25 -->
+      <div class="book-page" id="p25">
+        <img src="assets/P25.jpg" alt="P25 大家一起做新蛋糕">
+        <p class="page-text">大家立刻行动起来！米奇找来面粉和鸡蛋，乐迪飞去果园摘了新鲜的草莓，阿奇帮忙搅拌面糊，天天用嘴巴小心地摆上糖果。连唐老鸭都在帮忙打奶油——虽然溅了一脸！大家一起做蛋糕，好开心呀。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P26 -->
+      <div class="book-page" id="p26">
+        <img src="assets/P26.jpg" alt="P26 新蛋糕做好了">
+        <p class="page-text">新蛋糕做好了！它没有第一个那么漂亮，奶油有点歪，草莓摆得不太齐。但是，上面有每个人的努力——乐迪摘的草莓，阿奇挤的奶油，天天摆的糖果。"这是我们的蛋糕！"米妮开心地说。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P27 -->
+      <div class="book-page" id="p27">
+        <img src="assets/P27.jpg" alt="P27 心里暖暖的">
+        <p class="page-text">米妮看着新蛋糕，看着身边忙碌的朋友们，心里突然暖暖的。那种暖意从心底蔓延到全身，像冬天喝了一杯热可可。这不是生气，也不是难过，而是一种特别特别温暖的感觉——是感动。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P28 -->
+      <div class="book-page" id="p28">
+        <img src="assets/P28.jpg" alt="P28 高飞的道歉">
+        <p class="page-text">高飞走到米妮面前，低着头说："米妮，对不起，是我撞倒了桌子。"米妮看着他真诚的眼睛，微笑着伸出手："没关系，高飞。我刚才太生气了，但现在好了。谢谢你道歉。"</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P29 -->
+      <div class="book-page" id="p29">
+        <img src="assets/P29.jpg" alt="P29 点蜡烛">
+        <p class="page-text">灯关了，五根蜡烛亮了起来。火光映在每个人的脸上，温暖又柔和。大家齐声唱起了生日歌："祝你生日快乐……"米妮闭上眼睛，双手合十，在心里许了一个愿望。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P30 -->
+      <div class="book-page" id="p30">
+        <img src="assets/P30.jpg" alt="P30 米妮的愿望">
+        <p class="page-text">米妮深吸一口气——"呼——"五根蜡烛全灭了！大家欢呼起来。"你许了什么愿望？"唐老鸭好奇地问。米妮笑着说："我的愿望是……和好朋友永远在一起！"大家都笑了。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P31 -->
+      <div class="book-page" id="p31">
+        <img src="assets/P31.jpg" alt="P31 分享蛋糕">
+        <p class="page-text">大家一起分享新蛋糕。蛋糕又香又甜，因为里面加了好多好多的爱和友情。米妮咬了一口，草莓的甜味在嘴里化开。"这是我吃过的最好吃的蛋糕！"她说。大家你一口我一口，吃得好开心。</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+      <!-- P32 -->
+      <div class="book-page" id="p32">
+        <img src="assets/P32.jpg" alt="P32 米妮学会了">
+        <p class="page-text">派对结束了，朋友们要回家了。米妮抱了抱每一个朋友。"今天我学到了一件事，"她说，"生气是没关系的，难过也是没关系的。重要的是把感觉说出来，然后大家一起想办法解决。"大家都点头。米妮笑了，今天的生日，是她过得最棒的一个！</p>
+        <div class="page-sop">
+          <div class="sop-item"><span class="sop-tag sop-tag-before">读前准备</span><p>引导孩子观察画面，问："你觉得米妮现在是什么心情？"</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-during">共读引导</span><p>和孩子一起读故事，关注角色的情绪变化。</p></div>
+          <div class="sop-item"><span class="sop-tag sop-tag-after">读后延伸</span><p>问孩子："你有没有过类似的感受？"</p></div>
+        </div>
+      </div>
+
+
+      <!-- Back Cover -->
+      <div class="back-cover">
+        <h3>情绪魔法小口诀</h3>
+        <div class="mantra-card">
+          <div class="home-icons">
+            <span style="background:#E8F5E9;color:#6B8E23;">😊</span>
+            <span style="background:#FFF3E0;color:#FF7F50;">😤</span>
+            <span style="background:#E3F2FD;color:#4A90D9;">🌬️</span>
+            <span style="background:#FCE4EC;color:#E91E63;">💛</span>
+            <span style="background:#F3E5F5;color:#9C27B0;">🤝</span>
+          </div>
+          <p>生气没关系，先做深呼吸</p>
+          <p>说出你的感受，大家一起想办法</p>
+          <p class="mantra">情绪像天气，雨后会有彩虹！</p>
+        </div>
+      </div>
+
+        </div><!-- /book-slider -->
+      </div><!-- /book-reader -->
+
+      <!-- Page indicator dots -->
+      <div class="page-dots" id="pageDots"></div>
+
+    </div>
+
+    <!-- === Tab: Teaching Aids === -->
+    <div id="tab-aids" class="tab-content">
+      <h2 class="section-title">互动教具</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:1.5rem;">点击「打印此页」可直接打印教具图，剪下即可使用。</p>
+
+      <div class="aid-card">
+        <div class="aid-header">
+          <span class="aid-badge">教具1</span>
+          <h4>情绪温度计</h4>
+          <button class="print-btn" onclick="printAid('assets/aid1-emotion-thermometer.svg')">🖨️ 打印此页</button>
+        </div>
+        <p class="aid-meta">对应绘本 P22（阿奇用温度计帮米妮识别情绪）| A4 竖版</p>
+        <div class="aid-preview">
+          <img src="assets/aid1-emotion-thermometer.svg" alt="教具1 情绪温度计" onclick="openAid('assets/aid1-emotion-thermometer.svg')">
+        </div>
+        <p>四色刻度温度计（绿=平静、黄=有点难过、橙=生气、红=非常生气），配有可滑动指针和身体信号小贴士。底部设每日情绪打卡区，孩子每天用指针指向自己的情绪颜色。</p>
+        <div class="print-tip">打印建议：彩色打印最佳（四色刻度需彩色才有效果）。建议过塑后用白板笔反复打卡，或打印多张每周换一张。</div>
+      </div>
+
+      <div class="aid-card">
+        <div class="aid-header">
+          <span class="aid-badge">教具2</span>
+          <h4>深呼吸魔法卡</h4>
+          <button class="print-btn" onclick="printAid('assets/aid2-breathing-magic.svg')">🖨️ 打印此页</button>
+        </div>
+        <p class="aid-meta">对应绘本 P23（米妮深呼吸平复情绪）| A4 竖版</p>
+        <div class="aid-preview">
+          <img src="assets/aid2-breathing-magic.svg" alt="教具2 深呼吸魔法卡" onclick="openAid('assets/aid2-breathing-magic.svg')">
+        </div>
+        <p>随身携带的魔法卡，用"闻花香"比喻吸气、"吹气球"比喻呼气，三步法图示引导。配吹气球涂色练习区和情绪降温记录表，帮助孩子掌握深呼吸技巧。</p>
+        <div class="print-tip">打印建议：彩色打印，建议缩小打印成口袋卡片大小，方便孩子随身携带。可过塑增加耐用性。</div>
+      </div>
+
+      <div class="aid-card">
+        <div class="aid-header">
+          <span class="aid-badge">教具3</span>
+          <h4>我的情绪日记</h4>
+          <button class="print-btn" onclick="printAid('assets/aid3-emotion-diary.svg')">🖨️ 打印此页</button>
+        </div>
+        <p class="aid-meta">对应绘本 P27-P32（米妮学会感恩和表达）| A4 竖版</p>
+        <div class="aid-preview">
+          <img src="assets/aid3-emotion-diary.svg" alt="教具3 我的情绪日记" onclick="openAid('assets/aid3-emotion-diary.svg')">
+        </div>
+        <p>一周情绪天气图，每天用颜色和天气图标记录情绪（晴天=开心、雨天=难过、雷电=生气）。配每日感恩三件事记录区和深呼吸魔法打卡区，一周结束时做情绪总结。</p>
+        <div class="print-tip">打印建议：彩色打印（天气图标和颜色需彩色）。建议一次打印4-5张备用，每周换一张。可过塑后用白板笔反复填写。</div>
+      </div>
+    </div>
+
+    <!-- === Tab: Task Cards === -->
+    <div id="tab-tasks" class="tab-content">
+      <h2 class="section-title">练习任务卡</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:1.5rem;">5个情绪管理实践任务，从易到难，把"认识情绪"变成好玩的冒险。</p>
+
+      <div class="task-card">
+        <div class="task-header">
+          <span class="task-num">1</span>
+          <span class="difficulty diff-easy">最易</span>
+        </div>
+        <h4>情绪猜猜看</h4>
+        <ol>
+          <li>和孩子面对面坐着，家长先做一个表情（开心、生气、难过、害怕），让孩子猜猜是什么情绪。</li>
+          <li>换孩子做表情，家长来猜。猜对后问问孩子："你做这个表情的时候，身体有什么感觉？"</li>
+          <li>用情绪温度计教具，让孩子指出对应的颜色。</li>
+          <li>升级版：用绘本里的角色来玩，"米妮蛋糕掉了的时候，她是什么表情？"</li>
+        </ol>
+        <div class="tip">"我们来做表情游戏！妈妈先来——猜猜我现在是什么心情？"（从游戏入手，让孩子先学会识别他人的情绪，再慢慢学会识别自己的。）</div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-header">
+          <span class="task-num">2</span>
+          <span class="difficulty diff-easy">较易</span>
+        </div>
+        <h4>我的情绪温度计</h4>
+        <ol>
+          <li>拿出情绪温度计教具（或和孩子一起画一个），认识四个颜色代表的情绪。</li>
+          <li>问孩子："你现在在什么颜色？"让孩子用指针指向自己的情绪。</li>
+          <li>每天早晚各打卡一次，记录一周的情绪变化。</li>
+          <li>周末一起回顾："这周你在哪个颜色最多？那天发生了什么？"</li>
+        </ol>
+        <div class="tip">"我们来量一量你的情绪温度吧！现在指针指向哪里？"（用量化的方式帮孩子认识情绪，让抽象的"我感觉不好"变成具体的"我在橙色"。）</div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-header">
+          <span class="task-num">3</span>
+          <span class="difficulty diff-medium">中等</span>
+        </div>
+        <h4>深呼吸魔法练习</h4>
+        <ol>
+          <li>拿出深呼吸魔法卡，和孩子一起学习"闻花香+吹气球"三步法。</li>
+          <li>家长说"魔法时间到"，孩子就开始：吸气（闻花香）3秒，呼气（吹气球）3秒，重复3次。</li>
+          <li>每天练习一次，在魔法卡上打卡。坚持一周可以换一个小奖励。</li>
+          <li>当孩子情绪激动时，温柔地提醒："我们要不要用一下魔法？"</li>
+        </ol>
+        <div class="tip">"这是米妮用的魔法哦！闻花香——吹气球——闻花香——吹气球……"（用故事里的比喻让孩子觉得深呼吸是个有趣的"魔法"，而不是"任务"。约定一个暗号"魔法时间到"，比直接说"你冷静一下"更容易被接受。）</div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-header">
+          <span class="task-num">4</span>
+          <span class="difficulty diff-hard">较难</span>
+        </div>
+        <h4>和好三步法</h4>
+        <ol>
+          <li>当孩子和朋友/家人发生冲突时，等情绪稍微平复后，引导孩子用"和好三步法"。</li>
+          <li>第一步——说出感受："我刚才很____，因为____。"（用情绪温度计辅助）</li>
+          <li>第二步——倾听对方："你呢？你刚才是什么感觉？"</li>
+          <li>第三步——一起想办法："我们下次可以怎么做？"</li>
+          <li>完成后给孩子一个拥抱："你和米妮一样棒，学会了说出自己的感受！"</li>
+        </ol>
+        <div class="tip">"还记得米妮是怎么做的吗？她先深呼吸，然后说出自己的感受，最后和大家一起想办法。你也来试试好不好？"（把绘本里的方法迁移到真实生活中，让孩子有参照榜样。注意：一定要等孩子情绪平复后再进行，不要在情绪高峰时强制执行。）</div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-header">
+          <span class="task-num">5</span>
+          <span class="difficulty diff-hard">挑战</span>
+        </div>
+        <h4>感恩三件事+情绪日记</h4>
+        <ol>
+          <li>每天睡前，和孩子一起回顾今天的三件好事（不管多小都可以）。</li>
+          <li>用情绪日记教具记录：今天情绪是什么颜色？发生了什么事？感恩的三件事是什么？</li>
+          <li>深呼吸魔法打卡：今天有没有用深呼吸？什么场景下用的？</li>
+          <li>一周结束后，和孩子一起翻看日记，找规律："你发现了吗？每次你生气的时候，深呼吸之后是不是好多了？"</li>
+          <li>庆祝完成一周打卡，颁发"情绪魔法师"称号。</li>
+        </ol>
+        <div class="tip">"今天有什么开心的事想告诉妈妈吗？哪怕是很小很小的也行。"（培养孩子关注积极事件的习惯，同时通过日记追踪情绪模式。坚持记录会让孩子越来越了解自己的情绪规律，这是终身受用的能力。建议家长也一起做，和孩子分享自己的情绪日记，做榜样。）</div>
+      </div>
+    </div>
+
+    <!-- === Footer === -->
+    <footer>
+      <div class="footer-brand">小步绘本</div>
+      <p>绘本+教育SOP月包 | 情绪管理主题 | 样品3</p>
+      <p>AI 插图由豆包生成 | 暖橙+莫兰迪绿儿童绘本风格</p>
+    </footer>
+
+  </article>
+
+  <!-- Immersive Reading Overlay -->
+  <div class="immersive-overlay" id="immersiveOverlay">
+    <div class="im-reader">
+      <div class="im-topbar">
+        <div class="im-counter"><span class="im-cur" id="imCurPage">1</span> / <span id="imTotalPages">32</span></div>
+        <div class="im-actions">
+          <button class="im-btn" id="imPlayBtn" onclick="imTogglePlay()" title="朗读">🔊</button>
+          <button class="im-btn im-exit" onclick="exitImmersive()" title="退出">✕</button>
+        </div>
+      </div>
+      <div class="im-slider" id="imSlider">
+        <button class="im-arrow im-left im-hidden" id="imLeft" onclick="imFlipPrev()">‹</button>
+        <button class="im-arrow im-right" id="imRight" onclick="imFlipNext()">›</button>
+      </div>
+      <div class="im-dots" id="imDots"></div>
+    </div>
+  </div>
+
+  <!-- Floating Play Button -->
+  <button class="play-fab" id="playFab" onclick="startAutoPlay()" title="自动朗读">▶</button>
+
+  <!-- Auto-Play Control Bar -->
+  <div class="play-bar" id="playBar">
+    <button class="pb-btn pb-secondary" onclick="prevPage()" title="上一页">⏮</button>
+    <button class="pb-btn pb-play" id="pbPlayBtn" onclick="togglePlay()" title="播放/暂停">⏸</button>
+    <button class="pb-btn pb-secondary" onclick="nextPage()" title="下一页">⏭</button>
+    <div class="pb-info">
+      <span class="pb-page" id="pbPageNum">1</span> / <span id="pbTotalPages">32</span>
+      <span id="pbTitle" style="margin-left:0.5rem;">米妮的生日派对</span>
+    </div>
+    <div class="pb-speed">
+      <span>语速</span>
+      <select id="pbSpeed" onchange="changeSpeed()">
+        <option value="0.6">慢</option>
+        <option value="0.8">较慢</option>
+        <option value="1" selected>正常</option>
+        <option value="1.2">较快</option>
+        <option value="1.5">快</option>
+      </select>
+    </div>
+    <button class="pb-btn pb-secondary" onclick="stopAutoPlay()" title="退出">✕</button>
+  </div>
+
+  <script>
+function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 打印教具图
+    function printAid(svgPath) {
+      var w = window.open('', '_blank');
+      w.document.write('<html><head><title>打印教具</title><style>' +
+        '@media print { @page { margin: 5mm; } body { margin: 0; } }' +
+        'body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #fff; }' +
+        'img { max-width: 100%; max-height: 100vh; }' +
+        '</style></head><body>' +
+        '<img src="' + svgPath + '" onload="window.print()">' +
+        '</body></html>');
+      w.document.close();
+    }
+
+    // 新窗口查看教具大图
+    function openAid(svgPath) {
+      window.open(svgPath, '_blank');
+    }
+
+    /* ========================================
+       左右翻页 + 自动朗读系统
+       基于 Web Speech API + CSS Transform
+       ======================================== */
+
+    var pages = [];          // 页面数据 [{id, text, title}]
+    var currentPage = 0;     // 当前页索引
+    var isPlaying = false;   // 播放状态
+    var isPaused = false;    // 暂停状态
+    var utterance = null;    // 当前 SpeechSynthesisUtterance
+    var autoAdvanceTimer = null; // 翻页延迟计时器
+
+    // 初始化：收集所有绘本页面 + 生成指示点
+    function initPages() {
+      var bookPages = document.querySelectorAll('#bookSlider .book-page');
+      pages = [];
+      bookPages.forEach(function(page) {
+        var textEl = page.querySelector('.page-text');
+        var imgEl = page.querySelector('img');
+        pages.push({
+          id: page.id,
+          text: textEl ? textEl.textContent.trim() : '',
+          title: imgEl ? imgEl.alt : '',
+          el: page,
+          textEl: textEl
+        });
+      });
+      document.getElementById('pbTotalPages').textContent = pages.length;
+
+      // 生成页面指示点
+      var dotsContainer = document.getElementById('pageDots');
+      dotsContainer.innerHTML = '';
+      pages.forEach(function(_, i) {
+        var dot = document.createElement('button');
+        dot.className = 'dot' + (i === 0 ? ' dot-active' : '');
+        dot.onclick = function() { goToPage(i); };
+        dotsContainer.appendChild(dot);
+      });
+
+      updateFlipArrows();
+    }
+
+    // === 翻页核心：CSS Transform 滑动 ===
+    function flipToPage(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= pages.length) idx = pages.length - 1;
+      currentPage = idx;
+
+      var slider = document.getElementById('bookSlider');
+      slider.style.transform = 'translateX(-' + (idx * 100) + '%)';
+
+      updateFlipArrows();
+      updateUI();
+    }
+
+    // 更新左右箭头显示状态
+    function updateFlipArrows() {
+      var leftBtn = document.getElementById('flipLeft');
+      var rightBtn = document.getElementById('flipRight');
+      if (currentPage <= 0) {
+        leftBtn.classList.add('flip-hidden');
+      } else {
+        leftBtn.classList.remove('flip-hidden');
+      }
+      if (currentPage >= pages.length - 1) {
+        rightBtn.classList.add('flip-hidden');
+      } else {
+        rightBtn.classList.remove('flip-hidden');
+      }
+    }
+
+    // 翻到指定页（导航点/数字点击）
+    function goToPage(idx) {
+      speechSynthesis.cancel();
+      if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+      flipToPage(idx);
+      if (isPlaying || isPaused) {
+        isPaused = false;
+        isPlaying = true;
+        document.getElementById('pbPlayBtn').textContent = '⏸';
+        speakCurrentPage();
+      }
+    }
+
+    // 左翻
+    function flipPrev() {
+      if (currentPage > 0) {
+        goToPage(currentPage - 1);
+      }
+    }
+
+    // 右翻
+    function flipNext() {
+      if (currentPage < pages.length - 1) {
+        goToPage(currentPage + 1);
+      }
+    }
+
+    // 检查浏览器支持
+    function checkSpeechSupport() {
+      if (!('speechSynthesis' in window)) {
+        alert('您的浏览器不支持语音朗读功能，请使用 Chrome、Edge 或 Safari 浏览器。');
+        return false;
+      }
+      return true;
+    }
+
+    // 等待中文语音加载（异步）
+    var voicesReady = false;
+    function loadVoices() {
+      var voices = speechSynthesis.getVoices();
+      if (voices.length > 0) voicesReady = true;
+    }
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    // 获取中文语音
+    function getChineseVoice() {
+      var voices = speechSynthesis.getVoices();
+      var preferred = voices.find(function(v) {
+        return v.lang === 'zh-CN' && /female|女|ting|yaoyao|huihui|kangkang/i.test(v.name);
+      });
+      if (preferred) return preferred;
+      var zhVoice = voices.find(function(v) { return v.lang === 'zh-CN'; });
+      if (zhVoice) return zhVoice;
+      var zhAny = voices.find(function(v) { return v.lang && v.lang.startsWith('zh'); });
+      return zhAny || null;
+    }
+
+    // 开始自动播放
+    function startAutoPlay() {
+      if (!checkSpeechSupport()) return;
+
+      // 确保在绘本故事 Tab
+      var storyTab = document.getElementById('tab-story');
+      if (!storyTab.classList.contains('active')) {
+        document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+        var storyBtn = document.querySelector('.tab-btn');
+        storyBtn.classList.add('active');
+        storyTab.classList.add('active');
+      }
+
+      if (pages.length === 0) initPages();
+      if (pages.length === 0) return;
+
+      document.getElementById('playFab').classList.add('hidden');
+      document.getElementById('playBar').classList.add('visible');
+      document.body.classList.add('playing');
+
+      if (currentPage >= pages.length) currentPage = 0;
+
+      isPlaying = true;
+      isPaused = false;
+      document.getElementById('pbPlayBtn').textContent = '⏸';
+
+      speakCurrentPage();
+    }
+
+    // 朗读当前页
+    function speakCurrentPage() {
+      if (!isPlaying || isPaused) return;
+      if (currentPage >= pages.length) {
+        finishPlay();
+        return;
+      }
+
+      var page = pages[currentPage];
+      updateUI();
+
+      speechSynthesis.cancel();
+
+      utterance = new SpeechSynthesisUtterance(page.text);
+      utterance.lang = 'zh-CN';
+      utterance.rate = parseFloat(document.getElementById('pbSpeed').value);
+
+      var voice = getChineseVoice();
+      if (voice) utterance.voice = voice;
+
+      utterance.onstart = function() {
+        // 翻到当前页（CSS 动画）
+        flipToPage(currentPage);
+      };
+
+      utterance.onend = function() {
+        if (!isPlaying || isPaused) return;
+        autoAdvanceTimer = setTimeout(function() {
+          currentPage++;
+          if (currentPage < pages.length) {
+            speakCurrentPage();
+          } else {
+            finishPlay();
+          }
+        }, 1200);
+      };
+
+      utterance.onerror = function(e) {
+        console.warn('朗读出错:', e.error);
+        if (e.error === 'interrupted' || e.error === 'canceled') return;
+        currentPage++;
+        if (currentPage < pages.length) {
+          setTimeout(speakCurrentPage, 500);
+        } else {
+          finishPlay();
+        }
+      };
+
+      speechSynthesis.speak(utterance);
+    }
+
+    // 更新 UI 状态
+    function updateUI() {
+      var page = pages[currentPage];
+      if (!page) return;
+
+      document.getElementById('pbPageNum').textContent = currentPage + 1;
+      document.getElementById('pbTitle').textContent = page.title || ('第' + (currentPage + 1) + '页');
+
+      // 高亮当前朗读页面
+      document.querySelectorAll('.book-page').forEach(function(el) {
+        el.classList.remove('reading-current');
+      });
+      page.el.classList.add('reading-current');
+
+      // 高亮当前故事文字
+      document.querySelectorAll('.book-page .page-text').forEach(function(el) {
+        el.classList.remove('reading');
+      });
+      if (page.textEl) page.textEl.classList.add('reading');
+
+      // 更新导航数字高亮
+      document.querySelectorAll('.story-nav a').forEach(function(a) {
+        a.classList.remove('nav-active');
+      });
+      var navLink = document.querySelector('.story-nav a[href="#' + page.id + '"]');
+      if (navLink) navLink.classList.add('nav-active');
+
+      // 更新指示点高亮
+      document.querySelectorAll('.page-dots .dot').forEach(function(d, i) {
+        d.classList.toggle('dot-active', i === currentPage);
+      });
+    }
+
+    // 播放/暂停切换
+    function togglePlay() {
+      if (!isPlaying) {
+        if (currentPage < pages.length) {
+          isPlaying = true;
+          isPaused = false;
+          document.getElementById('pbPlayBtn').textContent = '⏸';
+          speakCurrentPage();
+        } else {
+          currentPage = 0;
+          startAutoPlay();
+        }
+      } else {
+        isPaused = true;
+        isPlaying = false;
+        speechSynthesis.cancel();
+        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        document.getElementById('pbPlayBtn').textContent = '▶';
+      }
+    }
+
+    // 上一页（控制栏按钮）
+    function prevPage() {
+      if (currentPage > 0) {
+        goToPage(currentPage - 1);
+      }
+    }
+
+    // 下一页（控制栏按钮）
+    function nextPage() {
+      if (currentPage < pages.length - 1) {
+        goToPage(currentPage + 1);
+      }
+    }
+
+    // 改变语速
+    function changeSpeed() {
+      if (isPlaying && !isPaused) {
+        speechSynthesis.cancel();
+        setTimeout(speakCurrentPage, 200);
+      }
+    }
+
+    // 结束播放
+    function finishPlay() {
+      isPlaying = false;
+      isPaused = false;
+      speechSynthesis.cancel();
+      if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+      document.getElementById('pbPlayBtn').textContent = '▶';
+
+      document.querySelectorAll('.book-page').forEach(function(el) {
+        el.classList.remove('reading-current');
+      });
+      document.querySelectorAll('.book-page .page-text').forEach(function(el) {
+        el.classList.remove('reading');
+      });
+      document.querySelectorAll('.story-nav a').forEach(function(a) {
+        a.classList.remove('nav-active');
+      });
+    }
+
+    // 退出自动播放模式
+    function stopAutoPlay() {
+      finishPlay();
+      document.getElementById('playBar').classList.remove('visible');
+      document.getElementById('playFab').classList.remove('hidden');
+      document.body.classList.remove('playing');
+    }
+
+    // === 触摸滑动支持 ===
+    var touchStartX = 0;
+    var touchEndX = 0;
+    var touchStartY = 0;
+    var touchEndY = 0;
+
+    var reader = document.getElementById('bookReader');
+    reader.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    reader.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      var deltaX = touchEndX - touchStartX;
+      var deltaY = touchEndY - touchStartY;
+      // 只响应水平滑动（水平位移 > 垂直位移 且 > 50px）
+      if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) {
+          flipPrev();
+        } else {
+          flipNext();
+        }
+      }
+    }, { passive: true });
+
+    // === 键盘快捷键（绘本 Tab 下始终生效）===
+    document.addEventListener('keydown', function(e) {
+      // 只在绘本故事 Tab 可见时响应
+      var storyTab = document.getElementById('tab-story');
+      if (!storyTab.classList.contains('active')) return;
+
+      // 如果焦点在输入框/选择框中，不拦截
+      var tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+
+      switch(e.key) {
+        case ' ':
+        case 'Spacebar':
+          e.preventDefault();
+          if (document.getElementById('playBar').classList.contains('visible')) {
+            togglePlay();
+          } else {
+            startAutoPlay();
+          }
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          flipPrev();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          flipNext();
+          break;
+        case 'Escape':
+          if (document.getElementById('playBar').classList.contains('visible')) {
+            e.preventDefault();
+            stopAutoPlay();
+          }
+          break;
+      }
+    });
+
+    // 页面加载完成后初始化
+    window.addEventListener('DOMContentLoaded', function() {
+      initPages();
+    });
+
+    // 页面卸载时清理
+    window.addEventListener('beforeunload', function() {
+      if ('speechSynthesis' in window) {
+        speechSynthesis.cancel();
+      }
+    });
+
+    /* ========================================
+       沉浸式阅读模式
+       全屏覆盖，只显示图片+文字+翻页
+       ======================================== */
+
+    var immersiveActive = false;
+    var imCurrentPage = 0;
+    var imPlaying = false;
+    var imUtterance = null;
+    var imAdvanceTimer = null;
+
+    // 进入沉浸式
+    function enterImmersive() {
+      if (pages.length === 0) initPages();
+      if (pages.length === 0) return;
+
+      immersiveActive = true;
+      imCurrentPage = currentPage; // 同步当前页
+
+      buildImmersivePages();
+      document.getElementById('immersiveOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      imFlipToPage(imCurrentPage);
+    }
+
+    // 退出沉浸式
+    function exitImmersive() {
+      immersiveActive = false;
+      imStopSpeak();
+      document.getElementById('immersiveOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+
+      // 同步回主页面页码
+      flipToPage(imCurrentPage);
+    }
+
+    // 构建沉浸式页面内容
+    function buildImmersivePages() {
+      var slider = document.getElementById('imSlider');
+      // 清除旧页面（保留箭头按钮）
+      var oldPages = slider.querySelectorAll('.im-page');
+      oldPages.forEach(function(p) { p.remove(); });
+
+      // 在箭头前面插入页面
+      var leftArrow = document.getElementById('imLeft');
+      pages.forEach(function(page, i) {
+        var div = document.createElement('div');
+        div.className = 'im-page' + (i === imCurrentPage ? ' active' : '');
+        div.id = 'im-page-' + i;
+
+        var img = document.createElement('img');
+        img.src = page.el.querySelector('img').src;
+        img.alt = page.title;
+
+        var text = document.createElement('div');
+        text.className = 'im-text';
+        text.textContent = page.text;
+        text.id = 'im-text-' + i;
+
+        div.appendChild(img);
+        div.appendChild(text);
+        slider.insertBefore(div, leftArrow);
+      });
+
+      document.getElementById('imTotalPages').textContent = pages.length;
+
+      // 生成指示点
+      var dotsContainer = document.getElementById('imDots');
+      dotsContainer.innerHTML = '';
+      pages.forEach(function(_, i) {
+        var dot = document.createElement('button');
+        dot.className = 'im-dot' + (i === imCurrentPage ? ' active' : '');
+        dot.onclick = function() { imFlipToPage(i); };
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    // 沉浸式翻页
+    function imFlipToPage(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= pages.length) idx = pages.length - 1;
+      imCurrentPage = idx;
+
+      // 切换页面显示
+      document.querySelectorAll('.im-page').forEach(function(p, i) {
+        p.classList.toggle('active', i === idx);
+        // 重置动画
+        if (i === idx) {
+          p.style.animation = 'none';
+          void p.offsetHeight;
+          p.style.animation = '';
+        }
+      });
+
+      // 更新计数器
+      document.getElementById('imCurPage').textContent = idx + 1;
+
+      // 更新箭头
+      document.getElementById('imLeft').classList.toggle('im-hidden', idx <= 0);
+      document.getElementById('imRight').classList.toggle('im-hidden', idx >= pages.length - 1);
+
+      // 更新指示点
+      document.querySelectorAll('.im-dots .im-dot').forEach(function(d, i) {
+        d.classList.toggle('active', i === idx);
+      });
+
+      // 如果正在朗读，继续朗读当前页
+      if (imPlaying) {
+        imSpeakCurrent();
+      }
+    }
+
+    function imFlipPrev() {
+      if (imCurrentPage > 0) {
+        imStopSpeak();
+        imFlipToPage(imCurrentPage - 1);
+      }
+    }
+
+    function imFlipNext() {
+      if (imCurrentPage < pages.length - 1) {
+        imStopSpeak();
+        imFlipToPage(imCurrentPage + 1);
+      }
+    }
+
+    // 沉浸式朗读
+    function imTogglePlay() {
+      if (imPlaying) {
+        imStopSpeak();
+      } else {
+        imPlaying = true;
+        document.getElementById('imPlayBtn').textContent = '⏸';
+        imSpeakCurrent();
+      }
+    }
+
+    function imSpeakCurrent() {
+      if (!imPlaying) return;
+      if (imCurrentPage >= pages.length) { imStopSpeak(); return; }
+
+      var page = pages[imCurrentPage];
+
+      // 高亮当前文字
+      document.querySelectorAll('.im-text').forEach(function(t) { t.classList.remove('reading'); });
+      var textEl = document.getElementById('im-text-' + imCurrentPage);
+      if (textEl) textEl.classList.add('reading');
+
+      speechSynthesis.cancel();
+      imUtterance = new SpeechSynthesisUtterance(page.text);
+      imUtterance.lang = 'zh-CN';
+      imUtterance.rate = parseFloat(document.getElementById('pbSpeed').value) || 1;
+
+      var voice = getChineseVoice();
+      if (voice) imUtterance.voice = voice;
+
+      imUtterance.onend = function() {
+        if (!imPlaying) return;
+        imAdvanceTimer = setTimeout(function() {
+          if (imCurrentPage < pages.length - 1) {
+            imFlipToPage(imCurrentPage + 1);
+          } else {
+            imStopSpeak();
+          }
+        }, 1200);
+      };
+
+      imUtterance.onerror = function(e) {
+        if (e.error === 'interrupted' || e.error === 'canceled') return;
+        if (imCurrentPage < pages.length - 1) {
+          setTimeout(function() { imFlipToPage(imCurrentPage + 1); }, 500);
+        }
+      };
+
+      speechSynthesis.speak(imUtterance);
+    }
+
+    function imStopSpeak() {
+      imPlaying = false;
+      speechSynthesis.cancel();
+      if (imAdvanceTimer) clearTimeout(imAdvanceTimer);
+      document.getElementById('imPlayBtn').textContent = '🔊';
+      document.querySelectorAll('.im-text').forEach(function(t) { t.classList.remove('reading'); });
+    }
+
+    // 沉浸式触摸滑动
+    var imTouchStartX = 0, imTouchStartY = 0;
+    var imSlider = document.getElementById('imSlider');
+    imSlider.addEventListener('touchstart', function(e) {
+      imTouchStartX = e.changedTouches[0].screenX;
+      imTouchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    imSlider.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].screenX - imTouchStartX;
+      var dy = e.changedTouches[0].screenY - imTouchStartY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 0) imFlipPrev(); else imFlipNext();
+      }
+    }, { passive: true });
+
+    // 沉浸式键盘
+    document.addEventListener('keydown', function(e) {
+      if (!immersiveActive) return;
+      switch(e.key) {
+        case ' ':
+        case 'Spacebar':
+          e.preventDefault();
+          imTogglePlay();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          imFlipPrev();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          imFlipNext();
+          break;
+        case 'Escape':
+          e.preventDefault();
+          exitImmersive();
+          break;
+      }
+    });
+  
+  </script>
+</body>
+</html>

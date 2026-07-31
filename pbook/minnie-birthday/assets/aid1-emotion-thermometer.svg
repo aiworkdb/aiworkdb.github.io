@@ -1,0 +1,320 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595 842" width="595" height="842">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&amp;display=swap');
+      text { font-family: 'Noto Sans CJK SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif; }
+    </style>
+    <!-- 背景渐变 -->
+    <linearGradient id="bgGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF9F0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFF0E0;stop-opacity:1"/>
+    </linearGradient>
+    <!-- 暖橙渐变 -->
+    <linearGradient id="orangeGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF7F50;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFB347;stop-opacity:1"/>
+    </linearGradient>
+    <!-- 脚印 -->
+    <g id="footprint1">
+      <ellipse cx="0" cy="0" rx="6" ry="9" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="-5" cy="-12" r="3" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="0" cy="-14" r="2.5" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="5" cy="-12" r="3" fill="#FF7F50" opacity="0.5"/>
+      <circle cx="9" cy="-9" r="2.5" fill="#FF7F50" opacity="0.5"/>
+    </g>
+    <!-- 表情：平静 -->
+    <g id="face-calm">
+      <circle cx="0" cy="0" r="13" fill="#86C166" stroke="#6B8E23" stroke-width="1.2"/>
+      <path d="M-6,-2 Q-4,-4 -2,-2" fill="none" stroke="#333" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M2,-2 Q4,-4 6,-2" fill="none" stroke="#333" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M-4,3 Q0,7 4,3" fill="none" stroke="#333" stroke-width="1.3" stroke-linecap="round"/>
+    </g>
+    <!-- 表情：有点难过 -->
+    <g id="face-sad">
+      <circle cx="0" cy="0" r="13" fill="#F2C94C" stroke="#D4A017" stroke-width="1.2"/>
+      <circle cx="-4" cy="-2" r="1.6" fill="#333"/>
+      <circle cx="4" cy="-2" r="1.6" fill="#333"/>
+      <path d="M-4,5 Q0,2 4,5" fill="none" stroke="#333" stroke-width="1.2" stroke-linecap="round"/>
+    </g>
+    <!-- 表情：生气 -->
+    <g id="face-angry">
+      <circle cx="0" cy="0" r="13" fill="#F2994A" stroke="#D9701F" stroke-width="1.2"/>
+      <line x1="-7" y1="-6" x2="-2" y2="-3" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="7" y1="-6" x2="2" y2="-3" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="-3" cy="-1" r="1.4" fill="#333"/>
+      <circle cx="3" cy="-1" r="1.4" fill="#333"/>
+      <path d="M-4,5 Q0,3 4,5" fill="none" stroke="#333" stroke-width="1.2" stroke-linecap="round"/>
+    </g>
+    <!-- 表情：非常生气 -->
+    <g id="face-furious">
+      <circle cx="0" cy="0" r="13" fill="#EB5757" stroke="#C0392B" stroke-width="1.2"/>
+      <line x1="-8" y1="-7" x2="-2" y2="-3" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+      <line x1="8" y1="-7" x2="2" y2="-3" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="-3" cy="-1" r="1.4" fill="#333"/>
+      <circle cx="3" cy="-1" r="1.4" fill="#333"/>
+      <ellipse cx="0" cy="5" rx="3" ry="2.5" fill="#333"/>
+      <path d="M-11,-8 L-14,-11 M11,-8 L14,-11" stroke="#C0392B" stroke-width="1.2" stroke-linecap="round"/>
+    </g>
+    <!-- 温度计裁剪 -->
+    <clipPath id="tubeClip1">
+      <path d="M250,140 Q250,110 280,110 Q310,110 310,140 L310,508 L250,508 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="595" height="842" fill="url(#bgGrad1)" rx="12"/>
+
+  <!-- 剪切线边框 -->
+  <rect x="12" y="12" width="571" height="818" fill="none" stroke="#CCCCCC" stroke-width="0.5" stroke-dasharray="5,3" rx="8"/>
+
+  <!-- ===== 顶部标题区 ===== -->
+  <g transform="translate(297, 38)">
+    <use href="#footprint1" x="-135" y="0" transform="scale(0.7)"/>
+    <use href="#footprint1" x="128" y="2" transform="scale(0.7) rotate(-12)"/>
+    <text x="0" y="12" text-anchor="middle" font-size="30" font-weight="700" fill="#FF7F50">我的情绪温度计</text>
+    <line x1="-145" y1="24" x2="145" y2="24" stroke="#6B8E23" stroke-width="2" stroke-linecap="round"/>
+    <polygon points="-155,10 -150,3 -145,10 -151,6 -149,6" fill="#FFD700"/>
+    <polygon points="150,8 155,1 160,8 154,4 156,4" fill="#FFD700"/>
+  </g>
+  <text x="297" y="78" text-anchor="middle" font-size="11" fill="#A0937D">滑一滑指针，看看你现在的情绪在哪个颜色？每个颜色都是正常的哦！</text>
+
+  <!-- ===== 左侧：身体信号小贴士 ===== -->
+  <!-- 红色段 -->
+  <g transform="translate(30, 113)">
+    <rect x="0" y="0" width="208" height="77" fill="#EB5757" opacity="0.08" stroke="#EB5757" stroke-width="1" stroke-dasharray="4,3" rx="10"/>
+    <use href="#face-furious" x="30" y="40"/>
+    <text x="58" y="20" font-size="12" font-weight="700" fill="#C0392B">非常生气</text>
+    <text x="58" y="40" font-size="9" fill="#666">脸通红，眼泪要掉，</text>
+    <text x="58" y="54" font-size="9" fill="#666">心里像火烧，想大叫</text>
+    <text x="58" y="68" font-size="9" fill="#666">或躲起来</text>
+  </g>
+  <!-- 橙色段 -->
+  <g transform="translate(30, 192)">
+    <rect x="0" y="0" width="208" height="96" fill="#F2994A" opacity="0.08" stroke="#F2994A" stroke-width="1" stroke-dasharray="4,3" rx="10"/>
+    <use href="#face-angry" x="30" y="50"/>
+    <text x="58" y="24" font-size="12" font-weight="700" fill="#D9701F">生气</text>
+    <text x="58" y="46" font-size="9" fill="#666">脸开始热，拳头想</text>
+    <text x="58" y="60" font-size="9" fill="#666">握紧，声音变大</text>
+  </g>
+  <!-- 黄色段 -->
+  <g transform="translate(30, 292)">
+    <rect x="0" y="0" width="208" height="96" fill="#F2C94C" opacity="0.1" stroke="#D4A017" stroke-width="1" stroke-dasharray="4,3" rx="10"/>
+    <use href="#face-sad" x="30" y="50"/>
+    <text x="58" y="24" font-size="12" font-weight="700" fill="#D4A017">有点难过</text>
+    <text x="58" y="46" font-size="9" fill="#666">心里有点闷，想叹</text>
+    <text x="58" y="60" font-size="9" fill="#666">气，做事没精神</text>
+  </g>
+  <!-- 绿色段 -->
+  <g transform="translate(30, 392)">
+    <rect x="0" y="0" width="208" height="113" fill="#86C166" opacity="0.1" stroke="#6B8E23" stroke-width="1" stroke-dasharray="4,3" rx="10"/>
+    <use href="#face-calm" x="30" y="58"/>
+    <text x="58" y="26" font-size="12" font-weight="700" fill="#6B8E23">平静</text>
+    <text x="58" y="50" font-size="9" fill="#666">身体放松，呼吸平</text>
+    <text x="58" y="64" font-size="9" fill="#666">稳，嘴角上扬</text>
+  </g>
+
+  <!-- ===== 中间：温度计 ===== -->
+  <g>
+    <!-- 管壁白色背景 -->
+    <path d="M250,140 Q250,110 280,110 Q310,110 310,140 L310,508 L250,508 Z" fill="#FFFFFF" stroke="#B0A090" stroke-width="2"/>
+    <!-- 四色段 -->
+    <g clip-path="url(#tubeClip1)">
+      <rect x="250" y="110" width="60" height="80" fill="#EB5757"/>
+      <rect x="250" y="190" width="60" height="100" fill="#F2994A"/>
+      <rect x="250" y="290" width="60" height="100" fill="#F2C94C"/>
+      <rect x="250" y="390" width="60" height="120" fill="#86C166"/>
+    </g>
+    <!-- 玻璃高光 -->
+    <rect x="256" y="122" width="6" height="378" fill="#FFFFFF" opacity="0.35" rx="3"/>
+    <!-- 段间分隔线 -->
+    <line x1="250" y1="190" x2="310" y2="190" stroke="#FFF" stroke-width="1.5" opacity="0.7"/>
+    <line x1="250" y1="290" x2="310" y2="290" stroke="#FFF" stroke-width="1.5" opacity="0.7"/>
+    <line x1="250" y1="390" x2="310" y2="390" stroke="#FFF" stroke-width="1.5" opacity="0.7"/>
+    <!-- 段名 -->
+    <text x="280" y="155" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">非常生气</text>
+    <text x="280" y="245" text-anchor="middle" font-size="14" font-weight="700" fill="#FFF">生气</text>
+    <text x="280" y="345" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">有点难过</text>
+    <text x="280" y="455" text-anchor="middle" font-size="14" font-weight="700" fill="#FFF">平静</text>
+    <!-- 球囊 -->
+    <circle cx="280" cy="515" r="34" fill="#86C166" stroke="#6B8E23" stroke-width="2"/>
+    <circle cx="270" cy="505" r="9" fill="#FFF" opacity="0.3"/>
+    <!-- 刻度线 -->
+    <line x1="310" y1="190" x2="320" y2="190" stroke="#999" stroke-width="1"/>
+    <line x1="310" y1="290" x2="320" y2="290" stroke="#999" stroke-width="1"/>
+    <line x1="310" y1="390" x2="320" y2="390" stroke="#999" stroke-width="1"/>
+    <line x1="310" y1="150" x2="316" y2="150" stroke="#999" stroke-width="0.8"/>
+    <line x1="310" y1="240" x2="316" y2="240" stroke="#999" stroke-width="0.8"/>
+    <line x1="310" y1="340" x2="316" y2="340" stroke="#999" stroke-width="0.8"/>
+    <line x1="310" y1="450" x2="316" y2="450" stroke="#999" stroke-width="0.8"/>
+  </g>
+
+  <!-- ===== 右侧：情绪比喻 + 可滑动指针 ===== -->
+  <!-- 比喻文字 -->
+  <g>
+    <text x="335" y="150" font-size="9.5" fill="#C0392B" font-weight="600">像大火球，</text>
+    <text x="335" y="164" font-size="9.5" fill="#C0392B" font-weight="600">快要爆炸了</text>
+    <text x="335" y="240" font-size="9.5" fill="#D9701F" font-weight="600">像小火苗，</text>
+    <text x="335" y="254" font-size="9.5" fill="#D9701F" font-weight="600">心里热热的</text>
+    <text x="335" y="340" font-size="9.5" fill="#D4A017" font-weight="600">像下雨天，</text>
+    <text x="335" y="354" font-size="9.5" fill="#D4A017" font-weight="600">心里闷闷的</text>
+    <text x="335" y="450" font-size="9.5" fill="#6B8E23" font-weight="600">像湖水一样</text>
+    <text x="335" y="464" font-size="9.5" fill="#6B8E23" font-weight="600">平平静静</text>
+  </g>
+
+  <!-- 滑动缝 -->
+  <line x1="448" y1="112" x2="448" y2="510" stroke="#999" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="448" y="102" text-anchor="middle" font-size="8" fill="#999">沿此剪一条细缝</text>
+  <!-- 缝隙小箭头示意 -->
+  <polygon points="448,240 442,246 454,246" fill="#FF7F50" opacity="0.5"/>
+
+  <!-- 指针小卡片（可剪下移动） -->
+  <g transform="translate(465, 200)">
+    <rect x="0" y="0" width="92" height="80" fill="#FFF9F0" stroke="#FF7F50" stroke-width="1.2" stroke-dasharray="5,3" rx="10"/>
+    <!-- 指针箭头 -->
+    <polygon points="-6,30 -20,36 -6,42" fill="#FF7F50"/>
+    <rect x="-6" y="33" width="32" height="6" fill="#FF7F50" rx="2"/>
+    <text x="46" y="22" text-anchor="middle" font-size="10" font-weight="700" fill="#FF7F50">✂ 情绪指针</text>
+    <text x="46" y="38" text-anchor="middle" font-size="9" fill="#FF7F50">可剪下移动</text>
+    <line x1="14" y1="48" x2="78" y2="48" stroke="#FFD9C0" stroke-width="1"/>
+    <text x="46" y="62" text-anchor="middle" font-size="7.5" fill="#A0937D">插入缝隙后</text>
+    <text x="46" y="73" text-anchor="middle" font-size="7.5" fill="#A0937D">可上下滑动</text>
+  </g>
+
+  <!-- 使用提示气泡 -->
+  <g transform="translate(465, 295)">
+    <rect x="0" y="0" width="92" height="70" fill="#6B8E23" opacity="0.08" stroke="#6B8E23" stroke-width="1" rx="8"/>
+    <text x="46" y="18" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6B8E23">小贴士</text>
+    <text x="46" y="34" text-anchor="middle" font-size="7.5" fill="#6B8E23">每个颜色都</text>
+    <text x="46" y="46" text-anchor="middle" font-size="7.5" fill="#6B8E23">是正常的！</text>
+    <text x="46" y="60" text-anchor="middle" font-size="7" fill="#A0937D">认识它，就能</text>
+    <text x="46" y="70" text-anchor="middle" font-size="7" fill="#A0937D">让它变小～</text>
+  </g>
+
+  <!-- ===== 底部：每日情绪打卡表 ===== -->
+  <g transform="translate(40, 535)">
+    <!-- 标题 -->
+    <text x="257" y="0" text-anchor="middle" font-size="16" font-weight="700" fill="#6B8E23">每日情绪打卡</text>
+    <text x="257" y="17" text-anchor="middle" font-size="10" fill="#A0937D">每天睡前滑一滑指针，圈出今天的颜色，写写感受吧！</text>
+
+    <!-- 表头 -->
+    <g transform="translate(0, 28)">
+      <rect x="0" y="0" width="515" height="26" fill="#6B8E23" rx="6"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">星期</text>
+      <text x="82" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">日期</text>
+      <text x="195" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">情绪颜色（圈一圈）</text>
+      <text x="365" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">我的感受（写/画）</text>
+      <text x="482" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">我想…</text>
+    </g>
+
+    <!-- 颜色图例小圆点（表头下方）放在第一行圈内 -->
+    <!-- 周一 -->
+    <g transform="translate(0, 56)">
+      <rect x="0" y="0" width="515" height="28" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#FF7F50">周一</text>
+      <rect x="58" y="6" width="48" height="16" fill="#FFF" stroke="#DDD" stroke-width="1" rx="3"/>
+      <text x="82" y="18" text-anchor="middle" font-size="9" fill="#CCC">月/日</text>
+      <circle cx="140" cy="14" r="8" fill="none" stroke="#86C166" stroke-width="1.5"/>
+      <circle cx="175" cy="14" r="8" fill="none" stroke="#F2C94C" stroke-width="1.5"/>
+      <circle cx="210" cy="14" r="8" fill="none" stroke="#F2994A" stroke-width="1.5"/>
+      <circle cx="245" cy="14" r="8" fill="none" stroke="#EB5757" stroke-width="1.5"/>
+      <rect x="285" y="4" width="160" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+      <rect x="455" y="4" width="55" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+    </g>
+    <!-- 周二 -->
+    <g transform="translate(0, 84)">
+      <rect x="0" y="0" width="515" height="28" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#FF7F50">周二</text>
+      <rect x="58" y="6" width="48" height="16" fill="#FFF" stroke="#DDD" stroke-width="1" rx="3"/>
+      <text x="82" y="18" text-anchor="middle" font-size="9" fill="#CCC">月/日</text>
+      <circle cx="140" cy="14" r="8" fill="none" stroke="#86C166" stroke-width="1.5"/>
+      <circle cx="175" cy="14" r="8" fill="none" stroke="#F2C94C" stroke-width="1.5"/>
+      <circle cx="210" cy="14" r="8" fill="none" stroke="#F2994A" stroke-width="1.5"/>
+      <circle cx="245" cy="14" r="8" fill="none" stroke="#EB5757" stroke-width="1.5"/>
+      <rect x="285" y="4" width="160" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+      <rect x="455" y="4" width="55" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+    </g>
+    <!-- 周三 -->
+    <g transform="translate(0, 112)">
+      <rect x="0" y="0" width="515" height="28" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#FF7F50">周三</text>
+      <rect x="58" y="6" width="48" height="16" fill="#FFF" stroke="#DDD" stroke-width="1" rx="3"/>
+      <text x="82" y="18" text-anchor="middle" font-size="9" fill="#CCC">月/日</text>
+      <circle cx="140" cy="14" r="8" fill="none" stroke="#86C166" stroke-width="1.5"/>
+      <circle cx="175" cy="14" r="8" fill="none" stroke="#F2C94C" stroke-width="1.5"/>
+      <circle cx="210" cy="14" r="8" fill="none" stroke="#F2994A" stroke-width="1.5"/>
+      <circle cx="245" cy="14" r="8" fill="none" stroke="#EB5757" stroke-width="1.5"/>
+      <rect x="285" y="4" width="160" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+      <rect x="455" y="4" width="55" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+    </g>
+    <!-- 周四 -->
+    <g transform="translate(0, 140)">
+      <rect x="0" y="0" width="515" height="28" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#FF7F50">周四</text>
+      <rect x="58" y="6" width="48" height="16" fill="#FFF" stroke="#DDD" stroke-width="1" rx="3"/>
+      <text x="82" y="18" text-anchor="middle" font-size="9" fill="#CCC">月/日</text>
+      <circle cx="140" cy="14" r="8" fill="none" stroke="#86C166" stroke-width="1.5"/>
+      <circle cx="175" cy="14" r="8" fill="none" stroke="#F2C94C" stroke-width="1.5"/>
+      <circle cx="210" cy="14" r="8" fill="none" stroke="#F2994A" stroke-width="1.5"/>
+      <circle cx="245" cy="14" r="8" fill="none" stroke="#EB5757" stroke-width="1.5"/>
+      <rect x="285" y="4" width="160" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+      <rect x="455" y="4" width="55" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+    </g>
+    <!-- 周五 -->
+    <g transform="translate(0, 168)">
+      <rect x="0" y="0" width="515" height="28" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#FF7F50">周五</text>
+      <rect x="58" y="6" width="48" height="16" fill="#FFF" stroke="#DDD" stroke-width="1" rx="3"/>
+      <text x="82" y="18" text-anchor="middle" font-size="9" fill="#CCC">月/日</text>
+      <circle cx="140" cy="14" r="8" fill="none" stroke="#86C166" stroke-width="1.5"/>
+      <circle cx="175" cy="14" r="8" fill="none" stroke="#F2C94C" stroke-width="1.5"/>
+      <circle cx="210" cy="14" r="8" fill="none" stroke="#F2994A" stroke-width="1.5"/>
+      <circle cx="245" cy="14" r="8" fill="none" stroke="#EB5757" stroke-width="1.5"/>
+      <rect x="285" y="4" width="160" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+      <rect x="455" y="4" width="55" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+    </g>
+    <!-- 周六 -->
+    <g transform="translate(0, 196)">
+      <rect x="0" y="0" width="515" height="28" fill="#FFF9F0" stroke="#DDD" stroke-width="0.8"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#FF7F50">周六</text>
+      <rect x="58" y="6" width="48" height="16" fill="#FFF" stroke="#DDD" stroke-width="1" rx="3"/>
+      <text x="82" y="18" text-anchor="middle" font-size="9" fill="#CCC">月/日</text>
+      <circle cx="140" cy="14" r="8" fill="none" stroke="#86C166" stroke-width="1.5"/>
+      <circle cx="175" cy="14" r="8" fill="none" stroke="#F2C94C" stroke-width="1.5"/>
+      <circle cx="210" cy="14" r="8" fill="none" stroke="#F2994A" stroke-width="1.5"/>
+      <circle cx="245" cy="14" r="8" fill="none" stroke="#EB5757" stroke-width="1.5"/>
+      <rect x="285" y="4" width="160" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+      <rect x="455" y="4" width="55" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+    </g>
+    <!-- 周日 -->
+    <g transform="translate(0, 224)">
+      <rect x="0" y="0" width="515" height="28" fill="#FFFDF8" stroke="#DDD" stroke-width="0.8"/>
+      <text x="28" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#FF7F50">周日</text>
+      <rect x="58" y="6" width="48" height="16" fill="#FFF" stroke="#DDD" stroke-width="1" rx="3"/>
+      <text x="82" y="18" text-anchor="middle" font-size="9" fill="#CCC">月/日</text>
+      <circle cx="140" cy="14" r="8" fill="none" stroke="#86C166" stroke-width="1.5"/>
+      <circle cx="175" cy="14" r="8" fill="none" stroke="#F2C94C" stroke-width="1.5"/>
+      <circle cx="210" cy="14" r="8" fill="none" stroke="#F2994A" stroke-width="1.5"/>
+      <circle cx="245" cy="14" r="8" fill="none" stroke="#EB5757" stroke-width="1.5"/>
+      <rect x="285" y="4" width="160" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+      <rect x="455" y="4" width="55" height="20" fill="#FFF" stroke="#E0E0E0" stroke-width="0.8" rx="4" stroke-dasharray="3,2"/>
+    </g>
+
+    <!-- 列分隔线 -->
+    <line x1="55" y1="56" x2="55" y2="252" stroke="#DDD" stroke-width="0.5"/>
+    <line x1="110" y1="56" x2="110" y2="252" stroke="#DDD" stroke-width="0.5"/>
+    <line x1="280" y1="56" x2="280" y2="252" stroke="#DDD" stroke-width="0.5"/>
+    <line x1="450" y1="56" x2="450" y2="252" stroke="#DDD" stroke-width="0.5"/>
+    <!-- 表格外框 -->
+    <rect x="0" y="28" width="515" height="224" fill="none" stroke="#6B8E23" stroke-width="1.5" rx="6"/>
+  </g>
+
+  <!-- ===== 底部打印建议 ===== -->
+  <g transform="translate(297, 822)">
+    <text x="0" y="0" text-anchor="middle" font-size="8" fill="#BBB">打印建议：A4彩色打印，120g以上稍厚纸 | 指针小卡片可单独剪下过塑反复使用 | 适合3-6岁儿童</text>
+    <text x="0" y="11" text-anchor="middle" font-size="8" fill="#BBB">绘本《米妮的生日派对》配套教具 · 小步绘本</text>
+  </g>
+
+  <!-- 装饰脚印 -->
+  <use href="#footprint1" x="45" y="815" transform="scale(0.55) rotate(-18)"/>
+  <use href="#footprint1" x="555" y="818" transform="scale(0.55) rotate(12)"/>
+</svg>
