@@ -126,7 +126,7 @@ play/
 
 ## 使用入口
 
-- 产品总览：`https://aiworkdb.github.io/teambuilding/play/`
+- 产品总览：`https://ai.aitboy.cn/teambuilding/play/`
 - 更新：新增产品时在本 README 状态表打勾 ✅
 
 _更新：2026-08-12_

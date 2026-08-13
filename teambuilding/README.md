@@ -2,7 +2,7 @@
 title: "团建 & 培训游戏库 - 让团队建设更有趣有效"
 author: "AIWorkDB"
 cover: "images/readme-cover.png"
-source_url: "https://aiworkdb.github.io/teambuilding/"
+source_url: "https://ai.aitboy.cn/teambuilding/"
 ---
 
 # 团建 & 培训游戏库
