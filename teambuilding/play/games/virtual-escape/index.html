@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G7 虚拟密室逃脱</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 10px; }
+  .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.08em; font-weight: 600; padding: 15px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.sm { padding: 8px 14px; font-size: 0.85em; }
+  .btn:disabled { background: #e2e6ee; color: #9aa0ad; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; min-width: 120px; }
+  .num-input { width: 100%; padding: 14px; border: 2px solid #d0d5e0; border-radius: 10px; font-size: 1.2em; text-align: center; font-family: inherit; margin-bottom: 14px; }
+  .num-input:focus { outline: none; border-color: #5b8cfe; }
+  .room-head { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .room-title { font-size: 1.1em; font-weight: 700; }
+  .room-sub { font-size: 0.8em; opacity: 0.85; margin-top: 2px; }
+  .timer-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 6px 12px; font-size: 1.2em; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .obj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .obj-card { background: #f8f9fc; border: 1px solid #e2e6ee; border-radius: 10px; padding: 14px 12px; text-align: center; cursor: pointer; }
+  .obj-card:active { transform: scale(0.98); }
+  .obj-name { font-weight: 700; font-size: 1em; }
+  .obj-status { font-size: 0.78em; color: #5b8cfe; margin-top: 4px; min-height: 1.2em; }
+  .inv-line { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f1f4; padding: 8px 0; font-size: 0.92em; }
+  .inv-line:last-child { border-bottom: none; }
+  .inv-label { color: #666; }
+  .inv-value { font-weight: 600; color: #1a1a2e; }
+  .feedback { background: #eef2ff; border-radius: 8px; padding: 12px; font-size: 0.9em; color: #3366cc; margin-top: 10px; min-height: 1.4em; }
+  .book-list { display: flex; flex-direction: column; gap: 8px; }
+  .book-btn { text-align: left; padding: 12px 14px; border: 1px solid #e2e6ee; border-radius: 8px; background: #f8f9fc; cursor: pointer; font-size: 0.95em; font-family: inherit; color: #1a1a2e; }
+  .book-btn:active { background: #eef2ff; }
+  .book-btn.found { border-color: #5b8cfe; background: #eef2ff; }
+  .overlay { position: fixed; inset: 0; background: rgba(26,26,46,0.55); display: flex; align-items: flex-end; justify-content: center; z-index: 50; }
+  .overlay-card { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-width: 680px; max-height: 82vh; overflow-y: auto; padding: 18px 18px 26px; }
+  .overlay-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .overlay-head .t { font-size: 1.1em; font-weight: 700; }
+  .clue-item { background: #f8f9fc; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 0.9em; }
+  .clue-item .idx { color: #5b8cfe; font-weight: 700; margin-right: 6px; }
+  .empty { color: #999; font-size: 0.88em; text-align: center; padding: 14px 0; }
+  .puzzle-slots { display: flex; gap: 8px; margin: 12px 0; }
+  .puzzle-slot { flex: 1; height: 56px; border: 2px dashed #d0d5e0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.85em; color: #999; }
+  .puzzle-slot.filled { border-style: solid; border-color: #5b8cfe; background: #eef2ff; color: #3366cc; font-weight: 700; }
+  .puzzle-hint { background: #eef2ff; border-radius: 8px; padding: 12px; font-size: 0.95em; color: #3366cc; margin-top: 10px; font-weight: 600; text-align: center; }
+  .password-input { width: 100%; padding: 13px 14px; border: 2px solid #d0d5e0; border-radius: 10px; font-size: 1.05em; font-family: inherit; letter-spacing: 4px; text-align: center; }
+  .password-input:focus { outline: none; border-color: #5b8cfe; }
+  .success-box { text-align: center; padding: 30px 18px; }
+  .success-time { font-size: 2.6em; font-weight: 700; color: #5b8cfe; font-variant-numeric: tabular-nums; margin: 14px 0 6px; }
+  .success-sub { color: #666; font-size: 0.95em; }
+  .fail-box { text-align: center; padding: 30px 18px; }
+  .fail-title { font-size: 1.4em; font-weight: 700; color: #e0563f; margin-bottom: 8px; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+  @media (min-width: 520px) { .obj-grid { grid-template-columns: repeat(3, 1fr); } .overlay { align-items: center; } .overlay-card { border-radius: 16px; max-height: 80vh; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>虚拟密室逃脱</h1>
+  <p>线上解谜闯关 · 团队协作逃生</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 首页 -->
+  <div id="screen-home">
+    <div class="card">
+      <h2>准备开始</h2>
+      <p style="margin-bottom:14px;color:#666;">你们被锁在一间密室里。探索房间、收集线索与拼图碎片、破解密码，在倒计时结束前打开大门逃脱。建议小组讨论共同解谜，单设备由主持人操控。</p>
+      <label style="font-size:0.9em;color:#555;">倒计时（分钟）</label>
+      <input type="number" class="num-input" id="minutesInput" value="30" min="5" max="120">
+      <button type="button" class="btn big" onclick="startAdventure()">开始探险</button>
+    </div>
+    <div class="card">
+      <h2>玩法说明</h2>
+      <p style="font-size:0.9em;color:#666;">1. 点击房间里的物件，探索并收集线索。<br>2. 找到钥匙、打开保险箱、收集 4 块拼图碎片。<br>3. 拼图完成后得到大门密码，输入密码逃脱。<br>4. 共有 3 次提示机会，线索自动记录在「线索板」。</p>
+    </div>
+  </div>
+
+  <!-- 密室 -->
+  <div id="screen-room" style="display:none;">
+    <div class="room-head">
+      <div>
+        <div class="room-title">虚拟密室</div>
+        <div class="room-sub">找到线索，破解密码，打开大门逃脱</div>
+      </div>
+      <div class="timer-badge" id="timerText">30:00</div>
+    </div>
+
+    <div class="card">
+      <h2>房间探索</h2>
+      <p style="font-size:0.85em;color:#999;margin-bottom:12px;">点击物件查看详情，找到线索与碎片</p>
+      <div class="obj-grid" id="objGrid"></div>
+    </div>
+
+    <div class="card">
+      <h2>物品栏</h2>
+      <div id="inventory"></div>
+      <div class="feedback" id="hintText"></div>
+      <div class="btn-row">
+        <button type="button" class="btn" id="puzzleBtn" onclick="openPuzzle()">拼图板</button>
+        <button type="button" class="btn ghost" onclick="showHint()">提示</button>
+        <button type="button" class="btn gray" onclick="resetAll()">重新开始</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>线索板</h2>
+      <div id="clueList"></div>
+    </div>
+  </div>
+
+  <!-- 逃脱成功 -->
+  <div id="screen-escaped" style="display:none;">
+    <div class="card">
+      <div class="success-box">
+        <div class="screen-title" style="font-size:1.2em;font-weight:700;">逃脱成功！</div>
+        <div class="success-time" id="escapedTime">00:00</div>
+        <div class="success-sub">你们合作破解了所有谜题，成功打开大门！</div>
+        <button type="button" class="btn big" style="margin-top:18px;" onclick="resetAll()">再玩一局</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 时间到 -->
+  <div id="screen-failed" style="display:none;">
+    <div class="card">
+      <div class="fail-box">
+        <div class="fail-title">时间到！</div>
+        <p style="color:#666;">很遗憾，未能在倒计时结束前逃脱。</p>
+        <button type="button" class="btn big" style="margin-top:18px;" onclick="resetAll()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 物件详情 / 拼图 弹层 -->
+<div class="overlay" id="overlay" style="display:none;" onclick="if(event.target===this)closePanel();">
+  <div class="overlay-card">
+    <div class="overlay-head">
+      <span class="t" id="panelTitle"></span>
+      <button type="button" class="btn sm gray" onclick="closePanel()">关闭</button>
+    </div>
+    <div id="panelBody"></div>
+    <div class="feedback" id="objFeedback"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// ---- 全局状态（localStorage 持久化，刷新不丢）----
+var SAVE_KEY = 've_state_v1';
+var hints = [
+  '书架上的《航海日志》里似乎夹着什么东西，翻一翻。',
+  '字画翻过来看看，数字可能和保险箱有关。',
+  '保险箱密码是四位数字；大门密码要等拼图完成后才会显现。'
+];
+var OBJECTS = [
+  { id: 'bookshelf', name: '书架' },
+  { id: 'painting', name: '字画' },
+  { id: 'safe', name: '保险箱' },
+  { id: 'table', name: '桌子' },
+  { id: 'window', name: '窗户' },
+  { id: 'rug', name: '地毯' },
+  { id: 'door', name: '门' }
+];
+
+// step: 0 首页 / 1 密室中 / 2 找到钥匙 / 3 字画密码线索 / 4 打开保险箱 / 5 桌子碎片 / 6 地毯碎片 / 7 钥匙圈碎片 / 8 逃脱成功
+var state = {
+  step: 0,
+  fragments: [],
+  clues: [],
+  hasKey: false,
+  hasSafeClue: false,
+  safeOpened: false,
+  keyUsed: false,
+  windowViewed: false,
+  puzzlePlaced: [],
+  hintsUsed: 0,
+  minutes: 30,
+  deadline: 0,
+  totalSeconds: 0
+};
+var timerId = null;
+var currentPanel = 'object';
+var currentObject = '';
+
+// ---- localStorage 容错 ----
+function save() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function load() {
+  try {
+    var raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    state.step = d.step || 0;
+    state.fragments = Array.isArray(d.fragments) ? d.fragments : [];
+    state.clues = Array.isArray(d.clues) ? d.clues : [];
+    state.hasKey = !!d.hasKey;
+    state.hasSafeClue = !!d.hasSafeClue;
+    state.safeOpened = !!d.safeOpened;
+    state.keyUsed = !!d.keyUsed;
+    state.windowViewed = !!d.windowViewed;
+    state.puzzlePlaced = Array.isArray(d.puzzlePlaced) ? d.puzzlePlaced : [];
+    state.hintsUsed = d.hintsUsed || 0;
+    state.minutes = d.minutes || 30;
+    state.deadline = d.deadline || 0;
+    state.totalSeconds = d.totalSeconds || 0;
+  } catch (e) {}
+}
+
+// ---- 通用 ----
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function addClue(t) { if (state.clues.indexOf(t) < 0) state.clues.push(t); }
+function addFrag(n) { if (state.fragments.indexOf(n) < 0) state.fragments.push(n); }
+function hasFrag(n) { return state.fragments.indexOf(n) >= 0; }
+function setStep(n) { if (n > state.step) state.step = n; }
+
+function showScreen(name) {
+  ['home', 'room', 'escaped', 'failed'].forEach(function (s) {
+    document.getElementById('screen-' + s).style.display = (s === name) ? '' : 'none';
+  });
+  document.getElementById('overlay').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+// ---- 倒计时 ----
+function getRemaining() {
+  if (!state.deadline) return state.minutes * 60;
+  return Math.max(0, Math.round((state.deadline - Date.now()) / 1000));
+}
+function updateTimerText() {
+  var r = getRemaining();
+  document.getElementById('timerText').textContent = pad(Math.floor(r / 60)) + ':' + pad(r % 60);
+}
+function startTimer() {
+  stopTimer();
+  state.deadline = Date.now() + state.minutes * 60000;
+  save();
+  timerId = setInterval(tickTimer, 1000);
+  updateTimerText();
+}
+function stopTimer() {
+  if (timerId) { clearInterval(timerId); timerId = null; }
+}
+function tickTimer() {
+  if (getRemaining() <= 0) {
+    stopTimer();
+    showFailed();
+  } else {
+    updateTimerText();
+  }
+}
+function showFailed() {
+  showScreen('failed');
+}
+
+// ---- 流程 ----
+function startAdventure() {
+  var min = parseInt(document.getElementById('minutesInput').value, 10);
+  if (!min || min < 5 || min > 120) { alert('请输入 5-120 之间的分钟数'); return; }
+  state.minutes = min;
+  state.step = 1;
+  save();
+  showScreen('room');
+  renderRoom();
+  startTimer();
+}
+
+function resetAll() {
+  if (!confirm('确定重新开始？所有进度将清空。')) return;
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+  state = { step: 0, fragments: [], clues: [], hasKey: false, hasSafeClue: false, safeOpened: false, keyUsed: false, windowViewed: false, puzzlePlaced: [], hintsUsed: 0, minutes: 30, deadline: 0, totalSeconds: 0 };
+  stopTimer();
+  document.getElementById('minutesInput').value = state.minutes;
+  document.getElementById('hintText').textContent = '';
+  showScreen('home');
+}
+
+// ---- 密室渲染 ----
+function renderRoom() {
+  renderObjGrid();
+  renderInventory();
+  renderClues();
+  updateTimerText();
+}
+
+function objStatus(id) {
+  switch (id) {
+    case 'bookshelf': return state.hasKey ? '已找到钥匙' : '';
+    case 'painting': return state.hasSafeClue ? '已查看' : '';
+    case 'safe': return state.safeOpened ? '已打开' : '';
+    case 'table': return hasFrag(2) ? '已找到碎片' : '';
+    case 'window': return state.windowViewed ? '已查看' : '';
+    case 'rug': return hasFrag(3) ? '已找到碎片' : '';
+    case 'door': return '';
+    default: return '';
+  }
+}
+
+function renderObjGrid() {
+  var html = '';
+  OBJECTS.forEach(function (o) {
+    var st = objStatus(o.id);
+    html += '<div class="obj-card" onclick="openObject(\'' + o.id + '\')">';
+    html += '<div class="obj-name">' + o.name + '</div>';
+    html += '<div class="obj-status">' + st + '</div>';
+    html += '</div>';
+  });
+  document.getElementById('objGrid').innerHTML = html;
+}
+
+function renderInventory() {
+  var html = '';
+  html += '<div class="inv-line"><span class="inv-label">钥匙</span><span class="inv-value">' + (state.hasKey ? (state.keyUsed ? '已使用' : '已找到') : '未找到') + '</span></div>';
+  html += '<div class="inv-line"><span class="inv-label">拼图碎片</span><span class="inv-value">' + state.fragments.length + ' / 4</span></div>';
+  html += '<div class="inv-line"><span class="inv-label">提示机会</span><span class="inv-value">' + Math.max(0, hints.length - state.hintsUsed) + ' 次</span></div>';
+  if (state.hasKey && !state.keyUsed) {
+    html += '<div class="btn-row"><button type="button" class="btn ghost" onclick="useKey()">使用钥匙（打开钥匙圈）</button></div>';
+  }
+  document.getElementById('inventory').innerHTML = html;
+  document.getElementById('puzzleBtn').disabled = state.fragments.length < 4;
+}
+
+function renderClues() {
+  var html = '';
+  if (state.clues.length === 0) {
+    html = '<p class="empty">还没有线索，去探索房间吧</p>';
+  }
+  state.clues.forEach(function (c, i) {
+    html += '<div class="clue-item"><span class="idx">线索 ' + (i + 1) + '</span>' + esc(c) + '</div>';
+  });
+  document.getElementById('clueList').innerHTML = html;
+}
+
+// ---- 弹层 ----
+function closePanel() {
+  document.getElementById('overlay').style.display = 'none';
+  currentPanel = 'object';
+  currentObject = '';
+}
+function openObject(id) {
+  currentPanel = 'object';
+  currentObject = id;
+  var o = OBJECTS.filter(function (x) { return x.id === id; })[0];
+  document.getElementById('panelTitle').textContent = o ? o.name : '';
+  document.getElementById('overlay').style.display = 'flex';
+  renderObjectPanel();
+}
+function openPuzzle() {
+  if (state.fragments.length < 4) { alert('需要先收集 4 块拼图碎片'); return; }
+  currentPanel = 'puzzle';
+  currentObject = '';
+  document.getElementById('panelTitle').textContent = '拼图板';
+  document.getElementById('overlay').style.display = 'flex';
+  renderPuzzlePanel();
+}
+function setFeedback(t) {
+  document.getElementById('objFeedback').textContent = t;
+}
+function renderPanel() {
+  if (currentPanel === 'puzzle') renderPuzzlePanel(); else renderObjectPanel();
+}
+
+// ---- 物件交互 ----
+function renderObjectPanel() {
+  var body = '';
+  switch (currentObject) {
+    case 'bookshelf': body = panelBookshelf(); break;
+    case 'painting': body = panelPainting(); break;
+    case 'safe': body = panelSafe(); break;
+    case 'table': body = panelTable(); break;
+    case 'window': body = panelWindow(); break;
+    case 'rug': body = panelRug(); break;
+    case 'door': body = panelDoor(); break;
+    default: body = '<p class="empty">未知物件</p>';
+  }
+  document.getElementById('panelBody').innerHTML = body;
+  setFeedback('');
+}
+
+function panelBookshelf() {
+  var books = [
+    { name: '《岛民手记》', desc: '一本记录海岛日常的笔记。' },
+    { name: '《航海日志》', desc: '船长留下的日志，看起来被翻过很多次。' },
+    { name: '《食谱》', desc: '一本家常菜谱，中间夹着油渍。' },
+    { name: '《诗集》', desc: '一本泛黄的诗集，扉页写着赠言。' },
+    { name: '《字典》', desc: '厚厚的中文字典，书脊有些磨损。' }
+  ];
+  var html = '<p style="font-size:0.9em;color:#666;margin-bottom:12px;">书架上整齐地摆着五本书，点击翻看。</p><div class="book-list">';
+  books.forEach(function (b, i) {
+    html += '<button type="button" class="book-btn' + (i === 1 && state.hasKey ? ' found' : '') + '" onclick="readBook(' + i + ')">' + b.name + '<span style="color:#999;font-size:0.85em;display:block;">' + b.desc + '</span></button>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function readBook(i) {
+  var books = ['《岛民手记》', '《航海日志》', '《食谱》', '《诗集》', '《字典》'];
+  if (i === 1 && !state.hasKey) {
+    state.hasKey = true;
+    addClue('从《航海日志》的夹层里找到一把钥匙。日志上写着：「字画背后似乎有东西」。');
+    setStep(2);
+    save();
+    renderRoom();
+    renderObjectPanel();
+    setFeedback('在《航海日志》里找到一把钥匙！');
+  } else if (i === 1 && state.hasKey) {
+    setFeedback('《航海日志》已经被翻看过了。');
+  } else {
+    setFeedback(books[i] + '是一本普通的书，没有特别发现。');
+  }
+}
+
+function panelPainting() {
+  if (state.hasSafeClue) {
+    return '<p style="font-size:0.95em;color:#666;">字画背面写着一串数字：<b style="font-size:1.4em;color:#3366cc;letter-spacing:6px;">3-8-1-6</b><br><span style="font-size:0.85em;color:#999;">这很可能就是保险箱的密码。</span></p>';
+  }
+  return '<p style="font-size:0.95em;color:#666;margin-bottom:12px;">墙上挂着一幅山水字画，落款有些模糊。也许背面藏着什么。</p><button type="button" class="btn" onclick="flipPainting()">翻看背面</button>';
+}
+
+function flipPainting() {
+  state.hasSafeClue = true;
+  addClue('字画背面写着一串数字：3-8-1-6，可能是保险箱的密码。');
+  setStep(3);
+  save();
+  renderRoom();
+  renderObjectPanel();
+  setFeedback('字画背面写着：3-8-1-6');
+}
+
+function panelSafe() {
+  if (state.safeOpened) {
+    return '<p style="font-size:0.95em;color:#666;">保险箱已经打开了，里面空空的，拼图碎片已经被取走。</p>';
+  }
+  return '<p style="font-size:0.95em;color:#666;margin-bottom:12px;">墙角放着一个老式保险箱，需要输入 4 位数字密码。</p><input class="password-input" id="safeInput" maxlength="4" inputmode="numeric" placeholder="4 位数字密码"><div class="btn-row"><button type="button" class="btn" onclick="trySafe()">打开保险箱</button></div>';
+}
+
+function trySafe() {
+  var v = document.getElementById('safeInput').value.trim();
+  if (v === '3816') {
+    state.safeOpened = true;
+    addFrag(1);
+    addClue('保险箱打开了！里面有一块拼图碎片（碎片 1）。');
+    setStep(4);
+    save();
+    renderRoom();
+    renderObjectPanel();
+    setFeedback('保险箱打开了，获得拼图碎片 1！');
+  } else {
+    setFeedback('密码不对，保险箱纹丝不动，再试试。');
+  }
+}
+
+function panelTable() {
+  if (hasFrag(2)) {
+    return '<p style="font-size:0.95em;color:#666;">桌上的旧书还摊开着，书签已经被取走了。</p>';
+  }
+  return '<p style="font-size:0.95em;color:#666;margin-bottom:12px;">房间中央放着一张木桌，上面有一本摊开的旧书，书页里露出一角书签。</p><button type="button" class="btn" onclick="openBookmark()">翻开书签</button>';
+}
+
+function openBookmark() {
+  addFrag(2);
+  addClue('在桌上一本旧书的书签里找到一块拼图碎片（碎片 2）。');
+  setStep(5);
+  save();
+  renderRoom();
+  renderObjectPanel();
+  setFeedback('书签里夹着一块拼图碎片！获得碎片 2。');
+}
+
+function panelWindow() {
+  return '<p style="font-size:0.95em;color:#666;margin-bottom:12px;">窗户被木板钉死了，缝隙里透进微弱的光。窗台上积着一层灰。</p><button type="button" class="btn" onclick="checkWindow()">查看窗台</button>';
+}
+
+function checkWindow() {
+  if (state.windowViewed) {
+    setFeedback('窗外依然只有风声，没有别的发现。');
+    return;
+  }
+  state.windowViewed = true;
+  addClue('窗外有风声，看不到什么。');
+  save();
+  renderRoom();
+  setFeedback('窗外有风声，看不到什么。');
+}
+
+function panelRug() {
+  if (hasFrag(3)) {
+    return '<p style="font-size:0.95em;color:#666;">地毯已经被掀开，下面什么都没有了。</p>';
+  }
+  return '<p style="font-size:0.95em;color:#666;margin-bottom:12px;">地上铺着一块旧地毯，边缘微微翘起，下面似乎压着什么东西。</p><button type="button" class="btn" onclick="liftRug()">掀开地毯</button>';
+}
+
+function liftRug() {
+  addFrag(3);
+  addClue('地毯下藏着一块拼图碎片（碎片 3）。');
+  setStep(6);
+  save();
+  renderRoom();
+  renderObjectPanel();
+  setFeedback('地毯下有一块拼图碎片！获得碎片 3。');
+}
+
+function panelDoor() {
+  return '<p style="font-size:0.95em;color:#666;margin-bottom:12px;">大门紧闭，门锁上有一排输入按键，需要输入字母与数字组成的密码。</p><input class="password-input" id="doorInput" maxlength="8" placeholder="输入大门密码"><div class="btn-row"><button type="button" class="btn" onclick="tryDoor()">打开大门</button></div>';
+}
+
+function tryDoor() {
+  var v = document.getElementById('doorInput').value.trim().toUpperCase();
+  if (v === 'TEAM2026') {
+    stopTimer();
+    state.step = 8;
+    state.totalSeconds = state.minutes * 60 - getRemaining();
+    save();
+    showScreen('escaped');
+    document.getElementById('escapedTime').textContent = pad(Math.floor(state.totalSeconds / 60)) + ':' + pad(state.totalSeconds % 60);
+  } else {
+    setFeedback('密码不对，门纹丝不动，再想想。');
+  }
+}
+
+// ---- 钥匙 ----
+function useKey() {
+  if (!state.hasKey || state.keyUsed) return;
+  state.keyUsed = true;
+  addFrag(4);
+  addClue('用钥匙打开钥匙圈，里面藏着一块拼图碎片（碎片 4）。');
+  setStep(7);
+  save();
+  renderRoom();
+  setFeedback('用钥匙打开了钥匙圈，获得拼图碎片 4！');
+}
+
+// ---- 拼图 ----
+function renderPuzzlePanel() {
+  var html = '<p style="font-size:0.9em;color:#666;margin-bottom:6px;">把收集到的碎片依次放入拼图板，拼出最终密码。</p>';
+  html += '<div class="puzzle-slots">';
+  for (var i = 1; i <= 4; i++) {
+    var placed = state.puzzlePlaced.indexOf(i) >= 0;
+    html += '<div class="puzzle-slot' + (placed ? ' filled' : '') + '">' + (placed ? '碎片' + i : '空') + '</div>';
+  }
+  html += '</div>';
+  var unplaced = [1, 2, 3, 4].filter(function (f) { return state.fragments.indexOf(f) >= 0 && state.puzzlePlaced.indexOf(f) < 0; });
+  if (unplaced.length > 0) {
+    html += '<div class="btn-row">';
+    unplaced.forEach(function (f) { html += '<button type="button" class="btn" onclick="placeFragment(' + f + ')">放入碎片 ' + f + '</button>'; });
+    html += '</div>';
+  }
+  if (state.puzzlePlaced.length === 4) {
+    html += '<div class="puzzle-hint">拼图完成！密码提示：TEAM2026</div>';
+  }
+  document.getElementById('panelBody').innerHTML = html;
+  setFeedback('');
+}
+
+function placeFragment(f) {
+  if (state.puzzlePlaced.indexOf(f) >= 0) return;
+  state.puzzlePlaced.push(f);
+  if (state.puzzlePlaced.length === 4) {
+    addClue('拼图完成！碎片拼出密码提示：TEAM2026。');
+  }
+  save();
+  renderRoom();
+  renderPuzzlePanel();
+}
+
+// ---- 提示 ----
+function showHint() {
+  if (state.hintsUsed >= hints.length) { alert('提示已用完'); return; }
+  var h = hints[state.hintsUsed];
+  state.hintsUsed++;
+  save();
+  renderRoom();
+  document.getElementById('hintText').textContent = '提示：' + h;
+}
+
+// ---- 初始化 ----
+load();
+if (state.step === 8) {
+  showScreen('escaped');
+  document.getElementById('escapedTime').textContent = pad(Math.floor(state.totalSeconds / 60)) + ':' + pad(state.totalSeconds % 60);
+} else if (state.step > 0) {
+  showScreen('room');
+  renderRoom();
+  if (getRemaining() <= 0) {
+    showFailed();
+  } else {
+    startTimer();
+  }
+} else {
+  document.getElementById('minutesInput').value = state.minutes;
+  showScreen('home');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2 人类宾果 · 在线版</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.12em; margin-bottom: 10px; }
+  .card p { font-size: 0.9em; color: #666; }
+  .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.08em; font-weight: 600; padding: 15px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.sm { padding: 8px 14px; font-size: 0.85em; }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; min-width: 120px; }
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+  .mode-btn { padding: 26px 12px; border: 2px solid #d0d5e0; border-radius: 12px; background: #fff; cursor: pointer; text-align: center; }
+  .mode-btn:active { transform: scale(0.98); }
+  .mode-btn .t { font-size: 1.15em; font-weight: 700; color: #1a1a2e; }
+  .mode-btn .d { font-size: 0.82em; color: #888; margin-top: 6px; }
+  .mode-btn:hover { border-color: #5b8cfe; }
+  .howto { background: #eef2ff; border-radius: 10px; padding: 14px 16px; font-size: 0.88em; color: #3366cc; margin-top: 14px; line-height: 1.8; }
+  .big-code { font-size: 1.15em; font-weight: 700; color: #5b8cfe; word-break: break-all; letter-spacing: 1px; background: #f8f9fc; border-radius: 8px; padding: 12px; margin: 10px 0; text-align: center; }
+  .called-box { background: #1a1a2e; color: #fff; border-radius: 12px; padding: 22px; text-align: center; margin: 12px 0; min-height: 96px; display: flex; flex-direction: column; justify-content: center; }
+  .called-box .t { font-size: 1.5em; font-weight: 700; word-break: break-all; }
+  .called-box .d { font-size: 0.82em; opacity: 0.75; margin-top: 6px; }
+  .code-row { display: flex; align-items: center; justify-content: space-between; border: 1px solid #e2e6ee; border-radius: 8px; padding: 9px 12px; margin-bottom: 6px; }
+  .code-row .code-text { font-family: monospace; font-size: 0.9em; letter-spacing: 1px; cursor: pointer; }
+  .code-input { width: 100%; padding: 14px; border: 2px solid #d0d5e0; border-radius: 10px; font-size: 1em; text-align: center; font-family: monospace; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
+  .code-input:focus { outline: none; border-color: #5b8cfe; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 14px 0; }
+  .cell { aspect-ratio: 1; border: 1px solid #d0d5e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.72em; padding: 4px; cursor: pointer; background: #fff; color: #333; overflow: hidden; }
+  .cell.marked { background: #5b8cfe; border-color: #5b8cfe; color: #fff; font-weight: 600; }
+  .bingo-banner { display: none; background: linear-gradient(135deg, #e0563f, #c0392b); color: #fff; border-radius: 12px; padding: 18px; text-align: center; font-size: 1.3em; font-weight: 800; margin: 12px 0; letter-spacing: 2px; }
+  .card-no { font-size: 0.88em; color: #666; margin-bottom: 4px; }
+  .card-no b { color: #5b8cfe; font-family: monospace; letter-spacing: 1px; }
+  .status-line { font-size: 0.9em; color: #333; min-height: 1.5em; text-align: center; }
+  .empty { color: #999; font-size: 0.88em; text-align: center; padding: 14px 0; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+  .toast { position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%); background: rgba(26,26,46,0.9); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 300; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>人类宾果 · 在线版</h1>
+  <p>5×5 特征宾果 · 找到对的人连线</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 模式选择 -->
+  <div id="screen-mode">
+    <div class="card">
+      <h2>选择模式</h2>
+      <div class="mode-grid">
+        <button type="button" class="mode-btn" onclick="enterHost()">
+          <div class="t">主持模式</div>
+          <div class="d">大屏生成卡片码、喊格子</div>
+        </button>
+        <button type="button" class="mode-btn" onclick="enterPlayer()">
+          <div class="t">玩家模式</div>
+          <div class="d">输入卡片码，自己点格子</div>
+        </button>
+      </div>
+      <div class="howto">
+        玩法：找到符合特征的人 → 互相确认 → 点击格子标记。<br>
+        横、竖、斜任意连成 5 格即 BINGO！
+      </div>
+    </div>
+  </div>
+
+  <!-- 主持模式 -->
+  <div id="screen-host" style="display:none;">
+    <div class="card">
+      <h2>主持模式</h2>
+      <div class="btn-row">
+        <button type="button" class="btn" onclick="genCard()">生成新卡片</button>
+        <button type="button" class="btn ghost" onclick="callTrait()">喊格子</button>
+        <button type="button" class="btn gray" onclick="goMode()">返回</button>
+      </div>
+      <div class="called-box">
+        <div class="t" id="calledTrait">点击「喊格子」开始喊号</div>
+        <div class="d" id="calledHint">玩家在自己的卡片上找到这个特征并标记</div>
+      </div>
+      <div class="screen-sub" style="font-size:0.85em;color:#888;">最新生成的卡片码（可点复制）</div>
+      <div class="big-code" id="newCardCode">—</div>
+      <div style="font-size:0.95em;font-weight:700;margin:14px 0 8px;">已生成的卡片码列表</div>
+      <div id="cardList"></div>
+    </div>
+  </div>
+
+  <!-- 玩家模式 -->
+  <div id="screen-player" style="display:none;">
+    <div class="card">
+      <h2>玩家模式</h2>
+      <p style="margin-bottom:12px;">输入主持人给你的卡片码（25 位大写字母/数字）</p>
+      <input class="code-input" id="cardCode" placeholder="输入卡片码" maxlength="25">
+      <button type="button" class="btn big" onclick="loadCard()">载入我的卡片</button>
+      <div class="btn-row">
+        <button type="button" class="btn gray" onclick="goMode()">返回</button>
+      </div>
+      <div id="playerArea" style="display:none;">
+        <div class="card-no" style="margin-top:16px;">卡号：<b id="playerCardNo"></b></div>
+        <div class="grid" id="grid"></div>
+        <div class="bingo-banner" id="bingoBanner">BINGO！已连成 <span id="bingoLineCount">0</span> 线</div>
+        <div class="status-line" id="bingoStatus"></div>
+        <div class="btn-row">
+          <button type="button" class="btn ghost" onclick="regenCard()">重新生成</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- 特征池（30 条）----
+var TRAITS = [
+  '养过宠物', '会两种以上外语', '去过西藏', '做过志愿者', '喜欢吃香菜',
+  '会一种乐器', '凌晨2点还没睡过', '手机里有1000张以上照片', '会骑自行车', '看过同一部电影三遍以上',
+  '参加过马拉松或长跑', '会做一道拿手菜', '有弟弟或妹妹', '喜欢看悬疑推理剧', '冬天去过北方',
+  '会游泳', '名字是三个字', '最近一个月没喝过奶茶', '习惯早起', '会打麻将',
+  '出过国', '会跳广场舞', '收藏过旧邮票或旧物件', '会讲冷笑话', '熬夜看过球赛直播',
+  '坐过绿皮火车', '会用Excel函数', '微信好友超过500人', '养过植物且养活了', '怕打针'
+];
+
+// 卡片码字母表（32 个，去掉易混淆的 I/O/0/1）
+var ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+// ---- localStorage 容错 ----
+function lsGet(k, d) {
+  try {
+    var v = localStorage.getItem(k);
+    return v ? JSON.parse(v) : d;
+  } catch (e) { return d; }
+}
+function lsSet(k, v) {
+  try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+// 编码：25 个格子特征索引 → 25 位卡片码
+function encode(cells) {
+  return cells.map(function (c) { return ALPHA[c]; }).join('');
+}
+
+// 解码：卡片码 → 25 个特征索引；非法返回 null
+function decode(code) {
+  code = code.toUpperCase().trim();
+  if (code.length !== 25) return null;
+  var cells = [];
+  for (var i = 0; i < 25; i++) {
+    var idx = ALPHA.indexOf(code[i]);
+    if (idx < 0 || idx > 29) return null;
+    cells.push(idx);
+  }
+  return cells;
+}
+
+// ---- 屏幕切换 ----
+function showScreen2(name) {
+  ['mode', 'host', 'player'].forEach(function (s) {
+    document.getElementById('screen-' + s).style.display = (s === name) ? '' : 'none';
+  });
+  window.scrollTo(0, 0);
+}
+function goMode() { showScreen2('mode'); }
+function enterHost() { renderHostCards(); document.getElementById('calledTrait').textContent = '点击「喊格子」开始喊号'; showScreen2('host'); }
+function enterPlayer() { document.getElementById('cardCode').value = ''; showScreen2('player'); }
+
+// ---- 主持：生成卡片 ----
+function genCard() {
+  var shuffled = shuffle(TRAITS).slice(0, 25);
+  var cells = shuffled.map(function (t) { return TRAITS.indexOf(t); });
+  var code = encode(cells);
+  var list = lsGet('hb_cards_v1', []);
+  list.unshift({ code: code, time: Date.now() });
+  lsSet('hb_cards_v1', list.slice(0, 100));
+  document.getElementById('newCardCode').textContent = code;
+  renderHostCards();
+  showToast('已生成新卡片');
+}
+
+function renderHostCards() {
+  var list = lsGet('hb_cards_v1', []);
+  var html = '';
+  if (list.length === 0) {
+    html = '<p class="empty">还没有生成卡片，点击「生成新卡片」</p>';
+  }
+  list.forEach(function (it) {
+    html += '<div class="code-row"><span class="code-text" onclick="copyCode(\'' + it.code + '\')">' + it.code + '</span><button type="button" class="btn sm ghost" onclick="copyCode(\'' + it.code + '\')">复制</button></div>';
+  });
+  document.getElementById('cardList').innerHTML = html;
+}
+
+// ---- 主持：喊格子 ----
+function callTrait() {
+  var t = TRAITS[Math.floor(Math.random() * TRAITS.length)];
+  document.getElementById('calledTrait').textContent = t;
+  document.getElementById('calledHint').textContent = '玩家在自己的卡片上找到这个特征并标记';
+}
+
+// ---- 玩家：载入卡片 ----
+var currentCode = '';
+var currentCells = [];
+var marked = [];
+
+function loadCard() {
+  var code = document.getElementById('cardCode').value.trim().toUpperCase();
+  var cells = decode(code);
+  if (!cells) { alert('卡片码无效：应为 25 位大写字母/数字'); return; }
+  currentCode = code;
+  currentCells = cells;
+  marked = lsGet('hb_mark_' + code, []);
+  document.getElementById('playerCardNo').textContent = code;
+  document.getElementById('playerArea').style.display = '';
+  renderGrid();
+  showToast('卡片载入成功');
+}
+
+function renderGrid() {
+  var html = '';
+  for (var i = 0; i < 25; i++) {
+    html += '<div class="cell' + (marked.indexOf(i) >= 0 ? ' marked' : '') + '" onclick="toggleCell(' + i + ')">' + esc(TRAITS[currentCells[i]]) + '</div>';
+  }
+  document.getElementById('grid').innerHTML = html;
+  updateBingo();
+}
+
+function toggleCell(i) {
+  var pos = marked.indexOf(i);
+  if (pos >= 0) { marked.splice(pos, 1); } else { marked.push(i); }
+  lsSet('hb_mark_' + currentCode, marked);
+  renderGrid();
+}
+
+// ---- BINGO 检测：行/列/对角线 ----
+function countLines() {
+  var m = {};
+  marked.forEach(function (i) { m[i] = true; });
+  var lines = 0;
+  for (var r = 0; r < 5; r++) {
+    var ok = true;
+    for (var c = 0; c < 5; c++) { if (!m[r * 5 + c]) { ok = false; break; } }
+    if (ok) lines++;
+  }
+  for (var c2 = 0; c2 < 5; c2++) {
+    var ok2 = true;
+    for (var r2 = 0; r2 < 5; r2++) { if (!m[r2 * 5 + c2]) { ok2 = false; break; } }
+    if (ok2) lines++;
+  }
+  var d1 = true;
+  for (var i = 0; i < 5; i++) { if (!m[i * 5 + i]) { d1 = false; break; } }
+  if (d1) lines++;
+  var d2 = true;
+  for (var j = 0; j < 5; j++) { if (!m[j * 5 + (4 - j)]) { d2 = false; break; } }
+  if (d2) lines++;
+  return lines;
+}
+
+function updateBingo() {
+  var lines = countLines();
+  document.getElementById('bingoStatus').textContent = lines > 0 ? ('已连成 ' + lines + ' 线') : '';
+  document.getElementById('bingoBanner').style.display = lines > 0 ? 'block' : 'none';
+  document.getElementById('bingoLineCount').textContent = lines;
+}
+
+// 玩家重新生成自己的卡片
+function regenCard() {
+  var shuffled = shuffle(TRAITS).slice(0, 25);
+  currentCells = shuffled.map(function (t) { return TRAITS.indexOf(t); });
+  currentCode = encode(currentCells);
+  marked = [];
+  lsSet('hb_mark_' + currentCode, marked);
+  document.getElementById('playerCardNo').textContent = currentCode;
+  renderGrid();
+  showToast('已生成新卡片');
+}
+
+// ---- 复制 ----
+function copyCode(code) {
+  var done = function () { showToast('卡片码已复制'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(done, function () { fallbackCopy(code); done(); });
+  } else {
+    fallbackCopy(code);
+    done();
+  }
+}
+
+function fallbackCopy(t) {
+  var ta = document.createElement('textarea');
+  ta.value = t;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+var toastTimer = null;
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1600);
+}
+</script>
+
+</body>
+</html>

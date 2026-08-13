@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T2 随机分组器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 12px; }
+  textarea { width: 100%; min-height: 140px; border: 1px solid #d0d5e0; border-radius: 8px; padding: 12px; font-size: 0.95em; font-family: inherit; resize: vertical; }
+  textarea:focus { outline: none; border-color: #5b8cfe; box-shadow: 0 0 0 3px rgba(91,140,254,0.18); }
+  .stat-line { margin-top: 8px; font-size: 0.88em; color: #666; }
+  .stat-line b { color: #5b8cfe; font-size: 1.1em; }
+  .mode-switch { display: flex; gap: 8px; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 11px 18px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.sm { padding: 8px 14px; font-size: 0.88em; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.active { background: #5b8cfe; color: #fff; border-color: #5b8cfe; }
+  .btn.big { display: block; width: 100%; font-size: 1.05em; font-weight: 600; padding: 14px; }
+  .num-row { display: flex; align-items: center; gap: 14px; margin: 6px 0 8px; }
+  .num-btn { width: 48px; height: 48px; border-radius: 10px; border: 2px solid #d0d5e0; background: #fff; font-size: 1.4em; color: #5b8cfe; cursor: pointer; }
+  .num-btn:active { transform: scale(0.95); }
+  .num-val { font-size: 1.6em; font-weight: 700; min-width: 56px; text-align: center; color: #1a1a2e; }
+  .hint { font-size: 0.82em; color: #888; margin-bottom: 10px; }
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-row .btn { flex: 1; }
+  .group-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 14px 16px; margin-bottom: 10px; }
+  .group-head { font-size: 0.95em; font-weight: 700; margin-bottom: 6px; }
+  .group-head .g-count { font-size: 0.78em; color: #5b8cfe; font-weight: 400; margin-left: 8px; }
+  .group-members { font-size: 0.92em; color: #333; line-height: 1.7; }
+  .empty { color: #999; font-size: 0.88em; text-align: center; padding: 20px 0; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+  .toast { position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%); background: rgba(26,26,46,0.9); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 0.9em; opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 300; }
+  .toast.show { opacity: 1; }
+  @media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .wrap { padding: 10px; }
+    .group-card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero no-print">
+  <h1>随机分组器</h1>
+  <p>名单快速公平随机分组 · 一键复制打印</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card no-print">
+    <h2>1. 输入名单</h2>
+    <textarea id="names" placeholder="每行一个名字，可直接粘贴：&#10;张三&#10;李四&#10;王五&#10;赵六" oninput="updateTotal()"></textarea>
+    <div class="stat-line">总人数：<b id="total">0</b> 人</div>
+  </div>
+
+  <div class="card no-print">
+    <h2>2. 分组方式</h2>
+    <div class="mode-switch">
+      <button type="button" class="btn sm" id="modeGroups" onclick="setMode('groups')">按组数</button>
+      <button type="button" class="btn sm ghost" id="modePer" onclick="setMode('per')">按每组人数</button>
+    </div>
+    <div class="num-row">
+      <button type="button" class="num-btn" onclick="step(-1)">-</button>
+      <span class="num-val" id="numVal">4</span>
+      <button type="button" class="num-btn" onclick="step(1)">+</button>
+    </div>
+    <div class="hint" id="numHint">组数：4 组（1-20）</div>
+    <button type="button" class="btn big" onclick="doSplit()">随机分组</button>
+    <div class="btn-row">
+      <button type="button" class="btn ghost" onclick="doSplit()">重新分组</button>
+      <button type="button" class="btn ghost" onclick="copyResult()">复制结果</button>
+      <button type="button" class="btn ghost" onclick="window.print()">打印</button>
+    </div>
+  </div>
+
+  <div id="result"><p class="empty">输入名单后点击「随机分组」</p></div>
+</div>
+
+<div class="footer no-print">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var mode = 'groups';      // groups=按组数，per=按每组人数
+var num = 4;              // 当前数值
+var lastGroups = [];      // 最近一次分组结果
+
+function setMode(m) {
+  mode = m;
+  if (mode === 'groups' && num > 20) num = 20;
+  if (mode === 'per' && num < 1) num = 1;
+  updateNumUI();
+}
+
+function step(d) {
+  var max = mode === 'groups' ? 20 : 99;
+  num = Math.min(max, Math.max(1, num + d));
+  updateNumUI();
+}
+
+function updateNumUI() {
+  document.getElementById('numVal').textContent = num;
+  document.getElementById('numHint').textContent = mode === 'groups'
+    ? '组数：' + num + ' 组（1-20）'
+    : '每组人数：' + num + ' 人';
+  var g = document.getElementById('modeGroups');
+  var p = document.getElementById('modePer');
+  g.className = 'btn sm' + (mode === 'groups' ? ' active' : ' ghost');
+  p.className = 'btn sm' + (mode === 'per' ? ' active' : ' ghost');
+}
+
+function getNames() {
+  var raw = document.getElementById('names').value;
+  var list = raw.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s !== ''; });
+  return list;
+}
+
+function updateTotal() {
+  document.getElementById('total').textContent = getNames().length;
+}
+
+// 洗牌
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+// 轮流分配，保证各组人数尽量均衡
+function chunk(arr, n) {
+  var out = [];
+  for (var i = 0; i < n; i++) out.push([]);
+  arr.forEach(function (x, i) { out[i % n].push(x); });
+  return out;
+}
+
+function doSplit() {
+  var names = getNames();
+  if (names.length === 0) {
+    alert('请先输入名单（每行一个名字）');
+    return;
+  }
+  var groups;
+  if (mode === 'groups') {
+    var n = Math.min(num, names.length);
+    if (num > names.length) alert('组数超过人数，已自动调整为 ' + n + ' 组');
+    groups = chunk(shuffle(names), n);
+  } else {
+    var size = Math.max(1, num);
+    var n2 = Math.ceil(names.length / size);
+    groups = chunk(shuffle(names), n2);
+  }
+  lastGroups = groups;
+  renderGroups(groups);
+}
+
+function renderGroups(groups) {
+  var html = '';
+  groups.forEach(function (g, i) {
+    html += '<div class="group-card">';
+    html += '<div class="group-head">第 ' + (i + 1) + ' 组<span class="g-count">' + g.length + ' 人</span></div>';
+    html += '<div class="group-members">' + (g.length > 0 ? g.join('、') : '（空）') + '</div>';
+    html += '</div>';
+  });
+  document.getElementById('result').innerHTML = html;
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyResult() {
+  if (lastGroups.length === 0) {
+    alert('请先点击「随机分组」');
+    return;
+  }
+  var text = lastGroups.map(function (g, i) {
+    return '第' + (i + 1) + '组：' + g.join('、');
+  }).join('\n');
+  copyText(text);
+}
+
+function copyText(t) {
+  var done = function () { showToast('已复制到剪贴板'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(done, function () {
+      fallbackCopy(t);
+      done();
+    });
+  } else {
+    fallbackCopy(t);
+    done();
+  }
+}
+
+function fallbackCopy(t) {
+  var ta = document.createElement('textarea');
+  ta.value = t;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+var toastTimer = null;
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1600);
+}
+
+updateTotal();
+updateNumUI();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1 团建方案生成器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.1em; margin-bottom: 14px; }
+  .dim { margin-bottom: 16px; }
+  .dim-label { font-size: 0.92em; font-weight: 700; margin-bottom: 8px; color: #333; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { padding: 10px 16px; border: 2px solid #d0d5e0; border-radius: 8px; background: #fff; color: #555; font-size: 0.9em; cursor: pointer; transition: all 0.15s; }
+  .opt:hover { border-color: #5b8cfe; color: #5b8cfe; }
+  .opt.active { background: #5b8cfe; color: #fff; border-color: #5b8cfe; }
+  .btn { display: inline-block; padding: 11px 18px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.05em; font-weight: 600; padding: 14px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .summary { background: #eef2ff; border-radius: 8px; padding: 10px 14px; font-size: 0.9em; color: #3366cc; margin-bottom: 12px; }
+  .warn { background: #fff9e6; border-radius: 8px; padding: 10px 14px; font-size: 0.85em; color: #a06700; margin-bottom: 12px; }
+  .rec-title { font-size: 0.95em; font-weight: 700; margin: 12px 0 10px; }
+  .game-card { background: #f8f9fc; border-left: 3px solid #5b8cfe; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+  .game-head { font-size: 0.98em; margin-bottom: 6px; }
+  .game-head b { color: #1a1a2e; }
+  .g-idx { display: inline-block; min-width: 20px; height: 20px; line-height: 20px; text-align: center; background: #5b8cfe; color: #fff; border-radius: 50%; font-size: 0.72em; margin-right: 6px; }
+  .g-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .g-tags span { font-size: 0.72em; background: #eef2ff; color: #3366cc; padding: 2px 8px; border-radius: 4px; }
+  .game-card p { font-size: 0.85em; color: #666; }
+  .tl { margin-top: 14px; }
+  .tl-item { border-left: 2px solid #5b8cfe; padding: 0 0 14px 16px; margin-left: 6px; position: relative; }
+  .tl-item::before { content: ''; position: absolute; left: -6px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: #5b8cfe; }
+  .tl-phase { font-size: 0.85em; font-weight: 700; color: #5b8cfe; margin-bottom: 6px; }
+  .tl-game { font-size: 0.92em; font-weight: 600; margin-top: 6px; }
+  .tl-min { font-size: 0.78em; font-weight: 400; color: #5b8cfe; }
+  .tl-note { font-size: 0.82em; color: #888; margin-top: 2px; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+  @media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .wrap { padding: 10px; }
+    .card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero no-print">
+  <h1>团建方案生成器</h1>
+  <p>四维筛选 · 智能推荐 · 一键生成时间轴</p>
+</div>
+
+<div class="wrap">
+  <div class="card no-print">
+    <h2>选择你的团建需求（每项单选，再点可取消）</h2>
+
+    <div class="dim">
+      <div class="dim-label">目的</div>
+      <div class="opts">
+        <button type="button" class="opt" data-dim="purpose" data-val="破冰热场" onclick="toggleOpt(this)">破冰热场</button>
+        <button type="button" class="opt" data-dim="purpose" data-val="沟通表达" onclick="toggleOpt(this)">沟通表达</button>
+        <button type="button" class="opt" data-dim="purpose" data-val="团队协作" onclick="toggleOpt(this)">团队协作</button>
+        <button type="button" class="opt" data-dim="purpose" data-val="信任建立" onclick="toggleOpt(this)">信任建立</button>
+        <button type="button" class="opt" data-dim="purpose" data-val="领导力" onclick="toggleOpt(this)">领导力</button>
+        <button type="button" class="opt" data-dim="purpose" data-val="创新思维" onclick="toggleOpt(this)">创新思维</button>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="dim-label">形式</div>
+      <div class="opts">
+        <button type="button" class="opt" data-dim="form" data-val="室内" onclick="toggleOpt(this)">室内</button>
+        <button type="button" class="opt" data-dim="form" data-val="户外" onclick="toggleOpt(this)">户外</button>
+        <button type="button" class="opt" data-dim="form" data-val="线上" onclick="toggleOpt(this)">线上</button>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="dim-label">人数</div>
+      <div class="opts">
+        <button type="button" class="opt" data-dim="people" data-val="10人以下" onclick="toggleOpt(this)">10人以下</button>
+        <button type="button" class="opt" data-dim="people" data-val="10-30人" onclick="toggleOpt(this)">10-30人</button>
+        <button type="button" class="opt" data-dim="people" data-val="30人以上" onclick="toggleOpt(this)">30人以上</button>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="dim-label">时长</div>
+      <div class="opts">
+        <button type="button" class="opt" data-dim="duration" data-val="30分钟内" onclick="toggleOpt(this)">30分钟内</button>
+        <button type="button" class="opt" data-dim="duration" data-val="30-60分钟" onclick="toggleOpt(this)">30-60分钟</button>
+        <button type="button" class="opt" data-dim="duration" data-val="60分钟以上" onclick="toggleOpt(this)">60分钟以上</button>
+      </div>
+    </div>
+
+    <button type="button" class="btn big" onclick="generatePlan()">生成方案</button>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<div class="footer no-print">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// 当前选择（每个维度最多一个）
+var SELECTED = { purpose: '', form: '', people: '', duration: '' };
+
+// 内置游戏库（约 20 款，均来自团建游戏库真实游戏）
+var GAMES = [
+  { name: '两真一假', purpose: '破冰热场', forms: ['室内', '线上'], peoples: ['10人以下', '10-30人'], durations: ['30分钟内'], play: '每人说出两个真话一个假话，其他人投票猜哪个是假的，笑声中快速认识彼此。' },
+  { name: '人类宾果', purpose: '破冰热场', forms: ['室内', '线上'], peoples: ['10人以下', '10-30人', '30人以上'], durations: ['30分钟内'], play: '5×5 特征宾果卡，找到符合特征的人互相确认并标记，连成线即完成。' },
+  { name: '名字接龙', purpose: '破冰热场', forms: ['室内', '户外', '线上'], peoples: ['10人以下', '10-30人'], durations: ['30分钟内'], play: '依次报出前面所有人的名字并加上自己的，超快记住全队名字。' },
+  { name: '线上宾果', purpose: '破冰热场', forms: ['线上'], peoples: ['10人以下', '10-30人', '30人以上'], durations: ['30分钟内'], play: '线上版人类宾果，用视频会议完成特征确认与标记。' },
+  { name: '团队知识竞答', purpose: '破冰热场', forms: ['室内', '线上'], peoples: ['10-30人', '30人以上'], durations: ['30-60分钟'], play: '趣味题库竞答，队伍抢答计分，气氛热烈。' },
+  { name: '传话游戏', purpose: '沟通表达', forms: ['室内', '户外', '线上'], peoples: ['10-30人', '30人以上'], durations: ['30分钟内'], play: '一句话悄悄传递，最后与开头对比，直观看到信息失真。' },
+  { name: '你说我画', purpose: '沟通表达', forms: ['室内', '线上'], peoples: ['10人以下', '10-30人'], durations: ['30分钟内'], play: '一人描述图形一人画，体验表达与倾听之间的鸿沟。' },
+  { name: '盲人方阵', purpose: '沟通表达', forms: ['室内', '户外'], peoples: ['10-30人', '30人以上'], durations: ['30-60分钟'], play: '蒙眼后用绳子围成一个正方形，经典沟通协作游戏。' },
+  { name: '人结', purpose: '团队协作', forms: ['室内', '户外'], peoples: ['10-30人', '30人以上'], durations: ['30-60分钟'], play: '所有人手拉手结成乱结，在不松手的前提下一起解开。' },
+  { name: '齐眉棍', purpose: '团队协作', forms: ['室内', '户外'], peoples: ['10-30人'], durations: ['30分钟内'], play: '全组伸出食指托起一根棍子放到齐眉高度，体验"每个人都对但结果错了"。' },
+  { name: '珠行万里', purpose: '团队协作', forms: ['室内', '户外'], peoples: ['10-30人', '30人以上'], durations: ['30分钟内'], play: '用 U 型槽接力运送小球，一个失误全体重来，体验责任共担。' },
+  { name: '岛屿求生', purpose: '团队协作', forms: ['室内'], peoples: ['10-30人'], durations: ['60分钟以上'], play: '资源有限的荒岛协作决策，体验取舍与共识。' },
+  { name: '病毒危机', purpose: '团队协作', forms: ['室内'], peoples: ['10-30人'], durations: ['60分钟以上'], play: '模拟病毒爆发，团队分工应对危机，锻炼决策与领导力。' },
+  { name: '疯狂厨房', purpose: '团队协作', forms: ['室内'], peoples: ['10-30人'], durations: ['30-60分钟'], play: '流水线协作烹饪，时间压力下体验瓶颈工位与默契配合。' },
+  { name: '魔法学院', purpose: '团队协作', forms: ['室内'], peoples: ['10-30人'], durations: ['60分钟以上'], play: '角色分工合作完成魔法任务，深度协作体验。' },
+  { name: '星际矿工', purpose: '团队协作', forms: ['室内'], peoples: ['10-30人'], durations: ['60分钟以上'], play: '资源竞争与团队协作平衡的星际采矿决策。' },
+  { name: '信任背摔', purpose: '信任建立', forms: ['户外'], peoples: ['10-30人', '30人以上'], durations: ['30-60分钟'], play: '队员从高处向后倒，队友用手臂接住，深度信任体验。' },
+  { name: '盲行', purpose: '信任建立', forms: ['室内', '户外'], peoples: ['10人以下', '10-30人'], durations: ['30分钟内'], play: '一人蒙眼一人引导穿越障碍，体验交出控制权与肩负责任。' },
+  { name: '红黑游戏', purpose: '领导力', forms: ['室内'], peoples: ['10-30人', '30人以上'], durations: ['60分钟以上'], play: '两队选择红黑牌博弈，体验竞争与合作的根本张力。' },
+  { name: '沙漠逃生', purpose: '领导力', forms: ['室内', '线上'], peoples: ['10-30人'], durations: ['30-60分钟'], play: '飞机迫降沙漠，排序求生物品，在分歧中达成团队共识。' },
+  { name: '报纸塔挑战', purpose: '创新思维', forms: ['室内'], peoples: ['10-30人', '30人以上'], durations: ['30-60分钟'], play: '用报纸和胶带搭出最高最稳的塔，激发创意与协作。' },
+  { name: '10元买创意', purpose: '创新思维', forms: ['室内', '户外'], peoples: ['10-30人'], durations: ['30-60分钟'], play: '用 10 元预算解决指定难题，资源受限下激发想象力。' }
+];
+
+// 选项切换（单选，再次点击取消）
+function toggleOpt(btn) {
+  var dim = btn.getAttribute('data-dim');
+  var val = btn.getAttribute('data-val');
+  var wasActive = btn.classList.contains('active');
+  document.querySelectorAll('.opt[data-dim="' + dim + '"]').forEach(function (b) {
+    b.classList.remove('active');
+  });
+  if (wasActive) {
+    SELECTED[dim] = '';
+  } else {
+    btn.classList.add('active');
+    SELECTED[dim] = val;
+  }
+}
+
+// 洗牌
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+// 由时长档位给出建议分钟数
+function sugMin(d) {
+  if (d === '30分钟内') return 15;
+  if (d === '30-60分钟') return 40;
+  if (d === '60分钟以上') return 60;
+  return 20;
+}
+
+// 生成方案：匹配目的，且至少满足一项其他条件
+function generatePlan() {
+  var dims = ['purpose', 'form', 'people', 'duration'];
+  for (var i = 0; i < dims.length; i++) {
+    if (!SELECTED[dims[i]]) {
+      alert('请在每个维度选择一个选项（再次点击可取消后重选）');
+      return;
+    }
+  }
+  var p = SELECTED.purpose, f = SELECTED.form, pe = SELECTED.people, d = SELECTED.duration;
+
+  var matched = GAMES.filter(function (g) {
+    if (g.purpose !== p) return false;
+    return g.forms.indexOf(f) >= 0 || g.peoples.indexOf(pe) >= 0 || g.durations.indexOf(d) >= 0;
+  });
+
+  var loose = false;
+  if (matched.length < 3) {
+    // 条件过严时放宽：仅按目的匹配
+    matched = GAMES.filter(function (g) { return g.purpose === p; });
+    loose = true;
+  }
+
+  var picked = shuffle(matched).slice(0, 5);
+  renderResult(picked, p, f, pe, d, loose);
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 渲染推荐结果 + 时间轴
+function renderResult(picked, p, f, pe, d, loose) {
+  var html = '';
+  html += '<div class="card" id="print-area">';
+  html += '<h2>推荐方案</h2>';
+  html += '<div class="summary">目的：' + p + ' ｜ 形式：' + f + ' ｜ 人数：' + pe + ' ｜ 时长：' + d + '</div>';
+  if (loose) html += '<div class="warn">匹配游戏较少，已放宽为仅按目的推荐。</div>';
+
+  if (picked.length === 0) {
+    html += '<p style="color:#888;">没有找到匹配的游戏，请调整条件后重试。</p>';
+  } else {
+    html += '<div class="rec-title">推荐游戏（' + picked.length + ' 款）</div>';
+    picked.forEach(function (g, i) {
+      html += '<div class="game-card">';
+      html += '<div class="game-head"><span class="g-idx">' + (i + 1) + '</span><b>' + g.name + '</b></div>';
+      html += '<div class="g-tags"><span>' + g.purpose + '</span><span>' + g.forms.join('/') + '</span><span>' + g.peoples.join('/') + '</span><span>' + g.durations.join('/') + '</span></div>';
+      html += '<p>' + g.play + '</p>';
+      html += '</div>';
+    });
+    html += buildTimelineHtml(picked);
+    html += '<button type="button" class="btn big no-print" onclick="window.print()" style="margin-top:6px;">打印方案</button>';
+  }
+  html += '</div>';
+  document.getElementById('result').innerHTML = html;
+}
+
+// 生成时间轴：开场热身 → 主游戏 → 收尾复盘
+function buildTimelineHtml(picked) {
+  var ice = [], rest = [];
+  picked.forEach(function (g) {
+    if (g.purpose === '破冰热场') ice.push(g); else rest.push(g);
+  });
+  var seq = ice.concat(rest);
+  var last = null;
+  if (seq.length > 1) last = seq.pop();
+  var opener = seq[0];
+
+  var html = '<div class="rec-title">时间轴安排</div><div class="tl">';
+
+  html += '<div class="tl-item"><div class="tl-phase">开场热身</div>';
+  html += '<div class="tl-game">' + opener.name + ' <span class="tl-min">建议 ' + sugMin(opener.durations[0]) + ' 分钟</span></div>';
+  html += '<div class="tl-note">' + opener.play + '</div></div>';
+
+  var mains = seq.slice(1);
+  if (mains.length > 0) {
+    html += '<div class="tl-item"><div class="tl-phase">主游戏</div>';
+    mains.forEach(function (g) {
+      html += '<div class="tl-game">' + g.name + ' <span class="tl-min">建议 ' + sugMin(g.durations[0]) + ' 分钟</span></div>';
+      html += '<div class="tl-note">' + g.play + '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="tl-item"><div class="tl-phase">收尾复盘</div>';
+  if (last) {
+    html += '<div class="tl-game">' + last.name + ' <span class="tl-min">建议 ' + sugMin(last.durations[0]) + ' 分钟</span></div>';
+    html += '<div class="tl-note">' + last.play + '</div>';
+  }
+  html += '<div class="tl-game">复盘讨论 <span class="tl-min">建议 10-15 分钟</span></div>';
+  html += '<div class="tl-note">用 4F 模型回顾：事实、感受、发现、未来行动。</div>';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+</script>
+
+</body>
+</html>

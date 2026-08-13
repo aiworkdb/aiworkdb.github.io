@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G3 团队知识竞答</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.1em; margin-bottom: 12px; }
+  .card p { font-size: 0.9em; color: #666; }
+  .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.08em; font-weight: 600; padding: 15px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.sm { padding: 8px 14px; font-size: 0.85em; }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; min-width: 120px; }
+  select, input { font-family: inherit; }
+  .select-bar { width: 100%; padding: 13px; border: 2px solid #d0d5e0; border-radius: 10px; font-size: 1em; margin-bottom: 12px; background: #fff; }
+  .team-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .team-name-row span { width: 24px; height: 24px; border-radius: 50%; background: #5b8cfe; color: #fff; text-align: center; line-height: 24px; font-size: 0.8em; flex-shrink: 0; }
+  .team-name-row input { flex: 1; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.95em; }
+  .team-name-row input:focus { outline: none; border-color: #5b8cfe; }
+  .q-manage { border-top: 1px dashed #e2e6ee; margin-top: 16px; padding-top: 14px; }
+  .q-manage .sub-label { font-size: 0.9em; font-weight: 700; margin: 12px 0 8px; }
+  .q-input { width: 100%; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.92em; margin-bottom: 8px; }
+  .q-input:focus { outline: none; border-color: #5b8cfe; }
+  .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .import-box { width: 100%; min-height: 110px; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.82em; font-family: monospace; resize: vertical; margin-bottom: 8px; }
+  .q-list { max-height: 220px; overflow-y: auto; }
+  .q-row { display: flex; align-items: center; gap: 10px; border: 1px solid #e2e6ee; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; }
+  .q-idx { width: 24px; height: 24px; border-radius: 50%; background: #eef2ff; color: #3366cc; text-align: center; line-height: 24px; font-size: 0.78em; flex-shrink: 0; }
+  .q-info { flex: 1; min-width: 0; }
+  .q-info b { font-size: 0.88em; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .q-info .q-ans { font-size: 0.75em; color: #888; }
+  .empty { color: #999; font-size: 0.9em; text-align: center; padding: 14px 0; }
+  .team-bar { display: flex; align-items: center; gap: 8px; border: 1px solid #e2e6ee; border-radius: 8px; padding: 9px 12px; margin-bottom: 6px; }
+  .team-bar .tname { flex: 1; font-weight: 600; font-size: 0.95em; }
+  .team-bar .tscore { min-width: 56px; text-align: center; font-weight: 700; color: #5b8cfe; }
+  .progress-line { font-size: 0.88em; color: #888; margin-bottom: 10px; }
+  .q-text { font-size: 1.12em; font-weight: 700; margin-bottom: 14px; line-height: 1.5; }
+  .opt-btn { display: block; width: 100%; text-align: left; padding: 14px 16px; border: 2px solid #d0d5e0; border-radius: 10px; background: #fff; color: #1a1a2e; font-size: 0.98em; cursor: pointer; margin-bottom: 10px; }
+  .opt-btn:active { transform: scale(0.99); }
+  .opt-btn.correct { background: #e8f7ee; border-color: #27ae60; color: #1a7a3c; font-weight: 600; }
+  .opt-btn.wrong { background: #fdf0ee; border-color: #e0563f; color: #a33a28; }
+  .opt-btn:disabled { cursor: default; }
+  .explain { display: none; background: #eef2ff; border-radius: 10px; padding: 12px 14px; font-size: 0.9em; color: #3366cc; margin-bottom: 10px; line-height: 1.7; }
+  .explain p { color: #3366cc; font-size: 0.9em; margin-top: 4px; }
+  .rank-row { display: flex; align-items: center; padding: 12px 14px; background: #f8f9fc; border-radius: 8px; margin-bottom: 8px; }
+  .rank-no { width: 30px; height: 30px; border-radius: 50%; background: #5b8cfe; color: #fff; text-align: center; line-height: 30px; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .rank-name { flex: 1; font-size: 0.98em; font-weight: 600; }
+  .rank-score { font-size: 0.95em; color: #5b8cfe; font-weight: 700; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>团队知识竞答</h1>
+  <p>自定义题库 · 队伍抢答计分 · 排行榜比拼</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 设置页 -->
+  <div id="screen-setup">
+    <div class="card">
+      <h2>队伍设置</h2>
+      <p style="margin-bottom:10px;">选择队伍数量（2-6），可为队伍命名</p>
+      <select class="select-bar" id="teamCount" onchange="onTeamCountChange()">
+        <option value="2">2 队</option>
+        <option value="3">3 队</option>
+        <option value="4" selected>4 队</option>
+        <option value="5">5 队</option>
+        <option value="6">6 队</option>
+      </select>
+      <div id="teamNames"></div>
+      <button type="button" class="btn big" onclick="startPlay()">开始比赛</button>
+    </div>
+
+    <div class="card">
+      <h2>题库管理 <span style="font-size:0.8em;color:#888;">（当前 <span id="qCount">0</span> 题）</span></h2>
+
+      <div class="q-manage">
+        <div class="sub-label">添加题目</div>
+        <input class="q-input" id="qText" placeholder="题干">
+        <div class="opt-grid">
+          <input class="q-input" id="o1" placeholder="选项 A">
+          <input class="q-input" id="o2" placeholder="选项 B">
+          <input class="q-input" id="o3" placeholder="选项 C">
+          <input class="q-input" id="o4" placeholder="选项 D">
+        </div>
+        <select class="select-bar" id="qAnswer" style="margin-bottom:8px;">
+          <option value="0">正确答案：A</option>
+          <option value="1">正确答案：B</option>
+          <option value="2">正确答案：C</option>
+          <option value="3">正确答案：D</option>
+        </select>
+        <button type="button" class="btn" onclick="addQuestion()">添加题目</button>
+      </div>
+
+      <div class="q-manage">
+        <div class="sub-label">导入题库（粘贴 JSON 数组）</div>
+        <textarea class="import-box" id="importBox" placeholder='格式示例：&#10;[{"q":"一年有多少个星期？","options":["48","52","54","50"],"answer":1,"explain":"平年365天约52周"}]'></textarea>
+        <button type="button" class="btn ghost" onclick="importQuestions()">导入题库</button>
+      </div>
+
+      <div class="q-manage">
+        <div class="sub-label">题目列表</div>
+        <div class="q-list" id="questionList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 比赛页 -->
+  <div id="screen-play" style="display:none;">
+    <div class="card">
+      <div class="progress-line" id="qProgress">第 1 / 15 题</div>
+      <div id="teamBars"></div>
+      <div style="border-top:1px solid #e2e6ee;margin:14px 0;"></div>
+      <div class="q-text" id="qTextPlay"></div>
+      <div id="opts"></div>
+      <div class="explain" id="explain"></div>
+      <button type="button" class="btn big" id="nextQBtn" onclick="nextQ()" disabled>下一题</button>
+      <div class="btn-row">
+        <button type="button" class="btn gray" onclick="showEnd()">结束并查看排行</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 排行榜 -->
+  <div id="screen-end" style="display:none;">
+    <div class="card">
+      <h2>最终排行榜</h2>
+      <div id="finalRank"></div>
+      <button type="button" class="btn big" onclick="playAgain()">再玩一轮</button>
+      <div class="btn-row">
+        <button type="button" class="btn gray" onclick="restartAll()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// ---- 预置题库（15 道通用趣味题）----
+var PRESET = [
+  { q: '一年有多少个星期？', options: ['48 个', '52 个', '54 个', '50 个'], answer: 1, explain: '平年 365 天约等于 52 周加 1 天。' },
+  { q: '世界上最大的海洋是？', options: ['大西洋', '印度洋', '太平洋', '北冰洋'], answer: 2, explain: '太平洋面积约 1.8 亿平方公里，全球最大。' },
+  { q: '人体最大的器官是？', options: ['心脏', '肝脏', '大脑', '皮肤'], answer: 3, explain: '皮肤是人体面积最大、重量最重的器官。' },
+  { q: '「床前明月光」的下一句是？', options: ['疑是地上霜', '举头望明月', '低头思故乡', '何处是吾乡'], answer: 0, explain: '出自李白《静夜思》。' },
+  { q: '彩虹通常被认为有几种颜色？', options: ['5 种', '6 种', '7 种', '8 种'], answer: 2, explain: '红橙黄绿蓝靛紫，共 7 种。' },
+  { q: '太阳从哪个方向升起？', options: ['东', '西', '南', '北'], answer: 0, explain: '地球自西向东自转，太阳从东方升起。' },
+  { q: '中国最长的河流是？', options: ['黄河', '珠江', '黑龙江', '长江'], answer: 3, explain: '长江全长约 6300 公里，中国第一长河。' },
+  { q: '一公斤棉花和一公斤铁哪个更重？', options: ['棉花', '铁', '一样重', '无法比较'], answer: 2, explain: '都是 1 公斤，重量相同。' },
+  { q: '一年有几个月？', options: ['10 个月', '11 个月', '12 个月', '13 个月'], answer: 2, explain: '公历一年共 12 个月。' },
+  { q: '世界上使用人数最多的语言是？', options: ['英语', '中文（汉语）', '西班牙语', '印地语'], answer: 1, explain: '以母语使用者数量计，中文排第一。' },
+  { q: '篮球比赛每队上场几名球员？', options: ['4 名', '5 名', '6 名', '7 名'], answer: 1, explain: '标准篮球比赛每队 5 人上场。' },
+  { q: '一天有多少秒？', options: ['36000 秒', '72000 秒', '86400 秒', '96000 秒'], answer: 2, explain: '24 × 60 × 60 = 86400 秒。' },
+  { q: '北极熊的皮肤是什么颜色？', options: ['白色', '黑色', '粉色', '棕色'], answer: 1, explain: '北极熊毛是透明的，皮肤其实是黑色。' },
+  { q: '地球上面积最大的国家是？', options: ['中国', '加拿大', '美国', '俄罗斯'], answer: 3, explain: '俄罗斯面积约 1709 万平方公里。' },
+  { q: '电脑键盘上最长的键是？', options: ['空格键', '回车键', 'Shift 键', 'Caps Lock 键'], answer: 0, explain: '空格键通常是最长的按键。' }
+];
+
+var DEFAULT_NAMES = ['红队', '蓝队', '黄队', '绿队', '紫队', '橙队'];
+
+var questions = PRESET.slice();
+var teams = [];        // [{name, score}]
+var stage = 'setup';
+var currentQ = 0;
+var revealed = false;
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function showScreen3(name) {
+  ['setup', 'play', 'end'].forEach(function (s) {
+    document.getElementById('screen-' + s).style.display = (s === name) ? '' : 'none';
+  });
+  window.scrollTo(0, 0);
+}
+
+// ---- 队伍设置 ----
+function renderTeamInputs() {
+  var n = parseInt(document.getElementById('teamCount').value, 10);
+  var html = '';
+  for (var i = 0; i < n; i++) {
+    html += '<div class="team-name-row"><span>' + (i + 1) + '</span><input id="teamName' + i + '" maxlength="8" placeholder="队伍名称" value="' + DEFAULT_NAMES[i] + '"></div>';
+  }
+  document.getElementById('teamNames').innerHTML = html;
+}
+
+function onTeamCountChange() {
+  var olds = [];
+  for (var i = 0; i < 6; i++) {
+    var el = document.getElementById('teamName' + i);
+    if (el) olds.push(el.value);
+  }
+  var n = parseInt(document.getElementById('teamCount').value, 10);
+  var html = '';
+  for (var j = 0; j < n; j++) {
+    var v = olds[j] || DEFAULT_NAMES[j];
+    html += '<div class="team-name-row"><span>' + (j + 1) + '</span><input id="teamName' + j + '" maxlength="8" placeholder="队伍名称" value="' + esc(v) + '"></div>';
+  }
+  document.getElementById('teamNames').innerHTML = html;
+}
+
+function startPlay() {
+  var n = parseInt(document.getElementById('teamCount').value, 10);
+  teams = [];
+  for (var i = 0; i < n; i++) {
+    var el = document.getElementById('teamName' + i);
+    teams.push({ name: (el && el.value.trim()) ? el.value.trim() : DEFAULT_NAMES[i], score: 0 });
+  }
+  if (questions.length === 0) { alert('题库为空，请先添加题目或导入题库'); return; }
+  stage = 'play';
+  currentQ = 0;
+  revealed = false;
+  renderPlay();
+  showScreen3('play');
+}
+
+// ---- 比赛 ----
+function renderTeamBars() {
+  var tb = '';
+  teams.forEach(function (t, i) {
+    tb += '<div class="team-bar"><span class="tname">' + esc(t.name) + '</span><span class="tscore">' + t.score + ' 分</span><button type="button" class="btn sm ghost" onclick="score(' + i + ',10)">+10</button><button type="button" class="btn sm gray" onclick="score(' + i + ',-5)">-5</button></div>';
+  });
+  document.getElementById('teamBars').innerHTML = tb;
+}
+
+function renderPlay() {
+  renderTeamBars();
+
+  document.getElementById('qProgress').textContent = '第 ' + (currentQ + 1) + ' / ' + questions.length + ' 题';
+  var q = questions[currentQ];
+  document.getElementById('qTextPlay').textContent = q.q;
+  var opts = '';
+  ['A', 'B', 'C', 'D'].forEach(function (L, i) {
+    opts += '<button type="button" class="opt-btn" id="opt' + i + '" onclick="pickAnswer(' + i + ')">' + L + '、' + esc(q.options[i]) + '</button>';
+  });
+  document.getElementById('opts').innerHTML = opts;
+  document.getElementById('explain').style.display = 'none';
+  var btn = document.getElementById('nextQBtn');
+  btn.disabled = !revealed;
+  btn.textContent = currentQ === questions.length - 1 ? '查看排行榜' : '下一题';
+}
+
+function score(i, delta) {
+  teams[i].score += delta;
+  renderTeamBars();
+}
+
+function pickAnswer(i) {
+  if (revealed) return;
+  revealed = true;
+  var q = questions[currentQ];
+  for (var j = 0; j < 4; j++) {
+    var el = document.getElementById('opt' + j);
+    el.classList.remove('correct', 'wrong');
+    if (j === q.answer) el.classList.add('correct');
+    if (j === i && i !== q.answer) el.classList.add('wrong');
+    el.disabled = true;
+  }
+  var ex = document.getElementById('explain');
+  ex.style.display = 'block';
+  ex.innerHTML = '<b>正确答案：' + ['A', 'B', 'C', 'D'][q.answer] + '、' + esc(q.options[q.answer]) + '</b>' + (q.explain ? '<p>' + esc(q.explain) + '</p>' : '');
+  document.getElementById('nextQBtn').disabled = false;
+}
+
+function nextQ() {
+  if (!revealed) { alert('请先点击一个选项揭晓答案'); return; }
+  if (currentQ >= questions.length - 1) { showEnd(); return; }
+  currentQ++;
+  revealed = false;
+  renderPlay();
+}
+
+// ---- 结束与排行 ----
+function showEnd() {
+  stage = 'end';
+  var sorted = teams.slice().sort(function (a, b) { return b.score - a.score; });
+  var html = '';
+  sorted.forEach(function (t, i) {
+    html += '<div class="rank-row"><span class="rank-no">' + (i + 1) + '</span><span class="rank-name">' + esc(t.name) + '</span><span class="rank-score">' + t.score + ' 分</span></div>';
+  });
+  document.getElementById('finalRank').innerHTML = html;
+  showScreen3('end');
+}
+
+function playAgain() {
+  teams.forEach(function (t) { t.score = 0; });
+  stage = 'play';
+  currentQ = 0;
+  revealed = false;
+  renderPlay();
+  showScreen3('play');
+}
+
+function restartAll() {
+  if (!confirm('确定重新开始？将清空分数并恢复默认题库与队伍。')) return;
+  teams.forEach(function (t) { t.score = 0; });
+  questions = PRESET.slice();
+  stage = 'setup';
+  currentQ = 0;
+  revealed = false;
+  renderQuestionList();
+  showScreen3('setup');
+}
+
+// ---- 题库管理 ----
+function renderQuestionList() {
+  var html = '';
+  if (questions.length === 0) html = '<p class="empty">暂无题目</p>';
+  questions.forEach(function (q, i) {
+    html += '<div class="q-row"><span class="q-idx">' + (i + 1) + '</span><div class="q-info"><b>' + esc(q.q) + '</b><div class="q-ans">答案：' + ['A', 'B', 'C', 'D'][q.answer] + '</div></div><button type="button" class="btn sm gray" onclick="removeQ(' + i + ')">删除</button></div>';
+  });
+  document.getElementById('questionList').innerHTML = html;
+  document.getElementById('qCount').textContent = questions.length;
+}
+
+function addQuestion() {
+  var q = document.getElementById('qText').value.trim();
+  var o = [];
+  for (var i = 0; i < 4; i++) o.push(document.getElementById('o' + (i + 1)).value.trim());
+  var ans = parseInt(document.getElementById('qAnswer').value, 10);
+  if (!q) { alert('请输入题干'); return; }
+  for (var j = 0; j < 4; j++) {
+    if (!o[j]) { alert('请填写第 ' + (j + 1) + ' 个选项'); return; }
+  }
+  questions.push({ q: q, options: o, answer: ans, explain: '' });
+  renderQuestionList();
+  document.getElementById('qText').value = '';
+  for (var k = 0; k < 4; k++) document.getElementById('o' + (k + 1)).value = '';
+  document.getElementById('qAnswer').value = 0;
+  alert('已添加 1 题');
+}
+
+function removeQ(i) {
+  questions.splice(i, 1);
+  renderQuestionList();
+}
+
+function importQuestions() {
+  var txt = document.getElementById('importBox').value.trim();
+  if (!txt) { alert('请先粘贴题库 JSON'); return; }
+  try {
+    var arr = JSON.parse(txt);
+    if (!Array.isArray(arr) || arr.length === 0) throw new Error('数组为空');
+    var qs = arr.map(function (it, i) {
+      if (!it.q || !Array.isArray(it.options) || it.options.length !== 4 ||
+          typeof it.answer !== 'number' || it.answer < 0 || it.answer > 3) {
+        throw new Error('第 ' + (i + 1) + ' 条格式不正确');
+      }
+      return { q: String(it.q), options: it.options.map(String), answer: it.answer, explain: it.explain ? String(it.explain) : '' };
+    });
+    questions = qs;
+    renderQuestionList();
+    alert('导入成功，共 ' + qs.length + ' 题');
+  } catch (e) {
+    alert('导入失败：' + e.message);
+  }
+}
+
+// ---- 初始化 ----
+renderTeamInputs();
+renderQuestionList();
+</script>
+
+</body>
+</html>

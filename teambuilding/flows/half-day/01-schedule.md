@@ -2,7 +2,7 @@
 title: "半日团建流程模板"
 author: "AIWorkDB"
 cover: "images/cover.png"
-source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.html"
+source_url: "https://ai.aitboy.cn/teambuilding/flows/half-day/01-schedule.html"
 
 ---
 # 半日团建流程模板
@@ -38,7 +38,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 
 #### 开场白话术模板
 
-- [名字接龙](https://aiworkdb.github.io/teambuilding/games/icebreaker/name-chain.html)（5–10 min，快速热身）
+- [名字接龙](https://ai.aitboy.cn/teambuilding/games/icebreaker/name-chain.html)（5–10 min，快速热身）
 - 简单的身体活动（伸展、拍手节奏等）
 
 ---
@@ -51,8 +51,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 
 | 游戏 | 适合人数 | 时长 | 特点 |
 |------|---------|------|------|
-| [人类宾果](https://aiworkdb.github.io/teambuilding/games/icebreaker/human-bingo.html) | 任意（8–50人） | 15 min | 零道具、快速认识很多人 |
-| [两真一假](https://aiworkdb.github.io/teambuilding/games/icebreaker/two-truths-one-lie.html) | 5–30人 | 20 min | 深度了解彼此、笑声多 |
+| [人类宾果](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html) | 任意（8–50人） | 15 min | 零道具、快速认识很多人 |
+| [两真一假](https://ai.aitboy.cn/teambuilding/games/icebreaker/two-truths-one-lie.html) | 5–30人 | 20 min | 深度了解彼此、笑声多 |
 | [人类宾果] + [名字接龙] | 任意 | 30 min | 组合使用，效果加倍 |
 
 #### 教练关键把控点
@@ -71,21 +71,21 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 **方案 A：信任建立方向**
 | 顺序 | 游戏 | 时长 | 说明 |
 |------|------|------|------|
-| 1 | [盲行](https://aiworkdb.github.io/teambuilding/games/trust/blind-walk.html) | 25 min | 建立初步信任 |
-| 2 | [信任背摔](https://aiworkdb.github.io/teambuilding/games/trust/trust-fall.html)（简化版*） | 20 min | 深度信任突破 |
+| 1 | [盲行](https://ai.aitboy.cn/teambuilding/games/trust/blind-walk.html) | 25 min | 建立初步信任 |
+| 2 | [信任背摔](https://ai.aitboy.cn/teambuilding/games/trust/trust-fall.html)（简化版*） | 20 min | 深度信任突破 |
 
 > \* 简化版：只做 1.2 米高度，每人只摔 1 次，适合时间紧张的半日团建。
 
 **方案 B：沟通表达方向**
 | 顺序 | 游戏 | 时长 | 说明 |
 |------|------|------|------|
-| 1 | [盲人方阵](https://aiworkdb.github.io/teambuilding/games/communication/blind-polygon.html) | 35 min | 经典沟通游戏，复盘价值高 |
+| 1 | [盲人方阵](https://ai.aitboy.cn/teambuilding/games/communication/blind-polygon.html) | 35 min | 经典沟通游戏，复盘价值高 |
 | 2 | 简短分享 | 10 min | 每组派代表分享"沟通中最难的部分" |
 
 **方案 C：问题解决方向**（适合培训场景）
 | 顺序 | 游戏 | 时长 | 说明 |
 |------|------|------|------|
-| 1 | [沙漠逃生](https://aiworkdb.github.io/teambuilding/games/problem-solving/desert-survival.html) | 40 min | 团队决策，讨论激烈 |
+| 1 | [沙漠逃生](https://ai.aitboy.cn/teambuilding/games/problem-solving/desert-survival.html) | 40 min | 团队决策，讨论激烈 |
 | 2 | 复盘 | 5 min | 快速提炼 1 个关键词 |
 
 ![核心活动方案选择：信任 / 沟通 / 问题解决三条路径](images/illust-game-options.png)
@@ -117,19 +117,19 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/half-day/01-schedule.
 **方案 A：动手协作**
 | 游戏 | 时长 | 说明 |
 |------|------|------|
-| [报纸塔挑战](https://aiworkdb.github.io/teambuilding/games/creativity/newspaper-tower.html) | 35 min | 动手+策略，成果可视化 |
+| [报纸塔挑战](https://ai.aitboy.cn/teambuilding/games/creativity/newspaper-tower.html) | 35 min | 动手+策略，成果可视化 |
 | 展示 + 投票 | 5 min | 快速投票，选出"最高塔" |
 
 **方案 B：创新思维**
 | 游戏 | 时长 | 说明 |
 |------|------|------|
-| [10元买创意](https://aiworkdb.github.io/teambuilding/games/creativity/10-yuan-idea.html) | 40 min | 资源受限下的创新，讨论激烈 |
+| [10元买创意](https://ai.aitboy.cn/teambuilding/games/creativity/10-yuan-idea.html) | 40 min | 资源受限下的创新，讨论激烈 |
 
 **方案 C：综合能力**（体力+智力）
 | 游戏 | 时长 | 说明 |
 |------|------|------|
-| [人结](https://aiworkdb.github.io/teambuilding/games/collaboration/human-knot.html) | 20 min | 身体协作，笑声多 |
-| [鸡蛋坠落挑战](https://aiworkdb.github.io/teambuilding/games/problem-solving/egg-drop.html)（简化版*） | 15 min | 动手挑战，时间紧时选这个 |
+| [人结](https://ai.aitboy.cn/teambuilding/games/collaboration/human-knot.html) | 20 min | 身体协作，笑声多 |
+| [鸡蛋坠落挑战](https://ai.aitboy.cn/teambuilding/games/problem-solving/egg-drop.html)（简化版*） | 15 min | 动手挑战，时间紧时选这个 |
 
 > \* 简化版：材料减半，高度降为 2 米，侧重参与而非竞争。
 

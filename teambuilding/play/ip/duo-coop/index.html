@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>I2 协作双人游戏</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 10px; }
+  .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.08em; font-weight: 600; padding: 15px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+
+  /* ---- 游戏区（全屏深色）---- */
+  .game-area { position: fixed; inset: 0; background: #1a1a2e; color: #fff; display: none; flex-direction: column; z-index: 10; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+  .game-area.flash { animation: flashGreen 0.8s ease; }
+  @keyframes flashGreen { 0% { background: #1a1a2e; } 30% { background: #1f7a4d; } 100% { background: #1a1a2e; } }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; font-size: 0.98em; z-index: 12; }
+  .top-bar .lv { font-weight: 700; }
+  .top-bar .tm { font-variant-numeric: tabular-nums; color: #8ee6b0; font-weight: 700; }
+  .meter-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 26px; z-index: 12; }
+  .meter-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; font-size: 0.95em; color: rgba(255,255,255,0.75); }
+  .meter-label .pct { font-size: 1.6em; font-weight: 700; color: #fff; }
+  .meter { height: 26px; background: rgba(255,255,255,0.15); border-radius: 13px; overflow: hidden; }
+  .meter-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #5b8cfe, #34c98d); border-radius: 13px; transition: width 0.1s linear; }
+  .status-text { text-align: center; margin-top: 16px; font-size: 0.95em; min-height: 1.5em; color: #ffb3a0; }
+  .level-desc { text-align: center; margin-top: 6px; font-size: 0.82em; color: rgba(255,255,255,0.55); }
+  .big-btn { position: fixed; bottom: 7vh; width: 34vw; max-width: 200px; height: 34vw; max-height: 200px; border-radius: 50%; border: none; font-size: 1.05em; font-weight: 700; color: #fff; touch-action: none; -webkit-user-select: none; user-select: none; z-index: 12; box-shadow: 0 6px 18px rgba(0,0,0,0.35); transition: transform 0.06s ease, box-shadow 0.06s ease; }
+  .big-btn.held { transform: scale(0.92); box-shadow: 0 0 0 8px rgba(255,255,255,0.22), 0 6px 18px rgba(0,0,0,0.35); }
+  .lbtn { left: 6vw; background: #5b8cfe; }
+  .rbtn { right: 6vw; background: #e67e22; }
+  .big-btn .sub { display: block; font-size: 0.62em; font-weight: 400; opacity: 0.85; margin-top: 2px; }
+  .overlay-center { position: fixed; inset: 0; background: rgba(26,26,46,0.78); display: none; align-items: center; justify-content: center; z-index: 30; }
+  .panel { background: #fff; color: #1a1a2e; border-radius: 14px; padding: 26px 22px; text-align: center; width: 84%; max-width: 360px; }
+  .panel .pt { font-size: 1.25em; font-weight: 700; margin-bottom: 8px; }
+  .panel .ps { font-size: 0.9em; color: #666; margin-bottom: 16px; }
+  .panel .btn { width: 100%; }
+  @media (orientation: landscape) { .big-btn { width: 24vh; height: 24vh; max-width: 170px; max-height: 170px; } .big-btn { font-size: 0.95em; } }
+</style>
+</head>
+<body>
+
+<!-- 首页 -->
+<div id="screen-home">
+  <div class="hero">
+    <h1>同步心跳</h1>
+    <p>双人协作 · 考验同步与配合</p>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <h2>游戏说明</h2>
+      <p style="font-size:0.92em;color:#666;">两名玩家各守一边：左玩家按住左侧按钮（或键盘 A），右玩家按住右侧按钮（或键盘 L）。<br><br><b>两人必须同时按住</b>，协作度才会上升；任一人松手，协作度就会下降。协作度达到 100% 即过关，共 3 关，每关限时 60 秒。</p>
+    </div>
+    <div class="card">
+      <h2>关卡预览</h2>
+      <p style="font-size:0.92em;color:#666;">第 1 关「起步」：无干扰，找节奏。<br>第 2 关「干扰」：每 5 秒进度骤降 15%。<br>第 3 关「颠簸」：进度上下波动，需稳定按住 12 秒。</p>
+    </div>
+    <button type="button" class="btn big" onclick="startGame()">开始游戏</button>
+  </div>
+  <div class="footer">
+    <a href="../../index.html">返回产品总览</a>
+    <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+  </div>
+</div>
+
+<!-- 游戏区 -->
+<div class="game-area" id="gameArea">
+  <div class="top-bar">
+    <div class="lv" id="levelText">第 1 关 · 起步</div>
+    <div class="tm" id="timeText">60 秒</div>
+  </div>
+  <div class="meter-wrap">
+    <div class="meter-label">
+      <span>协作度</span>
+      <span class="pct" id="pctText">0%</span>
+    </div>
+    <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
+    <div class="status-text" id="statusText">两人同时按住按钮，进度才会上升</div>
+    <div class="level-desc" id="levelDesc">无干扰，找节奏</div>
+  </div>
+  <button type="button" class="big-btn lbtn" id="lbtn">玩家A<span class="sub">按住 / A 键</span></button>
+  <button type="button" class="big-btn rbtn" id="rbtn">玩家B<span class="sub">按住 / L 键</span></button>
+
+  <div class="overlay-center" id="passOverlay">
+    <div class="panel">
+      <div class="pt" id="passTitle">第 1 关过关！</div>
+      <div class="ps" id="passTime"></div>
+      <button type="button" class="btn" id="passBtn" onclick="nextLevel()">下一关</button>
+    </div>
+  </div>
+  <div class="overlay-center" id="failOverlay">
+    <div class="panel">
+      <div class="pt">时间到！</div>
+      <div class="ps">本关未能在 60 秒内通关，再试一次吧。</div>
+      <button type="button" class="btn" onclick="retryLevel()">重试本关</button>
+    </div>
+  </div>
+</div>
+
+<!-- 结果 -->
+<div id="screen-result" style="display:none;">
+  <div class="wrap">
+    <div class="card">
+      <h2>通关结果</h2>
+      <div class="screen-title" style="font-size:1.2em;font-weight:700;margin:6px 0;" id="resultTitle">通关！</div>
+      <p style="font-size:0.95em;color:#666;margin:4px 0;" id="resultEval"></p>
+      <p style="font-size:0.95em;color:#666;margin:4px 0;" id="resultTime"></p>
+      <p style="font-size:0.85em;color:#999;margin:8px 0 0;">三关用时：<span id="resultDetail"></span></p>
+    </div>
+    <button type="button" class="btn big" onclick="showAppScreen('home')">再来一局</button>
+  </div>
+  <div class="footer">
+    <a href="../../index.html">返回产品总览</a>
+    <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+  </div>
+</div>
+
+<script>
+// ---- 关卡配置 ----
+var LEVELS = [
+  { name: '起步', desc: '无干扰，找节奏', rise: 0.45, fall: 0.25, dropEvery: 0, dropAmt: 0, wobble: 0, needHold: 0 },
+  { name: '干扰', desc: '每 5 秒进度骤降 15%', rise: 0.60, fall: 0.35, dropEvery: 5000, dropAmt: 15, wobble: 0, needHold: 0 },
+  { name: '颠簸', desc: '进度上下波动，需稳定按住 12 秒', rise: 0.35, fall: 0.35, dropEvery: 0, dropAmt: 0, wobble: 0.7, needHold: 12 }
+];
+
+// ---- 游戏状态 ----
+var game2 = {
+  level: 0,
+  progress: 0,
+  holdTime: 0,
+  timeLeft: 60,
+  running: false,
+  leftHeld: false,
+  rightHeld: false,
+  peaked: false,
+  times: [],
+  tickId: null,
+  lastDrop: 0,
+  dropMsgTs: 0,
+  startTs: 0
+};
+
+function showAppScreen(name) {
+  document.getElementById('screen-home').style.display = name === 'home' ? '' : 'none';
+  document.getElementById('screen-result').style.display = name === 'result' ? '' : 'none';
+  document.getElementById('gameArea').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+function showGame() {
+  document.getElementById('screen-home').style.display = 'none';
+  document.getElementById('screen-result').style.display = 'none';
+  document.getElementById('gameArea').style.display = 'flex';
+}
+
+// ---- 流程 ----
+function startGame() {
+  game2.level = 0;
+  game2.times = [];
+  showGame();
+  enterLevel();
+}
+
+function enterLevel() {
+  var cfg = LEVELS[game2.level];
+  game2.progress = 0;
+  game2.holdTime = 0;
+  game2.timeLeft = 60;
+  game2.running = true;
+  game2.peaked = false;
+  game2.lastDrop = Date.now();
+  game2.dropMsgTs = 0;
+  game2.startTs = Date.now();
+  document.getElementById('levelText').textContent = '第 ' + (game2.level + 1) + ' 关 · ' + cfg.name;
+  document.getElementById('levelDesc').textContent = cfg.desc;
+  document.getElementById('passOverlay').style.display = 'none';
+  document.getElementById('failOverlay').style.display = 'none';
+  document.getElementById('gameArea').classList.remove('flash');
+  stopTick();
+  game2.tickId = setInterval(tick, 100);
+  renderMeter();
+}
+
+function stopTick() {
+  if (game2.tickId) { clearInterval(game2.tickId); game2.tickId = null; }
+}
+
+function tick() {
+  if (!game2.running) return;
+  var cfg = LEVELS[game2.level];
+  var both = game2.leftHeld && game2.rightHeld;
+  if (both) {
+    game2.progress += cfg.rise;
+    game2.holdTime += 0.1;
+  } else {
+    game2.progress -= cfg.fall;
+  }
+  // 一旦本轮达到过 100% 即锁定（在波动/骤降可能把进度拉低之前判定）
+  if (game2.progress >= 100) game2.peaked = true;
+  if (cfg.wobble > 0) {
+    game2.progress += Math.sin(Date.now() / 350) * cfg.wobble * 0.9;
+    if (Math.random() < 0.012) game2.progress -= 5;
+  }
+  if (cfg.dropEvery > 0 && Date.now() - game2.lastDrop >= cfg.dropEvery) {
+    game2.progress -= cfg.dropAmt;
+    game2.lastDrop = Date.now();
+    game2.dropMsgTs = Date.now();
+  }
+  if (game2.peaked) {
+    game2.progress = 100;
+  } else {
+    game2.progress = Math.max(0, Math.min(100, game2.progress));
+  }
+  game2.timeLeft = Math.max(0, 60 - Math.floor((Date.now() - game2.startTs) / 1000));
+  renderMeter();
+  if (game2.progress >= 100 && game2.holdTime >= cfg.needHold) {
+    passLevel();
+    return;
+  }
+  if (game2.timeLeft <= 0) {
+    failLevel();
+  }
+}
+
+function renderMeter() {
+  document.getElementById('meterFill').style.width = game2.progress + '%';
+  document.getElementById('pctText').textContent = Math.round(game2.progress) + '%';
+  document.getElementById('timeText').textContent = game2.timeLeft + ' 秒';
+  var st = document.getElementById('statusText');
+  var both = game2.leftHeld && game2.rightHeld;
+  if (game2.dropMsgTs && Date.now() - game2.dropMsgTs < 1500) {
+    st.textContent = '干扰！进度骤降，快恢复';
+    st.style.color = '#ffb3a0';
+  } else if (game2.level === 2) {
+    st.textContent = both ? '稳住！保持同时按住' : '颠簸中，需要两人同时按住！';
+    st.style.color = both ? '#8ee6b0' : '#ffb3a0';
+  } else if (both) {
+    st.textContent = '协作度上升中，保持住！';
+    st.style.color = '#8ee6b0';
+  } else {
+    st.textContent = '需要两人同时按住按钮！';
+    st.style.color = '#ffb3a0';
+  }
+}
+
+function passLevel() {
+  if (!game2.running) return;
+  game2.running = false;
+  stopTick();
+  var used = 60 - game2.timeLeft;
+  game2.times.push(used);
+  var area = document.getElementById('gameArea');
+  area.classList.remove('flash');
+  void area.offsetWidth;
+  area.classList.add('flash');
+  var isLast = game2.level >= LEVELS.length - 1;
+  document.getElementById('passTitle').textContent = '第 ' + (game2.level + 1) + ' 关过关！';
+  document.getElementById('passTime').textContent = '本关用时 ' + used + ' 秒';
+  document.getElementById('passBtn').textContent = isLast ? '查看结果' : '下一关';
+  document.getElementById('passOverlay').style.display = 'flex';
+}
+
+function failLevel() {
+  if (!game2.running) return;
+  game2.running = false;
+  stopTick();
+  document.getElementById('failOverlay').style.display = 'flex';
+}
+
+function nextLevel() {
+  document.getElementById('passOverlay').style.display = 'none';
+  if (game2.level >= LEVELS.length - 1) {
+    showResult();
+    return;
+  }
+  game2.level++;
+  enterLevel();
+}
+
+function retryLevel() {
+  document.getElementById('failOverlay').style.display = 'none';
+  enterLevel();
+}
+
+function showResult() {
+  var total = 0;
+  game2.times.forEach(function (t) { total += t; });
+  document.getElementById('resultEval').textContent = '评价：' + resultText(total);
+  document.getElementById('resultTime').textContent = '总用时：' + total + ' 秒';
+  document.getElementById('resultDetail').textContent = game2.times.map(function (t, i) { return '第' + (i + 1) + '关 ' + t + 's'; }).join(' / ');
+  showAppScreen('result');
+}
+
+function resultText(t) {
+  if (t <= 40) return '配合默契！天作之合，节奏完全同步';
+  if (t <= 60) return '心有灵犀！默契度超高，非常棒';
+  if (t <= 90) return '配合不错！再多磨合几次会更好';
+  return '还需磨合！再来一局，找到彼此的节奏';
+}
+
+// ---- 输入：按钮（触摸）+ 键盘 ----
+function bindBtn(id, set) {
+  var el = document.getElementById(id);
+  el.addEventListener('pointerdown', function (e) { e.preventDefault(); set(true); });
+  el.addEventListener('pointerup', function (e) { e.preventDefault(); set(false); });
+  el.addEventListener('pointercancel', function () { set(false); });
+  el.addEventListener('pointerleave', function () { set(false); });
+  el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+}
+bindBtn('lbtn', function (v) { game2.leftHeld = v; updateBtn(); });
+bindBtn('rbtn', function (v) { game2.rightHeld = v; updateBtn(); });
+
+document.addEventListener('keydown', function (e) {
+  var k = (e.key || '').toLowerCase();
+  if (k === 'a') { game2.leftHeld = true; updateBtn(); }
+  if (k === 'l') { game2.rightHeld = true; updateBtn(); }
+});
+document.addEventListener('keyup', function (e) {
+  var k = (e.key || '').toLowerCase();
+  if (k === 'a') { game2.leftHeld = false; updateBtn(); }
+  if (k === 'l') { game2.rightHeld = false; updateBtn(); }
+});
+
+function updateBtn() {
+  document.getElementById('lbtn').classList.toggle('held', game2.leftHeld);
+  document.getElementById('rbtn').classList.toggle('held', game2.rightHeld);
+}
+
+// ---- 初始化 ----
+showAppScreen('home');
+</script>
+
+</body>
+</html>

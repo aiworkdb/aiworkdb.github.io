@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G4 线上你画我猜</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 8px; }
+  .hint { font-size: 0.85em; color: #888; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.92em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; font-family: inherit; }
+  .btn:active { transform: scale(0.98); }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.red { background: #e0563f; }
+  .btn.sm { padding: 7px 12px; font-size: 0.82em; }
+  .btn.primary { padding: 12px 22px; font-size: 1em; }
+  .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+  .count-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .count-btn { flex: 1; min-width: 48px; padding: 10px 0; border-radius: 8px; border: 1px solid #d0d5e0; background: #fff; font-size: 1em; cursor: pointer; font-family: inherit; color: #1a1a2e; }
+  .count-btn.active { background: #5b8cfe; border-color: #5b8cfe; color: #fff; font-weight: 700; }
+  .name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .name-row .idx { width: 30px; color: #999; font-size: 0.9em; }
+  .name-row input { flex: 1; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.92em; font-family: inherit; }
+  .name-row input:focus { outline: none; border-color: #5b8cfe; }
+  .add-word-row { display: flex; gap: 8px; margin: 12px 0 8px; }
+  .add-word-row input { flex: 1; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.92em; font-family: inherit; }
+  .add-word-row input:focus { outline: none; border-color: #5b8cfe; }
+  .custom-word { display: inline-block; background: #eef2ff; color: #3366cc; border: 1px solid #c9d6ff; border-radius: 999px; padding: 4px 10px 4px 12px; font-size: 0.82em; margin: 0 6px 6px 0; }
+  .custom-word button { background: none; border: none; color: #3366cc; cursor: pointer; font-size: 0.9em; margin-left: 6px; padding: 0 2px; }
+  .round-head { font-size: 1em; font-weight: 700; margin-bottom: 12px; text-align: center; }
+  .word-box { background: #fffbe6; border: 2px dashed #f2a03d; border-radius: 12px; padding: 18px; text-align: center; margin-bottom: 12px; }
+  .word-big { font-size: 2em; font-weight: 700; color: #1a1a2e; letter-spacing: 4px; }
+  .canvas-box { width: 100%; border: 2px solid #d0d5e0; border-radius: 12px; overflow: hidden; background: #fff; margin: 12px 0 10px; }
+  #drawCanvas { display: block; width: 100%; height: 300px; touch-action: none; cursor: crosshair; }
+  .color-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .pen-btn { width: 36px; height: 36px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px #d0d5e0; cursor: pointer; }
+  .pen-btn.active { box-shadow: 0 0 0 2px #1a1a2e; }
+  .pen-btn.eraser { background: repeating-conic-gradient(#fff 0% 25%, #e2e6ee 0% 50%) 0 0 / 12px 12px; border-radius: 8px; width: auto; padding: 0 10px; font-size: 0.8em; color: #666; font-family: inherit; box-shadow: 0 0 0 1px #d0d5e0; }
+  .guess-status { text-align: center; font-size: 1em; min-height: 1.6em; margin-bottom: 12px; }
+  .guess-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .guess-input-row input { flex: 1; border: 1px solid #d0d5e0; border-radius: 8px; padding: 12px; font-size: 0.95em; font-family: inherit; }
+  .guess-input-row input:focus { outline: none; border-color: #5b8cfe; }
+  .word-reveal { text-align: center; font-size: 1em; background: #eef2ff; border: 1px solid #c9d6ff; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+  .rank-item { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px dashed #e8ebf1; font-size: 0.95em; }
+  .rank-item .rk { width: 28px; font-weight: 700; color: #5b8cfe; }
+  .rank-item .rk1 { color: #f2a03d; font-size: 1.1em; }
+  .rank-item .score { margin-left: auto; font-weight: 700; font-size: 1.1em; font-variant-numeric: tabular-nums; }
+  .empty { color: #999; font-size: 0.88em; text-align: center; padding: 16px 0; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>你画我猜</h1>
+  <p>轮流传手机 · 一人画众人猜</p>
+</div>
+
+<div class="wrap">
+  <!-- 设置 -->
+  <div class="card" id="panelSetup">
+    <h2>游戏设置</h2>
+    <p class="hint">设置玩家数（2-8），每人画一轮</p>
+    <div class="count-row" id="countRow"></div>
+    <div id="nameList"></div>
+    <h2 style="margin-top:16px">自定义词库（可选）</h2>
+    <div class="add-word-row">
+      <input id="customWordInput" placeholder="输入自定义词，如：键盘">
+      <button type="button" class="btn" onclick="addCustomWord()">添加</button>
+    </div>
+    <div id="customWordList"></div>
+    <div class="btn-row">
+      <button type="button" class="btn primary" onclick="startGame()">开始游戏</button>
+    </div>
+  </div>
+
+  <!-- 作画 -->
+  <div class="card" id="panelDraw" style="display:none">
+    <div class="round-head" id="drawHead"></div>
+    <button type="button" class="btn ghost" id="showWordBtn" onclick="toggleWord()">查看你的词</button>
+    <div class="word-box" id="wordBox" style="display:none"><div class="word-big" id="wordBig"></div></div>
+    <div class="canvas-box"><canvas id="drawCanvas"></canvas></div>
+    <div class="color-row" id="colorRow"></div>
+    <div class="btn-row">
+      <button type="button" class="btn primary" onclick="finishDrawing()">画好了，进入猜词</button>
+      <button type="button" class="btn gray" onclick="endGameNow()">结束游戏</button>
+    </div>
+  </div>
+
+  <!-- 猜词 -->
+  <div class="card" id="panelGuess" style="display:none">
+    <div class="round-head" id="guessHead"></div>
+    <div class="canvas-box" id="guessArtBox" style="display:none"><img id="guessArt" alt="画作" style="display:block; width:100%; height:auto;"></div>
+    <div id="guessInner"></div>
+  </div>
+
+  <!-- 排行榜 -->
+  <div class="card" id="panelResult" style="display:none">
+    <h2>排行榜</h2>
+    <div id="rankList"></div>
+    <div class="btn-row">
+      <button type="button" class="btn primary" onclick="restart()">重新开始</button>
+      <button type="button" class="btn ghost" onclick="showSetup()">返回设置</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+var CUSTOM_KEY = 'tb_pictionary_custom_v1';
+var MIN_PLAYERS = 2;
+var MAX_PLAYERS = 8;
+
+// 预置词库：8 类，每类 13 个，共 104 个
+var WORD_BANK = {
+  '日常物品': ['牙刷', '钥匙', '雨伞', '台灯', '闹钟', '剪刀', '水杯', '遥控器', '拖鞋', '背包', '蜡烛', '风扇', '耳机'],
+  '动物': ['熊猫', '企鹅', '长颈鹿', '大象', '乌龟', '兔子', '海豚', '青蛙', '老鹰', '老虎', '蜜蜂', '螃蟹', '蜗牛'],
+  '食物': ['火锅', '饺子', '汉堡', '冰淇淋', '披萨', '西瓜', '奶茶', '粽子', '臭豆腐', '棉花糖', '月饼', '薯条', '蛋挞'],
+  '职业': ['医生', '消防员', '厨师', '宇航员', '老师', '理发师', '警察', '程序员', '快递员', '画家', '农民', '歌手', '飞行员'],
+  '动作': ['跳绳', '游泳', '骑自行车', '打篮球', '跳舞', '刷牙', '打哈欠', '弹吉他', '跑步', '瑜伽', '劈叉', '划船', '举重'],
+  '电影名': ['泰坦尼克号', '大话西游', '西游记', '功夫熊猫', '变形金刚', '哈利波特', '冰雪奇缘', '蜘蛛侠', '阿凡达', '狮子王', '流浪地球', '千与千寻', '疯狂动物城'],
+  '成语': ['对牛弹琴', '画蛇添足', '守株待兔', '井底之蛙', '掩耳盗铃', '亡羊补牢', '狐假虎威', '刻舟求剑', '自相矛盾', '杯弓蛇影', '鹤立鸡群', '一石二鸟', '水中捞月'],
+  '地点': ['天安门', '长城', '医院', '学校', '超市', '游乐场', '火车站', '电影院', '图书馆', '健身房', '海滩', '山顶', '机场']
+};
+
+var customWords = [];
+
+var players = [];       // 玩家名
+var scores = [];        // 玩家得分
+var roundIndex = 0;     // 当前画者下标
+var roundCount = 0;     // 已完成回合数
+var currentWord = '';
+var guessers = [];      // 本轮猜词者下标（除画者）
+var guesserIndex = 0;   // 当前猜词者位置
+var roundDone = false;
+var guessMsg = '';
+var usedWords = {};     // 本局已用词
+
+// canvas 状态
+var canvas = null;
+var ctx = null;
+var cssWidth = 0;
+var drawing = false;
+var last = null;
+var penColor = '#1a1a2e';
+var penWidth = 4;
+var penIsEraser = false;
+var COLORS = [
+  { name: '黑色', v: '#1a1a2e' },
+  { name: '红色', v: '#e0563f' },
+  { name: '蓝色', v: '#5b8cfe' },
+  { name: '绿色', v: '#3fae7e' }
+];
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function lsGet(k, d) {
+  try {
+    var v = localStorage.getItem(k);
+    return v ? JSON.parse(v) : d;
+  } catch (e) { return d; }
+}
+function lsSet(k, v) {
+  try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+}
+function defaultName(i) { return '玩家' + (i + 1); }
+
+// ---- 设置面板 ----
+function renderSetup() {
+  var countHtml = '';
+  for (var i = MIN_PLAYERS; i <= MAX_PLAYERS; i++) {
+    countHtml += '<button type="button" class="count-btn' + (i === players.length ? ' active' : '') + '" onclick="setCount(' + i + ')">' + i + '</button>';
+  }
+  document.getElementById('countRow').innerHTML = countHtml;
+
+  var nameHtml = '';
+  for (var j = 0; j < players.length; j++) {
+    nameHtml += '<div class="name-row"><span class="idx">' + (j + 1) + '.</span>';
+    nameHtml += '<input id="playerName' + j + '" maxlength="8" value="' + esc(players[j] || defaultName(j)) + '"></div>';
+  }
+  document.getElementById('nameList').innerHTML = nameHtml;
+  renderCustomWords();
+}
+
+function setCount(n) {
+  while (players.length < n) players.push(defaultName(players.length));
+  players.length = n;
+  renderSetup();
+}
+
+function startGame() {
+  var names = [];
+  for (var i = 0; i < players.length; i++) {
+    var el = document.getElementById('playerName' + i);
+    var v = el ? el.value.trim() : '';
+    names.push(v || defaultName(i));
+  }
+  players = names;
+  scores = [];
+  for (var j = 0; j < players.length; j++) scores.push(0);
+  roundIndex = 0;
+  roundCount = 0;
+  usedWords = {};
+  startDraw();
+}
+
+function showSetup() {
+  hideAll();
+  document.getElementById('panelSetup').style.display = '';
+  renderSetup();
+}
+
+function hideAll() {
+  ['panelSetup', 'panelDraw', 'panelGuess', 'panelResult'].forEach(function (id) {
+    document.getElementById(id).style.display = 'none';
+  });
+}
+
+// ---- 自定义词 ----
+function renderCustomWords() {
+  var html = '';
+  if (customWords.length === 0) {
+    html = '<p class="hint" style="margin-bottom:0">暂无自定义词</p>';
+  } else {
+    customWords.forEach(function (w, i) {
+      html += '<span class="custom-word">' + esc(w) + '<button type="button" onclick="deleteCustomWord(' + i + ')">×</button></span>';
+    });
+  }
+  document.getElementById('customWordList').innerHTML = html;
+}
+
+function addCustomWord() {
+  var input = document.getElementById('customWordInput');
+  var v = input.value.trim();
+  if (!v) { alert('请输入词语'); return; }
+  if (customWords.indexOf(v) >= 0) { alert('该词已存在'); return; }
+  customWords.push(v);
+  lsSet(CUSTOM_KEY, customWords);
+  input.value = '';
+  renderCustomWords();
+}
+
+function deleteCustomWord(i) {
+  customWords.splice(i, 1);
+  lsSet(CUSTOM_KEY, customWords);
+  renderCustomWords();
+}
+
+// ---- 抽词 ----
+function pickWord() {
+  var avail = [];
+  var pools = {};
+  Object.keys(WORD_BANK).forEach(function (k) { pools[k] = WORD_BANK[k]; });
+  if (customWords.length > 0) pools['自定义'] = customWords;
+  Object.keys(pools).forEach(function (k) {
+    pools[k].forEach(function (w) {
+      if (!usedWords[w]) avail.push(w);
+    });
+  });
+  if (avail.length === 0) {
+    usedWords = {};
+    Object.keys(pools).forEach(function (k) {
+      pools[k].forEach(function (w) { avail.push(w); });
+    });
+  }
+  var w = avail[Math.floor(Math.random() * avail.length)];
+  usedWords[w] = true;
+  return w;
+}
+
+// ---- 回合流程 ----
+function startDraw() {
+  currentWord = pickWord();
+  roundDone = false;
+  guessMsg = '';
+  guesserIndex = 0;
+  guessers = [];
+  for (var i = 0; i < players.length; i++) {
+    if (i !== roundIndex) guessers.push(i);
+  }
+  hideAll();
+  document.getElementById('panelDraw').style.display = '';
+  document.getElementById('drawHead').textContent = '第 ' + (roundCount + 1) + ' / ' + players.length + ' 轮 · ' + players[roundIndex] + ' 正在画';
+  document.getElementById('wordBox').style.display = 'none';
+  document.getElementById('showWordBtn').textContent = '查看你的词';
+  document.getElementById('wordBig').textContent = currentWord;
+  setupCanvas();
+  renderColors();
+}
+
+function toggleWord() {
+  var box = document.getElementById('wordBox');
+  var btn = document.getElementById('showWordBtn');
+  if (box.style.display === 'none') {
+    box.style.display = '';
+    btn.textContent = '隐藏词（防止偷看）';
+  } else {
+    box.style.display = 'none';
+    btn.textContent = '查看你的词';
+  }
+}
+
+function finishDrawing() {
+  // 在隐藏画布前生成快照，供猜词面板展示（方案1：快照图）
+  var art = document.getElementById('guessArt');
+  if (art && canvas && canvas.toDataURL) {
+    art.src = canvas.toDataURL('image/png');
+  }
+  hideAll();
+  document.getElementById('panelGuess').style.display = '';
+  renderGuess();
+}
+
+function renderGuess() {
+  document.getElementById('guessHead').textContent = '第 ' + (roundCount + 1) + ' 轮 · ' + players[roundIndex] + ' 的画 · 猜词环节';
+  var artBox = document.getElementById('guessArtBox');
+  if (artBox) artBox.style.display = '';
+  var html = '';
+  if (roundDone) {
+    html += '<div class="guess-status">' + esc(guessMsg) + '</div>';
+    html += '<div class="word-reveal">答案：<b>' + esc(currentWord) + '</b></div>';
+    html += '<div class="btn-row"><button type="button" class="btn primary" onclick="nextRound()">下一回合</button>';
+    html += '<button type="button" class="btn gray" onclick="endGameNow()">结束游戏</button></div>';
+  } else {
+    var g = guessers[guesserIndex];
+    var status = '轮到 <b>' + esc(players[g]) + '</b> 猜测';
+    if (guessMsg) status = esc(guessMsg) + '，' + status;
+    html += '<div class="guess-status">' + status + '</div>';
+    html += '<div class="guess-input-row"><input id="guessInput" placeholder="输入你的猜测">';
+    html += '<button type="button" class="btn" onclick="submitGuess()">提交</button></div>';
+    html += '<div class="btn-row">';
+    html += '<button type="button" class="btn ghost" onclick="skipGuesser()">跳过</button>';
+    html += '<button type="button" class="btn gray" onclick="endRoundManual()">本轮结束</button>';
+    html += '<button type="button" class="btn red" onclick="endGameNow()">结束游戏</button></div>';
+  }
+  document.getElementById('guessInner').innerHTML = html;
+  if (!roundDone) {
+    var inp = document.getElementById('guessInput');
+    if (inp) inp.focus();
+  }
+}
+
+function submitGuess() {
+  var inp = document.getElementById('guessInput');
+  var v = inp ? inp.value.trim() : '';
+  if (!v) { alert('请输入猜测'); return; }
+  var g = guessers[guesserIndex];
+  if (v === currentWord) {
+    scores[g] += 10;
+    scores[roundIndex] += 5;
+    roundDone = true;
+    guessMsg = '猜对了！' + players[g] + ' +10 分，画者 ' + players[roundIndex] + ' +5 分';
+  } else {
+    if (guesserIndex < guessers.length - 1) {
+      guesserIndex++;
+      guessMsg = '猜错了，换下一位';
+    } else {
+      roundDone = true;
+      guessMsg = '本轮无人猜对';
+    }
+  }
+  renderGuess();
+}
+
+function skipGuesser() {
+  if (guesserIndex < guessers.length - 1) {
+    guesserIndex++;
+    guessMsg = '已跳过，换下一位';
+  } else {
+    roundDone = true;
+    guessMsg = '已跳过全部猜词者，本轮无人得分';
+  }
+  renderGuess();
+}
+
+function endRoundManual() {
+  roundDone = true;
+  guessMsg = '本轮提前结束';
+  renderGuess();
+}
+
+function nextRound() {
+  roundCount++;
+  if (roundCount >= players.length) {
+    showResult();
+    return;
+  }
+  roundIndex = (roundIndex + 1) % players.length;
+  startDraw();
+}
+
+function endGameNow() {
+  if (!confirm('确定结束游戏并查看排行榜？')) return;
+  showResult();
+}
+
+// ---- 排行榜 ----
+function showResult() {
+  hideAll();
+  document.getElementById('panelResult').style.display = '';
+  var idxs = players.map(function (_, i) { return i; });
+  idxs.sort(function (a, b) { return scores[b] - scores[a]; });
+  var html = '';
+  if (players.length === 0) {
+    html = '<p class="empty">还没有玩家</p>';
+  }
+  idxs.forEach(function (i, rk) {
+    var cls = rk === 0 ? ' rk1' : '';
+    html += '<div class="rank-item"><span class="rk' + cls + '">' + (rk + 1) + '</span><span>' + esc(players[i]) + '</span><span class="score">' + scores[i] + ' 分</span></div>';
+  });
+  document.getElementById('rankList').innerHTML = html;
+}
+
+function restart() {
+  startGame();
+}
+
+// ---- 画布 ----
+function setupCanvas() {
+  canvas = document.getElementById('drawCanvas');
+  var rect = canvas.getBoundingClientRect();
+  var dpr = window.devicePixelRatio || 1;
+  cssWidth = Math.max(100, Math.round(rect.width));
+  canvas.width = cssWidth * dpr;
+  canvas.height = 300 * dpr;
+  ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  clearCanvas();
+}
+
+function clearCanvas() {
+  if (!ctx) return;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, cssWidth, 300);
+}
+
+function getPos(e) {
+  var rect = canvas.getBoundingClientRect();
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+function onDown(e) {
+  e.preventDefault();
+  drawing = true;
+  last = getPos(e);
+  if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+  ctx.beginPath();
+  ctx.moveTo(last.x, last.y);
+  ctx.strokeStyle = penColor;
+  ctx.lineWidth = penWidth;
+  ctx.lineTo(last.x + 0.01, last.y + 0.01);
+  ctx.stroke();
+}
+
+function onMove(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  var p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(last.x, last.y);
+  ctx.lineTo(p.x, p.y);
+  ctx.strokeStyle = penColor;
+  ctx.lineWidth = penWidth;
+  ctx.stroke();
+  last = p;
+}
+
+function onUp() {
+  drawing = false;
+  last = null;
+}
+
+function renderColors() {
+  var html = '';
+  COLORS.forEach(function (c, i) {
+    html += '<button type="button" class="pen-btn' + (penColor === c.v && !penIsEraser ? ' active' : '') + '" style="background:' + c.v + '" onclick="setPen(' + i + ')" title="' + c.name + '"></button>';
+  });
+  html += '<button type="button" class="pen-btn eraser' + (penIsEraser ? ' active' : '') + '" onclick="setEraser()">橡皮</button>';
+  html += '<button type="button" class="btn sm gray" onclick="clearCanvas()">清除</button>';
+  document.getElementById('colorRow').innerHTML = html;
+}
+
+function setPen(i) {
+  penColor = COLORS[i].v;
+  penWidth = 4;
+  penIsEraser = false;
+  renderColors();
+}
+
+function setEraser() {
+  penColor = '#ffffff';
+  penWidth = 18;
+  penIsEraser = true;
+  renderColors();
+}
+
+// ---- 初始化 ----
+(function init() {
+  customWords = lsGet(CUSTOM_KEY, []);
+  if (!Array.isArray(customWords)) customWords = [];
+  players = [defaultName(0), defaultName(1)];
+  scores = [0, 0];
+  canvas = document.getElementById('drawCanvas');
+  canvas.addEventListener('pointerdown', onDown);
+  canvas.addEventListener('pointermove', onMove);
+  canvas.addEventListener('pointerup', onUp);
+  canvas.addEventListener('pointercancel', onUp);
+  canvas.addEventListener('pointerleave', onUp);
+  renderSetup();
+})();
+</script>
+
+</body>
+</html>

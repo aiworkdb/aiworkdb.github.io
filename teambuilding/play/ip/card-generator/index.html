@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I1 卡牌生成器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 10px; }
+  .card h2 .cnt { font-size: 0.75em; color: #999; font-weight: 400; margin-left: 6px; }
+  .tpl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .tpl-card { border: 2px solid #e2e6ee; border-radius: 10px; padding: 14px 12px; text-align: center; cursor: pointer; background: #f8f9fc; }
+  .tpl-card:active { transform: scale(0.98); }
+  .tpl-card.sel { border-color: #5b8cfe; background: #eef2ff; }
+  .tpl-name { font-weight: 700; font-size: 1em; }
+  .tpl-desc { font-size: 0.8em; color: #999; margin-top: 4px; }
+  .deck-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .pcard { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid #e2e6ee; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .pcard .band { height: 10px; }
+  .pcard .body { padding: 8px 8px 10px; }
+  .pcard .cname { font-weight: 700; font-size: 0.92em; margin-bottom: 2px; }
+  .pcard .ccat { display: inline-block; font-size: 0.68em; color: #fff; border-radius: 4px; padding: 1px 6px; margin-bottom: 4px; }
+  .pcard .cdesc { font-size: 0.76em; color: #666; line-height: 1.4; }
+  .pcard .rm { position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border: none; border-radius: 50%; background: rgba(26,26,46,0.55); color: #fff; font-size: 0.85em; line-height: 1; cursor: pointer; }
+  .pcard .rm:active { transform: scale(0.92); }
+  .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.08em; font-weight: 600; padding: 15px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; min-width: 120px; }
+  .print-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  .print-row label { font-size: 0.95em; color: #555; }
+  .select { border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 14px; font-size: 0.95em; font-family: inherit; background: #fff; }
+  .empty { color: #999; font-size: 0.9em; text-align: center; padding: 24px 0; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+  @media (min-width: 520px) { .deck-grid { grid-template-columns: repeat(4, 1fr); } }
+  /* 打印样式：A4 竖版 3×3 网格，卡牌 58×84mm（约 90×130mm 比例） */
+  #printArea { display: none; }
+  @media print {
+    .no-print { display: none !important; }
+    #printArea { display: grid !important; grid-template-columns: repeat(3, 58mm); gap: 4mm; justify-content: center; padding-top: 6mm; }
+    .print-card { width: 58mm; aspect-ratio: 9 / 13; border-radius: 3mm; border: 0.4mm solid #c8ccd6; overflow: hidden; background: #fff; page-break-inside: avoid; }
+    .print-card .band { height: 9mm; }
+    .print-card .body { padding: 3mm 3mm 4mm; }
+    .print-card .cname { font-size: 11pt; font-weight: 700; }
+    .print-card .ccat { font-size: 8pt; color: #fff; border-radius: 2mm; padding: 0.5mm 3mm; display: inline-block; margin: 1mm 0; }
+    .print-card .cdesc { font-size: 8.5pt; color: #333; line-height: 1.4; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero no-print">
+  <h1>IP 卡牌生成器</h1>
+  <p>主题 IP 卡牌 · 一键生成打印</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card no-print">
+    <h2>选择模板</h2>
+    <div class="tpl-grid" id="tplGrid"></div>
+  </div>
+
+  <div class="card no-print">
+    <h2>卡牌预览<span class="cnt" id="deckCnt"></span></h2>
+    <div class="deck-grid" id="deckGrid"></div>
+    <div class="btn-row">
+      <button type="button" class="btn ghost" onclick="restoreAll()">恢复全部</button>
+    </div>
+  </div>
+
+  <div class="card no-print">
+    <h2>打印设置</h2>
+    <div class="print-row">
+      <label>打印份数</label>
+      <select class="select" id="copiesSel">
+        <option value="1">1 份</option>
+        <option value="2">2 份</option>
+        <option value="3">3 份</option>
+        <option value="4" selected>4 份</option>
+      </select>
+    </div>
+    <button type="button" class="btn big" onclick="doPrint()">打印卡牌</button>
+  </div>
+
+</div>
+
+<div id="printArea"></div>
+
+<div class="footer no-print">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// ---- 内置模板数据 ----
+var TEMPLATES = [
+  {
+    id: 'wukong', name: '大圣西游', desc: '西游主题角色与道具卡',
+    colors: { '角色': '#d4a017', '道具': '#c0392b', '技能': '#2e86de' },
+    cards: [
+      { name: '悟空', cat: '角色', desc: '齐天大圣，七十二变，本领高强' },
+      { name: '八戒', cat: '角色', desc: '贪吃爱睡，关键时刻力大无穷' },
+      { name: '沙僧', cat: '角色', desc: '忠厚老实，一路挑担护师' },
+      { name: '唐僧', cat: '角色', desc: '慈悲为怀，带领师徒西行取经' },
+      { name: '白龙马', cat: '角色', desc: '原为龙王三太子，化马随行' },
+      { name: '紧箍咒', cat: '道具', desc: '一念咒语，金箍便收紧' }
+    ]
+  },
+  {
+    id: 'demon', name: '鬼杀队', desc: '斩鬼之人的伙伴与剑技',
+    colors: { '角色': '#1e8449', '道具': '#c0392b', '技能': '#2e86de' },
+    cards: [
+      { name: '炭治郎', cat: '角色', desc: '日之呼吸传人，温柔而坚韧' },
+      { name: '祢豆子', cat: '角色', desc: '被变成鬼却从未失去人性' },
+      { name: '善逸', cat: '角色', desc: '胆小怕事，睡梦中雷光一闪' },
+      { name: '伊之助', cat: '角色', desc: '头戴野猪头套，直觉惊人' },
+      { name: '水之呼吸', cat: '技能', desc: '如水般流动的剑技，攻守兼备' },
+      { name: '日轮刀', cat: '道具', desc: '吸收阳光的利刃，斩鬼必备' }
+    ]
+  },
+  {
+    id: 'jujutsu', name: '咒术回战', desc: '咒术师与咒具的对抗',
+    colors: { '角色': '#6c3483', '道具': '#5d6d7e', '技能': '#c0392b' },
+    cards: [
+      { name: '虎杖悠仁', cat: '角色', desc: '天生怪力，体内寄宿特级咒物' },
+      { name: '伏黑惠', cat: '角色', desc: '十种影法术的使用者，冷静可靠' },
+      { name: '钉崎野蔷薇', cat: '角色', desc: '操使咒具钉锤，性格爽朗' },
+      { name: '五条悟', cat: '角色', desc: '最强咒术师，六眼与无下限术式' },
+      { name: '领域展开', cat: '技能', desc: '构筑领域的究极术式，必中必杀' },
+      { name: '咒具', cat: '道具', desc: '蕴含咒力的武器，可伤咒灵' }
+    ]
+  },
+  {
+    id: 'island', name: '岛屿求生', desc: '荒岛求生小队角色卡',
+    colors: { '角色': '#2e86de', '道具': '#ca6f1e', '技能': '#1e8449' },
+    cards: [
+      { name: '队长', cat: '角色', desc: '统筹全局，做出最终决策' },
+      { name: '资源官', cat: '角色', desc: '管理食物与材料，精打细算' },
+      { name: '探索员', cat: '角色', desc: '外出探索新区域，带回情报' },
+      { name: '建造师', cat: '角色', desc: '规划建造顺序，搭建庇护所' },
+      { name: '天气预报员', cat: '角色', desc: '分析天气风险，提前预警' },
+      { name: '营地卡', cat: '道具', desc: '核心营地设施，团队落脚点' }
+    ]
+  }
+];
+
+// ---- 状态 ----
+var selIdx = 0;
+var deck = [];       // deck[i] = 是否保留第 i 张卡
+var copies = 4;
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+// ---- 模板选择 ----
+function renderTpls() {
+  var html = '';
+  TEMPLATES.forEach(function (t, i) {
+    html += '<div class="tpl-card' + (i === selIdx ? ' sel' : '') + '" onclick="selectTemplate(' + i + ')">';
+    html += '<div class="tpl-name">' + esc(t.name) + '</div>';
+    html += '<div class="tpl-desc">' + esc(t.desc) + ' · ' + t.cards.length + ' 张</div>';
+    html += '</div>';
+  });
+  document.getElementById('tplGrid').innerHTML = html;
+}
+
+function selectTemplate(i) {
+  selIdx = i;
+  deck = TEMPLATES[i].cards.map(function () { return true; });
+  renderAll();
+}
+
+// ---- 牌组操作 ----
+function removeCard(i) {
+  deck[i] = false;
+  renderAll();
+}
+
+function restoreAll() {
+  deck = TEMPLATES[selIdx].cards.map(function () { return true; });
+  renderAll();
+}
+
+function renderAll() {
+  renderTpls();
+  renderDeck();
+}
+
+function renderDeck() {
+  var t = TEMPLATES[selIdx];
+  var kept = deck.filter(function (k) { return k; }).length;
+  document.getElementById('deckCnt').textContent = kept + ' / ' + t.cards.length + ' 张';
+  var html = '';
+  if (kept === 0) {
+    html = '<p class="empty">牌组为空，点击「恢复全部」重新加入</p>';
+  }
+  deck.forEach(function (k, i) {
+    if (!k) return;
+    var c = t.cards[i];
+    var color = t.colors[c.cat] || '#5b8cfe';
+    html += '<div class="pcard">';
+    html += '<div class="band" style="background:' + color + ';"></div>';
+    html += '<div class="body">';
+    html += '<div class="cname">' + esc(c.name) + '</div>';
+    html += '<span class="ccat" style="background:' + color + ';">' + esc(c.cat) + '</span>';
+    html += '<div class="cdesc">' + esc(c.desc) + '</div>';
+    html += '</div>';
+    html += '<button type="button" class="rm" onclick="removeCard(' + i + ')">×</button>';
+    html += '</div>';
+  });
+  document.getElementById('deckGrid').innerHTML = html;
+}
+
+// ---- 打印 ----
+function cardHtml(c, color) {
+  return '<div class="print-card"><div class="band" style="background:' + color + ';"></div><div class="body"><div class="cname">' + esc(c.name) + '</div><span class="ccat" style="background:' + color + ';">' + esc(c.cat) + '</span><div class="cdesc">' + esc(c.desc) + '</div></div></div>';
+}
+
+function doPrint() {
+  copies = parseInt(document.getElementById('copiesSel').value, 10) || 1;
+  var t = TEMPLATES[selIdx];
+  var html = '';
+  deck.forEach(function (k, i) {
+    if (!k) return;
+    var c = t.cards[i];
+    var color = t.colors[c.cat] || '#5b8cfe';
+    for (var n = 0; n < copies; n++) {
+      html += cardHtml(c, color);
+    }
+  });
+  if (html === '') { alert('牌组为空，请先恢复卡牌'); return; }
+  document.getElementById('printArea').innerHTML = html;
+  window.print();
+}
+
+// ---- 初始化 ----
+selectTemplate(0);
+</script>
+
+</body>
+</html>

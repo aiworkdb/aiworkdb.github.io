@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G6 红黑游戏 · 在线版</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 8px; }
+  .hint { font-size: 0.85em; color: #888; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.92em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; font-family: inherit; }
+  .btn:active { transform: scale(0.98); }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.primary { padding: 12px 22px; font-size: 1em; }
+  .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+  .count-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .count-btn { flex: 1; min-width: 72px; padding: 12px 0; border-radius: 8px; border: 1px solid #d0d5e0; background: #fff; font-size: 1em; cursor: pointer; font-family: inherit; color: #1a1a2e; }
+  .count-btn.active { background: #5b8cfe; border-color: #5b8cfe; color: #fff; font-weight: 700; }
+  .resume-bar { background: #eef2ff; border: 1px solid #c9d6ff; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 0.9em; }
+  .round-ind { text-align: center; font-size: 1em; font-weight: 700; margin-bottom: 10px; }
+  .scores-line { display: flex; justify-content: center; gap: 18px; font-size: 0.95em; margin-bottom: 14px; }
+  .scores-line .red-score { color: #c0392b; font-weight: 700; }
+  .scores-line .blue-score { color: #2c5fbf; font-weight: 700; }
+  .team-panel { border-radius: 12px; padding: 18px; margin-bottom: 14px; text-align: center; }
+  .team-panel h2 { font-size: 1.1em; margin-bottom: 6px; }
+  .team-panel.red-panel { background: #fdf0ee; border: 2px solid #f0b3ab; }
+  .team-panel.blue-panel { background: #eef3fd; border: 2px solid #b9cdf2; }
+  .choice-row { display: flex; gap: 12px; justify-content: center; margin-top: 12px; }
+  .choice-btn { flex: 1; max-width: 140px; padding: 22px 0; border-radius: 12px; font-size: 1.4em; font-weight: 700; cursor: pointer; border: none; font-family: inherit; }
+  .choice-btn:active { transform: scale(0.97); }
+  .choice-btn.red { background: #e0563f; color: #fff; }
+  .choice-btn.dark { background: #1a1a2e; color: #fff; }
+  .reveal-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .reveal-team { border-radius: 12px; padding: 16px; text-align: center; font-size: 0.95em; }
+  .reveal-team b { font-size: 1.6em; display: block; margin-top: 4px; }
+  .reveal-team.red-reveal { background: #fdf0ee; border: 2px solid #f0b3ab; }
+  .reveal-team.blue-reveal { background: #eef3fd; border: 2px solid #b9cdf2; }
+  .round-result { background: #fffbe6; border: 1px solid #f2e2b8; border-radius: 8px; padding: 12px; font-size: 0.9em; margin-bottom: 12px; text-align: center; }
+  .final-scores { text-align: center; font-size: 1.2em; margin-bottom: 6px; }
+  .winner-line { text-align: center; font-size: 1.4em; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+  .tips-title { font-size: 0.95em; font-weight: 700; margin-bottom: 8px; }
+  .tip-item { font-size: 0.88em; color: #555; background: #f5f7fa; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .hist-title { font-size: 0.9em; font-weight: 700; margin: 14px 0 6px; }
+  .hist-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+  .hist-table th, .hist-table td { border: 1px solid #e2e6ee; padding: 6px 8px; text-align: center; }
+  .hist-table th { background: #f5f7fa; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>红黑游戏 · 在线版</h1>
+  <p>两队多轮红黑选择 · 体验竞争与合作的张力</p>
+</div>
+
+<div class="wrap">
+  <!-- 设置 -->
+  <div class="card" id="setupPanel">
+    <h2>游戏设置</h2>
+    <div class="resume-bar" id="resumeBar" style="display:none"></div>
+    <p class="hint">两队（红队 / 蓝队）独立选择红或黑，选择后不可更改</p>
+    <p class="hint">选择总轮数（3-5）：</p>
+    <div class="count-row" id="roundRow"></div>
+    <div class="btn-row">
+      <button type="button" class="btn primary" onclick="startGame()">开始游戏</button>
+    </div>
+  </div>
+
+  <!-- 对局 -->
+  <div class="card" id="gamePanel" style="display:none">
+    <div class="round-ind" id="roundInd"></div>
+    <div class="scores-line" id="scoresLine"></div>
+
+    <div class="team-panel red-panel" id="phaseRed">
+      <h2>红队选择</h2>
+      <p class="hint">请红队商议后选择（选择后不可更改）</p>
+      <div class="choice-row">
+        <button type="button" class="choice-btn red" onclick="choose('red','红')">红</button>
+        <button type="button" class="choice-btn dark" onclick="choose('red','黑')">黑</button>
+      </div>
+    </div>
+
+    <div class="team-panel blue-panel" id="phaseBlue" style="display:none">
+      <h2>蓝队选择</h2>
+      <p class="hint">红队已选完，请蓝队商议后选择（选择后不可更改）</p>
+      <div class="choice-row">
+        <button type="button" class="choice-btn red" onclick="choose('blue','红')">红</button>
+        <button type="button" class="choice-btn dark" onclick="choose('blue','黑')">黑</button>
+      </div>
+    </div>
+
+    <div id="phaseReveal" style="display:none">
+      <div class="reveal-cards">
+        <div class="reveal-team red-reveal">红队选择：<b id="redChoiceText"></b></div>
+        <div class="reveal-team blue-reveal">蓝队选择：<b id="blueChoiceText"></b></div>
+      </div>
+      <div class="round-result" id="roundResult"></div>
+      <div class="scores-line" id="scoresAfter"></div>
+      <div class="btn-row">
+        <button type="button" class="btn primary" id="nextRoundBtn" onclick="nextRound()">下一轮</button>
+      </div>
+    </div>
+
+    <div id="phaseDone" style="display:none">
+      <div class="final-scores" id="finalScores"></div>
+      <div class="winner-line" id="winnerLine"></div>
+      <div class="tips-title">复盘要点</div>
+      <div class="tip-item">双黑共赢：双方都选黑时一起加分，这是合作的最优解。</div>
+      <div class="tip-item">单方选红能短期占优，但会引发对方报复，长期是双输。</div>
+      <div class="tip-item">信任需要共同维护：连续双黑，比分才会稳步上升。</div>
+      <div class="tip-item">游戏隐喻工作与协作：单方面占便宜，会破坏长期合作关系。</div>
+      <div class="hist-title">每轮记录</div>
+      <table class="hist-table" id="histTable"></table>
+      <div class="btn-row">
+        <button type="button" class="btn primary" onclick="restartGame()">再来一局</button>
+        <button type="button" class="btn gray" onclick="clearSave()">清除存档</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+var STORE_KEY = 'tb_redblack_v1';
+
+var game = {
+  totalRounds: 4,
+  round: 1,
+  redScore: 0,
+  blueScore: 0,
+  phase: 'setup',       // setup | red | blue | reveal | done
+  redChoice: null,
+  blueChoice: null,
+  history: []
+};
+
+function lsGet(k, d) {
+  try {
+    var v = localStorage.getItem(k);
+    return v ? JSON.parse(v) : d;
+  } catch (e) { return d; }
+}
+function lsSet(k, v) {
+  try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+}
+function save() { lsSet(STORE_KEY, game); }
+
+// 经典计分矩阵
+function calc(red, blue) {
+  if (red === '红' && blue === '红') {
+    return { red: -3, blue: -3, msg: '双方都选红：两败俱伤，各扣 3 分。信任一旦破裂，合作就难了。' };
+  }
+  if (red === '黑' && blue === '黑') {
+    return { red: 1, blue: 1, msg: '双方都选黑：合作共赢，各加 1 分。双黑是长期最优解。' };
+  }
+  if (red === '红') {
+    return { red: 5, blue: -3, msg: '红方选红：+5 分短期占优；蓝方选黑被扣 3 分。单方选红会引发对方报复，下一轮对方大概率也选红。' };
+  }
+  return { red: -3, blue: 5, msg: '蓝方选红：+5 分短期占优；红方选黑被扣 3 分。单方选红会引发对方报复。' };
+}
+
+// ---- 设置 ----
+function renderSetup() {
+  var html = '';
+  [3, 4, 5].forEach(function (n) {
+    html += '<button type="button" class="count-btn' + (n === game.totalRounds ? ' active' : '') + '" onclick="setRounds(' + n + ')">' + n + ' 轮</button>';
+  });
+  document.getElementById('roundRow').innerHTML = html;
+
+  var bar = document.getElementById('resumeBar');
+  if (game.phase !== 'setup' && game.phase !== 'done') {
+    bar.style.display = '';
+    bar.innerHTML = '检测到未完成的对局：第 ' + game.round + ' / ' + game.totalRounds + ' 轮，红队 ' + game.redScore + ' 分 · 蓝队 ' + game.blueScore + ' 分。' +
+      '<div class="btn-row"><button type="button" class="btn" onclick="resumeGame()">继续</button>' +
+      '<button type="button" class="btn gray" onclick="clearSave()">放弃并重来</button></div>';
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function setRounds(n) {
+  game.totalRounds = n;
+  renderSetup();
+}
+
+function startGame() {
+  game.round = 1;
+  game.redScore = 0;
+  game.blueScore = 0;
+  game.phase = 'red';
+  game.redChoice = null;
+  game.blueChoice = null;
+  game.history = [];
+  save();
+  showGame();
+}
+
+function resumeGame() {
+  showGame();
+}
+
+function restartGame() {
+  if (!confirm('确定重新开始？当前进度会被清空。')) return;
+  startGame();
+}
+
+function clearSave() {
+  if (!confirm('确定清除存档？')) return;
+  try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+  game = {
+    totalRounds: game.totalRounds,
+    round: 1,
+    redScore: 0,
+    blueScore: 0,
+    phase: 'setup',
+    redChoice: null,
+    blueChoice: null,
+    history: []
+  };
+  document.getElementById('gamePanel').style.display = 'none';
+  document.getElementById('setupPanel').style.display = '';
+  renderSetup();
+}
+
+// ---- 对局 ----
+function showGame() {
+  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('gamePanel').style.display = '';
+  renderGame();
+}
+
+function renderGame() {
+  document.getElementById('roundInd').textContent = '第 ' + game.round + ' / ' + game.totalRounds + ' 轮';
+  document.getElementById('scoresLine').innerHTML =
+    '<span class="red-score">红队 ' + game.redScore + ' 分</span>' +
+    '<span class="blue-score">蓝队 ' + game.blueScore + ' 分</span>';
+
+  var isRed = game.phase === 'red';
+  var isBlue = game.phase === 'blue';
+  var isReveal = game.phase === 'reveal';
+  var isDone = game.phase === 'done';
+
+  document.getElementById('phaseRed').style.display = isRed ? '' : 'none';
+  document.getElementById('phaseBlue').style.display = isBlue ? '' : 'none';
+  document.getElementById('phaseReveal').style.display = isReveal ? '' : 'none';
+  document.getElementById('phaseDone').style.display = isDone ? '' : 'none';
+
+  if (isReveal) renderReveal();
+  if (isDone) renderDone();
+}
+
+function choose(team, color) {
+  if (team === 'red') {
+    game.redChoice = color;
+    game.phase = 'blue';
+  } else {
+    game.blueChoice = color;
+    game.phase = 'reveal';
+    var r = calc(game.redChoice, game.blueChoice);
+    game.redScore += r.red;
+    game.blueScore += r.blue;
+    game.lastMsg = r.msg;
+    // 先更新本轮记录到 history，再 save（保证刷新续玩不丢记录、不重复）
+    game.history.push({
+      round: game.round,
+      red: game.redChoice,
+      blue: game.blueChoice,
+      redScore: game.redScore,
+      blueScore: game.blueScore
+    });
+  }
+  save();
+  renderGame();
+}
+
+function renderReveal() {
+  document.getElementById('redChoiceText').textContent = game.redChoice;
+  document.getElementById('blueChoiceText').textContent = game.blueChoice;
+  document.getElementById('roundResult').textContent = game.lastMsg || '';
+  document.getElementById('scoresAfter').innerHTML =
+    '<span class="red-score">红队 ' + game.redScore + ' 分</span>' +
+    '<span class="blue-score">蓝队 ' + game.blueScore + ' 分</span>';
+
+  var btn = document.getElementById('nextRoundBtn');
+  btn.textContent = game.round >= game.totalRounds ? '查看总结' : '下一轮';
+}
+
+function nextRound() {
+  if (game.round >= game.totalRounds) {
+    game.phase = 'done';
+  } else {
+    game.round++;
+    game.phase = 'red';
+    game.redChoice = null;
+    game.blueChoice = null;
+  }
+  save();
+  renderGame();
+}
+
+function renderDone() {
+  document.getElementById('finalScores').innerHTML =
+    '红队 <b>' + game.redScore + '</b> 分 · 蓝队 <b>' + game.blueScore + '</b> 分';
+  var winner;
+  if (game.redScore > game.blueScore) winner = '红队获胜';
+  else if (game.blueScore > game.redScore) winner = '蓝队获胜';
+  else winner = '平局';
+  document.getElementById('winnerLine').textContent = winner;
+
+  var html = '<tr><th>轮次</th><th>红队</th><th>蓝队</th><th>红队分</th><th>蓝队分</th></tr>';
+  game.history.forEach(function (h) {
+    html += '<tr><td>' + h.round + '</td><td>' + h.red + '</td><td>' + h.blue + '</td><td>' + h.redScore + '</td><td>' + h.blueScore + '</td></tr>';
+  });
+  document.getElementById('histTable').innerHTML = html;
+}
+
+// ---- 初始化 ----
+(function init() {
+  var saved = lsGet(STORE_KEY, null);
+  if (saved && typeof saved === 'object' && saved.totalRounds && saved.phase) {
+    game = saved;
+    // 兼容旧存档：reveal 阶段若缺少当前轮记录则补录，避免续玩丢记录/重复
+    if (game.phase === 'reveal' && game.redChoice && game.blueChoice) {
+      if (!Array.isArray(game.history)) game.history = [];
+      var last = game.history[game.history.length - 1];
+      if (!last || last.round !== game.round) {
+        game.history.push({
+          round: game.round,
+          red: game.redChoice,
+          blue: game.blueChoice,
+          redScore: game.redScore,
+          blueScore: game.blueScore
+        });
+        save();
+      }
+    }
+  }
+  renderSetup();
+})();
+</script>
+
+</body>
+</html>

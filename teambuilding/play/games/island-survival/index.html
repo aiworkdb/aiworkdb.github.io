@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G8 岛屿求生</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 10px; }
+  .screen-title { font-size: 1.15em; font-weight: 700; margin-bottom: 4px; }
+  .screen-sub { font-size: 0.85em; color: #888; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.08em; font-weight: 600; padding: 15px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.sm { padding: 8px 14px; font-size: 0.85em; }
+  .btn:disabled { background: #e2e6ee; color: #9aa0ad; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; min-width: 120px; }
+  .num-input { width: 100%; padding: 14px; border: 2px solid #d0d5e0; border-radius: 10px; font-size: 1.2em; text-align: center; font-family: inherit; margin-bottom: 14px; }
+  .num-input:focus { outline: none; border-color: #5b8cfe; }
+  .name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .name-row .idx { width: 44px; flex-shrink: 0; color: #5b8cfe; font-weight: 700; font-size: 0.9em; }
+  .name-row input { flex: 1; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.92em; font-family: inherit; }
+  .name-row input:focus { outline: none; border-color: #5b8cfe; }
+  .rank-row { display: flex; align-items: center; gap: 10px; border: 1px solid #e2e6ee; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; background: #fff; }
+  .rank-row.bad { border-color: #e0563f; background: #fdf0ee; }
+  .rank-item-name { flex: 1; font-size: 0.95em; font-weight: 500; }
+  .prio-input { width: 68px; flex-shrink: 0; text-align: center; border: 2px solid #d0d5e0; border-radius: 8px; padding: 8px 6px; font-size: 1em; font-family: inherit; }
+  .prio-input:focus { outline: none; border-color: #5b8cfe; }
+  .rank-row.bad .prio-input { border-color: #e0563f; }
+  .inherit-line { display: flex; gap: 8px; margin-bottom: 12px; }
+  .select { flex: 1; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.92em; font-family: inherit; background: #fff; }
+  .expert-row { display: flex; align-items: center; gap: 10px; padding: 7px 4px; border-bottom: 1px solid #f0f1f4; font-size: 0.95em; }
+  .expert-no { width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; background: #5b8cfe; color: #fff; text-align: center; line-height: 26px; font-size: 0.8em; font-weight: 700; }
+  .cmp-head, .cmp-row { display: grid; grid-template-columns: 1fr 44px 44px 44px; gap: 6px; align-items: center; padding: 7px 4px; border-bottom: 1px solid #f0f1f4; font-size: 0.92em; }
+  .cmp-head { color: #999; font-size: 0.82em; border-bottom: 2px solid #e2e6ee; }
+  .cmp-head span, .cmp-row span { text-align: center; }
+  .cmp-head span:first-child, .cmp-row span:first-child { text-align: left; }
+  .cmp-row .d0 { color: #2e8b57; font-weight: 700; }
+  .cmp-row .d1 { color: #5b8cfe; }
+  .cmp-row .d2 { color: #e67e22; }
+  .cmp-row .d3 { color: #e0563f; font-weight: 700; }
+  .cmp-total { display: flex; justify-content: space-between; padding: 10px 4px; font-weight: 700; font-size: 1em; border-top: 2px solid #e2e6ee; margin-top: 6px; }
+  .team-score { font-size: 1.1em; font-weight: 700; color: #3366cc; margin: 10px 0 6px; }
+  .eval-box { background: #eef2ff; border-radius: 8px; padding: 12px; font-size: 0.92em; color: #3366cc; }
+  .rank-no { width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; background: #5b8cfe; color: #fff; text-align: center; line-height: 30px; font-weight: 700; font-size: 0.9em; margin-right: 12px; }
+  .rank-name { flex: 1; font-size: 0.98em; font-weight: 600; }
+  .rank-score { font-size: 0.95em; color: #5b8cfe; font-weight: 700; }
+  .rank-row.list { display: flex; align-items: center; padding: 12px 14px; background: #f8f9fc; border: none; border-radius: 8px; margin-bottom: 8px; }
+  .empty { color: #999; font-size: 0.88em; text-align: center; padding: 14px 0; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>岛屿求生</h1>
+  <p>有限资源下的团队决策求生</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 设置 -->
+  <div id="screen-setup">
+    <div class="card">
+      <h2>游戏设置</h2>
+      <p style="margin-bottom:14px;color:#666;">你们漂流到一座荒岛上，只有 15 件物品。请先各自排序，再团队讨论达成共识，最后对照专家答案评分。</p>
+      <label style="font-size:0.9em;color:#555;">参与人数（2-10）</label>
+      <input type="number" class="num-input" id="countInput" value="4" min="2" max="10">
+      <button type="button" class="btn big" onclick="setupPlayers()">生成玩家列表</button>
+    </div>
+    <div class="card">
+      <h2>玩家名单</h2>
+      <div id="playerNames"></div>
+      <button type="button" class="btn big" id="startRankBtn" onclick="startRanking()" disabled>开始个人排序</button>
+    </div>
+  </div>
+
+  <!-- 排序 -->
+  <div id="screen-rank" style="display:none;">
+    <div class="card">
+      <div class="screen-title" id="rankTitle">玩家 1 排序</div>
+      <div class="screen-sub" id="rankSub">为 15 件物品填写 1-15 优先级，不可重复（1 = 最重要）</div>
+      <div id="inheritRow" style="display:none;">
+        <div class="inherit-line">
+          <select class="select" id="inheritSel"></select>
+          <button type="button" class="btn ghost" onclick="loadPlayerRank()">载入</button>
+        </div>
+      </div>
+      <div id="rankList"></div>
+      <div class="btn-row">
+        <button type="button" class="btn big" onclick="submitRank()">提交</button>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn gray" onclick="clearRanks()">清空重排</button>
+        <button type="button" class="btn gray" id="prevBtn" onclick="prevPlayer()" style="display:none;">上一位</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 揭晓 -->
+  <div id="screen-reveal" style="display:none;">
+    <div class="card">
+      <div class="screen-title">专家标准答案</div>
+      <div class="screen-sub">按生存学常识排序：1 为最重要</div>
+      <div id="expertList"></div>
+    </div>
+    <div class="card">
+      <div class="screen-title">团队排序对比</div>
+      <div class="screen-sub">偏差 = |团队优先级 - 专家优先级|</div>
+      <div id="compareList"></div>
+      <div class="team-score" id="teamScore"></div>
+      <div class="eval-box" id="evalBox"></div>
+    </div>
+    <button type="button" class="btn big" onclick="showEnd()">查看个人排行</button>
+  </div>
+
+  <!-- 结束 -->
+  <div id="screen-end" style="display:none;">
+    <div class="card">
+      <div class="screen-title">个人排行</div>
+      <div class="screen-sub">个人分 = 与专家答案的偏差之和，越小越好</div>
+      <div id="endList"></div>
+    </div>
+    <div class="card">
+      <div class="team-score" id="endTeam"></div>
+    </div>
+    <button type="button" class="btn big" onclick="resetGame()">再来一局</button>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// ---- 数据 ----
+var ITEMS = [
+  { name: '打火机', expert: 2 },
+  { name: '饮用水', expert: 1 },
+  { name: '压缩饼干', expert: 7 },
+  { name: '急救箱', expert: 3 },
+  { name: '信号镜', expert: 4 },
+  { name: '求生刀具', expert: 5 },
+  { name: '救生圈', expert: 13 },
+  { name: '帆布帐篷', expert: 8 },
+  { name: '尼龙绳', expert: 9 },
+  { name: '指南针', expert: 10 },
+  { name: '防寒服', expert: 6 },
+  { name: '渔具', expert: 12 },
+  { name: '手电筒', expert: 11 },
+  { name: '防水地图', expert: 15 },
+  { name: '收音机', expert: 14 }
+];
+
+// ---- 全局状态（纯内存）----
+var game = { phase: 'setup', count: 0, players: [], playerIndex: 0, team: null };
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function showScreen(name) {
+  ['setup', 'rank', 'reveal', 'end'].forEach(function (s) {
+    document.getElementById('screen-' + s).style.display = (s === name) ? '' : 'none';
+  });
+  window.scrollTo(0, 0);
+}
+
+// ---- 设置 ----
+function setupPlayers() {
+  var n = parseInt(document.getElementById('countInput').value, 10);
+  if (!n || n < 2 || n > 10) { alert('请输入 2-10 之间的玩家人数'); return; }
+  game.count = n;
+  game.players = [];
+  for (var i = 0; i < n; i++) {
+    game.players.push({ name: '玩家' + (i + 1), ranks: null });
+  }
+  renderPlayerNames();
+}
+
+function renderPlayerNames() {
+  var html = '';
+  game.players.forEach(function (p, i) {
+    html += '<div class="name-row"><span class="idx">' + (i + 1) + '</span><input class="name-input" value="' + esc(p.name) + '" maxlength="8"></div>';
+  });
+  document.getElementById('playerNames').innerHTML = html;
+  document.getElementById('startRankBtn').disabled = false;
+}
+
+function startRanking() {
+  document.querySelectorAll('.name-input').forEach(function (inp, i) {
+    var nm = inp.value.trim();
+    if (nm) game.players[i].name = nm;
+  });
+  game.playerIndex = 0;
+  game.phase = 'individual';
+  enterRank();
+}
+
+// ---- 排序页 ----
+function enterRank() {
+  var isTeam = game.phase === 'team';
+  document.getElementById('rankTitle').textContent = isTeam ? '团队共识排序' : '玩家 ' + (game.playerIndex + 1) + ' 排序';
+  document.getElementById('rankSub').textContent = isTeam ? '团队讨论后统一填写 1-15 优先级，不可重复（1 = 最重要）' : '为 15 件物品填写 1-15 优先级，不可重复（1 = 最重要）';
+  document.getElementById('prevBtn').style.display = (!isTeam && game.playerIndex > 0) ? '' : 'none';
+  document.getElementById('inheritRow').style.display = isTeam ? '' : 'none';
+  if (isTeam) renderInheritSel();
+  var existing = isTeam ? game.team : game.players[game.playerIndex].ranks;
+  renderRankList(existing);
+  showScreen('rank');
+}
+
+function renderRankList(ranks) {
+  var html = '';
+  ITEMS.forEach(function (it, i) {
+    var v = (ranks && ranks[i]) ? ranks[i] : '';
+    html += '<div class="rank-row"><span class="rank-item-name">' + esc(it.name) + '</span><input class="prio-input" type="number" min="1" max="15" placeholder="1-15" value="' + v + '"></div>';
+  });
+  document.getElementById('rankList').innerHTML = html;
+}
+
+function renderInheritSel() {
+  var html = '<option value="-1">从零开始（清空）</option>';
+  game.players.forEach(function (p, i) {
+    html += '<option value="' + i + '">继承 ' + esc(p.name) + ' 的排序</option>';
+  });
+  document.getElementById('inheritSel').innerHTML = html;
+}
+
+function loadPlayerRank() {
+  var idx = parseInt(document.getElementById('inheritSel').value, 10);
+  document.querySelectorAll('.prio-input').forEach(function (inp, i) {
+    if (idx >= 0) {
+      var ranks = game.players[idx].ranks;
+      inp.value = (ranks && ranks[i]) ? ranks[i] : '';
+    } else {
+      inp.value = '';
+    }
+  });
+  clearBad();
+}
+
+function clearRanks() {
+  document.querySelectorAll('.prio-input').forEach(function (inp) { inp.value = ''; });
+  clearBad();
+}
+
+function clearBad() {
+  document.querySelectorAll('.rank-row').forEach(function (row) { row.classList.remove('bad'); });
+}
+
+function prevPlayer() {
+  if (game.phase !== 'individual' || game.playerIndex <= 0) return;
+  game.playerIndex--;
+  enterRank();
+}
+
+function collectRanks() {
+  var vals = [];
+  var byVal = {};
+  document.querySelectorAll('.prio-input').forEach(function (inp, i) {
+    var v = inp.value.trim();
+    var n = parseInt(v, 10);
+    if (v === '' || !n || n < 1 || n > 15) { vals.push(0); return; }
+    vals.push(n);
+    if (!byVal[n]) byVal[n] = [];
+    byVal[n].push(i);
+  });
+  var errs = {};
+  vals.forEach(function (n, i) { if (n === 0) errs[i] = true; });
+  Object.keys(byVal).forEach(function (k) {
+    if (byVal[k].length > 1) byVal[k].forEach(function (i) { errs[i] = true; });
+  });
+  document.querySelectorAll('.rank-row').forEach(function (row, i) {
+    row.classList.toggle('bad', !!errs[i]);
+  });
+  return { vals: vals, errCount: Object.keys(errs).length };
+}
+
+function submitRank() {
+  var r = collectRanks();
+  if (r.errCount > 0) {
+    alert('请为每件物品填写 1-15 的不重复优先级，缺失或重复项已标红');
+    return;
+  }
+  if (game.phase === 'individual') {
+    game.players[game.playerIndex].ranks = r.vals.slice();
+    game.playerIndex++;
+    if (game.playerIndex >= game.count) {
+      game.phase = 'team';
+      enterRank();
+    } else {
+      enterRank();
+    }
+  } else {
+    game.team = r.vals.slice();
+    enterReveal();
+  }
+}
+
+// ---- 评分 ----
+function scoreOf(ranks) {
+  var total = 0;
+  ITEMS.forEach(function (it, i) {
+    total += Math.abs(ranks[i] - it.expert);
+  });
+  return total;
+}
+
+function evalText(s) {
+  if (s < 30) return '生存大师！团队决策非常精准，稳操胜券。';
+  if (s < 60) return '求生好手！思路清晰，稍微调整会更完美。';
+  if (s < 90) return '需要学习：先保证生存刚需（水、火、急救），再考虑工具。';
+  return '危险！这样的排序在荒岛上很难存活，建议复盘讨论。';
+}
+
+function devClass(d) {
+  if (d === 0) return 'd0';
+  if (d === 1) return 'd1';
+  if (d === 2) return 'd2';
+  return 'd3';
+}
+
+function enterReveal() {
+  renderExpert();
+  renderCompare();
+  showScreen('reveal');
+}
+
+function renderExpert() {
+  var order = ITEMS.map(function (it, i) { return { idx: i, rank: it.expert }; })
+    .sort(function (a, b) { return a.rank - b.rank; });
+  var html = '';
+  order.forEach(function (o, i) {
+    html += '<div class="expert-row"><span class="expert-no">' + (i + 1) + '</span><span>' + esc(ITEMS[o.idx].name) + '</span></div>';
+  });
+  document.getElementById('expertList').innerHTML = html;
+}
+
+function renderCompare() {
+  var html = '<div class="cmp-head"><span>物品</span><span>团队</span><span>专家</span><span>偏差</span></div>';
+  var total = 0;
+  ITEMS.forEach(function (it, i) {
+    var t = game.team[i];
+    var e = it.expert;
+    var d = Math.abs(t - e);
+    total += d;
+    html += '<div class="cmp-row"><span>' + esc(it.name) + '</span><span>' + t + '</span><span>' + e + '</span><span class="' + devClass(d) + '">' + d + '</span></div>';
+  });
+  html += '<div class="cmp-total"><span>团队总分</span><span>' + total + '</span></div>';
+  document.getElementById('compareList').innerHTML = html;
+  document.getElementById('teamScore').textContent = '团队总分：' + total + '（越小越好）';
+  document.getElementById('evalBox').textContent = '评价：' + evalText(total);
+}
+
+// ---- 结束 ----
+function showEnd() {
+  var rows = game.players.map(function (p, i) {
+    return { name: p.name, score: scoreOf(p.ranks) };
+  }).sort(function (a, b) { return a.score - b.score; });
+  var html = '';
+  if (rows.length === 0) {
+    html = '<p class="empty">暂无数据</p>';
+  }
+  rows.forEach(function (r, i) {
+    html += '<div class="rank-row list"><span class="rank-no">' + (i + 1) + '</span><span class="rank-name">' + esc(r.name) + '</span><span class="rank-score">' + r.score + ' 分</span></div>';
+  });
+  document.getElementById('endList').innerHTML = html;
+  document.getElementById('endTeam').textContent = '团队总分：' + (game.team ? scoreOf(game.team) : '-') + '（越小越好）';
+  showScreen('end');
+}
+
+// ---- 重新开始 ----
+function resetGame() {
+  game = { phase: 'setup', count: 0, players: [], playerIndex: 0, team: null };
+  document.getElementById('countInput').value = 4;
+  document.getElementById('playerNames').innerHTML = '';
+  document.getElementById('startRankBtn').disabled = true;
+  showScreen('setup');
+}
+
+// ---- 初始化 ----
+showScreen('setup');
+</script>
+
+</body>
+</html>

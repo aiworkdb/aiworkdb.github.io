@@ -2,20 +2,20 @@
 title: "一日团建流程方案 · 完整模板"
 author: "AIWorkDB"
 cover: "images/cover.png"
-source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.html"
+source_url: "https://ai.aitboy.cn/teambuilding/flows/one-day/01-schedule.html"
 
 ---
 # 一日团建流程方案 · 完整模板
 
 ![封面](images/cover.png)
 
-| 09:30–10:00 | 破冰一 | [人类宾果](https://aiworkdb.github.io/teambuilding/flows/games/icebreaker/human-bingo.html) | 记住名字、发现共同点 |
-| 10:00–10:30 | 破冰二 | [两真一假](https://aiworkdb.github.io/teambuilding/flows/games/icebreaker/two-truths-one-lie.html) | 加深了解 |
-| 10:30–12:00 | 主体活动一 | [人结](https://aiworkdb.github.io/teambuilding/flows/games/collaboration/human-knot.html) | 团队协作、沟通 |
+| 09:30–10:00 | 破冰一 | [人类宾果](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html) | 记住名字、发现共同点 |
+| 10:00–10:30 | 破冰二 | [两真一假](https://ai.aitboy.cn/teambuilding/games/icebreaker/two-truths-one-lie.html) | 加深了解 |
+| 10:30–12:00 | 主体活动一 | [人结](https://ai.aitboy.cn/teambuilding/games/collaboration/human-knot.html) | 团队协作、沟通 |
 | 12:00–13:30 | 午餐 & 休息 | — | 放松、自由交流 |
-| 13:30–15:00 | 主体活动二 | [盲人方阵](https://aiworkdb.github.io/teambuilding/flows/games/communication/blind-polygon.html) | 精准沟通、信任 |
+| 13:30–15:00 | 主体活动二 | [盲人方阵](https://ai.aitboy.cn/teambuilding/games/communication/blind-polygon.html) | 精准沟通、信任 |
 | 15:00–15:30 | 下午茶歇 | — | 补水、休息 |
-| 15:30–16:30 | 信任活动 | [盲行](https://aiworkdb.github.io/teambuilding/flows/games/trust/blind-walk.html) | 信任建立 |
+| 15:30–16:30 | 信任活动 | [盲行](https://ai.aitboy.cn/teambuilding/games/trust/blind-walk.html) | 信任建立 |
 | 16:30–17:00 | 整体复盘 &  closing | — | 整合体验、行动计划 |
 
 ---
@@ -33,7 +33,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 **教练任务：**
 - [ ] 提前 30 分钟到达场地，检查布置
 - [ ] 签到表/姓名贴准备就绪
-- [ ] 开场白（参考 [guide.md](https://aiworkdb.github.io/teambuilding/flows/guide.html) 开场模板）
+- [ ] 开场白（参考 [guide.md](https://ai.aitboy.cn/teambuilding/guide.html) 开场模板）
 
 **开场话术参考：**
 ```
@@ -49,7 +49,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 
 ### 09:30–10:00 破冰一：人类宾果（30 min）
 
-- **游戏文档**：[human-bingo.md](https://aiworkdb.github.io/teambuilding/flows/games/icebreaker/human-bingo.html)
+- **游戏文档**：[human-bingo.md](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html)
 - **时长分配**：讲解 3 min + 游戏 15 min + 复盘 10 min
 - **引导要点**：强调"签名字"而不是打勾，帮助记住名字
 - **复盘重点**："今天认识了哪些新同事？"
@@ -58,7 +58,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 
 ### 10:00–10:30 破冰二：两真一假（30 min）
 
-- **游戏文档**：[two-truths-one-lie.md](https://aiworkdb.github.io/teambuilding/flows/games/icebreaker/two-truths-one-lie.html)
+- **游戏文档**：[two-truths-one-lie.md](https://ai.aitboy.cn/teambuilding/games/icebreaker/two-truths-one-lie.html)
 - **时长分配**：讲解 2 min + 构思 3 min + 分享 20 min + 复盘 5 min
 - **引导要点**：教练先示范，鼓励具体故事
 - **复盘重点**："原来身边人还有这一面"
@@ -67,7 +67,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 
 ### 10:30–12:00 主体活动一：人结（90 min）
 
-- **游戏文档**：[human-knot.md](https://aiworkdb.github.io/teambuilding/flows/games/collaboration/human-knot.html)
+- **游戏文档**：[human-knot.md](https://ai.aitboy.cn/teambuilding/games/collaboration/human-knot.html)
 - **时长分配**：讲解 5 min + 尝试 30 min + 复盘 20 min
 - **引导要点**：
 
@@ -88,7 +88,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 
 ### 13:30–15:00 主体活动二：盲人方阵（90 min）
 
-- **游戏文档**：[blind-polygon.md](https://aiworkdb.github.io/teambuilding/flows/games/communication/blind-polygon.html)
+- **游戏文档**：[blind-polygon.md](https://ai.aitboy.cn/teambuilding/games/communication/blind-polygon.html)
 - **时长分配**：讲解 5 min + 尝试 40 min + 复盘 25 min
 - **引导要点**：
   - 教练**不干预**过程，只观察记录
@@ -109,7 +109,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/one-day/01-schedule.h
 
 ### 15:30–16:30 信任活动：盲行（60 min）
 
-- **游戏文档**：[blind-walk.md](https://aiworkdb.github.io/teambuilding/flows/games/trust/blind-walk.html)
+- **游戏文档**：[blind-walk.md](https://ai.aitboy.cn/teambuilding/games/trust/blind-walk.html)
 - **时长分配**：讲解 5 min + 第一轮 15 min + 交换角色 15 min + 复盘 20 min
 - **引导要点**：
   - 路线必须提前踏勘
@@ -215,7 +215,7 @@ ______ 总/老师，您好！
 
 ### 变体一：培训导向（替换部分游戏）
 
-将下午的[盲行]替换为[红黑游戏](https://aiworkdb.github.io/teambuilding/flows/games/leadership/red-black-game.html)（需 45–60 min，压缩其他环节）
+将下午的[盲行]替换为[红黑游戏](https://ai.aitboy.cn/teambuilding/games/leadership/red-black-game.html)（需 45–60 min，压缩其他环节）
 
 ### 变体二：高能导向（适合年轻团队）
 

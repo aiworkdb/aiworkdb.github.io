@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T6 复盘引导卡</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 8px; }
+  .hint { font-size: 0.85em; color: #888; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.92em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; font-family: inherit; }
+  .btn:active { transform: scale(0.98); }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.sm { padding: 7px 12px; font-size: 0.82em; }
+  .btn.primary { padding: 12px 22px; font-size: 1em; }
+  .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+  .dim-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dim-btn { padding: 12px 8px; border-radius: 10px; border: 2px solid #e2e6ee; background: #fff; cursor: pointer; font-family: inherit; font-size: 0.92em; color: #1a1a2e; }
+  .dim-btn .dim-en { font-size: 0.72em; color: #999; display: block; }
+  .dim-btn.active { border-color: #5b8cfe; background: #eef2ff; font-weight: 700; }
+  .dim-btn.d-fact.active { border-color: #5b8cfe; background: #eef2ff; }
+  .dim-btn.d-feeling.active { border-color: #f28bb8; background: #fdeef5; }
+  .dim-btn.d-finding.active { border-color: #3fae7e; background: #e9f7f0; }
+  .dim-btn.d-future.active { border-color: #f2a03d; background: #fdf3e5; }
+  .card-center { text-align: center; padding: 26px 18px; }
+  .card-dim { display: inline-block; font-size: 0.85em; font-weight: 700; padding: 5px 14px; border-radius: 999px; margin-bottom: 18px; }
+  .card-dim.d-fact { background: #eef2ff; color: #5b8cfe; }
+  .card-dim.d-feeling { background: #fdeef5; color: #c2577f; }
+  .card-dim.d-finding { background: #e9f7f0; color: #2f8a64; }
+  .card-dim.d-future { background: #fdf3e5; color: #c07a1e; }
+  .card-q { font-size: 1.7em; font-weight: 700; line-height: 1.5; min-height: 2.6em; display: flex; align-items: center; justify-content: center; color: #1a1a2e; }
+  .card-q.placeholder { font-size: 1em; color: #aaa; font-weight: 400; }
+  .card-q.anim { animation: cardIn 0.35s ease; }
+  @keyframes cardIn { 0% { transform: translateY(12px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+  .list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .list-head h2 { margin-bottom: 0; }
+  .hist-item { display: flex; align-items: center; gap: 10px; padding: 10px 4px; border-bottom: 1px dashed #e8ebf1; font-size: 0.92em; }
+  .tag { flex: none; font-size: 0.72em; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .tag.d-fact { background: #eef2ff; color: #5b8cfe; }
+  .tag.d-feeling { background: #fdeef5; color: #c2577f; }
+  .tag.d-finding { background: #e9f7f0; color: #2f8a64; }
+  .tag.d-future { background: #fdf3e5; color: #c07a1e; }
+  .empty { color: #999; font-size: 0.88em; text-align: center; padding: 16px 0; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>复盘引导卡</h1>
+  <p>4F 复盘模型 · 随机抽卡引导讨论</p>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h2>选择维度</h2>
+    <p class="hint">4F 复盘法：从事实到感受，再到发现与未来行动</p>
+    <div class="dim-row" id="dimRow"></div>
+    <div class="btn-row">
+      <button type="button" class="btn ghost" onclick="randomMode()">随机模式</button>
+    </div>
+  </div>
+
+  <div class="card card-center">
+    <div class="card-dim d-fact" id="cardDim">请先选择维度</div>
+    <div class="card-q placeholder" id="cardQ">点击上方维度，再点「抽一张」开始复盘</div>
+    <div class="btn-row">
+      <button type="button" class="btn primary" onclick="draw()">抽一张</button>
+      <button type="button" class="btn ghost" onclick="changeOne()">换一张</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="list-head">
+      <h2>已抽问题</h2>
+      <button type="button" class="btn sm gray" onclick="clearHistory()">清空已抽</button>
+    </div>
+    <div id="historyList"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// 4F 四维度问题库
+var QUESTIONS = {
+  fact: {
+    label: '事实',
+    en: 'Fact',
+    cls: 'd-fact',
+    items: [
+      '今天哪一刻你印象最深？',
+      '我们实际做了什么？',
+      '哪个环节用时最长？',
+      '今天最成功的动作是什么？',
+      '有没有被忽略的细节？',
+      '如果重来一次，流程上你会改哪里？',
+      '今天团队完成了哪些具体产出？'
+    ]
+  },
+  feeling: {
+    label: '感受',
+    en: 'Feeling',
+    cls: 'd-feeling',
+    items: [
+      '当时你的心情是？',
+      '有没有让你紧张或兴奋的时刻？',
+      '你觉得团队氛围如何？',
+      '哪个瞬间你最投入？',
+      '过程中你有没有想放弃的念头？',
+      '看到队友表现时你的感受是？'
+    ]
+  },
+  finding: {
+    label: '发现',
+    en: 'Finding',
+    cls: 'd-finding',
+    items: [
+      '你发现团队有什么优势？',
+      '哪个协作方式最有效？',
+      '你对自己有什么新认识？',
+      '团队沟通中有哪些卡点？',
+      '什么样的反馈最容易被接受？',
+      '我们忽略了哪些资源？',
+      '谁是今天的隐形贡献者？'
+    ]
+  },
+  future: {
+    label: '未来',
+    en: 'Future',
+    cls: 'd-future',
+    items: [
+      '下次你会做哪些改变？',
+      '我们该保留什么做法？',
+      '给自己定一个小目标',
+      '下一次合作你会主动承担什么？',
+      '有什么经验可以带回日常工作中？',
+      '如果要给下个团队留一句话，你会说什么？',
+      '下一步我们最该改进的一点是？'
+    ]
+  }
+};
+
+var DIM_ORDER = ['fact', 'feeling', 'finding', 'future'];
+var activeDim = null;                 // 当前选中的维度
+var drawn = { fact: [], feeling: [], finding: [], future: [] };  // 各维度已抽索引
+var pickedHistory = [];               // [{dim, q}]（避免与 window.history 冲突）
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function renderDims() {
+  var html = '';
+  DIM_ORDER.forEach(function (key) {
+    var d = QUESTIONS[key];
+    html += '<button type="button" class="dim-btn ' + d.cls + (activeDim === key ? ' active' : '') + '" onclick="selectDim(\'' + key + '\')">';
+    html += d.label + '<span class="dim-en">' + d.en + '</span></button>';
+  });
+  document.getElementById('dimRow').innerHTML = html;
+}
+
+function selectDim(key) {
+  activeDim = key;
+  renderDims();
+}
+
+// 抽一张（从指定/随机维度抽取未用过的卡）
+function drawFromDim(key) {
+  var arr = QUESTIONS[key].items;
+  var used = drawn[key];
+  if (used.length >= arr.length) {
+    alert('「' + QUESTIONS[key].label + '」维度的问题已全部抽完，请点击「清空已抽」后重新开始');
+    return false;
+  }
+  var idx;
+  do {
+    idx = Math.floor(Math.random() * arr.length);
+  } while (used.indexOf(idx) >= 0);
+  used.push(idx);
+  showCard(key, idx);
+  pickedHistory.unshift({ dim: key, q: arr[idx] });
+  renderHistory();
+  return true;
+}
+
+function showCard(key, idx) {
+  activeDim = key;
+  renderDims();
+  var q = QUESTIONS[key].items[idx];
+  var dimEl = document.getElementById('cardDim');
+  dimEl.className = 'card-dim ' + QUESTIONS[key].cls;
+  dimEl.textContent = QUESTIONS[key].label + ' · ' + QUESTIONS[key].en;
+  var qEl = document.getElementById('cardQ');
+  qEl.classList.remove('placeholder');
+  qEl.textContent = q;
+  qEl.classList.remove('anim');
+  void qEl.offsetWidth;
+  qEl.classList.add('anim');
+}
+
+function draw() {
+  if (!activeDim) {
+    alert('请先选择复盘维度，或使用「随机模式」');
+    return;
+  }
+  drawFromDim(activeDim);
+}
+
+function changeOne() {
+  if (!activeDim) {
+    alert('请先选择复盘维度');
+    return;
+  }
+  drawFromDim(activeDim);
+}
+
+function randomMode() {
+  var available = DIM_ORDER.filter(function (key) {
+    return drawn[key].length < QUESTIONS[key].items.length;
+  });
+  if (available.length === 0) {
+    alert('所有维度的问题都抽完了，请点击「清空已抽」后重新开始');
+    return;
+  }
+  var key = available[Math.floor(Math.random() * available.length)];
+  drawFromDim(key);
+}
+
+function renderHistory() {
+  var html = '';
+  if (pickedHistory.length === 0) {
+    html = '<p class="empty">还没有抽过卡</p>';
+  }
+  pickedHistory.forEach(function (h) {
+    html += '<div class="hist-item"><span class="tag ' + QUESTIONS[h.dim].cls + '">' + QUESTIONS[h.dim].label + '</span><span>' + esc(h.q) + '</span></div>';
+  });
+  document.getElementById('historyList').innerHTML = html;
+}
+
+function clearHistory() {
+  pickedHistory = [];
+  drawn = { fact: [], feeling: [], finding: [], future: [] };
+  renderHistory();
+}
+
+// ---- 初始化 ----
+renderDims();
+renderHistory();
+</script>
+
+</body>
+</html>

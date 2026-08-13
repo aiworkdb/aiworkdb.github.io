@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>团建在线产品库</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 44px 20px 30px; text-align: center; }
+  .hero h1 { font-size: 1.7em; margin-bottom: 10px; letter-spacing: 1px; }
+  .hero p { font-size: 1em; opacity: 0.85; }
+  .tip { max-width: 680px; margin: 14px auto 0; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-size: 0.85em; padding: 8px 14px; border-radius: 8px; line-height: 1.5; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 22px 16px 96px; }
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 1.12em; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e2e6ee; }
+  .section-title .cnt { font-size: 0.75em; color: #999; font-weight: 400; margin-left: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 16px; display: flex; flex-direction: column; }
+  .card .no { font-size: 0.78em; color: #5b8cfe; font-weight: 700; margin-bottom: 4px; }
+  .card h3 { font-size: 1em; margin-bottom: 6px; }
+  .card p { font-size: 0.85em; color: #666; flex: 1; }
+  .card .btn-start { display: block; margin-top: 12px; padding: 10px 0; text-align: center; border-radius: 8px; background: #5b8cfe; color: #fff; font-size: 0.9em; font-weight: 600; text-decoration: none; border: none; cursor: pointer; }
+  .card .btn-start:active { transform: scale(0.98); }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+  @media (min-width: 681px) { .hero h1 { font-size: 2em; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>团建在线产品库</h1>
+  <p>教练工具 · 线上游戏 · 一起玩</p>
+  <div class="tip">使用提示：手机扫码或浏览器打开即可使用，无需安装，全部离线可用。</div>
+</div>
+
+<div class="wrap" id="wrap"></div>
+
+<div class="footer">
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// 产品数据：三个分类
+var CATEGORIES = [
+  { title: '教练执行工具', items: [
+    { no: 'T1', name: '团建方案生成器', desc: '按目的、形式、人数、时长四维筛选，一键生成团建方案', url: 'tools/plan-generator/' },
+    { no: 'T2', name: '随机分组器', desc: '粘贴名单，快速公平随机分组，一键复制打印', url: 'tools/group-splitter/' },
+    { no: 'T3', name: '环节计时器', desc: '多环节倒计时控场，时间到有提示音', url: 'tools/timer/' },
+    { no: 'T4', name: '积分计分板', desc: '多队伍实时计分，加减分与领先榜一目了然', url: 'tools/scoreboard/' },
+    { no: 'T5', name: '物资清单', desc: '勾选游戏自动汇总物资清单，一键打印带去现场', url: 'tools/materials/' },
+    { no: 'T6', name: '复盘卡', desc: '4F 模型问题抽卡，复盘引导更轻松', url: 'tools/debrief-cards/' }
+  ]},
+  { title: '线上互动游戏', items: [
+    { no: 'G1', name: '两真一假', desc: '每人说两个真话一个假话，投票猜假话，快速破冰', url: 'games/two-truths-one-lie/' },
+    { no: 'G2', name: '人类宾果', desc: '5×5 特征宾果卡，找到符合特征的人连线', url: 'games/human-bingo/' },
+    { no: 'G3', name: '团队知识竞答', desc: '自定义题库，队伍抢答计分，排行榜比拼', url: 'games/team-quiz/' },
+    { no: 'G4', name: '你画我猜', desc: '画图猜词轮流传手机，词库丰富可自定义', url: 'games/pictionary/' },
+    { no: 'G5', name: '我从未', desc: '"我从未做过…"翻卡接龙，安全有趣了解彼此', url: 'games/never-have-i-ever/' },
+    { no: 'G6', name: '红黑游戏', desc: '两队多轮红黑选择，体验竞争与合作博弈', url: 'games/red-black/' },
+    { no: 'G7', name: '虚拟密室', desc: '线上解谜闯关，探索密室收集线索，团队协作逃脱', url: 'games/virtual-escape/' },
+    { no: 'G8', name: '岛屿求生', desc: '个人排序+团队共识，对照专家答案评分求生', url: 'games/island-survival/' }
+  ]},
+  { title: 'IP 沉浸衍生', items: [
+    { no: 'I1', name: '卡牌生成器', desc: '四个主题 IP 卡牌模板，自定义牌组一键打印', url: 'ip/card-generator/' },
+    { no: 'I2', name: '协作双人游戏', desc: '双人同屏按住协作，同步心跳闯三关', url: 'ip/duo-coop/' }
+  ]}
+];
+
+// 渲染卡片网格
+function render() {
+  var html = '';
+  CATEGORIES.forEach(function (cat) {
+    html += '<div class="section"><div class="section-title">' + cat.title + '<span class="cnt">' + cat.items.length + ' 个</span></div><div class="grid">';
+    cat.items.forEach(function (it) {
+      html += '<div class="card">';
+      html += '<div class="no">' + it.no + '</div>';
+      html += '<h3>' + it.name + '</h3>';
+      html += '<p>' + it.desc + '</p>';
+      html += '<a class="btn-start" href="' + it.url + '">开始使用</a>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  document.getElementById('wrap').innerHTML = html;
+}
+
+render();
+</script>
+
+</body>
+</html>

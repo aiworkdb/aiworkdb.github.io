@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G1 两真一假 · 线上版</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.12em; margin-bottom: 12px; }
+  .card p { font-size: 0.9em; color: #666; }
+  .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.08em; font-weight: 600; padding: 15px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .btn-row .btn { flex: 1; min-width: 120px; }
+  .num-input { width: 100%; padding: 14px; border: 2px solid #d0d5e0; border-radius: 10px; font-size: 1.2em; text-align: center; font-family: inherit; margin-bottom: 14px; }
+  .num-input:focus { outline: none; border-color: #5b8cfe; }
+  .stmt-input { width: 100%; padding: 13px 14px; border: 2px solid #d0d5e0; border-radius: 10px; font-size: 1em; font-family: inherit; margin-bottom: 10px; }
+  .stmt-input:focus { outline: none; border-color: #5b8cfe; }
+  .lie-group { display: flex; gap: 8px; margin: 4px 0 6px; }
+  .lie-btn { flex: 1; padding: 13px 0; border: 2px solid #d0d5e0; border-radius: 10px; background: #fff; color: #555; font-size: 0.95em; cursor: pointer; }
+  .lie-btn.active { background: #5b8cfe; color: #fff; border-color: #5b8cfe; }
+  .stmt { background: #f8f9fc; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; font-size: 0.98em; display: flex; align-items: flex-start; gap: 10px; }
+  .stmt .stmt-no { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: #5b8cfe; color: #fff; text-align: center; line-height: 22px; font-size: 0.78em; margin-top: 2px; }
+  .stmt.is-lie { border: 2px solid #e0563f; background: #fdf0ee; }
+  .stmt .lie-mark { margin-left: auto; flex-shrink: 0; font-size: 0.72em; background: #e0563f; color: #fff; padding: 2px 8px; border-radius: 4px; }
+  .vote-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .vote-btn { padding: 18px 0; border: none; border-radius: 12px; background: #5b8cfe; color: #fff; font-size: 1.05em; font-weight: 600; cursor: pointer; }
+  .vote-btn:active { transform: scale(0.96); }
+  .feedback { background: #eef2ff; border-radius: 8px; padding: 12px; font-size: 0.92em; color: #3366cc; margin: 8px 0; min-height: 1.4em; }
+  .name-row { display: flex; gap: 8px; margin: 8px 0; }
+  .name-row input { flex: 1; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.92em; font-family: inherit; }
+  .answer-box { background: #fdf0ee; border: 2px solid #e0563f; border-radius: 10px; padding: 14px; margin: 10px 0; font-size: 1em; font-weight: 600; color: #a33a28; }
+  .stats-line { font-size: 0.95em; color: #333; margin: 6px 0 2px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .tab-btn { flex: 1; padding: 11px 0; border: 2px solid #d0d5e0; border-radius: 8px; background: #fff; color: #555; font-size: 0.92em; cursor: pointer; }
+  .tab-btn.active { background: #5b8cfe; color: #fff; border-color: #5b8cfe; }
+  .rank-row { display: flex; align-items: center; padding: 12px 14px; background: #f8f9fc; border-radius: 8px; margin-bottom: 8px; }
+  .rank-no { width: 30px; height: 30px; border-radius: 50%; background: #5b8cfe; color: #fff; text-align: center; line-height: 30px; font-weight: 700; font-size: 0.9em; margin-right: 12px; flex-shrink: 0; }
+  .rank-name { flex: 1; font-size: 0.98em; font-weight: 600; }
+  .rank-score { font-size: 0.95em; color: #5b8cfe; font-weight: 700; }
+  .empty { color: #999; font-size: 0.9em; text-align: center; padding: 20px 0; }
+  .screen-title { font-size: 1.15em; font-weight: 700; margin-bottom: 6px; }
+  .screen-sub { font-size: 0.85em; color: #888; margin-bottom: 14px; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>两真一假 · 线上版</h1>
+  <p>每人两个真话一个假话，投票猜猜谁在说谎</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 首页 -->
+  <div id="screen-home">
+    <div class="card">
+      <h2>开始游戏</h2>
+      <p style="margin-bottom:14px;">主持人操作大屏/手机即可，本页面记录所有出题与投票。</p>
+      <label style="font-size:0.9em;color:#555;">参与人数</label>
+      <input type="number" class="num-input" id="playerCount" value="6" min="2" max="30">
+      <button type="button" class="btn big" onclick="startGame()">开始游戏</button>
+    </div>
+  </div>
+
+  <!-- 出题环节 -->
+  <div id="screen-submit" style="display:none;">
+    <div class="card">
+      <div class="screen-title" id="submitTitle">玩家 1 出题</div>
+      <div class="screen-sub">填写三条陈述，并标注哪一条是假的</div>
+      <input class="stmt-input" id="s1" placeholder="陈述 1（真话）" maxlength="60">
+      <input class="stmt-input" id="s2" placeholder="陈述 2（真话）" maxlength="60">
+      <input class="stmt-input" id="s3" placeholder="陈述 3（真话或假话）" maxlength="60">
+      <div class="screen-sub" style="margin-top:6px;">哪一条是假的？</div>
+      <div class="lie-group" id="lieGroup">
+        <button type="button" class="lie-btn" onclick="pickLie(0)">第1条是假的</button>
+        <button type="button" class="lie-btn" onclick="pickLie(1)">第2条是假的</button>
+        <button type="button" class="lie-btn" onclick="pickLie(2)">第3条是假的</button>
+      </div>
+      <button type="button" class="btn big" onclick="nextPlayer()">下一位</button>
+      <div class="btn-row">
+        <button type="button" class="btn ghost" id="backBtn" onclick="backPlayer()" style="display:none;">返回修改</button>
+        <button type="button" class="btn gray" onclick="restartAll()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 投票环节 -->
+  <div id="screen-vote" style="display:none;">
+    <div class="card">
+      <div class="screen-title" id="voteTitle">投票</div>
+      <div class="screen-sub">请大家猜：这位玩家哪一条是假的？可多人猜同一条</div>
+      <div id="voteStatements"></div>
+      <div class="vote-btns">
+        <button type="button" class="vote-btn" onclick="castVote(0)">猜第1条</button>
+        <button type="button" class="vote-btn" onclick="castVote(1)">猜第2条</button>
+        <button type="button" class="vote-btn" onclick="castVote(2)">猜第3条</button>
+      </div>
+      <div class="feedback" id="voteFeedback">点击上方按钮记录投票</div>
+      <div class="name-row">
+        <input id="voterName" placeholder="猜者名字（可选，留空匿名）" maxlength="12">
+        <button type="button" class="btn ghost" onclick="attachName()">记名</button>
+      </div>
+      <button type="button" class="btn big" onclick="revealAnswer()">揭晓答案</button>
+      <div class="btn-row">
+        <button type="button" class="btn gray" onclick="restartAll()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 揭晓环节 -->
+  <div id="screen-reveal" style="display:none;">
+    <div class="card">
+      <div class="screen-title" id="revealTitle">答案揭晓</div>
+      <div id="revealStatements"></div>
+      <div class="answer-box" id="revealAnswer"></div>
+      <div class="stats-line" id="revealStats"></div>
+      <button type="button" class="btn big" onclick="nextReveal()" id="nextRevealBtn">进入下一位</button>
+      <div class="btn-row">
+        <button type="button" class="btn gray" onclick="restartAll()">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 排行榜 -->
+  <div id="screen-ranking" style="display:none;">
+    <div class="card">
+      <div class="screen-title">排行榜</div>
+      <div class="tabs">
+        <button type="button" class="tab-btn active" id="rankTabFool" onclick="renderRanking('fool')">出题者榜（骗到人数）</button>
+        <button type="button" class="tab-btn" id="rankTabGuess" onclick="renderRanking('guess')">猜题者榜（猜对次数）</button>
+      </div>
+      <div id="rankList"></div>
+      <button type="button" class="btn big" onclick="restartAll()">再玩一局</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// ---- 全局状态（全部内存实现，刷新即重置）----
+var state = { stage: 'home', count: 6, players: [], submitIdx: 0, revealIdx: 0 };
+var draft = { s: ['', '', ''], lie: -1 };
+var votes = [];            // votes[i] = [{idx, name}]
+var currentRank = { fool: [], guessers: [] };
+var currentRankTab = 'fool';
+
+function showScreen(name) {
+  ['home', 'submit', 'vote', 'reveal', 'ranking'].forEach(function (s) {
+    document.getElementById('screen-' + s).style.display = (s === name) ? '' : 'none';
+  });
+  window.scrollTo(0, 0);
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+// ---- 首页 ----
+function startGame() {
+  var n = parseInt(document.getElementById('playerCount').value, 10);
+  if (!n || n < 2 || n > 30) { alert('请输入 2-30 之间的玩家人数'); return; }
+  state = { stage: 'submit', count: n, players: [], submitIdx: 0, revealIdx: 0 };
+  draft = { s: ['', '', ''], lie: -1 };
+  votes = [];
+  enterSubmit();
+}
+
+// ---- 出题 ----
+function enterSubmit() {
+  state.stage = 'submit';
+  updateSubmitUI();
+  syncDraftToInputs();
+  showScreen('submit');
+}
+
+function updateSubmitUI() {
+  document.getElementById('submitTitle').textContent = '玩家 ' + (state.submitIdx + 1) + ' 出题（共 ' + state.count + ' 人）';
+  // 注意：此处绝不写 s1/s2/s3 的 value，避免在玩家输入过程中（如点击“假的”按钮）覆盖已输入内容。
+  document.querySelectorAll('#lieGroup .lie-btn').forEach(function (b, i) {
+    b.classList.toggle('active', draft.lie === i);
+  });
+  document.getElementById('backBtn').style.display = state.submitIdx > 0 ? '' : 'none';
+}
+
+// 输入框值的写入收口：仅当进入某位玩家出题面板 / 切换玩家 / 返回修改时显式调用。
+function syncDraftToInputs() {
+  document.getElementById('s1').value = draft.s[0];
+  document.getElementById('s2').value = draft.s[1];
+  document.getElementById('s3').value = draft.s[2];
+}
+
+function pickLie(i) {
+  draft.lie = i;
+  updateSubmitUI();
+}
+
+function nextPlayer() {
+  var s1 = document.getElementById('s1').value.trim();
+  var s2 = document.getElementById('s2').value.trim();
+  var s3 = document.getElementById('s3').value.trim();
+  if (!s1 || !s2 || !s3) { alert('请填写三条陈述'); return; }
+  if (draft.lie < 0) { alert('请标注哪一条是假的'); return; }
+  var player = { s: [s1, s2, s3], lie: draft.lie };
+  if (state.submitIdx < state.players.length) {
+    state.players[state.submitIdx] = player;   // 修改已有玩家
+  } else {
+    state.players.push(player);
+    votes.push([]);
+  }
+  state.submitIdx++;
+  draft = { s: ['', '', ''], lie: -1 };
+  if (state.submitIdx >= state.count) {
+    state.revealIdx = 0;
+    enterVote();
+  } else {
+    updateSubmitUI();
+    syncDraftToInputs();
+  }
+}
+
+function backPlayer() {
+  if (state.submitIdx <= 0) return;
+  state.submitIdx--;
+  var p = state.players[state.submitIdx];
+  draft = { s: p.s.slice(), lie: p.lie };
+  updateSubmitUI();
+  syncDraftToInputs();
+}
+
+// ---- 投票 ----
+function enterVote() {
+  state.stage = 'vote';
+  var p = state.players[state.revealIdx];
+  document.getElementById('voteTitle').textContent = '投票：玩家 ' + (state.revealIdx + 1) + ' 的陈述';
+  document.getElementById('voteStatements').innerHTML = p.s.map(function (t, i) {
+    return '<div class="stmt"><span class="stmt-no">' + (i + 1) + '</span>' + esc(t) + '</div>';
+  }).join('');
+  document.getElementById('voteFeedback').textContent = '点击上方按钮记录投票';
+  document.getElementById('voterName').value = '';
+  showScreen('vote');
+}
+
+function castVote(idx) {
+  var v = votes[state.revealIdx];
+  v.push({ idx: idx, name: '' });
+  document.getElementById('voteFeedback').textContent = '你猜的是第 ' + (idx + 1) + ' 条（已记录 ' + v.length + ' 票）';
+  document.getElementById('voterName').value = '';
+}
+
+function attachName() {
+  var nm = document.getElementById('voterName').value.trim();
+  var v = votes[state.revealIdx];
+  if (v.length === 0) { alert('请先点选猜哪一条'); return; }
+  if (!nm) { alert('请输入名字，或留空表示匿名'); return; }
+  v[v.length - 1].name = nm;
+  document.getElementById('voteFeedback').textContent = '已把最后一票记为「' + nm + '」';
+  document.getElementById('voterName').value = '';
+}
+
+// ---- 揭晓 ----
+function revealAnswer() {
+  state.stage = 'reveal';
+  var p = state.players[state.revealIdx];
+  var v = votes[state.revealIdx] || [];
+  var correct = v.filter(function (x) { return x.idx === p.lie; }).length;
+  var rate = v.length > 0 ? Math.round(correct / v.length * 100) : 0;
+
+  document.getElementById('revealTitle').textContent = '玩家 ' + (state.revealIdx + 1) + ' 的答案';
+  document.getElementById('revealStatements').innerHTML = p.s.map(function (t, i) {
+    return '<div class="stmt' + (i === p.lie ? ' is-lie' : '') + '"><span class="stmt-no">' + (i + 1) + '</span>' + esc(t) + (i === p.lie ? '<span class="lie-mark">假话</span>' : '') + '</div>';
+  }).join('');
+  document.getElementById('revealAnswer').textContent = '假话是第 ' + (p.lie + 1) + ' 条：' + p.s[p.lie];
+  document.getElementById('revealStats').textContent = '共 ' + v.length + ' 票，猜对 ' + correct + ' 票，猜对率 ' + rate + '%';
+  var isLast = state.revealIdx >= state.count - 1;
+  document.getElementById('nextRevealBtn').textContent = isLast ? '查看排行榜' : '进入下一位';
+  showScreen('reveal');
+}
+
+function nextReveal() {
+  state.revealIdx++;
+  if (state.revealIdx >= state.count) {
+    showRanking();
+  } else {
+    enterVote();
+  }
+}
+
+// ---- 排行榜 ----
+function showRanking() {
+  state.stage = 'ranking';
+  // 出题者榜：骗到人数（猜错该玩家假话的人数）×1
+  var fool = state.players.map(function (p, i) {
+    var v = votes[i] || [];
+    var fooled = v.filter(function (x) { return x.idx !== p.lie; }).length;
+    return { name: '玩家 ' + (i + 1), score: fooled };
+  }).sort(function (a, b) { return b.score - a.score; });
+
+  // 猜题者榜：具名猜者猜对次数 ×1
+  var tally = {};
+  state.players.forEach(function (p, i) {
+    (votes[i] || []).forEach(function (x) {
+      if (x.name) {
+        if (!tally[x.name]) tally[x.name] = 0;
+        if (x.idx === p.lie) tally[x.name]++;
+      }
+    });
+  });
+  var guessers = Object.keys(tally).map(function (k) {
+    return { name: k, score: tally[k] };
+  }).sort(function (a, b) { return b.score - a.score; });
+
+  currentRank = { fool: fool, guessers: guessers };
+  renderRanking('fool');
+  showScreen('ranking');
+}
+
+function renderRanking(tab) {
+  currentRankTab = tab;
+  document.getElementById('rankTabFool').className = 'tab-btn' + (tab === 'fool' ? ' active' : '');
+  document.getElementById('rankTabGuess').className = 'tab-btn' + (tab === 'guess' ? ' active' : '');
+  var list = tab === 'fool' ? currentRank.fool : currentRank.guessers;
+  var html = '';
+  if (list.length === 0) {
+    html = '<p class="empty">暂无数据</p>';
+  }
+  list.forEach(function (it, i) {
+    html += '<div class="rank-row"><span class="rank-no">' + (i + 1) + '</span><span class="rank-name">' + esc(it.name) + '</span><span class="rank-score">' + it.score + ' 分</span></div>';
+  });
+  document.getElementById('rankList').innerHTML = html;
+}
+
+// ---- 重新开始 ----
+function restartAll() {
+  if (!confirm('确定重新开始？所有出题与投票数据将清空。')) return;
+  state = { stage: 'home', count: 6, players: [], submitIdx: 0, revealIdx: 0 };
+  draft = { s: ['', '', ''], lie: -1 };
+  votes = [];
+  document.getElementById('playerCount').value = 6;
+  showScreen('home');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T5 物资清单生成器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 100px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 8px; }
+  .hint { font-size: 0.85em; color: #888; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 10px 16px; border: none; border-radius: 8px; font-size: 0.92em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; font-family: inherit; }
+  .btn:active { transform: scale(0.98); }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn.gray { background: #e2e6ee; color: #666; }
+  .btn.primary { padding: 12px 22px; font-size: 1em; }
+  .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+  .search-box { width: 100%; border: 1px solid #d0d5e0; border-radius: 8px; padding: 10px 12px; font-size: 0.92em; font-family: inherit; margin-bottom: 12px; }
+  .search-box:focus { outline: none; border-color: #5b8cfe; }
+  .game-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e2e6ee; border-radius: 8px; margin-bottom: 8px; cursor: pointer; background: #fff; }
+  .game-item:active { background: #f5f8ff; }
+  .game-item input { width: 20px; height: 20px; flex: none; }
+  .game-item .g-name { flex: 1; font-size: 0.95em; }
+  .game-item .g-cnt { font-size: 0.78em; color: #999; }
+  .summary-line { font-size: 0.9em; color: #666; margin: 6px 0 2px; }
+  .summary-line b { color: #5b8cfe; }
+  .result-meta { font-size: 0.9em; color: #666; background: #eef2ff; border: 1px solid #c9d6ff; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; }
+  .group-title { font-size: 0.95em; margin: 14px 0 8px; padding-bottom: 6px; border-bottom: 2px solid #e2e6ee; }
+  .mat-list { list-style: none; }
+  .mat-list li { display: flex; align-items: baseline; gap: 8px; padding: 8px 4px; border-bottom: 1px dashed #e8ebf1; font-size: 0.92em; }
+  .mat-list li b { flex: 1; }
+  .mat-list li .qty { color: #5b8cfe; font-weight: 600; white-space: nowrap; }
+  .mat-list li em { font-style: normal; font-size: 0.78em; color: #999; white-space: nowrap; }
+  .empty { color: #999; font-size: 0.88em; text-align: center; padding: 16px 0; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+  @media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .wrap { padding: 0; max-width: 100%; }
+    .card { box-shadow: none; border: none; padding: 8px 0; }
+    .footer { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero no-print">
+  <h1>物资清单生成器</h1>
+  <p>勾选游戏 → 一键生成带数量建议的物资清单</p>
+</div>
+
+<div class="wrap">
+  <div class="card no-print">
+    <h2>勾选游戏</h2>
+    <p class="hint">勾选游戏 → 一键生成带数量建议的物资清单，可打印带去现场</p>
+    <input id="search" class="search-box" placeholder="搜索游戏名称…" oninput="renderGameList()">
+    <div id="gameList"></div>
+    <div class="summary-line">已选 <b id="selCount">0</b> 款游戏</div>
+    <div class="btn-row">
+      <button type="button" class="btn primary" onclick="generate()">生成物资清单</button>
+      <button type="button" class="btn gray" onclick="clearSelection()">清空选择</button>
+    </div>
+  </div>
+
+  <div class="card" id="resultPanel" style="display:none">
+    <h2>物资清单</h2>
+    <div class="result-meta" id="resultMeta"></div>
+    <div id="resultGroups"></div>
+    <div class="btn-row no-print">
+      <button type="button" class="btn primary" onclick="window.print()">打印清单</button>
+      <button type="button" class="btn ghost" onclick="backToSelect()">返回修改</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer no-print">
+  <a href="../../index.html">返回产品总览</a>
+  <a href="https://aiworkdb.github.io/teambuilding/">团建游戏库</a>
+</div>
+
+<script>
+// 内置游戏物资数据：每款游戏 + 物资数组（名称 + 数量建议）
+var GAMES = [
+  { name: '两真一假', materials: [
+    { name: '白板笔', qty: '1 支/人' },
+    { name: '白板或纸张', qty: '1 块' },
+    { name: '计分纸', qty: '1 张' },
+    { name: '计时器', qty: '1 个' }
+  ]},
+  { name: '人类宾果', materials: [
+    { name: '宾果卡（打印）', qty: '1 张/人' },
+    { name: '笔', qty: '1 支/人' },
+    { name: '小奖品', qty: '若干' }
+  ]},
+  { name: '名字接龙', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '话筒或音响（可选）', qty: '1 套' },
+    { name: '计时器', qty: '1 个' }
+  ]},
+  { name: '传话游戏', materials: [
+    { name: '词条纸条（打印）', qty: '10 张' },
+    { name: '耳塞或耳机（可选）', qty: '1 副/人' },
+    { name: '计时器', qty: '1 个' }
+  ]},
+  { name: '你说我画', materials: [
+    { name: 'A4 纸', qty: '3 张/人' },
+    { name: '笔', qty: '1 支/人' },
+    { name: '图卡（打印）', qty: '20 张' }
+  ]},
+  { name: '画图接龙', materials: [
+    { name: 'A4 纸', qty: '2 张/人' },
+    { name: '马克笔', qty: '1 支/人' },
+    { name: '计时器', qty: '1 个' }
+  ]},
+  { name: '盲人方阵', materials: [
+    { name: '眼罩', qty: '1 个/人' },
+    { name: '长绳', qty: '1 根（约 20 米）' },
+    { name: '地面标识物', qty: '若干' }
+  ]},
+  { name: '人结', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器', qty: '1 个' },
+    { name: '备用宽松场地', qty: '1 块' }
+  ]},
+  { name: '齐眉棍', materials: [
+    { name: '轻质长杆', qty: '1 根' },
+    { name: '秒表或计时器', qty: '1 个' },
+    { name: '备用长杆', qty: '1 根' }
+  ]},
+  { name: '珠行万里', materials: [
+    { name: 'U 型槽', qty: '1 段/人' },
+    { name: '乒乓球', qty: '3 个' },
+    { name: '纸杯', qty: '2 个' },
+    { name: '计时器', qty: '1 个' }
+  ]},
+  { name: '风火轮', materials: [
+    { name: '报纸', qty: '20 张' },
+    { name: '胶带', qty: '4 卷' },
+    { name: '剪刀', qty: '2 把' }
+  ]},
+  { name: '信任背摔', materials: [
+    { name: '高台或结实桌子', qty: '1 个' },
+    { name: '软垫', qty: '2 块' },
+    { name: '安全绳', qty: '2 条' },
+    { name: '护具（可选）', qty: '若干' }
+  ]},
+  { name: '盲行', materials: [
+    { name: '眼罩', qty: '1 个/人' },
+    { name: '障碍物道具', qty: '若干' },
+    { name: '场地标识物', qty: '若干' }
+  ]},
+  { name: '红黑游戏', materials: [
+    { name: '红黑选择卡（打印）', qty: '10 张/队' },
+    { name: '计分表（打印）', qty: '4 张' },
+    { name: '白板及白板笔', qty: '1 套' }
+  ]},
+  { name: '沙漠逃生', materials: [
+    { name: '清单表（打印）', qty: '1 张/人' },
+    { name: '笔', qty: '1 支/人' },
+    { name: '答案卡（打印）', qty: '1 份' }
+  ]},
+  { name: '报纸塔挑战', materials: [
+    { name: '报纸', qty: '30 张' },
+    { name: '胶带', qty: '6 卷' },
+    { name: '剪刀', qty: '2 把' },
+    { name: '卷尺', qty: '1 个' }
+  ]},
+  { name: '鸡蛋坠落', materials: [
+    { name: '鸡蛋', qty: '2 个/组' },
+    { name: '缓冲材料', qty: '1 包/组' },
+    { name: '塑料袋', qty: '若干' },
+    { name: '胶带', qty: '2 卷' },
+    { name: '剪刀', qty: '1 把' }
+  ]},
+  { name: '10 元买创意', materials: [
+    { name: '道具杂项（旧物）', qty: '1 箱' },
+    { name: '10 元道具钞', qty: '1 张/组' },
+    { name: '展示台', qty: '1 个' }
+  ]},
+  { name: '线上宾果', materials: [
+    { name: '电脑或投影', qty: '1 台' },
+    { name: '网络连接', qty: '1 路' },
+    { name: '线上工具账号', qty: '1 个' }
+  ]},
+  { name: '团队知识竞答', materials: [
+    { name: '抢答器', qty: '1 个/组' },
+    { name: '题目卡（打印）', qty: '30 张' },
+    { name: '计分板', qty: '1 块' },
+    { name: '白板笔', qty: '2 支' }
+  ]}
+];
+
+var sel = {};        // 选中状态 index -> true
+var filterText = '';
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+// ---- 游戏勾选列表 ----
+function renderGameList() {
+  filterText = (document.getElementById('search').value || '').trim().toLowerCase();
+  var html = '';
+  var count = 0;
+  GAMES.forEach(function (g, i) {
+    if (filterText && g.name.toLowerCase().indexOf(filterText) < 0) return;
+    count++;
+    html += '<label class="game-item">';
+    html += '<input type="checkbox" data-i="' + i + '"' + (sel[i] ? ' checked' : '') + ' onchange="toggleSel(' + i + ', this.checked)">';
+    html += '<span class="g-name">' + esc(g.name) + '</span>';
+    html += '<span class="g-cnt">' + g.materials.length + ' 项物资</span>';
+    html += '</label>';
+  });
+  document.getElementById('gameList').innerHTML = html || '<p class="empty">没有匹配的游戏</p>';
+  updateSelCount();
+}
+
+function toggleSel(i, checked) {
+  if (checked) sel[i] = true; else delete sel[i];
+  updateSelCount();
+}
+
+function updateSelCount() {
+  var n = 0;
+  Object.keys(sel).forEach(function (k) { if (sel[k]) n++; });
+  document.getElementById('selCount').textContent = n;
+}
+
+function clearSelection() {
+  if (!confirm('确定清空所有勾选？')) return;
+  sel = {};
+  renderGameList();
+}
+
+// ---- 生成物资清单 ----
+var CAT_ORDER = ['道具类', '打印类', '通用类'];
+var PRINT_KEYWORDS = ['卡', '清单', '表', '题', '单', '券'];
+var COMMON_KEYWORDS = ['笔', '白板', '纸', '胶带', '剪刀', '计时'];
+
+function classify(name) {
+  for (var i = 0; i < PRINT_KEYWORDS.length; i++) {
+    if (name.indexOf(PRINT_KEYWORDS[i]) >= 0) return '打印类';
+  }
+  for (var j = 0; j < COMMON_KEYWORDS.length; j++) {
+    if (name.indexOf(COMMON_KEYWORDS[j]) >= 0) return '通用类';
+  }
+  return '道具类';
+}
+
+// 同名物资合并时，根据各款游戏的数量建议生成范围文案（如「1-2 支/人」）
+function qtyRangeText(qtys) {
+  if (!qtys || qtys.length <= 1) return qtys && qtys[0] ? qtys[0] : '';
+  var nums = [];
+  var unitByNum = {};
+  var allParsed = true;
+  qtys.forEach(function (q) {
+    var m = String(q).match(/^(\d+(?:\.\d+)?)\s*([^\d]*)$/);
+    if (m) {
+      var n = parseFloat(m[1]);
+      nums.push(n);
+      if (!(n in unitByNum)) unitByNum[n] = (m[2] || '').trim();
+    } else {
+      allParsed = false;
+    }
+  });
+  // 有无法解析的数量时，保守起见保留首个文案
+  if (!allParsed || nums.length === 0) return qtys[0];
+  var min = Math.min.apply(null, nums);
+  var max = Math.max.apply(null, nums);
+  if (min === max) return qtys[0];
+  var unit = unitByNum[min] || '';
+  return min + '-' + max + (unit ? ' ' + unit : '');
+}
+
+function generate() {
+  var selected = [];
+  GAMES.forEach(function (g, i) {
+    if (sel[i]) selected.push(g);
+  });
+  if (selected.length === 0) {
+    alert('请先勾选至少一个游戏');
+    return;
+  }
+
+  // 汇总并去重（同名物资合并，记录出现次数与全部数量建议）
+  var map = {};
+  var totalOccur = 0;
+  selected.forEach(function (g) {
+    g.materials.forEach(function (m) {
+      totalOccur++;
+      if (!map[m.name]) map[m.name] = { name: m.name, qty: m.qty, qtys: [], games: [] };
+      map[m.name].qtys.push(m.qty);
+      map[m.name].games.push(g.name);
+    });
+  });
+
+  var items = Object.keys(map).map(function (k) {
+    var it = map[k];
+    it.qty = qtyRangeText(it.qtys);
+    return it;
+  });
+  var groups = { '道具类': [], '打印类': [], '通用类': [] };
+  items.forEach(function (it) {
+    groups[classify(it.name)].push(it);
+  });
+
+  var meta = '已选 ' + selected.length + ' 款游戏 · 汇总物资 ' + items.length + ' 项（去重后）· 合计出现 ' + totalOccur + ' 次';
+  document.getElementById('resultMeta').textContent = meta;
+
+  var html = '';
+  CAT_ORDER.forEach(function (cat) {
+    var list = groups[cat];
+    if (!list.length) return;
+    html += '<h3 class="group-title">' + cat + '（' + list.length + ' 项）</h3>';
+    html += '<ul class="mat-list">';
+    list.forEach(function (it) {
+      html += '<li><b>' + esc(it.name) + '</b>';
+      html += '<span class="qty">' + esc(it.qty) + '</span>';
+      if (it.games.length > 1) {
+        html += '<em>· ' + it.games.length + ' 款游戏需要</em>';
+      }
+      html += '</li>';
+    });
+    html += '</ul>';
+  });
+  document.getElementById('resultGroups').innerHTML = html;
+
+  document.getElementById('resultPanel').style.display = '';
+  document.getElementById('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function backToSelect() {
+  document.getElementById('resultPanel').style.display = 'none';
+  document.getElementById('search').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ---- 初始化 ----
+renderGameList();
+</script>
+
+</body>
+</html>

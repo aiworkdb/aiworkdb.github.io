@@ -2,7 +2,7 @@
 title: "线上团建流程模板"
 author: "AIWorkDB"
 cover: "images/cover.png"
-source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.html"
+source_url: "https://ai.aitboy.cn/teambuilding/flows/online/01-schedule.html"
 
 ---
 # 线上团建流程模板
@@ -36,8 +36,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/online/01-schedule.ht
 
 #### 开场白话术模板
 
-| [名字接龙](https://aiworkdb.github.io/teambuilding/games/icebreaker/name-chain.html) | 用「轮流说话」代替「排队拍肩」 | 5 min |
-| [人类宾果](https://aiworkdb.github.io/teambuilding/games/icebreaker/human-bingo.html) | **屏幕共享宾果卡**，所有人一起玩 | 10 min |
+| [名字接龙](https://ai.aitboy.cn/teambuilding/games/icebreaker/name-chain.html) | 用「轮流说话」代替「排队拍肩」 | 5 min |
+| [人类宾果](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html) | **屏幕共享宾果卡**，所有人一起玩 | 10 min |
 | 「背景大揭秘」 | 每人展示虚拟背景并解释 30 秒 | 10 min |
 
 ---

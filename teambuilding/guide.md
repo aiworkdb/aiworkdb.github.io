@@ -2,7 +2,7 @@
 title: "团建教练使用指南 - 5分钟快速上手"
 author: "AIWorkDB"
 cover: "images/guide-cover.png"
-source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
+source_url: "https://ai.aitboy.cn/teambuilding/guide.html"
 
 ---
 # 教练 / 培训师使用指南
@@ -12,7 +12,7 @@ source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
    → 5-15min（热身） / 15-30min（课堂插入） / 30-60min（主体活动） / >60min（沙盘/全天）
 ```
 
-回答完后，打开 [`README.md`](https://aiworkdb.github.io/teambuilding/teambuilding/README.html) 的索引表，按四个维度交叉筛选，找到匹配的游戏。
+回答完后，打开 [`README.md`](https://ai.aitboy.cn/teambuilding/README.html) 的索引表，按四个维度交叉筛选，找到匹配的游戏。
 
 **选游戏的三条原则：**
 - 时间宁短勿长：留 20% 缓冲，别把流程排满
