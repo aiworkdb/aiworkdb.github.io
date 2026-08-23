@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八仙渡海：打工人成仙记 - 打印道具</title>
+<style>
+:root{
+  --ink:#2b1a0e;
+  --gold:#c8992f;
+  --gold-l:#e8c765;
+  --red:#a8332a;
+  --red-l:#c9584a;
+  --jade:#2f6d5e;
+  --jade-l:#4f9483;
+  --sea:#1d5c7a;
+  --sea-l:#3f8bab;
+  --paper:#fdf8ec;
+  --paper2:#f6ecd6;
+  --purple:#5b3d78;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  background:#efe3cb;
+  color:var(--ink);
+  padding:24px;
+  line-height:1.6;
+}
+.wrap{max-width:1120px;margin:0 auto}
+
+/* ===== 页头 ===== */
+header{
+  background:linear-gradient(135deg,#1d5c7a 0%,#2f6d5e 45%,#a8332a 100%);
+  color:#fff;border-radius:16px;padding:32px 28px;text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);margin-bottom:22px;
+  position:relative;overflow:hidden;
+}
+header::after{
+  content:"🍑";position:absolute;right:-10px;bottom:-24px;font-size:130px;opacity:.14;
+}
+header h1{font-size:34px;letter-spacing:2px;margin-bottom:8px;text-shadow:0 2px 6px rgba(0,0,0,.3)}
+header .en{font-size:13px;letter-spacing:3px;opacity:.85;text-transform:uppercase}
+header .meta{margin-top:14px;font-size:14px;opacity:.95}
+header .badge{
+  display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);
+  padding:3px 12px;border-radius:20px;margin:4px 5px;font-size:13px;
+}
+
+/* ===== 打印提示 ===== */
+.print-hint{
+  background:#fff6d8;border:2px dashed var(--gold);border-left:8px solid var(--red);
+  border-radius:10px;padding:18px 22px;margin-bottom:26px;
+}
+.print-hint strong{color:var(--red);font-size:16px}
+.print-hint ul{margin:10px 0 0 22px}
+.print-hint li{margin:5px 0;font-size:14px}
+.btn-print{
+  display:inline-block;margin-top:12px;background:var(--red);color:#fff;border:none;
+  padding:10px 26px;border-radius:24px;font-size:15px;cursor:pointer;
+  box-shadow:0 3px 8px rgba(168,51,42,.35);font-family:inherit;
+}
+.btn-print:hover{background:#8f2a22}
+
+/* ===== 区块 ===== */
+section{margin-bottom:38px;page-break-inside:avoid}
+h2{
+  font-size:23px;color:var(--ink);border-bottom:3px solid var(--gold);
+  padding-bottom:8px;margin-bottom:6px;display:flex;align-items:center;gap:10px;
+}
+.sub{font-size:13px;color:#7a6a56;margin-bottom:16px}
+
+/* ===== 地图 ===== */
+.board{
+  background:var(--paper);border:5px solid var(--sea);border-radius:14px;
+  padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.15);
+}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cell{
+  aspect-ratio:1/1;border-radius:8px;border:2px solid rgba(0,0,0,.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;font-size:11px;text-align:center;padding:2px;
+}
+.cell .ic{font-size:24px;line-height:1}
+.cell .nm{font-size:9px;margin-top:1px;font-weight:600;opacity:.85}
+.cell .no{position:absolute;right:3px;bottom:2px;font-size:9px;font-weight:700;opacity:.55}
+.t-sea{background:#cfe6f0}
+.t-lotus{background:#f6d9e6}
+.t-cloud{background:#e6eef7}
+.t-wine{background:#f7e3c4}
+.t-shop{background:#dff0d8}
+.t-bolt{background:#fdf0b8}
+.t-whirl{background:#d6d0ea}
+.t-dragon{background:#f4c9c2}
+.t-peach{background:#ffd9c9}
+.t-start{background:linear-gradient(135deg,#8d8d8d,#c9c9c9);color:#fff;border-color:#555}
+.t-end{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#3a2a05;border-color:#8a6a12}
+.t-start .no,.t-end .no{opacity:.8}
+
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:7px;margin-top:16px}
+.lg{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #ddd0b8;border-radius:7px;padding:6px 9px;font-size:12px}
+.lg .sw{width:22px;height:22px;border-radius:5px;border:1px solid rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.route{
+  margin-top:14px;background:#eaf3f7;border-left:5px solid var(--sea);
+  border-radius:8px;padding:11px 15px;font-size:13px;
+}
+
+/* ===== 卡牌通用 ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px}
+.card{
+  height:230px;border-radius:11px;border:2.5px solid var(--ink);
+  padding:9px;display:flex;flex-direction:column;position:relative;overflow:hidden;
+  background:var(--paper);box-shadow:0 2px 6px rgba(0,0,0,.13);
+}
+.card .top{font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:.7;text-align:center;font-weight:700}
+.card .ico{font-size:44px;text-align:center;margin:5px 0 3px}
+.card .ttl{font-size:14px;font-weight:800;text-align:center;line-height:1.25;margin-bottom:5px}
+.card .cost{
+  font-size:11px;text-align:center;background:rgba(0,0,0,.07);
+  border-radius:12px;padding:2px 6px;margin-bottom:5px;font-weight:700;
+}
+.card .desc{font-size:10.5px;line-height:1.45;flex:1;text-align:center;padding:0 2px}
+.card .foot{font-size:9px;text-align:center;opacity:.6;border-top:1px dashed rgba(0,0,0,.25);padding-top:4px;margin-top:3px}
+.card .qty{position:absolute;left:5px;top:5px;background:var(--ink);color:#fff;font-size:9px;border-radius:9px;padding:1px 6px;font-weight:700}
+
+.c-lotus{background:linear-gradient(170deg,#fce7f0,#f8d3e3);border-color:#a8447a}
+.c-cloud{background:linear-gradient(170deg,#eef4fb,#dae7f5);border-color:#3d6b96}
+.c-wine{background:linear-gradient(170deg,#fdf1dc,#f6e0b8);border-color:#a87b2a}
+.c-tool{background:linear-gradient(170deg,#e8f5e2,#d3ebc9);border-color:var(--jade)}
+.c-trap{background:linear-gradient(170deg,#f7dcd8,#eec2ba);border-color:var(--red)}
+.c-peach{background:linear-gradient(170deg,#ffe9d4,#ffd0b0);border-color:#c9622a}
+.c-role{background:linear-gradient(170deg,#ece3f7,#dcd0ee);border-color:var(--purple)}
+
+/* ===== 棋子 ===== */
+.pawns{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:13px}
+.pawn{text-align:center}
+.pawn .body{
+  border:2.5px dashed var(--ink);border-radius:10px;padding:9px 5px;background:var(--paper);
+}
+.pawn .disc{
+  width:62px;height:62px;border-radius:50%;margin:0 auto 5px;
+  display:flex;align-items:center;justify-content:center;font-size:29px;
+  border:3px solid var(--ink);box-shadow:inset 0 -3px 7px rgba(0,0,0,.14);
+}
+.pawn .nm{font-size:12px;font-weight:800}
+.pawn .tab{font-size:9px;opacity:.6;margin-top:2px}
+.fold{font-size:9px;color:#8a7a66;margin-top:5px;border-top:1px dotted #aa9;padding-top:3px}
+
+/* ===== 标记 ===== */
+.tokens{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:9px}
+.tok{
+  aspect-ratio:1/1;border-radius:50%;border:2.5px solid var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;text-align:center;background:var(--paper2);
+}
+.tok .big{font-size:22px;line-height:1}
+.tok.on{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#3a2a05}
+.tok.off{background:#ded6c6;color:#6b6355}
+
+/* ===== 骰子/计分 ===== */
+.dice-net{display:grid;grid-template-columns:repeat(4,58px);grid-template-rows:repeat(3,58px);gap:0;justify-content:center;margin:0 auto}
+.df{border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:24px;background:var(--paper);font-weight:800}
+.df.blank{border:none;background:transparent}
+
+table.score{width:100%;border-collapse:collapse;background:#fff;font-size:13px}
+table.score th,table.score td{border:1px solid #cbbfa8;padding:7px 10px;text-align:left}
+table.score th{background:var(--paper2);font-weight:800}
+table.score td.c{text-align:center;font-weight:700}
+.tally{display:flex;gap:4px}
+.tally span{width:22px;height:22px;border:1px solid #bbae95;border-radius:4px;display:inline-block}
+
+footer{text-align:center;padding:24px 0;color:#7a6a56;font-size:13px;border-top:2px solid var(--gold);margin-top:30px}
+
+/* ===== 打印 ===== */
+@media print{
+  *{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .print-hint{display:none}
+  .btn-print{display:none}
+  body{background:#fff;padding:0}
+  header{border-radius:0;box-shadow:none;margin-bottom:12px;padding:18px}
+  header::after{display:none}
+  section{page-break-inside:avoid;margin-bottom:18px}
+  .card{box-shadow:none;height:222px}
+  .board{box-shadow:none;page-break-after:always}
+  h2{page-break-after:avoid}
+  footer{page-break-before:avoid}
+  @page{margin:8mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>🍶 八仙渡海：打工人成仙记</h1>
+  <div class="en">Baxian Crossing Sea &middot; The Office Worker's Ascension</div>
+  <div class="meta">
+    <span class="badge">🎉 派对类</span>
+    <span class="badge">👥 3-8 人</span>
+    <span class="badge">⏱️ 20-40 分钟</span>
+    <span class="badge">🎯 难度：简单</span>
+    <span class="badge">🎂 8 岁以上</span>
+  </div>
+</header>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议在打印设置中选择<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形 / Background graphics」</strong>选项，否则卡牌会变成白纸</li>
+    <li><strong>地图</strong>建议用普通 A4 纸；<strong>卡牌与棋子</strong>建议使用 <strong>180g 以上卡纸</strong>打印，更耐用不透光</li>
+    <li>卡牌裁剪后可用透明卡套或塑封膜保护，反复游玩不易磨损</li>
+    <li>棋子沿虚线剪下后，底部预留的折页向后折 90°，或插入小夹子 / 橡皮泥底座即可站立</li>
+    <li>渡海值标记建议打印 <strong>2 份</strong>（激活面 / 未激活面各一份），或双面打印后背靠背粘贴</li>
+    <li>6 人局全套约需 <strong>5 张 A4</strong>（地图 1 张 + 卡牌 4 张）</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 立即打印</button>
+</div>
+
+<!-- ================= 地图 ================= -->
+<section>
+  <h2>🗺️ 一、游戏地图 · 东海渡海图</h2>
+  <div class="sub">7×7 共 49 格。从左下角 🏢 加班楼（第 1 格）出发，蛇形穿越东海，抵达右上角 🏛️ 蟠桃编制处（第 49 格）。每格右下角小数字为格号，照数字走即可。</div>
+
+  <div class="board">
+    <div class="grid">
+      <!-- 第7行：格 43-49（从右到左布局，因为蛇形第7行是 A7->G7 左到右） -->
+      <div class="cell t-shop"><div class="ic">🏪</div><div class="nm">法器铺</div><div class="no">43</div></div>
+      <div class="cell t-peach"><div class="ic">🍑</div><div class="nm">蟠桃点</div><div class="no">44</div></div>
+      <div class="cell t-cloud"><div class="ic">☁️</div><div class="nm">清气流</div><div class="no">45</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">46</div></div>
+      <div class="cell t-dragon"><div class="ic">🐉</div><div class="nm">龙宫收费</div><div class="no">47</div></div>
+      <div class="cell t-peach"><div class="ic">🍑</div><div class="nm">蟠桃点</div><div class="no">48</div></div>
+      <div class="cell t-end"><div class="ic">🏛️</div><div class="nm">蟠桃编制处</div><div class="no">49</div></div>
+
+      <!-- 第6行：格 42-36（蛇形反向，G6=36 ... A6=42 -> 显示 A..G = 42..36） -->
+      <div class="cell t-lotus"><div class="ic">🪷</div><div class="nm">善缘涌泉</div><div class="no">42</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">41</div></div>
+      <div class="cell t-shop"><div class="ic">🏪</div><div class="nm">法器铺</div><div class="no">40</div></div>
+      <div class="cell t-bolt"><div class="ic">⚡</div><div class="nm">天雷区</div><div class="no">39</div></div>
+      <div class="cell t-peach"><div class="ic">🍑</div><div class="nm">蟠桃点</div><div class="no">38</div></div>
+      <div class="cell t-cloud"><div class="ic">☁️</div><div class="nm">清气流</div><div class="no">37</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">36</div></div>
+
+      <!-- 第5行：格 29-35 -->
+      <div class="cell t-cloud"><div class="ic">☁️</div><div class="nm">清气流</div><div class="no">29</div></div>
+      <div class="cell t-wine"><div class="ic">🍶</div><div class="nm">海市酒摊</div><div class="no">30</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">31</div></div>
+      <div class="cell t-whirl"><div class="ic">🌀</div><div class="nm">漩涡</div><div class="no">32</div></div>
+      <div class="cell t-shop"><div class="ic">🏪</div><div class="nm">法器铺</div><div class="no">33</div></div>
+      <div class="cell t-bolt"><div class="ic">⚡</div><div class="nm">天雷区</div><div class="no">34</div></div>
+      <div class="cell t-lotus"><div class="ic">🪷</div><div class="nm">善缘涌泉</div><div class="no">35</div></div>
+
+      <!-- 第4行：格 28-22 -->
+      <div class="cell t-dragon"><div class="ic">🐉</div><div class="nm">龙宫收费</div><div class="no">28</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">27</div></div>
+      <div class="cell t-cloud"><div class="ic">☁️</div><div class="nm">清气流</div><div class="no">26</div></div>
+      <div class="cell t-wine"><div class="ic">🍶</div><div class="nm">海市酒摊</div><div class="no">25</div></div>
+      <div class="cell t-lotus"><div class="ic">🪷</div><div class="nm">善缘涌泉</div><div class="no">24</div></div>
+      <div class="cell t-bolt"><div class="ic">⚡</div><div class="nm">天雷区</div><div class="no">23</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">22</div></div>
+
+      <!-- 第3行：格 15-21 -->
+      <div class="cell t-lotus"><div class="ic">🪷</div><div class="nm">善缘涌泉</div><div class="no">15</div></div>
+      <div class="cell t-shop"><div class="ic">🏪</div><div class="nm">法器铺</div><div class="no">16</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">17</div></div>
+      <div class="cell t-peach"><div class="ic">🍑</div><div class="nm">蟠桃点</div><div class="no">18</div></div>
+      <div class="cell t-whirl"><div class="ic">🌀</div><div class="nm">漩涡</div><div class="no">19</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">20</div></div>
+      <div class="cell t-wine"><div class="ic">🍶</div><div class="nm">海市酒摊</div><div class="no">21</div></div>
+
+      <!-- 第2行：格 14-8 -->
+      <div class="cell t-wine"><div class="ic">🍶</div><div class="nm">海市酒摊</div><div class="no">14</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">13</div></div>
+      <div class="cell t-lotus"><div class="ic">🪷</div><div class="nm">善缘涌泉</div><div class="no">12</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">11</div></div>
+      <div class="cell t-whirl"><div class="ic">🌀</div><div class="nm">漩涡</div><div class="no">10</div></div>
+      <div class="cell t-shop"><div class="ic">🏪</div><div class="nm">法器铺</div><div class="no">9</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">8</div></div>
+
+      <!-- 第1行：格 1-7 -->
+      <div class="cell t-start"><div class="ic">🏢</div><div class="nm">加班楼·起点</div><div class="no">1</div></div>
+      <div class="cell t-cloud"><div class="ic">☁️</div><div class="nm">清气流</div><div class="no">2</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">3</div></div>
+      <div class="cell t-lotus"><div class="ic">🪷</div><div class="nm">善缘涌泉</div><div class="no">4</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">5</div></div>
+      <div class="cell t-wine"><div class="ic">🍶</div><div class="nm">海市酒摊</div><div class="no">6</div></div>
+      <div class="cell t-sea"><div class="ic">🌊</div><div class="nm">茫茫东海</div><div class="no">7</div></div>
+    </div>
+
+    <div class="route">
+      <strong>🧭 移动路线（蛇形）：</strong>
+      第 1 格（左下 🏢）→ 向右走到第 7 格 → 上移一行 → 向左走到第 14 格 → 上移一行 → 向右走到第 21 格 → …… 以此类推 → 第 49 格（右上 🏛️）。
+      <br><strong>提示：</strong>格号连续递增，只要沿着数字 1→2→3→…→49 走就绝不会错。
+    </div>
+
+    <div class="legend">
+      <div class="lg"><div class="sw t-start">🏢</div><div><strong>加班楼</strong>（1格）起点，回此格可弃全部天雷卡</div></div>
+      <div class="lg"><div class="sw t-sea">🌊</div><div><strong>茫茫东海</strong>（20格）安全格，无事发生</div></div>
+      <div class="lg"><div class="sw t-lotus">🪷</div><div><strong>善缘涌泉</strong>（6格）抽 1 张善缘</div></div>
+      <div class="lg"><div class="sw t-cloud">☁️</div><div><strong>清气流</strong>（5格）抽 1 张清气</div></div>
+      <div class="lg"><div class="sw t-wine">🍶</div><div><strong>海市酒摊</strong>（5格）抽 1 张酒钱 / 请人喝酒</div></div>
+      <div class="lg"><div class="sw t-shop">🏪</div><div><strong>法器铺</strong>（5格）建造法器 / 4功德换渡海值</div></div>
+      <div class="lg"><div class="sw t-bolt">⚡</div><div><strong>天雷区</strong>（3格）抽 1 张天雷卡入手</div></div>
+      <div class="lg"><div class="sw t-whirl">🌀</div><div><strong>漩涡</strong>（3格）后退 4 格（芭蕉扇免疫）</div></div>
+      <div class="lg"><div class="sw t-dragon">🐉</div><div><strong>龙宫收费站</strong>（2格）交 1 功德卡过路费</div></div>
+      <div class="lg"><div class="sw t-peach">🍑</div><div><strong>蟠桃点</strong>（4格）抽 1 张蟠桃卡</div></div>
+      <div class="lg"><div class="sw t-end">🏛️</div><div><strong>蟠桃编制处</strong>（1格）终点，渡海值 ≥3 才可上岸</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 功德卡 ================= -->
+<section>
+  <h2>🪷 二、功德卡（资源卡）· 共 40 张</h2>
+  <div class="sub">打工人的三种「KPI 材料」。手牌上限 7 张，回合结束时超出必须弃掉。下方每种打印 1 张模板，按标注数量复制打印。</div>
+  <div class="cards">
+
+    <div class="card c-lotus">
+      <div class="qty">×14</div>
+      <div class="top">功德卡 · 资源</div>
+      <div class="ico">🪷</div>
+      <div class="ttl">善 缘</div>
+      <div class="cost">终局计分：1 分 / 张</div>
+      <div class="desc">最基础的功德材料。<br>建造大多数法器的主料。<br><br>获得：停在 🪷 善缘涌泉格</div>
+      <div class="foot">八仙渡海 · 善缘</div>
+    </div>
+
+    <div class="card c-cloud">
+      <div class="qty">×14</div>
+      <div class="top">功德卡 · 资源</div>
+      <div class="ico">☁️</div>
+      <div class="ttl">清 气</div>
+      <div class="cost">终局计分：1 分 / 张</div>
+      <div class="desc">轻盈的仙气。<br>建造飞行 / 闪避类法器主料。<br><br><strong>特殊：</strong>可弃 1 张抵消 1 次「后退」效果</div>
+      <div class="foot">八仙渡海 · 清气</div>
+    </div>
+
+    <div class="card c-wine">
+      <div class="qty">×12</div>
+      <div class="top">功德卡 · 硬通货</div>
+      <div class="ico">🍶</div>
+      <div class="ttl">酒 钱</div>
+      <div class="cost">终局计分：2 分 / 张</div>
+      <div class="desc"><strong>万能牌！</strong><br>可当任意 1 张功德卡使用。<br>可付给龙宫当过路费。<br><br>能拿就拿，别乱花。</div>
+      <div class="foot">八仙渡海 · 酒钱</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 法器卡 ================= -->
+<section>
+  <h2>🪈 三、法器卡（工具卡）· 8 种 × 3 张 = 24 张</h2>
+  <div class="sub">必须停在 🏪 法器铺才能建造，每回合最多造 1 件。打出后永久有效，摆在自己面前。每人同种最多 1 件、总计最多 3 件。<strong>同时持有 3 件法器 → 永久 +1 渡海值（只触发一次）</strong>。</div>
+  <div class="cards">
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 韩湘子</div>
+      <div class="ico">🪈</div>
+      <div class="ttl">玉笛（漏音版）</div>
+      <div class="cost">🪷 1 + ☁️ 1</div>
+      <div class="desc"><strong>被动 · 永久</strong><br>每回合掷骰后<br>可 <strong>+1 移动</strong>。<br><br>虽然漏音，但确实能吹。</div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 吕洞宾</div>
+      <div class="ico">🗡️</div>
+      <div class="ttl">宝剑（钝口版）</div>
+      <div class="cost">🪷 2</div>
+      <div class="desc"><strong>主动 · 每局 3 次</strong><br>可<strong>取消</strong>一张针对你的天雷卡。<br><br>用完 3 次后翻面失效。<br><em>（建议用小记号笔划勾计次）</em></div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 何仙姑</div>
+      <div class="ico">🪷</div>
+      <div class="ttl">荷 花 篮</div>
+      <div class="cost">🪷 2 + ☁️ 1</div>
+      <div class="desc"><strong>被动 · 永久</strong><br>每次停在资源格<br>（🪷 / ☁️ / 🍶）时<br><strong>多抽 1 张</strong>功德卡。</div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 曹国舅</div>
+      <div class="ico">🎋</div>
+      <div class="ttl">玉板（打拍子）</div>
+      <div class="cost">🪷 1 + ☁️ 2</div>
+      <div class="desc"><strong>主动 · 每回合 1 次</strong><br>掷骰后可<strong>重掷一次</strong>，<br>取较优结果。<br><br>铁拐李的最佳搭档。</div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 汉钟离</div>
+      <div class="ico">🪭</div>
+      <div class="ttl">芭 蕉 扇</div>
+      <div class="cost">☁️ 2</div>
+      <div class="desc"><strong>被动 · 永久</strong><br><strong>完全免疫 🌀 漩涡</strong><br>（不再后退 4 格），<br>也免疫天雷「返工漩涡」。<br><br>最便宜的三件套之一。</div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 张果老</div>
+      <div class="ico">🐎</div>
+      <div class="ttl">纸驴（打折版）</div>
+      <div class="cost">🪷 2 + 🍶 1</div>
+      <div class="desc"><strong>主动 · 每局 1 次</strong><br>指定一次传送：<br><strong>直接前进 6 格</strong><br>（正常结算落点格效果）。<br><br>用完后翻面。</div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 铁拐李</div>
+      <div class="ico">📿</div>
+      <div class="ttl">葫芦（酒葫芦）</div>
+      <div class="cost">☁️ 1 + 🍶 2</div>
+      <div class="desc"><strong>主动 · 每回合 1 次</strong><br>可用 1 张 🍶 酒钱<br><strong>换任意 1 张功德卡</strong><br>（从牌堆顶抽，或指定类型）。<br><br>资源洗牌机。</div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+    <div class="card c-tool">
+      <div class="qty">×3</div>
+      <div class="top">法器 · 蓝采和</div>
+      <div class="ico">🪞</div>
+      <div class="ttl">拍 板 宝 镜</div>
+      <div class="cost">🪷 1 + ☁️ 1 + 🍶 1</div>
+      <div class="desc"><strong>被动 · 永久</strong><br>当有人对你打出天雷卡，<br><strong>将该效果反弹给出牌者</strong>。<br><br>同一张天雷最多反弹 1 次。</div>
+      <div class="foot">终局 3 分</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 天雷卡 ================= -->
+<section>
+  <h2>⚡ 四、天雷卡（陷阱卡）· 8 种 × 2-3 张 = 20 张</h2>
+  <div class="sub"><strong>任何时候都能打！</strong>包括别人的回合、别人掷骰后、别人即将上岸前。打出后弃掉。天雷手牌上限 <strong>3 张</strong>。多人同时打出时按座位顺时针顺序依次结算。</div>
+  <div class="cards">
+
+    <div class="card c-trap">
+      <div class="qty">×3</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">⚡</div>
+      <div class="ttl">甩 锅 天 雷</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">目标<strong>后退 3 格</strong>。<br><br><em>应对：</em>宝剑 🗡️ 取消<br>或弃 1 张 ☁️ 清气抵消</div>
+      <div class="foot">这锅你背</div>
+    </div>
+
+    <div class="card c-trap">
+      <div class="qty">×3</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">🌀</div>
+      <div class="ttl">返 工 漩 涡</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">目标<strong>回退到其身后最近的<br>🏪 法器铺格</strong>。<br><br><em>注意：</em>被动退到 🏪 <strong>不能</strong>建造。<br><em>应对：</em>芭蕉扇 🪭 免疫 / 宝剑 🗡️</div>
+      <div class="foot">改了 8 版还要改</div>
+    </div>
+
+    <div class="card c-trap">
+      <div class="qty">×3</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">🐉</div>
+      <div class="ttl">龙 王 催 工</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">目标<strong>交出 2 张功德卡</strong>给你<br>（目标自选交哪两张）。<br><br><em>应对：</em>弃 1 张 🍶 酒钱贿赂免疫</div>
+      <div class="foot">周末也要交</div>
+    </div>
+
+    <div class="card c-trap">
+      <div class="qty">×3</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">🌊</div>
+      <div class="ttl">加 班 潮 汐</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">目标<strong>跳过下一个回合</strong><br>（不掷骰、不结算、不行牌）。<br><br><em>应对：</em>宝剑 🗡️ 取消</div>
+      <div class="foot">今晚通宵</div>
+    </div>
+
+    <div class="card c-trap">
+      <div class="qty">×2</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">🕳️</div>
+      <div class="ttl">绩 效 黑 洞</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">目标<strong>弃掉 1 件法器</strong><br>（由目标自选弃哪件）。<br><br><em>注意：</em>已获得的「法器达标」<br>渡海值<strong>不会</strong>因此失去。<br><em>应对：</em>拍板宝镜 🪞 反弹</div>
+      <div class="foot">你的 KPI 归零了</div>
+    </div>
+
+    <div class="card c-trap">
+      <div class="qty">×2</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">📜</div>
+      <div class="ttl">K P I 卷 轴</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">目标本回合<strong>掷骰点数只算一半</strong><br>（向下取整，最低 1）。<br><br><em>应对：</em>玉板 🎋 重掷（重掷结果<br>仍会被减半）/ 宝剑 🗡️ 取消</div>
+      <div class="foot">目标翻倍，人手不变</div>
+    </div>
+
+    <div class="card c-trap">
+      <div class="qty">×2</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">👹</div>
+      <div class="ttl">妖 怪 碰 瓷</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">目标<strong>丢失 1 点渡海值</strong><br>（若有则必须丢）。<br><br><strong>终局杀手牌，留到最后打。</strong><br><em>应对：</em>宝剑 🗡️ 取消</div>
+      <div class="foot">你的资格被举报了</div>
+    </div>
+
+    <div class="card c-trap">
+      <div class="qty">×2</div>
+      <div class="top">天雷 · 陷阱</div>
+      <div class="ico">🧾</div>
+      <div class="ttl">报 销 单</div>
+      <div class="cost">目标：任意 1 名玩家</div>
+      <div class="desc">你从目标手中<br><strong>抽走 1 张蟠桃卡</strong><br>（随机抽，若目标无蟠桃则无效）。<br><br><em>应对：</em>拍板宝镜 🪞 反弹</div>
+      <div class="foot">财务说流程不对</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 蟠桃卡 ================= -->
+<section>
+  <h2>🍑 五、蟠桃卡（宝藏卡）· 8 种各 1 张 = 8 张</h2>
+  <div class="sub">停在 🍑 蟠桃点抽 1 张。<strong>全场只有 8 张，抽完不补充</strong>——之后停 🍑 改为抽 2 张功德卡。一次性使用，用后弃掉。未使用的蟠桃终局计 2 分。</div>
+  <div class="cards">
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">千 年 蟠 桃</div>
+      <div class="cost">一次性 · 即时</div>
+      <div class="desc"><strong>立即获得 1 点渡海值。</strong><br><br>最直接的胜利道具，<br>抽到就是赚。</div>
+      <div class="foot">渡海值 +1</div>
+    </div>
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">半 熟 蟠 桃</div>
+      <div class="cost">一次性 · 即时</div>
+      <div class="desc"><strong>立即前进 8 格</strong>，<br>无视中途所有格子效果，<br><strong>也不结算落点格</strong>。<br><br>纯位移，闭眼冲刺。</div>
+      <div class="foot">前进 8 格</div>
+    </div>
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">醉 仙 桃</div>
+      <div class="cost">一次性 · 群体</div>
+      <div class="desc"><strong>所有其他玩家</strong><br>下一个回合 <strong>-2 移动</strong><br>（最低移动 0）。<br><br>大家一起醉。</div>
+      <div class="foot">全场减速</div>
+    </div>
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">桃 核 护 身</div>
+      <div class="cost">一次性 · 防御</div>
+      <div class="desc"><strong>免疫针对你的全部天雷卡</strong>，<br>持续到<strong>你的下个回合结束</strong>。<br><br>冲线保险牌，<br>配合终局冲刺使用。</div>
+      <div class="foot">天雷免疫</div>
+    </div>
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">蟠 桃 分 赃</div>
+      <div class="cost">一次性 · 群体</div>
+      <div class="desc">从<strong>每一位</strong>其他玩家手中<br><strong>各抽 1 张功德卡</strong><br>（随机抽取）。<br><br>人越多越赚。</div>
+      <div class="foot">全场收税</div>
+    </div>
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">仙 桃 酿 酒</div>
+      <div class="cost">一次性 · 资源</div>
+      <div class="desc"><strong>立即抽 4 张功德卡</strong>，<br>类型可<strong>任选</strong><br>（从牌堆中挑）。<br><br>直接凑够「4 换渡海值」。</div>
+      <div class="foot">抽 4 张</div>
+    </div>
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">蟠 桃 入 编</div>
+      <div class="cost">一次性 · 代价</div>
+      <div class="desc"><strong>立即获得 1 点渡海值</strong>，<br>但你必须<strong>弃掉手上所有法器</strong>。<br><br><em>进编制要交出个性。</em><br>已获得的法器达标渡海值保留。</div>
+      <div class="foot">渡海值 +1 / 弃全部法器</div>
+    </div>
+
+    <div class="card c-peach">
+      <div class="qty">×1</div>
+      <div class="top">蟠桃 · 宝藏</div>
+      <div class="ico">🍑</div>
+      <div class="ttl">桃 花 劫</div>
+      <div class="cost">一次性 · 位置</div>
+      <div class="desc">与<strong>任意一名玩家<br>交换棋子位置</strong><br>（可指定当前领先者）。<br><br>交换后<strong>不结算</strong>新格子效果。</div>
+      <div class="foot">换位</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 仙格卡 ================= -->
+<section>
+  <h2>🧙 六、仙格卡（角色卡）· 8 张</h2>
+  <div class="sub">开局每人随机 1 张，<strong>正面朝上</strong>放在自己面前（大家要知道彼此的缺点技能）。八仙都有一个缺点，缺点同时也是技能——这就是《八仙!》的精髓。</div>
+  <div class="cards">
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🦯</div>
+      <div class="ttl">铁 拐 李</div>
+      <div class="cost">缺点：贪杯</div>
+      <div class="desc"><strong>✅ 优势：</strong>每次停 🍶 格<br>额外抽 1 张 🍶 酒钱。<br><br><strong>❌ 代价：</strong>每次掷骰出 <strong>1</strong> 点时<br><strong>原地不动</strong>（醉了）。<br><br><em>打法：</em>酒钱囤积流，<br>尽早造玉板 🎋 重掷</div>
+      <div class="foot">一壶浊酒喜相逢</div>
+    </div>
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🪭</div>
+      <div class="ttl">汉 钟 离</div>
+      <div class="cost">缺点：摆烂</div>
+      <div class="desc"><strong>✅ 技能：</strong>每回合可选择<br><strong>不掷骰</strong>，改为<br><strong>抽 2 张功德卡</strong>。<br><br><em>打法：</em>囤牌流——位置落后<br>但渡海值满，靠 🏪 换值取胜</div>
+      <div class="foot">躺平也是一种修行</div>
+    </div>
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🐎</div>
+      <div class="ttl">张 果 老</div>
+      <div class="cost">缺点：倒着走</div>
+      <div class="desc"><strong>✅ 技能：</strong>你可以选择<br><strong>倒退</strong>移动；倒退时<br>额外<strong>抽 1 张天雷卡</strong>。<br><br><em>打法：</em>在 🪷☁️ 密集区来回横跳，<br>攒一手天雷当核武器</div>
+      <div class="foot">倒骑驴看沧海</div>
+    </div>
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🗡️</div>
+      <div class="ttl">吕 洞 宾</div>
+      <div class="cost">缺点：好为人师</div>
+      <div class="desc"><strong>✅ 技能 · 每局 2 次：</strong><br><strong>替</strong>某位玩家承受一张天雷卡，<br>然后你<strong>抽 2 张功德卡</strong>。<br><br><em>打法：</em>好人卡流，<br>配合「助人成仙」</div>
+      <div class="foot">度尽众生方成仙</div>
+    </div>
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🪷</div>
+      <div class="ttl">何 仙 姑</div>
+      <div class="cost">缺点：心太软</div>
+      <div class="desc"><strong>❌ 代价：</strong>别人向你要牌<br>你<strong>必须给 1 张</strong>。<br><br><strong>✅ 补偿：</strong>每次给牌后<br>立即<strong>抽 2 张 🪷 善缘</strong>。<br><br><em>打法：</em>主动挑衅让人来要牌</div>
+      <div class="foot">慈悲也能算 KPI</div>
+    </div>
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🎶</div>
+      <div class="ttl">蓝 采 和</div>
+      <div class="cost">缺点：嘴碎</div>
+      <div class="desc"><strong>✅ 技能：</strong>每回合开始可<br><strong>公开预测</strong>自己的骰点（1-6），<br>猜中则额外 <strong>+2 移动</strong>。<br><br><em>打法：</em>建议固定猜同一个数字，<br>避免选择疲劳</div>
+      <div class="foot">踏踏歌，世界如许</div>
+    </div>
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🪈</div>
+      <div class="ttl">韩 湘 子</div>
+      <div class="cost">缺点：沉迷吹笛</div>
+      <div class="desc"><strong>✅ 技能：</strong>掷骰前可宣告「吹笛」：<br>本回合<strong>移动 ×2</strong>，<br>但<strong>跳过格子结算</strong>（不拿资源、<br>也不受危险格影响）。<br><br><em>终点上岸判定照常触发。</em></div>
+      <div class="foot">一曲吹开万里云</div>
+    </div>
+
+    <div class="card c-role">
+      <div class="top">仙格 · 角色</div>
+      <div class="ico">🎋</div>
+      <div class="ttl">曹 国 舅</div>
+      <div class="cost">缺点：抠门</div>
+      <div class="desc"><strong>✅ 技能：</strong>龙宫过路费与<br>法器建造费用<strong>各省 1 张</strong>功德卡<br>（最低仍需 1 张）。<br><br><em>打法：</em>最快拿到「法器达标」<br>渡海值的角色，<strong>新手首选</strong></div>
+      <div class="foot">省下的都是功德</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 棋子 ================= -->
+<section>
+  <h2>🎭 七、玩家棋子 · 8 个</h2>
+  <div class="sub">沿虚线剪下，底部折页向后折 90° 即可站立；也可插入小夹子或粘在硬币上。8 种颜色对应 8 位散仙。</div>
+  <div class="pawns">
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#a8332a,#c9584a);color:#fff">🦯</div>
+      <div class="nm">铁拐李</div><div class="tab">赤 · Red</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#1d5c7a,#3f8bab);color:#fff">🪭</div>
+      <div class="nm">汉钟离</div><div class="tab">青 · Blue</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#2f6d5e,#4f9483);color:#fff">🐎</div>
+      <div class="nm">张果老</div><div class="tab">碧 · Green</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#c8992f,#e8c765);color:#3a2a05">🗡️</div>
+      <div class="nm">吕洞宾</div><div class="tab">金 · Gold</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#b04a86,#d878ad);color:#fff">🪷</div>
+      <div class="nm">何仙姑</div><div class="tab">粉 · Pink</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#5b3d78,#7d5c9d);color:#fff">🎶</div>
+      <div class="nm">蓝采和</div><div class="tab">紫 · Purple</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#d1701f,#e89b52);color:#fff">🪈</div>
+      <div class="nm">韩湘子</div><div class="tab">橙 · Orange</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+    <div class="pawn"><div class="body">
+      <div class="disc" style="background:linear-gradient(135deg,#4a4a4a,#7a7a7a);color:#fff">🎋</div>
+      <div class="nm">曹国舅</div><div class="tab">墨 · Black</div>
+      <div class="fold">▲ 折页 ▲</div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ================= 渡海值标记 ================= -->
+<section>
+  <h2>🎫 八、渡海值标记 · 24 个（每人 3 个）</h2>
+  <div class="sub">渡海值初始为 <strong>0</strong>。获得时把标记翻到「已激活」金色面；被天雷「妖怪碰瓷 👹」夺走时翻回灰色面。<strong>抵达终点需渡海值 ≥ 3 才能上岸。</strong>建议双面打印后背靠背粘贴，或分别打印两份。</div>
+  <div class="tokens">
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok on"><div class="big">✅</div>已激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+    <div class="tok off"><div class="big">⭕</div>未激活</div>
+  </div>
+  <div class="route" style="margin-top:14px">
+    <strong>🎫 渡海值的 4 种获得方式：</strong>
+    ① 在 🏪 法器铺弃 <strong>4 张功德卡</strong>换 1 点（每回合限 1 次）；
+    ② 抽到「千年蟠桃」或「蟠桃入编」直接 +1；
+    ③ <strong>同时持有 3 件法器</strong>永久 +1（只触发一次）；
+    ④ <strong>助人成仙</strong>——赠送其他玩家 3 张功德卡换 1 点（每人整局限 1 次）。
+  </div>
+</section>
+
+<!-- ================= 骰子 ================= -->
+<section>
+  <h2>🎲 九、六面骰展开图 · 2 颗</h2>
+  <div class="sub">沿实线剪下、沿内部边线折叠，用胶水粘成正方体。也可直接使用现成骰子或手机骰子 App。</div>
+  <div class="dice-net">
+    <div class="df blank"></div><div class="df">1</div><div class="df blank"></div><div class="df blank"></div>
+    <div class="df">2</div><div class="df">3</div><div class="df">4</div><div class="df">5</div>
+    <div class="df blank"></div><div class="df">6</div><div class="df blank"></div><div class="df blank"></div>
+  </div>
+  <div class="route" style="margin-top:16px">
+    <strong>🎲 用量说明：</strong>标准局用 <strong>1 颗</strong> D6 移动；<strong>快速局变体</strong>用 2 颗（取和）；定先手时全体各掷 1 颗，<strong>点数最小者先行</strong>（打工人的谦让美德）。
+  </div>
+</section>
+
+<!-- ================= 计分表 ================= -->
+<section>
+  <h2>📝 十、终局功德计分表</h2>
+  <div class="sub">仅在「功德卡堆第二次抽完」触发终局判定时使用。若有玩家渡海成仙（抵达第 49 格且渡海值 ≥3），则<strong>直接获胜，无需计分</strong>。</div>
+  <table class="score">
+    <tr>
+      <th style="width:22%">计分项</th><th style="width:12%">单价</th>
+      <th>玩家 1</th><th>玩家 2</th><th>玩家 3</th><th>玩家 4</th><th>玩家 5</th><th>玩家 6</th>
+    </tr>
+    <tr><td>🎫 渡海值（每 1 点）</td><td class="c">5 分</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>🍶 酒钱（每张）</td><td class="c">2 分</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>🪷 善缘 / ☁️ 清气（每张）</td><td class="c">1 分</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>🪈 法器（每件）</td><td class="c">3 分</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>🍑 未使用蟠桃（每张）</td><td class="c">2 分</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>🚩 棋子进度（每满 5 格）</td><td class="c">1 分</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr style="background:#fff6d8;font-weight:800"><td>🏆 总计</td><td class="c">—</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>📛 角色（仙号）</td><td class="c">—</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <div class="route" style="margin-top:14px">
+    <strong>⚖️ 平分处理：</strong>先比<strong>渡海值</strong>高者胜；仍平则比<strong>棋子位置</strong>靠前者胜；再平则共同获胜（一起敬一杯）。
+  </div>
+</section>
+
+<!-- ================= 速查卡 ================= -->
+<section>
+  <h2>⚡ 十一、回合速查卡（建议打印 1 张放桌中）</h2>
+  <div class="sub">新手最常忘的三件事都在这里。</div>
+  <table class="score">
+    <tr><th style="width:16%">步骤</th><th>操作内容</th></tr>
+    <tr><td class="c">① 掷骰前进</td><td>掷 1 颗 D6 前进。使用法器加成（玉笛 +1 / 玉板重掷）与角色技能（需在掷骰<strong>前</strong>宣告）。不能超过第 49 格，无需精确点数。</td></tr>
+    <tr><td class="c">② 结算格子</td><td>只结算<strong>最终停留格</strong>，途经格不结算。🏪 法器铺可建造法器或弃 4 功德换渡海值（<strong>仅自己回合、仅主动移动到达时有效</strong>）。</td></tr>
+    <tr><td class="c">③ 行牌整手</td><td>可打任意数量天雷卡 / 蟠桃卡。整手牌：功德卡 ≤ <strong>7 张</strong>、天雷卡 ≤ <strong>3 张</strong>，超出立即弃掉。宣布「过」。</td></tr>
+    <tr style="background:#fff6d8"><td class="c">⚡ 随时可做</td><td><strong>天雷卡不限回合！</strong>任何人在任何时机都能打出，包括别人掷骰后、即将上岸前。多人同时打出按座位顺时针依次结算。</td></tr>
+    <tr style="background:#eaf3f7"><td class="c">🏛️ 上岸判定</td><td>棋子到达第 49 格时检查渡海值：<strong>≥ 3 立即获胜</strong>；不足则在编制处「排队」，可继续打牌 / 送牌换渡海值，但<strong>不能移动</strong>，凑够即刻获胜。</td></tr>
+  </table>
+</section>
+
+<footer>
+  <div><strong>🍶 八仙渡海：打工人成仙记</strong> · Baxian Crossing Sea</div>
+  <div style="margin-top:6px">派对类桌游 · 3-8 人 · 20-40 分钟 · 难度：简单</div>
+  <div style="margin-top:6px">灵感来源：2026 暑期档国产动画电影《八仙!》「打工人成仙」设定</div>
+  <div style="margin-top:6px">规则详见同目录 README.md · 创建日期 2026-08-23</div>
+</footer>
+
+</div>
+</body>
+</html>
