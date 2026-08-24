@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>长安荔枝：转运使之争 - 打印道具</title>
+<style>
+:root{
+  --ink:#2b1810;
+  --gold:#c8992f;
+  --gold-l:#e8c765;
+  --red:#9e2b25;
+  --red-l:#c0492f;
+  --jade:#2f6d5e;
+  --jade-l:#4f9483;
+  --sea:#1d5c7a;
+  --paper:#fbf3e0;
+  --paper2:#f3e6c8;
+  --purple:#5b3d78;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  background:#efe1c4;color:var(--ink);padding:24px;line-height:1.55;
+}
+.wrap{max-width:1140px;margin:0 auto}
+
+/* ===== 页头 ===== */
+header{
+  background:linear-gradient(135deg,#9e2b25 0%,#c8992f 55%,#2f6d5e 100%);
+  color:#fff;border-radius:16px;padding:30px 28px;text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);margin-bottom:22px;position:relative;overflow:hidden;
+}
+header::after{content:"🍒";position:absolute;right:-8px;bottom:-22px;font-size:128px;opacity:.16}
+header h1{font-size:33px;letter-spacing:2px;margin-bottom:6px;text-shadow:0 2px 6px rgba(0,0,0,.3)}
+header .en{font-size:12px;letter-spacing:3px;opacity:.85;text-transform:uppercase}
+header .meta{margin-top:12px;font-size:14px;opacity:.95}
+header .badge{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);padding:3px 11px;border-radius:20px;margin:3px 4px;font-size:12px}
+
+/* ===== 打印提示 ===== */
+.print-hint{background:#fff6d8;border:2px dashed var(--gold);border-left:8px solid var(--red);border-radius:10px;padding:16px 22px;margin-bottom:24px}
+.print-hint strong{color:var(--red);font-size:15px}
+.print-hint ul{margin:8px 0 0 22px}
+.print-hint li{margin:4px 0;font-size:13px}
+.btn-print{display:inline-block;margin-top:10px;background:var(--red);color:#fff;border:none;padding:9px 24px;border-radius:24px;font-size:14px;cursor:pointer}
+.btn-print:hover{background:var(--red-l)}
+
+/* ===== 区块 ===== */
+section{margin-bottom:30px;page-break-inside:avoid}
+.sec-title{font-size:21px;color:var(--red);border-left:6px solid var(--gold);padding-left:12px;margin-bottom:14px;font-weight:700}
+.sec-title small{color:var(--jade);font-size:13px;font-weight:400;margin-left:8px}
+
+/* ===== 地图 ===== */
+.map-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;max-width:760px;margin:0 auto}
+.cell{border:2px solid var(--gold);border-radius:8px;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--paper);position:relative;font-size:13px}
+.cell .ico{font-size:26px;line-height:1}
+.cell .num{position:absolute;right:4px;bottom:2px;font-size:10px;color:#8a6d3b;font-weight:700}
+.cell.start{background:#f6d9b0}
+.cell.end{background:#f3c9a0}
+.cell.safe{background:#eef3e2}
+.cell.res{background:#e8f0f5}
+.cell.func{background:#f7e8d0}
+.cell.danger{background:#f6dcd6}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;margin-top:14px;font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:4px}
+
+/* ===== 卡牌 ===== */
+.card-area{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.card{width:118px;border-radius:10px;padding:9px 8px;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,.18);position:relative;min-height:150px;display:flex;flex-direction:column}
+.card .tt{font-size:14px;font-weight:700;text-align:center;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:4px;margin-bottom:5px}
+.card .em{font-size:30px;text-align:center;margin:3px 0}
+.card .ds{font-size:11px;line-height:1.4;text-align:center;flex:1}
+.card .tp{font-size:10px;text-align:center;opacity:.85;margin-top:4px;border-top:1px solid rgba(255,255,255,.3);padding-top:3px}
+.c-ice{background:linear-gradient(135deg,#1d5c7a,#3f8bab)}
+.c-foot{background:linear-gradient(135deg,#2f6d5e,#4f9483)}
+.c-money{background:linear-gradient(135deg,#9e6b1f,#c8992f)}
+.c-tool{background:linear-gradient(135deg,#7a4b2b,#a8703f)}
+.c-trap{background:linear-gradient(135deg,#7a2222,#b0432f)}
+.c-tre{background:linear-gradient(135deg,#5b3d78,#8a5ba8)}
+.c-role{background:linear-gradient(135deg,#9e2b25,#c0492f)}
+.c-res-ice{background:linear-gradient(135deg,#1d5c7a,#3f8bab)}
+.c-res-foot{background:linear-gradient(135deg,#2f6d5e,#4f9483)}
+.c-res-money{background:linear-gradient(135deg,#9e6b1f,#c8992f)}
+
+/* ===== 棋子 ===== */
+.pieces{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.piece{width:74px;height:74px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;box-shadow:0 3px 8px rgba(0,0,0,.2);text-align:center}
+.piece .em{font-size:24px}
+.p-red{background:#c0392b}.p-blue{background:#2471a3}.p-green{background:#1e8449}.p-purple{background:#7d3c98}
+
+/* ===== 计分 / 速查 ===== */
+.table-box{border:2px solid var(--gold);border-radius:10px;overflow:hidden;max-width:760px;margin:0 auto}
+.table-box table{width:100%;border-collapse:collapse;font-size:13px}
+.table-box th,.table-box td{border:1px solid var(--paper2);padding:7px 9px;text-align:center}
+.table-box th{background:var(--red);color:#fff}
+.table-box tr:nth-child(even) td{background:var(--paper2)}
+.score-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.score-card{flex:1;min-width:160px;border:2px solid var(--gold);border-radius:10px;padding:12px;text-align:center;background:var(--paper)}
+.score-card .nm{font-weight:700;color:var(--red)}
+.score-card .ln{display:flex;justify-content:space-between;border-bottom:1px dashed var(--paper2);padding:4px 0;font-size:13px}
+
+.note{background:var(--paper2);border-radius:10px;padding:12px 16px;font-size:13px;margin-top:10px;border-left:6px solid var(--jade)}
+
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  .print-hint{display:none}
+  body{background:#fff;padding:0}
+  header{box-shadow:none;-webkit-print-color-adjust:exact !important}
+  section{page-break-inside:avoid}
+  .card,.cell,.piece,.score-card{-webkit-print-color-adjust:exact !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>🍒 长安荔枝：转运使之争</h1>
+  <div class="en">Lychee of Chang'an · Printable Props</div>
+  <div class="meta">
+    <span class="badge">策略 · 2-4人</span>
+    <span class="badge">45-70分钟</span>
+    <span class="badge">10岁以上</span>
+    <span class="badge">中等/困难</span>
+  </div>
+</header>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（否则卡牌颜色会丢失）</li>
+    <li>地图用普通 A4 纸；卡牌与棋子建议用<strong>卡纸（180g+）</strong>打印后裁剪</li>
+    <li>棋子可贴在瓶盖 / 橡皮泥底座上增加站立感</li>
+    <li>本页含：地图 + 图例、资源卡、器具卡、匪患卡、恩赏卡、角色卡、棋子、计分表、回合速查</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 打印本页</button>
+</div>
+
+<!-- ===== 1. 地图 ===== -->
+<section>
+  <div class="sec-title">游戏地图 · 千里转运图 <small>7×7 蛇形 49 格，岭南(1)→长安(49)</small></div>
+  <div class="map-grid" id="map"></div>
+  <div class="legend">
+    <span>🏝️ 岭南荔园(起点)</span><span>🌿 荔乡小径</span><span>🐎 驿站</span>
+    <span>🧊 冰窖</span><span>💰 市集</span><span>🌊 江河渡口</span><span>⛰️ 蜀道险关</span>
+    <span>🏯 驿站中枢</span><span>🏚️ 匪寨</span><span>🌀 泥泞</span><span>🏛️ 兴庆宫(终点)</span>
+  </div>
+</section>
+
+<!-- ===== 2. 资源卡 ===== -->
+<section>
+  <div class="sec-title">资源卡 <small>冰藏🧊 / 脚力🐎 / 银钱💰（各打印 30 张，按人数可减）</small></div>
+  <div class="card-area" id="res-cards"></div>
+</section>
+
+<!-- ===== 3. 器具卡 ===== -->
+<section>
+  <div class="sec-title">器具卡（工具卡） <small>8 种，各打印 3 张，共 24 张</small></div>
+  <div class="card-area" id="tool-cards"></div>
+</section>
+
+<!-- ===== 4. 匪患卡 ===== -->
+<section>
+  <div class="sec-title">匪患卡（陷阱卡） <small>8 种，按数量打印共 20 张</small></div>
+  <div class="card-area" id="trap-cards"></div>
+</section>
+
+<!-- ===== 5. 恩赏卡 ===== -->
+<section>
+  <div class="sec-title">恩赏卡（宝藏卡） <small>8 种，各 1 张，共 8 张，进贡时抽取</small></div>
+  <div class="card-area" id="treasure-cards"></div>
+</section>
+
+<!-- ===== 6. 角色卡 ===== -->
+<section>
+  <div class="sec-title">转运使卡（角色卡） <small>4 张，开局每人随机 1 张</small></div>
+  <div class="card-area" id="role-cards"></div>
+</section>
+
+<!-- ===== 7. 棋子 ===== -->
+<section>
+  <div class="sec-title">玩家棋子 <small>4 色，贴在底座上即可使用</small></div>
+  <div class="pieces">
+    <div class="piece p-red"><span class="em">🍒</span>红衣使</div>
+    <div class="piece p-blue"><span class="em">🍒</span>青衣使</div>
+    <div class="piece p-green"><span class="em">🍒</span>绿衣使</div>
+    <div class="piece p-purple"><span class="em">🍒</span>紫衣使</div>
+  </div>
+</section>
+
+<!-- ===== 8. 计分表 + 速查 ===== -->
+<section>
+  <div class="sec-title">贡品计分表 & 回合速查</div>
+  <div class="score-row">
+    <div class="score-card">
+      <div class="nm">红衣使</div>
+      <div class="ln"><span>已进贡担数</span><span>__ / 3</span></div>
+      <div class="ln"><span>新鲜度合计</span><span>__</span></div>
+      <div class="ln"><span>恩赏加分</span><span>__</span></div>
+      <div class="ln"><span>余银钱分</span><span>__</span></div>
+      <div class="ln"><span><b>总分</b></span><span><b>__</b></span></div>
+    </div>
+    <div class="score-card">
+      <div class="nm">青衣使</div>
+      <div class="ln"><span>已进贡担数</span><span>__ / 3</span></div>
+      <div class="ln"><span>新鲜度合计</span><span>__</span></div>
+      <div class="ln"><span>恩赏加分</span><span>__</span></div>
+      <div class="ln"><span>余银钱分</span><span>__</span></div>
+      <div class="ln"><span><b>总分</b></span><span><b>__</b></span></div>
+    </div>
+  </div>
+  <div class="score-row">
+    <div class="score-card">
+      <div class="nm">绿衣使</div>
+      <div class="ln"><span>已进贡担数</span><span>__ / 3</span></div>
+      <div class="ln"><span>新鲜度合计</span><span>__</span></div>
+      <div class="ln"><span>恩赏加分</span><span>__</span></div>
+      <div class="ln"><span>余银钱分</span><span>__</span></div>
+      <div class="ln"><span><b>总分</b></span><span><b>__</b></span></div>
+    </div>
+    <div class="score-card">
+      <div class="nm">紫衣使</div>
+      <div class="ln"><span>已进贡担数</span><span>__ / 3</span></div>
+      <div class="ln"><span>新鲜度合计</span><span>__</span></div>
+      <div class="ln"><span>恩赏加分</span><span>__</span></div>
+      <div class="ln"><span>余银钱分</span><span>__</span></div>
+      <div class="ln"><span><b>总分</b></span><span><b>__</b></span></div>
+    </div>
+  </div>
+  <div class="note">
+    <b>每回合四步速查：</b> ① 掷骰前进 → ② 结算停留格 → ③ 打匪患/恩赏、整手牌 → ④ 腐坏 -1（竹筒水藏免）、检查终局。<br>
+    <b>进贡：</b> 停第 49 格，本担新鲜度即贡品分（盐渍 +2 / 金牌 +3），抽 1 恩赏，重新装担（鲜度重置 8）。<br>
+    <b>终局：</b> 有人送满 3 担 或 第 10 回合结束；总分最高者胜（进贡鲜度 + 恩赏 + 余银钱 + 手担鲜度/2）。
+  </div>
+</section>
+
+</div>
+
+<script>
+// ===== 地图数据（49 格，蛇形；与 README 一致）=====
+// 行序：第7行(43-49) 顶 -> 第1行(1-7) 底；单数行左->右，双数行右->左
+const cells = [
+  {n:1,ico:"🏝️",cls:"start"},
+  {n:2,ico:"🌿",cls:"safe"},{n:3,ico:"🐎",cls:"res"},{n:4,ico:"🧊",cls:"res"},{n:5,ico:"💰",cls:"res"},{n:6,ico:"🌊",cls:"danger"},{n:7,ico:"🌿",cls:"safe"},
+  {n:8,ico:"🌿",cls:"safe"},{n:9,ico:"🐎",cls:"res"},{n:10,ico:"🌊",cls:"danger"},{n:11,ico:"🧊",cls:"res"},{n:12,ico:"💰",cls:"res"},{n:13,ico:"🏯",cls:"func"},{n:14,ico:"⛰️",cls:"danger"},
+  {n:15,ico:"🐎",cls:"res"},{n:16,ico:"🌊",cls:"danger"},{n:17,ico:"🧊",cls:"res"},{n:18,ico:"💰",cls:"res"},{n:19,ico:"🌿",cls:"safe"},{n:20,ico:"⛰️",cls:"danger"},{n:21,ico:"🏚️",cls:"danger"},
+  {n:22,ico:"🐎",cls:"res"},{n:23,ico:"🌊",cls:"danger"},{n:24,ico:"🧊",cls:"res"},{n:25,ico:"💰",cls:"res"},{n:26,ico:"🌿",cls:"safe"},{n:27,ico:"⛰️",cls:"danger"},{n:28,ico:"🏚️",cls:"danger"},
+  {n:29,ico:"🌀",cls:"danger"},{n:30,ico:"🐎",cls:"res"},{n:31,ico:"🌊",cls:"danger"},{n:32,ico:"🧊",cls:"res"},{n:33,ico:"💰",cls:"res"},{n:34,ico:"🌿",cls:"safe"},{n:35,ico:"⛰️",cls:"danger"},
+  {n:36,ico:"🏚️",cls:"danger"},{n:37,ico:"🌀",cls:"danger"},{n:38,ico:"🌿",cls:"safe"},{n:39,ico:"🌊",cls:"danger"},{n:40,ico:"🌿",cls:"safe"},{n:41,ico:"🌀",cls:"danger"},{n:42,ico:"⛰️",cls:"danger"},
+  {n:43,ico:"🏯",cls:"func"},{n:44,ico:"🌿",cls:"safe"},{n:45,ico:"🏚️",cls:"danger"},{n:46,ico:"🌀",cls:"danger"},{n:47,ico:"🌊",cls:"danger"},{n:48,ico:"⛰️",cls:"danger"},{n:49,ico:"🏛️",cls:"end"}
+];
+const mapEl = document.getElementById("map");
+// 按显示行：第7行先，第1行后
+const displayRows = [43,44,45,46,47,48,49, 36,37,38,39,40,41,42, 29,30,31,32,33,34,35, 22,23,24,25,26,27,28, 15,16,17,18,19,20,21, 8,9,10,11,12,13,14, 1,2,3,4,5,6,7];
+displayRows.forEach(c=>{
+  const d = cells.find(x=>x.n===c);
+  const div = document.createElement("div");
+  div.className = "cell "+d.cls;
+  div.innerHTML = `<span class="ico">${d.ico}</span><span class="num">${d.n}</span>`;
+  mapEl.appendChild(div);
+});
+
+// ===== 资源卡 =====
+const resCards = [
+  {em:"🧊",tt:"冰藏卡",ds:"延缓腐坏主料；造竹筒水藏 / 冰窖车。手牌上限 9。",tp:"资源 · 停冰窖格获得"},
+  {em:"🐎",tt:"脚力卡",ds:"加速主料；造快马 / 飞鸽 / 盐渍古法。手牌上限 9。",tp:"资源 · 停驿站格获得"},
+  {em:"💰",tt:"银钱卡",ds:"万能牌，可抵任意 1 张资源；终局每 1 张 = 1 分。",tp:"资源 · 停市集格获得"}
+];
+const resEl = document.getElementById("res-cards");
+const resMap = {"🧊":"c-res-ice","🐎":"c-res-foot","💰":"c-res-money"};
+resCards.forEach(r=>{
+  const d=document.createElement("div");d.className="card "+(resMap[r.em]||"c-money");
+  d.innerHTML=`<div class="tt">${r.tt}</div><div class="em">${r.em}</div><div class="ds">${r.ds}</div><div class="tp">${r.tp}</div>`;
+  resEl.appendChild(d);
+});
+
+// ===== 器具卡 =====
+const toolCards = [
+  {em:"🎋",tt:"竹筒水藏",ds:"你的担腐坏 -1 / 回合（原本 -1 现不变）。",cost:"1🧊+1💰"},
+  {em:"🐎",tt:"快马加鞭",ds:"每回合掷骰后 +1 移动（被动永久）。",cost:"2💰"},
+  {em:"🧊",tt:"冰窖车",ds:"每次停冰窖格多抽 1 张冰藏卡。",cost:"2🧊+1💰"},
+  {em:"🎫",tt:"驿站令牌",ds:"掷骰可重掷一次，取较优（每回合 1 次）。",cost:"1💰+1🐎"},
+  {em:"🧂",tt:"盐渍古法",ds:"进贡时新鲜度视为 +2（最高记 10）。",cost:"1🧊+1🐎"},
+  {em:"🕊️",tt:"飞鸽传书",ds:"每局指定一次：直接前进 4 格（无视中途）。",cost:"2💰+1🐎"},
+  {em:"📜",tt:"锦囊妙计",ds:"抵消一次针对你的匪患卡（每局限 3 次）。",cost:"1💰+1🧊"},
+  {em:"👑",tt:"皇敕驿道",ds:"免疫所有🌀泥泞后退 + 经过🏚️匪寨不结算。",cost:"2💰+2🐎"}
+];
+const toolEl=document.getElementById("tool-cards");
+toolCards.forEach(t=>{
+  const d=document.createElement("div");d.className="card c-tool";
+  d.innerHTML=`<div class="tt">${t.tt}</div><div class="em">${t.em}</div><div class="ds">${t.ds}</div><div class="tp">建造：${t.cost} · 市集/中枢</div>`;
+  toolEl.appendChild(d);
+});
+
+// ===== 匪患卡 =====
+const trapCards = [
+  {em:"⛰️",tt:"山贼剪径",ds:"指定 1 名玩家后退 3 格。",qty:3},
+  {em:"🌊",tt:"水盗劫担",ds:"指定 1 名玩家新鲜度 -2。",qty:3},
+  {em:"☀️",tt:"酷暑蒸腾",ds:"指定 1 名玩家本回合腐坏 +1（即 -2）。",qty:3},
+  {em:"🧊",tt:"冰消瓦解",ds:"指定 1 名玩家弃掉 1 张冰藏卡。",qty:2},
+  {em:"🐎",tt:"驿卒误工",ds:"指定 1 名玩家跳过下一回合。",qty:2},
+  {em:"🪨",tt:"官道塌方",ds:"指定回退到上一个🏯驿站中枢。",qty:2},
+  {em:"🐴",tt:"马瘟倒毙",ds:"指定 1 名玩家弃掉 1 件器具。",qty:2},
+  {em:"⏰",tt:"贡期提前",ds:"全局剩余回合强制设为 2（天威难抗）。",qty:3}
+];
+const trapEl=document.getElementById("trap-cards");
+trapCards.forEach(t=>{
+  const d=document.createElement("div");d.className="card c-trap";
+  d.innerHTML=`<div class="tt">${t.tt}</div><div class="em">${t.em}</div><div class="ds">${t.ds}</div><div class="tp">陷阱 · 任意时机打 · 数量×${t.qty}</div>`;
+  trapEl.appendChild(d);
+});
+
+// ===== 恩赏卡 =====
+const treCards = [
+  {em:"💖",tt:"贵妃一笑",ds:"立即 +5 贡品分。"},
+  {em:"🥇",tt:"金牌敕令",ds:"你下次进贡新鲜度 +3（可破 10 上限）。"},
+  {em:"🌱",tt:"岭南良种",ds:"立即重新装担，新鲜度 = 10。"},
+  {em:"🗺️",tt:"蜀道捷径",ds:"立即前进 6 格，无视中途格。"},
+  {em:"❄️",tt:"御赐冰库",ds:"得 2🧊，接下来 2 回合腐坏免疫。"},
+  {em:"🏯",tt:"荔枝贡院",ds:"任意市集/中枢免费造 1 件器具。"},
+  {em:"🕊️",tt:"飞马传书",ds:"立即抽 3 张任意资源卡。"},
+  {em:"👑",tt:"荔枝永贡",ds:"立即计作已进贡 1 担（按当前鲜度计分）。"}
+];
+const treEl=document.getElementById("treasure-cards");
+treCards.forEach(t=>{
+  const d=document.createElement("div");d.className="card c-tre";
+  d.innerHTML=`<div class="tt">${t.tt}</div><div class="em">${t.em}</div><div class="ds">${t.ds}</div><div class="tp">宝藏 · 进贡时抽 · 各1张</div>`;
+  treEl.appendChild(d);
+});
+
+// ===== 角色卡 =====
+const roleCards = [
+  {em:"🧮",tt:"李善德",ds:"装担鲜度 = 9（多1）；但掷出 1 时原地不动（算呆了）。"},
+  {em:"🕌",tt:"胡商",ds:"停市集额外抽 1💰；但造器具费用 +1💰。"},
+  {em:"🌿",tt:"岭南老吏",ds:"过🌊渡口不减速；但不能造快马加鞭。"},
+  {em:"🥾",tt:"蜀道脚夫",ds:"装担后首回合腐坏豁免；但停🏯中枢不能免费造。"}
+];
+const roleEl=document.getElementById("role-cards");
+roleCards.forEach(r=>{
+  const d=document.createElement("div");d.className="card c-role";
+  d.innerHTML=`<div class="tt">${r.tt}</div><div class="em">${r.em}</div><div class="ds">${r.ds}</div><div class="tp">转运使 · 开局随机1张</div>`;
+  roleEl.appendChild(d);
+});
+</script>
+</body>
+</html>
