@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>链锯人：恶魔契约 - 打印道具</title>
+<style>
+:root{
+  --ink:#1a1410;
+  --red:#b3241d;
+  --red-l:#d6453c;
+  --gold:#c9962b;
+  --gold-l:#ecc468;
+  --blood:#7a1420;
+  --fear:#4a2d6b;
+  --steel:#2f5d6b;
+  --paper:#f7f1e8;
+  --paper2:#efe5d4;
+  --black:#171513;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  background:#e7ddd0;color:var(--ink);padding:24px;line-height:1.55;
+}
+.wrap{max-width:1140px;margin:0 auto}
+
+header{
+  background:linear-gradient(135deg,#171513 0%,#b3241d 55%,#c9962b 100%);
+  color:#fff;border-radius:16px;padding:30px 28px;text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);margin-bottom:22px;position:relative;overflow:hidden;
+}
+header::after{content:"⚙️";position:absolute;right:-8px;bottom:-26px;font-size:128px;opacity:.13}
+header h1{font-size:33px;letter-spacing:2px;margin-bottom:8px;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+header .en{font-size:12px;letter-spacing:3px;opacity:.85;text-transform:uppercase}
+header .meta{margin-top:13px;font-size:14px;opacity:.95}
+header .badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);
+  padding:3px 12px;border-radius:20px;margin:4px 5px;font-size:13px}
+
+.print-hint{
+  background:#fff6d8;border:2px dashed var(--gold);border-left:8px solid var(--red);
+  border-radius:10px;padding:18px 22px;margin-bottom:26px;
+}
+.print-hint strong{color:var(--red);font-size:16px}
+.print-hint ul{margin:10px 0 0 22px}
+.print-hint li{margin:5px 0;font-size:14px}
+.btn-print{display:inline-block;margin-top:12px;background:var(--red);color:#fff;border:none;
+  padding:10px 26px;border-radius:24px;font-size:15px;cursor:pointer;
+  box-shadow:0 3px 8px rgba(179,36,29,.35);font-family:inherit}
+.btn-print:hover{background:#8f1c16}
+
+section{margin-bottom:36px;page-break-inside:avoid}
+h2{font-size:22px;color:var(--ink);border-bottom:3px solid var(--gold);
+  padding-bottom:8px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.sub{font-size:13px;color:#7a6a56;margin-bottom:16px}
+
+/* ===== 地图 ===== */
+.board{background:var(--paper);border:5px solid var(--black);border-radius:14px;
+  padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cell{aspect-ratio:1/1;border-radius:8px;border:2px solid rgba(0,0,0,.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;font-size:11px;text-align:center;padding:2px}
+.cell .ic{font-size:23px;line-height:1}
+.cell .nm{font-size:8.5px;margin-top:1px;font-weight:700;opacity:.85}
+.cell .no{position:absolute;right:3px;bottom:2px;font-size:9px;font-weight:700;opacity:.55}
+.t-start{background:linear-gradient(135deg,#8d8d8d,#c9c9c9);color:#fff;border-color:#555}
+.t-end{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#3a2a05;border-color:#8a6a12}
+.t-blood{background:#e7b9bd}
+.t-fear{background:#cfc2e0}
+.t-steel{background:#bcd6dc}
+.t-devil{background:#2a2320;color:#fff}
+.t-contract{background:#f4dc9c}
+.t-home{background:#efe5d4}
+.t-start .no,.t-end .no{opacity:.8}
+
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:7px;margin-top:16px}
+.lg{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #ddd0b8;border-radius:7px;padding:6px 9px;font-size:12px}
+.lg .sw{width:22px;height:22px;border-radius:5px;border:1px solid rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.route{margin-top:14px;background:#f3ece0;border-left:5px solid var(--red);border-radius:8px;padding:11px 15px;font-size:13px}
+
+/* ===== 卡牌通用 ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:11px}
+.card{height:228px;border-radius:11px;border:2.5px solid var(--ink);padding:9px;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--paper);
+  box-shadow:0 2px 6px rgba(0,0,0,.13)}
+.card .top{font-size:8.5px;letter-spacing:1px;text-transform:uppercase;opacity:.7;text-align:center;font-weight:700}
+.card .ico{font-size:42px;text-align:center;margin:4px 0 2px}
+.card .ttl{font-size:13.5px;font-weight:800;text-align:center;line-height:1.2;margin-bottom:4px}
+.card .cost{font-size:10.5px;text-align:center;background:rgba(0,0,0,.07);border-radius:12px;padding:2px 6px;margin-bottom:4px;font-weight:700}
+.card .desc{font-size:10.5px;line-height:1.4;text-align:center;flex:1}
+.card .no{position:absolute;left:5px;bottom:4px;font-size:9px;opacity:.5;font-weight:700}
+.c-res{background:linear-gradient(160deg,#fff,#f0e6d6)}
+.c-weapon{background:linear-gradient(160deg,#fff,#dfeef2);border-color:var(--steel)}
+.c-trap{background:linear-gradient(160deg,#3a322d,#1c1815);color:#fff;border-color:#000}
+.c-trap .top,.c-trap .cost{opacity:.85;background:rgba(255,255,255,.12)}
+.c-trap .cost{color:#fff}
+.c-treasure{background:linear-gradient(160deg,#fff,#fbeec4);border-color:var(--gold)}
+.c-hero{background:linear-gradient(160deg,#fff,#f6dad7);border-color:var(--red)}
+
+/* ===== 棋子 ===== */
+.pawns{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.pawn{height:96px;border-radius:12px;border:2.5px solid var(--ink);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.13)}
+.pawn .pc{font-size:40px;line-height:1}
+.pawn .pn{font-size:12px;font-weight:800;margin-top:3px}
+.p-red{background:#f3c6c3}.p-blue{background:#c3d4f3}.p-green{background:#c8eccb}.p-yellow{background:#f3ecc3}.p-purple{background:#e0c8f3}
+
+.tracker{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 16px;font-size:13px}
+.tracker table{width:100%;border-collapse:collapse;margin-top:8px}
+.tracker th,.tracker td{border:1px solid #ccc;padding:5px 7px;text-align:center;font-size:12px}
+.tracker th{background:var(--paper2)}
+
+.quick{background:#fff;border:2px solid var(--gold);border-radius:10px;padding:14px 18px;font-size:12.5px}
+.quick h3{font-size:15px;margin-bottom:8px;color:var(--red)}
+.quick ol{margin-left:20px}
+.quick li{margin:4px 0}
+
+footer{text-align:center;font-size:12px;color:#7a6a56;margin-top:10px;padding:14px}
+
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  .print-hint{display:none}
+  body{background:#fff;padding:0}
+  section{margin-bottom:18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>⚙️ 链锯人：恶魔契约</h1>
+  <div class="en">Chainsaw Man · Devil Contracts</div>
+  <div class="meta">
+    <span class="badge">卡牌类 Card</span>
+    <span class="badge">2-5 人</span>
+    <span class="badge">30-50 分钟</span>
+    <span class="badge">12岁以上</span>
+    <span class="badge">中等难度</span>
+  </div>
+</header>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong>。</li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（否则卡牌颜色会丢失）。</li>
+    <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，并裁剪、塑封以延长寿命。</li>
+    <li>地图、图例、计分表可用普通 A4 纸；卡牌/棋子建议卡纸。</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 立即打印</button>
+</div>
+
+<!-- ===== 1. 地图 ===== -->
+<section>
+  <h2>🗺️ 游戏地图 · 恶魔巢穴（7×7 蛇形通路）</h2>
+  <div class="sub">从格 00 🚪 出发，沿通路顺序前进至格 48 🏆。上排图标 / 下排格号。</div>
+  <div class="board">
+    <div class="grid" id="grid"></div>
+    <div class="legend">
+      <div class="lg"><span class="sw t-start">🚪</span> 起点·猎人事务所 (00)</div>
+      <div class="lg"><span class="sw t-home">🏠</span> 安全屋（休整，无效果）</div>
+      <div class="lg"><span class="sw t-blood">🩸</span> 血之井（得血之契约）</div>
+      <div class="lg"><span class="sw t-fear">😱</span> 恐惧之厅（得恐惧值）</div>
+      <div class="lg"><span class="sw t-steel">⚙️</span> 军火库（得武器）</div>
+      <div class="lg"><span class="sw t-devil">👿</span> 恶魔之门（抽恶魔袭击）</div>
+      <div class="lg"><span class="sw t-contract">📜</span> 契约祭坛（抽契约果实）</div>
+      <div class="lg"><span class="sw t-end">🏆</span> 终点·魔王封印 (48)</div>
+    </div>
+    <div class="route">
+      🐍 <strong>蛇形顺序</strong>：00→01→…→06 → 07→…→13 → 14→…→20 → 21→…→27 → 28→…→34 → 35→…→41 → 42→…→48。掷 2 骰之和 = 前进格数。
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. 资源卡 ===== -->
+<section>
+  <h2>🩸😱⚙️ 资源卡（基础材料）</h2>
+  <div class="sub">中央资源堆各 15 张；停在对应井格获得。用于锻造武器与结算攻击。</div>
+  <div class="cards" id="resCards"></div>
+</section>
+
+<!-- ===== 3. 恶魔武器卡 ===== -->
+<section>
+  <h2>🪚 恶魔武器卡（工具卡 · 24张）</h2>
+  <div class="sub">每种 4 张。用资源锻造后打出，对恶魔/对手造成攻击。</div>
+  <div class="cards" id="weaponCards"></div>
+</section>
+
+<!-- ===== 4. 恶魔袭击卡 ===== -->
+<section>
+  <h2>👿 恶魔袭击卡（陷阱卡 · 16张）</h2>
+  <div class="sub">每种 2 张。可在<strong>任意玩家回合任意时机</strong>打出，打断对手！</div>
+  <div class="cards" id="trapCards"></div>
+</section>
+
+<!-- ===== 5. 契约果实卡 ===== -->
+<section>
+  <h2>📜 契约果实卡（宝藏卡 · 8张）</h2>
+  <div class="sub">每种 1 张，抽完不补。在契约祭坛 📜 抽得，一次性强力增益。</div>
+  <div class="cards" id="treasureCards"></div>
+</section>
+
+<!-- ===== 6. 猎人角色卡 ===== -->
+<section>
+  <h2>⚔️ 猎人角色卡（缺点即技能 · 4张）</h2>
+  <div class="sub">开局抽 1 张，亮出技能与缺点。</div>
+  <div class="cards" id="heroCards"></div>
+</section>
+
+<!-- ===== 7. 棋子 ===== -->
+<section>
+  <h2>🚩 玩家棋子（5色）</h2>
+  <div class="sub">剪下棋子放在起点 🚪；封印值可用纸笔记录。</div>
+  <div class="pawns">
+    <div class="pawn p-red"><div class="pc">🔴</div><div class="pn">红队猎人</div></div>
+    <div class="pawn p-blue"><div class="pc">🔵</div><div class="pn">蓝队猎人</div></div>
+    <div class="pawn p-green"><div class="pc">🟢</div><div class="pn">绿队猎人</div></div>
+    <div class="pawn p-yellow"><div class="pc">🟡</div><div class="pn">黄队猎人</div></div>
+    <div class="pawn p-purple"><div class="pc">🟣</div><div class="pn">紫队猎人</div></div>
+  </div>
+</section>
+
+<!-- ===== 8. 封印值计分表 ===== -->
+<section>
+  <h2>🏆 封印值计分表</h2>
+  <div class="tracker">
+    <div>率先抵达 🏆 且封印值 ≥ 10 者获胜；12 回合无人达标则封印值最高者胜。</div>
+    <table>
+      <tr><th>猎人</th><th>角色</th><th>封印值 (目标≥10)</th><th>到达终点</th><th>备注</th></tr>
+      <tr><td>🔴</td><td></td><td></td><td>□</td><td></td></tr>
+      <tr><td>🔵</td><td></td><td></td><td>□</td><td></td></tr>
+      <tr><td>🟢</td><td></td><td></td><td>□</td><td></td></tr>
+      <tr><td>🟡</td><td></td><td></td><td>□</td><td></td></tr>
+      <tr><td>🟣</td><td></td><td></td><td>□</td><td></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 9. 回合速查 ===== -->
+<section>
+  <h2>⚡ 回合速查卡</h2>
+  <div class="quick">
+    <h3>每个回合做这 5 步</h3>
+    <ol>
+      <li><strong>掷骰前进</strong>：2 骰之和 = 前进格数（沿蛇形通路）。</li>
+      <li><strong>触发停留格</strong>：资源井得卡 / 恶魔门抽袭击 / 祭坛抽宝藏 / 终点判封印值。</li>
+      <li><strong>锻造武器（可选）</strong>：用 🩸😱⚙️ 在手牌造恶魔武器卡。</li>
+      <li><strong>出牌攻击（可选）</strong>：打武器卡劈恶魔、用契约果实增益。</li>
+      <li><strong>互坑</strong>：任意时机打恶魔袭击卡打断对手 → 轮到下家。</li>
+    </ol>
+    <p style="margin-top:8px"><strong>封印值 +1</strong>：每劈开 1 恶魔门 / 抵御 1 次袭击。到终点检查 ≥10。</p>
+  </div>
+</section>
+
+<footer>
+  ⚙️ 链锯人：恶魔契约 · 打印道具包 &nbsp;|&nbsp; 关联文档：<a href="README.md">README.md</a>
+</footer>
+
+</div>
+
+<script>
+// ===== 地图数据（与 README 严格一致，索引 0..48 蛇形） =====
+const plan = {0:'S',1:'H',2:'T',3:'T',4:'F',5:'C',6:'B',7:'H',8:'T',9:'H',10:'W',11:'C',12:'T',13:'H',14:'B',15:'H',16:'F',17:'C',18:'W',19:'H',20:'T',21:'H',22:'B',23:'H',24:'F',25:'C',26:'T',27:'H',28:'W',29:'H',30:'B',31:'C',32:'F',33:'H',34:'T',35:'H',36:'W',37:'C',38:'B',39:'H',40:'T',41:'H',42:'F',43:'C',44:'W',45:'T',46:'T',47:'H',48:'G'};
+const meta = {
+  S:{ic:'🚪',nm:'起点',cls:'t-start'},
+  H:{ic:'🏠',nm:'安全屋',cls:'t-home'},
+  B:{ic:'🩸',nm:'血之井',cls:'t-blood'},
+  F:{ic:'😱',nm:'恐惧厅',cls:'t-fear'},
+  W:{ic:'⚙️',nm:'军火库',cls:'t-steel'},
+  T:{ic:'👿',nm:'恶魔门',cls:'t-devil'},
+  C:{ic:'📜',nm:'祭坛',cls:'t-contract'},
+  G:{ic:'🏆',nm:'终点',cls:'t-end'}
+};
+// 蛇形坐标
+const snake=[];
+for(let r=0;r<7;r++){const cols=(r%2===0)?[0,1,2,3,4,5,6]:[6,5,4,3,2,1,0];for(const c of cols)snake.push([r,c]);}
+const grid=document.getElementById('grid');
+snake.forEach((rc,idx)=>{
+  const t=plan[idx],m=meta[t];
+  const d=document.createElement('div');
+  d.className='cell '+m.cls;
+  d.innerHTML=`<span class="ic">${m.ic}</span><span class="nm">${m.nm}</span><span class="no">${idx}</span>`;
+  grid.appendChild(d);
+});
+
+// ===== 资源卡 =====
+const res=[
+  {ic:'🩸',ttl:'血之契约',desc:'基础资源。停在血之井🩸获得。锻造链锯/圣枪/契约卷轴。'},
+  {ic:'😱',ttl:'恐惧值',desc:'基础资源。停在恐惧之厅😱获得。驱动攻击与火焰瓶结算。'},
+  {ic:'⚙️',ttl:'武器',desc:'基础资源。停在军火库⚙️获得。锻造手枪/链锯等恶魔武器。'}
+];
+const rc=document.getElementById('resCards');
+res.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-res';
+  d.innerHTML=`<div class="top">RESOURCE</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;rc.appendChild(d);});
+
+// ===== 恶魔武器卡 =====
+const weapons=[
+  {ic:'🪚',ttl:'链锯',cost:'武器×2',desc:'造成 2 攻击，劈开恶魔之门。电次技能下攻击+2。'},
+  {ic:'🔫',ttl:'手枪',cost:'武器×1 + 恐惧×1',desc:'造成 1 攻击，远程可指定任意对手。早川+1。'},
+  {ic:'🔥',ttl:'火焰瓶',cost:'恐惧×2',desc:'造成 2 攻击，范围并驱散 1 张陷阱。'},
+  {ic:'💡',ttl:'圣枪',cost:'血之契约×2',desc:'净化 1 恶魔，免疫接下来 1 次陷阱。'},
+  {ic:'💉',ttl:'恶魔之血注射',cost:'血×1 + 恐惧×1',desc:'回复 1 生命并抽 2 张牌。'},
+  {ic:'📜',ttl:'契约卷轴',cost:'血×1 + 武器×1',desc:'签订契约：本回合攻击 +3。'}
+];
+const wc=document.getElementById('weaponCards');
+weapons.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-weapon';
+  d.innerHTML=`<div class="top">WEAPON</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="cost">${x.cost}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;wc.appendChild(d);});
+
+// ===== 恶魔袭击卡 =====
+const traps=[
+  {ic:'🍅',ttl:'番茄恶魔',desc:'目标失去 1 张资源卡。圣枪可净化。'},
+  {ic:'🧟',ttl:'僵尸恶魔',desc:'目标后退 3 格。契约卷轴可抵消。'},
+  {ic:'🕸️',ttl:'控制恶魔',desc:'目标跳过 1 个回合。早川之刃免疫前2次。'},
+  {ic:'🌑',ttl:'黑暗恶魔',desc:'目标本回合攻击值 -2。电次狂暴可反超。'},
+  {ic:'💥',ttl:'枪之恶魔',desc:'目标失去全部武器卡。靠分散持有防御。'},
+  {ic:'🔮',ttl:'未来恶魔',desc:'窥视目标手牌，令其弃 1 张。烟幕每3回合免1次。'},
+  {ic:'♾️',ttl:'无限恶魔',desc:'目标下次攻击需额外付 1 血之契约。'},
+  {ic:'🔥',ttl:'地狱恶魔',desc:'目标立即再抽 2 张恶魔袭击卡叠加。火焰瓶驱散1张。'}
+];
+const tc=document.getElementById('trapCards');
+traps.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-trap';
+  d.innerHTML=`<div class="top">DEVIL ATTACK</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;tc.appendChild(d);});
+
+// ===== 契约果实卡 =====
+const treasures=[
+  {ic:'🐕',ttl:'波奇塔之心',desc:'永久攻击 +1（无需支付恐惧）。'},
+  {ic:'🤡',ttl:'帕瓦之角',desc:'立即获得 1 武器卡 + 1 血之契约卡。'},
+  {ic:'🗡️',ttl:'早川之刃',desc:'本局免疫前 2 次恶魔袭击。'},
+  {ic:'💨',ttl:'姬野之烟',desc:'立即抽 3 张牌。'},
+  {ic:'👁️',ttl:'玛奇玛命令',desc:'指定 1 名对手后退 5 格。'},
+  {ic:'⚡',ttl:'电次狂暴',desc:'本回合所有攻击 ×2。'},
+  {ic:'👼',ttl:'天使恶魔翼',desc:'立即前进 4 格。'},
+  {ic:'⚔️',ttl:'万剑恶魔',desc:'对任意玩家造成 3 攻击（支付 3 恐惧）。'}
+];
+const trc=document.getElementById('treasureCards');
+treasures.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-treasure';
+  d.innerHTML=`<div class="top">CONTRACT</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;trc.appendChild(d);});
+
+// ===== 猎人角色卡 =====
+const heroes=[
+  {ic:'⚙️',ttl:'电次',desc:'技能：手牌≤3 时攻击+2。缺点「穷」：初始资源 -1。'},
+  {ic:'🗡️',ttl:'早川',desc:'技能：武器卡效果+1。缺点「负重」：最多持 5 武器。'},
+  {ic:'🤡',ttl:'帕瓦',desc:'技能：血之契约获取翻倍。缺点「笨蛋」：恶魔判定+1次。'},
+  {ic:'💨',ttl:'姬野',desc:'技能：每 3 回合免 1 次恶魔袭击。缺点「酗酒」：开局弃1牌。'}
+];
+const hc=document.getElementById('heroCards');
+heroes.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-hero';
+  d.innerHTML=`<div class="top">HUNTER</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;hc.appendChild(d);});
+</script>
+</body>
+</html>
