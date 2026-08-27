@@ -110,6 +110,7 @@ boardgames/
 | [八仙渡海：打工人成仙记](category/party/baxian-crossing-sea/README.md) | 派对 | 3-8人 | 20-40分钟 | 简单 |
 | [长安荔枝：转运使之争](category/strategy/lychee-of-chang-an/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等/困难 |
 | [链锯人：恶魔契约](category/card/chainsaw-man-contracts/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
+| [龙珠集结：神龙召唤](category/cooperative/dragon-ball-shenron/README.md) | 合作 | 2-5人 | 45-75分钟 | 中等 |
 
 ## 添加新桌游
 

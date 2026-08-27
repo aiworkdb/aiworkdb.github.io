@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>龙珠集结：神龙召唤 - 打印道具</title>
+<style>
+:root{
+  --ink:#1a1208;
+  --orange:#e8731a;
+  --orange-l:#f5a64b;
+  --gold:#f2c14e;
+  --gold-l:#f8dd97;
+  --red:#c0392b;
+  --green:#3aa655;
+  --blue:#5a6bcf;
+  --purple:#7d4fa3;
+  --paper:#fbf6ea;
+  --paper2:#f1e7d2;
+  --black:#171513;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  background:#e9ddc7;color:var(--ink);padding:24px;line-height:1.55;
+}
+.wrap{max-width:1140px;margin:0 auto}
+
+header{
+  background:linear-gradient(135deg,#171513 0%,#c0392b 45%,#e8731a 75%,#f2c14e 100%);
+  color:#fff;border-radius:16px;padding:30px 28px;text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);margin-bottom:22px;position:relative;overflow:hidden;
+}
+header::after{content:"🐉";position:absolute;right:-8px;bottom:-26px;font-size:128px;opacity:.13}
+header h1{font-size:33px;letter-spacing:2px;margin-bottom:8px;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+header .en{font-size:12px;letter-spacing:3px;opacity:.85;text-transform:uppercase}
+header .meta{margin-top:13px;font-size:14px;opacity:.95}
+header .badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);
+  padding:3px 12px;border-radius:20px;margin:4px 5px;font-size:13px}
+
+.print-hint{
+  background:#fff6d8;border:2px dashed var(--gold);border-left:8px solid var(--orange);
+  border-radius:10px;padding:18px 22px;margin-bottom:26px;
+}
+.print-hint strong{color:var(--orange);font-size:16px}
+.print-hint ul{margin:10px 0 0 22px}
+.print-hint li{margin:5px 0;font-size:14px}
+.btn-print{display:inline-block;margin-top:12px;background:var(--orange);color:#fff;border:none;
+  padding:10px 26px;border-radius:24px;font-size:15px;cursor:pointer;
+  box-shadow:0 3px 8px rgba(192,57,43,.35);font-family:inherit}
+.btn-print:hover{background:#b5330f}
+
+section{margin-bottom:36px;page-break-inside:avoid}
+h2{font-size:22px;color:var(--ink);border-bottom:3px solid var(--gold);
+  padding-bottom:8px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.sub{font-size:13px;color:#7a6a56;margin-bottom:16px}
+
+/* ===== 地图 ===== */
+.board{background:var(--paper);border:5px solid var(--black);border-radius:14px;
+  padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cell{aspect-ratio:1/1;border-radius:8px;border:2px solid rgba(0,0,0,.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;font-size:11px;text-align:center;padding:2px}
+.cell .ic{font-size:23px;line-height:1}
+.cell .nm{font-size:8.5px;margin-top:1px;font-weight:700;opacity:.85}
+.cell .no{position:absolute;right:3px;bottom:2px;font-size:9px;font-weight:700;opacity:.55}
+.t-start{background:linear-gradient(135deg,#3aa655,#9be0b0);color:#fff;border-color:#1e5e35}
+.t-end{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#3a2a05;border-color:#8a6a12}
+.t-qi{background:#cfeccd}
+.t-soul{background:#f0c9c2}
+.t-ball{background:#fbeec4}
+.t-temple{background:#cfd2f0}
+.t-supply{background:#d6eccb}
+.t-base{background:#2a1c2e;color:#fff}
+.t-village{background:#e7dcc6}
+.t-start .no,.t-end .no{opacity:.8}
+
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:7px;margin-top:16px}
+.lg{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #ddd0b8;border-radius:7px;padding:6px 9px;font-size:12px}
+.lg .sw{width:22px;height:22px;border-radius:5px;border:1px solid rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.route{margin-top:14px;background:#f3ece0;border-left:5px solid var(--orange);border-radius:8px;padding:11px 15px;font-size:13px}
+
+/* ===== 卡牌通用 ===== */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:11px}
+.card{height:228px;border-radius:11px;border:2.5px solid var(--ink);padding:9px;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--paper);
+  box-shadow:0 2px 6px rgba(0,0,0,.13)}
+.card .top{font-size:8.5px;letter-spacing:1px;text-transform:uppercase;opacity:.7;text-align:center;font-weight:700}
+.card .ico{font-size:42px;text-align:center;margin:4px 0 2px}
+.card .ttl{font-size:13.5px;font-weight:800;text-align:center;line-height:1.2;margin-bottom:4px}
+.card .cost{font-size:10.5px;text-align:center;background:rgba(0,0,0,.07);border-radius:12px;padding:2px 6px;margin-bottom:4px;font-weight:700}
+.card .desc{font-size:10.5px;line-height:1.4;text-align:center;flex:1}
+.card .no{position:absolute;left:5px;bottom:4px;font-size:9px;opacity:.5;font-weight:700}
+.c-res{background:linear-gradient(160deg,#fff,#f0e6d6)}
+.c-tool{background:linear-gradient(160deg,#fff,#e6ebfb);border-color:var(--blue)}
+.c-trap{background:linear-gradient(160deg,#3a2630,#1c1418);color:#fff;border-color:#000}
+.c-trap .top,.c-trap .cost{opacity:.85;background:rgba(255,255,255,.12)}
+.c-trap .cost{color:#fff}
+.c-treasure{background:linear-gradient(160deg,#fff,#fbeec4);border-color:var(--gold)}
+.c-hero{background:linear-gradient(160deg,#fff,#f6dad7);border-color:var(--red)}
+
+/* ===== 棋子 ===== */
+.pawns{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.pawn{height:96px;border-radius:12px;border:2.5px solid var(--ink);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.13)}
+.pawn .pc{font-size:40px;line-height:1}
+.pawn .pn{font-size:12px;font-weight:800;margin-top:3px}
+.p-red{background:#f3c6c3}.p-blue{background:#c3d4f3}.p-green{background:#c8eccb}.p-yellow{background:#f3ecc3}.p-purple{background:#e0c8f3}
+
+.tracker{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 16px;font-size:13px}
+.tracker table{width:100%;border-collapse:collapse;margin-top:8px}
+.tracker th,.tracker td{border:1px solid #ccc;padding:5px 7px;text-align:center;font-size:12px}
+.tracker th{background:var(--paper2)}
+
+.quick{background:#fff;border:2px solid var(--gold);border-radius:10px;padding:14px 18px;font-size:12.5px}
+.quick h3{font-size:15px;margin-bottom:8px;color:var(--orange)}
+.quick ol{margin-left:20px}
+.quick li{margin:4px 0}
+
+footer{text-align:center;font-size:12px;color:#7a6a56;margin-top:10px;padding:14px}
+
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  .print-hint{display:none}
+  body{background:#fff;padding:0}
+  section{margin-bottom:18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>🐉 龙珠集结：神龙召唤</h1>
+  <div class="en">Dragon Ball · Shenron Summon</div>
+  <div class="meta">
+    <span class="badge">合作类 Cooperative</span>
+    <span class="badge">2-5 人</span>
+    <span class="badge">45-75 分钟</span>
+    <span class="badge">10岁以上</span>
+    <span class="badge">中等难度</span>
+  </div>
+</header>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong>。</li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（否则卡牌颜色会丢失）。</li>
+    <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，并裁剪、塑封以延长寿命。</li>
+    <li>地图、图例、计分表可用普通 A4 纸；卡牌/棋子建议卡纸。</li>
+  </ul>
+  <button class="btn-print" onclick="window.print()">🖨️ 立即打印</button>
+</div>
+
+<!-- ===== 1. 地图 ===== -->
+<section>
+  <h2>🗺️ 游戏地图 · 那美克星（7×7 蛇形通路）</h2>
+  <div class="sub">从格 00 🐉 出发，沿通路顺序前进至格 48 🚀。上排图标 / 下排格号。</div>
+  <div class="board">
+    <div class="grid" id="grid"></div>
+    <div class="legend">
+      <div class="lg"><span class="sw t-start">🐉</span> 起点·界王神界 (00)</div>
+      <div class="lg"><span class="sw t-village">👤</span> 那美克村落（休整，无效果）</div>
+      <div class="lg"><span class="sw t-qi">🟢</span> 气之泉（得气卡）</div>
+      <div class="lg"><span class="sw t-soul">🔴</span> 战士纪念碑（得战士之魂）</div>
+      <div class="lg"><span class="sw t-ball">🟡</span> 龙珠遗迹（得龙珠碎片）</div>
+      <div class="lg"><span class="sw t-temple">⚡</span> 界王神殿（抽绝招卡）</div>
+      <div class="lg"><span class="sw t-supply">🌿</span> 补给站（抽龙珠宝藏）</div>
+      <div class="lg"><span class="sw t-base">🚩</span> 弗利萨基地（掷危机骰）</div>
+      <div class="lg"><span class="sw t-end">🚀</span> 终点·神龙祭坛 (48)</div>
+    </div>
+    <div class="route">
+      🐉 <strong>蛇形顺序</strong>：00→01→…→06 → 07→…→13 → 14→…→20 → 21→…→27 → 28→…→34 → 35→…→41 → 42→…→48。掷 2 骰之和 = 前进格数。
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. 资源卡 ===== -->
+<section>
+  <h2>🟢🔴🟡 资源卡（基础材料）</h2>
+  <div class="sub">中央资源堆各 15 张；停在对应泉/碑/遗迹格获得。用于修练绝招与集齐龙珠。</div>
+  <div class="cards" id="resCards"></div>
+</section>
+
+<!-- ===== 3. 绝招卡 ===== -->
+<section>
+  <h2>⚡ 绝招卡（工具卡 · 24张）</h2>
+  <div class="sub">每种 4 张。用资源修练后打出，对弗利萨军造成攻击或支援队友。</div>
+  <div class="cards" id="toolCards"></div>
+</section>
+
+<!-- ===== 4. 弗利萨军袭击卡 ===== -->
+<section>
+  <h2>👾 弗利萨军袭击卡（陷阱卡 · 16张）</h2>
+  <div class="sub">每种 2 张。停留弗利萨基地 🚩 掷危机骰出「危机」时抽 1 张立即生效！</div>
+  <div class="cards" id="trapCards"></div>
+</section>
+
+<!-- ===== 5. 龙珠宝藏卡 ===== -->
+<section>
+  <h2>🐉 龙珠宝藏卡（宝藏卡 · 8张）</h2>
+  <div class="sub">每种 1 张，抽完不补。在补给站 🌿 抽得，一次性强力增益。</div>
+  <div class="cards" id="treasureCards"></div>
+</section>
+
+<!-- ===== 6. Z 战士角色卡 ===== -->
+<section>
+  <h2>🥋 Z 战士角色卡（缺点即技能 · 5张）</h2>
+  <div class="sub">开局抽 1 张，亮出技能与缺点。</div>
+  <div class="cards" id="heroCards"></div>
+</section>
+
+<!-- ===== 7. 棋子 ===== -->
+<section>
+  <h2>🚩 玩家棋子（5色）</h2>
+  <div class="sub">剪下棋子放在起点 🐉；龙珠进度与团队生命值可用纸笔记录。</div>
+  <div class="pawns">
+    <div class="pawn p-red"><div class="pc">🔴</div><div class="pn">红队战士</div></div>
+    <div class="pawn p-blue"><div class="pc">🔵</div><div class="pn">蓝队战士</div></div>
+    <div class="pawn p-green"><div class="pc">🟢</div><div class="pn">绿队战士</div></div>
+    <div class="pawn p-yellow"><div class="pc">🟡</div><div class="pn">黄队战士</div></div>
+    <div class="pawn p-purple"><div class="pc">🟣</div><div class="pn">紫队战士</div></div>
+  </div>
+</section>
+
+<!-- ===== 8. 龙珠进度 / 生命值计分表 ===== -->
+<section>
+  <h2>🐉 龙珠进度 & 团队生命值计分表</h2>
+  <div class="tracker">
+    <div>集齐 7 张龙珠碎片 🟡 且任意 1 名战士抵达 🚀 神龙祭坛 → 全员<strong>共同胜利</strong>！团队生命值降至 0 则全体失败。</div>
+    <table>
+      <tr><th>项目</th><th>进度 / 数值</th><th>状态</th><th>备注</th></tr>
+      <tr><td>🟡 龙珠碎片</td><td>__ / 7</td><td>□</td><td>每得 1 张 +1</td></tr>
+      <tr><td>❤️ 团队生命值</td><td>__ / 10</td><td>□</td><td>弗利萨袭击扣减</td></tr>
+      <tr><td>🚀 抵达祭坛</td><td>□ 是 / □ 否</td><td></td><td>需龙珠满 7</td></tr>
+      <tr><td>🏆 胜利</td><td>□ 达成</td><td></td><td>共同胜利</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 9. 回合速查 ===== -->
+<section>
+  <h2>⚡ 回合速查卡</h2>
+  <div class="quick">
+    <h3>每个回合做这 5 步</h3>
+    <ol>
+      <li><strong>掷骰前进</strong>：2 骰之和 = 前进格数（沿蛇形通路）。</li>
+      <li><strong>触发停留格</strong>：资源泉得卡 / 神殿抽绝招 / 补给抽宝藏 / 弗利萨基地掷危机骰。</li>
+      <li><strong>修练绝招（可选）</strong>：用 🟢🔴🟡 在手牌造绝招卡。</li>
+      <li><strong>出牌行动（可选）</strong>：打绝招攻击弗利萨军、用龙珠宝藏增益、支援队友。</li>
+      <li><strong>累积龙珠</strong>：每得 1 张 🟡 进度 +1 → 轮到下家。</li>
+    </ol>
+    <p style="margin-top:8px"><strong>胜利条件</strong>：龙珠进度 = 7 且有人抵达 🚀；团队生命值 0 则失败。</p>
+  </div>
+</section>
+
+<footer>
+  🐉 龙珠集结：神龙召唤 · 打印道具包 &nbsp;|&nbsp; 关联文档：<a href="README.md">README.md</a>
+</footer>
+
+</div>
+
+<script>
+// ===== 地图数据（与 README 严格一致，索引 0..48 蛇形） =====
+const plan = {0:'S',1:'Q',2:'R',3:'B',4:'T',5:'V',6:'F',7:'F',8:'F',9:'Q',10:'B',11:'R',12:'N',13:'N',14:'B',15:'V',16:'N',17:'T',18:'F',19:'R',20:'F',21:'N',22:'F',23:'F',24:'F',25:'Q',26:'T',27:'V',28:'V',29:'Q',30:'T',31:'F',32:'R',33:'B',34:'N',35:'N',36:'T',37:'F',38:'F',39:'V',40:'F',41:'N',42:'V',43:'V',44:'F',45:'Q',46:'R',47:'B',48:'G'};
+const meta = {
+  S:{ic:'🐉',nm:'起点',cls:'t-start'},
+  N:{ic:'👤',nm:'村落',cls:'t-village'},
+  Q:{ic:'🟢',nm:'气之泉',cls:'t-qi'},
+  R:{ic:'🔴',nm:'纪念碑',cls:'t-soul'},
+  B:{ic:'🟡',nm:'龙珠遗迹',cls:'t-ball'},
+  T:{ic:'⚡',nm:'神殿',cls:'t-temple'},
+  V:{ic:'🌿',nm:'补给站',cls:'t-supply'},
+  F:{ic:'🚩',nm:'弗利萨基地',cls:'t-base'},
+  G:{ic:'🚀',nm:'终点',cls:'t-end'}
+};
+// 蛇形坐标
+const snake=[];
+for(let r=0;r<7;r++){const cols=(r%2===0)?[0,1,2,3,4,5,6]:[6,5,4,3,2,1,0];for(const c of cols)snake.push([r,c]);}
+const grid=document.getElementById('grid');
+snake.forEach((rc,idx)=>{
+  const t=plan[idx],m=meta[t];
+  const d=document.createElement('div');
+  d.className='cell '+m.cls;
+  d.innerHTML=`<span class="ic">${m.ic}</span><span class="nm">${m.nm}</span><span class="no">${idx}</span>`;
+  grid.appendChild(d);
+});
+
+// ===== 资源卡 =====
+const res=[
+  {ic:'🟢',ttl:'气',desc:'基础资源。停在气之泉🟢获得。驱动龟派气功/界王拳/元气弹。'},
+  {ic:'🔴',ttl:'战士之魂',desc:'基础资源。停在战士纪念碑🔴获得。爆发攻击/防御/复活。'},
+  {ic:'🟡',ttl:'龙珠碎片',desc:'基础资源。停在龙珠遗迹🟡获得。集齐 7 张召唤神龙。'}
+];
+const rc=document.getElementById('resCards');
+res.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-res';
+  d.innerHTML=`<div class="top">RESOURCE</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;rc.appendChild(d);});
+
+// ===== 绝招卡 =====
+const tools=[
+  {ic:'💥',ttl:'龟派气功',cost:'气×2',desc:'造成 2 攻击，击破弗利萨军。悟空技能下攻击+1。'},
+  {ic:'🔥',ttl:'界王拳',cost:'气×1 + 战士之魂×1',desc:'造成 1 攻击，本回合攻击 +2。'},
+  {ic:'☄️',ttl:'元气弹',cost:'气×3',desc:'造成 3 攻击（强爆发，需弃 3 张气）。'},
+  {ic:'🕊️',ttl:'舞空术',cost:'战士之魂×1',desc:'立即前进 3 格，机动支援/规避危机。'},
+  {ic:'🫘',ttl:'仙豆',cost:'战士之魂×2',desc:'回复团队生命 2 点或复活 1 名倒下战士。'},
+  {ic:'🌀',ttl:'合体',cost:'气×1 + 战士之魂×1',desc:'与 1 名队友联动：本回合共同攻击 +3。'}
+];
+const tc=document.getElementById('toolCards');
+tools.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-tool';
+  d.innerHTML=`<div class="top">TECHNIQUE</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="cost">${x.cost}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;tc.appendChild(d);});
+
+// ===== 弗利萨军袭击卡 =====
+const traps=[
+  {ic:'👹',ttl:'杂兵赛亚人',desc:'团队生命值 -1。龟派气功可击退。'},
+  {ic:'🛸',ttl:'侦察机',desc:'1 名战士后退 2 格。舞空术可抵消。'},
+  {ic:'🧠',ttl:'精神控制',desc:'1 名战士跳过 1 回合。短笛之耳免疫前2次。'},
+  {ic:'💣',ttl:'能量炮',desc:'失去 1 张资源卡。仙豆可回补。'},
+  {ic:'❄️',ttl:'冰冻光线',desc:'本回合全体攻击 -1。界王拳可反超。'},
+  {ic:'🦖',ttl:'基纽特战队',desc:'交换两名战士位置。合体可稳定阵型。'},
+  {ic:'🌋',ttl:'那美克星毁灭',desc:'龙珠碎片 -1（若有）。元气弹可护盾。'},
+  {ic:'👑',ttl:'弗利萨本体',desc:'团队生命 -3，须立即集火击破。'}
+];
+const trc=document.getElementById('trapCards');
+traps.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-trap';
+  d.innerHTML=`<div class="top">FRIEZA ARMY</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="cost">危机触发</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;trc.appendChild(d);});
+
+// ===== 龙珠宝藏卡 =====
+const treasures=[
+  {ic:'💊',ttl:'万能胶囊',desc:'立即获得 1 气 + 1 战士之魂。'},
+  {ic:'☁️',ttl:'筋斗云',desc:'立即前进 5 格。'},
+  {ic:'👴',ttl:'老界王神',desc:'本局免疫前 2 次袭击。'},
+  {ic:'🔮',ttl:'占卜婆婆',desc:'立即抽 3 张牌。'},
+  {ic:'👁️',ttl:'天津饭',desc:'指定 1 名队友立即再行动 1 次。'},
+  {ic:'🤝',ttl:'比克融合',desc:'全体攻击 +1（永久）。'},
+  {ic:'📡',ttl:'界王通讯',desc:'查看袭击堆顶 3 张并重新排列。'},
+  {ic:'⚡',ttl:'超级赛亚人',desc:'本回合所有攻击 ×2。'}
+];
+const trc2=document.getElementById('treasureCards');
+treasures.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-treasure';
+  d.innerHTML=`<div class="top">DRAGON BALL</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;trc2.appendChild(d);});
+
+// ===== Z 战士角色卡 =====
+const heroes=[
+  {ic:'🥋',ttl:'孙悟空',desc:'技能：气卡效果 +1（龟派气功变 3 攻击）。缺点「贪吃」：开局弃 1 张手牌。'},
+  {ic:'👑',ttl:'贝吉塔',desc:'技能：战士之魂获取翻倍。缺点「傲娇」：不能接受他人支援卡。'},
+  {ic:'🧠',ttl:'短笛',desc:'技能：每 3 回合免 1 次袭击。缺点「孤高」：初始资源 -1。'},
+  {ic:'🔆',ttl:'小林',desc:'技能：龙珠碎片获取翻倍。缺点「凡人」：最多持有 4 张绝招卡。'},
+  {ic:'📚',ttl:'悟饭',desc:'技能：手牌 ≤4 时全队攻击 +1。缺点「书呆」：首次袭击必中。'}
+];
+const hc=document.getElementById('heroCards');
+heroes.forEach((x,i)=>{const d=document.createElement('div');d.className='card c-hero';
+  d.innerHTML=`<div class="top">Z-WARRIOR</div><div class="ico">${x.ic}</div><div class="ttl">${x.ttl}</div><div class="desc">${x.desc}</div><div class="no">#${i+1}</div>`;hc.appendChild(d);});
+</script>
+</body>
+</html>
