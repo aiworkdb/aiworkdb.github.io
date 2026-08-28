@@ -111,6 +111,7 @@ boardgames/
 | [长安荔枝：转运使之争](category/strategy/lychee-of-chang-an/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等/困难 |
 | [链锯人：恶魔契约](category/card/chainsaw-man-contracts/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
 | [龙珠集结：神龙召唤](category/cooperative/dragon-ball-shenron/README.md) | 合作 | 2-5人 | 45-75分钟 | 中等 |
+| [时光代理人：记忆照片](category/strategy/link-click-memory/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等 |
 
 ## 添加新桌游
 

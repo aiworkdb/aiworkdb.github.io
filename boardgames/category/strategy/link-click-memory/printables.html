@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时光代理人：记忆照片 - 打印文档</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, sans-serif; background: #f3f4f6; padding: 20px; color: #222; }
+        .container { max-width: 1040px; margin: 0 auto; }
+        h1 { text-align: center; color: #1f2937; margin-bottom: 8px; font-size: 2em; }
+        .subtitle { text-align:center; color:#6b7280; margin-bottom: 24px; font-size: 14px; }
+        h2 { color: #374151; margin: 26px 0 14px; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
+        .section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .print-hint { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-size: 14px; color: #856404; }
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+        .game-map { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #0f172a; padding: 15px; border-radius: 12px; }
+        .map-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 22px; border-radius: 6px; position: relative; }
+        .map-cell.start { background: #fbbf24; }
+        .map-cell.memory { background: #a78bfa; }
+        .map-cell.time { background: #fb923c; }
+        .map-cell.emotion { background: #60a5fa; }
+        .map-cell.trap { background: #ef4444; }
+        .map-cell.treasure { background: #22d3ee; }
+        .map-cell.goal { background: #facc15; }
+        .map-cell.path { background: #cbd5e1; }
+        .cell-label { position: absolute; bottom: 2px; right: 3px; font-size: 8px; color: rgba(0,0,0,0.55); font-weight: 600; }
+        .legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; font-size:12px; }
+        .legend span { display:inline-flex; align-items:center; gap:4px; background:#f1f5f9; padding:4px 8px; border-radius:6px; }
+        .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .card { border: 2px solid #ddd; border-radius: 10px; padding: 12px; min-height: 130px; display: flex; flex-direction: column; break-inside: avoid; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .card-icon { font-size: 26px; }
+        .card-title { font-weight: bold; font-size: 15px; }
+        .card-description { flex: 1; font-size: 12px; line-height: 1.5; color: #555; }
+        .card-footer { margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee; font-size: 11px; color: #888; }
+        .card.resource { border-color: #a78bfa; } .card.tool { border-color: #fb923c; }
+        .card.trap { border-color: #ef4444; } .card.treasure { border-color: #22d3ee; }
+        .card.character { border-color: #34d399; }
+        .player-pieces { display: flex; gap: 30px; flex-wrap: wrap; }
+        .piece { display: flex; flex-direction: column; align-items: center; }
+        .piece-circle { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 3px solid #333; color:#fff; font-weight:bold; }
+        .piece-circle.blue { background: #3b82f6; } .piece-circle.red { background: #ef4444; }
+        .piece-circle.green { background: #22c55e; } .piece-circle.yellow { background: #eab308; }
+        .piece-label { margin-top: 8px; font-size: 14px; font-weight: 600; }
+        .score-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .score-table th, .score-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        .score-table th { background: #f1f5f9; }
+        .dice { width: 56px; height: 56px; background: white; border: 3px solid #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+        .instructions { background: #ecfeff; border: 1px solid #a5f3fc; border-radius: 8px; padding: 18px; margin-top: 20px; }
+        .instructions h3 { color: #0e7490; margin-bottom: 12px; }
+        .instructions ul { margin-left: 20px; line-height: 1.8; color: #37474f; }
+        @media print {
+            body { background: white; }
+            .print-hint { display: none; }
+            .section { box-shadow: none; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📸 时光代理人：记忆照片</h1>
+        <div class="subtitle">Link Click: Memory Photo · 策略桌游打印文档 · 改编自国创动画《时光代理人》第三季</div>
+
+        <div class="print-hint">
+            <strong>⚠️ 重要打印提示：</strong>
+            <ul style="margin-top:10px; margin-left:20px; line-height:1.8;">
+                <li>使用A4纸张打印，建议设置<strong>最小边距</strong></li>
+                <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图和卡牌的颜色背景将不会打印</li>
+                <li>卡牌和棋子建议使用<strong>卡纸</strong>打印，增加耐用性</li>
+                <li>游戏地图使用普通纸张打印即可</li>
+                <li>打印后按边缘裁剪使用，建议塑封卡牌</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ 游戏地图（7×7 共49格）</h2>
+            <div class="game-map">
+                <div class="map-cell start">📸<span class="cell-label">00 照相馆</span></div>
+                <div class="map-cell memory">🟣<span class="cell-label">01 记忆</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">02 道路</span></div>
+                <div class="map-cell time">🟠<span class="cell-label">03 时间</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">04 道路</span></div>
+                <div class="map-cell emotion">🔵<span class="cell-label">05 情感</span></div>
+                <div class="map-cell treasure">📷<span class="cell-label">06 宝丽来</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">07 道路</span></div>
+                <div class="map-cell trap">⚡<span class="cell-label">08 意外</span></div>
+                <div class="map-cell memory">🟣<span class="cell-label">09 记忆</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">10 道路</span></div>
+                <div class="map-cell time">🟠<span class="cell-label">11 时间</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">12 道路</span></div>
+                <div class="map-cell treasure">📷<span class="cell-label">13 宝丽来</span></div>
+                <div class="map-cell treasure">📷<span class="cell-label">14 宝丽来</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">15 道路</span></div>
+                <div class="map-cell memory">🟣<span class="cell-label">16 记忆</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">17 道路</span></div>
+                <div class="map-cell trap">⚡<span class="cell-label">18 意外</span></div>
+                <div class="map-cell time">🟠<span class="cell-label">19 时间</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">20 道路</span></div>
+                <div class="map-cell emotion">🔵<span class="cell-label">21 情感</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">22 道路</span></div>
+                <div class="map-cell trap">⚡<span class="cell-label">23 意外</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">24 道路</span></div>
+                <div class="map-cell memory">🟣<span class="cell-label">25 记忆</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">26 道路</span></div>
+                <div class="map-cell time">🟠<span class="cell-label">27 时间</span></div>
+                <div class="map-cell treasure">📷<span class="cell-label">28 宝丽来</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">29 道路</span></div>
+                <div class="map-cell emotion">🔵<span class="cell-label">30 情感</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">31 道路</span></div>
+                <div class="map-cell trap">⚡<span class="cell-label">32 意外</span></div>
+                <div class="map-cell memory">🟣<span class="cell-label">33 记忆</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">34 道路</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">35 道路</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">36 道路</span></div>
+                <div class="map-cell trap">⚡<span class="cell-label">37 意外</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">38 道路</span></div>
+                <div class="map-cell emotion">🔵<span class="cell-label">39 情感</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">40 道路</span></div>
+                <div class="map-cell treasure">📷<span class="cell-label">41 宝丽来</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">42 道路</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">43 道路</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">44 道路</span></div>
+                <div class="map-cell time">🟠<span class="cell-label">45 时间</span></div>
+                <div class="map-cell path">◼️<span class="cell-label">46 道路</span></div>
+                <div class="map-cell trap">⚡<span class="cell-label">47 意外</span></div>
+                <div class="map-cell goal">🕰️<span class="cell-label">48 真相</span></div>
+            </div>
+            <div class="legend">
+                <span>📸 照相馆(00)</span><span>🟣 记忆碎片</span><span>🟠 时间能量</span>
+                <span>🔵 情感共鸣</span><span>⚡ 意外</span><span>📷 宝丽来</span><span>🕰️ 真相(48)</span><span>⬛ 道路</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🟣🟠🔵 资源卡片</h2>
+            <div class="cards-grid">
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🟣</span><span class="card-title">记忆碎片</span></div>
+                    <div class="card-description">基础资源，用于冲洗宝丽来/拼合记忆拼图</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🟠</span><span class="card-title">时间能量</span></div>
+                    <div class="card-description">穿越移动与触发相机绝招的燃料</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔵</span><span class="card-title">情感共鸣</span></div>
+                    <div class="card-description">化解意外反噬、解锁角色被动</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🟣</span><span class="card-title">记忆碎片</span></div>
+                    <div class="card-description">基础资源，用于冲洗宝丽来/拼合记忆拼图</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🟠</span><span class="card-title">时间能量</span></div>
+                    <div class="card-description">穿越移动与触发相机绝招的燃料</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔵</span><span class="card-title">情感共鸣</span></div>
+                    <div class="card-description">化解意外反噬、解锁角色被动</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🟣</span><span class="card-title">记忆碎片</span></div>
+                    <div class="card-description">基础资源，用于冲洗宝丽来/拼合记忆拼图</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🟠</span><span class="card-title">时间能量</span></div>
+                    <div class="card-description">穿越移动与触发相机绝招的燃料</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+                <div class="card resource">
+                    <div class="card-header"><span class="card-icon">🔵</span><span class="card-title">情感共鸣</span></div>
+                    <div class="card-description">化解意外反噬、解锁角色被动</div>
+                    <div class="card-footer">资源卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📸 相机工具卡片（8种）</h2>
+            <div class="cards-grid">
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">📸</span><span class="card-title">潜入照片</span></div>
+                    <div class="card-description">时间能量×1：本回合移动后再+2格</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">⏸️</span><span class="card-title">定格瞬间</span></div>
+                    <div class="card-description">时间能量×2：跳过下1个意外格不结算</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🎞️</span><span class="card-title">双重曝光</span></div>
+                    <div class="card-description">记忆碎片×2：立即冲洗1张宝丽来</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🧪</span><span class="card-title">显影液</span></div>
+                    <div class="card-description">记忆×1+情感×1：弃1张意外卡免效</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">↩️</span><span class="card-title">回溯</span></div>
+                    <div class="card-description">时间×1+情感×1：撤回本回合重掷</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">👁️</span><span class="card-title">心灵之眼</span></div>
+                    <div class="card-description">情感×2：查看牌堆顶3张并重置顺序</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">📜</span><span class="card-title">委托契约</span></div>
+                    <div class="card-description">记忆×1：偷看1名对手手牌</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+                <div class="card tool">
+                    <div class="card-header"><span class="card-icon">🌀</span><span class="card-title">时光跳跃</span></div>
+                    <div class="card-description">时间×3：直接移动到任意格</div>
+                    <div class="card-footer">相机工具</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚡ 意外陷阱卡片（8种）</h2>
+            <div class="cards-grid">
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🦋</span><span class="card-title">蝴蝶效应</span></div>
+                    <div class="card-description">随机1张资源卡移交左邻玩家</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🌀</span><span class="card-title">记忆紊乱</span></div>
+                    <div class="card-description">跳过本回合剩余操作</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">⏳</span><span class="card-title">时间悖论</span></div>
+                    <div class="card-description">后退3格（不结算途经）</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">💔</span><span class="card-title">情感反噬</span></div>
+                    <div class="card-description">失去1张情感共鸣卡</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">❌</span><span class="card-title">委托失败</span></div>
+                    <div class="card-description">本回合无法冲洗宝丽来</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">👁️</span><span class="card-title">旁观者察觉</span></div>
+                    <div class="card-description">公开你手牌1回合</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🔥</span><span class="card-title">照片燃毁</span></div>
+                    <div class="card-description">随机弃1张宝丽来卡</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+                <div class="card trap">
+                    <div class="card-header"><span class="card-icon">🔁</span><span class="card-title">循环困局</span></div>
+                    <div class="card-description">原地停留1回合</div>
+                    <div class="card-footer">意外卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📷 宝丽来宝藏卡片（8种）</h2>
+            <div class="cards-grid">
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">📷</span><span class="card-title">初遇合影</span></div>
+                    <div class="card-description">立即获得1张记忆碎片</div>
+                    <div class="card-footer">宝丽来</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🏙️</span><span class="card-title">旧日街角</span></div>
+                    <div class="card-description">下次移动+2格</div>
+                    <div class="card-footer">宝丽来</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">😢</span><span class="card-title">委托人眼泪</span></div>
+                    <div class="card-description">获1情感卡并豁免下次意外</div>
+                    <div class="card-footer">宝丽来</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🎞️</span><span class="card-title">时光胶卷</span></div>
+                    <div class="card-description">获得2张时间能量卡</div>
+                    <div class="card-footer">宝丽来</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">✉️</span><span class="card-title">未寄出的信</span></div>
+                    <div class="card-description">偷看牌堆顶并抽1张宝丽来</div>
+                    <div class="card-footer">宝丽来</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🧩</span><span class="card-title">合影拼图A</span></div>
+                    <div class="card-description">记忆拼图+1块</div>
+                    <div class="card-footer">宝丽来·关键</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🧩</span><span class="card-title">合影拼图B</span></div>
+                    <div class="card-description">记忆拼图+1块</div>
+                    <div class="card-footer">宝丽来·关键</div>
+                </div>
+                <div class="card treasure">
+                    <div class="card-header"><span class="card-icon">🗝️</span><span class="card-title">真相之钥</span></div>
+                    <div class="card-description">抵达终点时豁免1块拼图</div>
+                    <div class="card-footer">宝丽来·关键</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎞️ 摄影师角色卡片（4张）</h2>
+            <div class="cards-grid">
+                <div class="card character">
+                    <div class="card-header"><span class="card-icon">📸</span><span class="card-title">程小时</span></div>
+                    <div class="card-description">潜入型：🟣格+1记忆；但⚡效果对他+1</div>
+                    <div class="card-footer">角色卡</div>
+                </div>
+                <div class="card character">
+                    <div class="card-header"><span class="card-icon">🕶️</span><span class="card-title">陆光</span></div>
+                    <div class="card-description">时控型：时光跳跃仅需时间×2；但首移-1</div>
+                    <div class="card-footer">角色卡</div>
+                </div>
+                <div class="card character">
+                    <div class="card-header"><span class="card-icon">🔍</span><span class="card-title">陈欣然</span></div>
+                    <div class="card-description">情报型：冲洗宝丽来先看再抽；手牌上限-1</div>
+                    <div class="card-footer">角色卡</div>
+                </div>
+                <div class="card character">
+                    <div class="card-header"><span class="card-icon">🌑</span><span class="card-title">刘枭</span></div>
+                    <div class="card-description">暗影型：留1意外卡反打；起始资源-1</div>
+                    <div class="card-footer">角色卡</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👤 玩家棋子</h2>
+            <div class="player-pieces">
+                <div class="piece"><div class="piece-circle blue">1</div><div class="piece-label">玩家1</div></div>
+                <div class="piece"><div class="piece-circle red">2</div><div class="piece-label">玩家2</div></div>
+                <div class="piece"><div class="piece-circle green">3</div><div class="piece-label">玩家3</div></div>
+                <div class="piece"><div class="piece-circle yellow">4</div><div class="piece-label">玩家4</div></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 记忆拼图计分表</h2>
+            <table class="score-table">
+                <tr><th>玩家</th><th>记忆拼图(0/5)</th><th>是否抵达真相(48)</th><th>备注</th></tr>
+                <tr><td>玩家1</td><td>☐☐☐☐☐</td><td>☐</td><td></td></tr>
+                <tr><td>玩家2</td><td>☐☐☐☐☐</td><td>☐</td><td></td></tr>
+                <tr><td>玩家3</td><td>☐☐☐☐☐</td><td>☐</td><td></td></tr>
+                <tr><td>玩家4</td><td>☐☐☐☐☐</td><td>☐</td><td></td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🧰 回合速查 & 骰子</h2>
+            <p style="font-size:13px; line-height:1.8; margin-bottom:12px;">
+                <strong>每回合：</strong>①掷D6沿道路移动 → ②结算停留格（资源/意外/宝丽来/真相） → ③行动阶段（冲洗宝丽来·用相机工具·交易） → ④交还下家。<br>
+                <strong>胜利：</strong>首位集齐 <strong>5块记忆拼图</strong> 且 <strong>抵达格48 🕰️真相</strong> 者胜。
+            </p>
+            <div style="display:flex; gap:16px;">
+                <div class="dice">🎲</div>
+                <div class="dice">⚀⚁⚂⚃⚄⚅</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li><strong>打印地图：</strong>将地图打印置于桌面中央作为游戏区域</li>
+                <li><strong>裁剪卡牌：</strong>沿卡牌边缘裁剪，建议塑封增加耐用性</li>
+                <li><strong>准备棋子：</strong>裁剪棋子或使用硬币/纽扣代替</li>
+                <li><strong>骰子：</strong>无骰子可用手机App或打印的骰子模板</li>
+                <li><strong>开始游戏：</strong>每人选角色卡与棋子放格00，分发初始资源与2张相机工具卡</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
