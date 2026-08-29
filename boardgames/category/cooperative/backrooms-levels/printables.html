@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后室：无尽层级 - 打印道具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, sans-serif;
+            background: #14120c;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(232,201,58,0.045) 0px, rgba(232,201,58,0.045) 1px, transparent 1px, transparent 44px),
+                repeating-linear-gradient(90deg, rgba(232,201,58,0.045) 0px, rgba(232,201,58,0.045) 1px, transparent 1px, transparent 44px);
+            padding: 20px;
+            color: #2b2b2b;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #e8c93a;
+            margin-bottom: 4px;
+            font-size: 2.1em;
+            letter-spacing: 2px;
+            text-shadow: 0 0 14px rgba(232,201,58,0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #9fb8b5;
+            margin-bottom: 24px;
+            font-size: 0.95em;
+            letter-spacing: 0.6px;
+        }
+
+        h2 {
+            color: #e8c93a;
+            margin: 30px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4a4326;
+            font-size: 1.3em;
+        }
+
+        h3 {
+            color: #3d3a2c;
+            margin: 0 0 10px;
+            font-size: 1.05em;
+        }
+
+        .section {
+            background: #fffdf5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 14px rgba(232,201,58,0.1);
+            border: 1px solid #e6e0c8;
+        }
+
+        .print-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        .print-hint ul {
+            margin: 8px 0 0 20px;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        @media print {
+            .print-hint {
+                display: none;
+            }
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        /* ===== 地图 ===== */
+        .map-wrap {
+            margin-bottom: 26px;
+        }
+
+        .map-title {
+            font-size: 1.02em;
+            font-weight: 700;
+            color: #4a4326;
+            margin-bottom: 4px;
+        }
+
+        .map-meta {
+            font-size: 0.82em;
+            color: #7a7358;
+            margin-bottom: 8px;
+        }
+
+        .game-map {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            background: #3a3524;
+            padding: 12px;
+            border-radius: 10px;
+            max-width: 560px;
+        }
+
+        .map-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border-radius: 5px;
+            position: relative;
+            background: #d9c547;
+            color: #2b2b2b;
+        }
+
+        .map-cell.entry  { background: #a8d8f0; }
+        .map-cell.plain  { background: #d9c547; }
+        .map-cell.crate  { background: #b5793c; color: #fff; }
+        .map-cell.supply { background: #7cc47f; }
+        .map-cell.hazard { background: #e88b3a; color: #fff; }
+        .map-cell.dark   { background: #2e2b22; color: #e8c93a; }
+        .map-cell.heat   { background: #d4553f; color: #fff; }
+        .map-cell.bluelamp { background: #4fc3d9; }
+        .map-cell.exit   { background: #4caf50; color: #fff; }
+        .map-cell.finalgate { background: #f5c518; color: #3a2f00; }
+
+        .cell-label {
+            position: absolute;
+            bottom: 1px;
+            right: 3px;
+            font-size: 9px;
+            color: rgba(0,0,0,0.55);
+        }
+
+        .map-cell.dark .cell-label { color: rgba(232,201,58,0.8); }
+        .map-cell.crate .cell-label,
+        .map-cell.hazard .cell-label,
+        .map-cell.heat .cell-label,
+        .map-cell.exit .cell-label { color: rgba(255,255,255,0.9); }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-top: 12px;
+            font-size: 12.5px;
+            color: #5c5642;
+        }
+
+        .legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+        /* ===== 卡牌 ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .card {
+            border: 2px solid #333;
+            border-radius: 9px;
+            padding: 10px 11px;
+            min-height: 132px;
+            position: relative;
+            background: #fff;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .card.supply  { background: #e8f6ea; border-color: #4a9e5c; }
+        .card.tool    { background: #e6f0fa; border-color: #3d7ab8; }
+        .card.entity  { background: #fdeaea; border-color: #c0392b; }
+        .card.env     { background: #f5ecf7; border-color: #8e44ad; }
+        .card.treasure{ background: #fff6da; border-color: #d4a017; }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 7px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed rgba(0,0,0,0.22);
+        }
+
+        .card-icon { font-size: 26px; line-height: 1; }
+
+        .card-name {
+            font-weight: 700;
+            font-size: 0.98em;
+            color: #23201a;
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 8px;
+            right: 9px;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 9px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .card.supply   .card-tag { background: #4a9e5c; }
+        .card.tool     .card-tag { background: #3d7ab8; }
+        .card.entity   .card-tag { background: #c0392b; }
+        .card.env      .card-tag { background: #8e44ad; }
+        .card.treasure .card-tag { background: #d4a017; }
+
+        .card-body {
+            font-size: 12.2px;
+            color: #3a352a;
+        }
+
+        .card-body strong { color: #1f1c16; }
+
+        .card-stat {
+            margin-top: 7px;
+            font-size: 11.5px;
+            color: #5c5642;
+            border-top: 1px dotted rgba(0,0,0,0.16);
+            padding-top: 5px;
+        }
+
+        .card-count {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            font-size: 10.5px;
+            color: #8a8270;
+        }
+
+        /* ===== 棋子与标记 ===== */
+        .pieces-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+
+        .pawn {
+            border-radius: 50%;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #fff;
+            font-weight: 700;
+            border: 3px solid rgba(0,0,0,0.3);
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .pawn span { font-size: 11.5px; margin-top: 3px; }
+
+        .pawn.p1 { background: #e05252; }
+        .pawn.p2 { background: #3d7ab8; }
+        .pawn.p3 { background: #4a9e5c; }
+        .pawn.p4 { background: #d4a017; }
+        .pawn.p5 { background: #8e44ad; }
+
+        .markers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .marker {
+            border: 2px dashed #8a8270;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            background: #faf7ec;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .marker .m-icon { font-size: 30px; }
+        .marker .m-name { font-weight: 700; font-size: 0.92em; margin-top: 5px; }
+        .marker .m-desc { font-size: 11.5px; color: #6b6450; margin-top: 3px; }
+
+        /* ===== 记录表 ===== */
+        .track-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .track-table th,
+        .track-table td {
+            border: 1px solid #c9c2a8;
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .track-table th { background: #efe9d2; color: #4a4326; }
+        .track-table td { background: #fffdf5; }
+
+        .san-dots {
+            display: inline-flex;
+            gap: 3px;
+        }
+
+        .san-dots i {
+            width: 13px;
+            height: 13px;
+            border: 1.5px solid #8a8270;
+            border-radius: 50%;
+            display: inline-block;
+            background: #e8c93a;
+        }
+
+        .footnote {
+            text-align: center;
+            color: #7d7660;
+            font-size: 12.5px;
+            margin: 26px 0 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>后室：无尽层级</h1>
+    <div class="subtitle">Backrooms: Endless Levels ｜ 打印道具包 ｜ Level 0 → Level 4</div>
+
+    <div class="print-hint">
+        <strong>⚠️ 重要打印提示：</strong>
+        <ul>
+            <li>使用<strong>A4纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+            <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则地图与卡牌颜色会丢失</li>
+            <li>卡牌和棋子建议使用<strong>卡纸（200g以上）</strong>打印</li>
+            <li>打印后沿边框裁剪，卡牌可塑封以延长使用寿命</li>
+            <li>地图建议单独打印在 A4 纸上（每层 1 张，共 5 张）</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🗺️ 层级地图（每层打印 1 张）</h2>
+
+        <div class="map-wrap">
+            <div class="map-title">Level 0 — 潮湿大厅（The Lobby）</div>
+            <div class="map-meta">轮数上限 8 ｜ 出口条件：无附加条件</div>
+            <div class="game-map">
+                <div class="map-cell entry">🧍<span class="cell-label">入口</span></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">💧</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">🍫</div>
+
+                <div class="map-cell supply">💧</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell exit">🚪<span class="cell-label">出口</span></div>
+            </div>
+        </div>
+
+        <div class="map-wrap">
+            <div class="map-title">Level 1 — 宜居区（Habitable Zone）</div>
+            <div class="map-meta">轮数上限 10 ｜ 出口条件：持有 🗝️ 门禁卡 ×1（或全队弃 3 张补给卡）</div>
+            <div class="game-map">
+                <div class="map-cell entry">🧍<span class="cell-label">入口</span></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">🩹</div>
+
+                <div class="map-cell supply">🔋</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">💧</div>
+
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell exit">🚪<span class="cell-label">出口</span></div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <span>🧍 入口</span>
+            <span>⬛ 潮湿地毯（空地）</span>
+            <span>📦 货箱（2AP 搜索）</span>
+            <span>💧🍫🩹🔋 补给点</span>
+            <span>⚠️ 异变点（抽环境卡）</span>
+            <span>🌑 黑暗区</span>
+            <span>🔥 高温管道</span>
+            <span>💠 蓝灯房</span>
+            <span>🚪 出口</span>
+            <span>🌟 现实之门</span>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>🗺️ 层级地图（续）</h2>
+
+        <div class="map-wrap">
+            <div class="map-title">Level 2 — 管道迷宫（Pipe Dreams）</div>
+            <div class="map-meta">轮数上限 12 ｜ 出口条件：关闭 ≥2 个 🔥 阀门（未达成强行突破：全队 SAN -2）</div>
+            <div class="game-map">
+                <div class="map-cell entry">🧍<span class="cell-label">入口</span></div>
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">💧</div>
+
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell heat">🔥</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">🍫</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell exit">🚪<span class="cell-label">出口</span></div>
+            </div>
+        </div>
+
+        <div class="map-wrap">
+            <div class="map-title">Level 3 — 电气站台（Electric Station）</div>
+            <div class="map-meta">轮数上限 10 ｜ 出口条件：在出口投入 🔋 电池 ×2（未达成强行突破：全队 SAN -1 且手电电量归 0）</div>
+            <div class="game-map">
+                <div class="map-cell entry">🧍<span class="cell-label">入口</span></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">🔋</div>
+
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell bluelamp">💠</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell supply">🩹</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell exit">🚪<span class="cell-label">出口</span></div>
+            </div>
+        </div>
+
+        <div class="map-wrap">
+            <div class="map-title">Level 4 — 废弃办公室（Abandoned Office）</div>
+            <div class="map-meta">轮数上限 14 ｜ 出口条件：所有存活玩家位于 🌟 相邻格，且团队总理智 ≥12</div>
+            <div class="game-map">
+                <div class="map-cell entry">🧍<span class="cell-label">入口</span></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell bluelamp">💠</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell heat">🔥</div>
+
+                <div class="map-cell supply">💧</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell crate">📦</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell hazard">⚠️</div>
+                <div class="map-cell plain"></div>
+
+                <div class="map-cell plain"></div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell dark">🌑</div>
+                <div class="map-cell supply">🔋</div>
+                <div class="map-cell plain"></div>
+                <div class="map-cell finalgate">🌟<span class="cell-label">现实之门</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>💊 补给卡（消耗品 · 使用后弃置）</h2>
+        <div class="cards-grid">
+            <div class="card supply">
+                <div class="card-tag">补给</div>
+                <div class="card-head"><div class="card-icon">💧</div><div class="card-name">杏仁水</div></div>
+                <div class="card-body">恢复自身 <strong>2 点 SAN</strong>。若自身 SAN 已满，改为给<strong>任意队友 +1 SAN</strong>。</div>
+                <div class="card-stat">消耗 1 AP ｜ 后室的硬通货</div>
+                <div class="card-count">×10</div>
+            </div>
+            <div class="card supply">
+                <div class="card-tag">补给</div>
+                <div class="card-head"><div class="card-icon">🍫</div><div class="card-name">能量棒</div></div>
+                <div class="card-body">本回合立即 <strong>+2 AP</strong>。每回合<strong>最多使用 1 张</strong>。</div>
+                <div class="card-stat">消耗 0 AP ｜ 抢轮次的神器</div>
+                <div class="card-count">×8</div>
+            </div>
+            <div class="card supply">
+                <div class="card-tag">补给</div>
+                <div class="card-head"><div class="card-icon">🩹</div><div class="card-name">绷带</div></div>
+                <div class="card-body">作为<strong>护盾</strong>：抵消下一次 SAN 损失（可叠加持有）。被实体接触时<strong>无需 AP</strong> 即可打出。</div>
+                <div class="card-stat">消耗 0 AP ｜ 救命稻草</div>
+                <div class="card-count">×6</div>
+            </div>
+            <div class="card supply">
+                <div class="card-tag">补给</div>
+                <div class="card-head"><div class="card-icon">🔋</div><div class="card-name">电池</div></div>
+                <div class="card-body">手电电量 <strong>+2</strong>（上限 6）。在 <strong>Level 3</strong> 可作出口配电材料（需 2 颗）。</div>
+                <div class="card-stat">消耗 1 AP ｜ 黑暗层的命脉</div>
+                <div class="card-count">×6</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 工具卡（装备 / 一次性）</h2>
+        <div class="cards-grid">
+            <div class="card tool">
+                <div class="card-tag">装备</div>
+                <div class="card-head"><div class="card-icon">🔦</div><div class="card-name">手电筒</div></div>
+                <div class="card-body">照亮自身及<strong>相邻 1 格</strong>：处于黑暗区<strong>不再扣 SAN</strong>。</div>
+                <div class="card-stat">电量 3，每轮结束 -1 ｜ 🔋 可充电，卡不消耗</div>
+                <div class="card-count">×4</div>
+            </div>
+            <div class="card tool">
+                <div class="card-tag">一次性</div>
+                <div class="card-head"><div class="card-icon">🔥</div><div class="card-name">火把</div></div>
+                <div class="card-body">驱散<strong>相邻所有实体</strong>（实体卡回牌库底部）。驱散后<strong>本格噪音 +2</strong>。</div>
+                <div class="card-stat">消耗 1 AP ｜ 接触时可无 AP 紧急使用</div>
+                <div class="card-count">×4</div>
+            </div>
+            <div class="card tool">
+                <div class="card-tag">一次性</div>
+                <div class="card-head"><div class="card-icon">📻</div><div class="card-name">对讲机</div></div>
+                <div class="card-body">二选一：① 与<strong>任意队友交换 1 张卡</strong>（无视距离）；② <strong>远程搜索</strong>任意 1 个货箱（<strong>不产生噪音</strong>）。</div>
+                <div class="card-stat">消耗 1 AP ｜ 团队调度核心</div>
+                <div class="card-count">×3</div>
+            </div>
+            <div class="card tool">
+                <div class="card-tag">装备</div>
+                <div class="card-head"><div class="card-icon">🔧</div><div class="card-name">撬棍</div></div>
+                <div class="card-body">① 花 2 AP <strong>攻击</strong>相邻实体：掷骰 <strong>≥5</strong> 击退 2 格（本格噪音 +2）；② 花 1 AP <strong>破开塌方格</strong>。</div>
+                <div class="card-stat">持续装备 ｜ 唯一的主动反击手段</div>
+                <div class="card-count">×3</div>
+            </div>
+            <div class="card tool">
+                <div class="card-tag">装备</div>
+                <div class="card-head"><div class="card-icon">😷</div><div class="card-name">防毒面具</div></div>
+                <div class="card-body">免疫「霉斑」🦠 与「幻觉」🌀 造成的 SAN 损失；<strong>黑暗区 SAN 损失减半</strong>（取整后即免疫）。</div>
+                <div class="card-stat">持续装备 ｜ 后期层的保命符</div>
+                <div class="card-count">×2</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>👁️ 实体卡（威胁 · 每轮「实体行动阶段」激活）</h2>
+        <div class="cards-grid">
+            <div class="card entity">
+                <div class="card-tag">威胁 3</div>
+                <div class="card-head"><div class="card-icon">🐕</div><div class="card-name">猎犬（Hound）</div></div>
+                <div class="card-body"><strong>出现</strong>：任意格噪音 ≥3 时生成。<br><strong>移动</strong>：每轮 2 格，直奔噪音最高的格子。<br><strong>接触</strong>：<strong>SAN -2</strong>；或花 2 AP 掷骰 <strong>≥4</strong> 挣脱。</div>
+                <div class="card-stat">应对：🔥 火把 / 🔧 撬棍 / 提前压制噪音</div>
+                <div class="card-count">×6</div>
+            </div>
+            <div class="card entity">
+                <div class="card-tag">威胁 4</div>
+                <div class="card-head"><div class="card-icon">😁</div><div class="card-name">微笑者（Smiler）</div></div>
+                <div class="card-body"><strong>出现</strong>：玩家在黑暗区连续停留 2 轮后生成。<br><strong>移动</strong>：每轮 3 格，仅在黑暗格中穿行。<br><strong>接触</strong>：<strong>SAN -3，无法挣脱</strong>，只能用 🔥 火把驱散。</div>
+                <div class="card-stat">应对：🔥 火把（唯一稳解）/ 🔦 照亮该格使其停步</div>
+                <div class="card-count">×5</div>
+            </div>
+            <div class="card entity">
+                <div class="card-tag">威胁 5</div>
+                <div class="card-head"><div class="card-icon">🎈</div><div class="card-name">派对客（Partygoer）</div></div>
+                <div class="card-body"><strong>出现</strong>：环境卡「幻觉」🌀 结算后生成。<br><strong>移动</strong>：每轮 1 格，朝<strong>玩家最密集</strong>处移动。<br><strong>接触</strong>：<strong>SAN -4</strong>，直接被拖走（理智减半）。</div>
+                <div class="card-stat">应对：🔥 火把 / <strong>分散站位</strong> / 优先绕开</div>
+                <div class="card-count">×3</div>
+            </div>
+            <div class="card entity">
+                <div class="card-tag">威胁 2</div>
+                <div class="card-head"><div class="card-icon">👤</div><div class="card-name">无面人（Faceling）</div></div>
+                <div class="card-body"><strong>出现</strong>：环境卡「空间扭曲」🔀 结算后生成。<br><strong>移动</strong>：每轮 1 格，随机方向。<br><strong>接触</strong>：<strong>SAN -1</strong>，但会<strong>持续尾随</strong>（下轮必朝该玩家移动）。</div>
+                <div class="card-stat">应对：🔧 撬棍击退 / 换路线甩开 / 硬吃伤害</div>
+                <div class="card-count">×4</div>
+            </div>
+        </div>
+        <div class="legend" style="margin-top:14px;">
+            <span>⚠️ 同格有 2 个以上实体时，接触效果<strong>叠加结算</strong></span>
+            <span>激活顺序：🎈 → 😁 → 🐕 → 👤</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🌫️ 环境卡（事件 · 每轮抽取 1 张）</h2>
+        <div class="cards-grid">
+            <div class="card env">
+                <div class="card-tag">环境</div>
+                <div class="card-head"><div class="card-icon">🌑</div><div class="card-name">停电</div></div>
+                <div class="card-body">本轮<strong>所有格子视为黑暗区</strong>；所有已装备手电电量 <strong>-1</strong>。</div>
+                <div class="card-stat">应对：提前省电 / 集中站位共享照明</div>
+                <div class="card-count">×4</div>
+            </div>
+            <div class="card env">
+                <div class="card-tag">环境</div>
+                <div class="card-head"><div class="card-icon">💥</div><div class="card-name">塌方</div></div>
+                <div class="card-body">随机 <strong>3 个空格</strong>变为塌方格，<strong>本层内不可通行</strong>。</div>
+                <div class="card-stat">应对：🔧 撬棍花 1 AP 破开 / 预留备用路线</div>
+                <div class="card-count">×3</div>
+            </div>
+            <div class="card env">
+                <div class="card-tag">环境</div>
+                <div class="card-head"><div class="card-icon">🌀</div><div class="card-name">幻觉</div></div>
+                <div class="card-body">所有玩家 <strong>SAN -1</strong>；若某玩家 SAN ≥5 则改为 <strong>-2</strong> 并生成 <strong>1 个派对客 🎈</strong>。</div>
+                <div class="card-stat">应对：😷 防毒面具免疫 / 保持 SAN 中低水位</div>
+                <div class="card-count">×4</div>
+            </div>
+            <div class="card env">
+                <div class="card-tag">环境</div>
+                <div class="card-head"><div class="card-icon">🔀</div><div class="card-name">空间扭曲</div></div>
+                <div class="card-body">所有玩家被<strong>随机传送</strong>到本层任意空格，并生成 <strong>1 个无面人 👤</strong>。</div>
+                <div class="card-stat">应对：传送后立刻重新集结</div>
+                <div class="card-count">×3</div>
+            </div>
+            <div class="card env">
+                <div class="card-tag">环境</div>
+                <div class="card-head"><div class="card-icon">🦠</div><div class="card-name">霉斑</div></div>
+                <div class="card-body">所有玩家<strong>各弃 1 张补给卡</strong>；没有补给卡则 <strong>SAN -1</strong>。</div>
+                <div class="card-stat">应对：😷 防毒面具免疫 / 分散持有补给</div>
+                <div class="card-count">×3</div>
+            </div>
+            <div class="card env">
+                <div class="card-tag">利好</div>
+                <div class="card-head"><div class="card-icon">🤫</div><div class="card-name">寂静</div></div>
+                <div class="card-body"><strong>本轮实体不移动</strong>，并<strong>清除全部噪音标记</strong>。</div>
+                <div class="card-stat">✅ 抓住这一轮疯狂搜索货箱</div>
+                <div class="card-count">×3</div>
+            </div>
+            <div class="card env">
+                <div class="card-tag">利好</div>
+                <div class="card-head"><div class="card-icon">✨</div><div class="card-name">切出预兆</div></div>
+                <div class="card-body"><strong>下一轮</strong>所有玩家移动消耗 <strong>AP -1</strong>（最低 1）。</div>
+                <div class="card-stat">✅ 提前规划下轮的长距离转移</div>
+                <div class="card-count">×3</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>💎 宝藏卡（出口相关）</h2>
+        <div class="cards-grid">
+            <div class="card treasure">
+                <div class="card-tag">宝藏</div>
+                <div class="card-head"><div class="card-icon">🗝️</div><div class="card-name">门禁卡</div></div>
+                <div class="card-body">开启 <strong>Level 1 出口</strong>的必需品。任意玩家持有 1 张即可让全队撤离。</div>
+                <div class="card-stat">获得：货箱搜索（Level 1 概率提升）</div>
+                <div class="card-count">×4</div>
+            </div>
+            <div class="card treasure">
+                <div class="card-tag">终点</div>
+                <div class="card-head"><div class="card-icon">🌟</div><div class="card-name">现实之门</div></div>
+                <div class="card-body">固定在 <strong>Level 4 地图右下角</strong>。所有存活玩家位于其<strong>相邻格</strong>且团队总理智 <strong>≥12</strong> 时激活。</div>
+                <div class="card-stat">激活即全队共同胜利 🎉</div>
+                <div class="card-count">×1</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="section">
+        <h2>🧍 玩家棋子（沿圆形裁剪，建议对折做成立牌）</h2>
+        <div class="pieces-grid">
+            <div class="pawn p1">🧥<span>漫游者</span></div>
+            <div class="pawn p2">🔧<span>修理工</span></div>
+            <div class="pawn p3">🔦<span>探照者</span></div>
+            <div class="pawn p4">📻<span>通讯员</span></div>
+            <div class="pawn p5">🎒<span>拾荒者</span></div>
+        </div>
+        <div class="legend" style="margin-top:14px;">
+            <span>🧥 漫游者：起始 +💧杏仁水 ×1</span>
+            <span>🔧 修理工：起始 +🔧撬棍 ×1</span>
+            <span>🔦 探照者：起始 +🔦手电筒 ×1</span>
+            <span>📻 通讯员：起始 +📻对讲机 ×1</span>
+            <span>🎒 拾荒者：背包上限 +2（共 7 张）</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔔 标记与指示物（建议打印 2 份）</h2>
+        <div class="markers-grid">
+            <div class="marker">
+                <div class="m-icon">📢</div>
+                <div class="m-name">噪音标记</div>
+                <div class="m-desc">搜索 +1 ｜ 攻击/火把 +2<br>等待 -1 ｜ 每轮末 -1</div>
+            </div>
+            <div class="marker">
+                <div class="m-icon">👁️</div>
+                <div class="m-name">实体立牌</div>
+                <div class="m-desc">放置在实体所在格<br>可用实体卡代替</div>
+            </div>
+            <div class="marker">
+                <div class="m-icon">🚧</div>
+                <div class="m-name">塌方标记</div>
+                <div class="m-desc">塌方事件生成<br>🔧 撬棍可破开</div>
+            </div>
+            <div class="marker">
+                <div class="m-icon">✅</div>
+                <div class="m-name">阀门已关</div>
+                <div class="m-desc">Level 2 专用<br>标记已关闭的 🔥 阀门</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 玩家状态记录表（每人 1 行，可用白板笔反复擦写）</h2>
+        <table class="track-table">
+            <tr>
+                <th style="width:16%">玩家 / 角色</th>
+                <th style="width:30%">理智值 SAN（0-6）</th>
+                <th style="width:18%">手电电量</th>
+                <th>背包内容（上限 5 张）</th>
+            </tr>
+            <tr>
+                <td>玩家 1</td>
+                <td><span class="san-dots"><i></i><i></i><i></i><i></i><i></i><i></i></span></td>
+                <td>🔋🔋🔋</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>玩家 2</td>
+                <td><span class="san-dots"><i></i><i></i><i></i><i></i><i></i><i></i></span></td>
+                <td>🔋🔋🔋</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>玩家 3</td>
+                <td><span class="san-dots"><i></i><i></i><i></i><i></i><i></i><i></i></span></td>
+                <td>🔋🔋🔋</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>玩家 4</td>
+                <td><span class="san-dots"><i></i><i></i><i></i><i></i><i></i><i></i></span></td>
+                <td>🔋🔋🔋</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>玩家 5</td>
+                <td><span class="san-dots"><i></i><i></i><i></i><i></i><i></i><i></i></span></td>
+                <td>🔋🔋🔋</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>⏱️ 层级计时器（每层轮数上限）</h2>
+        <table class="track-table">
+            <tr>
+                <th>层级</th>
+                <th>轮数上限</th>
+                <th>出口条件</th>
+                <th>已用轮数（画正字）</th>
+            </tr>
+            <tr><td>L0 潮湿大厅</td><td>8 轮</td><td>无附加条件</td><td></td></tr>
+            <tr><td>L1 宜居区</td><td>10 轮</td><td>🗝️ 门禁卡 ×1</td><td></td></tr>
+            <tr><td>L2 管道迷宫</td><td>12 轮</td><td>关闭 ≥2 个 🔥 阀门</td><td></td></tr>
+            <tr><td>L3 电气站台</td><td>10 轮</td><td>投入 🔋 电池 ×2</td><td></td></tr>
+            <tr><td>L4 废弃办公室</td><td>14 轮</td><td>全员在 🌟 相邻格且总理智 ≥12</td><td></td></tr>
+        </table>
+        <div class="legend" style="margin-top:10px;">
+            <span>⏰ 计时器归 0 仍未撤离 → 全队 <strong>SAN -2</strong> 并强制切出到下一层</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎲 快速规则卡（每人打印 1 张，放在手边）</h2>
+        <table class="track-table">
+            <tr>
+                <th style="width:22%">阶段</th>
+                <th>要做的事</th>
+            </tr>
+            <tr><td>① 玩家行动</td><td>每人 4 AP：移动 1/格 · 搜索 2 · 关阀门 1 · 攻击 2 · 挣脱 2 · 破塌方 1 · 等待 1（清 1 噪音）</td></tr>
+            <tr><td>② 事件</td><td>抽 1 张环境卡 → 噪音 ≥3 生成 🐕 → 黑暗区停留 2 轮生成 😁</td></tr>
+            <tr><td>③ 实体行动</td><td>按 🎈→😁→🐕→👤 顺序，朝噪音最高处（无噪音则最近玩家）移动，接触即结算</td></tr>
+            <tr><td>④ 结算</td><td>手电 -1 电量 → 噪音 -1 → SAN ≤0 出局 → 计时器 -1 → 轮换起始玩家</td></tr>
+        </table>
+        <div class="legend" style="margin-top:10px;">
+            <span>🏆 胜利：激活 🌟 现实之门且至少 1 人 SAN &gt; 0</span>
+            <span>💀 失败：全员 SAN 归 0，或 L4 计时器耗尽</span>
+        </div>
+    </div>
+
+    <div class="footnote">
+        《后室：无尽层级》打印道具包 ｜ 完整规则请参阅 [README.md](README.md) ｜ 打印前请勾选"背景图形"
+    </div>
+
+</div>
+</body>
+</html>

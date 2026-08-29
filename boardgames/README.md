@@ -76,7 +76,6 @@ boardgames/
 | [星际餐厅大逃亡](category/cooperative/space-diner-escape/README.md) | 合作 | 1-5人 | 45-75分钟 | 中等 |
 | [台词之王](category/party/line-master/README.md) | 派对 | 3-8人 | 25-45分钟 | 简单 |
 | [时空驿站](category/party/chrono-station/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
-| [芙莉莲的旅程](category/cooperative/frieren-journey/README.md) | 合作 | 2-4人 | 45-90分钟 | 中等 |
 | [独行猎人](category/cooperative/solo-level-ing-hunters/README.md) | 合作 | 1-4人 | 60-90分钟 | 中等/困难 |
 | [神话裂隙](category/cooperative/mythic-rift/README.md) | 合作 | 2-5人 | 60-90分钟 | 中等/困难 |
 | [间谍家庭派对](category/party/spy-family-party/README.md) | 派对 | 4-8人 | 30-45分钟 | 简单 |
@@ -112,6 +111,7 @@ boardgames/
 | [链锯人：恶魔契约](category/card/chainsaw-man-contracts/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
 | [龙珠集结：神龙召唤](category/cooperative/dragon-ball-shenron/README.md) | 合作 | 2-5人 | 45-75分钟 | 中等 |
 | [时光代理人：记忆照片](category/strategy/link-click-memory/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等 |
+| [后室：无尽层级](category/cooperative/backrooms-levels/README.md) | 合作 | 1-5人 | 50-80分钟 | 中等偏难 |
 
 ## 添加新桌游
 
