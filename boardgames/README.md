@@ -113,6 +113,7 @@ boardgames/
 | [时光代理人：记忆照片](category/strategy/link-click-memory/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等 |
 | [后室：无尽层级](category/cooperative/backrooms-levels/README.md) | 合作 | 1-5人 | 50-80分钟 | 中等偏难 |
 | [奥德赛：归乡航程](category/card/odyssey-voyage-home/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等 |
+| [山海御灵录](category/card/shanhai-spirit-codex/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
 
 ## 添加新桌游
 
