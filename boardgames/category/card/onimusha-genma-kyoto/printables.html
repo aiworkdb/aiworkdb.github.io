@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鬼武者：幻魔京都 · 打印道具</title>
+<style>
+:root{
+    --paper:#f5efe2;
+    --paper-2:#ece2cd;
+    --ink:#1c1a24;
+    --ink-soft:#6a6257;
+    --navy:#1b2a4a;
+    --navy-2:#2d4263;
+    --navy-3:#40608c;
+    --vermilion:#c1272d;
+    --vermilion-d:#8a1a1f;
+    --gold:#c9a227;
+    --gold-l:#e8cd7a;
+    --line:#c2b294;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+    font-family:"Songti SC","STSong","SimSun","Georgia",serif;
+    background:
+        radial-gradient(circle at 12% 0%, #fffdf7 0%, transparent 52%),
+        linear-gradient(180deg,#f5efe2 0%,#e6dac0 100%);
+    color:var(--ink);
+    line-height:1.55;
+    padding:24px 16px 60px;
+}
+.wrap{max-width:1200px;margin:0 auto;}
+
+/* ================= 页头 ================= */
+header{
+    text-align:center;
+    padding:32px 20px 26px;
+    background:
+        radial-gradient(circle at 50% 120%, rgba(193,39,45,.45) 0%, transparent 60%),
+        linear-gradient(160deg,#141d33 0%,#24365a 55%,#3a4d75 100%);
+    border-radius:14px;
+    color:var(--paper);
+    margin-bottom:22px;
+    border:3px solid var(--gold);
+    box-shadow:0 8px 24px rgba(20,29,51,.35);
+}
+header h1{font-size:34px;letter-spacing:5px;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.5);}
+header .en{font-size:13px;color:var(--gold-l);letter-spacing:4px;}
+header .quote{
+    margin-top:13px;font-size:13px;color:#d8d2c2;font-style:italic;
+    border-top:1px solid rgba(232,205,122,.35);padding-top:11px;
+}
+
+/* ================= 打印提示 ================= */
+.print-hint{
+    background:#fff8e1;
+    border:2px dashed var(--gold);
+    border-left:6px solid var(--vermilion);
+    border-radius:10px;
+    padding:15px 20px;
+    margin-bottom:26px;
+    font-size:14px;
+}
+.print-hint h3{color:var(--vermilion-d);font-size:16px;margin-bottom:6px;}
+.print-hint ul{margin-left:20px;}
+.print-hint li{margin-bottom:3px;}
+.print-hint .em{color:var(--vermilion);font-weight:bold;}
+
+/* ================= 区块 ================= */
+section{margin-bottom:40px;}
+h2{
+    font-size:22px;color:var(--vermilion-d);
+    border-left:6px solid var(--gold);
+    padding-left:12px;margin-bottom:6px;letter-spacing:1px;
+}
+.h2note{font-size:13px;color:var(--ink-soft);margin:0 0 16px 18px;}
+
+/* ================= 京都舆图 ================= */
+.mapboard{
+    background:
+        radial-gradient(circle at 50% 40%, #fbf6e9 0%, transparent 62%),
+        linear-gradient(165deg,#efe4cb 0%,#dbcca9 100%);
+    border:4px solid var(--navy);border-radius:14px;padding:22px;position:relative;overflow:hidden;
+}
+.mapboard::before{
+    content:"";position:absolute;inset:0;
+    background:
+        repeating-linear-gradient(0deg,transparent 0 26px,rgba(27,42,74,.05) 26px 27px),
+        repeating-linear-gradient(90deg,transparent 0 26px,rgba(27,42,74,.05) 26px 27px);
+    pointer-events:none;
+}
+.map-title{text-align:center;font-size:21px;color:var(--navy);letter-spacing:8px;margin-bottom:4px;position:relative;}
+.map-sub{text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:18px;position:relative;}
+.mapgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;position:relative;}
+.district{
+    background:var(--paper);
+    border:3px solid var(--navy-2);border-radius:11px;padding:11px 9px;
+    text-align:center;position:relative;min-height:172px;
+    box-shadow:0 2px 6px rgba(27,42,74,.18);
+    display:flex;flex-direction:column;
+}
+.district .dname{font-size:16px;font-weight:bold;letter-spacing:2px;margin-bottom:1px;}
+.district .dkana{font-size:10px;color:var(--ink-soft);letter-spacing:1px;margin-bottom:6px;}
+.district .dicon{font-size:24px;line-height:1.1;margin-bottom:4px;}
+.district .dslot{
+    border:2px dashed #b0a17c;border-radius:8px;padding:5px 4px;
+    font-size:11px;color:var(--ink-soft);background:rgba(255,255,255,.55);margin-bottom:6px;
+}
+.district .dslot b{display:block;color:var(--ink);font-size:12px;margin-bottom:2px;}
+.district .dterrain{font-size:10.5px;color:var(--ink-soft);line-height:1.45;text-align:left;}
+.district.central{
+    background:linear-gradient(160deg,#1b2a4a 0%,#3a4d75 100%);
+    border:3px solid var(--gold);color:var(--paper);
+}
+.district.central .dname{color:var(--gold-l);}
+.district.central .dkana{color:#b9c6dd;}
+.district.central .dterrain{color:#d9e2f0;}
+.district .gates{
+    display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-bottom:6px;
+}
+.district .gates i{
+    width:15px;height:15px;border:2px solid var(--vermilion);border-radius:3px;
+    background:repeating-linear-gradient(45deg,rgba(193,39,45,.35) 0 3px,transparent 3px 6px);
+    display:inline-block;
+}
+.district .gates i.sealed{
+    border-color:var(--gold);background:var(--gold-l);
+}
+.mapfoot{
+    margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative;
+}
+.mfbox{
+    background:rgba(255,255,255,.66);border:2px solid #b0a17c;border-radius:8px;
+    padding:8px 6px;text-align:center;font-size:11px;color:var(--ink-soft);
+}
+.mfbox b{display:block;color:var(--ink);font-size:12px;margin-bottom:2px;}
+.legend{
+    background:rgba(255,255,255,.7);border:2px solid var(--navy-2);border-radius:10px;
+    padding:10px 12px;font-size:11.5px;color:var(--ink-soft);position:relative;
+    display:flex;flex-direction:column;justify-content:center;
+}
+.legend h4{font-size:12.5px;color:var(--vermilion-d);margin-bottom:5px;letter-spacing:1px;}
+.legend table{width:100%;border-collapse:collapse;font-size:11px;}
+.legend td{padding:2px 3px;border-bottom:1px dotted var(--line);}
+.legend td:first-child{white-space:nowrap;color:var(--ink);font-weight:bold;}
+.legend .note{margin-top:6px;font-size:10.5px;line-height:1.5;}
+
+/* ================= 卡牌栅格 ================= */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px;}
+.card{
+    position:relative;
+    background:var(--paper);
+    border:2px solid #8c7a52;border-radius:10px;
+    padding:8px 8px 9px;min-height:206px;
+    box-shadow:0 2px 5px rgba(27,42,74,.14);
+    display:flex;flex-direction:column;
+}
+.card .cnt{
+    position:absolute;top:-7px;right:-7px;
+    background:var(--vermilion);color:#fff;font-size:11px;font-weight:bold;
+    border-radius:20px;padding:1px 8px;border:2px solid var(--paper);
+    z-index:2;
+}
+.card .c-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:4px;}
+.card .c-badge{
+    font-size:10px;font-weight:bold;color:#fff;background:var(--navy-2);
+    border-radius:20px;padding:1px 8px;letter-spacing:1px;white-space:nowrap;
+}
+.card .c-kana{font-size:9.5px;color:var(--ink-soft);letter-spacing:.5px;text-align:right;}
+.card .c-mid{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.card .c-icon{font-size:24px;line-height:1;}
+.card .c-name{font-size:14.5px;font-weight:bold;letter-spacing:1px;}
+.card .c-tag{
+    font-size:10.5px;color:var(--vermilion-d);background:rgba(193,39,45,.08);
+    border-left:3px solid var(--vermilion);padding:2px 5px;margin-bottom:5px;line-height:1.4;
+}
+.card .c-stats{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;}
+.card .st{
+    font-size:10.5px;font-weight:bold;color:#fff;border-radius:4px;padding:1px 6px;
+}
+.card .st.hp{background:var(--vermilion);}
+.card .st.atk{background:#7a2340;}
+.card .st.soul{background:var(--gold);color:#3a2c05;}
+.card .c-wheel{margin-bottom:5px;}
+.card .c-wheel .wl{font-size:9.5px;color:var(--ink-soft);letter-spacing:1px;}
+.card .c-wheel .whs{display:flex;gap:3px;margin-top:2px;}
+.card .c-wheel .wh{
+    flex:1;text-align:center;font-size:10px;border:1.5px solid var(--navy-3);
+    border-radius:4px;padding:1px 0;background:rgba(64,96,140,.09);color:var(--navy);
+}
+.card .c-text{font-size:10.5px;line-height:1.48;color:#3b352c;flex:1;}
+.card .c-rate{
+    margin-top:5px;font-size:10.5px;line-height:1.45;
+    border-top:1px dashed var(--line);padding-top:5px;color:var(--ink);
+}
+.card .genma-text{
+    background:rgba(122,35,64,.07);border-left:3px solid #7a2340;padding:3px 5px;
+}
+
+/* 太刀卡配色 */
+.t-jodan{border-color:#c1272d;background:linear-gradient(180deg,#fdf1ef 0%,#f7e2dd 100%);}
+.t-jodan .c-badge{background:#c1272d;}
+.t-chudan{border-color:#2a6f97;background:linear-gradient(180deg,#eef5fa 0%,#dceaf4 100%);}
+.t-chudan .c-badge{background:#2a6f97;}
+.t-gedan{border-color:#3f7d4f;background:linear-gradient(180deg,#eef7ef 0%,#dcecdf 100%);}
+.t-gedan .c-badge{background:#3f7d4f;}
+.t-kaiten{border-color:#7b4fa8;background:linear-gradient(180deg,#f4eefa 0%,#e7dbf3 100%);}
+.t-kaiten .c-badge{background:#7b4fa8;}
+.t-fudo{border-color:#5a6572;background:linear-gradient(180deg,#f0f2f4 0%,#e2e6ea 100%);}
+.t-fudo .c-badge{background:#5a6572;}
+
+/* 道具 / 幻魔 / 魂 / 瘴気 / 秘宝 */
+.c-tool{border-color:#8a5a2a;background:linear-gradient(180deg,#fbf3e4 0%,#f2e4c8 100%);}
+.c-tool .c-badge{background:#8a5a2a;}
+.g-zako{border-color:#4a6b8a;background:linear-gradient(180deg,#eef3f8 0%,#dde7f0 100%);}
+.g-zako .c-badge{background:#4a6b8a;}
+.g-chu{border-color:#8a5a2a;background:linear-gradient(180deg,#faf1e2 0%,#f0e0c4 100%);}
+.g-chu .c-badge{background:#8a5a2a;}
+.g-dai{border-color:#7a2340;background:linear-gradient(180deg,#fbecf1 0%,#f2d5e0 100%);}
+.g-dai .c-badge{background:#7a2340;}
+.g-ou{
+    border-color:#3b1d4a;color:#f3ecf7;
+    background:linear-gradient(160deg,#3b1d4a 0%,#5d2f6e 60%,#7a3f5c 100%);
+}
+.g-ou .c-badge{background:var(--gold);color:#3b1d4a;}
+.g-ou .c-name{color:var(--gold-l);}
+.g-ou .c-kana{color:#cbb8d8;}
+.g-ou .c-text{color:#efe6f5;background:rgba(255,255,255,.1);border-left-color:var(--gold-l);}
+.g-ou .c-wheel .wh{border-color:var(--gold-l);color:var(--gold-l);background:rgba(255,255,255,.1);}
+.g-ou .c-wheel .wl{color:#d9c8e6;}
+.g-ou .genma-text{background:rgba(255,255,255,.12);border-left-color:var(--gold);}
+.g-ou .cnt{background:var(--gold);color:#3b1d4a;border-color:#3b1d4a;}
+
+.soul-card{min-height:150px;}
+.s-red{border-color:#c1272d;background:linear-gradient(180deg,#fdeceb 0%,#f7d6d3 100%);}
+.s-blue{border-color:#2a6f97;background:linear-gradient(180deg,#eaf3fa 0%,#d3e5f3 100%);}
+.s-yellow{border-color:#c9a227;background:linear-gradient(180deg,#fdf6e0 0%,#f6e7bd 100%);}
+.soul-card .c-mid{justify-content:center;margin-bottom:6px;}
+.soul-card .c-icon{font-size:30px;}
+.soul-card .c-name{font-size:16px;}
+
+.c-miasma{border-color:#4a3a6a;background:linear-gradient(180deg,#f0ecf7 0%,#ddd5ee 100%);}
+.c-miasma .c-badge{background:#4a3a6a;}
+.c-treasure{border-color:#c9a227;background:linear-gradient(165deg,#fdf6e0 0%,#f5e4b4 100%);}
+.c-treasure .c-badge{background:#c9a227;color:#3a2c05;}
+
+/* ================= 角色 / 棋子 ================= */
+.pieces{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.hero{
+    background:var(--paper);border:3px solid var(--navy-2);border-radius:12px;
+    padding:12px;text-align:center;box-shadow:0 3px 8px rgba(27,42,74,.16);
+}
+.hero .disc{
+    width:78px;height:78px;margin:0 auto 8px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#3a4d75 0%,#1b2a4a 100%);
+    border:4px solid var(--gold);color:var(--paper);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+}
+.hero .disc .pi{font-size:28px;line-height:1;}
+.hero .disc .pn{font-size:11px;font-weight:bold;letter-spacing:1px;color:var(--gold-l);}
+.hero .hname{font-size:16px;font-weight:bold;letter-spacing:2px;}
+.hero .htitle{font-size:11px;color:var(--vermilion-d);margin-bottom:6px;}
+.hero .htext{font-size:11px;line-height:1.5;color:#3b352c;text-align:left;}
+.hero .hp{
+    margin-top:8px;font-size:11px;border-top:1px dashed var(--line);padding-top:6px;
+    display:flex;justify-content:space-between;
+}
+.hero .hp .pip{
+    width:15px;height:15px;border:2px solid var(--vermilion);border-radius:3px;
+    background:var(--vermilion);display:inline-block;
+}
+
+.tokens{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+.token{
+    background:var(--paper);border:2px dashed var(--navy-3);border-radius:10px;
+    padding:12px 8px;text-align:center;font-size:12px;color:var(--ink-soft);
+}
+.token .ticon{font-size:26px;display:block;margin-bottom:4px;}
+.token b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px;}
+
+/* ================= 速查表 ================= */
+.quick{
+    background:linear-gradient(165deg,#1b2a4a 0%,#2d4263 100%);
+    color:#e8e2d2;border:3px solid var(--gold);border-radius:12px;
+    padding:16px 14px;white-space:pre;font-size:11.5px;line-height:1.62;
+    overflow-x:auto;font-family:"Courier New",monospace;
+    box-shadow:0 4px 14px rgba(27,42,74,.28);
+}
+.endnote{
+    text-align:center;color:var(--ink-soft);font-size:12px;
+    border-top:2px solid var(--line);padding-top:16px;
+}
+.endnote a{color:var(--vermilion-d);}
+
+/* ================= 打印 ================= */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    @page { size: A4; margin: 8mm; }
+    body { background: #fff !important; padding: 0; }
+    .print-hint { display: none; }
+    section { page-break-inside: avoid; margin-bottom: 22px; }
+    .card, .hero, .district, .token, .legend { page-break-inside: avoid; }
+    header { box-shadow: none; }
+}
+@media screen and (max-width: 700px) {
+    .mapgrid, .mapfoot { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <h1>鬼武者 · 幻魔京都</h1>
+    <div class="en">O N I M U S H A &nbsp; · &nbsp; G E N M A &nbsp; K Y O T O</div>
+    <div class="quote">「江戸の夜、魔空の門がひらく。鬼の籠手を持つ五人よ、京を守れ。」<br>
+    —— 江户初年，魔空之门洞开。手握鬼之笼手的五人，守住这座京城。</div>
+</header>
+
+<div class="print-hint">
+    <h3>⚠️ 重要打印提示</h3>
+    <ul>
+        <li>使用 <span class="em">A4 纸张</span>打印，建议在打印设置里选择<span class="em">最小边距</span>。</li>
+        <li>在打印对话框中，务必<span class="em">勾选「背景图形」</span>选项，否则卡牌底色与地图会变成空白。</li>
+        <li>卡牌和棋子建议使用 <span class="em">卡纸（200-250g）</span>打印，打印后可裁剪并塑封，耐用度大幅提升。</li>
+        <li>角标 <span class="em">×N</span> 表示该模板需要打印的份数；角标总和即为卡牌总数。</li>
+        <li>地图建议单独用 A3 或 A4 普通纸打印一份，平铺在桌子中间。</li>
+    </ul>
+</div>
+
+<section>
+<h2>🗺️ 京都七町舆图</h2>
+<p class="h2note">打印 1 张平铺在桌中央。外环 6 町彼此顺时针 / 逆时针相连，且<b>每一町都与中央二条城相邻</b>。红色斜纹方块 = 未封印的魔空空间。</p>
+<div class="mapboard">
+    <div class="map-title">京 都 七 町</div>
+    <div class="map-sub">外环 6 町 · 中央本陣 二条城 · 全城共 13 处魔空空间</div>
+    <div class="mapgrid">
+        <div class="district">
+            <div class="dname">🎋 嵐山</div>
+            <div class="dkana">あらしやま · 西北</div>
+            <div class="gates"><i></i><i></i></div>
+            <div class="dslot"><b>魔空 2 处</b>封印后放置「封」标记</div>
+            <div class="dterrain"><b>竹林</b>：在此町时，你可以在暗置阶段<b>先看推进骰结果</b>，再决定出哪张太刀卡。</div>
+        </div>
+        <div class="district">
+            <div class="dname">🌊 鴨川</div>
+            <div class="dkana">かもがわ · 北</div>
+            <div class="gates"><i></i><i></i><i></i></div>
+            <div class="dslot"><b>魔空 3 处</b>封印后放置「封」标记</div>
+            <div class="dterrain"><b>水畔</b>：花 1 行动力，弃 1 张手牌，然后<b>抽 2 张牌</b>。</div>
+        </div>
+        <div class="district">
+            <div class="dname">🌸 祇園</div>
+            <div class="dkana">ぎおん · 東北</div>
+            <div class="gates"><i></i><i></i></div>
+            <div class="dslot"><b>魔空 2 处</b>封印后放置「封」标记</div>
+            <div class="dterrain"><b>花街</b>：花 1 行动力，将 1 枚任意魂<b>换成 1 张随机太刀卡</b>（从太刀弃牌堆或牌库顶取）。</div>
+        </div>
+        <div class="district">
+            <div class="dname">🔥 本能寺</div>
+            <div class="dkana">ほんのうじ · 西南</div>
+            <div class="gates"><i></i></div>
+            <div class="dslot"><b>魔空 1 处</b>封印后放置「封」标记</div>
+            <div class="dterrain"><b>炎上</b>：在此町时，你的<b>一闪伤害额外 +1</b>（乘算之后再 +1）。</div>
+        </div>
+        <div class="district central">
+            <div class="dname">🏯 二条城</div>
+            <div class="dkana">にじょうじょう · 中央</div>
+            <div class="gates"><span style="font-size:10px;color:#6a6257;">本陣 · 无魔空</span></div>
+            <div class="dslot"><b>本陣</b>封印后放置「封」标记</div>
+            <div class="dterrain"><b>本陣</b>：安全区 —— 在此町<b>不受幻魔反击</b>；花 1 行动力可疗伤 1 点（<b>不需要</b>黄魂）。</div>
+        </div>
+        <div class="district">
+            <div class="dname">🏪 七条</div>
+            <div class="dkana">しちじょう · 東南</div>
+            <div class="gates"><i></i><i></i></div>
+            <div class="dslot"><b>魔空 2 处</b>封印后放置「封」标记</div>
+            <div class="dterrain"><b>市集</b>：花 1 行动力，<b>抽 1 张道具卡</b>；若道具卡已抽完，改为抽 1 张太刀卡。</div>
+        </div>
+        <div class="legend">
+            <h4>🎲 涌出表（每回合【夜明】掷 D6）</h4>
+            <table>
+                <tr><td>⚀ 1</td><td>🌊 鴨川</td></tr>
+                <tr><td>⚀ 2</td><td>🌸 祇園</td></tr>
+                <tr><td>⚀ 3</td><td>🏪 七条</td></tr>
+                <tr><td>⚀ 4</td><td>⛩️ 伏見</td></tr>
+                <tr><td>⚀ 5</td><td>🔥 本能寺</td></tr>
+                <tr><td>⚀ 6</td><td>🎋 嵐山</td></tr>
+            </table>
+            <div class="note">若该町<b>尚有未封印的魔空空间</b>，则<b>额外</b>再涌出 1 只幻魔。</div>
+        </div>
+        <div class="district">
+            <div class="dname">⛩️ 伏見</div>
+            <div class="dkana">ふしみ · 南</div>
+            <div class="gates"><i></i><i></i><i></i></div>
+            <div class="dslot"><b>魔空 3 处</b>封印后放置「封」标记</div>
+            <div class="dterrain"><b>稲荷</b>：在此町<b>每封印 1 处魔空空间，额外 +1 功绩</b>（封印本身 2 分，共 3 分）。</div>
+        </div>
+        <div class="legend">
+            <h4>🌀 推进骰（【構】之后掷 D6）</h4>
+            <table>
+                <tr><td>1 - 3 ↷</td><td>正序推进 <b>1 格</b></td></tr>
+                <tr><td>4 - 5 ↷↷</td><td>正序推进 <b>2 格</b></td></tr>
+                <tr><td>6 ↶</td><td><b>逆序</b>回退 1 格</td></tr>
+            </table>
+            <div class="note">推进结果决定本回合<b>全场所有幻魔</b>的破绽格。幻魔剣豪额外 +1 格。</div>
+        </div>
+    </div>
+    <div class="mapfoot">
+        <div class="mfbox"><b>起始位置</b>所有玩家把棋子放在<b>二条城</b>，各抽 5 张手牌。</div>
+        <div class="mfbox"><b>移动规则</b>二条城 ⇄ 外环任一町（1 步）；外环顺时针 / 逆时针相邻町（1 步）。</div>
+        <div class="mfbox"><b>回合数</b>共 <b>10 回合</b>；第 7 回合结束时<b>幻魔王降临二条城</b>。</div>
+    </div>
+</div>
+</section>
+
+<section>
+<h2>⚔️ 太刀卡（40 张）</h2>
+<p class="h2note">全场共用一个「太刀 + 道具」混合牌库。每人起始 5 张，每回合【補充】补至 5 张（鬼武者形态下补至 8 张）。打出的太刀卡进入你自己的<b>刀鍔</b>，需要花 1 点行动力「納刀」才能全部收回。</p>
+<div class="cards">
+<div class="card t-jodan">
+<div class="cnt">×8</div>
+<div class="c-top"><span class="c-badge">上段</span><span class="c-kana">じょうだん</span></div>
+<div class="c-mid"><span class="c-icon">⚔️</span><span class="c-name">上段斬</span></div>
+<div class="c-tag">高举过顶的一击</div>
+<div class="c-text">与破绽一致 → <b>一闪</b>，伤害 ×3、吸魂 ×2、不受反击。<br>不一致 → 普通命中，伤害 ×1，受该幻魔反击。</div>
+</div><div class="card t-chudan">
+<div class="cnt">×8</div>
+<div class="c-top"><span class="c-badge">中段</span><span class="c-kana">ちゅうだん</span></div>
+<div class="c-mid"><span class="c-icon">🗡️</span><span class="c-name">中段斬</span></div>
+<div class="c-tag">最稳正的构え</div>
+<div class="c-text">与破绽一致 → <b>一闪</b>，伤害 ×3、吸魂 ×2、不受反击。<br>不一致 → 普通命中，伤害 ×1，受该幻魔反击。</div>
+</div><div class="card t-gedan">
+<div class="cnt">×8</div>
+<div class="c-top"><span class="c-badge">下段</span><span class="c-kana">げだん</span></div>
+<div class="c-mid"><span class="c-icon">🔪</span><span class="c-name">下段斬</span></div>
+<div class="c-tag">自下撩起的斩击</div>
+<div class="c-text">与破绽一致 → <b>一闪</b>，伤害 ×3、吸魂 ×2、不受反击。<br>不一致 → 普通命中，伤害 ×1，受该幻魔反击。</div>
+</div><div class="card t-kaiten">
+<div class="cnt">×8</div>
+<div class="c-top"><span class="c-badge">回旋</span><span class="c-kana">かいてん</span></div>
+<div class="c-mid"><span class="c-icon">🌀</span><span class="c-name">回旋斬</span></div>
+<div class="c-tag">万能，但威力稍逊</div>
+<div class="c-text"><b>万能匹配</b>：无论破绽是哪一格都算命中，但一闪倍率只有 ×2。<br>额外对同町第 2 只幻魔造成一半伤害（向上取整）。</div>
+</div><div class="card t-fudo">
+<div class="cnt">×8</div>
+<div class="c-top"><span class="c-badge">不動</span><span class="c-kana">ふどう</span></div>
+<div class="c-mid"><span class="c-icon">🛡️</span><span class="c-name">不動</span></div>
+<div class="c-tag">守如磐石，一动不动</div>
+<div class="c-text">与破绽一致 → <b>真·一闪</b>：伤害 ×3，且本町<b>所有玩家</b>本回合不受反击。<br>不一致 → 格挡：伤害 0，不受反击，<b>抽 1 张牌</b>。</div>
+</div></div>
+</section>
+
+<section>
+<h2>🎴 道具卡（18 张）</h2>
+<p class="h2note">与太刀卡洗在一起构成玩家牌库。使用道具<b>不消耗行动力</b>，每回合次数不限 —— 但打一张少一张，且牌库抽空后需要洗回弃牌堆。</p>
+<div class="cards">
+<div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">即时</span></div>
+<div class="c-mid"><span class="c-icon">🔫</span><span class="c-name">火縄銃</span></div>
+<div class="c-text">本回合你的普通命中<b>不受反击</b>（一闪本来就免疫，可叠加用于连战）。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">即时</span></div>
+<div class="c-mid"><span class="c-icon">💊</span><span class="c-name">薬丸</span></div>
+<div class="c-text">立即回复 <b>2 点体力</b>（可超过上限的 8 点溢出的部分无效）。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">持续1回合</span></div>
+<div class="c-mid"><span class="c-icon">🥋</span><span class="c-name">忍び鎧</span></div>
+<div class="c-text">本回合你受到的<b>所有伤害 -1</b>（最低降至 0）。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">即时</span></div>
+<div class="c-mid"><span class="c-icon">👁️</span><span class="c-name">心眼の札</span></div>
+<div class="c-text">暗置后<b>先查看推进骰结果</b>，再决定是否更换你打出的那张太刀卡。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">即时</span></div>
+<div class="c-mid"><span class="c-icon">🧤</span><span class="c-name">鬼の籠手</span></div>
+<div class="c-text">本回合<b>视为鬼武者形态</b>（一闪额外 ×2、手牌上限 +3），且<b>不用</b>消耗青魂。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">即时</span></div>
+<div class="c-mid"><span class="c-icon">💨</span><span class="c-name">煙玉</span></div>
+<div class="c-text">立即<b>移动到任意 1 个町</b>，不消耗行动力（可穿过已封锁的町）。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">持续1回合</span></div>
+<div class="c-mid"><span class="c-icon">🏷️</span><span class="c-name">御札</span></div>
+<div class="c-text">本回合你封印魔空空间<b>不需要</b>「町内无未讨伐幻魔」这个条件。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">持续1回合</span></div>
+<div class="c-mid"><span class="c-icon">🔮</span><span class="c-name">魂吸いの珠</span></div>
+<div class="c-text">本回合你击杀幻魔时<b>吸魂翻倍</b>（可与一闪的 ×2 叠乘为 ×4）。</div>
+</div><div class="card c-tool">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">道具</span><span class="c-kana">持续1回合</span></div>
+<div class="c-mid"><span class="c-icon">🗡️</span><span class="c-name">名刀正宗</span></div>
+<div class="c-text">本回合你的<b>基础伤害 +2</b>（一闪时为「(基础+2) × 3」）。</div>
+</div></div>
+</section>
+
+<section>
+<h2>👹 幻魔卡（28 张）</h2>
+<p class="h2note">面朝下堆成幻魔牌库。涌出时从牌库顶翻开，放在对应町。<b>破绽轮盘</b>共 4 格，用米粒 / 回形针标记当前格，每回合按推进骰结果移动。杂兵 14 张 / 中幻魔 8 张 / 大幻魔 4 张 / 幻魔王 2 张（实际只用 1 张，另 1 张为变体模式备用）。</p>
+<div class="cards">
+<div class="card g-zako">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">雑兵</span><span class="c-kana">こだま</span></div>
+<div class="c-mid"><span class="c-icon">🪵</span><span class="c-name">木霊</span></div>
+<div class="c-stats"><span class="st hp">HP 2</span><span class="st atk">攻 1</span><span class="st soul">赤1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">⚔️上</span><span class="wh">🗡️中</span><span class="wh">⚔️上</span><span class="wh">🔪下</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-zako">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">雑兵</span><span class="c-kana">よろいむしゃ</span></div>
+<div class="c-mid"><span class="c-icon">🛡️</span><span class="c-name">鎧武者</span></div>
+<div class="c-stats"><span class="st hp">HP 3</span><span class="st atk">攻 1</span><span class="st soul">赤1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🗡️中</span><span class="wh">🔪下</span><span class="wh">🌀回</span><span class="wh">🗡️中</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-zako">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">雑兵</span><span class="c-kana">みつめ</span></div>
+<div class="c-mid"><span class="c-icon">👁️</span><span class="c-name">三ツ目</span></div>
+<div class="c-stats"><span class="st hp">HP 2</span><span class="st atk">攻 1</span><span class="st soul">赤1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">⚔️上</span><span class="wh">🌀回</span><span class="wh">⚔️上</span><span class="wh">🌀回</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-zako">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">雑兵</span><span class="c-kana">おにび</span></div>
+<div class="c-mid"><span class="c-icon">🔥</span><span class="c-name">鬼火</span></div>
+<div class="c-stats"><span class="st hp">HP 3</span><span class="st atk">攻 1</span><span class="st soul">青1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🌀回</span><span class="wh">⚔️上</span><span class="wh">🗡️中</span><span class="wh">🌀回</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-zako">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">雑兵</span><span class="c-kana">かまいたち</span></div>
+<div class="c-mid"><span class="c-icon">🌪️</span><span class="c-name">鎌鼬</span></div>
+<div class="c-stats"><span class="st hp">HP 2</span><span class="st atk">攻 1</span><span class="st soul">赤1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🔪下</span><span class="wh">🗡️中</span><span class="wh">🔪下</span><span class="wh">🗡️中</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-zako">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">雑兵</span><span class="c-kana">つちぐも</span></div>
+<div class="c-mid"><span class="c-icon">🕷️</span><span class="c-name">土蜘蛛</span></div>
+<div class="c-stats"><span class="st hp">HP 4</span><span class="st atk">攻 1</span><span class="st soul">赤1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🗡️中</span><span class="wh">🗡️中</span><span class="wh">🔪下</span><span class="wh">⚔️上</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-zako">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">雑兵</span><span class="c-kana">ばけちょうちん</span></div>
+<div class="c-mid"><span class="c-icon">🏮</span><span class="c-name">化け提灯</span></div>
+<div class="c-stats"><span class="st hp">HP 3</span><span class="st atk">攻 1</span><span class="st soul">黄1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🔪下</span><span class="wh">🔪下</span><span class="wh">🗡️中</span><span class="wh">⚔️上</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-chu">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">中幻魔</span><span class="c-kana">げんまけんし</span></div>
+<div class="c-mid"><span class="c-icon">👹</span><span class="c-name">幻魔剣士</span></div>
+<div class="c-stats"><span class="st hp">HP 6</span><span class="st atk">攻 2</span><span class="st soul">赤2</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">⚔️上</span><span class="wh">🗡️中</span><span class="wh">🌀回</span><span class="wh">🔪下</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-chu">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">中幻魔</span><span class="c-kana">らいじゅう</span></div>
+<div class="c-mid"><span class="c-icon">⚡</span><span class="c-name">雷獣</span></div>
+<div class="c-stats"><span class="st hp">HP 5</span><span class="st atk">攻 2</span><span class="st soul">赤1青1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🌀回</span><span class="wh">🌀回</span><span class="wh">⚔️上</span><span class="wh">🗡️中</span></div></div>
+<div class="c-text genma-text"><b>雷甲</b>：它反击你时，你额外弃 1 张手牌。</div>
+</div><div class="card g-chu">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">中幻魔</span><span class="c-kana">おおむかで</span></div>
+<div class="c-mid"><span class="c-icon">🐛</span><span class="c-name">大百足</span></div>
+<div class="c-stats"><span class="st hp">HP 7</span><span class="st atk">攻 2</span><span class="st soul">赤2黄1</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🔪下</span><span class="wh">⚔️上</span><span class="wh">🔪下</span><span class="wh">🗡️中</span></div></div>
+<div class="c-text genma-text">无</div>
+</div><div class="card g-chu">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">中幻魔</span><span class="c-kana">ぬれおんな</span></div>
+<div class="c-mid"><span class="c-icon">🐍</span><span class="c-name">濡女</span></div>
+<div class="c-stats"><span class="st hp">HP 6</span><span class="st atk">攻 2</span><span class="st soul">赤1青2</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🗡️中</span><span class="wh">🌀回</span><span class="wh">🗡️中</span><span class="wh">⚔️上</span></div></div>
+<div class="c-text genma-text"><b>湿衣</b>：与它同町时，你的行动力 -1。</div>
+</div><div class="card g-dai">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">大幻魔</span><span class="c-kana">げんましょう</span></div>
+<div class="c-mid"><span class="c-icon">🦑</span><span class="c-name">幻魔将 ギルデンスタン</span></div>
+<div class="c-stats"><span class="st hp">HP 10</span><span class="st atk">攻 3</span><span class="st soul">赤3青2</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">⚔️上</span><span class="wh">🌀回</span><span class="wh">🔪下</span><span class="wh">🗡️中</span></div></div>
+<div class="c-text genma-text"><b>号令</b>：登场时，它所在町立即涌出 1 只雑兵。</div>
+</div><div class="card g-dai">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">大幻魔</span><span class="c-kana">げんまけんごう</span></div>
+<div class="c-mid"><span class="c-icon">⚔️</span><span class="c-name">幻魔剣豪 フォーティンブラス</span></div>
+<div class="c-stats"><span class="st hp">HP 12</span><span class="st atk">攻 3</span><span class="st soul">赤4黄2</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">🗡️中</span><span class="wh">⚔️上</span><span class="wh">🌀回</span><span class="wh">🔪下</span></div></div>
+<div class="c-text genma-text"><b>二段構え</b>：它的破绽每回合推进 <b>2 格</b>（推进骰结果 +1）。</div>
+</div><div class="card g-ou">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">幻魔王</span><span class="c-kana">げんまおう</span></div>
+<div class="c-mid"><span class="c-icon">👑</span><span class="c-name">幻魔王 ノブナガ</span></div>
+<div class="c-stats"><span class="st hp">HP 20</span><span class="st atk">攻 4</span><span class="st soul">赤8青4黄4</span></div>
+<div class="c-wheel"><span class="wl">破绽轮盘</span><div class="whs"><span class="wh">⚔️上</span><span class="wh">🗡️中</span><span class="wh">🔪下</span><span class="wh">🌀回</span></div></div>
+<div class="c-text genma-text"><b>魔障</b>：普通命中对它<b>伤害为 0</b>，只有一闪（含真·一闪）才能造成伤害。</div>
+</div></div>
+</section>
+
+<section>
+<h2>🔮 魂卡（48 张）</h2>
+<p class="h2note">击杀幻魔后立即按卡面「魂」栏拿取，正面朝上摆在面前（不需要隐藏）。魂既是你强化自己的资源，也是终局的功绩来源之一（每 2 枚 = 1 功绩）。</p>
+<div class="cards">
+<div class="card s-red soul-card">
+<div class="cnt">×16</div>
+<div class="c-mid"><span class="c-icon">🔴</span><span class="c-name">赤魂</span></div>
+<div class="c-text">攻击之魂，击杀幻魔最主要的报酬</div>
+<div class="c-rate">4 枚 → 花 1 行动力「太刀鍛冶」：你的基础伤害<b>永久 +1</b>（每局最多 3 次）</div>
+</div><div class="card s-blue soul-card">
+<div class="cnt">×16</div>
+<div class="c-mid"><span class="c-icon">🔵</span><span class="c-name">青魂</span></div>
+<div class="c-text">鬼力之魂，开启鬼武者形态的燃料</div>
+<div class="c-rate">3 枚 → 宣告<b>鬼武者形态</b>：本回合一闪额外 ×2、手牌上限 +3；回合结束时受 1 点伤害</div>
+</div><div class="card s-yellow soul-card">
+<div class="cnt">×16</div>
+<div class="c-mid"><span class="c-icon">🟡</span><span class="c-name">黄魂</span></div>
+<div class="c-text">生命之魂，续命的本钱</div>
+<div class="c-rate">2 枚 → 花 1 行动力「療養」：回复 <b>1 点体力</b>（楓只需 1 枚）</div>
+</div></div>
+</section>
+
+<section>
+<h2>☁️ 瘴气卡（12 张）</h2>
+<p class="h2note">封印魔空空间是好事，但魔空不会乖乖就范 —— <b>每封印 1 处，封印者立刻抽 1 张瘴气卡并立即执行</b>（除非效果写明「下一次」）。这就是「封印 +2 功绩」的代价。</p>
+<div class="cards">
+<div class="card c-miasma">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">瘴気</span><span class="c-kana">封印的代价</span></div>
+<div class="c-mid"><span class="c-icon">☁️</span><span class="c-name">瘴気纏い</span></div>
+<div class="c-text">你的<b>下一次</b>讨伐伤害 <b>-2</b>（不足则降为 0）。持续到你完成 1 次讨伐。</div>
+</div><div class="card c-miasma">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">瘴気</span><span class="c-kana">封印的代价</span></div>
+<div class="c-mid"><span class="c-icon">👥</span><span class="c-name">幻魔増殖</span></div>
+<div class="c-text">你所在的町<b>立即涌出 1 只雑兵</b>（从幻魔牌库顶翻 1 张；若翻出大幻魔则放回底部改翻 1 只雑兵）。</div>
+</div><div class="card c-miasma">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">瘴気</span><span class="c-kana">封印的代价</span></div>
+<div class="c-mid"><span class="c-icon">❄️</span><span class="c-name">刀鍔凍結</span></div>
+<div class="c-text">你的<b>下一次「納刀」无效</b>（照常消耗行动力，但太刀卡不回手）。</div>
+</div><div class="card c-miasma">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">瘴気</span><span class="c-kana">封印的代价</span></div>
+<div class="c-mid"><span class="c-icon">💔</span><span class="c-name">魂散</span></div>
+<div class="c-text">随机弃掉你 <b>1 枚魂</b>（由你左手边的玩家闭眼抽取）。</div>
+</div><div class="card c-miasma">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">瘴気</span><span class="c-kana">封印的代价</span></div>
+<div class="c-mid"><span class="c-icon">⛓️</span><span class="c-name">足枷</span></div>
+<div class="c-text">你的<b>下回合行动力 -1</b>（即下回合只有 1 点行动力）。</div>
+</div><div class="card c-miasma">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">瘴気</span><span class="c-kana">封印的代价</span></div>
+<div class="c-mid"><span class="c-icon">🌀</span><span class="c-name">魔空の揺らぎ</span></div>
+<div class="c-text">你所在町<b>已封印的魔空空间解除 1 处封印</b>（该町魔空数 +1，可再次封印）。</div>
+</div></div>
+</section>
+
+<section>
+<h2>🏆 秘宝卡（10 张）</h2>
+<p class="h2note">获取方式：① 团队每累计封印 <b>3 处</b>魔空空间，由<b>完成第 3 处</b>的玩家抽 1 张；② 击杀<b>大幻魔</b>时，击杀者抽 1 张；③ 击杀<b>幻魔王</b>时，击杀者抽 1 张。</p>
+<div class="cards">
+<div class="card c-treasure">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">秘宝</span><span class="c-kana">+3 功績</span></div>
+<div class="c-mid"><span class="c-icon">🎭</span><span class="c-name">天狗の面</span></div>
+<div class="c-text">你每回合的<b>第一次一闪</b>，伤害额外 +1。</div>
+</div><div class="card c-treasure">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">秘宝</span><span class="c-kana">+3 功績</span></div>
+<div class="c-mid"><span class="c-icon">⚔️</span><span class="c-name">織田の太刀</span></div>
+<div class="c-text">你的<b>基础伤害永久 +1</b>（可与太刀鍛冶叠加）。</div>
+</div><div class="card c-treasure">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">秘宝</span><span class="c-kana">+3 功績</span></div>
+<div class="c-mid"><span class="c-icon">👁️</span><span class="c-name">鬼の瞳</span></div>
+<div class="c-text">每回合 1 次，你可以在暗置阶段<b>先查看推进骰结果</b>再出牌。</div>
+</div><div class="card c-treasure">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">秘宝</span><span class="c-kana">+3 功績</span></div>
+<div class="c-mid"><span class="c-icon">🐉</span><span class="c-name">龍の鱗</span></div>
+<div class="c-text">你受到的<b>所有伤害 -1</b>（最低降至 0），永久有效。</div>
+</div><div class="card c-treasure">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge">秘宝</span><span class="c-kana">+5 功績</span></div>
+<div class="c-mid"><span class="c-icon">🪙</span><span class="c-name">黄金の小判</span></div>
+<div class="c-text">无特殊能力，纯粹的价值 —— <b>终局 +5 功绩</b>。</div>
+</div></div>
+</section>
+
+<section>
+<h2>🎯 鬼之笼手继承者（5 名）</h2>
+<p class="h2note">每人 1 张，按实际玩家人数打印（2-5 张）。沿虚线剪下后可对折成立体底座，或者直接用硬币 / 橡皮 / 手边小物件代替。体力用骰子或纸片记录，初始 <b>8 点</b>。</p>
+<div class="pieces">
+    <div class="hero">
+        <div class="disc"><span class="pi">⚔️</span><span class="pn">宮本武蔵</span></div>
+        <div class="hname">宮本武蔵</div>
+        <div class="htitle">⚔️ 二天一流</div>
+        <div class="htext">你的<b>一闪伤害额外 +1</b>（在 ×3 与鬼武者加成结算完之后再加）。</div>
+        <div class="hp"><span>体力 8</span><span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></div>
+    </div>
+    <div class="hero">
+        <div class="disc"><span class="pi">🍃</span><span class="pn">阿凛</span></div>
+        <div class="hname">阿凛</div>
+        <div class="htitle">🍃 忍びの翅</div>
+        <div class="htext">每局 <b>2 次</b>「洞察」：暗置并看到推进骰结果后，可<b>更换</b>你打出的那张太刀卡。</div>
+        <div class="hp"><span>体力 8</span><span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></div>
+    </div>
+    <div class="hero">
+        <div class="disc"><span class="pi">🔫</span><span class="pn">佐久間玄蕃</span></div>
+        <div class="hname">佐久間玄蕃</div>
+        <div class="htitle">🔫 鉄炮の名手</div>
+        <div class="htext">你<b>普通命中时也不受反击</b>（玄蕃永远不必为贪刀付出体力代价）。</div>
+        <div class="hp"><span>体力 8</span><span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></div>
+    </div>
+    <div class="hero">
+        <div class="disc"><span class="pi">🔮</span><span class="pn">白鷺天秀</span></div>
+        <div class="hname">白鷺天秀</div>
+        <div class="htitle">🔮 陰陽師の末裔</div>
+        <div class="htext">每回合开始，你<b>额外获得 1 枚青魂</b>（鬼武者形态的常客）。</div>
+        <div class="hp"><span>体力 8</span><span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></div>
+    </div>
+    <div class="hero">
+        <div class="disc"><span class="pi">💊</span><span class="pn">楓</span></div>
+        <div class="hname">楓</div>
+        <div class="htitle">💊 薬師の手</div>
+        <div class="htext">你療養只需 <b>1 枚黄魂</b>；且可花 1 枚黄魂为<b>同町 1 名玩家</b>回复 1 点体力（不耗行动力）。</div>
+        <div class="hp"><span>体力 8</span><span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></div>
+    </div>
+</div>
+</section>
+
+<section>
+<h2>🔖 辅助标记</h2>
+<p class="h2note">按需打印。破绽标记建议用实物（米粒、回形针、小石子）直接放在幻魔卡的轮盘格上，比纸片更好用。</p>
+<div class="tokens">
+    <div class="token"><span class="ticon">🏷️</span><b>封印标记 ×13</b>盖在已封印的魔空空间上</div>
+    <div class="token"><span class="ticon">🌀</span><b>破绽标记 ×8</b>放在幻魔卡轮盘的当前格</div>
+    <div class="token"><span class="ticon">🩸</span><b>体力标记 ×5</b>或用骰子 / 纸片记录 0-8</div>
+    <div class="token"><span class="ticon">👹</span><b>鬼武者标记 ×5</b>宣告后摆在自己面前</div>
+    <div class="token"><span class="ticon">🌙</span><b>回合标记 ×1</b>沿 1-10 的夜刻度推进</div>
+    <div class="token"><span class="ticon">🔄</span><b>刀鍔卡垫 ×5</b>放已打出、待納刀回收的太刀卡</div>
+</div>
+</section>
+
+<section>
+<h2>📎 一页速查表</h2>
+<p class="h2note">建议打印 1 张放在桌边，供所有玩家随时查阅。</p>
+<div class="quick">╔══════════════════════════════════════════════════════════════════╗
+║              鬼 武 者 · 幻 魔 京 都   一 页 速 查 表               ║
+╠══════════════════════════════════════════════════════════════════╣
+║  每夜八步： ①夜明 → ②構 → ③刻 → ④斬 → ⑤吸魂 → ⑥町巡 → ⑦補充 → ⑧晦║
+╠══════════════════════════════════════════════════════════════════╣
+║  ①【夜明】掷 D6 查涌出表 → 该町翻 1 只幻魔                        ║
+║            （该町有未封印魔空 → 额外再翻 1 只）                   ║
+║  ②【構】  所有人同时暗置 1 张太刀卡（背面朝上）                   ║
+║            想开鬼武者形态 → 在暗置<b>之前</b>宣告，弃 3 青魂       ║
+║  ③【刻】  掷 D6：1-3 正序+1格 ／ 4-5 正序+2格 ／ 6 逆序-1格        ║
+║  ④【斬】  同时揭示，比对你所在町幻魔的破绽格                       ║
+║      ✔ 一致        → 一闪！伤害 ×3、吸魂 ×2、不受反击             ║
+║      ✔ 一致且是不動→ 真·一闪：×3，且全町本回合不受反击            ║
+║      ✔ 回旋斬      → 恒命中，但一闪倍率只有 ×2                    ║
+║      ✘ 不一致      → 普通命中：伤害 ×1，受反击「攻」值伤害        ║
+║      ✘ 不動不一致  → 格挡：伤害 0，不受反击，抽 1 张              ║
+║      ★ 连锁一闪    → 同町 ≥2 人一闪，每人伤害再 +1                ║
+║  ⑤【吸魂】击杀者取走该卡全部魂（多人同町：伤害最高者优先）         ║
+║  ⑥【町巡】每人 2 点行动力，可用见下方「行动菜单」                 ║
+║  ⑦【補充】手牌补至 5 张（鬼武者形态补至 8 张）                    ║
+╠══════════════════════════════════════════════════════════════════╣
+║  【行动菜单】                                                     ║
+║   移動 1 点 ／ 封印 1 点(+2功绩,抽1瘴气) ／ 納刀 1 点             ║
+║   地形 1 点 ／ 太刀鍛冶 1 点(弃4赤魂,伤害永久+1,上限3次)          ║
+║   療養 1 点(弃2黄魂,回1体力) ／ 鬼武者 0 点(弃3青魂)              ║
+║   道具 0 点（不限次数）                                           ║
+╠══════════════════════════════════════════════════════════════════╣
+║  【魂的换算】 4 赤 = 伤害永久 +1   ／ 3 青 = 鬼武者形态           ║
+║               2 黄 = 回复 1 体力   ／ 每 2 枚魂 = 终局 1 功绩     ║
+╠══════════════════════════════════════════════════════════════════╣
+║  【功绩计分】 雑兵 1 ／ 中 3 ／ 大 6 ／ 王 12（其余各 +4）        ║
+║   封印 1 处魔空 +2（伏見 +3） ／ 秘宝 +3（小判 +5）               ║
+║   每次一闪 +1 ／ 剩余每 1 体力 +1 ／ 每 2 枚魂 +1                 ║
+║   京都守护（封满 13 处 且 斩杀幻魔王）全员 +5                     ║
+║   只完成其一：全员 +2   ／   都未完成：+0                         ║
+╠══════════════════════════════════════════════════════════════════╣
+║  ⚠️ 四条铁律                                                      ║
+║   1. 不納刀就没牌打 —— 手牌是这游戏最稀缺的资源                   ║
+║   2. 幻魔王只吃一闪 —— 普通命中对它伤害为 0                       ║
+║   3. 封印必抽瘴气 —— 但每 3 处封印会带来 1 张秘宝                 ║
+║   4. 体力归 0 只是倒地，不是出局：下回合在二条城以 3 体力复活      ║
+╚══════════════════════════════════════════════════════════════════╝</div>
+</section>
+
+
+<section>
+<h2>📋 行动菜单详解</h2>
+<p class="h2note">【町巡】阶段每人有 <b>2 点行动力</b>，从下列动作中自由组合（同一动作可重复做）。</p>
+<div class="cards">
+<div class="card c-tool">
+<div class="c-top"><span class="c-badge">🚶 移動</span><span class="c-kana">1 点</span></div>
+<div class="c-mid"><span class="c-icon">🚶</span><span class="c-name">移動</span></div>
+<div class="c-text">移动到<b>相邻</b>的 1 个町（中央二条城与外环 6 町彼此相邻；外环相邻町按地图顺时针 / 逆时针）。</div>
+</div><div class="card c-tool">
+<div class="c-top"><span class="c-badge">🏷️ 封印</span><span class="c-kana">1 点</span></div>
+<div class="c-mid"><span class="c-icon">🏷️</span><span class="c-name">封印</span></div>
+<div class="c-text">封印所在町的 1 处魔空空间，<b>+2 功绩</b>。要求：该町<b>没有未讨伐的幻魔</b>。封印后<b>抽 1 张瘴气卡</b>。</div>
+</div><div class="card c-tool">
+<div class="c-top"><span class="c-badge">🔄 納刀</span><span class="c-kana">1 点</span></div>
+<div class="c-mid"><span class="c-icon">🔄</span><span class="c-name">納刀</span></div>
+<div class="c-text">将你的<b>刀鍔</b>（已打出太刀卡的弃牌区）全部收回手中。不纳刀就没牌可打。</div>
+</div><div class="card c-tool">
+<div class="c-top"><span class="c-badge">⛩️ 地形</span><span class="c-kana">1 点</span></div>
+<div class="c-mid"><span class="c-icon">⛩️</span><span class="c-name">地形</span></div>
+<div class="c-text">发动所在町的地形效果（各町不同，见地图）。</div>
+</div><div class="card c-tool">
+<div class="c-top"><span class="c-badge">⚒️ 太刀鍛冶</span><span class="c-kana">1 点</span></div>
+<div class="c-mid"><span class="c-icon">⚒️</span><span class="c-name">太刀鍛冶</span></div>
+<div class="c-text">弃 <b>4 枚赤魂</b>，你的基础伤害<b>永久 +1</b>（每局上限 3 次）。</div>
+</div><div class="card c-tool">
+<div class="c-top"><span class="c-badge">🩹 療養</span><span class="c-kana">1 点</span></div>
+<div class="c-mid"><span class="c-icon">🩹</span><span class="c-name">療養</span></div>
+<div class="c-text">弃 <b>2 枚黄魂</b>（楓只需 1 枚），回复 <b>1 点体力</b>。</div>
+</div><div class="card c-tool">
+<div class="c-top"><span class="c-badge">👹 鬼武者</span><span class="c-kana">0 点</span></div>
+<div class="c-mid"><span class="c-icon">👹</span><span class="c-name">鬼武者</span></div>
+<div class="c-text">弃 <b>3 枚青魂</b>宣告，必须在暗置阶段<b>之前</b>宣告。本回合一闪额外 ×2、手牌上限 +3；回合结束受 1 伤。</div>
+</div><div class="card c-tool">
+<div class="c-top"><span class="c-badge">🎴 道具</span><span class="c-kana">0 点</span></div>
+<div class="c-mid"><span class="c-icon">🎴</span><span class="c-name">道具</span></div>
+<div class="c-text">使用手上的道具卡（大部分不耗行动力，每回合<b>不限次数</b>，但没有限制就是最大的限制 —— 打一张少一张）。</div>
+</div></div>
+</section>
+
+<section class="endnote">
+    《鬼武者：幻魔京都》打印道具包 · 共 <b>156 张卡牌</b>
+    （太刀 40 + 道具 18 + 幻魔 28 + 魂 48 + 瘴气 12 + 秘宝 10）<br>
+    完整规则请参考同目录下的 <a href="README.md">README.md</a>
+</section>
+
+</div>
+</body>
+</html>
