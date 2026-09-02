@@ -115,6 +115,7 @@ boardgames/
 | [奥德赛：归乡航程](category/card/odyssey-voyage-home/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等 |
 | [山海御灵录](category/card/shanhai-spirit-codex/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
 | [鬼武者：幻魔京都](category/card/onimusha-genma-kyoto/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
+| [吉伊卡哇：人鱼岛的馈赠](category/party/chiikawa-mermaid-island/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
 
 ## 添加新桌游
 
