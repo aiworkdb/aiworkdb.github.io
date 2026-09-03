@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>魔女之夜：灵魂宝石 · 打印道具</title>
+<style>
+:root{
+  --ink:#2b2333; --muted:#6b5f78; --line:#d9cfe4;
+  --bg:#f7f4fa; --panel:#ffffff; --accent:#7d5ba6;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; padding:28px 18px 60px;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans CJK SC",system-ui,sans-serif;
+  line-height:1.6;
+}
+.wrap{max-width:1180px;margin:0 auto;}
+
+header.hero{
+  background:linear-gradient(135deg,#4a3460 0%,#7d5ba6 55%,#b4739a 100%);
+  color:#fff;border-radius:16px;padding:26px 30px;margin-bottom:22px;
+  box-shadow:0 6px 22px rgba(74,52,96,.22);
+}
+header.hero h1{margin:0 0 6px;font-size:29px;letter-spacing:.5px;}
+header.hero .sub{opacity:.9;font-size:14px;letter-spacing:2px;text-transform:uppercase;}
+header.hero .desc{margin-top:12px;font-size:14px;opacity:.95;}
+
+h2.sec{
+  font-size:20px;margin:34px 0 14px;padding-left:12px;
+  border-left:5px solid var(--accent);line-height:1.3;
+}
+h2.sec small{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:3px;}
+
+.print-hint{
+  background:#fff8e6;border:1px solid #f0d9a0;border-left:5px solid #d1782b;
+  border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:14px;
+}
+.print-hint strong{color:#a35a15;}
+.print-hint ul{margin:8px 0 0;padding-left:20px;}
+.print-hint li{margin:3px 0;}
+
+.grid{display:grid;gap:12px;}
+.g4{grid-template-columns:repeat(4,1fr);}
+.g5{grid-template-columns:repeat(5,1fr);}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g2{grid-template-columns:repeat(2,1fr);}
+
+/* ---------- 通用卡 ---------- */
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:11px;
+  padding:10px 11px 8px;position:relative;overflow:hidden;
+  box-shadow:0 1px 4px rgba(60,40,80,.07);
+  break-inside:avoid; page-break-inside:avoid;
+  display:flex;flex-direction:column;min-height:186px;
+}
+.card::before{
+  content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--ac);
+}
+
+/* ---------- 魔法牌 ---------- */
+.card.spell{background:var(--abg,#fff);}
+.sp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.sp-tag{
+  font-size:11px;color:#fff;background:var(--ac);
+  padding:2px 8px;border-radius:20px;letter-spacing:1px;
+}
+.sp-pw{
+  font-size:19px;font-weight:800;color:var(--ac);
+  border:2px solid var(--ac);border-radius:8px;width:38px;height:32px;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.sp-pw::after{content:"";}
+.sp-icon{font-size:30px;text-align:center;margin:2px 0 4px;}
+.sp-name{font-size:15px;font-weight:700;text-align:center;color:var(--ink);}
+.sp-sub{font-size:11px;color:var(--ac);text-align:center;margin-bottom:6px;font-weight:600;}
+.sp-eff{font-size:11.5px;color:#4a3f55;flex:1;line-height:1.5;}
+
+.sp-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px dashed var(--line);margin-top:7px;padding-top:5px;
+}
+.cnt{font-size:11px;font-weight:700;color:var(--ac);background:#fff;
+  border:1px solid var(--ac);border-radius:4px;padding:0 5px;}
+.ft-tag{font-size:10px;color:var(--muted);letter-spacing:1px;}
+
+.good{color:#2f7a4a;font-weight:700;}
+.warn{color:#b8402f;font-weight:700;}
+
+/* ---------- 侵蚀卡 ---------- */
+.card.night{background:#f6f2fa;}
+.nt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.nt-no{font-size:12px;font-weight:700;color:#fff;background:var(--ac);padding:2px 9px;border-radius:20px;}
+.nt-er{font-size:13px;font-weight:800;color:var(--ac);}
+.nt-icon{font-size:28px;text-align:center;margin:2px 0;}
+.nt-name{font-size:15px;font-weight:700;text-align:center;}
+.nt-ev{font-size:11.5px;color:#4a3f55;flex:1;margin-top:6px;line-height:1.5;}
+
+/* ---------- 使魔 ---------- */
+.card.fam{background:#fdfbf6;}
+.fm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.fm-hp{font-size:12px;font-weight:800;color:#fff;background:var(--ac);padding:2px 8px;border-radius:5px;}
+.fm-tier{font-size:11px;font-weight:700;color:var(--ac);}
+.fm-icon{font-size:28px;text-align:center;margin:2px 0;}
+.fm-name{font-size:14px;font-weight:700;text-align:center;}
+.fm-desc{font-size:10.5px;color:var(--muted);font-style:italic;text-align:center;margin:4px 0 6px;line-height:1.45;}
+.fm-rew{font-size:11px;flex:1;background:#fff;border:1px dashed var(--line);border-radius:6px;padding:5px 6px;}
+
+/* ---------- 板块 ---------- */
+.card.tile{background:#f4f1fa;min-height:158px;}
+.tl-icon{font-size:32px;text-align:center;margin:6px 0 4px;}
+.tl-name{font-size:15px;font-weight:700;text-align:center;}
+.tl-eff{font-size:11.5px;color:#4a3f55;flex:1;margin-top:6px;line-height:1.5;}
+
+/* ---------- 愿望卡 ---------- */
+.card.wish{background:#fffdf8;min-height:246px;}
+.ws-icon{font-size:28px;text-align:center;margin:4px 0 2px;}
+.ws-name{font-size:17px;font-weight:800;text-align:center;color:var(--ac);}
+.ws-title{font-size:11px;color:var(--muted);text-align:center;margin-bottom:7px;}
+.ws-sec{font-size:10.5px;color:#fff;background:var(--ac);border-radius:4px;
+  padding:1px 7px;display:inline-block;margin-bottom:4px;letter-spacing:1px;}
+.ws-sec.cost{background:#8a4a4a;}
+.ws-ability,.ws-cost{font-size:11.5px;line-height:1.5;color:#4a3f55;}
+.ws-cost{flex:1;color:#8a4a4a;font-weight:600;}
+
+/* ---------- 悲叹 / 污浊 / 魔女化 ---------- */
+.card.seed,.card.witched{min-height:210px;text-align:center;}
+.card.seed.grief{background:#f7f2fd;}
+.card.seed.tainted{background:#efe9f3;}
+.card.witched{background:#f0eaf4;}
+.sd-icon{font-size:34px;margin:8px 0 4px;}
+.sd-name{font-size:16px;font-weight:800;color:var(--ac);}
+.sd-line{font-size:12px;font-weight:700;margin:4px 0 7px;color:var(--ink);}
+.sd-eff{font-size:11.5px;color:#4a3f55;text-align:left;flex:1;line-height:1.55;}
+
+/* ---------- 污浊刻度条 ---------- */
+.tracker{
+  background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px;
+  break-inside:avoid;page-break-inside:avoid;
+}
+.tr-title{font-size:15px;font-weight:800;text-align:center;color:#5b3a6e;}
+.tr-sub{font-size:11px;color:var(--muted);text-align:center;margin:4px 0 10px;}
+.tr-scale{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;}
+.tr-cell{
+  text-align:center;font-size:12px;font-weight:700;color:#fff;
+  border-radius:6px;padding:9px 0;
+}
+.tr-cell span{display:block;font-size:8.5px;font-weight:400;opacity:.9;}
+.tr-cell.safe{background:#4b8f5e;}
+.tr-cell.warn1{background:#c9a03c;}
+.tr-cell.warn2{background:#d1782b;}
+.tr-cell.danger{background:#c0453f;}
+.tr-cell.dead{background:#2b1c33;}
+.tr-legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px;font-size:10.5px;color:var(--muted);}
+.tr-legend .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:3px;vertical-align:-1px;}
+.sw.safe{background:#4b8f5e;}.sw.warn1{background:#c9a03c;}
+.sw.warn2{background:#d1782b;}.sw.danger{background:#c0453f;}.sw.dead{background:#2b1c33;}
+
+/* ---------- 棋子 ---------- */
+.pawn{text-align:center;break-inside:avoid;page-break-inside:avoid;}
+.pawn-body{
+  width:96px;height:96px;margin:0 auto;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#fff 0%,var(--pc) 62%,rgba(0,0,0,.28) 100%);
+  border:3px solid rgba(0,0,0,.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 3px 10px rgba(50,30,70,.2);position:relative;
+}
+.pawn-gem{
+  width:30px;height:38px;border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+  background:linear-gradient(160deg,#fff 0%,#e8dff5 40%,#b9a6d4 100%);
+  border:2px solid rgba(255,255,255,.85);
+  box-shadow:0 0 8px rgba(255,255,255,.7);
+}
+.pawn-no{
+  position:absolute;bottom:10px;font-size:13px;font-weight:800;color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,.6);
+}
+.pawn-label{font-size:12px;color:var(--muted);margin-top:6px;font-weight:600;}
+
+/* ---------- 地图 ---------- */
+.map-wrap{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;}
+.map-title{font-size:17px;font-weight:800;text-align:center;color:#5b3a6e;margin-bottom:12px;}
+.map-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:640px;margin:0 auto;
+}
+.map-cell{
+  border:2px solid var(--line);border-radius:10px;padding:14px 8px;text-align:center;
+  background:#f7f4fa;min-height:104px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.map-cell.core{
+  background:linear-gradient(150deg,#3d2a52,#6b4a8a);color:#fff;border-color:#3d2a52;
+}
+.mc-icon{font-size:26px;}
+.mc-name{font-size:13px;font-weight:700;margin-top:5px;}
+.mc-tag{font-size:10px;opacity:.85;margin-top:3px;}
+.map-note{
+  font-size:12px;color:var(--muted);margin-top:14px;background:#faf8fc;
+  border-left:4px solid var(--accent);padding:9px 12px;border-radius:0 7px 7px 0;line-height:1.6;
+}
+
+/* ---------- 速查表 ---------- */
+.ref{background:#fff;border:1px solid var(--line);border-radius:11px;padding:16px 18px;}
+.ref table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.ref th,.ref td{border:1px solid var(--line);padding:6px 9px;text-align:left;}
+.ref th{background:#f2ecf8;color:#5b3a6e;font-size:12px;}
+.ref td.c{text-align:center;}
+.ref h3{margin:0 0 10px;font-size:15px;color:#5b3a6e;}
+
+footer{margin-top:40px;text-align:center;font-size:12px;color:var(--muted);}
+
+/* ---------- 打印 ---------- */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+@media print {
+    .print-hint { display: none; }
+}
+@media print{
+  body{padding:0;background:#fff;}
+  h2.sec{page-break-after:avoid;margin-top:18px;}
+  .grid{page-break-inside:auto;}
+  header.hero{box-shadow:none;}
+  .card,.tracker,.map-wrap,.pawn,.ref{box-shadow:none;}
+}
+@page{ size:A4; margin:10mm; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>🌕 魔女之夜：灵魂宝石 · 打印道具</h1>
+  <div class="sub">Walpurgis Night: Soul Gems</div>
+  <div class="desc">共 8 个夜晚的半合作策略对抗。管理你的灵魂宝石污浊度，抢在悲叹之种耗尽前击溃魔女之夜——
+  但记住，<b>每一颗被用掉的悲叹之种，都会变成下一颗扎伤同伴的刺。</b></div>
+</header>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则所有彩色边框与渐变会丢失</li>
+    <li>卡牌和棋子建议使用<strong>卡纸（200-250g）</strong>打印，普通纸太软会透光</li>
+    <li>悲叹之种与污浊之种<strong>建议双面打印</strong>（或分别打印后背对背粘贴），方便翻面使用</li>
+    <li>打印后可裁剪并<strong>塑封</strong>，用湿布擦写污浊刻度条即可反复使用</li>
+  </ul>
+</div>
+<h2 class="sec">🗺️ 游戏地图<small>魔女结界 3×3 —— 中心固定，外环 8 板块每夜洗牌重排</small></h2><div class="map-wrap">
+  <div class="map-title">魔女结界 · 3×3 板块布局</div>
+  <div class="map-grid"><div class="map-cell outer"><div class="mc-icon">🏫</div><div class="mc-name">见泷原中学</div></div><div class="map-cell outer"><div class="mc-icon">🛍️</div><div class="mc-name">商店街</div></div><div class="map-cell outer"><div class="mc-icon">🌉</div><div class="mc-name">堤坝</div></div><div class="map-cell outer"><div class="mc-icon">🏠</div><div class="mc-name">住宅街</div></div><div class="map-cell core"><div class="mc-icon">👁️</div><div class="mc-name">魔女之夜核心</div><div class="mc-tag">攻击点 · 受侵蚀</div></div><div class="map-cell outer"><div class="mc-icon">⛪</div><div class="mc-name">废弃教堂</div></div><div class="map-cell outer"><div class="mc-icon">🎡</div><div class="mc-name">摩天轮</div></div><div class="map-cell outer"><div class="mc-icon">🕳️</div><div class="mc-name">迷宫回廊</div></div><div class="map-cell outer"><div class="mc-icon">🌹</div><div class="mc-name">蔷薇园</div></div></div>
+  <div class="map-note">
+    <b>布局规则：</b>中心固定为「👁️ 魔女之夜核心」；外环 8 格由 <b>8 张结界板块</b>每夜<b>洗牌重排</b>。
+    <b>相邻</b>＝共边（外环顺时针相连，且 8 个外环格<b>都与中心相邻</b>）。
+    <b>污浊之种</b>与<b>使魔</b>都跟着板块一起移动。
+  </div>
+</div><h2 class="sec">📋 行动速查表<small>建议单独打印一张，人手一份</small></h2>
+<div class="ref">
+<h3>每夜 3 点魔力（AP）· 行动一览</h3>
+<table>
+<tr><th style="width:76px">行动</th><th style="width:46px">AP</th><th style="width:88px">位置要求</th><th>效果</th></tr>
+<tr><td>⚔️ 攻击</td><td class="c">2</td><td class="c">仅中心</td><td>打出 1 张魔法牌，伤害＝威力。可额外支付污浊强化：<b>每 2 点污浊 +1 伤害</b>，最多 +3。</td></tr>
+<tr><td>🗡️ 讨伐使魔</td><td class="c">1</td><td class="c">外环</td><td>打出 1 张魔法牌，威力 ≥ 使魔 HP 即击败，拿奖励。牌无论成败都弃掉。</td></tr>
+<tr><td>🚶 移动</td><td class="c">1</td><td class="c">任意</td><td>移动到<b>相邻</b>板块（外环↔中心，或外环↔相邻外环）。</td></tr>
+<tr><td>🃏 蓄力</td><td class="c">1</td><td class="c">任意</td><td>抽 1 张魔法牌（手牌上限 6 张）。</td></tr>
+<tr><td>💠 净化</td><td class="c">1</td><td class="c">任意</td><td>消耗 1 颗悲叹之种，<b>污浊 -4</b>。用掉后它翻面成污浊之种，留在你当前板块。</td></tr>
+<tr><td>🤝 守护</td><td class="c">1</td><td class="c">任意</td><td>给 1 名其他玩家 1 张手牌，<b>或</b>代他承受 2 点污浊。</td></tr>
+<tr><td>😌 静息</td><td class="c">1</td><td class="c">仅外环</td><td><b>污浊 -1</b>（中心无法静息）。</td></tr>
+</table>
+<h3 style="margin-top:16px">每夜流程</h3>
+<table>
+<tr><th style="width:110px">阶段</th><th>做什么</th></tr>
+<tr><td>① 结界展开</td><td>翻出本夜<b>侵蚀卡</b>；把 8 张外环板块<b>洗牌重排</b>（污浊之种与使魔跟着板块走）。</td></tr>
+<tr><td>② 行动阶段</td><td>从起始玩家开始顺时针，<b>每人每次花 1 AP</b>，循环到所有人 AP 归零。可公开讨论。</td></tr>
+<tr><td>③ 反击阶段</td><td>仍在中心的玩家，污浊 <b>+ 本夜侵蚀值</b>（先结算减益，再判定魔女化）。</td></tr>
+<tr><td>④ 夜末结算</td><td>触发板块停留效果 → 结算本夜特殊事件 → 手牌补到 3 张 → 起始玩家左移一位。</td></tr>
+</table>
+</div><h2 class="sec">💠 污浊刻度条<small>每位玩家 1 条 —— 12 点即魔女化</small></h2><div class="grid g3"><div class="tracker">
+  <div class="tr-title">灵魂宝石 · 污浊刻度</div>
+  <div class="tr-sub">把一枚回形针或记号放在当前污浊数字上；到 <b>12</b> 立即魔女化</div>
+  <div class="tr-scale">
+    <div class="tr-cell safe">0</div><div class="tr-cell safe">1</div>
+    <div class="tr-cell safe">2</div><div class="tr-cell safe">3</div>
+    <div class="tr-cell safe">4</div><div class="tr-cell safe">5</div>
+    <div class="tr-cell warn1">6</div><div class="tr-cell warn1">7</div>
+    <div class="tr-cell warn2">8</div><div class="tr-cell warn2">9</div>
+    <div class="tr-cell danger">10</div><div class="tr-cell danger">11</div>
+    <div class="tr-cell dead">12<br><span>魔女化</span></div>
+  </div>
+  <div class="tr-legend">
+    <span><i class="sw safe"></i>0-5 安全</span>
+    <span><i class="sw warn1"></i>6-7 注意</span>
+    <span><i class="sw warn2"></i>8-9 危险</span>
+    <span><i class="sw danger"></i>10-11 极限</span>
+    <span><i class="sw dead"></i>12 出局</span>
+  </div>
+</div><div class="tracker">
+  <div class="tr-title">灵魂宝石 · 污浊刻度</div>
+  <div class="tr-sub">把一枚回形针或记号放在当前污浊数字上；到 <b>12</b> 立即魔女化</div>
+  <div class="tr-scale">
+    <div class="tr-cell safe">0</div><div class="tr-cell safe">1</div>
+    <div class="tr-cell safe">2</div><div class="tr-cell safe">3</div>
+    <div class="tr-cell safe">4</div><div class="tr-cell safe">5</div>
+    <div class="tr-cell warn1">6</div><div class="tr-cell warn1">7</div>
+    <div class="tr-cell warn2">8</div><div class="tr-cell warn2">9</div>
+    <div class="tr-cell danger">10</div><div class="tr-cell danger">11</div>
+    <div class="tr-cell dead">12<br><span>魔女化</span></div>
+  </div>
+  <div class="tr-legend">
+    <span><i class="sw safe"></i>0-5 安全</span>
+    <span><i class="sw warn1"></i>6-7 注意</span>
+    <span><i class="sw warn2"></i>8-9 危险</span>
+    <span><i class="sw danger"></i>10-11 极限</span>
+    <span><i class="sw dead"></i>12 出局</span>
+  </div>
+</div><div class="tracker">
+  <div class="tr-title">灵魂宝石 · 污浊刻度</div>
+  <div class="tr-sub">把一枚回形针或记号放在当前污浊数字上；到 <b>12</b> 立即魔女化</div>
+  <div class="tr-scale">
+    <div class="tr-cell safe">0</div><div class="tr-cell safe">1</div>
+    <div class="tr-cell safe">2</div><div class="tr-cell safe">3</div>
+    <div class="tr-cell safe">4</div><div class="tr-cell safe">5</div>
+    <div class="tr-cell warn1">6</div><div class="tr-cell warn1">7</div>
+    <div class="tr-cell warn2">8</div><div class="tr-cell warn2">9</div>
+    <div class="tr-cell danger">10</div><div class="tr-cell danger">11</div>
+    <div class="tr-cell dead">12<br><span>魔女化</span></div>
+  </div>
+  <div class="tr-legend">
+    <span><i class="sw safe"></i>0-5 安全</span>
+    <span><i class="sw warn1"></i>6-7 注意</span>
+    <span><i class="sw warn2"></i>8-9 危险</span>
+    <span><i class="sw danger"></i>10-11 极限</span>
+    <span><i class="sw dead"></i>12 出局</span>
+  </div>
+</div></div><h2 class="sec">🌀 结界板块 ×8<small>每夜洗牌重排，构成外环 8 格</small></h2><div class="grid g4"><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">🏫</div>
+  <div class="tl-name">见泷原中学</div>
+  <div class="tl-eff">停留时<b>抽 1 张</b>魔法牌（每夜每板块限 1 次）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">🛍️</div>
+  <div class="tl-name">商店街</div>
+  <div class="tl-eff">停留时<b>下夜 AP +1</b>（每夜每板块限 1 次）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">🌉</div>
+  <div class="tl-name">堤坝</div>
+  <div class="tl-eff">停留时<b>污浊 -1</b>（每夜每板块限 1 次）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">🏠</div>
+  <div class="tl-name">住宅街</div>
+  <div class="tl-eff">停留时<b>抽 1 张使魔卡</b>，可立即花 1 AP 挑战它。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">⛪</div>
+  <div class="tl-name">废弃教堂</div>
+  <div class="tl-eff">停留时<b>弃 2 张手牌，污浊 -3</b>（每夜限 1 次）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">🎡</div>
+  <div class="tl-name">摩天轮</div>
+  <div class="tl-eff">停留时<b>移动到任意相邻板块</b>，不消耗 AP（每夜限 1 次）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">🕳️</div>
+  <div class="tl-name">迷宫回廊</div>
+  <div class="tl-eff">停留时<b>传送到任意 1 个外环板块</b>（每夜限 1 次）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div><div class="card tile" style="--ac:#6b5b95">
+  <div class="tl-icon">🌹</div>
+  <div class="tl-name">蔷薇园</div>
+  <div class="tl-eff">停留时得 <b>1 枚结界碎片</b>；集齐 <b>2 枚</b>可换 <b>1 颗悲叹之种</b>。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">结界板块</span></div>
+</div></div><h2 class="sec">🔫 魔法牌 · 射击系 ×12<small>6 种模板 × 2 张 —— 在中心打出，伤害＝卡面威力</small></h2><div class="grid g4"><div class="card spell" style="--ac:#7d5ba6;--abg:#f3ecfa">
+  <div class="sp-top"><span class="sp-tag">射击</span><span class="sp-pw">2</span></div>
+  <div class="sp-icon">🔫</div>
+  <div class="sp-name">追踪弹</div>
+  <div class="sp-sub">本夜侵蚀 -1</div>
+  <div class="sp-eff">造成 <b>2 点</b>伤害。<br>本夜反击阶段，<b>你的侵蚀 -1</b>（最低 0）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#7d5ba6;--abg:#f3ecfa">
+  <div class="sp-top"><span class="sp-tag">射击</span><span class="sp-pw">2</span></div>
+  <div class="sp-icon">🎯</div>
+  <div class="sp-name">连射</div>
+  <div class="sp-sub">命中后抽 1 张</div>
+  <div class="sp-eff">造成 <b>2 点</b>伤害。<br>结算后<b>抽 1 张</b>魔法牌。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#7d5ba6;--abg:#f3ecfa">
+  <div class="sp-top"><span class="sp-tag">射击</span><span class="sp-pw">3</span></div>
+  <div class="sp-icon">🏹</div>
+  <div class="sp-name">贯穿矢</div>
+  <div class="sp-sub">朴实无华的一击</div>
+  <div class="sp-eff">造成 <b>3 点</b>伤害。没有额外效果，也没有代价。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#7d5ba6;--abg:#f3ecfa">
+  <div class="sp-top"><span class="sp-tag">射击</span><span class="sp-pw">3</span></div>
+  <div class="sp-icon">💥</div>
+  <div class="sp-name">弹幕</div>
+  <div class="sp-sub">站桩输出 +1</div>
+  <div class="sp-eff">造成 <b>3 点</b>伤害。<br>若你本夜<b>没有移动过</b>，威力 <b>+1</b>（合计 4）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#7d5ba6;--abg:#f3ecfa">
+  <div class="sp-top"><span class="sp-tag">射击</span><span class="sp-pw">3</span></div>
+  <div class="sp-icon">🔮</div>
+  <div class="sp-name">银弹</div>
+  <div class="sp-sub">本夜侵蚀 -1</div>
+  <div class="sp-eff">造成 <b>3 点</b>伤害。<br>本夜反击阶段，<b>你的侵蚀 -1</b>（最低 0）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#7d5ba6;--abg:#f3ecfa">
+  <div class="sp-top"><span class="sp-tag">射击</span><span class="sp-pw">4</span></div>
+  <div class="sp-icon">🌟</div>
+  <div class="sp-name">终末一击</div>
+  <div class="sp-sub">仅第 6 夜起可用</div>
+  <div class="sp-eff">造成 <b>4 点</b>伤害。<br><span class="warn">只能在第 6、7、8 夜打出</span>；其他夜次视为 0 威力。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div></div><h2 class="sec">🗡️ 魔法牌 · 斩击系 ×12<small>6 种模板 × 2 张 —— 在中心打出，伤害＝卡面威力</small></h2><div class="grid g4"><div class="card spell" style="--ac:#c0453f;--abg:#fdeced">
+  <div class="sp-top"><span class="sp-tag">斩击</span><span class="sp-pw">3</span></div>
+  <div class="sp-icon">🗡️</div>
+  <div class="sp-name">短刃</div>
+  <div class="sp-sub">最基础的近战</div>
+  <div class="sp-eff">造成 <b>3 点</b>伤害。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#c0453f;--abg:#fdeced">
+  <div class="sp-top"><span class="sp-tag">斩击</span><span class="sp-pw">3</span></div>
+  <div class="sp-icon">⚔️</div>
+  <div class="sp-name">斩击</div>
+  <div class="sp-sub">标准的一斩</div>
+  <div class="sp-eff">造成 <b>3 点</b>伤害。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#c0453f;--abg:#fdeced">
+  <div class="sp-top"><span class="sp-tag">斩击</span><span class="sp-pw">4</span></div>
+  <div class="sp-icon">🌊</div>
+  <div class="sp-name">居合</div>
+  <div class="sp-sub">本夜不能再行动</div>
+  <div class="sp-eff">造成 <b>4 点</b>伤害。<br>打出后<b>你的本夜行动阶段立即结束</b>（剩余 AP 作废）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#c0453f;--abg:#fdeced">
+  <div class="sp-top"><span class="sp-tag">斩击</span><span class="sp-pw">4</span></div>
+  <div class="sp-icon">🔨</div>
+  <div class="sp-name">重斩</div>
+  <div class="sp-sub">额外 +1 污浊</div>
+  <div class="sp-eff">造成 <b>4 点</b>伤害，并<b>你的污浊 +1</b>。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#c0453f;--abg:#fdeced">
+  <div class="sp-top"><span class="sp-tag">斩击</span><span class="sp-pw">3</span></div>
+  <div class="sp-icon">🗡️</div>
+  <div class="sp-name">双刃</div>
+  <div class="sp-sub">可弃牌换威</div>
+  <div class="sp-eff">造成 <b>3 点</b>伤害。<br>可额外<b>弃 1 张手牌</b>，威力 <b>+2</b>（合计 5）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#c0453f;--abg:#fdeced">
+  <div class="sp-top"><span class="sp-tag">斩击</span><span class="sp-pw">5</span></div>
+  <div class="sp-icon">✂️</div>
+  <div class="sp-name">断罪</div>
+  <div class="sp-sub">清空手牌</div>
+  <div class="sp-eff">造成 <b>5 点</b>伤害。<br>结算后<b>弃掉全部手牌</b>（至少留 0 张，夜末补到 3 张）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div></div><h2 class="sec">⛓️ 魔法牌 · 束缚系 ×8<small>4 种模板 × 2 张 —— 在中心打出，伤害＝卡面威力</small></h2><div class="grid g4"><div class="card spell" style="--ac:#3f7fa8;--abg:#eaf3fa">
+  <div class="sp-top"><span class="sp-tag">束缚</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">⛓️</div>
+  <div class="sp-name">束缚</div>
+  <div class="sp-sub">全场侵蚀 -1</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>本夜反击阶段，<b>全场所有玩家侵蚀 -1</b>（可叠加）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#3f7fa8;--abg:#eaf3fa">
+  <div class="sp-top"><span class="sp-tag">束缚</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">🔒</div>
+  <div class="sp-name">结界封</div>
+  <div class="sp-sub">全场免疫一次</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>本夜<b>魔女之夜不反击</b>——<span class="good">全场免疫侵蚀</span>。每局限用 1 张。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#3f7fa8;--abg:#eaf3fa">
+  <div class="sp-top"><span class="sp-tag">束缚</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">🕸️</div>
+  <div class="sp-name">减速</div>
+  <div class="sp-sub">自身侵蚀 -2</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>本夜反击阶段，<b>你的侵蚀 -2</b>（最低 0）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#3f7fa8;--abg:#eaf3fa">
+  <div class="sp-top"><span class="sp-tag">束缚</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">🌀</div>
+  <div class="sp-name">引力场</div>
+  <div class="sp-sub">把侵蚀甩给别人</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>把<b>你本夜的侵蚀全部转移</b>给任意 1 名其他玩家（他无法拒绝）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div></div><h2 class="sec">💫 魔法牌 · 爆发系 ×8<small>4 种模板 × 2 张 —— 在中心打出，伤害＝卡面威力</small></h2><div class="grid g4"><div class="card spell" style="--ac:#d1782b;--abg:#fdf0e2">
+  <div class="sp-top"><span class="sp-tag">爆发</span><span class="sp-pw">5</span></div>
+  <div class="sp-icon">💫</div>
+  <div class="sp-name">魔力爆发</div>
+  <div class="sp-sub">+2 污浊</div>
+  <div class="sp-eff">造成 <b>5 点</b>伤害，并<b>你的污浊 +2</b>。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#d1782b;--abg:#fdf0e2">
+  <div class="sp-top"><span class="sp-tag">爆发</span><span class="sp-pw">6</span></div>
+  <div class="sp-icon">🔥</div>
+  <div class="sp-name">绝望之焰</div>
+  <div class="sp-sub">+3 污浊</div>
+  <div class="sp-eff">造成 <b>6 点</b>伤害，并<b>你的污浊 +3</b>。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#d1782b;--abg:#fdf0e2">
+  <div class="sp-top"><span class="sp-tag">爆发</span><span class="sp-pw">5</span></div>
+  <div class="sp-icon">⚡</div>
+  <div class="sp-name">灵魂过载</div>
+  <div class="sp-sub">越绝望越强</div>
+  <div class="sp-eff">造成 <b>5 点</b>伤害，并<b>你的污浊 +2</b>。<br>若你当前<b>污浊 ≥ 8</b>，威力改为 <b>7</b>。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#d1782b;--abg:#fdf0e2">
+  <div class="sp-top"><span class="sp-tag">爆发</span><span class="sp-pw">6</span></div>
+  <div class="sp-icon">💋</div>
+  <div class="sp-name">魔女之吻</div>
+  <div class="sp-sub">+2 污浊，抽悲叹之种</div>
+  <div class="sp-eff">造成 <b>6 点</b>伤害，并<b>你的污浊 +2</b>。<br>结算后从<b>悲叹之种堆</b>取 1 颗到自己手上（堆空则无）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div></div><h2 class="sec">🛡️ 魔法牌 · 守护系 ×8<small>4 种模板 × 2 张 —— 在中心打出，伤害＝卡面威力</small></h2><div class="grid g4"><div class="card spell" style="--ac:#4b8f5e;--abg:#ecf6ef">
+  <div class="sp-top"><span class="sp-tag">守护</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">🛡️</div>
+  <div class="sp-name">守护</div>
+  <div class="sp-sub">指定 1 人侵蚀 -2</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>指定 1 名玩家（可以是自己），他本夜<b>侵蚀 -2</b>。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#4b8f5e;--abg:#ecf6ef">
+  <div class="sp-top"><span class="sp-tag">守护</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">💚</div>
+  <div class="sp-name">治疗</div>
+  <div class="sp-sub">指定 1 人污浊 -2</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>指定 1 名玩家（可以是自己），他<b>污浊 -2</b>。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#4b8f5e;--abg:#ecf6ef">
+  <div class="sp-top"><span class="sp-tag">守护</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">🤝</div>
+  <div class="sp-name">分担</div>
+  <div class="sp-sub">替别人扛 3 点</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>把 1 名玩家的 <b>3 点污浊转移给自己</b>（他同意才行）。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div><div class="card spell" style="--ac:#4b8f5e;--abg:#ecf6ef">
+  <div class="sp-top"><span class="sp-tag">守护</span><span class="sp-pw">1</span></div>
+  <div class="sp-icon">🌈</div>
+  <div class="sp-name">希望之光</div>
+  <div class="sp-sub">回收弃牌</div>
+  <div class="sp-eff">造成 <b>1 点</b>伤害。<br>从<b>魔法牌弃牌堆</b>挑 1 张回到你手上。</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">魔法牌</span></div>
+</div></div><h2 class="sec">💠 悲叹之种 ×10 · 🖤 污浊之种 ×10 · 👁️ 魔女化 ×5<small>悲叹之种是唯一的净化手段，用一颗少一颗，还会变成地雷</small></h2><div class="grid g3"><div class="card seed grief" style="--ac:#7d5ba6">
+  <div class="sd-icon">💠</div>
+  <div class="sd-name">悲叹之种</div>
+  <div class="sd-line"><b>净化 4 点污浊</b></div>
+  <div class="sd-eff">花 <b>1 AP</b> 使用，你的<b>污浊 -4</b>。<br>
+  使用后把它<b>翻面为「污浊之种」</b>，放在你<b>当前所在板块</b>上。</div>
+  <div class="sp-foot"><span class="cnt">×10</span><span class="ft-tag">道具</span></div>
+</div><div class="card seed tainted" style="--ac:#3a2b45">
+  <div class="sd-icon">🖤</div>
+  <div class="sd-name">污浊之种</div>
+  <div class="sd-line"><b>地雷 · 不能再净化</b></div>
+  <div class="sd-eff">任何玩家<b>进入或停留</b>此板块，<b>污浊 +2</b>
+
+（每名玩家每夜最多触发 1 次）。<br>
+  它与板块<b>一起移动</b>——结界重排时跟着板块走。</div>
+  <div class="sp-foot"><span class="cnt">×10</span><span class="ft-tag">地雷</span></div>
+</div><div class="card witched" style="--ac:#1f1526">
+  <div class="sd-icon">👁️</div>
+  <div class="sd-name">魔女化</div>
+  <div class="sd-line"><b>灵魂宝石彻底污浊</b></div>
+  <div class="sd-eff">污浊达到 <b>12</b> 时立即魔女化：<br>
+  你<b>出局</b>，手牌与悲叹之种全部散落为<b>污浊之种</b>，<br>
+  魔女之夜 <b>HP +10</b>。<br>
+  此后每夜，仍在中心的玩家<b>额外 +1 污浊</b>。</div>
+  <div class="sp-foot"><span class="cnt">×5</span><span class="ft-tag">状态</span></div>
+</div></div><h2 class="sec">🌑 侵蚀卡（夜晚）×8<small>每夜翻 1 张，决定本夜侵蚀值与特殊事件</small></h2><div class="grid g4"><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 1 夜</span><span class="nt-er">侵蚀 1</span></div>
+  <div class="nt-icon">🌑</div>
+  <div class="nt-name">初见之影</div>
+  <div class="nt-ev"><b>准备：</b>每位玩家额外<b>抽 2 张</b>魔法牌（开局手牌变 5 张）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 2 夜</span><span class="nt-er">侵蚀 2</span></div>
+  <div class="nt-icon">🐇</div>
+  <div class="nt-name">使魔潮</div>
+  <div class="nt-ev"><b>结界展开后：</b>给<b>每个外环板块</b>各翻 1 张使魔卡，正面朝上放置。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 3 夜</span><span class="nt-er">侵蚀 2</span></div>
+  <div class="nt-icon">🌀</div>
+  <div class="nt-name">结界扭曲</div>
+  <div class="nt-ev">本夜所有<b>移动</b>行动消耗 <b>2 AP</b>（而非 1 AP）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 4 夜</span><span class="nt-er">侵蚀 3</span></div>
+  <div class="nt-icon">🗣️</div>
+  <div class="nt-name">绝望低语</div>
+  <div class="nt-ev">本夜<b>净化</b>行动额外消耗 <b>1 AP</b>（合计 2 AP）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 5 夜</span><span class="nt-er">侵蚀 3</span></div>
+  <div class="nt-icon">👁️</div>
+  <div class="nt-name">魔女觉醒</div>
+  <div class="nt-ev">从本夜起（含本夜），<b>所有在中心打出的攻击伤害 +1</b>。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 6 夜</span><span class="nt-er">侵蚀 4</span></div>
+  <div class="nt-icon">🥀</div>
+  <div class="nt-name">悲叹稀薄</div>
+  <div class="nt-ev">本夜<b>不能使用「净化」行动</b>（悲叹之种在手里也用不掉）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 7 夜</span><span class="nt-er">侵蚀 4</span></div>
+  <div class="nt-icon">🌒</div>
+  <div class="nt-name">终末前夜</div>
+  <div class="nt-ev"><b>夜末结算：</b>污浊 <b>≥ 8</b> 的玩家，各自<b>额外 +2 污浊</b>。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div><div class="card night" style="--ac:#5b3a6e">
+  <div class="nt-top"><span class="nt-no">第 8 夜</span><span class="nt-er">侵蚀 5</span></div>
+  <div class="nt-icon">🌕</div>
+  <div class="nt-name">瓦尔普吉斯</div>
+  <div class="nt-ev">本夜<b>所有攻击威力 +2</b>。<br><span class="warn">夜末若魔女之夜仍未被击败 → 全员立即魔女化，集体失败。</span></div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">侵蚀卡</span></div>
+</div></div><h2 class="sec">🐇 使魔卡 ×18<small>外环板块上的小怪 —— 击败它们是获取悲叹之种的主要途径</small></h2><div class="grid g5"><div class="card fam" style="--ac:#5f93ad">
+  <div class="fm-top"><span class="fm-hp">HP 3</span><span class="fm-tier">并</span></div>
+  <div class="fm-icon">🌺</div>
+  <div class="fm-name">蔷薇使魔</div>
+  <div class="fm-desc">会走路的花，被剪下来时还会轻微颤动。</div>
+  <div class="fm-rew"><b>击败奖励：</b>悲叹之种 ×1</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#c08a3c">
+  <div class="fm-top"><span class="fm-hp">HP 4</span><span class="fm-tier">强</span></div>
+  <div class="fm-icon">🕰️</div>
+  <div class="fm-name">钟摆使魔</div>
+  <div class="fm-desc">用摆锤计时，据说每摆一次就有人许下一次愿。</div>
+  <div class="fm-rew"><b>击败奖励：</b>魔法牌 ×2</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#5f93ad">
+  <div class="fm-top"><span class="fm-hp">HP 3</span><span class="fm-tier">并</span></div>
+  <div class="fm-icon">✂️</div>
+  <div class="fm-name">剪刀使魔</div>
+  <div class="fm-desc">喜欢把结界的布景剪成碎片，越剪越多。</div>
+  <div class="fm-rew"><b>击败奖励：</b>悲叹之种 ×1</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#7fa86b">
+  <div class="fm-top"><span class="fm-hp">HP 2</span><span class="fm-tier">弱</span></div>
+  <div class="fm-icon">🧸</div>
+  <div class="fm-name">玩偶使魔</div>
+  <div class="fm-desc">缝得歪歪扭扭的布偶，眼睛是用纽扣做的。</div>
+  <div class="fm-rew"><b>击败奖励：</b>魔法牌 ×1</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#c0653c">
+  <div class="fm-top"><span class="fm-hp">HP 5</span><span class="fm-tier">凶</span></div>
+  <div class="fm-icon">👤</div>
+  <div class="fm-name">影子使魔</div>
+  <div class="fm-desc">没有实体的黑影，会模仿你的动作。</div>
+  <div class="fm-rew"><b>击败奖励：</b>悲叹之种 ×2</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#c08a3c">
+  <div class="fm-top"><span class="fm-hp">HP 4</span><span class="fm-tier">强</span></div>
+  <div class="fm-icon">⚙️</div>
+  <div class="fm-name">齿轮使魔</div>
+  <div class="fm-desc">咬合的齿轮，转动时会发出像哭一样的声音。</div>
+  <div class="fm-rew"><b>击败奖励：</b>污浊 -2</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#7fa86b">
+  <div class="fm-top"><span class="fm-hp">HP 2</span><span class="fm-tier">弱</span></div>
+  <div class="fm-icon">🐦</div>
+  <div class="fm-name">鸟使魔</div>
+  <div class="fm-desc">成群出现的小鸟，衔着不知道从哪来的信。</div>
+  <div class="fm-rew"><b>击败奖励：</b>魔法牌 ×1</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#a03a6a">
+  <div class="fm-top"><span class="fm-hp">HP 6</span><span class="fm-tier">厄</span></div>
+  <div class="fm-icon">🪞</div>
+  <div class="fm-name">镜使魔</div>
+  <div class="fm-desc">照出来的不是你的脸，是你最不想成为的样子。</div>
+  <div class="fm-rew"><b>击败奖励：</b>悲叹之种 ×2 + 魔法牌 ×2</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div><div class="card fam" style="--ac:#5f93ad">
+  <div class="fm-top"><span class="fm-hp">HP 3</span><span class="fm-tier">并</span></div>
+  <div class="fm-icon">❓</div>
+  <div class="fm-name">无名使魔</div>
+  <div class="fm-desc">连魔女之夜都不记得它叫什么了。</div>
+  <div class="fm-rew"><b>击败奖励：</b>掷 D6：1-3 悲叹之种 ×1 / 4-6 魔法牌 ×2</div>
+  <div class="sp-foot"><span class="cnt">×2</span><span class="ft-tag">使魔</span></div>
+</div></div><h2 class="sec">🎀 愿望卡 ×5<small>每位玩家开局领取 1 张，能力很强，代价也很实在</small></h2><div class="grid g5"><div class="card wish" style="--ac:#d4739a">
+  <div class="ws-icon">🌸</div>
+  <div class="ws-name">治愈之愿</div>
+  <div class="ws-title">「想让那个人不再痛苦」</div>
+  <div class="ws-sec"><b>能力</b></div>
+  <div class="ws-ability">每局 <b>2 次</b>，可使任意 1 名玩家<b>污浊 -3</b>（<span class="good">不消耗悲叹之种、不产生污浊之种</span>）。</div>
+  <div class="ws-sec cost"><b>代价</b></div>
+  <div class="ws-cost">代价：每次使用后，<b>你自己的污浊 +1</b>。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">愿望卡</span></div>
+</div><div class="card wish" style="--ac:#6b5b95">
+  <div class="ws-icon">⛓️</div>
+  <div class="ws-name">时间之愿</div>
+  <div class="ws-title">「想回到那一天重新来过」</div>
+  <div class="ws-sec"><b>能力</b></div>
+  <div class="ws-ability">每局 <b>1 次</b>，可在你的行动阶段<b>重来一次</b>：把已花的 AP 全部恢复，已打出的牌收回。</div>
+  <div class="ws-sec cost"><b>代价</b></div>
+  <div class="ws-cost">副作用：每次重来，你<b>污浊 +2</b>。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">愿望卡</span></div>
+</div><div class="card wish" style="--ac:#c0453f">
+  <div class="ws-icon">⚔️</div>
+  <div class="ws-name">正义之愿</div>
+  <div class="ws-title">「想亲手斩断所有不公」</div>
+  <div class="ws-sec"><b>能力</b></div>
+  <div class="ws-ability">你的<b>攻击伤害 +1</b>（含强化后的总额）。</div>
+  <div class="ws-sec cost"><b>代价</b></div>
+  <div class="ws-cost">副作用：你每次攻击后<b>污浊 +1</b>。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">愿望卡</span></div>
+</div><div class="card wish" style="--ac:#d1782b">
+  <div class="ws-icon">🍎</div>
+  <div class="ws-name">温饱之愿</div>
+  <div class="ws-title">「想让重要的人吃上一口热饭」</div>
+  <div class="ws-sec"><b>能力</b></div>
+  <div class="ws-ability">你使用<b>悲叹之种</b>时，净化 <b>6 点</b>（而非 4 点）。</div>
+  <div class="ws-sec cost"><b>代价</b></div>
+  <div class="ws-cost">副作用：你每夜<b>少 1 AP</b>（即每夜 2 AP）。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">愿望卡</span></div>
+</div><div class="card wish" style="--ac:#4b8f5e">
+  <div class="ws-icon">🎀</div>
+  <div class="ws-name">羁绊之愿</div>
+  <div class="ws-title">「想和大家一直在一起」</div>
+  <div class="ws-sec"><b>能力</b></div>
+  <div class="ws-ability">每夜<b>首名进入中心</b>的玩家若是<b>其他玩家</b>，你立刻获得 <b>1 AP</b>（每夜限 1 次）。</div>
+  <div class="ws-sec cost"><b>代价</b></div>
+  <div class="ws-cost">副作用：只要有队友<b>魔女化</b>，你立刻<b>污浊 +3</b>。</div>
+  <div class="sp-foot"><span class="cnt">×1</span><span class="ft-tag">愿望卡</span></div>
+</div></div><h2 class="sec">♟️ 玩家棋子 ×5<small>沿虚线剪下，对折立起来就是一座灵魂宝石</small></h2><div class="grid g5" style="justify-items:center;"><div class="pawn" style="--pc:#c0453f">
+  <div class="pawn-body">
+    <div class="pawn-gem"></div>
+    <div class="pawn-no">P1</div>
+  </div>
+  <div class="pawn-label">玩家 1</div>
+</div><div class="pawn" style="--pc:#3f7fa8">
+  <div class="pawn-body">
+    <div class="pawn-gem"></div>
+    <div class="pawn-no">P2</div>
+  </div>
+  <div class="pawn-label">玩家 2</div>
+</div><div class="pawn" style="--pc:#4b8f5e">
+  <div class="pawn-body">
+    <div class="pawn-gem"></div>
+    <div class="pawn-no">P3</div>
+  </div>
+  <div class="pawn-label">玩家 3</div>
+</div><div class="pawn" style="--pc:#d1782b">
+  <div class="pawn-body">
+    <div class="pawn-gem"></div>
+    <div class="pawn-no">P4</div>
+  </div>
+  <div class="pawn-label">玩家 4</div>
+</div><div class="pawn" style="--pc:#7d5ba6">
+  <div class="pawn-body">
+    <div class="pawn-gem"></div>
+    <div class="pawn-no">P5</div>
+  </div>
+  <div class="pawn-label">玩家 5</div>
+</div></div>
+<footer>
+  《魔女之夜：灵魂宝石》· 打印道具 &nbsp;|&nbsp;
+  卡牌 112 张 + 棋子 5 个 + 板块 8 张 + 地图 1 张<br>
+  完整规则见同目录 <b>README.md</b>
+</footer>
+
+</div>
+</body>
+</html>
