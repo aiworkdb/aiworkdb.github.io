@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>只狼：苇名架势 — 打印道具</title>
+<style>
+  :root{
+    --ink:#1b1b1f; --paper:#fbf7f0; --line:#d9cfbe; --gold:#b98b2e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:24px; background:#efe9dd; color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  }
+  h1{font-size:26px; margin:0 0 4px; letter-spacing:2px;}
+  h2{
+    font-size:19px; margin:34px 0 10px; padding:8px 12px;
+    border-left:6px solid var(--gold); background:#f4ece0; border-radius:4px;
+  }
+  h3{font-size:15px; margin:18px 0 8px; color:#6b5b3e;}
+  .lead{font-size:13px; color:#6b5b3e; margin:0 0 18px;}
+  .print-hint{
+    background:#fff8e1; border:2px solid #f0c14b; border-radius:8px;
+    padding:12px 16px; margin:16px 0 24px; font-size:13px; line-height:1.7;
+  }
+  .print-hint ul{margin:6px 0 0; padding-left:20px;}
+  .grid{display:flex; flex-wrap:wrap; gap:8px;}
+  .card{
+    position:relative; width:6.3cm; min-height:8.8cm; border-radius:8px;
+    border:2px solid var(--c,#888); background:linear-gradient(180deg,#fffdf8 0%,#f6efe3 100%);
+    padding:8px 8px 6px; display:flex; flex-direction:column; align-items:center;
+    box-shadow:0 1px 3px rgba(0,0,0,.15); page-break-inside:avoid; break-inside:avoid;
+  }
+  .card-big{width:8.4cm; min-height:11.2cm;}
+  .badge{
+    position:absolute; top:-8px; right:-8px; background:var(--c,#888); color:#fff;
+    font-size:11px; font-weight:700; padding:2px 7px; border-radius:10px;
+    border:2px solid #fff;
+  }
+  .c-icon{font-size:30px; line-height:1.1; margin-top:2px;}
+  .card-big .c-icon{font-size:38px;}
+  .c-title{font-size:15px; font-weight:800; margin-top:4px; letter-spacing:1px;}
+  .card-big .c-title{font-size:18px;}
+  .c-sub{
+    font-size:10px; color:#fff; background:var(--c,#888); border-radius:4px;
+    padding:1px 7px; margin:4px 0 6px; letter-spacing:.5px;
+  }
+  .c-lines{list-style:none; margin:0; padding:0 2px; font-size:10.5px; line-height:1.55; text-align:left; width:100%;}
+  .card-big .c-lines{font-size:12px;}
+  .c-lines li{border-bottom:1px dashed #e2d8c6; padding:2px 0;}
+  .c-lines li:last-child{border-bottom:none;}
+  .c-foot{margin-top:auto; padding-top:5px; font-size:8px; color:#a89878; letter-spacing:1px;}
+  /* ---- 对决盘 ---- */
+  .board{
+    background:var(--paper); border:3px solid #6b5b3e; border-radius:12px;
+    padding:16px; page-break-inside:avoid;
+  }
+  .board-title{
+    text-align:center; font-size:20px; font-weight:800; letter-spacing:6px;
+    color:#6b5b3e; margin-bottom:10px;
+  }
+  .boss-zone{
+    border:2px dashed #b98b2e; border-radius:10px; padding:10px;
+    background:linear-gradient(180deg,#fdf3e0,#f7e9cf); margin-bottom:12px;
+  }
+  .boss-row{display:flex; gap:10px; align-items:stretch; flex-wrap:wrap;}
+  .slot{
+    border:2px dashed #b98b2e; border-radius:8px; display:flex;
+    align-items:center; justify-content:center; text-align:center;
+    font-size:11px; color:#8a7550; padding:6px; background:#fffdf6;
+  }
+  .pbar{flex:1 1 260px; min-width:240px;}
+  .pbar-hd{
+    font-size:12px; font-weight:800; color:#fff; background:var(--c,#888);
+    border-radius:6px 6px 0 0; padding:3px 8px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .pbar-note{font-weight:400; font-size:9.5px; opacity:.9;}
+  .pbar-cells{display:flex; border:2px solid var(--c,#888); border-top:none; border-radius:0 0 6px 6px; overflow:hidden;}
+  .tk{
+    flex:1; height:26px; display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:700; color:#5b4a2e;
+    background:linear-gradient(180deg,#fffdf7,#f2ead9);
+    border-right:1px solid #e0d5bf;
+  }
+  .tk:last-child{border-right:none;}
+  .tk.warn{background:linear-gradient(180deg,#fff2d6,#ffe2a8);}
+  .tk.crit{background:linear-gradient(180deg,#ffd9d2,#ffb9ad); color:#8a1f14;}
+  .party-row{display:flex; flex-direction:column; gap:8px;}
+  /* ---- 棋子 ---- */
+  .pawn{
+    width:4.2cm; height:4.2cm; border-radius:50%; border:3px solid var(--c,#888);
+    background:radial-gradient(circle at 35% 30%,#fff,var(--bg,#eee));
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    box-shadow:0 2px 4px rgba(0,0,0,.2);
+  }
+  .pawn .pi{font-size:26px;}
+  .pawn .pn{font-size:13px; font-weight:800; margin-top:2px;}
+  .pawn .pd{font-size:9px; color:#6b5b3e;}
+  .token{
+    width:2.6cm; height:2.6cm; border-radius:8px; border:2px solid var(--c,#888);
+    background:linear-gradient(180deg,#fffdf8,#f3ead9); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; font-size:20px;
+  }
+  .token span{font-size:9px; color:#6b5b3e; margin-top:2px;}
+  .legend{font-size:11.5px; line-height:1.7; color:#5b4a2e; margin-top:8px;}
+  .legend b{color:#8a1f14;}
+  table.qr{border-collapse:collapse; font-size:11px; width:100%; margin-top:8px;}
+  table.qr th,table.qr td{border:1px solid var(--line); padding:3px 6px; text-align:left;}
+  table.qr th{background:#f1e6d2;}
+  .foot{font-size:11px; color:#8a7c60; margin-top:26px; text-align:center;}
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body{background:#fff; padding:0;}
+    h2{page-break-after:avoid;}
+    .card,.board,.pawn,.token{box-shadow:none;}
+  }
+  @page { size: A4; margin: 8mm; }
+</style>
+</head>
+<body>
+
+<h1>⚔️ 只狼：苇名架势</h1>
+<p class="lead">SEKIRO — ASHINA POSTURE ｜ 打印道具全集 ｜ 建议 A4 纸张 + 卡纸</p>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong>（本页已内置 <code>@page { margin: 8mm }</code>）。</li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项，否则所有底色与架势条刻度会丢失。</li>
+    <li><strong>卡牌</strong>与<strong>棋子</strong>建议使用 <strong>200g 以上卡纸</strong>打印，<strong>对决盘</strong>可用普通 A4 纸（或覆膜）。</li>
+    <li>卡牌角标 <strong>×N</strong> 表示这张卡需要打印 <strong>N 张</strong>；没有角标的卡打印 1 张。</li>
+    <li>打印后沿边框裁剪，棋子可对折做成立牌，或粘贴在硬币/瓶盖上代替指示物。</li>
+  </ul>
+</div>
+
+<h2>一、苇名对决盘（1 张 · A4 横放）</h2>
+<p class="lead">中央为 Boss 区（Boss 卡位 + 招式卡位 + 架势条 0–16 刻度），下方为 4 名玩家的架势条（0–10 刻度）。把玩家棋子直接放在刻度格里当指示物。Boss 架势条上贴一张小纸条，写上当前 Boss 的<strong>架势上限</strong>与<strong>回复 R</strong>。</p>
+<div class="board">
+<div class="board-title">葦 名 對 決 盤</div>
+<div class="boss-zone">
+<div class="boss-row">
+<div class="slot" style="width:5.2cm;height:3.4cm;">Boss 卡位<br>（放当前 Boss 卡）</div>
+<div class="slot" style="width:3.6cm;height:3.4cm;">招式卡位<br>（每轮翻 1 张）</div>
+<div class="pbar"><div class="pbar-hd" style="--c:#b42318">Boss 架勢<span class="pbar-note">到达上限 = 被忍杀</span></div><div class="pbar-cells" style="--c:#b42318"><div class="tk"><span>0</span></div><div class="tk"><span>1</span></div><div class="tk"><span>2</span></div><div class="tk"><span>3</span></div><div class="tk"><span>4</span></div><div class="tk"><span>5</span></div><div class="tk"><span>6</span></div><div class="tk"><span>7</span></div><div class="tk"><span>8</span></div><div class="tk"><span>9</span></div><div class="tk"><span>10</span></div><div class="tk"><span>11</span></div><div class="tk"><span>12</span></div><div class="tk warn"><span>13</span></div><div class="tk warn"><span>14</span></div><div class="tk warn"><span>15</span></div><div class="tk crit"><span>16</span></div></div></div>
+</div>
+<div class="legend"><b>Boss 架势条</b>：由玩家打出招式卡 / 成功弹反 / 成功看破·跳跃·后跃推高；<b>每位玩家回合结束时，Boss 架势自动 −R</b>（R 写在 Boss 卡上，通常 2；破戒僧为 1）。「蓄力」额外让 Boss 架势 −2（蝴蝶夫人为 −3）。架势到达该 Boss 上限 → <b>立刻忍杀</b>，由打出最后一击的玩家得分。<br>★ <b>核心恒等式</b>：一整轮 Boss 共回复 <b>人数 × R</b> 点。4 人局 R=2 ⇒ 一轮必须合力打出 <b>8 点以上</b>，Boss 的条才会净增长——<b>一个人再猛也推不动，必须连续施压。</b></div>
+</div>
+<div class="party-row">
+<div class="pbar"><div class="pbar-hd" style="--c:#d13438">🔴 赤 架勢<span class="pbar-note">满 10 = 崩防</span></div><div class="pbar-cells" style="--c:#d13438"><div class="tk"><span>0</span></div><div class="tk"><span>1</span></div><div class="tk"><span>2</span></div><div class="tk"><span>3</span></div><div class="tk"><span>4</span></div><div class="tk"><span>5</span></div><div class="tk"><span>6</span></div><div class="tk warn"><span>7</span></div><div class="tk warn"><span>8</span></div><div class="tk warn"><span>9</span></div><div class="tk crit"><span>10</span></div></div></div>
+<div class="pbar"><div class="pbar-hd" style="--c:#1f6feb">🔵 蒼 架勢<span class="pbar-note">满 10 = 崩防</span></div><div class="pbar-cells" style="--c:#1f6feb"><div class="tk"><span>0</span></div><div class="tk"><span>1</span></div><div class="tk"><span>2</span></div><div class="tk"><span>3</span></div><div class="tk"><span>4</span></div><div class="tk"><span>5</span></div><div class="tk"><span>6</span></div><div class="tk warn"><span>7</span></div><div class="tk warn"><span>8</span></div><div class="tk warn"><span>9</span></div><div class="tk crit"><span>10</span></div></div></div>
+<div class="pbar"><div class="pbar-hd" style="--c:#2da44e">🟢 翠 架勢<span class="pbar-note">满 10 = 崩防</span></div><div class="pbar-cells" style="--c:#2da44e"><div class="tk"><span>0</span></div><div class="tk"><span>1</span></div><div class="tk"><span>2</span></div><div class="tk"><span>3</span></div><div class="tk"><span>4</span></div><div class="tk"><span>5</span></div><div class="tk"><span>6</span></div><div class="tk warn"><span>7</span></div><div class="tk warn"><span>8</span></div><div class="tk warn"><span>9</span></div><div class="tk crit"><span>10</span></div></div></div>
+<div class="pbar"><div class="pbar-hd" style="--c:#d4a72c">🟡 金 架勢<span class="pbar-note">满 10 = 崩防</span></div><div class="pbar-cells" style="--c:#d4a72c"><div class="tk"><span>0</span></div><div class="tk"><span>1</span></div><div class="tk"><span>2</span></div><div class="tk"><span>3</span></div><div class="tk"><span>4</span></div><div class="tk"><span>5</span></div><div class="tk"><span>6</span></div><div class="tk warn"><span>7</span></div><div class="tk warn"><span>8</span></div><div class="tk warn"><span>9</span></div><div class="tk crit"><span>10</span></div></div></div>
+</div>
+<div class="legend"><b>玩家架势条</b>：Boss 每轮只攻击「焦点玩家」一人，焦点按顺时针固定轮转。未应对的招式会推高你的架势；<b>回气</b>可以让自己 −4（枭在场时为 −3），代价是这一轮不出招。到达第 10 格 → <b>崩防</b>：损失 1 点回生、架势归 0、弃光手牌重抽 4 张。</div>
+</div>
+<h2>二、Boss 卡（6 张）</h2>
+<p class="lead">开局从中随机抽 <strong>2 位</strong>（不含苇名一心）依次作为第 1、第 2 位 Boss，<strong>苇名一心固定为第 3 位</strong>。忍杀分值：第 1 位 3 分 / 第 2 位 5 分 / 第 3 位 8 分。</p>
+<div class="grid">
+<div class="card card-big" style="--c:#1f6feb"><div class="c-icon">🏹</div><div class="c-title">葦名 弦一郎</div><div class="c-sub">BOSS</div><ul class="c-lines"><li>苇名流的弓与刀。突刺最多，看破不够就崩得快。</li><li>架势上限 13　｜　回复 R = 2</li><li>特性・雷逆：「危・突」未应对时，该玩家改为 +5 架势（而非 +4）。</li><li>招式堆：🗡️普通斬×4 🔺危・突×3 🌊危・薙×2 🌀蓄力×1</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card card-big" style="--c:#8e4ec6"><div class="c-icon">🦋</div><div class="c-title">蝴蝶夫人</div><div class="c-sub">BOSS</div><ul class="c-lines"><li>幻术与暗器。上限最低，但一次蓄力就能把你一轮的功夫抹掉。</li><li>架势上限 12　｜　回复 R = 2</li><li>特性・幻影：她的「蓄力」改为 Boss 架势 −3（而非 −2）。</li><li>招式堆：🗡️普通斬×4 🔺危・突×2 🌊危・薙×2 ✋危・掴×1 🌀蓄力×1</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card card-big" style="--c:#2da44e"><div class="c-icon">🪷</div><div class="c-title">破戒僧</div><div class="c-sub">BOSS</div><ul class="c-lines"><li>长枪横扫。回复只有 1，是最好推的一条，但长达 16。</li><li>架势上限 16　｜　回复 R = 1</li><li>特性・戒律：招式堆没有「蓄力」；任意玩家崩防时 Boss 架势 −2。</li><li>招式堆：🗡️普通斬×6 🔺危・突×2 🌊危・薙×1 ✋危・掴×1</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card card-big" style="--c:#475467"><div class="c-icon">🦉</div><div class="c-title">枭</div><div class="c-sub">BOSS</div><ul class="c-lines"><li>义父的毒。专治喜欢苟活的忍者。</li><li>架势上限 15　｜　回复 R = 2</li><li>特性・禁药：本场玩家「回气」只恢复 3 点架势（而非 4）。</li><li>招式堆：🗡️普通斬×5 🔺危・突×2 🌊危・薙×2 ✋危・掴×1</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card card-big" style="--c:#b54708"><div class="c-icon">🐒</div><div class="c-title">狮子猿</div><div class="c-sub">BOSS</div><ul class="c-lines"><li>三条命的巨兽。抓技 3 张，后跃带够了吗？</li><li>架势上限 15　｜　回复 R = 2</li><li>特性・咆哮：「危・掴」未应对时，该玩家额外弃 2 张手牌。</li><li>招式堆：🗡️普通斬×4 🔺危・突×1 🌊危・薙×2 ✋危・掴×3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card card-big" style="--c:#b42318"><div class="c-icon">👑</div><div class="c-title">葦名 一心</div><div class="c-sub">BOSS</div><ul class="c-lines"><li>苇名国的尽头。剑圣压得住看破，别指望一套带走。</li><li>架势上限 16　｜　回复 R = 2</li><li>特性・葦名之魂：固定为第 3 位 Boss；他的「危・突」被 👟 看破时，Boss 只 +2（而非 +3）。</li><li>招式堆：🗡️普通斬×4 🔺危・突×3 🌊危・薙×2 ✋危・掴×1</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h2>三、Boss 招式卡（60 张 · 每位 Boss 一副 10 张）</h2>
+<p class="lead">每位 Boss 的招式卡用<strong>该 Boss 的边框色</strong>打印，洗匀后作为独立牌堆；每轮从当前 Boss 的堆顶翻 1 张。堆用完立刻洗回重来。</p>
+<h3>🏹 葦名 弦一郎（架势上限 13　回复 R=2）　特性：雷逆</h3>
+<div class="grid">
+<div class="card" style="--c:#1f6feb"><div class="badge">×4</div><div class="c-icon">🗡️</div><div class="c-title">普通斬</div><div class="c-sub">🏹 Boss 招式</div><ul class="c-lines"><li>🛡️ 弹反成功：Boss +2，自身 +1</li><li>未应对：自身 +3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#1f6feb"><div class="badge">×3</div><div class="c-icon">🔺</div><div class="c-title">危・突</div><div class="c-sub">🏹 Boss 招式</div><ul class="c-lines"><li>👟 看破成功：Boss +3，自身 +0</li><li>未应对：自身 +4（雷逆：+5）</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#1f6feb"><div class="badge">×2</div><div class="c-icon">🌊</div><div class="c-title">危・薙</div><div class="c-sub">🏹 Boss 招式</div><ul class="c-lines"><li>🦵 跳跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#1f6feb"><div class="badge">×1</div><div class="c-icon">🌀</div><div class="c-title">蓄力</div><div class="c-sub">🏹 Boss 招式</div><ul class="c-lines"><li>无需应对：Boss 架势 −2</li><li>本轮焦点玩家白赚一轮</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h3>🦋 蝴蝶夫人（架势上限 12　回复 R=2）　特性：幻影</h3>
+<div class="grid">
+<div class="card" style="--c:#8e4ec6"><div class="badge">×4</div><div class="c-icon">🗡️</div><div class="c-title">普通斬</div><div class="c-sub">🦋 Boss 招式</div><ul class="c-lines"><li>🛡️ 弹反成功：Boss +2，自身 +1</li><li>未应对：自身 +3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#8e4ec6"><div class="badge">×2</div><div class="c-icon">🔺</div><div class="c-title">危・突</div><div class="c-sub">🦋 Boss 招式</div><ul class="c-lines"><li>👟 看破成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#8e4ec6"><div class="badge">×2</div><div class="c-icon">🌊</div><div class="c-title">危・薙</div><div class="c-sub">🦋 Boss 招式</div><ul class="c-lines"><li>🦵 跳跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#8e4ec6"><div class="badge">×1</div><div class="c-icon">✋</div><div class="c-title">危・掴</div><div class="c-sub">🦋 Boss 招式</div><ul class="c-lines"><li>💨 后跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4 且弃 1 张手牌</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#8e4ec6"><div class="badge">×1</div><div class="c-icon">🌀</div><div class="c-title">蓄力</div><div class="c-sub">🦋 Boss 招式</div><ul class="c-lines"><li>无需应对：Boss 架势 −2（幻影：−3）</li><li>本轮焦点玩家白赚一轮</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h3>🪷 破戒僧（架势上限 16　回复 R=1）　特性：戒律</h3>
+<div class="grid">
+<div class="card" style="--c:#2da44e"><div class="badge">×6</div><div class="c-icon">🗡️</div><div class="c-title">普通斬</div><div class="c-sub">🪷 Boss 招式</div><ul class="c-lines"><li>🛡️ 弹反成功：Boss +2，自身 +1</li><li>未应对：自身 +3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#2da44e"><div class="badge">×2</div><div class="c-icon">🔺</div><div class="c-title">危・突</div><div class="c-sub">🪷 Boss 招式</div><ul class="c-lines"><li>👟 看破成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#2da44e"><div class="badge">×1</div><div class="c-icon">🌊</div><div class="c-title">危・薙</div><div class="c-sub">🪷 Boss 招式</div><ul class="c-lines"><li>🦵 跳跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#2da44e"><div class="badge">×1</div><div class="c-icon">✋</div><div class="c-title">危・掴</div><div class="c-sub">🪷 Boss 招式</div><ul class="c-lines"><li>💨 后跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4 且弃 1 张手牌</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h3>🦉 枭（架势上限 15　回复 R=2）　特性：禁药</h3>
+<div class="grid">
+<div class="card" style="--c:#475467"><div class="badge">×5</div><div class="c-icon">🗡️</div><div class="c-title">普通斬</div><div class="c-sub">🦉 Boss 招式</div><ul class="c-lines"><li>🛡️ 弹反成功：Boss +2，自身 +1</li><li>未应对：自身 +3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#475467"><div class="badge">×2</div><div class="c-icon">🔺</div><div class="c-title">危・突</div><div class="c-sub">🦉 Boss 招式</div><ul class="c-lines"><li>👟 看破成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#475467"><div class="badge">×2</div><div class="c-icon">🌊</div><div class="c-title">危・薙</div><div class="c-sub">🦉 Boss 招式</div><ul class="c-lines"><li>🦵 跳跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#475467"><div class="badge">×1</div><div class="c-icon">✋</div><div class="c-title">危・掴</div><div class="c-sub">🦉 Boss 招式</div><ul class="c-lines"><li>💨 后跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4 且弃 1 张手牌</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h3>🐒 狮子猿（架势上限 15　回复 R=2）　特性：咆哮</h3>
+<div class="grid">
+<div class="card" style="--c:#b54708"><div class="badge">×4</div><div class="c-icon">🗡️</div><div class="c-title">普通斬</div><div class="c-sub">🐒 Boss 招式</div><ul class="c-lines"><li>🛡️ 弹反成功：Boss +2，自身 +1</li><li>未应对：自身 +3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b54708"><div class="badge">×1</div><div class="c-icon">🔺</div><div class="c-title">危・突</div><div class="c-sub">🐒 Boss 招式</div><ul class="c-lines"><li>👟 看破成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b54708"><div class="badge">×2</div><div class="c-icon">🌊</div><div class="c-title">危・薙</div><div class="c-sub">🐒 Boss 招式</div><ul class="c-lines"><li>🦵 跳跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b54708"><div class="badge">×3</div><div class="c-icon">✋</div><div class="c-title">危・掴</div><div class="c-sub">🐒 Boss 招式</div><ul class="c-lines"><li>💨 后跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4 且弃 1 张手牌（咆哮：弃 3 张）</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h3>👑 葦名 一心（架势上限 16　回复 R=2）　特性：葦名之魂</h3>
+<div class="grid">
+<div class="card" style="--c:#b42318"><div class="badge">×4</div><div class="c-icon">🗡️</div><div class="c-title">普通斬</div><div class="c-sub">👑 Boss 招式</div><ul class="c-lines"><li>🛡️ 弹反成功：Boss +2，自身 +1</li><li>未应对：自身 +3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b42318"><div class="badge">×3</div><div class="c-icon">🔺</div><div class="c-title">危・突</div><div class="c-sub">👑 Boss 招式</div><ul class="c-lines"><li>👟 看破成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b42318"><div class="badge">×2</div><div class="c-icon">🌊</div><div class="c-title">危・薙</div><div class="c-sub">👑 Boss 招式</div><ul class="c-lines"><li>🦵 跳跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b42318"><div class="badge">×1</div><div class="c-icon">✋</div><div class="c-title">危・掴</div><div class="c-sub">👑 Boss 招式</div><ul class="c-lines"><li>💨 后跃成功：Boss +3，自身 +0</li><li>未应对：自身 +4 且弃 1 张手牌</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h2>四、应对卡（34 张）</h2>
+<p class="lead">应对卡<strong>只在 Boss 招式揭示后</strong>打出，用来化解这一击。对上了就是「弹反/看破」，Boss 架势大涨；没牌硬吃，自己架势大涨。</p>
+<div class="grid">
+<div class="card" style="--c:#1f6feb"><div class="badge">×12</div><div class="c-icon">🛡️</div><div class="c-title">弹反</div><div class="c-sub">应对 🗡️ 普通斬</div><ul class="c-lines"><li>成功：Boss 架势 +2，自身 +1</li><li>未打出时硬吃：自身 +3</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#7c3aed"><div class="badge">×8</div><div class="c-icon">👟</div><div class="c-title">看破</div><div class="c-sub">应对 🔺 危・突</div><ul class="c-lines"><li>成功：Boss 架势 +3，自身 +0</li><li>未打出时硬吃：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#0e7490"><div class="badge">×8</div><div class="c-icon">🦵</div><div class="c-title">跳跃</div><div class="c-sub">应对 🌊 危・薙</div><ul class="c-lines"><li>成功：Boss 架势 +3，自身 +0</li><li>未打出时硬吃：自身 +4</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b54708"><div class="badge">×6</div><div class="c-icon">💨</div><div class="c-title">后跃</div><div class="c-sub">应对 ✋ 危・掴</div><ul class="c-lines"><li>成功：Boss 架势 +3，自身 +0</li><li>未打出时硬吃：自身 +4 且弃 1 张手牌</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h2>五、招式卡（32 张）</h2>
+<p class="lead">招式卡是<strong>推高 Boss 架势</strong>的唯一手段，也是抢尾刀的筹码。每轮行动阶段只能打 1 张（忍具卡另算）。</p>
+<div class="grid">
+<div class="card" style="--c:#b42318"><div class="badge">×10</div><div class="c-icon">⚔️</div><div class="c-title">平斬</div><div class="c-sub">招式 +1</div><ul class="c-lines"><li>Boss 架势 +1</li><li>行动阶段打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b42318"><div class="badge">×8</div><div class="c-icon">🔪</div><div class="c-title">連斬</div><div class="c-sub">招式 +2</div><ul class="c-lines"><li>Boss 架势 +2</li><li>行动阶段打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b42318"><div class="badge">×6</div><div class="c-icon">💥</div><div class="c-title">突刺</div><div class="c-sub">招式 +2</div><ul class="c-lines"><li>Boss 架势 +2；若本轮你已弹反过，再 +1</li><li>行动阶段打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#b42318"><div class="badge">×5</div><div class="c-icon">🌸</div><div class="c-title">葦名流・一字斬</div><div class="c-sub">招式 +3</div><ul class="c-lines"><li>Boss 架势 +3</li><li>行动阶段打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#7a0d0d"><div class="badge">×3</div><div class="c-icon">🔥</div><div class="c-title">不死斬</div><div class="c-sub">招式 +4</div><ul class="c-lines"><li>Boss 架势 +4；每人每局限用 2 张，用完移除</li><li>行动阶段打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h2>六、忍具卡（8 张）</h2>
+<p class="lead">忍具卡在<strong>行动阶段</strong>打出，不占用「每轮 1 张招式卡」的名额，可以额外打出 1 张。</p>
+<div class="grid">
+<div class="card" style="--c:#0e7490"><div class="badge">×2</div><div class="c-icon">⭐</div><div class="c-title">手里剑</div><div class="c-sub">忍具</div><ul class="c-lines"><li>Boss 架势 +1，然后抽 1 张牌</li><li>行动阶段额外打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#0e7490"><div class="badge">×2</div><div class="c-icon">🪓</div><div class="c-title">忍斧</div><div class="c-sub">忍具</div><ul class="c-lines"><li>Boss 架势 +2，然后自身架势 +1</li><li>行动阶段额外打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#0e7490"><div class="badge">×2</div><div class="c-icon">☂️</div><div class="c-title">铁伞</div><div class="c-sub">忍具</div><ul class="c-lines"><li>本轮 Boss 对你造成的架势 −2（最低 0）</li><li>行动阶段额外打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+<div class="card" style="--c:#0e7490"><div class="badge">×2</div><div class="c-icon">🧨</div><div class="c-title">爆竹</div><div class="c-sub">忍具</div><ul class="c-lines"><li>Boss 架势 +1；下一位玩家的 Boss 招式改为「蓄力」</li><li>行动阶段额外打出，每轮 1 张</li></ul><div class="c-foot">只狼・葦名架勢</div></div>
+</div>
+<h2>七、玩家棋子与状态标记</h2>
+<div class="grid">
+<div class="pawn" style="--c:#d13438;--bg:#fdeaea"><div class="pi">🔴</div><div class="pn">赤</div><div class="pd">架势指示物</div></div>
+<div class="pawn" style="--c:#1f6feb;--bg:#e6effd"><div class="pi">🔵</div><div class="pn">蒼</div><div class="pd">架势指示物</div></div>
+<div class="pawn" style="--c:#2da44e;--bg:#e7f6ec"><div class="pi">🟢</div><div class="pn">翠</div><div class="pd">架势指示物</div></div>
+<div class="pawn" style="--c:#d4a72c;--bg:#fdf6e0"><div class="pi">🟡</div><div class="pn">金</div><div class="pd">架势指示物</div></div>
+</div>
+<h3>回生标记（每人 2 个，共 8 个 · 背面朝上表示已消耗）</h3>
+<div class="grid">
+<div class="token" style="--c:#d13438">❤️<span>回生（正面）</span></div>
+<div class="token" style="--c:#d13438">❤️<span>回生（正面）</span></div>
+<div class="token" style="--c:#8a7550">🖤<span>回生（已消耗）</span></div>
+<div class="token" style="--c:#b98b2e">⚔️<span>忍杀标记 ×3</span></div>
+<div class="token" style="--c:#1f6feb">🌀<span>焦点指示物 ×1</span></div>
+</div>
+<h2>八、一页速查（每位玩家 1 张）</h2>
+<div class="board" style="font-size:11.5px;line-height:1.75">
+<div class="board-title" style="font-size:15px;letter-spacing:3px">一 頁 速 查</div>
+<b>你的回合（固定顺时针轮转，你就是本轮「焦点玩家」）</b><br>
+① <b>Boss 出招</b>：翻当前 Boss 招式堆顶 1 张，明置在招式卡位。<br>
+② <b>你响应</b>：打出对应的应对卡（🗡️→🛡️／🔺→👟／🌊→🦵／✋→💨）。有牌＝应对成功；没牌或不打＝硬吃。<br>
+③ <b>你行动</b>（二选一）：<br>
+　　▪ <b>出招</b>：打 1 张招式卡（+1～+4 Boss 架势），可额外打 1 张忍具卡。<br>
+　　▪ <b>回气</b>：不出招，自身架势 −4（枭在场 −3）。<br>
+④ <b>结算</b>：若 Boss 架势 ≥ 上限 → 你立刻<b>忍杀</b>（得分 + 你的架势归 0 + 换下一位 Boss）。<br>
+　　若你的架势 ≥ 10 → 你<b>崩防</b>（回生 −1、架势归 0、弃光手牌重抽 4 张）。<br>
+⑤ 抽 1 张牌（手牌上限 6），把焦点指示物交给下一位。
+<table class="qr">
+<tr><th>Boss 招式</th><th>应对成功</th><th>硬吃（未应对）</th></tr>
+<tr><td>🗡️ 普通斬</td><td>🛡️ Boss +2 / 自身 +1</td><td>自身 +3</td></tr>
+<tr><td>🔺 危・突</td><td>👟 Boss +3 / 自身 +0</td><td>自身 +4（弦一郎 +5）</td></tr>
+<tr><td>🌊 危・薙</td><td>🦵 Boss +3 / 自身 +0</td><td>自身 +4</td></tr>
+<tr><td>✋ 危・掴</td><td>💨 Boss +3 / 自身 +0</td><td>自身 +4 且弃 1 张（狮子猿弃 3 张）</td></tr>
+<tr><td>🌀 蓄力</td><td colspan="2">无需应对：Boss 架势 −2（蝴蝶夫人 −3）。白赚一轮。</td></tr>
+</table>
+<b>计分</b>：忍杀第 1 位 Boss = 3 分／第 2 位 = 5 分／第 3 位 = 8 分；结束时每剩 1 点回生 +2 分。<br>
+<b>回生</b>：每人 2 点。崩防消耗 1 点；第 3 次崩防 = 真死，立即出局（保留已得分）。
+</div>
+<p class="foot">只狼：苇名架势 ｜ 打印道具 ｜ 完整规则见 <a href="README.md">README.md</a> ｜ 桌游索引：<a href="../../../README.md">boardgames/README.md</a></p>
+</body></html>
