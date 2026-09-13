@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黎明行者：桑格拉三十夜 — 打印道具</title>
+<style>
+  :root{
+    --ink:#1a1620; --paper:#f7f2e8; --line:#cfc3ae; --blood:#8c1c1c; --gold:#b98b2e;
+    --night:#241d33;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:24px; background:#e8e0d0; color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  }
+  h1{font-size:26px; margin:0 0 4px; letter-spacing:3px;}
+  .sub{font-size:12px; letter-spacing:4px; color:#6b5b3e; margin:0 0 6px;}
+  h2{
+    font-size:19px; margin:34px 0 6px; padding:8px 12px;
+    border-left:6px solid var(--blood); background:#efe6d6; border-radius:4px;
+  }
+  h3{font-size:15px; margin:18px 0 8px; color:#5b4a2e;}
+  .sec-note{font-size:12px; color:#6b5b3e; margin:0 0 12px; line-height:1.7;}
+  .lead{font-size:13px; color:#5b4a2e; margin:0 0 18px; line-height:1.8;}
+  .print-hint{
+    background:#fff8e1; border:2px solid #f0c14b; border-radius:8px;
+    padding:12px 16px; margin:16px 0 24px; font-size:13px; line-height:1.7;
+  }
+  .print-hint ul{margin:6px 0 0; padding-left:20px;}
+  .grid{display:flex; flex-wrap:wrap; gap:9px;}
+  .card{
+    position:relative; width:6.3cm; min-height:8.8cm; border-radius:8px;
+    border:2px solid var(--c,#888); background:linear-gradient(180deg,#fffdf8 0%,#f4ede0 100%);
+    padding:8px 8px 6px; display:flex; flex-direction:column; align-items:center;
+    box-shadow:0 1px 3px rgba(0,0,0,.15); page-break-inside:avoid; break-inside:avoid;
+  }
+  .card-big{width:8.4cm; min-height:11.2cm;}
+  .badge{
+    position:absolute; top:-8px; right:-8px; background:var(--c,#888); color:#fff;
+    font-size:11px; font-weight:700; padding:2px 7px; border-radius:10px; border:2px solid #fff;
+  }
+  .c-icon{font-size:30px; line-height:1.1; margin-top:2px;}
+  .card-big .c-icon{font-size:38px;}
+  .c-title{font-size:15px; font-weight:800; margin-top:4px; letter-spacing:1px; text-align:center;}
+  .card-big .c-title{font-size:18px;}
+  .c-sub{
+    font-size:10px; color:#fff; background:var(--c,#888); border-radius:4px;
+    padding:1px 7px; margin:4px 0 6px; letter-spacing:.5px;
+  }
+  .c-lines{list-style:none; margin:0; padding:0 2px; font-size:10.5px; line-height:1.55; text-align:left; width:100%;}
+  .card-big .c-lines{font-size:12px;}
+  .c-lines li{border-bottom:1px dashed #e2d8c6; padding:2px 0;}
+  .c-lines li:last-child{border-bottom:none;}
+  .c-foot{margin-top:auto; padding-top:5px; font-size:8px; color:#a89878; letter-spacing:1px;}
+  /* ---- 地图 ---- */
+  .board{
+    background:var(--paper); border:3px solid #3f3348; border-radius:12px;
+    padding:16px; page-break-inside:avoid;
+  }
+  .board-title{
+    text-align:center; font-size:20px; font-weight:800; letter-spacing:8px;
+    color:#5b4a2e; margin-bottom:4px;
+  }
+  .board-sub{text-align:center; font-size:11px; color:#8a7550; margin-bottom:12px; letter-spacing:2px;}
+  .map{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .zone{
+    border:2px dashed #b98b2e; border-radius:10px; padding:8px;
+    background:linear-gradient(180deg,#fdf6e8,#f5ead4);
+  }
+  .zone-n{background:linear-gradient(180deg,#efeaf5,#e2dcef); border-color:#6b5b8a;}
+  .zone-hd{font-size:12px; font-weight:800; letter-spacing:3px; text-align:center; margin-bottom:8px; color:#6b5b3e;}
+  .place{
+    border:2px solid var(--c,#888); border-radius:8px; background:#fffdf7;
+    padding:7px 8px; page-break-inside:avoid;
+  }
+  .p-hd{display:flex; align-items:center; gap:6px; font-size:13px; font-weight:800;}
+  .p-en{font-size:9px; color:#8a7550; font-weight:400; letter-spacing:1px;}
+  .p-phase{
+    display:inline-block; font-size:9px; color:#fff; background:var(--c,#888);
+    border-radius:3px; padding:1px 6px; margin:4px 0 5px;
+  }
+  .p-acts{list-style:none; margin:0; padding:0; font-size:10px; line-height:1.5;}
+  .p-acts li{border-bottom:1px dashed #e2d8c6; padding:2px 0; display:flex; gap:5px;}
+  .p-acts li:last-child{border-bottom:none;}
+  .cost{
+    flex:0 0 auto; background:#fff; border:1px solid var(--c,#888); color:var(--c,#888);
+    border-radius:3px; font-size:9px; font-weight:800; padding:0 4px; height:15px; line-height:14px;
+  }
+  /* ---- 渴血轨道 ---- */
+  .track{border:2px solid #3f3348; border-radius:8px; overflow:hidden; margin:8px 0; display:flex;}
+  .tk{
+    flex:1; height:30px; display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:800; color:#4b3f2e; border-right:1px solid #d8ccb6;
+    background:linear-gradient(180deg,#fffdf7,#f0e8d8);
+  }
+  .tk:last-child{border-right:none;}
+  .tk.o{background:linear-gradient(180deg,#fff6de,#ffe6b0);}
+  .tk.s{background:linear-gradient(180deg,#eaf3e6,#d7e8cf);}
+  .tk.d{background:linear-gradient(180deg,#efe6f5,#ddd0ec);}
+  .tk.b{background:linear-gradient(180deg,#ffdcd6,#ffb7ab); color:#7a1408;}
+  .gate{background:#3f3348 !important; color:#fff !important;}
+  /* ---- 表 ---- */
+  table{border-collapse:collapse; width:100%; font-size:12px; background:#fffdf8;}
+  th,td{border:1px solid var(--line); padding:5px 8px; text-align:left;}
+  th{background:#efe6d6; font-weight:800;}
+  .tw{max-width:820px;}
+  /* ---- 棋子 ---- */
+  .pawn{
+    width:2.6cm; height:2.6cm; border-radius:50%; border:3px solid #fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:24px; font-weight:800; color:#fff; box-shadow:0 2px 5px rgba(0,0,0,.25);
+    page-break-inside:avoid;
+  }
+  .pawn span{font-size:9px; letter-spacing:1px; margin-top:2px;}
+  .marker{
+    width:1.9cm; height:1.9cm; border-radius:6px; border:2px dashed #fff;
+    display:flex; align-items:center; justify-content:center; font-size:20px;
+    color:#fff; font-weight:800;
+  }
+  .row{display:flex; flex-wrap:wrap; gap:9px; align-items:flex-end;}
+  .two-col{display:flex; flex-wrap:wrap; gap:20px;}
+  .box{border:2px solid var(--line); border-radius:8px; padding:10px 12px; background:#fffdf8; font-size:11.5px; line-height:1.7;}
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+  @media print {
+    .print-hint { display: none; }
+    body { background:#fff; padding:0; }
+    h2 { page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则所有底色与分区将丢失</li>
+    <li>卡牌、地点板块与玩家板建议使用<strong>卡纸</strong>（200g 以上）打印，裁剪后可塑封</li>
+    <li>地图底板与速查卡可用普通 A4 纸；棋子与标记建议卡纸打印后对折或加底座</li>
+  </ul>
+</div>
+
+<h1>黎明行者：桑格拉三十夜</h1>
+<p class="sub">DAWNWALKER · THIRTY NIGHTS OF SANGORA · 打印道具</p>
+<p class="lead">
+  14 世纪，黑死病与吸血鬼一同笼罩桑格拉谷。你被转化为「黎明行者」——不畏阳光，却终将被血渴吞噬。
+  你有 30 天 30 夜救回家人。<strong>白昼让你像人，黑夜让你像魔，而你永远只能偏向一边。</strong><br>
+  本文件包含：桑格拉谷地图（6 地点板块）、4 张角色卡、12 张家人卡、24 张遗物卡、12 张圣物卡、
+  20 张情报卡、10 张瘟疫卡、4 张玩家板（渴血轨道 + 晨昏盘）、棋子与标记、速查表。
+</p>
+<h2>一、桑格拉谷地图</h2><div class="sec-note">上排为<strong>白昼地点</strong>，下排为<strong>黑夜地点</strong>，中下的 ⚰️ 无名墓园 为<strong>双相枢纽</strong>。沿相邻格移动一次花 1 点时辰。将 6 块地点板块按此布局摆在桌面中央。</div><div class="board"><div class="board-title">桑 格 拉 谷</div><div class="board-sub">SANGORA VALLEY · 上排白昼 / 下排黑夜</div><div class="map"><div class="place" style="--c:#3f5b3f"><div class="p-hd">🏠 灰烬村<span class="p-en">Ashen Village</span></div><div class="p-phase">白昼</div><ul class="p-acts"><li><span class="cost">8</span><span><b>营救</b> — 救出 1 位在此的家人（+5 分）</span></li><li><span class="cost">2</span><span><b>探听</b> — 摸 1 张情报卡</span></li><li><span class="cost">4</span><span><b>防疫</b> — 放置 1 个防疫标记（终局 +1 分/个）</span></li></ul></div><div class="place" style="--c:#6b5b3e"><div class="p-hd">⛪ 圣维图斯修道院<span class="p-en">Abbey of St. Vitus</span></div><div class="p-phase">白昼</div><ul class="p-acts"><li><span class="cost">4</span><span><b>忏悔</b> — −2 渴血</span></li><li><span class="cost">5</span><span><b>求取圣物</b> — 摸 1 张圣物卡（需渴血 ≤ 5）</span></li><li><span class="cost">2</span><span><b>布施</b> — +1 声望</span></li></ul></div><div class="place" style="--c:#8a6a1f"><div class="p-hd">🏛️ 灰石镇集<span class="p-en">Stone Market</span></div><div class="p-phase">白昼</div><ul class="p-acts"><li><span class="cost">4</span><span><b>交易</b> — 花 2 银，摸 1 张遗物卡</span></li><li><span class="cost">4</span><span><b>雇佣</b> — 花 3 银，本章时辰 +1</span></li><li><span class="cost">4</span><span><b>防疫</b> — 放置 1 个防疫标记（终局 +1 分/个）</span></li></ul></div></div><div class="map" style="margin-top:10px"><div class="place" style="--c:#2f5d3a"><div class="p-hd">🌲 血松林<span class="p-en">Bloodpine Wood</span></div><div class="p-phase">黑夜</div><ul class="p-acts"><li><span class="cost">1</span><span><b>猎食</b> — +2 渴血，+2 银</span></li><li><span class="cost">5</span><span><b>伏击</b> — 摸 1 张遗物卡，+1 渴血</span></li><li><span class="cost">2</span><span><b>追踪</b> — 查看瘟疫牌堆顶 1 张</span></li></ul></div><div class="place" style="--c:#4a4a55"><div class="p-hd">⚰️ 无名墓园<span class="p-en">Nameless Graveyard</span></div><div class="p-phase">双相</div><ul class="p-acts"><li><span class="cost">2</span><span><b>掘墓</b> — 摸 1 张遗物卡（昼力或夜力均可付）</span></li><li><span class="cost">3</span><span><b>潜修</b> — −1 渴血（昼力或夜力均可付）</span></li><li><span class="cost">0</span><span><b>通行</b> — 枢纽：与灰烬村/修道院/血松林/索恩堡均相邻</span></li></ul></div><div class="place" style="--c:#4a2f2f"><div class="p-hd">🏰 索恩堡地牢<span class="p-en">Thorn Keep Dungeon</span></div><div class="p-phase">黑夜</div><ul class="p-acts"><li><span class="cost">6</span><span><b>劫狱</b> — 救出 1 位在此的家人（+5 分），+1 渴血</span></li><li><span class="cost">4</span><span><b>掠夺</b> — +3 银</span></li><li><span class="cost">4</span><span><b>威慑</b> — +1 渴血，本章你的夜力视为 ×3 效率</span></li></ul></div></div></div><h2>二、玩家板：渴血轨道与晨昏盘</h2><div class="sec-note">每人 1 块。<strong>渴血 0-12</strong> 决定你的昼夜效率，记住三道闸门：<strong style="color:#8c1c1c">3 / 6 / 9</strong>。用一枚棋子或回形针别在轨道上表示当前渴血。晨昏盘每章填写一次时辰分配。</div><div class="board">
+<div class="board-title">渴 血 轨 道</div>
+<div class="board-sub">THIRST TRACK · 0-12 · 记住三道闸门：3 / 6 / 9</div>
+<div class="track"><div class="tk o">0</div><div class="tk o">1</div><div class="tk o">2</div><div class="tk gate">3</div><div class="tk s">4</div><div class="tk s">5</div><div class="tk gate">6</div><div class="tk d">7</div><div class="tk d">8</div><div class="tk gate">9</div><div class="tk b">10</div><div class="tk b">11</div><div class="tk b">12</div></div>
+<div class="two-col" style="margin-top:10px">
+  <table class="tw">
+    <tr><th>渴血</th><th>称号</th><th>昼效</th><th>夜效</th><th>5 点时辰的最大昼力+夜力</th></tr>
+    <tr><td>0-2</td><td>🕊️ 守誓者</td><td><b>×3</b></td><td>×1</td><td>13（昼4夜1 = 12 昼力 + 1 夜力）</td></tr>
+    <tr><td>3-5</td><td>⚖️ 挣扎者</td><td>×2</td><td>×2</td><td><b>10（任何分配恒为 10）</b></td></tr>
+    <tr><td>6-8</td><td>🌑 沉溺者</td><td>×1</td><td><b>×3</b></td><td>13（昼1夜4 = 1 昼力 + 12 夜力）</td></tr>
+    <tr><td>9-12</td><td>🩸 血魔</td><td>×1</td><td><b>×4</b></td><td>17（昼1夜4 = 1 昼力 + 16 夜力）</td></tr>
+  </table>
+</div>
+<div class="box" style="margin-top:10px">
+  <b>核心恒等式：时辰 × 效率 = 力</b><br>
+  每章你得 <b>5 点时辰</b>，分成白昼份与黑夜份（各至少 1 点）。
+  <b>白昼份 × 昼效 = 昼力</b>，<b>黑夜份 × 夜效 = 夜力</b>，行动按「力」付费。<br>
+  ① <b>渴血 3-5 时，无论怎么分配，昼力+夜力恒为 10</b> —— 这是「安全区」。<br>
+  ② 想突破 10 必须极端化：守誓者全压白昼可拿 13，血魔全压黑夜可拿 17。<br>
+  ③ 但极端化会关掉半张地图：守誓者只有 1 夜力 ⇒ 打不动地牢（劫狱需 6 夜力）；
+     血魔只有 1 昼力 ⇒ 救不了村里的人（营救需 8 昼力）。<br>
+  <b>⇒ 一句话：渴血 3-5 是安全区，但安全区的上限只有 10。</b><br>
+  <b>移动</b>：花 2 点昼力或夜力，走到相邻地点（每章不限次数，付得起就行）。
+</div>
+</div><h3>晨昏盘（每章填写一次）</h3><div class="board">
+<div class="two-col">
+  <div>
+    <table style="max-width:400px">
+      <tr><th>章</th><th>白昼时辰</th><th>黑夜时辰</th><th>昼力 + 夜力 (时辰×效率)</th></tr>
+      <tr><td>1</td><td></td><td></td><td></td></tr>
+      <tr><td>2</td><td></td><td></td><td></td></tr>
+      <tr><td>3</td><td></td><td></td><td></td></tr>
+      <tr><td>4</td><td></td><td></td><td></td></tr>
+      <tr><td>5</td><td></td><td></td><td></td></tr>
+      <tr><td>6</td><td></td><td></td><td></td></tr>
+      <tr><td>7</td><td></td><td></td><td></td></tr>
+      <tr><td>8</td><td></td><td></td><td></td></tr>
+      <tr><td>9</td><td></td><td></td><td></td></tr>
+      <tr><td>10</td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+  <div class="box" style="flex:1; min-width:260px">
+    <b>填写方法</b><br>
+    1. 章初所有人<strong>同时暗置</strong>分配：在掌心握 5 枚代币，同时摊开。<br>
+    2. 白昼份 × 昼效 = <b>昼力</b>；黑夜份 × 夜效 = <b>夜力</b>。填进右栏。<br>
+    3. 先结算全部白昼阶段行动（按顺时针，每人 1 个），再结算黑夜阶段。<br>
+    4. 同一阶段内可做多个行动，只要付得起；<strong>剩余力立即作废</strong>。<br>
+    5. 章末「黎明结算」：渴血 ≥ 9 者 +1 渴血 → 翻 1 张瘟疫卡 → 手牌弃至 5 张。
+  </div>
+</div>
+</div><h2>三、黎明行者角色卡（4 张）</h2><div class="sec-note">每人开局选 1 张。<b>新手推荐科恩</b>（攻守均衡）；伊尔卡偏白昼、托比亚斯偏防疫、玛蕾娜最稳。</div><div class="grid"><div class="card card-big" style="--c:#8c1c1c"><div class="badge">×1</div><div class="c-icon">🗡️</div><div class="c-title">科恩 Coen</div><div class="c-sub">被转化的谷地领主之子</div><ul class="c-lines"><li>起始渴血：3</li><li>起始渴血 3（挣扎者）</li><li>起始持 2 银。</li><li>【血债】你每救出 1 位家人，立刻 −1 渴血。</li><li>——原作主角，攻守均衡，适合新手。</li></ul><div class="c-foot">DAWNWALKER · 黎明行者</div></div><div class="card card-big" style="--c:#2f5d3a"><div class="badge">×1</div><div class="c-icon">🏹</div><div class="c-title">伊尔卡 Ilka</div><div class="c-sub">白日行猎的守林人</div><ul class="c-lines"><li>起始渴血：1</li><li>起始渴血 1（守誓者）。</li><li>起始持 1 张遗物。</li><li>【林间疾行】移动到 🌲 血松林 不花时辰（每章限 1 次）。</li><li>——白昼极强、黑夜几乎瘫痪，需靠队友或遗物补夜。</li></ul><div class="c-foot">DAWNWALKER · 黎明行者</div></div><div class="card card-big" style="--c:#5b3a7a"><div class="badge">×1</div><div class="c-icon">🔮</div><div class="c-title">玛蕾娜 Malena</div><div class="c-sub">通灵的墓园守夜人</div><ul class="c-lines"><li>起始渴血：5</li><li>起始渴血 5（挣扎者）。</li><li>起始持 1 张圣物。</li><li>【通灵】在 ⚰️ 墓园 潜修时，改为 −2 渴血。</li><li>——控渴血最稳的角色，适合喜欢长线运营的玩家。</li></ul><div class="c-foot">DAWNWALKER · 黎明行者</div></div><div class="card card-big" style="--c:#7a4b12"><div class="badge">×1</div><div class="c-icon">🔨</div><div class="c-title">托比亚斯 Tobias</div><div class="c-sub">锻造银器的铁匠</div><ul class="c-lines"><li>起始渴血：4</li><li>起始渴血 4（挣扎者）。</li><li>起始持 3 银。</li><li>【银匠】你放置防疫标记的花费由 4 点昼力降为 2 点昼力。</li><li>——防疫流核心，是团队不崩盘的关键。</li></ul><div class="c-foot">DAWNWALKER · 黎明行者</div></div></div><h2>四、家人卡（12 张 = 4 色 × 3）</h2><div class="sec-note">开局每人拿自己颜色的 3 张。<b>第 1 位固定灰烬村、第 2 位固定索恩堡地牢、第 3 位由情报卡揭示</b> —— 这保证了每位玩家都必须同时经营白昼与黑夜。</div><div class="grid"><div class="card" style="--c:#8c1c1c"><div class="c-icon">👤</div><div class="c-title">母亲 埃达</div><div class="c-sub">🏠 灰烬村</div><ul class="c-lines"><li>所属：绯红 氏族</li><li>营救方式：白昼 · 营救（4 白昼点）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#8c1c1c"><div class="c-icon">👤</div><div class="c-title">弟弟 米洛</div><div class="c-sub">🏰 索恩堡地牢</div><ul class="c-lines"><li>所属：绯红 氏族</li><li>营救方式：黑夜 · 劫狱（3 黑夜点，+1 渴血）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#8c1c1c"><div class="c-icon">👤</div><div class="c-title">未婚妻 莉薇</div><div class="c-sub">❓ 由情报卡揭示</div><ul class="c-lines"><li>所属：绯红 氏族</li><li>营救方式：按揭示地点的阶段与花费营救</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#1f5f78"><div class="c-icon">👤</div><div class="c-title">母亲 埃达</div><div class="c-sub">🏠 灰烬村</div><ul class="c-lines"><li>所属：苍青 氏族</li><li>营救方式：白昼 · 营救（4 白昼点）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#1f5f78"><div class="c-icon">👤</div><div class="c-title">弟弟 米洛</div><div class="c-sub">🏰 索恩堡地牢</div><ul class="c-lines"><li>所属：苍青 氏族</li><li>营救方式：黑夜 · 劫狱（3 黑夜点，+1 渴血）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#1f5f78"><div class="c-icon">👤</div><div class="c-title">未婚妻 莉薇</div><div class="c-sub">❓ 由情报卡揭示</div><ul class="c-lines"><li>所属：苍青 氏族</li><li>营救方式：按揭示地点的阶段与花费营救</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#8a6a1f"><div class="c-icon">👤</div><div class="c-title">母亲 埃达</div><div class="c-sub">🏠 灰烬村</div><ul class="c-lines"><li>所属：暗金 氏族</li><li>营救方式：白昼 · 营救（4 白昼点）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#8a6a1f"><div class="c-icon">👤</div><div class="c-title">弟弟 米洛</div><div class="c-sub">🏰 索恩堡地牢</div><ul class="c-lines"><li>所属：暗金 氏族</li><li>营救方式：黑夜 · 劫狱（3 黑夜点，+1 渴血）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#8a6a1f"><div class="c-icon">👤</div><div class="c-title">未婚妻 莉薇</div><div class="c-sub">❓ 由情报卡揭示</div><ul class="c-lines"><li>所属：暗金 氏族</li><li>营救方式：按揭示地点的阶段与花费营救</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#5b3a7a"><div class="c-icon">👤</div><div class="c-title">母亲 埃达</div><div class="c-sub">🏠 灰烬村</div><ul class="c-lines"><li>所属：幽紫 氏族</li><li>营救方式：白昼 · 营救（4 白昼点）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#5b3a7a"><div class="c-icon">👤</div><div class="c-title">弟弟 米洛</div><div class="c-sub">🏰 索恩堡地牢</div><ul class="c-lines"><li>所属：幽紫 氏族</li><li>营救方式：黑夜 · 劫狱（3 黑夜点，+1 渴血）</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div><div class="card" style="--c:#5b3a7a"><div class="c-icon">👤</div><div class="c-title">未婚妻 莉薇</div><div class="c-sub">❓ 由情报卡揭示</div><ul class="c-lines"><li>所属：幽紫 氏族</li><li>营救方式：按揭示地点的阶段与花费营救</li><li>救出计分：+5 分</li></ul><div class="c-foot">FAMILY · 家人</div></div></div><h2>五、遗物卡（24 张 = 12 模板 × 2）</h2><div class="sec-note">由 ⚰️ 无名墓园「掘墓」、🌲 血松林「伏击」、🏛️ 灰石镇集「交易」获得。<b>除注明「持续」外均为一次性</b>，使用后弃置，但计分保留。</div><div class="grid"><div class="card" style="--c:#6b6b6b"><div class="badge">×2</div><div class="c-icon">🔔</div><div class="c-title">丧钟碎片</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：本次行动花费 −1 点时辰。</li><li>弃置：摸 1 张情报卡。</li><li>计分：1 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#8a6a1f"><div class="badge">×2</div><div class="c-icon">🗝️</div><div class="c-title">锈蚀牢钥</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：在 🏰 索恩堡地牢 劫狱时改为花 1 点黑夜时辰。</li><li>弃置后劫狱不再 +1 渴血。</li><li>计分：1 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#b98b2e"><div class="badge">×2</div><div class="c-icon">🕯️</div><div class="c-title">长明蜡</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：本回合你的白昼时辰视为 ×3 效率（无视渴血档）。</li><li>计分：2 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#4a6b7a"><div class="badge">×2</div><div class="c-icon">🪞</div><div class="c-title">银背镜</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：复制场上任意 1 位玩家本章已执行的 1 个行动（花费照付）。</li><li>计分：3 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#5b3a7a"><div class="badge">×2</div><div class="c-icon">📖</div><div class="c-title">亡者名册</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：查看情报牌堆顶 3 张，留 1 张入手，其余洗回。</li><li>计分：1 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#3f6b4a"><div class="badge">×2</div><div class="c-icon">🧪</div><div class="c-title">灰烬药剂</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：−2 渴血。</li><li>若你渴血 ≥ 9，改为 −3 渴血。</li><li>计分：1 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#8a6a1f"><div class="badge">×2</div><div class="c-icon">🪙</div><div class="c-title">血银币</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：+3 银。</li><li>弃置：+2 银并 +1 声望。</li><li>计分：2 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#7a3b4a"><div class="badge">×2</div><div class="c-icon">🧣</div><div class="c-title">寡妇的围巾</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：本回合你在任意地点移动都不花时辰。</li><li>计分：1 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#4a6b7a"><div class="badge">×2</div><div class="c-icon">⚗️</div><div class="c-title">圣灰瓶</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：在你所在地点放置 1 个防疫标记（不花时辰）。</li><li>计分：2 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#6b4a2e"><div class="badge">×2</div><div class="c-icon">🪓</div><div class="c-title">伐木斧</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：在 🌲 血松林 伏击改为花 1 点黑夜时辰，且额外摸 1 张遗物。</li><li>计分：1 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#6b6b6b"><div class="badge">×2</div><div class="c-icon">🕰️</div><div class="c-title">停摆怀表</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：本章你的时辰改为 7 点（仍需昼夜各 ≥1）。</li><li>计分：3 分</li></ul><div class="c-foot">RELIC · 遗物</div></div><div class="card" style="--c:#5b4a2e"><div class="badge">×2</div><div class="c-icon">🐺</div><div class="c-title">狼牙护符</div><div class="c-sub">一次性 · 遗物</div><ul class="c-lines"><li>即时：本章你的黑夜时辰视为 ×3 效率（无视渴血档）。</li><li>计分：2 分</li></ul><div class="c-foot">RELIC · 遗物</div></div></div><h2>六、圣物卡（12 张 = 6 模板 × 2）</h2><div class="sec-note">由 ⛪ 圣维图斯修道院「求取圣物」获得（需渴血 ≤ 5）。<b>全部为持续型</b>，一旦取得整局生效。渴血高时无法求取 —— 这是「保持人性」的核心回报。</div><div class="grid"><div class="card" style="--c:#b98b2e"><div class="badge">×2</div><div class="c-icon">✝️</div><div class="c-title">圣维图斯十字</div><div class="c-sub">持续 · 圣物</div><ul class="c-lines"><li>你的渴血上限视为 10（超过 10 的部分立即回落）。</li><li>每章黎明结算时，若渴血 ≥ 9，改为不 +1。</li><li>计分：3 分</li></ul><div class="c-foot">HALLOW · 圣物</div></div><div class="card" style="--c:#4a6b7a"><div class="badge">×2</div><div class="c-icon">💧</div><div class="c-title">祝圣水盂</div><div class="c-sub">持续 · 圣物</div><ul class="c-lines"><li>你每救出 1 位家人，+2 银。</li><li>你在 ⛪ 修道院 的忏悔改为花 1 点白昼时辰。</li><li>计分：2 分</li></ul><div class="c-foot">HALLOW · 圣物</div></div><div class="card" style="--c:#6b4a2e"><div class="badge">×2</div><div class="c-icon">📿</div><div class="c-title">忏悔念珠</div><div class="c-sub">持续 · 圣物</div><ul class="c-lines"><li>每章黎明结算时，若你本章有执行过忏悔，额外 −1 渴血。</li><li>计分：2 分</li></ul><div class="c-foot">HALLOW · 圣物</div></div><div class="card" style="--c:#7a8a9a"><div class="badge">×2</div><div class="c-icon">🕊️</div><div class="c-title">白鸽之羽</div><div class="c-sub">持续 · 圣物</div><ul class="c-lines"><li>你移动到相邻地点不花时辰（每章限 2 次）。</li><li>计分：3 分</li></ul><div class="c-foot">HALLOW · 圣物</div></div><div class="card" style="--c:#8a6a1f"><div class="badge">×2</div><div class="c-icon">🏺</div><div class="c-title">圣油瓶</div><div class="c-sub">持续 · 圣物</div><ul class="c-lines"><li>即时：放置 2 个防疫标记（不花时辰）。</li><li>你放置的防疫标记，终局每个改为 +2 分。</li><li>计分：2 分</li></ul><div class="c-foot">HALLOW · 圣物</div></div><div class="card" style="--c:#b98b2e"><div class="badge">×2</div><div class="c-icon">🔆</div><div class="c-title">破晓徽记</div><div class="c-sub">持续 · 圣物</div><ul class="c-lines"><li>终局时，若你渴血 ≤ 5，额外 +5 分。</li><li>若你渴血 ≥ 9，额外 −5 分。</li><li>计分：0 分</li></ul><div class="c-foot">HALLOW · 圣物</div></div></div><h2>七、情报卡（20 张）</h2><div class="sec-note">由 🏠 灰烬村「探听」、遗物效果获得。<b>前 6 张是揭示隐藏家人位置的关键牌</b>，开局时请先将这 6 张均分洗入牌堆上半部。</div><div class="grid"><div class="card" style="--c:#4a2f2f"><div class="badge">×1</div><div class="c-icon">🏰</div><div class="c-title">地牢名册</div><div class="c-sub">情报</div><ul class="c-lines"><li>揭示：你的一位「❓隐藏家人」被关在 🏰 索恩堡地牢。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#3f5b3f"><div class="badge">×1</div><div class="c-icon">🏠</div><div class="c-title">村中密语</div><div class="c-sub">情报</div><ul class="c-lines"><li>揭示：你的一位「❓隐藏家人」藏在 🏠 灰烬村。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#6b5b3e"><div class="badge">×1</div><div class="c-icon">⛪</div><div class="c-title">修道院密室</div><div class="c-sub">情报</div><ul class="c-lines"><li>揭示：你的一位「❓隐藏家人」藏在 ⛪ 圣维图斯修道院。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#2f5d3a"><div class="badge">×1</div><div class="c-icon">🌲</div><div class="c-title">松林足迹</div><div class="c-sub">情报</div><ul class="c-lines"><li>揭示：你的一位「❓隐藏家人」躲在 🌲 血松林。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#4a4a55"><div class="badge">×1</div><div class="c-icon">⚰️</div><div class="c-title">墓园低语</div><div class="c-sub">情报</div><ul class="c-lines"><li>揭示：你的一位「❓隐藏家人」躲在 ⚰️ 无名墓园。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#6b5b3e"><div class="badge">×1</div><div class="c-icon">🏛️</div><div class="c-title">市集传闻</div><div class="c-sub">情报</div><ul class="c-lines"><li>揭示：你的一位「❓隐藏家人」藏在 🏛️ 灰石镇集。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#8a6a1f"><div class="badge">×1</div><div class="c-icon">🧾</div><div class="c-title">银匠的欠条</div><div class="c-sub">情报</div><ul class="c-lines"><li>立刻 +2 银。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#b98b2e"><div class="badge">×1</div><div class="c-icon">🖋️</div><div class="c-title">教士的手记</div><div class="c-sub">情报</div><ul class="c-lines"><li>立刻 −1 渴血。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#3f6b4a"><div class="badge">×1</div><div class="c-icon">🩹</div><div class="c-title">医师配方</div><div class="c-sub">情报</div><ul class="c-lines"><li>立刻 −1 渴血；若你渴血 ≤ 2，改为 +2 银。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#5b3a7a"><div class="badge">×1</div><div class="c-icon">🌙</div><div class="c-title">守夜人日志</div><div class="c-sub">情报</div><ul class="c-lines"><li>摸 1 张遗物卡。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#4a2f2f"><div class="badge">×1</div><div class="c-icon">🏰</div><div class="c-title">领主的赦令</div><div class="c-sub">情报</div><ul class="c-lines"><li>本章你在 🏰 索恩堡地牢 的所有行动花费 −1（最低 1）。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#3f5b3f"><div class="badge">×1</div><div class="c-icon">🏠</div><div class="c-title">村民的请愿</div><div class="c-sub">情报</div><ul class="c-lines"><li>本章你在 🏠 灰烬村 的所有行动花费 −1（最低 1）。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#5b4a2e"><div class="badge">×1</div><div class="c-icon">🐀</div><div class="c-title">瘟疫路线图</div><div class="c-sub">情报</div><ul class="c-lines"><li>查看瘟疫牌堆顶 2 张，可交换顺序后放回。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#6b6b6b"><div class="badge">×1</div><div class="c-icon">🌒</div><div class="c-title">午夜钟声</div><div class="c-sub">情报</div><ul class="c-lines"><li>本章你的黑夜时辰 +1。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#b98b2e"><div class="badge">×1</div><div class="c-icon">🌅</div><div class="c-title">晨祷的钟</div><div class="c-sub">情报</div><ul class="c-lines"><li>本章你的白昼时辰 +1。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#5b4a2e"><div class="badge">×1</div><div class="c-icon">🐕</div><div class="c-title">猎犬的项圈</div><div class="c-sub">情报</div><ul class="c-lines"><li>本章移动不花时辰（限 1 次）。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#8c1c1c"><div class="badge">×1</div><div class="c-icon">🩸</div><div class="c-title">血族的邀约</div><div class="c-sub">情报</div><ul class="c-lines"><li>立刻 +2 渴血，然后摸 2 张遗物卡。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#4a6b7a"><div class="badge">×1</div><div class="c-icon">🧴</div><div class="c-title">圣水的配方</div><div class="c-sub">情报</div><ul class="c-lines"><li>立刻摸 1 张圣物卡。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#8a6a1f"><div class="badge">×1</div><div class="c-icon">🧰</div><div class="c-title">避难所钥匙</div><div class="c-sub">情报</div><ul class="c-lines"><li>在你的所在地点放置 1 个防疫标记（不花时辰）。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div><div class="card" style="--c:#7a3b4a"><div class="badge">×1</div><div class="c-icon">👤</div><div class="c-title">旧日肖像</div><div class="c-sub">情报</div><ul class="c-lines"><li>选择 1 位未救出的家人，其营救/劫狱花费 −1（永久）。</li><li>（使用后弃置，不计分）</li></ul><div class="c-foot">INTEL · 情报</div></div></div><h2>八、瘟疫卡（10 张）</h2><div class="sec-note">洗成牌堆，<b>每章黎明结算后翻开 1 张并执行</b>。瘟疫自 🏠 灰烬村 起扩散；地点沦陷时，其中的家人永久死亡。放置防疫标记可在被扩散时抵消一次。</div><div class="grid"><div class="card" style="--c:#5b4a2e"><div class="c-icon">🐀</div><div class="c-title">鼠群穿街</div><div class="c-sub">第 1 章</div><ul class="c-lines"><li>自 🏠 灰烬村 起，沿相邻向上排扩散 1 格。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🦠</div><div class="c-title">井水变色</div><div class="c-sub">第 2 章</div><ul class="c-lines"><li>自任一沦陷区起，向相邻且未沦陷的地点扩散 1 格（由瘟疫持有者左侧玩家选择）。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🌫️</div><div class="c-title">死雾漫谷</div><div class="c-sub">第 3 章</div><ul class="c-lines"><li>本章所有玩家的白昼时辰 −1（最低 1）。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🐀</div><div class="c-title">粮仓告急</div><div class="c-sub">第 4 章</div><ul class="c-lines"><li>自任一沦陷区起扩散 1 格；若 🏛️ 灰石镇集 已沦陷，改为扩散 2 格。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🕯️</div><div class="c-title">长夜将至</div><div class="c-sub">第 5 章</div><ul class="c-lines"><li>本章所有玩家的黑夜时辰 −1（最低 1），但渴血 ≥ 6 者免疫。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🦠</div><div class="c-title">疫医失踪</div><div class="c-sub">第 6 章</div><ul class="c-lines"><li>自任一沦陷区起扩散 1 格；本章无人可放置防疫标记。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🌫️</div><div class="c-title">焚村之令</div><div class="c-sub">第 7 章</div><ul class="c-lines"><li>自任一沦陷区起扩散 1 格；若扩散目标有防疫标记，标记一并移除。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🐀</div><div class="c-title">鼠王现身</div><div class="c-sub">第 8 章</div><ul class="c-lines"><li>自任一沦陷区起扩散 2 格（可分两处各 1 格）。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🦠</div><div class="c-title">最后的告解</div><div class="c-sub">第 9 章</div><ul class="c-lines"><li>自任一沦陷区起扩散 1 格；所有渴血 ≤ 2 的玩家各 +1 声望。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div><div class="card" style="--c:#5b4a2e"><div class="c-icon">🌑</div><div class="c-title">桑格拉之冬</div><div class="c-sub">第 10 章</div><ul class="c-lines"><li>游戏最后一章：不再扩散，改为所有未救出的家人各 −1 分。</li><li>（执行后弃置）</li></ul><div class="c-foot">PLAGUE · 瘟疫</div></div></div><h2>九、棋子与标记</h2><div class="sec-note">用卡纸打印后裁剪；棋子可对折立起，或粘在瓶盖上。</div><div class="board"><div class="row"><div><div class="pawn" style="background:#8c1c1c">◈<span>绯红</span></div></div><div><div class="pawn" style="background:#1f5f78">◈<span>苍青</span></div></div><div><div class="pawn" style="background:#8a6a1f">◈<span>暗金</span></div></div><div><div class="pawn" style="background:#5b3a7a">◈<span>幽紫</span></div></div><div><div class="pawn" style="background:#3f3348">🐀<span>瘟疫源</span></div></div></div><div class="row" style="margin-top:14px"><div class="marker" style="background:#5b4a2e">🛡️</div><div class="marker" style="background:#5b4a2e">🛡️</div><div class="marker" style="background:#5b4a2e">🛡️</div><div class="marker" style="background:#5b4a2e">🛡️</div><div class="marker" style="background:#5b4a2e">🛡️</div><div class="marker" style="background:#5b4a2e">🛡️</div></div><div class="row" style="margin-top:8px"><div class="marker" style="background:#7a1408">☠️</div><div class="marker" style="background:#7a1408">☠️</div><div class="marker" style="background:#7a1408">☠️</div><div class="marker" style="background:#7a1408">☠️</div><div class="marker" style="background:#7a1408">☠️</div><div class="marker" style="background:#7a1408">☠️</div></div><div class="box" style="margin-top:12px">🛡️ <b>防疫标记 ×12</b>：花 4 点昼力放置于所在地点，抵消一次扩散（抵消后移除）。终局每个 +1 分。<br>☠️ <b>瘟疫标记 ×12</b>：地点沦陷时放置，该地点此后不可进入，其中的家人永久死亡。<br>◈ <b>玩家棋子 ×4</b>：放在地图上表示所在地点。<br><b>渴血标记</b>：用别针/回形针别在渴血轨道上。<b>时辰代币</b>：每人 7 枚（可用硬币或骰子代替）。<br><b>银币</b>：可用纸片或任意代币，建议各备 20 枚。</div></div><h2>十、速查表（建议每人 1 张）</h2>
+<div class="board">
+<div class="two-col">
+<table class="tw">
+  <tr><th>阶段</th><th>你可以做的事</th></tr>
+  <tr><td><b>章初 · 暗置</b></td><td>5 点时辰分为白昼/黑夜两份，各 ≥1，同时揭示</td></tr>
+  <tr><td><b>白昼阶段</b></td><td>顺时针每人结算，用<b>昼力</b>付行动/移动，可连做多个</td></tr>
+  <tr><td><b>黑夜阶段</b></td><td>顺时针每人结算，用<b>夜力</b>付行动/移动，可连做多个</td></tr>
+  <tr><td><b>黎明结算</b></td><td>渴血 ≥9 者 +1 渴血 → 翻 1 张瘟疫卡 → 手牌弃至 5 张</td></tr>
+  <tr><td colspan="3" style="background:#fff8e1"><b>限制</b>：同一行动每章限执行 1 次（<b>移动</b>与<b>猎食</b>不限）</td></tr>
+</table>
+<table class="tw" style="margin-top:12px">
+  <tr><th>行动花费速记（力）</th><th>昼/夜</th><th>花费</th></tr>
+  <tr><td>营救（村里家人）</td><td>昼力</td><td>8</td></tr>
+  <tr><td>劫狱（地牢家人）</td><td>夜力</td><td>6（+1 渴血）</td></tr>
+  <tr><td>忏悔（−2 渴血）</td><td>昼力</td><td>4</td></tr>
+  <tr><td>求取圣物</td><td>昼力</td><td>5（需渴血 ≤ 5）</td></tr>
+  <tr><td>防疫 / 交易 / 雇佣 / 掠夺 / 威慑</td><td>对应</td><td>4</td></tr>
+  <tr><td>潜修（−1 渴血）／掘墓</td><td>双相</td><td>3 / 2</td></tr>
+  <tr><td>移动（相邻 1 格）</td><td>昼或夜</td><td>2</td></tr>
+  <tr><td>布施 / 探听 / 追踪</td><td>对应</td><td>2</td></tr>
+  <tr><td>猎食（+2 渴血 +2 银）</td><td>夜力</td><td>1</td></tr>
+</table>
+<table class="tw" style="margin-top:12px">
+  <tr><th>终局计分</th><th>分数</th></tr>
+  <tr><td>每位救出的家人</td><td>+5</td></tr>
+  <tr><td>遗物卡 / 圣物卡</td><td>按卡面 0-3</td></tr>
+  <tr><td>每个场上的防疫标记</td><td>+1</td></tr>
+  <tr><td>每点声望</td><td>+1</td></tr>
+  <tr><td>渴血 0-2（守誓者）</td><td>+6</td></tr>
+  <tr><td>渴血 3-5（挣扎者）</td><td>+3</td></tr>
+  <tr><td>渴血 6-8（沉溺者）</td><td>0</td></tr>
+  <tr><td>渴血 9-12（血魔）</td><td>−8</td></tr>
+</table>
+</div>
+<div class="box" style="margin-top:12px">
+<b>新手三条铁律</b><br>
+1. <b>渴血卡在 3-5 就对了。</b> 想往上冲之前，先确认你这章不需要救村里的家人（需 8 昼力）。<br>
+2. <b>一章只做一件大事。</b> 挣扎者总共只有 10 点力：营救 8 + 移动 2 就用光了，别贪。<br>
+3. <b>第 3 章前一定要摸到揭示隐藏家人的情报卡。</b> 摸不到就等于自动放弃 5 分。
+</div>
+</div>
+<p class="lead" style="margin-top:30px; text-align:center; color:#8a7550;">
+完整规则请参阅同目录下的 <b>README.md</b> · 打印后请裁剪、塑封，祝你在桑格拉谷活过三十夜。
+</p>
+</body>
+</html>

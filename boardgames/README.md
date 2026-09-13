@@ -119,6 +119,7 @@ boardgames/
 | [魔女之夜：灵魂宝石](category/strategy/walpurgis-soul-gem/README.md) | 策略 | 3-5人 | 60-90分钟 | 中等偏难 |
 | [三猿拆弹：无声引信](category/party/three-monkeys-defuse/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
 | [只狼：苇名架势](category/card/sekiro-ashina-posture/README.md) | 卡牌 | 2-4人 | 40-70分钟 | 中等 |
+| [黎明行者：桑格拉三十夜](category/strategy/dawnwalker-sangora-nights/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等偏难 |
 
 ## 添加新桌游
 
