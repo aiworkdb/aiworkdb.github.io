@@ -122,6 +122,7 @@ boardgames/
 | [黎明行者：桑格拉三十夜](category/strategy/dawnwalker-sangora-nights/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等偏难 |
 | [玩具不许动：安迪的房间](category/party/toy-freeze-andy-room/README.md) | 派对 | 3-6人 | 35-55分钟 | 中等 |
 | [英灵殿：最后的席位](category/card/valhalla-last-seats/README.md) | 卡牌 | 2-5人 | 40-65分钟 | 中等 |
+| [乐高蝙蝠侠：哥谭积木夜](category/party/lego-batman-gotham-bricks/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
 
 ## 添加新桌游
 
