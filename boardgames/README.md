@@ -124,6 +124,7 @@ boardgames/
 | [英灵殿：最后的席位](category/card/valhalla-last-seats/README.md) | 卡牌 | 2-5人 | 40-65分钟 | 中等 |
 | [乐高蝙蝠侠：哥谭积木夜](category/party/lego-batman-gotham-bricks/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
 | [恶魔城：贝尔蒙特的诅咒](category/card/castlevania-belmont-curse/README.md) | 卡牌 | 2-5人 | 45-60分钟 | 中等 |
+| [海绵宝宝：水母田大捕捞](category/party/spongebob-jellyfish-roundup/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单/中等 |
 
 ## 添加新桌游
 
