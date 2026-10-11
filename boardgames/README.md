@@ -125,6 +125,7 @@ boardgames/
 | [乐高蝙蝠侠：哥谭积木夜](category/party/lego-batman-gotham-bricks/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
 | [恶魔城：贝尔蒙特的诅咒](category/card/castlevania-belmont-curse/README.md) | 卡牌 | 2-5人 | 45-60分钟 | 中等 |
 | [海绵宝宝：水母田大捕捞](category/party/spongebob-jellyfish-roundup/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单/中等 |
+| [水浒传：一百零八星宿](category/strategy/water-margin-108-stars/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等偏难 |
 
 ## 添加新桌游
 
