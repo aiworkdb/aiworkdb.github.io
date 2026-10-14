@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>钻石王牌：王牌投捕 · 打印道具</title>
+<style>
+:root{
+  --ink:#1f2430; --sub:#5a6479; --line:#c8d0de; --bg:#f5f7fa;
+  --red:#c0392b; --blue:#2471a3; --yellow:#b7950b; --green:#1e8449;
+  --purple:#76448a; --brown:#7b4a21; --gray:#607d8b; --gold:#e9c46a;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; padding:24px; background:var(--bg); color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  line-height:1.6;
+}
+.wrap{max-width:1080px; margin:0 auto;}
+h1{font-size:26px; margin:0 0 4px;}
+.sub{color:var(--sub); font-size:14px; margin-bottom:18px;}
+h2{
+  font-size:19px; margin:26px 0 10px; padding-left:10px;
+  border-left:5px solid var(--blue);
+}
+h3{font-size:15px; margin:16px 0 8px; color:var(--sub);}
+p{margin:6px 0;}
+table{border-collapse:collapse; width:100%; font-size:13px; margin:8px 0;}
+th,td{border:1px solid var(--line); padding:6px 8px; text-align:left;}
+th{background:#eef2f7;}
+td.n,th.n{text-align:right;}
+.print-hint{
+  background:#fff8e1; border:1px solid #e6c972; border-radius:10px;
+  padding:12px 16px; margin:16px 0; font-size:14px;
+}
+.print-hint ul{margin:6px 0 0; padding-left:20px;}
+.tag{
+  display:inline-block; font-size:11px; padding:1px 7px; border-radius:99px;
+  border:1px solid var(--line); color:var(--sub); margin-left:6px;
+}
+.grid{display:grid; gap:8px;}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+.g2{grid-template-columns:repeat(2,1fr);}
+.card{
+  border:2px solid var(--line); border-radius:10px; padding:8px 10px;
+  background:#fff; position:relative; min-height:104px;
+  break-inside:avoid; page-break-inside:avoid;
+}
+.card .top{display:flex; align-items:center; gap:6px; font-weight:700;}
+.card .nm{font-size:15px;}
+.card .en{font-size:10px; color:var(--sub); font-weight:400;}
+.card .body{font-size:12px; color:#333c4e; margin-top:4px;}
+.badge{
+  position:absolute; top:-8px; right:-8px; background:var(--ink); color:#fff;
+  font-size:11px; font-weight:700; padding:1px 7px; border-radius:99px;
+}
+.zone-wrap{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;}
+.zone{
+  display:grid; grid-template-columns:repeat(3,88px); gap:5px;
+  background:#fff; padding:8px; border:3px solid var(--ink); border-radius:8px;
+}
+.zc{
+  height:88px; border:2px dashed var(--line); border-radius:6px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-size:11px; color:var(--sub); background:#fbfcfe;
+}
+.zc b{font-size:24px; color:var(--ink);}
+.zc.sweet{background:#fdf3d4; border-style:solid; border-color:var(--gold);}
+.axis{display:grid; grid-template-columns:repeat(3,88px); gap:5px; margin-bottom:4px;}
+.axis div{text-align:center; font-size:12px; color:var(--sub);}
+.side{display:grid; grid-template-rows:repeat(3,88px); gap:5px; margin-right:4px;}
+.side div{display:flex; align-items:center; font-size:12px; color:var(--sub);}
+.track{
+  display:flex; border:2px solid var(--ink); border-radius:8px; overflow:hidden;
+  background:#fff; width:max-content;
+}
+.track div{
+  width:26px; height:28px; display:flex; align-items:center; justify-content:center;
+  font-size:12px; border-right:1px solid var(--line);
+}
+.track div:last-child{border-right:none;}
+.track div.on{background:#2ecc71; color:#fff; font-weight:700;}
+.pawn{
+  border:3px solid var(--ink); border-radius:50%; width:74px; height:74px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:#fff; font-size:24px;
+}
+.pawn span{font-size:11px; color:var(--sub);}
+.mvcard{border:2px solid var(--line); border-radius:8px; padding:6px; background:#fff;}
+.mvttl{font-size:13px; font-weight:700; margin-bottom:4px;}
+.mvgrid{display:grid; grid-template-columns:repeat(3,26px); gap:2px;}
+.mv{height:26px; display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); border-radius:3px; font-size:11px; background:#fbfcfe;}
+.mv-ok{background:#eafaf1; font-weight:700;}
+.mv-sweet{background:#fdf3d4;}
+.mv-out{background:#fdecea; color:var(--red); font-weight:700;}
+.mvcost{font-size:11px; color:var(--sub); margin-top:4px;}
+.marker{
+  border:2px dashed var(--ink); border-radius:50%; width:52px; height:52px;
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+  background:#fff;
+}
+.note{font-size:12px; color:var(--sub);}
+.page-break{break-before:page; page-break-before:always;}
+@media print{
+  *{
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .print-hint{ display:none; }
+  body{ padding:0; background:#fff; }
+  .page-break{ break-before:page; page-break-before:always; }
+  h2{ break-after:avoid; page-break-after:avoid; }
+  .card{ break-inside:avoid; page-break-inside:avoid; }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>💎 钻石王牌：王牌投捕 · 打印道具</h1>
+<div class="sub">Diamond Ace: Ace Battery — Printables　｜　2–4 人　｜　45–70 分钟　｜　策略类</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议在打印设置里选择<strong>最小边距</strong>。</li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项，否则卡牌底色与好球带板会印不出来。</li>
+    <li>卡牌与棋子建议使用<strong>卡纸（200g 以上）</strong>打印，裁剪后可塑封以延长寿命。</li>
+    <li>本页所有带 <span class="tag">×N</span> 角标的卡牌，请按角标数量打印相应份数。</li>
+  </ul>
+</div>
+
+
+<h2>0 · 一页速查（建议每人 1 张）</h2>
+
+<h3>0.1 每颗球的结算顺序</h3>
+<table>
+  <tr><th style="width:52px">步骤</th><th>内容</th></tr>
+  <tr><td class="n">1</td><td><b>投手</b>暗置 1 张球种卡，并把 🎯 投球标记扣在自己面板的小好球带上（＝瞄准格）。</td></tr>
+  <tr><td class="n">2</td><td><b>全体打者</b>同时暗置 1 张挥棒卡；🟢/🔴 还要把 🏏 挥棒标记扣在自己的小好球带上（＝猜的格）。⚪ 选球不放标记。</td></tr>
+  <tr><td class="n">3</td><td>同时揭示。<b>球的落点 = 瞄准格 + 球种位移</b>；移出九宫格 ⇒ <b>带外（坏球）</b>，否则 <b>带内（好球）</b>。</td></tr>
+  <tr><td class="n">4</td><td>逐名打者判定（下表），然后回到步骤 1，直到全场打者都结束打席，或投手球威耗尽。</td></tr>
+</table>
+
+<h3>0.2 打者判定表</h3>
+<table>
+  <tr><th>打者动作</th><th>球在带内</th><th>球在带外</th></tr>
+  <tr><td>🟢 小振</td><td>落点 ∈ 覆盖十字 ⇒ <b>击中</b>（掷 D6：≤5 得 2 分，=6 出局）<br>否则 ⇒ 挥空，好球 +1</td><td>挥空，好球 +1</td></tr>
+  <tr><td>🔴 大振</td><td>落点 == 猜测格 ⇒ <b>击中</b>（掷 D6：≤3 得 5 分，4–5 得 2 分，=6 出局）<br>否则 ⇒ 挥空，好球 +1</td><td>挥空，好球 +1</td></tr>
+  <tr><td>⚪ 选球</td><td>好球 +1</td><td>坏球 +1</td></tr>
+</table>
+<p class="note">好球累计 3 ⇒ <b>三振出局</b>（打者 0 分，投手 +2）。坏球累计 4 ⇒ <b>保送</b>（打者 +2）。甜区（格 5）击中额外 +1。</p>
+
+<h3>0.3 球威速查</h3>
+<table>
+  <tr><th>球种</th><th class="n">带内</th><th class="n">带外</th><th>能投出带外的瞄准格</th></tr>
+  <tr><td>🟥 直球</td><td class="n">1</td><td class="n">—</td><td>永远进带</td></tr>
+  <tr><td>🟦 滑球</td><td class="n">2</td><td class="n">3</td><td>外列 1 / 4 / 7</td></tr>
+  <tr><td>🟨 曲球</td><td class="n">2</td><td class="n">3</td><td>低行 7 / 8 / 9</td></tr>
+  <tr><td>🟩 变速球</td><td class="n">2</td><td class="n">3</td><td>内列 3 / 6 / 9</td></tr>
+  <tr><td>🟪 指叉球</td><td class="n">3</td><td class="n">4</td><td>中行与低行 4–9</td></tr>
+  <tr><td>🟫 喷射球</td><td class="n">3</td><td class="n">4</td><td>外列 1/4/7 与低行 7/8/9</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>1 · 好球带板（全场共用 1 张）</h2>
+<p class="note">放在桌子正中。真实棒球的好球带就是 3×3 九宫格 —— 这张板既是地图，也是判定器。</p>
+<div class="zone-wrap">
+  <div class="side"><div>高</div><div>中</div><div>低</div></div>
+  <div>
+    <div class="axis"><div>外</div><div>中</div><div>内</div></div>
+    <div class="zone"><div class="zc"><b>1</b>高外</div><div class="zc"><b>2</b>高中</div><div class="zc"><b>3</b>高内</div><div class="zc"><b>4</b>中外</div><div class="zc sweet"><b>5</b>中中<br>甜区</div><div class="zc"><b>6</b>中内</div><div class="zc"><b>7</b>低外</div><div class="zc"><b>8</b>低中</div><div class="zc"><b>9</b>低内</div></div>
+  </div>
+  <div style="max-width:240px;font-size:12px;color:var(--sub)">
+    <b>格位编号</b><br>
+    行：高(1) / 中(2) / 低(3)<br>
+    列：外(1) / 中(2) / 内(3)<br><br>
+    <b>🌟 格5 = 甜区</b><br>
+    在甜区击中，得分 +1。<br><br>
+    <b>球如何移动</b><br>
+    球从「瞄准格」出发，按球种位移 1–2 格；<br>
+    <b>移出九宫格 ⇒ 落到板外 = 坏球</b>。<br>
+    未移出的球留在板上 = 好球。
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<h2>2 · 球种卡（共 52 张，投手牌库）</h2>
+<p class="note">洗匀成牌库。每位玩家登板时补到 <b>5 张</b>手牌，未用完的手牌在该半局结束时弃掉。</p>
+<div class="grid g4">
+    <div class="card">
+      <span class="badge">×12</span>
+      <div class="top"><span style="font-size:22px">🟥</span>
+        <span class="nm">直球</span><span class="en">Fastball</span></div>
+      <div class="body">位移 <b>无</b>　球威 <b>1</b><br>不位移，永远落在你瞄的那一格。便宜，但打者读得到。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×10</span>
+      <div class="top"><span style="font-size:22px">🟦</span>
+        <span class="nm">滑球</span><span class="en">Slider</span></div>
+      <div class="body">位移 <b>外 1</b>　球威 <b>2</b><br>向外横扫 1 格。瞄外列 ⇒ 扫出带外。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×10</span>
+      <div class="top"><span style="font-size:22px">🟨</span>
+        <span class="nm">曲球</span><span class="en">Curve</span></div>
+      <div class="body">位移 <b>下 1</b>　球威 <b>2</b><br>向下坠落 1 格。瞄低行 ⇒ 坠出带外。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×8</span>
+      <div class="top"><span style="font-size:22px">🟩</span>
+        <span class="nm">变速球</span><span class="en">Changeup</span></div>
+      <div class="body">位移 <b>内 1</b>　球威 <b>2</b><br>向内兜回 1 格。瞄内列 ⇒ 兜出带外。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×6</span>
+      <div class="top"><span style="font-size:22px">🟪</span>
+        <span class="nm">指叉球</span><span class="en">Forkball</span></div>
+      <div class="body">位移 <b>下 2</b>　球威 <b>3</b><br>急坠 2 格。只有瞄高行才留得住。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×6</span>
+      <div class="top"><span style="font-size:22px">🟫</span>
+        <span class="nm">喷射球</span><span class="en">Shuuto</span></div>
+      <div class="body">位移 <b>外 1 + 下 1</b>　球威 <b>3</b><br>向外下坠各 1 格。瞄外列或低行都会跑掉。</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<h2>3 · 挥棒卡（共 30 张，打者牌库）</h2>
+<p class="note">洗匀成牌库。每半局开始时，所有打者把手牌补到 <b>4 张</b>，本半局用完即弃。</p>
+<div class="grid g4">
+    <div class="card">
+      <span class="badge">×15</span>
+      <div class="top"><span style="font-size:22px">🟢</span>
+        <span class="nm">小振</span><span class="en">Contact</span></div>
+      <div class="body"><b>覆盖目标格及其上下左右相邻格（十字 5 格，边角处自然缩减）</b><br>命中 ⇒ 掷 D6：≤4 得 1 分（甜区 +1），≥5 出局</div>
+    </div>
+    <div class="card">
+      <span class="badge">×9</span>
+      <div class="top"><span style="font-size:22px">🔴</span>
+        <span class="nm">大振</span><span class="en">Power</span></div>
+      <div class="body"><b>只覆盖目标格（1 格）</b><br>命中 ⇒ 掷 D6：≤4 得 3 分（甜区 +1），≥5 出局</div>
+    </div>
+    <div class="card">
+      <span class="badge">×6</span>
+      <div class="top"><span style="font-size:22px">⚪</span>
+        <span class="nm">选球</span><span class="en">Take</span></div>
+      <div class="body"><b>不挥棒。球进带 ⇒ 好球；球出带 ⇒ 坏球</b><br>好球 ⇒ 好球 +1；坏球 ⇒ 坏球 +1</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<h2>2.5 · 球种位移对照图</h2>
+<p class="note">每张小图的 <b>行＝瞄准格</b>，格内数字＝<b>投出后的实际落点</b>，✕＝飞出好球带。
+（左列为瞄准格编号）</p>
+<div class="grid g3">
+    <div class="mvcard">
+      <div class="mvttl">🟥 直球 <span class="en">Fastball</span></div>
+      <div class="mvgrid"><div class="mv mv-ok">1</div><div class="mv mv-ok">2</div><div class="mv mv-ok">3</div><div class="mv mv-ok">4</div><div class="mv mv-ok mv-sweet">5</div><div class="mv mv-ok">6</div><div class="mv mv-ok">7</div><div class="mv mv-ok">8</div><div class="mv mv-ok">9</div></div>
+      <div class="mvcost">带内 1 ／ 带外 2</div>
+    </div>
+    <div class="mvcard">
+      <div class="mvttl">🟦 滑球 <span class="en">Slider</span></div>
+      <div class="mvgrid"><div class="mv mv-out">✕</div><div class="mv mv-ok">1</div><div class="mv mv-ok">2</div><div class="mv mv-out">✕</div><div class="mv mv-ok">4</div><div class="mv mv-ok mv-sweet">5</div><div class="mv mv-out">✕</div><div class="mv mv-ok">7</div><div class="mv mv-ok">8</div></div>
+      <div class="mvcost">带内 2 ／ 带外 3</div>
+    </div>
+    <div class="mvcard">
+      <div class="mvttl">🟨 曲球 <span class="en">Curve</span></div>
+      <div class="mvgrid"><div class="mv mv-ok">4</div><div class="mv mv-ok mv-sweet">5</div><div class="mv mv-ok">6</div><div class="mv mv-ok">7</div><div class="mv mv-ok">8</div><div class="mv mv-ok">9</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div></div>
+      <div class="mvcost">带内 2 ／ 带外 3</div>
+    </div>
+    <div class="mvcard">
+      <div class="mvttl">🟩 变速球 <span class="en">Changeup</span></div>
+      <div class="mvgrid"><div class="mv mv-ok">2</div><div class="mv mv-ok">3</div><div class="mv mv-out">✕</div><div class="mv mv-ok mv-sweet">5</div><div class="mv mv-ok">6</div><div class="mv mv-out">✕</div><div class="mv mv-ok">8</div><div class="mv mv-ok">9</div><div class="mv mv-out">✕</div></div>
+      <div class="mvcost">带内 2 ／ 带外 3</div>
+    </div>
+    <div class="mvcard">
+      <div class="mvttl">🟪 指叉球 <span class="en">Forkball</span></div>
+      <div class="mvgrid"><div class="mv mv-ok">7</div><div class="mv mv-ok">8</div><div class="mv mv-ok">9</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div></div>
+      <div class="mvcost">带内 3 ／ 带外 4</div>
+    </div>
+    <div class="mvcard">
+      <div class="mvttl">🟫 喷射球 <span class="en">Shuuto</span></div>
+      <div class="mvgrid"><div class="mv mv-out">✕</div><div class="mv mv-ok">4</div><div class="mv mv-ok mv-sweet">5</div><div class="mv mv-out">✕</div><div class="mv mv-ok">7</div><div class="mv mv-ok">8</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div><div class="mv mv-out">✕</div></div>
+      <div class="mvcost">带内 3 ／ 带外 4</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<h2>4 · 投手卡（4 张，开局每人随机 1 张，整场保留）</h2>
+<div class="grid g4">
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:22px">🌀</span>
+        <span class="nm">クロスファイア 左腕</span><span class="en">Crossfire Lefty</span></div>
+      <div class="body">喷射球与滑球的球威消耗各 −1（3→2 / 2→1）。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:22px">⚡</span>
+        <span class="nm">扇の要 捕手</span><span class="en">Captain Catcher</span></div>
+      <div class="body">每半局球威 +3（12 → 15），但每次保送打者时，投手 −1 分。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:22px">🔥</span>
+        <span class="nm">剛腕 速球派</span><span class="en">Flame Thrower</span></div>
+      <div class="body">直球造成挥空时，投手额外 +1 分；但直球若被击中，打者额外 +1 分。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:22px">🎯</span>
+        <span class="nm">制球王 控球派</span><span class="en">Control Master</span></div>
+      <div class="body">变化球投到带外时不额外扣球威（免除越界惩罚）。</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<h2>5 · 战况卡（8 张，每局开局翻 1 张，全局生效一整局）</h2>
+<p class="note">8 张整轮用完；2 人局用前 4 张，3 人局用前 6 张。</p>
+<div class="grid g4">
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">🌬️</span>
+        <span class="nm">強風</span></div>
+      <div class="body">所有「向外」位移再 +1 格。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">🌧️</span>
+        <span class="nm">降雨</span></div>
+      <div class="body">本局所有球种球威消耗 +1。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">☀️</span>
+        <span class="nm">快晴</span></div>
+      <div class="body">本局所有球种球威消耗 −1（最低 1）。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">📣</span>
+        <span class="nm">満塁</span></div>
+      <div class="body">本局所有击中得分 +1。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">👀</span>
+        <span class="nm">厳密な審判</span></div>
+      <div class="body">本局好球带左右两列（外列、内列）视为带外。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">🕶️</span>
+        <span class="nm">逆光</span></div>
+      <div class="body">本局打者选择目标格后，向左或向右偏 1 格（由打者左右两侧玩家各掷 D2 决定）。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">🧊</span>
+        <span class="nm">冷え込み</span></div>
+      <div class="body">本局「向下」位移再 +1 格，且球威恢复 +2。</div>
+    </div>
+    <div class="card">
+      <span class="badge">×1</span>
+      <div class="top"><span style="font-size:20px">🔥</span>
+        <span class="nm">熱戦</span></div>
+      <div class="body">本局三振投手 +1 分，保送打者 +1 分。</div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<h2>6 · 玩家面板 · 棋子 · 标记</h2>
+<h3>6.1 棋子（每色 1 枚）</h3>
+<div class="grid g4"><div class="pawn" style="border-color:#c0392b;color:#c0392b">⚾<span>青道</span></div><div class="pawn" style="border-color:#2471a3;color:#2471a3">⚾<span>稻实</span></div><div class="pawn" style="border-color:#1e8449;color:#1e8449">⚾<span>药师</span></div><div class="pawn" style="border-color:#76448a;color:#76448a">⚾<span>市大三</span></div>
+</div>
+<h3>6.2 球威轨（每人 1 条，用夹子/回形针标记当前球威）</h3>
+<div style="margin-bottom:10px"><div class="note">青道 球威轨</div><div class="track"><div class="on">0</div><div class="on">1</div><div class="on">2</div><div class="on">3</div><div class="on">4</div><div class="on">5</div><div class="on">6</div><div class="on">7</div><div class="on">8</div><div class="on">9</div><div class="on">10</div><div class="on">11</div><div class="on">12</div></div></div><div style="margin-bottom:10px"><div class="note">稻实 球威轨</div><div class="track"><div class="on">0</div><div class="on">1</div><div class="on">2</div><div class="on">3</div><div class="on">4</div><div class="on">5</div><div class="on">6</div><div class="on">7</div><div class="on">8</div><div class="on">9</div><div class="on">10</div><div class="on">11</div><div class="on">12</div></div></div><div style="margin-bottom:10px"><div class="note">药师 球威轨</div><div class="track"><div class="on">0</div><div class="on">1</div><div class="on">2</div><div class="on">3</div><div class="on">4</div><div class="on">5</div><div class="on">6</div><div class="on">7</div><div class="on">8</div><div class="on">9</div><div class="on">10</div><div class="on">11</div><div class="on">12</div></div></div><div style="margin-bottom:10px"><div class="note">市大三 球威轨</div><div class="track"><div class="on">0</div><div class="on">1</div><div class="on">2</div><div class="on">3</div><div class="on">4</div><div class="on">5</div><div class="on">6</div><div class="on">7</div><div class="on">8</div><div class="on">9</div><div class="on">10</div><div class="on">11</div><div class="on">12</div></div></div>
+<h3>6.3 球数计（每人 1 张，用两枚小物分别标记 B 坏球 / S 好球）</h3>
+<div class="grid g4">
+  <div class="card"><div class="top">⚪ B 坏球</div><div class="body">0 1 2 3　（第 4 个 ⇒ 保送 +2）</div></div>
+  <div class="card"><div class="top">🔴 S 好球</div><div class="body">0 1 2　（第 3 个 ⇒ 三振，投手 +2）</div></div>
+  <div class="card"><div class="top">🎯 投球标记</div><div class="body">投手暗置在自己面板的小好球带上，指明「瞄准格」。</div></div>
+  <div class="card"><div class="top">🏏 挥棒标记</div><div class="body">打者暗置，指明「猜的格」。使用 ⚪ 选球时不放。</div></div>
+</div>
+
+
+</div>
+</body>
+</html>
