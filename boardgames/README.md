@@ -130,6 +130,7 @@ boardgames/
 | [深潜：深渊raid](category/party/deep-dive-abyss-raid/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
 | [FX战士：杠杆风暴](category/card/fx-warrior-leverage-storm/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等偏难 |
 | [钻石王牌：王牌投捕](category/strategy/diamond-ace-battery/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
+| [土俵：大相扑场所](category/party/grand-sumo-basho/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单/中等 |
 
 ## 添加新桌游
 

@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>土俵：大相扑场所 — 打印道具</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: "Microsoft YaHei","PingFang SC",sans-serif; background:#f4efe4;
+       color:#2b2118; margin:0; padding:18px; }
+h1 { text-align:center; font-size:26px; margin:6px 0 2px; color:#7d1f16; letter-spacing:2px; }
+h2 { font-size:19px; margin:26px 0 10px; padding:6px 12px; background:#1f3a5f; color:#fff;
+     border-radius:6px; }
+.sub { text-align:center; color:#6b5b47; margin-bottom:14px; font-size:13px; }
+.print-hint { background:#fff6d8; border:2px dashed #c9a227; border-radius:8px;
+              padding:12px 16px; margin:14px 0 22px; font-size:13px; line-height:1.75; }
+.print-hint strong { color:#8a5a00; }
+.grid { display:flex; flex-wrap:wrap; gap:10px; }
+.card { width:172px; min-height:238px; border:3px solid #1f3a5f; border-radius:10px;
+        background:#fffdf6; padding:8px; position:relative; page-break-inside:avoid;
+        box-shadow:0 2px 5px rgba(0,0,0,.14); }
+.card.atk { border-color:#c0392b; background:#fff8f5; }
+.card.def { border-color:#1f6f4a; background:#f4fbf7; }
+.card .nm { font-size:15px; font-weight:bold; text-align:center; margin:2px 0 4px; color:#7d1f16; }
+.card .ic { font-size:30px; text-align:center; line-height:1.15; }
+.card .en { text-align:center; font-size:10px; color:#8a7a66; letter-spacing:1px; margin-bottom:5px; }
+.card .bd { font-size:11.5px; line-height:1.55; border-top:1px dashed #c8b89c; padding-top:5px; }
+.card .badge { position:absolute; top:-9px; right:-9px; background:#c0392b; color:#fff;
+               border-radius:12px; padding:2px 8px; font-size:11px; font-weight:bold; }
+.rank { width:172px; min-height:150px; border:3px solid #7d1f16; border-radius:10px;
+        background:linear-gradient(#fff8ec,#f0e2c4); padding:9px; position:relative;
+        page-break-inside:avoid; }
+.rank .rn { font-size:22px; font-weight:bold; text-align:center; color:#7d1f16; }
+.rank .rd { font-size:12px; text-align:center; margin-top:5px; line-height:1.7; }
+.rank .badge { position:absolute; top:-9px; right:-9px; background:#1f3a5f; color:#fff;
+               border-radius:12px; padding:2px 8px; font-size:11px; font-weight:bold; }
+.gauge { width:100%; max-width:660px; border:3px solid #1f3a5f; border-radius:10px;
+         background:#fffdf6; padding:10px 12px; margin-bottom:12px; page-break-inside:avoid; }
+.gauge .gl { font-size:13px; font-weight:bold; margin-bottom:6px; color:#1f3a5f; }
+.gcells { display:flex; gap:3px; }
+.gcells div { flex:1; text-align:center; font-size:12px; font-weight:bold; padding:7px 0;
+              border-radius:5px; color:#fff; background:#2e8b57; }
+.gcells div.d1 { background:#b8860b; } .gcells div.d2 { background:#c0392b; }
+.gcells div.d0 { background:#5b4a38; }
+.piece { width:104px; height:126px; border:3px solid #4a3a26; border-radius:52px 52px 12px 12px;
+         background:#f7e9c9; text-align:center; padding-top:16px; page-break-inside:avoid; }
+.piece .pi { font-size:34px; } .piece .pn { font-size:12px; font-weight:bold; margin-top:4px; }
+.dohyo { width:100%; max-width:660px; border:4px solid #7d1f16; border-radius:14px;
+         background:radial-gradient(circle at 50% 45%, #f6ead0 0 38%, #cbb489 38% 46%, #e3d3ad 46% 100%);
+         padding:16px; page-break-inside:avoid; }
+.dohyo .dt { text-align:center; font-size:20px; font-weight:bold; color:#7d1f16; letter-spacing:4px; }
+.dohyo .dsub { text-align:center; font-size:11px; color:#6b5b47; margin:3px 0 10px; }
+.tbl { width:100%; border-collapse:collapse; font-size:12px; background:#fffdf6; }
+.tbl th, .tbl td { border:1px solid #b9a683; padding:4px 6px; text-align:center; }
+.tbl th { background:#1f3a5f; color:#fff; }
+.steps { font-size:12px; line-height:1.85; background:#fffdf6; border:1px solid #c8b89c;
+         border-radius:8px; padding:10px 14px; margin-top:10px; }
+.ref { width:100%; max-width:660px; border:2px solid #1f3a5f; border-radius:10px;
+       background:#fffdf6; padding:12px 14px; font-size:12px; line-height:1.8;
+       page-break-inside:avoid; margin-bottom:12px; }
+.ref h3 { margin:0 0 6px; font-size:15px; color:#7d1f16; }
+.foot { text-align:center; color:#8a7a66; font-size:11px; margin-top:26px; }
+@media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { background:#fff; padding:0; }
+    h2 { page-break-before: auto; }
+    @page { size: A4; margin: 8mm; }
+}
+</style></head><body>
+<h1>🏆 土俵：大相扑场所 🏆</h1>
+<div class="sub">Grand Sumo Basho ｜ 派对类 ｜ 3-6 人 ｜ 30-50 分钟 ｜ 打印道具合集</div>
+<div class="print-hint">
+<strong>⚠️ 重要打印提示：</strong><ul>
+<li>使用 <strong>A4 纸张</strong>打印，打印对话框中设置<strong>最小边距</strong></li>
+<li>务必<strong>勾选「背景图形」</strong>选项，否则土俵与卡牌的底色不会被印出来</li>
+<li>技卡、番付卡、力士棋子建议使用<strong>卡纸（200g 以上）</strong>打印</li>
+<li>距離刻度条建议打印后<strong>塑封</strong>，用白板笔或夹子标记当前步数</li>
+<li>卡牌角标 <strong>×N</strong> 表示需要打印的份数</li>
+</ul></div>
+<h2>1. 土俵中央板（共用 1 张）</h2>
+<div class="dohyo"><div class="dt">土 俵</div>
+<div class="dsub">DOHYŌ ｜ 十一月場所 ｜ 5 日間</div>
+<table class="tbl"><tr><th>番付</th><th>等级</th><th>推力加成 A</th><th>起始距離 S</th><th>突き出し</th><th>押し込み</th></tr>
+<tr><td>🤺 序ノ口</td><td>0</td><td>+0</td><td>9</td><td>2</td><td>3</td></tr>
+<tr><td>🥉 十両</td><td>1</td><td>+1</td><td>8</td><td>3</td><td>4</td></tr>
+<tr><td>🥈 幕内</td><td>2</td><td>+2</td><td>7</td><td>4</td><td>5</td></tr>
+<tr><td>🥇 大関</td><td>3</td><td>+3</td><td>6</td><td>5</td><td>6</td></tr>
+<tr><td>🏆 横綱</td><td>4</td><td>+4</td><td>5</td><td>6</td><td>7</td></tr>
+</table>
+<div class="steps"><b>每手结算顺序（严格按序）：</b><br>① 同时揭示技卡 → ② 免疫（🦶四股 / 🔄変化）→ ③ 施加推进 → ④ 🔄変化 反伤（指定他者各 −2）→ ⑤ 囲み（被 ≥3 张攻击卡指定再 −2；3 人局为 ≥2）→ ⑥ 仕切り直し（本手未被任何攻击卡指定者 +1，🖐️ はたき込み 目标除外）→ ⑦ 土俵を割る（剩餘 ≤ 0 者出局）</div>
+</div>
+<h2>2. 技卡（每人 1 套 7 张 · 共印 6 套）</h2>
+<div class="grid">
+<div class="card atk"><span class="badge">×2</span>
+<div class="ic">🫸</div>
+<div class="nm">突き出し</div>
+<div class="en">TSUKIDASHI</div>
+<div class="bd">对手 −(2 + 你的番付推力)。相扑最基础的推掌。</div></div>
+<div class="card atk"><span class="badge">×1</span>
+<div class="ic">💥</div>
+<div class="nm">押し込み</div>
+<div class="en">OSHIKOMI</div>
+<div class="bd">对手 −(3 + 推力)，但你自身 −2（反作用力）。</div></div>
+<div class="card atk"><span class="badge">×1</span>
+<div class="ic">🤼</div>
+<div class="nm">上手投げ</div>
+<div class="en">UWATENAGE</div>
+<div class="bd">对手剩餘 ≤3 ⇒ −4；否则只 −2。不吃推力加成（技巧不靠体重）。</div></div>
+<div class="card atk"><span class="badge">×1</span>
+<div class="ic">🖐️</div>
+<div class="nm">はたき込み</div>
+<div class="en">HATAKIKOMI</div>
+<div class="bd">对手 −2，且对手本手不能「仕切り直し」回中心。</div></div>
+<div class="card def"><span class="badge">×1</span>
+<div class="ic">🦶</div>
+<div class="nm">四股</div>
+<div class="en">SHIKO</div>
+<div class="bd">本手免疫所有推进，且自身 +2。稳住重心。</div></div>
+<div class="card def"><span class="badge">×1</span>
+<div class="ic">🔄</div>
+<div class="nm">変化</div>
+<div class="en">HENKA</div>
+<div class="bd">本手免疫所有推进，自身 +1；所有指定你的力士各 −2（扑空冲出）。</div></div>
+</div>
+<h2>3. 番付卡（面朝上摊在自己面前 · 每级 2 张）</h2>
+<div class="grid">
+<div class="rank"><span class="badge">×2</span>
+<div class="rn">🤺 序ノ口</div>
+<div class="rd">等级 0 ｜ 推力 <b>+0</b> ｜ 起始距離 <b>9</b><br>突き出し 2 ｜ 押し込み 3<br><span style="font-size:11px;color:#8a7a66">A + S = 9（全场恒定）</span></div></div>
+<div class="rank"><span class="badge">×2</span>
+<div class="rn">🥉 十両</div>
+<div class="rd">等级 1 ｜ 推力 <b>+1</b> ｜ 起始距離 <b>8</b><br>突き出し 3 ｜ 押し込み 4<br><span style="font-size:11px;color:#8a7a66">A + S = 9（全场恒定）</span></div></div>
+<div class="rank"><span class="badge">×2</span>
+<div class="rn">🥈 幕内</div>
+<div class="rd">等级 2 ｜ 推力 <b>+2</b> ｜ 起始距離 <b>7</b><br>突き出し 4 ｜ 押し込み 5<br><span style="font-size:11px;color:#8a7a66">A + S = 9（全场恒定）</span></div></div>
+<div class="rank"><span class="badge">×2</span>
+<div class="rn">🥇 大関</div>
+<div class="rd">等级 3 ｜ 推力 <b>+3</b> ｜ 起始距離 <b>6</b><br>突き出し 5 ｜ 押し込み 6<br><span style="font-size:11px;color:#8a7a66">A + S = 9（全场恒定）</span></div></div>
+<div class="rank"><span class="badge">×2</span>
+<div class="rn">🏆 横綱</div>
+<div class="rd">等级 4 ｜ 推力 <b>+4</b> ｜ 起始距離 <b>5</b><br>突き出し 6 ｜ 押し込み 7<br><span style="font-size:11px;color:#8a7a66">A + S = 9（全场恒定）</span></div></div>
+</div>
+<h2>4. 距離刻度条（每人 1 条 · 共印 6 条）</h2>
+<div class="gauge"><div class="gl">力士 🟥 距離土俵の縁　（0 = 土俵を割る＝出局）</div><div class="gcells"><div class="">9</div><div class="">8</div><div class="">7</div><div class="">6</div><div class="">5</div><div class="d1">4</div><div class="d1">3</div><div class="d2">2</div><div class="d2">1</div><div class="d0">0</div></div></div>
+<div class="gauge"><div class="gl">力士 🟦 距離土俵の縁　（0 = 土俵を割る＝出局）</div><div class="gcells"><div class="">9</div><div class="">8</div><div class="">7</div><div class="">6</div><div class="">5</div><div class="d1">4</div><div class="d1">3</div><div class="d2">2</div><div class="d2">1</div><div class="d0">0</div></div></div>
+<div class="gauge"><div class="gl">力士 🟩 距離土俵の縁　（0 = 土俵を割る＝出局）</div><div class="gcells"><div class="">9</div><div class="">8</div><div class="">7</div><div class="">6</div><div class="">5</div><div class="d1">4</div><div class="d1">3</div><div class="d2">2</div><div class="d2">1</div><div class="d0">0</div></div></div>
+<div class="gauge"><div class="gl">力士 🟨 距離土俵の縁　（0 = 土俵を割る＝出局）</div><div class="gcells"><div class="">9</div><div class="">8</div><div class="">7</div><div class="">6</div><div class="">5</div><div class="d1">4</div><div class="d1">3</div><div class="d2">2</div><div class="d2">1</div><div class="d0">0</div></div></div>
+<div class="gauge"><div class="gl">力士 🟪 距離土俵の縁　（0 = 土俵を割る＝出局）</div><div class="gcells"><div class="">9</div><div class="">8</div><div class="">7</div><div class="">6</div><div class="">5</div><div class="d1">4</div><div class="d1">3</div><div class="d2">2</div><div class="d2">1</div><div class="d0">0</div></div></div>
+<div class="gauge"><div class="gl">力士 🟧 距離土俵の縁　（0 = 土俵を割る＝出局）</div><div class="gcells"><div class="">9</div><div class="">8</div><div class="">7</div><div class="">6</div><div class="">5</div><div class="d1">4</div><div class="d1">3</div><div class="d2">2</div><div class="d2">1</div><div class="d0">0</div></div></div>
+<h2>5. 力士棋子（每人 1 枚 · 共印 6 枚）</h2>
+<div class="grid">
+<div class="piece"><div class="pi">🟥</div><div class="pn">力士 A</div></div>
+<div class="piece"><div class="pi">🟦</div><div class="pn">力士 B</div></div>
+<div class="piece"><div class="pi">🟩</div><div class="pn">力士 C</div></div>
+<div class="piece"><div class="pi">🟨</div><div class="pn">力士 D</div></div>
+<div class="piece"><div class="pi">🟪</div><div class="pn">力士 E</div></div>
+<div class="piece"><div class="pi">🟧</div><div class="pn">力士 F</div></div>
+</div>
+<h2>6. 速查表（每人 1 张 · 共印 2 张）</h2>
+<div class="ref"><h3>📜 一页速查</h3>
+<b>灵魂恒等式：</b>推力加成 A ＋ 起始距離 S ≡ 9。赢一日 = 推力 +1、容错 −1。连赢 4 日当上横綱，起始只剩 5 步 —— <b>连胜即自毁</b>。<br>
+<b>第二条恒等式：</b>分散输出的总压力是集火的 3.0×（3人）～2.4×（6人），因为集火会让所有旁观者「仕切り直し +1」。<b>集火只在能一击致命时才划算。</b><br>
+<b>计分：</b>白星 +2 ｜ 押し出し賞 +3（本手唯一对该目标推进最多者；并列则无人得）｜ 金星 +2（推倒番付高你 2 级以上）｜ 下克上 +1（高 1 级）｜ 残存賞 +1（整日未出局）｜ 无的放矢 −2（一日 0 人出局，全场）<br>
+<b>记忆锚：</b>① 你的番付越高，你越脆；② 別当那个被围的人；③ 🔄変化 是给「人人都想打你」时刻准备的；④ 押し出し賞 抢的是尾刀，不是总伤害。
+</div>
+<div class="ref"><h3>📜 一页速查</h3>
+<b>灵魂恒等式：</b>推力加成 A ＋ 起始距離 S ≡ 9。赢一日 = 推力 +1、容错 −1。连赢 4 日当上横綱，起始只剩 5 步 —— <b>连胜即自毁</b>。<br>
+<b>第二条恒等式：</b>分散输出的总压力是集火的 3.0×（3人）～2.4×（6人），因为集火会让所有旁观者「仕切り直し +1」。<b>集火只在能一击致命时才划算。</b><br>
+<b>计分：</b>白星 +2 ｜ 押し出し賞 +3（本手唯一对该目标推进最多者；并列则无人得）｜ 金星 +2（推倒番付高你 2 级以上）｜ 下克上 +1（高 1 级）｜ 残存賞 +1（整日未出局）｜ 无的放矢 −2（一日 0 人出局，全场）<br>
+<b>记忆锚：</b>① 你的番付越高，你越脆；② 別当那个被围的人；③ 🔄変化 是给「人人都想打你」时刻准备的；④ 押し出し賞 抢的是尾刀，不是总伤害。
+</div>
+<div class="foot">— 土俵：大相扑场所 · 打印道具 · 土俵板 1 ＋ 技卡 42 ＋ 番付卡 10 ＋ 距離条 6 ＋ 棋子 6 ＋ 速查 2 —</div>
+</body></html>
