@@ -132,6 +132,7 @@ boardgames/
 | [钻石王牌：王牌投捕](category/strategy/diamond-ace-battery/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
 | [土俵：大相扑场所](category/party/grand-sumo-basho/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单/中等 |
 | [铁旅：接续时刻表](category/card/rail-journey-timetable/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
+| [社团博览会：抢新大战](category/party/club-fair-scramble/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
 
 ## 添加新桌游
 
