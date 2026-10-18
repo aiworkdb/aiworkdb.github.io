@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>魔法骑士：塞菲罗支柱 — 打印道具</title>
+<style>
+:root{
+  --ink:#1f2937; --muted:#6b7280; --line:#d1d5db; --bg:#ffffff; --soft:#f8fafc;
+  --gold:#b45309; --heart:#e11d48; --pure:#0ea5e9; --faith:#7c3aed;
+}
+*{box-sizing:border-box;}
+body{font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  background:#eef2f7;color:var(--ink);margin:0;padding:24px;line-height:1.6;}
+.wrap{max-width:1180px;margin:0 auto;}
+h1{font-size:26px;margin:0 0 4px;color:#0f172a;}
+.sub{color:var(--muted);font-size:14px;margin-bottom:18px;}
+h2{font-size:20px;margin:32px 0 12px;padding:8px 12px;background:linear-gradient(90deg,#fde68a,#fef3c7);
+  border-left:6px solid var(--gold);border-radius:4px;color:#78350f;}
+h3{font-size:15px;margin:16px 0 8px;color:#334155;}
+.print-hint{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:14px;}
+.print-hint ul{margin:8px 0 0;padding-left:20px;}
+.no-print{display:inline-block;}
+.grid{display:grid;gap:10px;}
+.g-card{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+.g-board{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));}
+.g-chip{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
+
+/* ---- 卡牌 ---- */
+.card{width:150px;height:210px;border-radius:10px;border:2px solid var(--line);
+  background:var(--bg);padding:8px;position:relative;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,23,42,.12);display:flex;flex-direction:column;}
+.card .top{display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;color:var(--muted);}
+.card .emo{font-size:34px;text-align:center;margin:6px 0 2px;}
+.card .nm{text-align:center;font-weight:700;font-size:15px;letter-spacing:.5px;}
+.card .bd{font-size:11.5px;color:#374151;flex:1;margin-top:6px;line-height:1.45;}
+.card .ft{font-size:10px;color:var(--muted);text-align:center;border-top:1px dashed var(--line);padding-top:4px;}
+.card.pw{border-color:#94a3b8;}
+.card.pw .corner{position:absolute;top:6px;left:8px;font-size:22px;font-weight:800;color:#0f172a;}
+.card.pw .corner2{position:absolute;bottom:6px;right:8px;font-size:22px;font-weight:800;color:#0f172a;transform:rotate(180deg);}
+.card.pw .big{font-size:52px;font-weight:800;text-align:center;margin:auto;color:#0f172a;}
+.card.trial{background:linear-gradient(160deg,#fff7ed,#fed7aa);border-color:#f59e0b;}
+.card.oath{background:linear-gradient(160deg,#faf5ff,#ede9fe);border-color:#a78bfa;}
+.card.oath .nm{color:#5b21b6;}
+.card.trial .nm{color:#92400e;}
+.tbox{display:flex;justify-content:space-around;margin:6px 0;font-size:12px;font-weight:700;}
+.tbox span{background:#fff;border:1px solid #f59e0b;border-radius:6px;padding:2px 5px;color:#92400e;}
+
+/* ---- 记录板 ---- */
+.board{border:2px solid var(--line);border-radius:10px;background:#fff;padding:10px;box-shadow:0 1px 3px rgba(15,23,42,.1);}
+.board .bh{font-weight:700;font-size:14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.scale{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:8px;}
+.scale i{width:13px;height:13px;border:1px solid #cbd5e1;background:#fff;border-radius:2px;font-style:normal;font-size:8px;
+  display:flex;align-items:center;justify-content:center;color:#94a3b8;}
+.scale i.k{background:#f1f5f9;color:#475569;}
+.scale i.th{background:#fde68a;border-color:#b45309;color:#92400e;font-weight:700;}
+.track{font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:5px;}
+.pill{font-size:11px;border-radius:20px;padding:1px 8px;color:#fff;font-weight:700;}
+
+/* ---- 地图 ---- */
+.map{border:2px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#f0f9ff,#e0f2fe);padding:16px;}
+.maprow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.node{width:120px;border:2px solid #0ea5e9;border-radius:10px;background:#fff;padding:8px;text-align:center;}
+.node .n1{font-size:20px;}
+.node .n2{font-weight:700;font-size:13px;color:#075985;}
+.node .n3{font-size:11px;color:var(--muted);}
+.path{text-align:center;color:#0284c7;font-size:18px;margin:2px 0;}
+
+/* ---- 其他 ---- */
+.chip{border:1px dashed #94a3b8;border-radius:50%;width:104px;height:104px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-size:30px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.chip b{font-size:12px;margin-top:2px;}
+.bar{border:2px solid #7c3aed;border-radius:10px;background:#f5f3ff;padding:10px;margin-bottom:12px;}
+.barbox{display:flex;gap:3px;flex-wrap:wrap;}
+.barbox i{width:22px;height:26px;border:1px solid #a78bfa;background:#fff;border-radius:3px;font-style:normal;
+  font-size:11px;display:flex;align-items:center;justify-content:center;color:#6d28d9;font-weight:700;}
+table{border-collapse:collapse;width:100%;font-size:13px;background:#fff;}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:center;}
+th{background:#f1f5f9;font-weight:700;}
+.foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint { display: none; }
+    .no-print { display: none; }
+    body { background: #fff; padding: 0; }
+    h2 { page-break-after: avoid; }
+    .card, .board, .node { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🗼 魔法骑士：塞菲罗支柱 — 打印道具</h1>
+<div class="sub">共 8 场试炼 · 5 位骑士 · 40 张战力卡 · 8 张试炼卡 · 36 张誓约卡 · 5 块双轨记录板</div>
+
+<div class="print-hint">
+<strong>⚠️ 重要打印提示：</strong>
+<ul>
+<li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+<li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则所有颜色会丢失</li>
+<li>卡牌与棋子建议使用<strong>卡纸（200-250g）</strong>打印以增加耐用性</li>
+<li>打印后可裁剪并塑封；记录板建议用白板笔填写以便重复使用</li>
+<li>战力卡按玩家颜色分组，每人领取同色的 8 张</li>
+</ul>
+</div>
+<h2>🗺️ 一、塞菲罗试炼之路（地图）</h2>
+<div class="map">
+<div style="text-align:center;font-weight:700;color:#075985;margin-bottom:10px;">东京铁塔 → 塞菲罗：八重试炼，一路向艾梅洛德之塔</div>
+<div class="maprow">
+<div class="node"><div class="n1">🌲 ①</div><div class="n2">精灵之森</div><div class="n3">威胁 T = 人数 ×3</div><div class="n3">2人6 / 3人9 / 4人12 / 5人15</div></div>
+</div>
+<div class="path">↓</div>
+<div class="maprow">
+<div class="node"><div class="n1">⛲ ②</div><div class="n2">泉之遗迹</div><div class="n3">威胁 T = 人数 ×3</div><div class="n3">2人6 / 3人9 / 4人12 / 5人15</div></div>
+</div>
+<div class="path">↓</div>
+<div class="maprow">
+<div class="node"><div class="n1">🌪 ③</div><div class="n2">风之峡谷</div><div class="n3">威胁 T = 人数 ×3</div><div class="n3">2人6 / 3人9 / 4人12 / 5人15</div></div>
+</div>
+<div class="path">↓</div>
+<div class="maprow">
+<div class="node"><div class="n1">🏜 ④</div><div class="n2">沙之海市</div><div class="n3">威胁 T = 人数 ×4</div><div class="n3">2人8 / 3人12 / 4人16 / 5人20</div></div>
+</div>
+<div class="path">↓</div>
+<div class="maprow">
+<div class="node"><div class="n1">❄️ ⑤</div><div class="n2">冰之回廊</div><div class="n3">威胁 T = 人数 ×4</div><div class="n3">2人8 / 3人12 / 4人16 / 5人20</div></div>
+</div>
+<div class="path">↓</div>
+<div class="maprow">
+<div class="node"><div class="n1">🌋 ⑥</div><div class="n2">火山之颚</div><div class="n3">威胁 T = 人数 ×5</div><div class="n3">2人10 / 3人15 / 4人20 / 5人25</div></div>
+</div>
+<div class="path">↓</div>
+<div class="maprow">
+<div class="node"><div class="n1">👁 ⑦</div><div class="n2">幻影回廊</div><div class="n3">威胁 T = 人数 ×5</div><div class="n3">2人10 / 3人15 / 4人20 / 5人25</div></div>
+</div>
+<div class="path">↓</div>
+<div class="maprow">
+<div class="node"><div class="n1">🗼 ⑧</div><div class="n2">艾梅洛德之塔</div><div class="n3">威胁 T = 人数 ×6</div><div class="n3">2人12 / 3人18 / 4人24 / 5人30</div></div>
+</div>
+<div style="margin-top:12px;font-size:12.5px;color:#475569;">路线说明：八场试炼<strong>按顺序</strong>进行，不可跳过、不可回头。每场试炼的威胁值 T = 玩家人数 × 倍率（卡面已标出）。第 8 场「艾梅洛德之塔」倍率为 6，与每人手中最大的战力卡（6 点）相等 —— 那一战不需要任何人投入心愿。</div>
+</div>
+<h3>试炼与魔力需求速查（4 人局示例）</h3>
+<table>
+<tr><th>试炼</th><th>建议出牌</th><th>威胁 T</th><th>全场需 ♡</th><th>人均 ♡</th><th>说明</th></tr>
+<tr><td>①精灵之森</td><td>1</td><td>12</td><td>8</td><td>2</td><td>开局最紧，必须有人顶 2 点</td></tr>
+<tr><td>②泉之遗迹</td><td>2</td><td>12</td><td>4</td><td>1</td><td>标准轮次</td></tr>
+<tr><td>③风之峡谷</td><td>2</td><td>12</td><td>4</td><td>1</td><td>标准轮次</td></tr>
+<tr><td>④沙之海市</td><td>3</td><td>16</td><td>4</td><td>1</td><td>标准轮次</td></tr>
+<tr><td>⑤冰之回廊</td><td>3</td><td>16</td><td>4</td><td>1</td><td>标准轮次</td></tr>
+<tr><td>⑥火山之颚</td><td>4</td><td>20</td><td>4</td><td>1</td><td>标准轮次</td></tr>
+<tr><td>⑦幻影回廊</td><td>4</td><td>20</td><td>4</td><td>1</td><td>标准轮次</td></tr>
+<tr><td>⑧艾梅洛德之塔</td><td>6</td><td>24</td><td>0</td><td>0</td><td>魔神已醒，无需心愿</td></tr>
+<tr style="background:#fef3c7;font-weight:700;"><td>合计</td><td>25</td><td>132</td><td>32</td><td>8</td><td>人均 ♡ 8 ⇒ ✧ 基数 16</td></tr>
+</table>
+<h2>🗡️ 二、战力卡「心愿之刃」（5 色 × 8 张 = 40 张）</h2>
+<div class="grid g-card">
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">1</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">1</div><div class="ft" style="color:#e11d48">本轮战力 = 1 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">1</div></div>
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">2</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">2</div><div class="ft" style="color:#e11d48">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">2</div></div>
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">2</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">2</div><div class="ft" style="color:#e11d48">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">2</div></div>
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">3</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">3</div><div class="ft" style="color:#e11d48">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">3</div></div>
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">3</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">3</div><div class="ft" style="color:#e11d48">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">3</div></div>
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">4</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">4</div><div class="ft" style="color:#e11d48">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">4</div></div>
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">4</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">4</div><div class="ft" style="color:#e11d48">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">4</div></div>
+<div class="card pw" style="background:#fff1f2;border-color:#e11d48;"><div class="corner" style="color:#e11d48">6</div><div class="top"><span>🔥 光之骑士</span><span>战力</span></div><div class="big" style="color:#e11d48">6</div><div class="ft" style="color:#e11d48">本轮战力 = 6 + 你投入的 ♡</div><div class="corner2" style="color:#e11d48">6</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">1</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">1</div><div class="ft" style="color:#0ea5e9">本轮战力 = 1 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">1</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">2</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">2</div><div class="ft" style="color:#0ea5e9">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">2</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">2</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">2</div><div class="ft" style="color:#0ea5e9">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">2</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">3</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">3</div><div class="ft" style="color:#0ea5e9">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">3</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">3</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">3</div><div class="ft" style="color:#0ea5e9">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">3</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">4</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">4</div><div class="ft" style="color:#0ea5e9">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">4</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">4</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">4</div><div class="ft" style="color:#0ea5e9">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">4</div></div>
+<div class="card pw" style="background:#f0f9ff;border-color:#0ea5e9;"><div class="corner" style="color:#0ea5e9">6</div><div class="top"><span>🌊 海之骑士</span><span>战力</span></div><div class="big" style="color:#0ea5e9">6</div><div class="ft" style="color:#0ea5e9">本轮战力 = 6 + 你投入的 ♡</div><div class="corner2" style="color:#0ea5e9">6</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">1</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">1</div><div class="ft" style="color:#16a34a">本轮战力 = 1 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">1</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">2</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">2</div><div class="ft" style="color:#16a34a">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">2</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">2</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">2</div><div class="ft" style="color:#16a34a">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">2</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">3</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">3</div><div class="ft" style="color:#16a34a">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">3</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">3</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">3</div><div class="ft" style="color:#16a34a">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">3</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">4</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">4</div><div class="ft" style="color:#16a34a">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">4</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">4</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">4</div><div class="ft" style="color:#16a34a">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">4</div></div>
+<div class="card pw" style="background:#f0fdf4;border-color:#16a34a;"><div class="corner" style="color:#16a34a">6</div><div class="top"><span>🍃 风之骑士</span><span>战力</span></div><div class="big" style="color:#16a34a">6</div><div class="ft" style="color:#16a34a">本轮战力 = 6 + 你投入的 ♡</div><div class="corner2" style="color:#16a34a">6</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">1</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">1</div><div class="ft" style="color:#a16207">本轮战力 = 1 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">1</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">2</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">2</div><div class="ft" style="color:#a16207">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">2</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">2</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">2</div><div class="ft" style="color:#a16207">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">2</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">3</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">3</div><div class="ft" style="color:#a16207">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">3</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">3</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">3</div><div class="ft" style="color:#a16207">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">3</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">4</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">4</div><div class="ft" style="color:#a16207">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">4</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">4</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">4</div><div class="ft" style="color:#a16207">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">4</div></div>
+<div class="card pw" style="background:#fefce8;border-color:#a16207;"><div class="corner" style="color:#a16207">6</div><div class="top"><span>🪨 岩之骑士</span><span>战力</span></div><div class="big" style="color:#a16207">6</div><div class="ft" style="color:#a16207">本轮战力 = 6 + 你投入的 ♡</div><div class="corner2" style="color:#a16207">6</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">1</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">1</div><div class="ft" style="color:#7c3aed">本轮战力 = 1 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">1</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">2</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">2</div><div class="ft" style="color:#7c3aed">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">2</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">2</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">2</div><div class="ft" style="color:#7c3aed">本轮战力 = 2 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">2</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">3</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">3</div><div class="ft" style="color:#7c3aed">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">3</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">3</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">3</div><div class="ft" style="color:#7c3aed">本轮战力 = 3 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">3</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">4</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">4</div><div class="ft" style="color:#7c3aed">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">4</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">4</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">4</div><div class="ft" style="color:#7c3aed">本轮战力 = 4 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">4</div></div>
+<div class="card pw" style="background:#f5f3ff;border-color:#7c3aed;"><div class="corner" style="color:#7c3aed">6</div><div class="top"><span>⚡ 雷之骑士</span><span>战力</span></div><div class="big" style="color:#7c3aed">6</div><div class="ft" style="color:#7c3aed">本轮战力 = 6 + 你投入的 ♡</div><div class="corner2" style="color:#7c3aed">6</div></div>
+</div>
+<div style="margin-top:10px;font-size:12.5px;color:#475569;">每位玩家领取<strong>同色的 8 张</strong>（点数恒为 1、2、2、3、3、4、4、6，全场完全一致，零运气差）。每场试炼暗置 1 张，<strong>用完为止、不再补充</strong> —— 什么时候打出 6 点，是全局最关键的决策。</div>
+<h2>👁 三、试炼卡「幻惑」（8 张）</h2>
+<div class="grid g-card">
+<div class="card trial"><div class="top"><span>🌲 试炼 ①</span><span>幻惑</span></div><div class="emo">🌲</div><div class="nm">精灵之森</div><div class="tbox"><span>2人 6</span><span>3人 9</span></div><div class="tbox"><span>4人 12</span><span>5人 15</span></div><div class="bd">树影幢幢，第一次试炼。魔力尚浅，但幻惑也弱。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+<div class="card trial"><div class="top"><span>⛲ 试炼 ②</span><span>幻惑</span></div><div class="emo">⛲</div><div class="nm">泉之遗迹</div><div class="tbox"><span>2人 6</span><span>3人 9</span></div><div class="tbox"><span>4人 12</span><span>5人 15</span></div><div class="bd">遗迹的泉水映出你心中所愿 —— 看得越清，越难割舍。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+<div class="card trial"><div class="top"><span>🌪 试炼 ③</span><span>幻惑</span></div><div class="emo">🌪</div><div class="nm">风之峡谷</div><div class="tbox"><span>2人 6</span><span>3人 9</span></div><div class="tbox"><span>4人 12</span><span>5人 15</span></div><div class="bd">狂风撕扯意志，只有坚定的心能站住。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+<div class="card trial"><div class="top"><span>🏜 试炼 ④</span><span>幻惑</span></div><div class="emo">🏜</div><div class="nm">沙之海市</div><div class="tbox"><span>2人 8</span><span>3人 12</span></div><div class="tbox"><span>4人 16</span><span>5人 20</span></div><div class="bd">海市蜃楼里全是你的愿望，走错一步就再也回不来。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+<div class="card trial"><div class="top"><span>❄️ 试炼 ⑤</span><span>幻惑</span></div><div class="emo">❄️</div><div class="nm">冰之回廊</div><div class="tbox"><span>2人 8</span><span>3人 12</span></div><div class="tbox"><span>4人 16</span><span>5人 20</span></div><div class="bd">寒冷让心愿冻结，也让纯粹凝结。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+<div class="card trial"><div class="top"><span>🌋 试炼 ⑥</span><span>幻惑</span></div><div class="emo">🌋</div><div class="nm">火山之颚</div><div class="tbox"><span>2人 10</span><span>3人 15</span></div><div class="tbox"><span>4人 20</span><span>5人 25</span></div><div class="bd">怒焰考验的是你愿意烧掉多少心愿。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+<div class="card trial"><div class="top"><span>👁 试炼 ⑦</span><span>幻惑</span></div><div class="emo">👁</div><div class="nm">幻影回廊</div><div class="tbox"><span>2人 10</span><span>3人 15</span></div><div class="tbox"><span>4人 20</span><span>5人 25</span></div><div class="bd">回廊里走着你自己的影子，它比你更强，也比你更脏。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+<div class="card trial"><div class="top"><span>🗼 试炼 ⑧</span><span>幻惑</span></div><div class="emo">🗼</div><div class="nm">艾梅洛德之塔</div><div class="tbox"><span>2人 12</span><span>3人 18</span></div><div class="tbox"><span>4人 24</span><span>5人 30</span></div><div class="bd">公主沉睡之处。魔神已醒，最后一击不需要心愿。</div><div class="ft">总战力 ≥ T 即击退</div></div>
+</div>
+<h2>📜 四、誓约卡（12 种 × 3 张 = 36 张）</h2>
+<div class="grid g-card">
+<div class="card oath"><div class="top"><span>🪞 誓约</span></div><div class="emo">🪞</div><div class="nm">护心镜</div><div class="bd">本轮你若为「心愿最盛者」，✧ 不扣（◈+4 照常）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🪞 誓约</span></div><div class="emo">🪞</div><div class="nm">护心镜</div><div class="bd">本轮你若为「心愿最盛者」，✧ 不扣（◈+4 照常）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🪞 誓约</span></div><div class="emo">🪞</div><div class="nm">护心镜</div><div class="bd">本轮你若为「心愿最盛者」，✧ 不扣（◈+4 照常）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🕯 誓约</span></div><div class="emo">🕯</div><div class="nm">静心</div><div class="bd">结算后，将你本轮投入的 1 点 ♡ 改为 ✧。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🕯 誓约</span></div><div class="emo">🕯</div><div class="nm">静心</div><div class="bd">结算后，将你本轮投入的 1 点 ♡ 改为 ✧。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🕯 誓约</span></div><div class="emo">🕯</div><div class="nm">静心</div><div class="bd">结算后，将你本轮投入的 1 点 ♡ 改为 ✧。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>💧 誓约</span></div><div class="emo">💧</div><div class="nm">元素涌流</div><div class="bd">立即额外获得 2 点魔力，本轮内分配。</div><div class="ft">分配前打出</div></div>
+<div class="card oath"><div class="top"><span>💧 誓约</span></div><div class="emo">💧</div><div class="nm">元素涌流</div><div class="bd">立即额外获得 2 点魔力，本轮内分配。</div><div class="ft">分配前打出</div></div>
+<div class="card oath"><div class="top"><span>💧 誓约</span></div><div class="emo">💧</div><div class="nm">元素涌流</div><div class="bd">立即额外获得 2 点魔力，本轮内分配。</div><div class="ft">分配前打出</div></div>
+<div class="card oath"><div class="top"><span>🌀 誓约</span></div><div class="emo">🌀</div><div class="nm">谢夫罗的低语</div><div class="bd">指定一名对手，其本轮 ♡ 视为 −1（战力与判定均适用）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🌀 誓约</span></div><div class="emo">🌀</div><div class="nm">谢夫罗的低语</div><div class="bd">指定一名对手，其本轮 ♡ 视为 −1（战力与判定均适用）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🌀 誓约</span></div><div class="emo">🌀</div><div class="nm">谢夫罗的低语</div><div class="bd">指定一名对手，其本轮 ♡ 视为 −1（战力与判定均适用）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🗝 誓约</span></div><div class="emo">🗝</div><div class="nm">真名</div><div class="bd">本轮你的战力卡面值视为 6。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🗝 誓约</span></div><div class="emo">🗝</div><div class="nm">真名</div><div class="bd">本轮你的战力卡面值视为 6。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🗝 誓约</span></div><div class="emo">🗝</div><div class="nm">真名</div><div class="bd">本轮你的战力卡面值视为 6。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🕊 誓约</span></div><div class="emo">🕊</div><div class="nm">归还之翼</div><div class="bd">本轮你不参与「心愿最盛」判定（即使唯一最高也不算）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🕊 誓约</span></div><div class="emo">🕊</div><div class="nm">归还之翼</div><div class="bd">本轮你不参与「心愿最盛」判定（即使唯一最高也不算）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🕊 誓约</span></div><div class="emo">🕊</div><div class="nm">归还之翼</div><div class="bd">本轮你不参与「心愿最盛」判定（即使唯一最高也不算）。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>✨ 誓约</span></div><div class="emo">✨</div><div class="nm">艾梅洛德的祝福</div><div class="bd">塞菲罗稳定度 +3。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>✨ 誓约</span></div><div class="emo">✨</div><div class="nm">艾梅洛德的祝福</div><div class="bd">塞菲罗稳定度 +3。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>✨ 誓约</span></div><div class="emo">✨</div><div class="nm">艾梅洛德的祝福</div><div class="bd">塞菲罗稳定度 +3。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>🔥 誓约</span></div><div class="emo">🔥</div><div class="nm">试炼之炎</div><div class="bd">本轮幻惑的威胁值 T −4。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🔥 誓约</span></div><div class="emo">🔥</div><div class="nm">试炼之炎</div><div class="bd">本轮幻惑的威胁值 T −4。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🔥 誓约</span></div><div class="emo">🔥</div><div class="nm">试炼之炎</div><div class="bd">本轮幻惑的威胁值 T −4。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🌫 誓约</span></div><div class="emo">🌫</div><div class="nm">忘却之雾</div><div class="bd">揭示前，你可以重选本轮的 ♡ / ✧ 分配。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🌫 誓约</span></div><div class="emo">🌫</div><div class="nm">忘却之雾</div><div class="bd">揭示前，你可以重选本轮的 ♡ / ✧ 分配。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🌫 誓约</span></div><div class="emo">🌫</div><div class="nm">忘却之雾</div><div class="bd">揭示前，你可以重选本轮的 ♡ / ✧ 分配。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>📖 誓约</span></div><div class="emo">📖</div><div class="nm">魔导士的指引</div><div class="bd">查看自己剩余的战力手牌，并重排其出牌顺序。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>📖 誓约</span></div><div class="emo">📖</div><div class="nm">魔导士的指引</div><div class="bd">查看自己剩余的战力手牌，并重排其出牌顺序。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>📖 誓约</span></div><div class="emo">📖</div><div class="nm">魔导士的指引</div><div class="bd">查看自己剩余的战力手牌，并重排其出牌顺序。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>🌊 誓约</span></div><div class="emo">🌊</div><div class="nm">共鸣</div><div class="bd">本轮你的战力 +4。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🌊 誓约</span></div><div class="emo">🌊</div><div class="nm">共鸣</div><div class="bd">本轮你的战力 +4。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🌊 誓约</span></div><div class="emo">🌊</div><div class="nm">共鸣</div><div class="bd">本轮你的战力 +4。</div><div class="ft">揭示前打出</div></div>
+<div class="card oath"><div class="top"><span>🥚 誓约</span></div><div class="emo">🥚</div><div class="nm">魔神之卵</div><div class="bd">若你已「觉醒」：◈+3；否则 ◈+1。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>🥚 誓约</span></div><div class="emo">🥚</div><div class="nm">魔神之卵</div><div class="bd">若你已「觉醒」：◈+3；否则 ◈+1。</div><div class="ft">任意时机</div></div>
+<div class="card oath"><div class="top"><span>🥚 誓约</span></div><div class="emo">🥚</div><div class="nm">魔神之卵</div><div class="bd">若你已「觉醒」：◈+3；否则 ◈+1。</div><div class="ft">任意时机</div></div>
+</div>
+<div style="margin-top:10px;font-size:12.5px;color:#475569;">誓约牌堆洗匀背面朝上。每场试炼结算后，每人抽 1 张，<strong>手牌上限 3 张</strong>（超出须立即弃掉）。</div>
+<h2>📊 五、骑士记录板（5 块）</h2>
+<div class="grid g-board">
+<div class="board" style="border-color:#e11d48;"><div class="bh" style="color:#e11d48"><span>🔥 光之骑士</span><span class="pill" style="background:#e11d48">魔神三段</span></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">心愿 ♡（0-24）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">纯粹 ✧（0-24）· 金色格 = 柱门槛 12</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class="th">12</i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">信念 ◈（0-30）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">25</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">30</i></div><div class="track">觉醒 ⚡（✧≥8 且 ◈≥6）□　魔神 🐉（✧≥12 且 ◈≥12）□<br>终局献祭：♡ → ✧ 最多 3 点（1:1）</div></div>
+<div class="board" style="border-color:#0ea5e9;"><div class="bh" style="color:#0ea5e9"><span>🌊 海之骑士</span><span class="pill" style="background:#0ea5e9">魔神三段</span></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">心愿 ♡（0-24）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">纯粹 ✧（0-24）· 金色格 = 柱门槛 12</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class="th">12</i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">信念 ◈（0-30）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">25</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">30</i></div><div class="track">觉醒 ⚡（✧≥8 且 ◈≥6）□　魔神 🐉（✧≥12 且 ◈≥12）□<br>终局献祭：♡ → ✧ 最多 3 点（1:1）</div></div>
+<div class="board" style="border-color:#16a34a;"><div class="bh" style="color:#16a34a"><span>🍃 风之骑士</span><span class="pill" style="background:#16a34a">魔神三段</span></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">心愿 ♡（0-24）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">纯粹 ✧（0-24）· 金色格 = 柱门槛 12</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class="th">12</i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">信念 ◈（0-30）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">25</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">30</i></div><div class="track">觉醒 ⚡（✧≥8 且 ◈≥6）□　魔神 🐉（✧≥12 且 ◈≥12）□<br>终局献祭：♡ → ✧ 最多 3 点（1:1）</div></div>
+<div class="board" style="border-color:#a16207;"><div class="bh" style="color:#a16207"><span>🪨 岩之骑士</span><span class="pill" style="background:#a16207">魔神三段</span></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">心愿 ♡（0-24）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">纯粹 ✧（0-24）· 金色格 = 柱门槛 12</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class="th">12</i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">信念 ◈（0-30）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">25</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">30</i></div><div class="track">觉醒 ⚡（✧≥8 且 ◈≥6）□　魔神 🐉（✧≥12 且 ◈≥12）□<br>终局献祭：♡ → ✧ 最多 3 点（1:1）</div></div>
+<div class="board" style="border-color:#7c3aed;"><div class="bh" style="color:#7c3aed"><span>⚡ 雷之骑士</span><span class="pill" style="background:#7c3aed">魔神三段</span></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">心愿 ♡（0-24）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">纯粹 ✧（0-24）· 金色格 = 柱门槛 12</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class="th">12</i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div style="font-size:11px;color:#475569;margin-bottom:3px;">信念 ◈（0-30）</div><div class="scale"><i class="k">0</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">5</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">10</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">15</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">20</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">25</i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="k">30</i></div><div class="track">觉醒 ⚡（✧≥8 且 ◈≥6）□　魔神 🐉（✧≥12 且 ◈≥12）□<br>终局献祭：♡ → ✧ 最多 3 点（1:1）</div></div>
+</div>
+<h2>♟️ 六、棋子 · 元素泉 · 稳定度条</h2>
+<div class="grid g-chip">
+<div class="chip" style="border-color:#e11d48;background:#fff1f2;">🔥<b style="color:#e11d48">光之骑士</b></div>
+<div class="chip" style="border-color:#0ea5e9;background:#f0f9ff;">🌊<b style="color:#0ea5e9">海之骑士</b></div>
+<div class="chip" style="border-color:#16a34a;background:#f0fdf4;">🍃<b style="color:#16a34a">风之骑士</b></div>
+<div class="chip" style="border-color:#a16207;background:#fefce8;">🪨<b style="color:#a16207">岩之骑士</b></div>
+<div class="chip" style="border-color:#7c3aed;background:#f5f3ff;">⚡<b style="color:#7c3aed">雷之骑士</b></div>
+</div>
+<h3>塞菲罗稳定度条（起始 = 人数 × 3）</h3>
+<div class="bar">
+<div class="barbox">
+<i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i></div>
+<div style="font-size:12px;color:#6d28d9;margin-top:6px;">2人局起始 6　3人局起始 9　4人局起始 12　5人局起始 15。击退失败时倒扣（T − 总战力）；归零即塞菲罗崩坏，游戏立即结束，全员 ◈ 清零。</div>
+</div>
+<h3>元素泉（每场试炼每人取 3 点魔力）</h3>
+<div class="grid g-chip">
+<div class="chip" style="border-color:#0ea5e9;background:#f0f9ff;">💎<b style="color:#0369a1">魔力 ×3</b></div>
+<div class="chip" style="border-color:#0ea5e9;background:#f0f9ff;">💎<b style="color:#0369a1">魔力 ×3</b></div>
+<div class="chip" style="border-color:#0ea5e9;background:#f0f9ff;">💎<b style="color:#0369a1">魔力 ×3</b></div>
+<div class="chip" style="border-color:#0ea5e9;background:#f0f9ff;">💎<b style="color:#0369a1">魔力 ×3</b></div>
+<div class="chip" style="border-color:#0ea5e9;background:#f0f9ff;">💎<b style="color:#0369a1">魔力 ×3</b></div>
+<div class="chip" style="border-color:#0ea5e9;background:#f0f9ff;">💎<b style="color:#0369a1">魔力 ×3</b></div>
+</div>
+<h2>📌 七、一页速查卡（建议每人 1 张）</h2>
+<div class="grid g-board">
+<div class="board" style="border-color:#b45309;">
+<div class="bh" style="color:#b45309;">🗼 塞菲罗支柱 · 速查</div>
+<div style="font-size:11.5px;line-height:1.7;">
+<b>每场试炼流程</b><br>
+1. 涌泉：取 3 点魔力，<b>秘密</b>分给 ♡ / ✧（0-3 整数）<br>
+2. 誓约：可打出誓约卡<br>
+3. 出战：暗置 1 张战力卡<br>
+4. 揭示：战力 = 卡面 + ♡（觉醒再 +1）<br>
+5. 结算：总战力 ≥ T ？<br>
+　✔ 击退：<b>唯一最高 ♡</b> 者 ◈+4 ✧−2；其余 ◈+1<br>
+　✘ 失败：无人得 ◈，全员 ✧−2，稳定度 −(T−总战力)<br>
+6. 抽 1 张誓约卡（上限 3 张）<br>
+<b>终局计分</b><br>
+① 献祭：最多 3 点 ♡ → ✧（1:1）<br>
+② 心魔：有效♡ = min(♡, ✧)<br>
+③ 柱的审判：✧ ≥ 12 ⇒ ◈ 全计；✧ &lt; 12 ⇒ ◈ 减半<br>
+④ 魔神（✧≥12 且 ◈≥12）：+5<br>
+⑤ <b>得分 = 有效♡ + ✧ + 计◈ + 魔神奖励</b><br>
+<b>三次定律</b>：抢峰 0/1/2 次 ⇒ 32/33/34 分；<b>第 3 次骤降到 26</b>
+</div></div>
+<div class="board" style="border-color:#b45309;">
+<div class="bh" style="color:#b45309;">🗼 塞菲罗支柱 · 速查</div>
+<div style="font-size:11.5px;line-height:1.7;">
+<b>每场试炼流程</b><br>
+1. 涌泉：取 3 点魔力，<b>秘密</b>分给 ♡ / ✧（0-3 整数）<br>
+2. 誓约：可打出誓约卡<br>
+3. 出战：暗置 1 张战力卡<br>
+4. 揭示：战力 = 卡面 + ♡（觉醒再 +1）<br>
+5. 结算：总战力 ≥ T ？<br>
+　✔ 击退：<b>唯一最高 ♡</b> 者 ◈+4 ✧−2；其余 ◈+1<br>
+　✘ 失败：无人得 ◈，全员 ✧−2，稳定度 −(T−总战力)<br>
+6. 抽 1 张誓约卡（上限 3 张）<br>
+<b>终局计分</b><br>
+① 献祭：最多 3 点 ♡ → ✧（1:1）<br>
+② 心魔：有效♡ = min(♡, ✧)<br>
+③ 柱的审判：✧ ≥ 12 ⇒ ◈ 全计；✧ &lt; 12 ⇒ ◈ 减半<br>
+④ 魔神（✧≥12 且 ◈≥12）：+5<br>
+⑤ <b>得分 = 有效♡ + ✧ + 计◈ + 魔神奖励</b><br>
+<b>三次定律</b>：抢峰 0/1/2 次 ⇒ 32/33/34 分；<b>第 3 次骤降到 26</b>
+</div></div>
+</div>
+<div class="foot">
+本文档为《魔法骑士：塞菲罗支柱》的全部可打印道具。规则详情见
+<a href="README.md">README.md</a>；返回
+<a href="../../../README.md">桌游总索引</a> ·
+<a href="../../../development-guide.md">开发规范</a> ·
+<a href="../odyssey-voyage-home/README.md">同类：奥德赛</a>。
+</div>
+</div>
+</body>
+</html>
