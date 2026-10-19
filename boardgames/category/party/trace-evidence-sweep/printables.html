@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>痕迹：现场勘查 · 打印道具</title>
+<style>
+:root{
+  --navy:#16283c; --navy2:#2c4a68; --paper:#f7f4ea; --ink:#22303c;
+  --red:#c0392b; --amber:#f2b134; --green:#2f8f5b; --line:#b7a382;
+  --blue:#2f6f9f; --grey:#6b5c45;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:18px;background:#e8e3d6;color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;}
+h1{font-size:24px;margin:0 0 4px;color:var(--navy);}
+.lead{font-size:13px;color:#5c4e3a;margin:0 0 6px;}
+h2{font-size:18px;margin:26px 0 10px;color:#fff;background:var(--navy);
+  padding:7px 12px;border-radius:6px;border-left:6px solid var(--amber);}
+h3{font-size:14px;margin:14px 0 8px;color:var(--navy2);}
+p,li{font-size:13px;line-height:1.7;}
+.print-hint{background:#fff8e1;border:2px dashed var(--amber);border-radius:8px;
+  padding:12px 16px;margin:14px 0;}
+.print-hint strong{color:var(--red);}
+.grid{display:flex;flex-wrap:wrap;gap:9px;}
+.card{position:relative;background:var(--paper);border:2px solid var(--navy);
+  border-radius:8px;padding:7px 8px;page-break-inside:avoid;break-inside:avoid;}
+.badge{position:absolute;top:-8px;right:-8px;background:var(--red);color:#fff;
+  font-size:11px;font-weight:700;border-radius:10px;padding:1px 7px;border:2px solid #fff;}
+.ico{font-size:26px;line-height:1.1;text-align:center;}
+.nm{font-size:13px;font-weight:700;text-align:center;color:var(--navy);}
+.sub{font-size:11px;text-align:center;color:var(--grey);margin-top:2px;}
+.dsc{font-size:10.5px;line-height:1.45;margin-top:5px;color:#3a4a58;}
+.hd{text-align:center;font-size:10px;font-weight:700;color:#fff;background:var(--navy2);
+  border-radius:4px;padding:2px 0;margin:-3px -4px 4px;}
+/* 现场板 */
+.map{background:var(--paper);border:3px solid var(--navy);border-radius:12px;padding:14px;}
+.lane{display:flex;gap:4px;margin-top:8px;}
+.cell{flex:1 1 0;height:74px;border:2px solid var(--navy);border-radius:6px;
+  background:#fffdf6;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;font-size:19px;font-weight:700;color:var(--navy);}
+.cell b{font-size:20px;}
+.cell small{font-size:9px;color:var(--grey);font-weight:400;}
+.cell.dark{background:#e6e1d2;}
+.note{font-size:12px;color:#5c4e3a;background:#fff;padding:8px 12px;border-radius:6px;
+  border-left:4px solid var(--amber);margin:8px 0;}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;margin-top:12px;}
+.legend span{display:inline-block;padding:2px 8px;border-radius:4px;color:#fff;}
+/* 案情卡 */
+.cs{width:250px;height:172px;background:#fffdf5;}
+.cs .bar{display:flex;gap:2px;margin-top:6px;}
+.cs .lb{flex:1 1 0;height:20px;border:1px solid var(--line);border-radius:2px;
+  font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff;
+  background:#fff;overflow:hidden;}
+.cs .er{display:flex;align-items:center;gap:4px;font-size:9.5px;margin-top:2px;}
+.cs .er i{font-style:normal;font-size:13px;}
+.cs .er u{text-decoration:none;color:var(--grey);}
+.cs .er b{color:var(--navy);}
+/* 勘查条 */
+.bd{width:560px;background:#fffdf5;padding:8px 10px 10px;}
+.bd .lane{display:flex;gap:4px;}
+.bd .cell{height:46px;font-size:15px;background:#fff;border:2px solid var(--navy2);}
+.sbar{display:flex;gap:4px;margin-top:8px;}
+.sbar div{flex:1 1 0;height:30px;border:2px solid var(--navy);border-radius:5px;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--navy);}
+.sbar div.hi{background:var(--amber);}
+/* 档位卡 */
+.tc{width:104px;height:146px;background:#fffdf5;}
+.tc .mul{font-size:26px;font-weight:700;text-align:center;color:var(--navy);margin:14px 0 2px;}
+.tc .mul em{font-style:normal;color:var(--grey);font-size:18px;}
+.tc .use{text-align:center;font-size:9.5px;color:var(--grey);margin-top:4px;}
+.tc.free{background:#f2f6ea;border:3px dashed var(--blue);}
+.tc.ot{background:#fff2f0;}
+/* 布点标记 */
+.dot{width:44px;height:44px;border-radius:50%;border:3px solid var(--navy);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  font-weight:700;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);}
+/* 物证标记 */
+.ev{width:74px;height:74px;border-radius:8px;border:3px solid var(--navy);
+  background:#fffdf5;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;}
+.ev .t{font-size:17px;}
+.ev .p{font-size:12px;font-weight:700;color:var(--navy);}
+.ev .d{font-size:11px;font-weight:700;color:#fff;background:var(--red);
+  border-radius:8px;padding:0 5px;margin-top:1px;}
+.ev.d3{border-color:var(--green);} .ev.d3 .d{background:var(--green);}
+.ev.d5{border-color:var(--blue);} .ev.d5 .d{background:var(--blue);}
+.ev.d7{border-color:var(--red);background:#fff2f0;}
+/* 工具卡 */
+.tl{width:118px;height:150px;}
+.tl .big{font-size:34px;text-align:center;margin:6px 0 2px;}
+.tl .ft{position:absolute;bottom:5px;left:6px;right:6px;font-size:9.5px;
+  text-align:center;color:var(--grey);border-top:1px dashed var(--line);padding-top:3px;}
+/* 角色卡 */
+.rl{width:150px;height:112px;}
+.rl .big{font-size:28px;text-align:center;margin:4px 0 2px;}
+.rl .tag{font-size:9.5px;text-align:center;background:var(--navy2);color:#fff;
+  border-radius:4px;padding:1px 0;margin-top:4px;}
+/* 速查 */
+.cheat{width:360px;background:#fffdf5;border:2px solid var(--navy);
+  border-radius:8px;padding:10px;}
+.cheat table{border-collapse:collapse;width:100%;font-size:10.5px;margin-top:4px;}
+.cheat td,.cheat th{border:1px solid var(--line);padding:2px 3px;text-align:center;}
+.cheat th{background:var(--navy);color:#fff;}
+.cheat .hot{background:#fff0c9;font-weight:700;}
+@media print{
+  *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .print-hint{ display: none; }
+  body{background:#fff;padding:0;}
+  h2{page-break-after:avoid;}
+  .card,.map,.cheat,.dot,.ev,.bd{page-break-inside:avoid;break-inside:avoid;}
+  @page{ size:A4; margin:8mm; }
+}
+</style>
+</head>
+<body>
+<h1>🔍 痕迹：现场勘查 · 打印道具</h1>
+<p class="lead">Trace: Crime Scene Sweep ｜ 派对 / 推理类 ｜ 3-6 人 ｜ 40-50 分钟 ｜ 打印前请阅读下方提示</p>
+<div class="print-hint">
+<strong>⚠️ 重要打印提示：</strong>
+<ul>
+<li>使用 <strong>A4 纸张</strong> 打印，建议设置<strong>最小边距</strong></li>
+<li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则现场板、布点标记与物证标记会全部变成白色</li>
+<li>案情卡 / 工具卡 / 角色卡建议使用 <strong>卡纸（200g 以上）</strong> 打印并裁剪</li>
+<li>布点标记与物证标记建议打印两份，背对背粘合后裁剪；也可用 <strong>彩色纽扣、玻璃珠</strong> 代替</li>
+<li>现场板建议普通 A4 打印后 <strong>过塑</strong>，用白板笔标注，可反复使用</li>
+<li><strong>C × S ≤ 12</strong> 这条公式建议抄在速查卡上，摊在桌角</li>
+</ul>
+</div>
+
+<h2>零、现场板（1 张 · 全场共用）</h2>
+<div class="map">
+<h3 style="margin-top:0">现场板 · 十格勘查走廊</h3>
+<div class="note">每办一案，把该案案情卡摊在板子上方，把 <b>物证标记面朝下</b> 按编号摆进右侧的
+「物证槽」，所有人把自己的 <b>布点标记</b> 放到自己面前的勘查条上（不要直接放现场板，避免拥挤）。
+揭示阶段先把物证标记逐一翻开，再和每个人的勘查条逐格比对。</div>
+<div class="lane"><div class="cell"><b>1</b><small>格</small></div><div class="cell dark"><b>2</b><small>格</small></div><div class="cell"><b>3</b><small>格</small></div><div class="cell dark"><b>4</b><small>格</small></div><div class="cell"><b>5</b><small>格</small></div><div class="cell dark"><b>6</b><small>格</small></div><div class="cell"><b>7</b><small>格</small></div><div class="cell dark"><b>8</b><small>格</small></div><div class="cell"><b>9</b><small>格</small></div><div class="cell dark"><b>10</b><small>格</small></div></div>
+<div class="legend">
+<span style="background:var(--navy)">⬛ 走廊 1-10 格：物证的真实位置就藏在其中一格</span>
+<span style="background:var(--blue)">🔵 线索区间：案情卡上标出的 3 格范围，物证必在其中</span>
+<span style="background:var(--red)">🔴 损毁：你布到了那一格，但采样强度 S 小于难度 D</span>
+<span style="background:var(--green)">🟢 未布点：最安全的选择，也是最没分的选择</span>
+</div>
+</div>
+
+
+<h2>一、案情卡（6 张 · 公开信息）</h2>
+<div class="grid"><div class="card cs"><div class="hd">案一 🏠</div><div class="nm" style="font-size:12px">案一 老旧小区入室盗窃</div><div class="bar"><div class="lb" style="background:var(--blue)">1</div><div class="lb" style="background:var(--red)">15</div><div class="lb" style="background:var(--red)">125</div><div class="lb" style="background:var(--red)">25</div><div class="lb" style="background:var(--red)">24</div><div class="lb" style="background:var(--blue)">4</div><div class="lb" style="background:var(--blue)">4</div><div class="lb" style="background:var(--blue)">3</div><div class="lb" style="background:var(--blue)">3</div><div class="lb" style="background:var(--blue)">3</div></div><div class="sub" style="text-align:left;margin-top:5px">按人数取前 <b>P−1</b> 枚（3人取2 / 4人取3 / 5人取4 / 6人取5）</div><div class="er"><i>🖐️</i><b>指纹</b><u>线索 1-3 格</u><u>难度 1/2/3</u><u>分值 = D</u></div><div class="er"><i>👟</i><b>足迹</b><u>线索 3-5 格</u><u>难度 2/3/4</u><u>分值 = D</u></div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 8-10 格</u><u>难度 3/4/5</u><u>分值 = D</u></div><div class="er"><i>🖐️</i><b>指纹</b><u>线索 5-7 格</u><u>难度 1/2/3</u><u>分值 = D</u></div><div class="er"><i>👟</i><b>足迹</b><u>线索 2-4 格</u><u>难度 2/3/4</u><u>分值 = D</u></div></div><div class="card cs"><div class="hd">案二 🏬</div><div class="nm" style="font-size:12px">案二 便利店持械抢劫</div><div class="bar"><div class="lb" style="background:var(--blue)">2</div><div class="lb" style="background:var(--red)">12</div><div class="lb" style="background:var(--red)">12</div><div class="lb" style="background:var(--red)">15</div><div class="lb" style="background:var(--blue)">5</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--red)">34</div><div class="lb" style="background:var(--red)">34</div><div class="lb" style="background:var(--blue)">4</div><div class="lb">·</div></div><div class="sub" style="text-align:left;margin-top:5px">按人数取前 <b>P−1</b> 枚（3人取2 / 4人取3 / 5人取4 / 6人取5）</div><div class="er"><i>🖐️</i><b>指纹</b><u>线索 2-4 格</u><u>难度 1/2/3</u><u>分值 = D</u></div><div class="er"><i>👟</i><b>足迹</b><u>线索 1-3 格</u><u>难度 2/3/4</u><u>分值 = D</u></div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 6-8 格</u><u>难度 3/4/5</u><u>分值 = D</u></div><div class="er"><i>👟</i><b>足迹</b><u>线索 7-9 格</u><u>难度 2/3/4</u><u>分值 = D</u></div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 4-6 格</u><u>难度 3/4/5</u><u>分值 = D</u></div></div><div class="card cs"><div class="hd">案三 🏗️</div><div class="nm" style="font-size:12px">案三 工地电缆失窃</div><div class="bar"><div class="lb" style="background:var(--blue)">1</div><div class="lb" style="background:var(--red)">14</div><div class="lb" style="background:var(--red)">124</div><div class="lb" style="background:var(--red)">24</div><div class="lb" style="background:var(--blue)">2</div><div class="lb">·</div><div class="lb" style="background:var(--blue)">3</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--blue)">5</div></div><div class="sub" style="text-align:left;margin-top:5px">按人数取前 <b>P−1</b> 枚（3人取2 / 4人取3 / 5人取4 / 6人取5）</div><div class="er"><i>🖐️</i><b>指纹</b><u>线索 1-3 格</u><u>难度 1/2/3</u><u>分值 = D</u></div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 3-5 格</u><u>难度 3/4/5</u><u>分值 = D</u></div><div class="er"><i>🧵</i><b>纤维</b><u>线索 7-9 格</u><u>难度 4/5/6</u><u>分值 = D</u></div><div class="er"><i>👟</i><b>足迹</b><u>线索 2-4 格</u><u>难度 2/3/4</u><u>分值 = D</u></div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 8-10 格</u><u>难度 3/4/5</u><u>分值 = D</u></div></div><div class="card cs"><div class="hd">案四 🔥</div><div class="nm" style="font-size:12px">案四 郊区别墅纵火</div><div class="bar"><div class="lb" style="background:var(--blue)">1</div><div class="lb" style="background:var(--red)">14</div><div class="lb" style="background:var(--red)">14</div><div class="lb" style="background:var(--red)">24</div><div class="lb" style="background:var(--red)">23</div><div class="lb" style="background:var(--red)">23</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--blue)">5</div><div class="lb" style="background:var(--blue)">5</div><div class="lb">·</div></div><div class="sub" style="text-align:left;margin-top:5px">按人数取前 <b>P−1</b> 枚（3人取2 / 4人取3 / 5人取4 / 6人取5）</div><div class="er"><i>👟</i><b>足迹</b><u>线索 1-3 格</u><u>难度 2/3/4</u><u>分值 = D</u></div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 4-6 格</u><u>难度 3/4/5</u><u>分值 = D</u></div><div class="er"><i>🧵</i><b>纤维</b><u>线索 5-7 格</u><u>难度 4/5/6</u><u>分值 = D</u></div><div class="er"><i>🖐️</i><b>指纹</b><u>线索 2-4 格</u><u>难度 1/2/3</u><u>分值 = D</u></div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 7-9 格</u><u>难度 3/4/5</u><u>分值 = D</u></div></div><div class="card cs"><div class="hd">案五 🛣️</div><div class="nm" style="font-size:12px">案五 高速服务区劫案</div><div class="bar"><div class="lb" style="background:var(--blue)">1</div><div class="lb" style="background:var(--red)">14</div><div class="lb" style="background:var(--red)">14</div><div class="lb" style="background:var(--red)">24</div><div class="lb" style="background:var(--blue)">2</div><div class="lb" style="background:var(--red)">23</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--blue)">5</div><div class="lb">·</div></div><div class="sub" style="text-align:left;margin-top:5px">按人数取前 <b>P−1</b> 枚（3人取2 / 4人取3 / 5人取4 / 6人取5）</div><div class="er"><i>👟</i><b>足迹</b><u>线索 1-3 格</u><u>难度 2/3/4</u><u>分值 = D</u></div><div class="er"><i>🧵</i><b>纤维</b><u>线索 4-6 格</u><u>难度 4/5/6</u><u>分值 = D</u></div><div class="er"><i>🔫</i><b>枪弹痕</b><u>线索 6-8 格</u><u>难度 5/6/7</u><u>分值 = D</u></div><div class="er"><i>🖐️</i><b>指纹</b><u>线索 2-4 格</u><u>难度 1/2/3</u><u>分值 = D</u></div><div class="er"><i>🧵</i><b>纤维</b><u>线索 7-9 格</u><u>难度 4/5/6</u><u>分值 = D</u></div></div><div class="card cs"><div class="hd">案六 🚨</div><div class="nm" style="font-size:12px">案六 持枪绑架收网</div><div class="bar"><div class="lb" style="background:var(--blue)">1</div><div class="lb" style="background:var(--red)">14</div><div class="lb" style="background:var(--red)">124</div><div class="lb" style="background:var(--red)">24</div><div class="lb" style="background:var(--blue)">2</div><div class="lb" style="background:var(--blue)">5</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--red)">35</div><div class="lb" style="background:var(--blue)">3</div><div class="lb">·</div></div><div class="sub" style="text-align:left;margin-top:5px">按人数取前 <b>P−1</b> 枚（3人取2 / 4人取3 / 5人取4 / 6人取5）</div><div class="er"><i>🔧</i><b>工具痕</b><u>线索 1-3 格</u><u>难度 3/4/5</u><u>分值 = D</u></div><div class="er"><i>🧵</i><b>纤维</b><u>线索 3-5 格</u><u>难度 4/5/6</u><u>分值 = D</u></div><div class="er"><i>🔫</i><b>枪弹痕</b><u>线索 7-9 格</u><u>难度 5/6/7</u><u>分值 = D</u></div><div class="er"><i>👟</i><b>足迹</b><u>线索 2-4 格</u><u>难度 2/3/4</u><u>分值 = D</u></div><div class="er"><i>🧵</i><b>纤维</b><u>线索 6-8 格</u><u>难度 4/5/6</u><u>分值 = D</u></div></div></div>
+
+<h2>二、玩家勘查条（6 条 · 每人一条）</h2>
+<div class="grid"><div class="card bd"><div class="hd" style="background:#c0392b">P1 红 勘查条</div><div class="lane"><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">4</div><div class="cell">5</div><div class="cell">6</div><div class="cell">7</div><div class="cell">8</div><div class="cell">9</div><div class="cell">10</div></div><div class="sbar"><div class="">S=1</div><div class="">S=2</div><div class="hi">S=3</div><div class="hi">S=4</div><div class="">S=5</div><div class="hi">S=6</div><div class="">S=7</div></div><div class="sub" style="text-align:left;margin-top:4px">把布点标记放进格子里（<b>C 是上限，可以少放</b>）；用一枚回形针卡在下面强度条上标示本轮 <b>S</b>。</div></div><div class="card bd"><div class="hd" style="background:#2f6f9f">P2 蓝 勘查条</div><div class="lane"><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">4</div><div class="cell">5</div><div class="cell">6</div><div class="cell">7</div><div class="cell">8</div><div class="cell">9</div><div class="cell">10</div></div><div class="sbar"><div class="">S=1</div><div class="">S=2</div><div class="hi">S=3</div><div class="hi">S=4</div><div class="">S=5</div><div class="hi">S=6</div><div class="">S=7</div></div><div class="sub" style="text-align:left;margin-top:4px">把布点标记放进格子里（<b>C 是上限，可以少放</b>）；用一枚回形针卡在下面强度条上标示本轮 <b>S</b>。</div></div><div class="card bd"><div class="hd" style="background:#2f8f5b">P3 绿 勘查条</div><div class="lane"><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">4</div><div class="cell">5</div><div class="cell">6</div><div class="cell">7</div><div class="cell">8</div><div class="cell">9</div><div class="cell">10</div></div><div class="sbar"><div class="">S=1</div><div class="">S=2</div><div class="hi">S=3</div><div class="hi">S=4</div><div class="">S=5</div><div class="hi">S=6</div><div class="">S=7</div></div><div class="sub" style="text-align:left;margin-top:4px">把布点标记放进格子里（<b>C 是上限，可以少放</b>）；用一枚回形针卡在下面强度条上标示本轮 <b>S</b>。</div></div><div class="card bd"><div class="hd" style="background:#d99a06">P4 黄 勘查条</div><div class="lane"><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">4</div><div class="cell">5</div><div class="cell">6</div><div class="cell">7</div><div class="cell">8</div><div class="cell">9</div><div class="cell">10</div></div><div class="sbar"><div class="">S=1</div><div class="">S=2</div><div class="hi">S=3</div><div class="hi">S=4</div><div class="">S=5</div><div class="hi">S=6</div><div class="">S=7</div></div><div class="sub" style="text-align:left;margin-top:4px">把布点标记放进格子里（<b>C 是上限，可以少放</b>）；用一枚回形针卡在下面强度条上标示本轮 <b>S</b>。</div></div><div class="card bd"><div class="hd" style="background:#7b4fa8">P5 紫 勘查条</div><div class="lane"><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">4</div><div class="cell">5</div><div class="cell">6</div><div class="cell">7</div><div class="cell">8</div><div class="cell">9</div><div class="cell">10</div></div><div class="sbar"><div class="">S=1</div><div class="">S=2</div><div class="hi">S=3</div><div class="hi">S=4</div><div class="">S=5</div><div class="hi">S=6</div><div class="">S=7</div></div><div class="sub" style="text-align:left;margin-top:4px">把布点标记放进格子里（<b>C 是上限，可以少放</b>）；用一枚回形针卡在下面强度条上标示本轮 <b>S</b>。</div></div><div class="card bd"><div class="hd" style="background:#e07a2f">P6 橙 勘查条</div><div class="lane"><div class="cell">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">4</div><div class="cell">5</div><div class="cell">6</div><div class="cell">7</div><div class="cell">8</div><div class="cell">9</div><div class="cell">10</div></div><div class="sbar"><div class="">S=1</div><div class="">S=2</div><div class="hi">S=3</div><div class="hi">S=4</div><div class="">S=5</div><div class="hi">S=6</div><div class="">S=7</div></div><div class="sub" style="text-align:left;margin-top:4px">把布点标记放进格子里（<b>C 是上限，可以少放</b>）；用一枚回形针卡在下面强度条上标示本轮 <b>S</b>。</div></div></div>
+
+<h2>三、勘查档位卡（每人一套 6 张 · 每案暗出 1 张）</h2>
+<div class="grid"><div class="card tc"><div class="hd">勘查档位</div><div class="mul">6 × 2<em> = 12</em></div><div class="nm">广域档</div><div class="dsc" style="text-align:center">铺得最广，但只够显现最浅的痕迹</div><div class="use">C 是布点上限，可少放</div></div><div class="card tc"><div class="hd">勘查档位</div><div class="mul">4 × 3<em> = 12</em></div><div class="nm">均衡档</div><div class="dsc" style="text-align:center">人多时的稳牌，覆盖与深度各让一步</div><div class="use">C 是布点上限，可少放</div></div><div class="card tc"><div class="hd">勘查档位</div><div class="mul">3 × 4<em> = 12</em></div><div class="nm">精勘档</div><div class="dsc" style="text-align:center">三格四度，吃中低难度物证的最优解</div><div class="use">C 是布点上限，可少放</div></div><div class="card tc"><div class="hd">勘查档位</div><div class="mul">2 × 6<em> = 12</em></div><div class="nm">深挖档</div><div class="dsc" style="text-align:center">两格六度，高难度物证的主力档</div><div class="use">C 是布点上限，可少放</div></div><div class="card tc ot"><div class="hd">勘查档位</div><div class="mul">1 × 7<em> = 7</em></div><div class="nm">加班档</div><div class="dsc" style="text-align:center">一格七度，全场唯一够得着 D=7 的常规手段</div><div class="use">C 是布点上限，可少放</div></div><div class="card tc free"><div class="hd">勘查档位</div><div class="mul">C × S<em> = ≤ 12</em></div><div class="nm">自由档</div><div class="dsc" style="text-align:center">自己填 C 与 S，只要 C×S ≤ 12</div><div class="use">C 是布点上限，可少放</div></div></div>
+<div class="note">每案所有玩家从自己这套 6 张里挑 1 张、<b>面朝下</b>推到桌心，同时翻开。你出的那张卡决定了本轮你最多能布几格（C）、采样强度是多少（S）。翻开的档位卡<b>整案摊在自己面前</b>——这是全场读你的唯一窗口。</div>
+
+<h2>四、布点标记（60 枚 · 每人 10 枚）</h2>
+<div class="grid"><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#c0392b">P1</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f6f9f">P2</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#2f8f5b">P3</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#d99a06">P4</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#7b4fa8">P5</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div><div class="dot" style="background:#e07a2f">P6</div></div>
+
+<h2>五、物证标记（30 枚 · 面朝下摆进物证槽）</h2>
+<div class="grid"><div class="ev d3"><div class="t">🖐️</div><div class="p">2格</div><div class="d">D=1</div></div><div class="ev d3"><div class="t">👟</div><div class="p">4格</div><div class="d">D=2</div></div><div class="ev d3"><div class="t">🔧</div><div class="p">9格</div><div class="d">D=3</div></div><div class="ev d3"><div class="t">🖐️</div><div class="p">6格</div><div class="d">D=2</div></div><div class="ev d3"><div class="t">👟</div><div class="p">3格</div><div class="d">D=3</div></div><div class="ev d3"><div class="t">🖐️</div><div class="p">3格</div><div class="d">D=2</div></div><div class="ev d3"><div class="t">👟</div><div class="p">1格</div><div class="d">D=3</div></div><div class="ev d5"><div class="t">🔧</div><div class="p">7格</div><div class="d">D=4</div></div><div class="ev d3"><div class="t">👟</div><div class="p">9格</div><div class="d">D=2</div></div><div class="ev d5"><div class="t">🔧</div><div class="p">4格</div><div class="d">D=5</div></div><div class="ev d3"><div class="t">🖐️</div><div class="p">2格</div><div class="d">D=2</div></div><div class="ev d5"><div class="t">🔧</div><div class="p">5格</div><div class="d">D=4</div></div><div class="ev d5"><div class="t">🧵</div><div class="p">8格</div><div class="d">D=5</div></div><div class="ev d3"><div class="t">👟</div><div class="p">4格</div><div class="d">D=2</div></div><div class="ev d3"><div class="t">🔧</div><div class="p">9格</div><div class="d">D=3</div></div><div class="ev d3"><div class="t">👟</div><div class="p">3格</div><div class="d">D=2</div></div><div class="ev d5"><div class="t">🔧</div><div class="p">6格</div><div class="d">D=4</div></div><div class="ev d5"><div class="t">🧵</div><div class="p">7格</div><div class="d">D=5</div></div><div class="ev d3"><div class="t">🖐️</div><div class="p">4格</div><div class="d">D=3</div></div><div class="ev d5"><div class="t">🔧</div><div class="p">8格</div><div class="d">D=5</div></div><div class="ev d3"><div class="t">👟</div><div class="p">1格</div><div class="d">D=3</div></div><div class="ev d5"><div class="t">🧵</div><div class="p">5格</div><div class="d">D=5</div></div><div class="ev d7"><div class="t">🔫</div><div class="p">7格</div><div class="d">D=7</div></div><div class="ev d3"><div class="t">🖐️</div><div class="p">2格</div><div class="d">D=2</div></div><div class="ev d5"><div class="t">🧵</div><div class="p">8格</div><div class="d">D=4</div></div><div class="ev d3"><div class="t">🔧</div><div class="p">2格</div><div class="d">D=3</div></div><div class="ev d5"><div class="t">🧵</div><div class="p">5格</div><div class="d">D=5</div></div><div class="ev d7"><div class="t">🔫</div><div class="p">9格</div><div class="d">D=6</div></div><div class="ev d5"><div class="t">👟</div><div class="p">4格</div><div class="d">D=4</div></div><div class="ev d5"><div class="t">🧵</div><div class="p">7格</div><div class="d">D=4</div></div></div>
+
+<h2>六、工具卡（每人 3 张 · 整局各用一次）</h2>
+<div class="grid"><div class="card tl"><div class="hd" style="background:#c0392b">P1 红</div><div class="big">🔍</div><div class="nm">放大镜</div><div class="ft">本案你的采样强度 S 视为 +1（可超过上限 6），不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#2f6f9f">P2 蓝</div><div class="big">🔍</div><div class="nm">放大镜</div><div class="ft">本案你的采样强度 S 视为 +1（可超过上限 6），不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#2f8f5b">P3 绿</div><div class="big">🔍</div><div class="nm">放大镜</div><div class="ft">本案你的采样强度 S 视为 +1（可超过上限 6），不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#d99a06">P4 黄</div><div class="big">🔍</div><div class="nm">放大镜</div><div class="ft">本案你的采样强度 S 视为 +1（可超过上限 6），不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#7b4fa8">P5 紫</div><div class="big">🔍</div><div class="nm">放大镜</div><div class="ft">本案你的采样强度 S 视为 +1（可超过上限 6），不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#e07a2f">P6 橙</div><div class="big">🔍</div><div class="nm">放大镜</div><div class="ft">本案你的采样强度 S 视为 +1（可超过上限 6），不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#c0392b">P1 红</div><div class="big">📏</div><div class="nm">卷尺</div><div class="ft">本案你的布点格数 C 视为 +1，不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#2f6f9f">P2 蓝</div><div class="big">📏</div><div class="nm">卷尺</div><div class="ft">本案你的布点格数 C 视为 +1，不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#2f8f5b">P3 绿</div><div class="big">📏</div><div class="nm">卷尺</div><div class="ft">本案你的布点格数 C 视为 +1，不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#d99a06">P4 黄</div><div class="big">📏</div><div class="nm">卷尺</div><div class="ft">本案你的布点格数 C 视为 +1，不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#7b4fa8">P5 紫</div><div class="big">📏</div><div class="nm">卷尺</div><div class="ft">本案你的布点格数 C 视为 +1，不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#e07a2f">P6 橙</div><div class="big">📏</div><div class="nm">卷尺</div><div class="ft">本案你的布点格数 C 视为 +1，不额外消耗勘查人时</div></div><div class="card tl"><div class="hd" style="background:#c0392b">P1 红</div><div class="big">🧪</div><div class="nm">显现剂</div><div class="ft">本案指定 1 枚物证，其显现难度 D 视为 −2（最低为 1）</div></div><div class="card tl"><div class="hd" style="background:#2f6f9f">P2 蓝</div><div class="big">🧪</div><div class="nm">显现剂</div><div class="ft">本案指定 1 枚物证，其显现难度 D 视为 −2（最低为 1）</div></div><div class="card tl"><div class="hd" style="background:#2f8f5b">P3 绿</div><div class="big">🧪</div><div class="nm">显现剂</div><div class="ft">本案指定 1 枚物证，其显现难度 D 视为 −2（最低为 1）</div></div><div class="card tl"><div class="hd" style="background:#d99a06">P4 黄</div><div class="big">🧪</div><div class="nm">显现剂</div><div class="ft">本案指定 1 枚物证，其显现难度 D 视为 −2（最低为 1）</div></div><div class="card tl"><div class="hd" style="background:#7b4fa8">P5 紫</div><div class="big">🧪</div><div class="nm">显现剂</div><div class="ft">本案指定 1 枚物证，其显现难度 D 视为 −2（最低为 1）</div></div><div class="card tl"><div class="hd" style="background:#e07a2f">P6 橙</div><div class="big">🧪</div><div class="nm">显现剂</div><div class="ft">本案指定 1 枚物证，其显现难度 D 视为 −2（最低为 1）</div></div></div>
+
+<h2>七、痕检员角色卡（6 张）</h2>
+<div class="grid"><div class="card rl"><div class="big">🧑‍ὒC</div><div class="nm">老崔</div><div class="dsc" style="text-align:center">专长：🖐️指纹<br>每当你<b>全额</b>提取一枚指纹，额外 <b>+1 分</b></div><div class="tag">痕检员</div></div><div class="card rl"><div class="big">👩‍ὒC</div><div class="nm">小满</div><div class="dsc" style="text-align:center">专长：👟足迹<br>每当你<b>全额</b>提取一枚足迹，额外 <b>+1 分</b></div><div class="tag">痕检员</div></div><div class="card rl"><div class="big">🧑‍ὒ7</div><div class="nm">阿铁</div><div class="dsc" style="text-align:center">专长：🔧工具痕<br>每当你<b>全额</b>提取一枚工具痕，额外 <b>+1 分</b></div><div class="tag">痕检员</div></div><div class="card rl"><div class="big">👩‍ὒC</div><div class="nm">林纤</div><div class="dsc" style="text-align:center">专长：🧵纤维<br>每当你<b>全额</b>提取一枚纤维，额外 <b>+1 分</b></div><div class="tag">痕检员</div></div><div class="card rl"><div class="big">🧑‍ὒC</div><div class="nm">秦弹</div><div class="dsc" style="text-align:center">专长：🔫枪弹痕<br>每当你<b>全额</b>提取一枚枪弹痕，额外 <b>+1 分</b></div><div class="tag">痕检员</div></div><div class="card rl"><div class="big">🧑‍ὒC</div><div class="nm">周全</div><div class="dsc" style="text-align:center">专长：🖐️指纹<br>每当你<b>全额</b>提取一枚指纹，额外 <b>+1 分</b></div><div class="tag">痕检员</div></div></div>
+
+<h2>八、速查卡（2 张 · 摊在桌角）</h2>
+<div class="grid">
+<div class="cheat">
+<div class="nm">核心公式</div>
+<table><tr><th>C</th><th>S</th><th>C×S</th><th>说明</th></tr><tr class="hot"><td>2</td><td>6</td><td>12</td><td>★ 满效率</td></tr><tr class="hot"><td>3</td><td>4</td><td>12</td><td>★ 满效率</td></tr><tr class="hot"><td>4</td><td>3</td><td>12</td><td>★ 满效率</td></tr><tr class="hot"><td>6</td><td>2</td><td>12</td><td>★ 满效率</td></tr><tr><td>1</td><td>7</td><td>7</td><td>加班档，只剩 1 格</td></tr></table>
+<div class="dsc">C×S ≤ 12。<b>C 是布点格数上限（可以少放）</b>，S 是采样强度（1-7）。
+只有 4 个档位不浪费预算：6×2 / 4×3 / 3×4 / 2×6。</div>
+</div>
+<div class="cheat">
+<div class="nm">物证类型 · 难度即分值</div>
+<table><tr><th>类型</th><th>难度 D</th><th>最高分值</th></tr><tr><td>🖐️指纹</td><td>1/2/3</td><td>3 分</td></tr><tr><td>👟足迹</td><td>2/3/4</td><td>4 分</td></tr><tr><td>🔧工具痕</td><td>3/4/5</td><td>5 分</td></tr><tr><td>🧵纤维</td><td>4/5/6</td><td>6 分</td></tr><tr><td>🔫枪弹痕</td><td>5/6/7</td><td>7 分</td></tr></table>
+<div class="dsc">S ≥ D ⇒ 提取成功，得 <b>D</b> 分；<b>S &lt; D ⇒ 物证损毁，−1 分</b>
+（每案最多扣 2 分）。成功者中 <b>S 最小</b> 的人拿全额，其余拿 ⌊D/2⌋。</div>
+</div>
+</div>
+
+<h2>九、结案奖励与裁决</h2>
+<div class="note">
+<b>结案奖励</b>：全场成功提取某一种类型 ≥ 3 枚 ⇒ <b>+4 分</b>；≥ 5 枚 ⇒ <b>+8 分</b>（只取最高一档）。
+全场一次物证都没损毁 ⇒ 额外 <b>+3 分</b>。<br>
+<b>平局裁决</b>：先比<b>全额提取次数</b>；仍平则比<b>提取物证总枚数</b>；仍平则并列获胜。<br>
+<b>每案损毁扣分上限 2 分</b> —— 一次现场作业最多记两次事故，防止新手被一案打崩。
+</div>
+
+</body>
+</html>

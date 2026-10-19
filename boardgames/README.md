@@ -134,6 +134,7 @@ boardgames/
 | [铁旅：接续时刻表](category/card/rail-journey-timetable/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
 | [社团博览会：抢新大战](category/party/club-fair-scramble/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
 | [魔法骑士：塞菲罗支柱](category/card/magic-knight-cephiro/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
+| [痕迹：现场勘查](category/party/trace-evidence-sweep/README.md) | 派对 | 3-6人 | 40-50分钟 | 中等 |
 
 ## 添加新桌游
 
