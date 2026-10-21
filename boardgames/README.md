@@ -136,6 +136,7 @@ boardgames/
 | [魔法骑士：塞菲罗支柱](category/card/magic-knight-cephiro/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
 | [痕迹：现场勘查](category/party/trace-evidence-sweep/README.md) | 派对 | 3-6人 | 40-50分钟 | 中等 |
 | [铁球疾走：横断大陆赛马](category/card/iron-ball-derby/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
+| [农场惊魂夜：怪兽来袭](category/party/farm-fright-night/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单 |
 
 ## 添加新桌游
 
