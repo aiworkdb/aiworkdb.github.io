@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>探方：三星堆发掘季 — 打印道具</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f8fafc; color: #1f2937; margin: 0; padding: 24px; line-height: 1.5;
+  }
+  h1 { font-size: 26px; margin: 0 0 4px; color: #7c2d12; }
+  h2 {
+    font-size: 20px; margin: 32px 0 12px; padding: 8px 12px;
+    background: linear-gradient(90deg, #fed7aa, #fff7ed); border-left: 6px solid #c2410c;
+    border-radius: 4px; color: #7c2d12;
+  }
+  h3 { font-size: 16px; margin: 18px 0 8px; color: #475569; }
+  p { margin: 6px 0; font-size: 14px; }
+  .sub { color: #64748b; font-size: 13px; }
+  .print-hint {
+    background: #fffbeb; border: 2px dashed #f59e0b; border-radius: 8px;
+    padding: 14px 18px; margin: 16px 0 24px;
+  }
+  .print-hint strong { color: #b45309; }
+  .print-hint ul { margin: 8px 0 0; padding-left: 22px; font-size: 14px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .card {
+    width: 132px; min-height: 196px; border: 2px solid #cbd5e1; border-radius: 10px;
+    background: #fff; overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 1px 3px rgba(15,23,42,.12); font-size: 12px;
+  }
+  .card-top {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 8px; font-size: 11px; font-weight: 700;
+  }
+  .card-icon { font-size: 34px; text-align: center; padding: 8px 0 2px; }
+  .card-name { text-align: center; font-weight: 700; font-size: 13px; padding: 0 6px; }
+  .qual {
+    align-self: center; margin: 6px 8px 0; padding: 1px 10px; border: 1px solid;
+    border-radius: 999px; font-size: 11px; font-weight: 700;
+  }
+  .card-score {
+    text-align: center; font-weight: 800; font-size: 15px; color: #b91c1c; padding: 6px 4px 0;
+  }
+  .card-desc {
+    padding: 6px 9px 0; font-size: 11px; color: #334155; flex: 1; text-align: center;
+  }
+  .card-foot {
+    margin-top: auto; padding: 5px 8px; background: #f1f5f9; font-size: 10px;
+    color: #475569; text-align: center; border-top: 1px solid #e2e8f0;
+  }
+  /* ---------- 探区板 ---------- */
+  .board-wrap { overflow-x: auto; }
+  .board { border-collapse: collapse; background: #fff; }
+  .board th, .board td {
+    border: 2px solid #a8a29e; text-align: center; padding: 6px 8px; font-size: 12px;
+  }
+  .board .colhead { background: #7c2d12; color: #fff; font-size: 15px; width: 132px; }
+  .board .layhead { background: #fed7aa; color: #7c2d12; font-weight: 700; width: 96px; }
+  .board .slot { height: 76px; font-size: 11px; color: #64748b; }
+  table.key { border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  table.key th, table.key td { border: 1px solid #cbd5e1; padding: 5px 10px; }
+  table.key th { background: #f1f5f9; }
+  .pawns { display: flex; flex-wrap: wrap; gap: 14px; }
+  .pawn {
+    width: 86px; height: 86px; border-radius: 50%; border: 4px solid #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; font-size: 13px; box-shadow: 0 2px 6px rgba(15,23,42,.2);
+  }
+  .pawn small { font-size: 10px; font-weight: 600; opacity: .9; }
+  .tokens { display: flex; flex-wrap: wrap; gap: 10px; }
+  .token {
+    width: 62px; height: 62px; border-radius: 8px; border: 2px solid #94a3b8;
+    background: #fff; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; font-size: 10px; font-weight: 700; color: #334155;
+  }
+  .token span { font-size: 20px; }
+  .quick {
+    width: 300px; border: 2px solid #c2410c; border-radius: 8px; background: #fff;
+    padding: 12px 14px; font-size: 12px; line-height: 1.7;
+  }
+  .quick h4 { margin: 0 0 6px; font-size: 14px; color: #7c2d12; }
+  .quick table { border-collapse: collapse; width: 100%; font-size: 11px; }
+  .quick td, .quick th { border: 1px solid #fed7aa; padding: 3px 6px; }
+  .quick th { background: #fff7ed; }
+  .pagebreak { page-break-before: always; }
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { padding: 8mm; background: #fff; }
+    .card { box-shadow: none; }
+    h2 { page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>⛏️ 探方：三星堆发掘季 — 打印道具</h1>
+<p class="sub">配套规则见 <a href="README.md">README.md</a> ｜ 共 5 类道具：探区板、遗物卡、工具卡、季候卡、棋子与标记</p>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项，否则土层配色与品质色标全部丢失</li>
+    <li>遗物卡 / 工具卡 / 季候卡建议使用<strong>卡纸（200g 以上）</strong>打印</li>
+    <li>探区板建议 A4 普通纸打印后贴在一张硬纸板上</li>
+    <li>裁剪后可自行塑封，反复使用</li>
+  </ul>
+</div>
+
+<h2>🗺️ 一、探区板（三星堆遗址 · 五条探沟）</h2>
+<p>每列 = 一条<strong>探沟</strong>，从上到下 4 个<strong>层位</strong>。开局把每条探沟的 4 个格子各扣一张遗物卡（面朝下）。</p>
+<p class="sub">探沟数 = 玩家人数 + 1：2 人用 A/B/C，3 人用 A/B/C/D，4 人用 A/B/C/D/E。多出来的那一条就是「自由沟」。</p>
+<div class="board-wrap">
+<table class="board">
+  <tr><th class="layhead">层位</th><th class="colhead">A 沟</th><th class="colhead">B 沟</th><th class="colhead">C 沟</th><th class="colhead">D 沟</th><th class="colhead">E 沟</th></tr>
+  <tr><th class="layhead">第 1 层<br>下挖 1 工日<br>首现 +1</th><td class="slot" style="background:#fef9c3">A1<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fef9c3">B1<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fef9c3">C1<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fef9c3">D1<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fef9c3">E1<br><span style="font-size:16px">🕳️</span></td></tr>
+  <tr><th class="layhead">第 2 层<br>下挖 2 工日<br>首现 +2</th><td class="slot" style="background:#fed7aa">A2<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fed7aa">B2<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fed7aa">C2<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fed7aa">D2<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fed7aa">E2<br><span style="font-size:16px">🕳️</span></td></tr>
+  <tr><th class="layhead">第 3 层<br>下挖 3 工日<br>首现 +3</th><td class="slot" style="background:#fdba74">A3<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fdba74">B3<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fdba74">C3<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fdba74">D3<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#fdba74">E3<br><span style="font-size:16px">🕳️</span></td></tr>
+  <tr><th class="layhead">第 4 层<br>下挖 4 工日<br>首现 +4</th><td class="slot" style="background:#c2410c">A4<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#c2410c">B4<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#c2410c">C4<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#c2410c">D4<br><span style="font-size:16px">🕳️</span></td><td class="slot" style="background:#c2410c">E4<br><span style="font-size:16px">🕳️</span></td></tr>
+</table>
+</div>
+<table class="key">
+  <tr><th>层位</th><th>下挖成本</th><th>首现奖励</th><th>遗物期望分</th><th>说明</th></tr>
+  <tr><td>第 1 层</td><td>1 工日</td><td>+1 分</td><td>4 分</td><td>近现代扰乱层，浅而廉价</td></tr>
+  <tr><td>第 2 层</td><td>2 工日</td><td>+2 分</td><td>7 分</td><td>商末周初堆积</td></tr>
+  <tr><td>第 3 层</td><td>3 工日</td><td>+3 分</td><td>11 分</td><td>祭祀区主体堆积</td></tr>
+  <tr><td>第 4 层</td><td>4 工日</td><td>+4 分</td><td>16 分</td><td>祭祀坑底，最深最贵，单回合挖不穿</td></tr>
+</table>
+<p><strong>★ 深方铁律：第 4 层下挖要 4 工日，而你每轮只有 3 工日</strong>——想单回合挖穿层④，只有两条路：打出「手铲」（−1），或等「经费拨付」轮（+1）。</p>
+
+<h2>🏺 二、遗物卡（24 张）</h2>
+<p>按层位分成 4 叠洗匀，开局每条探沟的每一层各抽 1 张<strong>面朝下</strong>扣入格子。品质决定实际分值：<strong>残次 / 普通 / 精美</strong>。</p>
+<div class="grid">
+    <div class="card relic">
+      <div class="card-top" style="background:#fef9c3;color:#713f12">
+        <span class="lv">第1层</span><span class="cost">下挖 1 工日</span>
+      </div>
+      <div class="card-icon">🏺</div>
+      <div class="card-name">陶尖底盏</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">2 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +1</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fef9c3;color:#713f12">
+        <span class="lv">第1层</span><span class="cost">下挖 1 工日</span>
+      </div>
+      <div class="card-icon">🏺</div>
+      <div class="card-name">陶高柄豆</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">2 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +1</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fef9c3;color:#713f12">
+        <span class="lv">第1层</span><span class="cost">下挖 1 工日</span>
+      </div>
+      <div class="card-icon">💠</div>
+      <div class="card-name">石璧残块</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">4 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +1</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fef9c3;color:#713f12">
+        <span class="lv">第1层</span><span class="cost">下挖 1 工日</span>
+      </div>
+      <div class="card-icon">⚙️</div>
+      <div class="card-name">陶纺轮</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">4 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +1</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fef9c3;color:#713f12">
+        <span class="lv">第1层</span><span class="cost">下挖 1 工日</span>
+      </div>
+      <div class="card-icon">🦷</div>
+      <div class="card-name">兽牙饰</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">6 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +1</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fef9c3;color:#713f12">
+        <span class="lv">第1层</span><span class="cost">下挖 1 工日</span>
+      </div>
+      <div class="card-icon">🪡</div>
+      <div class="card-name">骨针</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">6 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +1</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fed7aa;color:#7c2d12">
+        <span class="lv">第2层</span><span class="cost">下挖 2 工日</span>
+      </div>
+      <div class="card-icon">🍲</div>
+      <div class="card-name">陶三足炊器</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">4 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +2</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fed7aa;color:#7c2d12">
+        <span class="lv">第2层</span><span class="cost">下挖 2 工日</span>
+      </div>
+      <div class="card-icon">🫖</div>
+      <div class="card-name">陶盉</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">4 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +2</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fed7aa;color:#7c2d12">
+        <span class="lv">第2层</span><span class="cost">下挖 2 工日</span>
+      </div>
+      <div class="card-icon">🔨</div>
+      <div class="card-name">玉凿</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">7 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +2</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fed7aa;color:#7c2d12">
+        <span class="lv">第2层</span><span class="cost">下挖 2 工日</span>
+      </div>
+      <div class="card-icon">🦷</div>
+      <div class="card-name">象牙段</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">7 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +2</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fed7aa;color:#7c2d12">
+        <span class="lv">第2层</span><span class="cost">下挖 2 工日</span>
+      </div>
+      <div class="card-icon">📜</div>
+      <div class="card-name">玉璋</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">10 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +2</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fed7aa;color:#7c2d12">
+        <span class="lv">第2层</span><span class="cost">下挖 2 工日</span>
+      </div>
+      <div class="card-icon">👁️</div>
+      <div class="card-name">青铜眼形器</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">10 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +2</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fdba74;color:#7c2d12">
+        <span class="lv">第3层</span><span class="cost">下挖 3 工日</span>
+      </div>
+      <div class="card-icon">🥇</div>
+      <div class="card-name">金杖残段</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">6 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +3</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fdba74;color:#7c2d12">
+        <span class="lv">第3层</span><span class="cost">下挖 3 工日</span>
+      </div>
+      <div class="card-icon">🐉</div>
+      <div class="card-name">青铜龙形饰</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">6 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +3</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fdba74;color:#7c2d12">
+        <span class="lv">第3层</span><span class="cost">下挖 3 工日</span>
+      </div>
+      <div class="card-icon">😲</div>
+      <div class="card-name">青铜纵目面具</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">11 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +3</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fdba74;color:#7c2d12">
+        <span class="lv">第3层</span><span class="cost">下挖 3 工日</span>
+      </div>
+      <div class="card-icon">📜</div>
+      <div class="card-name">玉边璋</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">11 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +3</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fdba74;color:#7c2d12">
+        <span class="lv">第3层</span><span class="cost">下挖 3 工日</span>
+      </div>
+      <div class="card-icon">🐟</div>
+      <div class="card-name">金箔鱼形饰</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">16 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +3</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#fdba74;color:#7c2d12">
+        <span class="lv">第3层</span><span class="cost">下挖 3 工日</span>
+      </div>
+      <div class="card-icon">🦅</div>
+      <div class="card-name">铜鹰首</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">16 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +3</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#c2410c;color:#fff7ed">
+        <span class="lv">第4层</span><span class="cost">下挖 4 工日</span>
+      </div>
+      <div class="card-icon">🌳</div>
+      <div class="card-name">青铜神树座</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">9 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +4</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#c2410c;color:#fff7ed">
+        <span class="lv">第4层</span><span class="cost">下挖 4 工日</span>
+      </div>
+      <div class="card-icon">📜</div>
+      <div class="card-name">玉璋王</div>
+      <div class="qual" style="background:#f1f5f9;color:#94a3b8;border-color:#94a3b8">残次</div>
+      <div class="card-score">9 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +4</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#c2410c;color:#fff7ed">
+        <span class="lv">第4层</span><span class="cost">下挖 4 工日</span>
+      </div>
+      <div class="card-icon">⛩️</div>
+      <div class="card-name">青铜神坛</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">16 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +4</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#c2410c;color:#fff7ed">
+        <span class="lv">第4层</span><span class="cost">下挖 4 工日</span>
+      </div>
+      <div class="card-icon">🗿</div>
+      <div class="card-name">青铜大立人像</div>
+      <div class="qual" style="background:#e0f2fe;color:#0ea5e9;border-color:#0ea5e9">普通</div>
+      <div class="card-score">16 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +4</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#c2410c;color:#fff7ed">
+        <span class="lv">第4层</span><span class="cost">下挖 4 工日</span>
+      </div>
+      <div class="card-icon">🎭</div>
+      <div class="card-name">黄金面具</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">23 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +4</div>
+    </div>
+    <div class="card relic">
+      <div class="card-top" style="background:#c2410c;color:#fff7ed">
+        <span class="lv">第4层</span><span class="cost">下挖 4 工日</span>
+      </div>
+      <div class="card-icon">🦁</div>
+      <div class="card-name">铜神兽</div>
+      <div class="qual" style="background:#fef3c7;color:#d97706;border-color:#d97706">精美</div>
+      <div class="card-score">23 分</div>
+      <div class="card-foot">提取 1 工日 ｜ 首现 +4</div>
+    </div>
+</div>
+
+<h2>🧩 三、组合器碎片卡（6 张）</h2>
+<p>开局把碎片卡混入遗物卡中替换掉对应格子：<strong>4 人局（5 沟）放 2 组共 6 张；2-3 人局放 1 组共 3 张。</strong><br>
+单片只有 3 分，但<strong>同一人</strong>集齐同组 3 片后花 2 工日「合器」，直接 <strong>+12 分</strong>。</p>
+<div class="grid">
+    <div class="card shard" style="border-color:#b45309">
+      <div class="card-top" style="background:#b45309;color:#fff">
+        <span class="lv">组合器碎片</span><span class="cost">青铜神树</span>
+      </div>
+      <div class="card-icon">🌳</div>
+      <div class="card-name">神树·根</div>
+      <div class="qual" style="background:#fffbeb;color:#b45309;border-color:#b45309">单片 3 分</div>
+      <div class="card-score">集齐 3 片 +2 工日 ⇒ +12 分</div>
+      <div class="card-foot">合器奖励按「组」结算，全组归一人</div>
+    </div>
+    <div class="card shard" style="border-color:#b45309">
+      <div class="card-top" style="background:#b45309;color:#fff">
+        <span class="lv">组合器碎片</span><span class="cost">青铜神树</span>
+      </div>
+      <div class="card-icon">🌳</div>
+      <div class="card-name">神树·干</div>
+      <div class="qual" style="background:#fffbeb;color:#b45309;border-color:#b45309">单片 3 分</div>
+      <div class="card-score">集齐 3 片 +2 工日 ⇒ +12 分</div>
+      <div class="card-foot">合器奖励按「组」结算，全组归一人</div>
+    </div>
+    <div class="card shard" style="border-color:#b45309">
+      <div class="card-top" style="background:#b45309;color:#fff">
+        <span class="lv">组合器碎片</span><span class="cost">青铜神树</span>
+      </div>
+      <div class="card-icon">🌳</div>
+      <div class="card-name">神树·枝</div>
+      <div class="qual" style="background:#fffbeb;color:#b45309;border-color:#b45309">单片 3 分</div>
+      <div class="card-score">集齐 3 片 +2 工日 ⇒ +12 分</div>
+      <div class="card-foot">合器奖励按「组」结算，全组归一人</div>
+    </div>
+    <div class="card shard" style="border-color:#a16207">
+      <div class="card-top" style="background:#a16207;color:#fff">
+        <span class="lv">组合器碎片</span><span class="cost">黄金权杖</span>
+      </div>
+      <div class="card-icon">🥇</div>
+      <div class="card-name">权杖·首</div>
+      <div class="qual" style="background:#fffbeb;color:#a16207;border-color:#a16207">单片 3 分</div>
+      <div class="card-score">集齐 3 片 +2 工日 ⇒ +12 分</div>
+      <div class="card-foot">合器奖励按「组」结算，全组归一人</div>
+    </div>
+    <div class="card shard" style="border-color:#a16207">
+      <div class="card-top" style="background:#a16207;color:#fff">
+        <span class="lv">组合器碎片</span><span class="cost">黄金权杖</span>
+      </div>
+      <div class="card-icon">🥇</div>
+      <div class="card-name">权杖·身</div>
+      <div class="qual" style="background:#fffbeb;color:#a16207;border-color:#a16207">单片 3 分</div>
+      <div class="card-score">集齐 3 片 +2 工日 ⇒ +12 分</div>
+      <div class="card-foot">合器奖励按「组」结算，全组归一人</div>
+    </div>
+    <div class="card shard" style="border-color:#a16207">
+      <div class="card-top" style="background:#a16207;color:#fff">
+        <span class="lv">组合器碎片</span><span class="cost">黄金权杖</span>
+      </div>
+      <div class="card-icon">🥇</div>
+      <div class="card-name">权杖·尾</div>
+      <div class="qual" style="background:#fffbeb;color:#a16207;border-color:#a16207">单片 3 分</div>
+      <div class="card-score">集齐 3 片 +2 工日 ⇒ +12 分</div>
+      <div class="card-foot">合器奖励按「组」结算，全组归一人</div>
+    </div>
+</div>
+
+<h2>🔧 四、工具卡（24 张 = 6 种 × 4 张）</h2>
+<p>洗匀成器材室牌堆。每人起手 <strong>2 张</strong>；之后可花 <strong>1 工日</strong>补抽 1 张。</p>
+<div class="grid">
+    <div class="card tool" style="border-color:#0e7490">
+      <div class="card-top" style="background:#0e7490;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">层④ 的唯一钥匙</span>
+      </div>
+      <div class="card-icon">🔨</div>
+      <div class="card-name">手铲</div>
+      <div class="card-desc">本轮内你的下挖成本 −1（每层最低 1）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#92400e">
+      <div class="card-top" style="background:#92400e;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">撤离前的保险</span>
+      </div>
+      <div class="card-icon">🪵</div>
+      <div class="card-name">支撑木</div>
+      <div class="card-desc">本轮末你所在探沟免疫塌方（离开后仍保护一轮）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#4338ca">
+      <div class="card-top" style="background:#4338ca;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">合器流必备</span>
+      </div>
+      <div class="card-icon">📡</div>
+      <div class="card-name">探地雷达</div>
+      <div class="card-desc">查看任意一条探沟的全部暗置遗物卡，看完原样放回</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#7e22ce">
+      <div class="card-top" style="background:#7e22ce;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢救敞口面</span>
+      </div>
+      <div class="card-icon">🧴</div>
+      <div class="card-name">加固剂</div>
+      <div class="card-desc">本回合你的提取或合器成本 −1（最低 0）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#be123c">
+      <div class="card-top" style="background:#be123c;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢位神器</span>
+      </div>
+      <div class="card-icon">🎫</div>
+      <div class="card-name">协调函</div>
+      <div class="card-desc">本回合可进入已被他人占据的探沟，不受独占限制</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#15803d">
+      <div class="card-top" style="background:#15803d;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">品质流放大器</span>
+      </div>
+      <div class="card-icon">📖</div>
+      <div class="card-name">学术期刊</div>
+      <div class="card-desc">终局结算：你提取的遗物中每有一件「精美」，+2 分</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#0e7490">
+      <div class="card-top" style="background:#0e7490;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">层④ 的唯一钥匙</span>
+      </div>
+      <div class="card-icon">🔨</div>
+      <div class="card-name">手铲</div>
+      <div class="card-desc">本轮内你的下挖成本 −1（每层最低 1）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#92400e">
+      <div class="card-top" style="background:#92400e;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">撤离前的保险</span>
+      </div>
+      <div class="card-icon">🪵</div>
+      <div class="card-name">支撑木</div>
+      <div class="card-desc">本轮末你所在探沟免疫塌方（离开后仍保护一轮）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#4338ca">
+      <div class="card-top" style="background:#4338ca;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">合器流必备</span>
+      </div>
+      <div class="card-icon">📡</div>
+      <div class="card-name">探地雷达</div>
+      <div class="card-desc">查看任意一条探沟的全部暗置遗物卡，看完原样放回</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#7e22ce">
+      <div class="card-top" style="background:#7e22ce;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢救敞口面</span>
+      </div>
+      <div class="card-icon">🧴</div>
+      <div class="card-name">加固剂</div>
+      <div class="card-desc">本回合你的提取或合器成本 −1（最低 0）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#be123c">
+      <div class="card-top" style="background:#be123c;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢位神器</span>
+      </div>
+      <div class="card-icon">🎫</div>
+      <div class="card-name">协调函</div>
+      <div class="card-desc">本回合可进入已被他人占据的探沟，不受独占限制</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#15803d">
+      <div class="card-top" style="background:#15803d;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">品质流放大器</span>
+      </div>
+      <div class="card-icon">📖</div>
+      <div class="card-name">学术期刊</div>
+      <div class="card-desc">终局结算：你提取的遗物中每有一件「精美」，+2 分</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#0e7490">
+      <div class="card-top" style="background:#0e7490;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">层④ 的唯一钥匙</span>
+      </div>
+      <div class="card-icon">🔨</div>
+      <div class="card-name">手铲</div>
+      <div class="card-desc">本轮内你的下挖成本 −1（每层最低 1）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#92400e">
+      <div class="card-top" style="background:#92400e;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">撤离前的保险</span>
+      </div>
+      <div class="card-icon">🪵</div>
+      <div class="card-name">支撑木</div>
+      <div class="card-desc">本轮末你所在探沟免疫塌方（离开后仍保护一轮）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#4338ca">
+      <div class="card-top" style="background:#4338ca;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">合器流必备</span>
+      </div>
+      <div class="card-icon">📡</div>
+      <div class="card-name">探地雷达</div>
+      <div class="card-desc">查看任意一条探沟的全部暗置遗物卡，看完原样放回</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#7e22ce">
+      <div class="card-top" style="background:#7e22ce;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢救敞口面</span>
+      </div>
+      <div class="card-icon">🧴</div>
+      <div class="card-name">加固剂</div>
+      <div class="card-desc">本回合你的提取或合器成本 −1（最低 0）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#be123c">
+      <div class="card-top" style="background:#be123c;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢位神器</span>
+      </div>
+      <div class="card-icon">🎫</div>
+      <div class="card-name">协调函</div>
+      <div class="card-desc">本回合可进入已被他人占据的探沟，不受独占限制</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#15803d">
+      <div class="card-top" style="background:#15803d;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">品质流放大器</span>
+      </div>
+      <div class="card-icon">📖</div>
+      <div class="card-name">学术期刊</div>
+      <div class="card-desc">终局结算：你提取的遗物中每有一件「精美」，+2 分</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#0e7490">
+      <div class="card-top" style="background:#0e7490;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">层④ 的唯一钥匙</span>
+      </div>
+      <div class="card-icon">🔨</div>
+      <div class="card-name">手铲</div>
+      <div class="card-desc">本轮内你的下挖成本 −1（每层最低 1）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#92400e">
+      <div class="card-top" style="background:#92400e;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">撤离前的保险</span>
+      </div>
+      <div class="card-icon">🪵</div>
+      <div class="card-name">支撑木</div>
+      <div class="card-desc">本轮末你所在探沟免疫塌方（离开后仍保护一轮）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#4338ca">
+      <div class="card-top" style="background:#4338ca;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">合器流必备</span>
+      </div>
+      <div class="card-icon">📡</div>
+      <div class="card-name">探地雷达</div>
+      <div class="card-desc">查看任意一条探沟的全部暗置遗物卡，看完原样放回</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#7e22ce">
+      <div class="card-top" style="background:#7e22ce;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢救敞口面</span>
+      </div>
+      <div class="card-icon">🧴</div>
+      <div class="card-name">加固剂</div>
+      <div class="card-desc">本回合你的提取或合器成本 −1（最低 0）</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#be123c">
+      <div class="card-top" style="background:#be123c;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">抢位神器</span>
+      </div>
+      <div class="card-icon">🎫</div>
+      <div class="card-name">协调函</div>
+      <div class="card-desc">本回合可进入已被他人占据的探沟，不受独占限制</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+    <div class="card tool" style="border-color:#15803d">
+      <div class="card-top" style="background:#15803d;color:#fff">
+        <span class="lv">工具卡</span><span class="cost">品质流放大器</span>
+      </div>
+      <div class="card-icon">📖</div>
+      <div class="card-name">学术期刊</div>
+      <div class="card-desc">终局结算：你提取的遗物中每有一件「精美」，+2 分</div>
+      <div class="card-foot">打出后弃置 ｜ 起手 2 张，可花 1 工日补抽</div>
+    </div>
+</div>
+
+<h2>🌦️ 五、季候卡（14 张 = 7 种 × 2 张）</h2>
+<p>洗匀成季候牌堆，<strong>每轮开始翻 1 张</strong>，效果对全场生效一整轮；翻完的卡放到弃牌堆。</p>
+<div class="grid">
+    <div class="card season" style="border-color:#ca8a04">
+      <div class="card-top" style="background:#ca8a04;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">☀️</div>
+      <div class="card-name">晴好</div>
+      <div class="card-desc">无特殊效果，按常规结算</div>
+    </div>
+    <div class="card season" style="border-color:#0369a1">
+      <div class="card-top" style="background:#0369a1;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🌧️</div>
+      <div class="card-name">暴雨</div>
+      <div class="card-desc">本轮末：所有「本轮无人作业」的探沟，最深的一层敞口面塌方回填</div>
+    </div>
+    <div class="card season" style="border-color:#dc2626">
+      <div class="card-top" style="background:#dc2626;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🔥</div>
+      <div class="card-name">烈日</div>
+      <div class="card-desc">本轮所有玩家工日 −1（高温停工半天）</div>
+    </div>
+    <div class="card season" style="border-color:#16a34a">
+      <div class="card-top" style="background:#16a34a;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">💰</div>
+      <div class="card-name">经费拨付</div>
+      <div class="card-desc">本轮所有玩家工日 +1（4 工日，可单回合挖穿层④）</div>
+    </div>
+    <div class="card season" style="border-color:#7c3aed">
+      <div class="card-top" style="background:#7c3aed;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🏛️</div>
+      <div class="card-name">专家考察</div>
+      <div class="card-desc">本轮提取的遗物每件 +2 分</div>
+    </div>
+    <div class="card season" style="border-color:#475569">
+      <div class="card-top" style="background:#475569;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🚧</div>
+      <div class="card-name">封方令</div>
+      <div class="card-desc">本轮最左侧探沟封闭，任何人不得进入或作业</div>
+    </div>
+    <div class="card season" style="border-color:#0f766e">
+      <div class="card-top" style="background:#0f766e;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">📋</div>
+      <div class="card-name">文物局督查</div>
+      <div class="card-desc">本轮提取的「残次」遗物不计分（只能拿 0 分）</div>
+    </div>
+    <div class="card season" style="border-color:#ca8a04">
+      <div class="card-top" style="background:#ca8a04;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">☀️</div>
+      <div class="card-name">晴好</div>
+      <div class="card-desc">无特殊效果，按常规结算</div>
+    </div>
+    <div class="card season" style="border-color:#0369a1">
+      <div class="card-top" style="background:#0369a1;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🌧️</div>
+      <div class="card-name">暴雨</div>
+      <div class="card-desc">本轮末：所有「本轮无人作业」的探沟，最深的一层敞口面塌方回填</div>
+    </div>
+    <div class="card season" style="border-color:#dc2626">
+      <div class="card-top" style="background:#dc2626;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🔥</div>
+      <div class="card-name">烈日</div>
+      <div class="card-desc">本轮所有玩家工日 −1（高温停工半天）</div>
+    </div>
+    <div class="card season" style="border-color:#16a34a">
+      <div class="card-top" style="background:#16a34a;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">💰</div>
+      <div class="card-name">经费拨付</div>
+      <div class="card-desc">本轮所有玩家工日 +1（4 工日，可单回合挖穿层④）</div>
+    </div>
+    <div class="card season" style="border-color:#7c3aed">
+      <div class="card-top" style="background:#7c3aed;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🏛️</div>
+      <div class="card-name">专家考察</div>
+      <div class="card-desc">本轮提取的遗物每件 +2 分</div>
+    </div>
+    <div class="card season" style="border-color:#475569">
+      <div class="card-top" style="background:#475569;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">🚧</div>
+      <div class="card-name">封方令</div>
+      <div class="card-desc">本轮最左侧探沟封闭，任何人不得进入或作业</div>
+    </div>
+    <div class="card season" style="border-color:#0f766e">
+      <div class="card-top" style="background:#0f766e;color:#fff">
+        <span class="lv">季候卡</span><span class="cost">每轮开始翻 1 张</span>
+      </div>
+      <div class="card-icon">📋</div>
+      <div class="card-name">文物局督查</div>
+      <div class="card-desc">本轮提取的「残次」遗物不计分（只能拿 0 分）</div>
+    </div>
+</div>
+
+<h2>🎯 六、玩家棋子与标记</h2>
+<h3>考古队棋子（5 枚）</h3>
+<div class="pawns">
+  <div class="pawn" style="background:#dc2626">🔴<br>朱鹮队<small>发掘队</small></div>
+  <div class="pawn" style="background:#2563eb">🔵<br>玄鸟队<small>发掘队</small></div>
+  <div class="pawn" style="background:#ca8a04">🟡<br>金乌队<small>发掘队</small></div>
+  <div class="pawn" style="background:#16a34a">🟢<br>蟾蜍队<small>发掘队</small></div>
+  <div class="pawn" style="background:#7c3aed">🟣<br>白鹭队<small>发掘队</small></div>
+</div>
+<h3>通用标记</h3>
+<div class="tokens">
+  <div class="token"><span>⛏️</span>工日标记<br>每轮 3 枚</div>
+  <div class="token"><span>🚩</span>发掘标杆<br>每沟 1 枚</div>
+  <div class="token"><span>🕳️</span>敞口面标记<br>挖穿未提取</div>
+  <div class="token"><span>📦</span>已提取标记<br>入库计分</div>
+  <div class="token"><span>💥</span>塌方标记<br>暴雨回填</div>
+  <div class="token"><span>🧩</span>合器标记<br>集齐 3 片</div>
+</div>
+<p class="sub">工日标记建议用真实的小物件代替（骰子 / 棋子 / 回形针），每轮发 3 枚、用完即止、不结转。</p>
+
+<h2>📋 七、速查卡（每桌 2 张）</h2>
+<div class="pawns">
+  <div class="quick">
+    <h4>一个回合能做什么</h4>
+    1. 移动棋子（免费，每回合 1 次，只能进没人的沟）<br>
+    2. 花工日（每轮 3 枚，不结转）：<br>
+    &nbsp;&nbsp;• 下挖下一层：成本 = 层号 工日<br>
+    &nbsp;&nbsp;• 提取自己挖穿的层：1 工日<br>
+    &nbsp;&nbsp;• 协助清理他人的敞口面：1 工日，得 +4<br>
+    &nbsp;&nbsp;• 合器：2 工日，得 +12<br>
+    &nbsp;&nbsp;• 补抽工具卡：1 工日<br>
+    3. 挖穿的层只有本人能提取 → <strong>挖了不提就是敞口面</strong>
+  </div>
+  <div class="quick">
+    <h4>计分速查</h4>
+    <table>
+      <tr><th>来源</th><th>分数</th></tr>
+      <tr><td>层①遗物</td><td>2 / 4 / 6</td></tr>
+      <tr><td>层②遗物</td><td>4 / 7 / 10</td></tr>
+      <tr><td>层③遗物</td><td>6 / 11 / 16</td></tr>
+      <tr><td>层④遗物</td><td>9 / 16 / 23</td></tr>
+      <tr><td>组合器单片</td><td>3</td></tr>
+      <tr><td>合器（3 片）</td><td>+12</td></tr>
+      <tr><td>首现（第 k 层）</td><td>+k</td></tr>
+      <tr><td>完整地层剖面</td><td>+6</td></tr>
+      <tr><td>协助清理</td><td>+4（协助者）</td></tr>
+    </table>
+  </div>
+</div>
+
+<p class="sub" style="margin-top:28px">—— 打印完成后即可开局。祝你这个发掘季不塌方、不被抢沟、挖出黄金面具。⛏️</p>
+</body>
+</html>
