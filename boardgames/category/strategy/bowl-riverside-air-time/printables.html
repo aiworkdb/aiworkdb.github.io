@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>碗池：滨江跳出彩 · 打印道具</title>
+<style>
+:root{
+  --ink:#16161a; --concrete:#f2efe9; --paper:#ffffff;
+  --yellow:#ffd400; --yellow-d:#e0b800; --red:#e8412f; --blue:#2f7fe8;
+  --green:#22a06b; --orange:#d97706; --purple:#7c3aed;
+  --line:#16161a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  background:
+    repeating-linear-gradient(45deg, rgba(0,0,0,.035) 0 2px, transparent 2px 9px),
+    radial-gradient(circle at 12% 8%, #fff8cc 0 22%, transparent 22%),
+    radial-gradient(circle at 88% 92%, #ffe9f0 0 18%, transparent 18%),
+    var(--concrete);
+  color:var(--ink); padding:26px 18px 60px; line-height:1.55;
+}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3,.heavy{font-family:"Arial Black","Impact","Haettenschweiler","PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:.5px}
+header.hero{
+  background:var(--ink); color:#fff; border:5px solid var(--ink);
+  border-radius:6px; padding:22px 24px; position:relative; overflow:hidden;
+  box-shadow:10px 10px 0 var(--yellow);
+}
+header.hero:after{
+  content:""; position:absolute; right:-40px; top:-40px; width:190px; height:190px;
+  background:var(--yellow); transform:rotate(24deg); opacity:.95;
+}
+header.hero h1{font-size:34px; line-height:1.1; position:relative; z-index:2}
+header.hero .sub{font-size:14px; color:var(--yellow); margin-top:8px; position:relative; z-index:2; letter-spacing:2px}
+header.hero .tag{display:inline-block;margin-top:12px;background:var(--yellow);color:var(--ink);
+  font-weight:800;font-size:12px;padding:4px 10px;border-radius:2px;position:relative;z-index:2}
+h2{margin:38px 0 6px; font-size:24px; display:flex; align-items:center; gap:10px}
+h2:before{content:""; width:26px; height:9px; background:var(--red); display:inline-block; transform:skewX(-18deg)}
+h2 .cnt{font-family:"PingFang SC",sans-serif; font-size:12px; font-weight:400; color:#6b6b6b; letter-spacing:0}
+p.desc{color:#4a4a4a; font-size:13px; margin-bottom:16px; max-width:900px}
+.print-hint{
+  background:#fff8cc; border:3px dashed var(--yellow-d); border-radius:6px;
+  padding:14px 18px; margin:20px 0 8px; font-size:13px;
+}
+.print-hint strong{color:var(--red)}
+.print-hint ul{margin:8px 0 0 20px}
+.grid{display:grid; gap:14px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g6{grid-template-columns:repeat(6,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.g3,.g4,.g6{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}}
+.card{border:3px solid var(--line); border-radius:5px; background:var(--paper); padding:10px; box-shadow:4px 4px 0 rgba(0,0,0,.16)}
+.zone{background:linear-gradient(180deg,#fff 0%,#f6f3ec 100%); border-width:4px}
+.zone .zh{display:flex;align-items:center;justify-content:space-between;gap:6px;
+  background:var(--ink);color:#fff;margin:-10px -10px 8px;padding:8px 10px}
+.zone .zh b{font-size:16px; font-family:"Arial Black",sans-serif}
+.zone .zh span{font-size:10px; color:var(--yellow); letter-spacing:1px}
+.zone .spon{display:inline-block;background:var(--yellow);border:2px solid var(--line);
+  font-size:11px;font-weight:800;padding:2px 7px;margin-bottom:8px}
+.trick{display:flex;align-items:center;gap:8px;border:2px solid #cfc9bd;border-radius:4px;padding:6px;margin-bottom:5px;background:#fff}
+.trick .tier{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:"Arial Black",sans-serif;font-size:14px;color:#fff;border:2px solid var(--line)}
+.tE{background:var(--green)} .tM{background:var(--blue)} .tH{background:var(--red)}
+.trick .info{flex:1; min-width:0}
+.trick .nm{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trick .st{font-size:10px;color:#6b6b6b}
+.trick .sc{font-family:"Arial Black",sans-serif;font-size:22px;line-height:1;min-width:40px;text-align:right}
+.trick .sc small{display:block;font-size:9px;font-family:"PingFang SC",sans-serif;color:#6b6b6b;text-align:right}
+.fantrack{display:flex;gap:3px;margin-top:8px;flex-wrap:wrap}
+.fantrack i{width:13px;height:13px;border-radius:50%;border:2px solid var(--line);background:#fff;display:block}
+.fantrack label{width:100%;font-size:10px;color:#6b6b6b;margin-bottom:3px}
+.ev{border-left:8px solid var(--green)}
+.ev.bad{border-left-color:var(--red)}
+.ev .eh{display:flex;gap:8px;align-items:center;font-family:"Arial Black",sans-serif;font-size:15px}
+.ev .eb{font-family:"PingFang SC",sans-serif;font-size:12px;color:#3a3a3a;margin-top:4px}
+.ev .eno{font-size:10px;color:#8a8a8a;margin-top:4px;letter-spacing:1px}
+.sponcard{text-align:center;background:linear-gradient(160deg,var(--yellow),#ffea7a);border-width:4px}
+.sponcard .sv{font-family:"Arial Black",sans-serif;font-size:40px;line-height:1}
+.sponcard .sn{font-size:13px;font-weight:800;margin-top:2px}
+.sponcard .sd{font-size:10px;color:#5a4b00;margin-top:4px}
+.flip{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+  font-family:"Arial Black",sans-serif;font-size:34px;background:#fff;border:4px solid var(--line);border-radius:5px;
+  box-shadow:3px 3px 0 var(--yellow)}
+.pawn{text-align:center;background:var(--paper)}
+.pawn .ph{height:52px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  font-family:"Arial Black",sans-serif;font-size:17px;color:#fff;border-bottom:3px solid var(--line)}
+.pawn .pb{font-size:11px;padding:8px 4px 6px;font-weight:700}
+.pawn .pt{font-size:9px;color:#6b6b6b;border-top:1px dashed #bbb;padding-top:5px}
+.board{background:#fffdf5}
+.board .bh{font-family:"Arial Black",sans-serif;font-size:15px;background:var(--ink);color:#fff;margin:-10px -10px 8px;padding:7px 10px}
+.tr{display:flex;gap:4px;margin:5px 0;align-items:center}
+.tr label{font-size:10px;width:52px;color:#555;flex:0 0 52px}
+.tr i{width:15px;height:15px;border:2px solid var(--line);border-radius:3px;background:#fff;display:block}
+.tr i.f{background:var(--yellow)}
+.rulecard{font-size:12px}
+.rulecard h4{font-family:"Arial Black",sans-serif;font-size:13px;margin:8px 0 3px;color:var(--red)}
+.rulecard ul{margin-left:16px}
+.rulecard li{margin-bottom:2px}
+.token{width:34px;height:34px;border-radius:50%;background:var(--yellow);border:3px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800}
+.sheet{background:#fff;border:3px dashed #b9b2a4;border-radius:5px;padding:12px;font-size:11px;color:#555}
+.footer{margin-top:40px;text-align:center;font-size:12px;color:#6b6b6b;border-top:2px solid #ccc;padding-top:14px}
+@media print{
+  *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .print-hint{ display:none }
+  body{background:#fff;padding:0}
+  .wrap{max-width:none}
+  h2{page-break-after:avoid;page-break-inside:avoid}
+  .card,.zone,.sponcard,.flip,.pawn,.board{page-break-inside:avoid}
+  .grid{page-break-inside:auto}
+  section{page-break-inside:auto}
+  .pagebreak{page-break-before:always}
+  header.hero{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <h1>碗池 · 滨江跳出彩</h1>
+  <div class="sub">BOWL — RIVERSIDE AIR TIME</div>
+  <div class="tag">2-4 人 · 45-70 分钟 · 中等偏难 · 策略类</div>
+</header>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项（否则所有色块会变白）</li>
+    <li>招式卡 / 日程卡 / 赞助卡 / 翻牌卡建议使用<strong>卡纸（200g 以上）</strong>打印</li>
+    <li>骑手棋子建议打印后<strong>对折立起来</strong>，或贴在硬币 / 纸底座上</li>
+  </ul>
+</div>
+
+<section><h2>🛹 滨江公园总图<span class="cnt">（6 个分区，2 人局用前 4 区 / 3 人局用前 5 区 / 4 人局全开）</span></h2>
+<p class="desc">把这一页摊在桌子中央，每个分区放上对应的 3 张招式卡。分区编号越大越难、分越高，赞助也越贵。</p>
+<div class="grid g3">
+<div class="card zone">
+  <div class="zh"><b>🛹街式广场 街式广场</b><span>STREET PLAZA</span></div>
+  <div class="spon">🏆 焦点赞助 +8 分</div>
+  <div class="trick">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm">Ollie 豚跳</div><div class="st">体力 1 · 翻 ≥1（必成） · 落地铁粉 +1</div></div>
+    <div class="sc">10<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm">Kickflip 踢翻</div><div class="st">体力 2 · 翻 ≥2 · 落地铁粉 +2</div></div>
+    <div class="sc">14<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm">360 Flip 三百六</div><div class="st">体力 3 · 翻 ≥3 · 落地铁粉 +3</div></div>
+    <div class="sc">16<small>分</small></div>
+  </div>
+  <div class="fantrack"><label>粉丝计数（放粉丝标记）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card zone">
+  <div class="zh"><b>🛼手动台 手动台</b><span>MANUAL PAD</span></div>
+  <div class="spon">🏆 焦点赞助 +10 分</div>
+  <div class="trick">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm">Manual 后轮滑</div><div class="st">体力 1 · 翻 ≥1（必成） · 落地铁粉 +1</div></div>
+    <div class="sc">11<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm">Nose Manual 前轮滑</div><div class="st">体力 2 · 翻 ≥2 · 落地铁粉 +2</div></div>
+    <div class="sc">15<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm">Casper 卡斯帕</div><div class="st">体力 3 · 翻 ≥3 · 落地铁粉 +3</div></div>
+    <div class="sc">18<small>分</small></div>
+  </div>
+  <div class="fantrack"><label>粉丝计数（放粉丝标记）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card zone">
+  <div class="zh"><b>🏁碗池 碗池</b><span>THE BOWL</span></div>
+  <div class="spon">🏆 焦点赞助 +12 分</div>
+  <div class="trick">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm">Drop-in 落池</div><div class="st">体力 1 · 翻 ≥1（必成） · 落地铁粉 +1</div></div>
+    <div class="sc">13<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm">Carve 刻刃</div><div class="st">体力 2 · 翻 ≥2 · 落地铁粉 +2</div></div>
+    <div class="sc">18<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm">Air 腾空</div><div class="st">体力 3 · 翻 ≥3 · 落地铁粉 +3</div></div>
+    <div class="sc">21<small>分</small></div>
+  </div>
+  <div class="fantrack"><label>粉丝计数（放粉丝标记）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card zone">
+  <div class="zh"><b>🪁大跳台 大跳台</b><span>BIG AIR</span></div>
+  <div class="spon">🏆 焦点赞助 +14 分</div>
+  <div class="trick">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm">Gap 跨距</div><div class="st">体力 1 · 翻 ≥1（必成） · 落地铁粉 +1</div></div>
+    <div class="sc">15<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm">Method Air 抓板</div><div class="st">体力 2 · 翻 ≥2 · 落地铁粉 +2</div></div>
+    <div class="sc">20<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm">540 空翻</div><div class="st">体力 3 · 翻 ≥3 · 落地铁粉 +3</div></div>
+    <div class="sc">24<small>分</small></div>
+  </div>
+  <div class="fantrack"><label>粉丝计数（放粉丝标记）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card zone">
+  <div class="zh"><b>🚧扶手区 扶手区</b><span>HANDRAIL</span></div>
+  <div class="spon">🏆 焦点赞助 +16 分</div>
+  <div class="trick">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm">50-50 五五</div><div class="st">体力 1 · 翻 ≥1（必成） · 落地铁粉 +1</div></div>
+    <div class="sc">17<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm">Boardslide 滑板滑</div><div class="st">体力 2 · 翻 ≥2 · 落地铁粉 +2</div></div>
+    <div class="sc">23<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm">Crooked 歪咬</div><div class="st">体力 3 · 翻 ≥3 · 落地铁粉 +3</div></div>
+    <div class="sc">27<small>分</small></div>
+  </div>
+  <div class="fantrack"><label>粉丝计数（放粉丝标记）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card zone">
+  <div class="zh"><b>🧱垂直墙 垂直墙</b><span>VERT WALL</span></div>
+  <div class="spon">🏆 焦点赞助 +18 分</div>
+  <div class="trick">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm">Rock 咬边</div><div class="st">体力 1 · 翻 ≥1（必成） · 落地铁粉 +1</div></div>
+    <div class="sc">19<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm">Invert 倒立</div><div class="st">体力 2 · 翻 ≥2 · 落地铁粉 +2</div></div>
+    <div class="sc">26<small>分</small></div>
+  </div>
+  <div class="trick">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm">900 九百度</div><div class="st">体力 3 · 翻 ≥3 · 落地铁粉 +3</div></div>
+    <div class="sc">30<small>分</small></div>
+  </div>
+  <div class="fantrack"><label>粉丝计数（放粉丝标记）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+</div></section>
+<section class="pagebreak"><h2>🃏 招式卡<span class="cnt">（18 张：6 分区 × 3 档难度，放进对应分区卡位）</span></h2>
+<p class="desc">每场每位玩家对同一个分区最多做 1 招，其中 <b>H（高难）每场全场限 1 招</b>。得招分 = 卡片分数 + 连招加成。</p>
+<div class="grid g3">
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm" style="font-size:13px">Ollie 豚跳</div><div class="st">🛹街式广场 · 入门档</div></div>
+    <div class="sc">10<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 1 ｜ 成功判定 翻 ≥1（必成） ｜ 落地 +1 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm" style="font-size:13px">Kickflip 踢翻</div><div class="st">🛹街式广场 · 进阶档</div></div>
+    <div class="sc">14<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 2 ｜ 成功判定 翻 ≥2 ｜ 落地 +2 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm" style="font-size:13px">360 Flip 三百六</div><div class="st">🛹街式广场 · 高难档</div></div>
+    <div class="sc">16<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 3 ｜ 成功判定 翻 ≥3 ｜ 落地 +3 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm" style="font-size:13px">Manual 后轮滑</div><div class="st">🛼手动台 · 入门档</div></div>
+    <div class="sc">11<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 1 ｜ 成功判定 翻 ≥1（必成） ｜ 落地 +1 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm" style="font-size:13px">Nose Manual 前轮滑</div><div class="st">🛼手动台 · 进阶档</div></div>
+    <div class="sc">15<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 2 ｜ 成功判定 翻 ≥2 ｜ 落地 +2 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm" style="font-size:13px">Casper 卡斯帕</div><div class="st">🛼手动台 · 高难档</div></div>
+    <div class="sc">18<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 3 ｜ 成功判定 翻 ≥3 ｜ 落地 +3 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm" style="font-size:13px">Drop-in 落池</div><div class="st">🏁碗池 · 入门档</div></div>
+    <div class="sc">13<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 1 ｜ 成功判定 翻 ≥1（必成） ｜ 落地 +1 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm" style="font-size:13px">Carve 刻刃</div><div class="st">🏁碗池 · 进阶档</div></div>
+    <div class="sc">18<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 2 ｜ 成功判定 翻 ≥2 ｜ 落地 +2 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm" style="font-size:13px">Air 腾空</div><div class="st">🏁碗池 · 高难档</div></div>
+    <div class="sc">21<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 3 ｜ 成功判定 翻 ≥3 ｜ 落地 +3 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm" style="font-size:13px">Gap 跨距</div><div class="st">🪁大跳台 · 入门档</div></div>
+    <div class="sc">15<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 1 ｜ 成功判定 翻 ≥1（必成） ｜ 落地 +1 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm" style="font-size:13px">Method Air 抓板</div><div class="st">🪁大跳台 · 进阶档</div></div>
+    <div class="sc">20<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 2 ｜ 成功判定 翻 ≥2 ｜ 落地 +2 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm" style="font-size:13px">540 空翻</div><div class="st">🪁大跳台 · 高难档</div></div>
+    <div class="sc">24<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 3 ｜ 成功判定 翻 ≥3 ｜ 落地 +3 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm" style="font-size:13px">50-50 五五</div><div class="st">🚧扶手区 · 入门档</div></div>
+    <div class="sc">17<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 1 ｜ 成功判定 翻 ≥1（必成） ｜ 落地 +1 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm" style="font-size:13px">Boardslide 滑板滑</div><div class="st">🚧扶手区 · 进阶档</div></div>
+    <div class="sc">23<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 2 ｜ 成功判定 翻 ≥2 ｜ 落地 +2 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm" style="font-size:13px">Crooked 歪咬</div><div class="st">🚧扶手区 · 高难档</div></div>
+    <div class="sc">27<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 3 ｜ 成功判定 翻 ≥3 ｜ 落地 +3 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tE">E</div>
+    <div class="info"><div class="nm" style="font-size:13px">Rock 咬边</div><div class="st">🧱垂直墙 · 入门档</div></div>
+    <div class="sc">19<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 1 ｜ 成功判定 翻 ≥1（必成） ｜ 落地 +1 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tM">M</div>
+    <div class="info"><div class="nm" style="font-size:13px">Invert 倒立</div><div class="st">🧱垂直墙 · 进阶档</div></div>
+    <div class="sc">26<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 2 ｜ 成功判定 翻 ≥2 ｜ 落地 +2 粉（焦点区 +1）</div>
+</div>
+<div class="card">
+  <div class="trick" style="border:0;margin:0;padding:0">
+    <div class="tier tH">H</div>
+    <div class="info"><div class="nm" style="font-size:13px">900 九百度</div><div class="st">🧱垂直墙 · 高难档</div></div>
+    <div class="sc">30<small>分</small></div>
+  </div>
+  <div class="st" style="margin-top:6px;border-top:1px dashed #ccc;padding-top:5px;color:#444">体力 3 ｜ 成功判定 翻 ≥3 ｜ 落地 +3 粉（焦点区 +1）</div>
+</div>
+</div></section>
+<section class="pagebreak"><h2>📅 日程卡<span class="cnt">（10 张，每场开局翻 1 张，全场生效）</span></h2>
+<p class="desc">日程卡决定这一场"今天公园是什么天气"，是全场共享的变量，所有人一起受益或一起吃亏。</p>
+<div class="grid g2">
+<div class="card ev bad">
+  <div class="eh"><span style="font-size:24px">🌬️</span><span>江风降温</span></div>
+  <div class="eb">本场所有玩家体力 −1</div>
+  <div class="eno">SCHEDULE 01 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">📷</span><span>摄影师到场</span></div>
+  <div class="eb">本场每招落地额外 +1 粉</div>
+  <div class="eno">SCHEDULE 02 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">🎤</span><span>夜场音乐派对</span></div>
+  <div class="eb">本场「同区连线」每招额外 +1 分</div>
+  <div class="eno">SCHEDULE 03 / 10</div>
+</div>
+<div class="card ev bad">
+  <div class="eh"><span style="font-size:24px">☀️</span><span>午后暴晒</span></div>
+  <div class="eb">本场所有招式风险阈值 +1</div>
+  <div class="eno">SCHEDULE 04 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">🚑</span><span>医疗暂停</span></div>
+  <div class="eb">本场所有玩家体力 +3（不超上限）</div>
+  <div class="eno">SCHEDULE 05 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">🤝</span><span>品牌活动日</span></div>
+  <div class="eb">本场两张焦点赞助各 +2 分</div>
+  <div class="eno">SCHEDULE 06 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">🧊</span><span>器械打蜡</span></div>
+  <div class="eb">本场 M/H 招体力消耗 −1</div>
+  <div class="eno">SCHEDULE 07 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">🌙</span><span>灯光秀</span></div>
+  <div class="eb">本场 H 招落地额外 +1 粉</div>
+  <div class="eno">SCHEDULE 08 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">🍜</span><span>补给站</span></div>
+  <div class="eb">本场所有玩家体力 +2</div>
+  <div class="eno">SCHEDULE 09 / 10</div>
+</div>
+<div class="card ev good">
+  <div class="eh"><span style="font-size:24px">📹</span><span>官方直播</span></div>
+  <div class="eb">本场连招加成由 +3 变为 +4（第 2 招起）</div>
+  <div class="eno">SCHEDULE 10 / 10</div>
+</div>
+</div></section>
+<section class="pagebreak"><h2>🏆 焦点赞助卡<span class="cnt">（6 张，每场抽 2 张公开为本场焦点分区）</span></h2>
+<p class="desc">每场抽出的两张赞助卡对应的分区就是<b>焦点分区</b>。落地该区招式额外 +1 粉；场末该区粉丝最多者拿走卡面分数。</p>
+<div class="grid g6">
+<div class="card sponcard">
+  <div style="font-size:22px">🛹街式广场</div>
+  <div class="sv">+8</div>
+  <div class="sn">街式广场</div>
+  <div class="sd">场末本区粉丝最多者获得</div>
+</div>
+<div class="card sponcard">
+  <div style="font-size:22px">🛼手动台</div>
+  <div class="sv">+10</div>
+  <div class="sn">手动台</div>
+  <div class="sd">场末本区粉丝最多者获得</div>
+</div>
+<div class="card sponcard">
+  <div style="font-size:22px">🏁碗池</div>
+  <div class="sv">+12</div>
+  <div class="sn">碗池</div>
+  <div class="sd">场末本区粉丝最多者获得</div>
+</div>
+<div class="card sponcard">
+  <div style="font-size:22px">🪁大跳台</div>
+  <div class="sv">+14</div>
+  <div class="sn">大跳台</div>
+  <div class="sd">场末本区粉丝最多者获得</div>
+</div>
+<div class="card sponcard">
+  <div style="font-size:22px">🚧扶手区</div>
+  <div class="sv">+16</div>
+  <div class="sn">扶手区</div>
+  <div class="sd">场末本区粉丝最多者获得</div>
+</div>
+<div class="card sponcard">
+  <div style="font-size:22px">🧱垂直墙</div>
+  <div class="sv">+18</div>
+  <div class="sn">垂直墙</div>
+  <div class="sd">场末本区粉丝最多者获得</div>
+</div>
+</div>
+<div class="sheet" style="margin-top:14px"><b>焦点区粉丝加成：</b>在焦点分区落地的每一招，粉丝 +1（与招式档位叠加）。H 招在焦点区一招可拿 4 粉（3+1），是全场单次涨粉最高的动作。<br><b>平手规则：</b>焦点分区粉丝并列第一 → <b>本场该赞助作废</b>，谁也拿不到，所以"多 1 粉"永远是值得的。</div>
+</section>
+<section class="pagebreak"><h2>🎲 翻牌堆<span class="cnt">（18 张：数字 1-6 各 3 张，全场共用）</span></h2>
+<p class="desc">做动作时从牌堆顶翻 1 张：<b>翻出数字 ≥ 该招"需求"即落地成功</b>，否则摔倒。牌堆用完立即洗回重来。</p>
+<div class="grid g6">
+<div class="flip">1</div>
+<div class="flip">1</div>
+<div class="flip">1</div>
+<div class="flip">2</div>
+<div class="flip">2</div>
+<div class="flip">2</div>
+<div class="flip">3</div>
+<div class="flip">3</div>
+<div class="flip">3</div>
+<div class="flip">4</div>
+<div class="flip">4</div>
+<div class="flip">4</div>
+<div class="flip">5</div>
+<div class="flip">5</div>
+<div class="flip">5</div>
+<div class="flip">6</div>
+<div class="flip">6</div>
+<div class="flip">6</div>
+</div>
+<div class="sheet" style="margin-top:14px">E 档需求 ≥1 → 成功率 <b>100%</b>；M 档需求 ≥2 → <b>83.3%</b>；H 档需求 ≥3 → <b>66.7%</b>。「午后暴晒」日程卡会让所有需求 +1（M→50%、H→50%、E→83%）。</div>
+</section>
+<section><h2>🏄 骑手棋子<span class="cnt">（5 枚，沿虚线剪下对折立起）</span></h2>
+<p class="desc">每场派 2 名骑手到分区（可同一区），骑手多的区先挑招式卡——这就是"我要不要跟人抢"的博弈点。</p>
+<div class="grid g4">
+<div class="card pawn">
+  <div class="ph" style="background:#e8412f">P1</div>
+  <div class="pb">P1 阿板</div>
+  <div class="pt">沿此虚线对折 → 立起来</div>
+</div>
+<div class="card pawn">
+  <div class="ph" style="background:#2f7fe8">P2</div>
+  <div class="pb">P2 碗仔</div>
+  <div class="pt">沿此虚线对折 → 立起来</div>
+</div>
+<div class="card pawn">
+  <div class="ph" style="background:#22a06b">P3</div>
+  <div class="pb">P3 腾仔</div>
+  <div class="pt">沿此虚线对折 → 立起来</div>
+</div>
+<div class="card pawn">
+  <div class="ph" style="background:#d97706">P4</div>
+  <div class="pb">P4 小轮</div>
+  <div class="pt">沿此虚线对折 → 立起来</div>
+</div>
+<div class="card pawn">
+  <div class="ph" style="background:#7c3aed">P5</div>
+  <div class="pb">P5 备用</div>
+  <div class="pt">沿此虚线对折 → 立起来</div>
+</div>
+</div></section>
+<section class="pagebreak"><h2>📋 玩家板<span class="cnt">（5 块：体力条 / 分数栏 / 粉丝区）</span></h2>
+<p class="desc">体力跨场保留（开季 8，上限 8），这是全局唯一的"跨场资源"。分数栏建议用白板笔或棋子记录。</p>
+<div class="grid g2">
+<div class="card board">
+  <div class="bh" style="background:#e8412f">P1 阿板</div>
+  <div class="tr"><label>体力 0-8</label><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
+  <div class="tr"><label>本场连招</label><i></i><i></i><i></i></div>
+  <div class="st" style="font-size:10px;color:#666">连招：本场第 2 招 +3 分，第 3 招 +6 分（摔一次立刻归零）</div>
+  <div class="tr" style="margin-top:8px"><label>分数</label><span style="font-family:'Arial Black',sans-serif;font-size:20px">____</span></div>
+  <div class="fantrack" style="margin-top:6px"><label>粉丝标记放置处（按分区排开）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card board">
+  <div class="bh" style="background:#2f7fe8">P2 碗仔</div>
+  <div class="tr"><label>体力 0-8</label><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
+  <div class="tr"><label>本场连招</label><i></i><i></i><i></i></div>
+  <div class="st" style="font-size:10px;color:#666">连招：本场第 2 招 +3 分，第 3 招 +6 分（摔一次立刻归零）</div>
+  <div class="tr" style="margin-top:8px"><label>分数</label><span style="font-family:'Arial Black',sans-serif;font-size:20px">____</span></div>
+  <div class="fantrack" style="margin-top:6px"><label>粉丝标记放置处（按分区排开）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card board">
+  <div class="bh" style="background:#22a06b">P3 腾仔</div>
+  <div class="tr"><label>体力 0-8</label><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
+  <div class="tr"><label>本场连招</label><i></i><i></i><i></i></div>
+  <div class="st" style="font-size:10px;color:#666">连招：本场第 2 招 +3 分，第 3 招 +6 分（摔一次立刻归零）</div>
+  <div class="tr" style="margin-top:8px"><label>分数</label><span style="font-family:'Arial Black',sans-serif;font-size:20px">____</span></div>
+  <div class="fantrack" style="margin-top:6px"><label>粉丝标记放置处（按分区排开）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card board">
+  <div class="bh" style="background:#d97706">P4 小轮</div>
+  <div class="tr"><label>体力 0-8</label><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
+  <div class="tr"><label>本场连招</label><i></i><i></i><i></i></div>
+  <div class="st" style="font-size:10px;color:#666">连招：本场第 2 招 +3 分，第 3 招 +6 分（摔一次立刻归零）</div>
+  <div class="tr" style="margin-top:8px"><label>分数</label><span style="font-family:'Arial Black',sans-serif;font-size:20px">____</span></div>
+  <div class="fantrack" style="margin-top:6px"><label>粉丝标记放置处（按分区排开）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div class="card board">
+  <div class="bh" style="background:#7c3aed">P5 备用</div>
+  <div class="tr"><label>体力 0-8</label><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
+  <div class="tr"><label>本场连招</label><i></i><i></i><i></i></div>
+  <div class="st" style="font-size:10px;color:#666">连招：本场第 2 招 +3 分，第 3 招 +6 分（摔一次立刻归零）</div>
+  <div class="tr" style="margin-top:8px"><label>分数</label><span style="font-family:'Arial Black',sans-serif;font-size:20px">____</span></div>
+  <div class="fantrack" style="margin-top:6px"><label>粉丝标记放置处（按分区排开）</label><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+</div></section>
+<section><h2>🎯 粉丝标记<span class="cnt">（建议 60 枚，每人 15 枚；也可用豆子 / 硬币代替）</span></h2>
+<p class="desc">粉丝是"分区所有权"，场末决定焦点赞助归谁。它不计入终局总分，只用来抢赞助。</p>
+<div class="grid" style="grid-template-columns:repeat(12,1fr)">
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+<div class="token">📣</div>
+</div></section>
+<section class="pagebreak"><h2>📖 规则速查卡<span class="cnt">（1 张，建议人手一份）</span></h2>
+<div class="grid g2">
+<div class="card rulecard">
+<h4>一场的流程</h4>
+<ul>
+<li><b>① 翻日程卡</b> —— 全场生效</li>
+<li><b>② 抽 2 张焦点赞助卡</b> —— 公开放在对应分区</li>
+<li><b>③ 同时派 2 名骑手</b> —— 握拳同时亮出目标分区</li>
+<li><b>④ 解析占位</b> —— 骑手多的区先挑；同数比该区粉丝；再平手按座位顺序</li>
+<li><b>⑤ 依次行动 3 AP</b> —— 出招 / 休息 / 造势，各 1 AP</li>
+<li><b>⑥ 结算焦点赞助</b> —— 每区粉丝最多者 +赞助分（平手作废）</li>
+</ul>
+<h4>动作三选一（各 1 AP）</h4>
+<ul>
+<li><b>出招</b>：翻牌 ≥ 需求 → 得「招分 + 连招加成」+ 粉丝；否则 <b>−3 分</b> 且连招归零</li>
+<li><b>休息</b>：体力 +4（上限 8）</li>
+<li><b>造势</b>：任选一区 +3 粉，体力 +2（每场限 1 次）</li>
+</ul>
+</div>
+<div class="card rulecard">
+<h4>计分速查</h4>
+<ul>
+<li>招分 = 卡片分数（E/M/H）</li>
+<li>连招加成：本场第 1 招 +0、第 2 招 +3、第 3 招 +6</li>
+<li>同区连线：本场落地 ≥2 招且全在同一区 → 每招 +3 分</li>
+<li>摔倒：−3 分，连招归零</li>
+<li>焦点赞助：8 / 10 / 12 / 14 / 16 / 18 分</li>
+</ul>
+<h4>四条硬规矩</h4>
+<ul>
+<li>同一分区<b>每场每人只能做 1 招</b></li>
+<li><b>H（高难）每场每人限 1 招</b></li>
+<li>体力不够就必须先休息，<b>不能赊账</b></li>
+<li>5 场结束后总分最高者夺冠，平分则粉丝总数多者胜</li>
+</ul>
+<h4>新手第一场就这么打</h4>
+<ul>
+<li>两骑手都放<b>碗池</b>，拿 H + M 两招，第 3 个 AP 用来休息</li>
+<li>下一场体力不够就休息，够就继续 H + M</li>
+<li>看到别人往同一个区堆骑手，立刻改去<b>没人的区</b></li>
+</ul>
+</div>
+</div></section>
+<div class="footer">
+碗池 · 滨江跳出彩（BOWL: Riverside Air Time）· 打印道具包 v1.0<br>
+完整规则请见同目录 <b>README.md</b> ｜ 返回 <b>boardgames/README.md</b> 桌游索引
+</div>
+</div>
+</body>
+</html>

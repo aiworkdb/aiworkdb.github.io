@@ -138,6 +138,7 @@ boardgames/
 | [铁球疾走：横断大陆赛马](category/card/iron-ball-derby/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
 | [农场惊魂夜：怪兽来袭](category/party/farm-fright-night/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单 |
 | [探方：三星堆发掘季](category/strategy/sanxingdui-dig/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
+| [碗池：滨江跳出彩](category/strategy/bowl-riverside-air-time/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
 
 ## 添加新桌游
 
