@@ -140,6 +140,7 @@ boardgames/
 | [探方：三星堆发掘季](category/strategy/sanxingdui-dig/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
 | [碗池：滨江跳出彩](category/strategy/bowl-riverside-air-time/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
 | [暗部共栖：学园都市夜班](category/card/dark-side-cohabitation/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等偏难 |
+| [大陆酒店：中立地带](category/party/continental-neutral-ground/README.md) | 派对 | 3-6人 | 30-45分钟 | 中等偏简单 |
 
 ## 添加新桌游
 
