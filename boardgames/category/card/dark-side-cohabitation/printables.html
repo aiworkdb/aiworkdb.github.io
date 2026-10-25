@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>暗部共栖：学园都市夜班 · 打印道具</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f4f6f8; color: #1f2933; margin: 0; padding: 24px;
+  }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: 1px; }
+  h2 {
+    font-size: 19px; margin: 34px 0 12px; padding: 8px 12px;
+    border-left: 5px solid #2c3e50; background: #e8edf2; border-radius: 4px;
+  }
+  .sub { color: #52606d; font-size: 13px; margin-bottom: 18px; }
+  .print-hint {
+    background: #fff8e1; border: 1px solid #f0c36d; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px; font-size: 14px; line-height: 1.9;
+  }
+  .print-hint strong { color: #b26a00; }
+  .print-hint ul { margin: 6px 0 0 18px; padding: 0; }
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  /* ---- 委托卡 ---- */
+  .job {
+    width: 168px; height: 232px; border-radius: 10px; padding: 10px;
+    background: #fff; border: 2px solid #333; position: relative;
+    box-shadow: 0 1px 4px rgba(0,0,0,.14); display: flex; flex-direction: column;
+    page-break-inside: avoid;
+  }
+  .job .bar { height: 6px; border-radius: 4px; margin: -4px -4px 6px; }
+  .job .tier { font-size: 11px; color: #7b8794; letter-spacing: 1px; }
+  .job .ttl { font-size: 15px; font-weight: 700; margin: 2px 0 8px; line-height: 1.25; }
+  .job .row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-top: 1px dashed #cbd2d9; }
+  .job .big { font-size: 20px; font-weight: 800; }
+  .job .foot { margin-top: auto; font-size: 10px; color: #7b8794; text-align: center; padding-top: 4px; }
+  /* ---- 角色卡 ---- */
+  .role {
+    width: 210px; height: 300px; border-radius: 12px; padding: 12px; background: #fff;
+    border: 3px solid #2c3e50; box-shadow: 0 2px 6px rgba(0,0,0,.16);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .role .head { border-radius: 8px; color: #fff; padding: 8px 10px; margin: -4px -4px 10px; }
+  .role .nm { font-size: 17px; font-weight: 800; }
+  .role .en { font-size: 9px; opacity: .85; letter-spacing: .5px; }
+  .role .lv { font-size: 10px; margin-top: 3px; background: rgba(255,255,255,.22); display: inline-block; padding: 1px 6px; border-radius: 8px; }
+  .role .st { display: flex; gap: 8px; margin-bottom: 8px; }
+  .role .st div { flex: 1; background: #eef2f5; border-radius: 6px; text-align: center; padding: 5px 2px; }
+  .role .st b { display: block; font-size: 18px; }
+  .role .st span { font-size: 10px; color: #52606d; }
+  .role .pas { background: #fdf3e3; border-left: 4px solid #d68910; padding: 7px 8px; border-radius: 4px; font-size: 12px; line-height: 1.7; }
+  .role .pas b { color: #b9770e; }
+  .role .tip { margin-top: auto; font-size: 10px; color: #7b8794; text-align: center; }
+  /* ---- 装备卡 ---- */
+  .mod {
+    width: 128px; height: 176px; border-radius: 9px; padding: 9px; background: #fff;
+    border: 2px solid #34495e; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .mod .ic { font-size: 30px; }
+  .mod .nm { font-size: 13px; font-weight: 700; margin: 4px 0 6px; }
+  .mod .d { font-size: 11px; line-height: 1.7; color: #3e4c59; }
+  .mod .tag { margin-top: auto; font-size: 9px; color: #7b8794; letter-spacing: 1px; }
+  /* ---- 据点板 ---- */
+  .board {
+    width: 100%; background: #fff; border: 3px solid #2c3e50; border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 14px; page-break-inside: avoid;
+  }
+  .board h3 { margin: 0 0 4px; font-size: 17px; }
+  .board .note { font-size: 12px; color: #52606d; margin-bottom: 10px; }
+  .track { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 12px; }
+  .track .cell {
+    width: 21px; height: 26px; border: 1px solid #b0b8c0; border-radius: 3px;
+    font-size: 9px; display: flex; align-items: center; justify-content: center; background: #fafbfc;
+  }
+  .track .cell.hit { background: #fdebd0; border-color: #d68910; font-weight: 700; }
+  .lines { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; }
+  .lines .ln { background: #eef2f5; border-radius: 6px; padding: 6px 10px; }
+  .lines .ln b { color: #c0392b; }
+  /* ---- 玩家板 / 标记 ---- */
+  .pb {
+    width: 230px; height: 150px; border: 2px solid #34495e; border-radius: 10px;
+    background: #fff; padding: 10px; font-size: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    page-break-inside: avoid;
+  }
+  .pb h4 { margin: 0 0 6px; font-size: 14px; }
+  .pb .pips { display: flex; gap: 3px; margin: 3px 0 8px; flex-wrap: wrap; }
+  .pb .pip { width: 17px; height: 17px; border: 1px solid #7b8794; border-radius: 50%; }
+  .pb .pip.on { background: #f5b041; border-color: #b9770e; }
+  .pb .rowl { font-size: 11px; color: #52606d; line-height: 1.7; }
+  .marks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mk {
+    width: 46px; height: 46px; border-radius: 50%; border: 2px solid rgba(0,0,0,.25);
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,.12);
+  }
+  .mk.grey { background: #b0b8c0; }
+  /* ---- 速查 ---- */
+  .quick { background: #fff; border: 2px solid #2c3e50; border-radius: 10px; padding: 14px 18px; font-size: 13px; line-height: 1.95; page-break-inside: avoid; }
+  .quick ol { margin: 4px 0 0 20px; padding: 0; }
+  .quick table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12px; }
+  .quick td, .quick th { border: 1px solid #cbd2d9; padding: 5px 8px; text-align: left; }
+  .quick th { background: #eef2f5; }
+  footer { margin-top: 40px; font-size: 12px; color: #7b8794; text-align: center; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { background: #fff; padding: 0; }
+    h2 { page-break-after: avoid; }
+    .job, .role, .mod, .pb, .board, .quick { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🕶️ 暗部共栖：学园都市夜班 · 打印道具</h1>
+<div class="sub">DARK SIDE COHABITATION — Academy City Night Shift｜卡牌类 2-5 人｜6 个夜晚｜建议 3-5 人开局</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项，否则颜色会全部丢失</li>
+    <li>委托卡 / 角色卡 / 装备卡建议使用 <strong>200g 以上卡纸</strong>打印</li>
+    <li>热标记与玩家板可用普通纸打印后裁剪，热标记建议用小圆点贴纸或玻璃珠替代</li>
+    <li>打印后沿边框裁剪，卡牌建议塑封或套卡套</li>
+  </ul>
+</div>
+
+<h2>① 据点板（公共热度轨道）</h2>
+<div class="board">
+  <h3>🏠 共栖据点 · 热度轨道</h3>
+  <div class="note">所有玩家把「热标记」堆在同一条轨道上。轨道总数达到<strong>清扫线</strong>就立刻结算一次清扫，然后<strong>整条轨道清空重来</strong>。</div>
+  <div class="track">
+    <div class="cell">1</div>
+    <div class="cell">2</div>
+    <div class="cell">3</div>
+    <div class="cell">4</div>
+    <div class="cell">5</div>
+    <div class="cell">6</div>
+    <div class="cell">7</div>
+    <div class="cell">8</div>
+    <div class="cell">9</div>
+    <div class="cell">10</div>
+    <div class="cell">11</div>
+    <div class="cell">12</div>
+    <div class="cell">13</div>
+    <div class="cell">14</div>
+    <div class="cell">15</div>
+    <div class="cell">16</div>
+    <div class="cell">17</div>
+    <div class="cell hit">★</div>
+    <div class="cell">19</div>
+    <div class="cell">20</div>
+    <div class="cell">21</div>
+    <div class="cell">22</div>
+    <div class="cell hit">★</div>
+    <div class="cell">24</div>
+    <div class="cell">25</div>
+    <div class="cell">26</div>
+    <div class="cell">27</div>
+    <div class="cell hit">★</div>
+    <div class="cell">29</div>
+    <div class="cell">30</div>
+    <div class="cell">31</div>
+    <div class="cell">32</div>
+    <div class="cell hit">★</div>
+    <div class="cell">34</div>
+    <div class="cell">35</div>
+    <div class="cell">36</div>
+    <div class="cell">37</div>
+    <div class="cell">38</div>
+    <div class="cell">39</div>
+    <div class="cell">40</div>
+  </div>
+  <div class="lines">
+    <div class="ln">2 人局清扫线 <b>18</b>（★）</div>
+    <div class="ln">3 人局清扫线 <b>23</b></div>
+    <div class="ln">4 人局清扫线 <b>28</b></div>
+    <div class="ln">5 人局清扫线 <b>33</b></div>
+    <div class="ln">外流委托 → 轨道 +1 枚 <b>灰色</b>标记</div>
+  </div>
+</div>
+
+<h2>② 委托卡（30 张 · 五类 × 六档）</h2>
+<div class="sub">同一档位的五张卡，难度 / 报酬 / 热度<strong>完全相同</strong>，只有图标和名字不同 —— 这是为了让五个角色绝对公平。</div>
+<div class="grid">
+  <div class="job" style="border-color:#c0392b">
+    <div class="bar" style="background:#c0392b"></div>
+    <div class="tier">🔫 歼灭 · Ⅰ</div>
+    <div class="ttl" style="color:#c0392b">清扫据点</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">3</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">7</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">2</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#c0392b">
+    <div class="bar" style="background:#c0392b"></div>
+    <div class="tier">🔫 歼灭 · Ⅱ</div>
+    <div class="ttl" style="color:#c0392b">处理叛徒</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">4</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">8</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">3</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#c0392b">
+    <div class="bar" style="background:#c0392b"></div>
+    <div class="tier">🔫 歼灭 · Ⅲ</div>
+    <div class="ttl" style="color:#c0392b">灭口证人</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">5</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">10</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#c0392b">
+    <div class="bar" style="background:#c0392b"></div>
+    <div class="tier">🔫 歼灭 · Ⅳ</div>
+    <div class="ttl" style="color:#c0392b">拦截搬运队</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">6</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">11</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#c0392b">
+    <div class="bar" style="background:#c0392b"></div>
+    <div class="tier">🔫 歼灭 · Ⅴ</div>
+    <div class="ttl" style="color:#c0392b">压制护卫</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">7</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">13</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">5</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#c0392b">
+    <div class="bar" style="background:#c0392b"></div>
+    <div class="tier">🔫 歼灭 · Ⅵ</div>
+    <div class="ttl" style="color:#c0392b">抹除研究设施</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">8</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">15</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">6</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#2471a3">
+    <div class="bar" style="background:#2471a3"></div>
+    <div class="tier">🛡 护卫 · Ⅰ</div>
+    <div class="ttl" style="color:#2471a3">要人护送</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">3</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">7</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">2</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#2471a3">
+    <div class="bar" style="background:#2471a3"></div>
+    <div class="tier">🛡 护卫 · Ⅱ</div>
+    <div class="ttl" style="color:#2471a3">账目看守</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">4</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">8</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">3</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#2471a3">
+    <div class="bar" style="background:#2471a3"></div>
+    <div class="tier">🛡 护卫 · Ⅲ</div>
+    <div class="ttl" style="color:#2471a3">实验体转移</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">5</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">10</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#2471a3">
+    <div class="bar" style="background:#2471a3"></div>
+    <div class="tier">🛡 护卫 · Ⅳ</div>
+    <div class="ttl" style="color:#2471a3">夜间巡逻</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">6</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">11</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#2471a3">
+    <div class="bar" style="background:#2471a3"></div>
+    <div class="tier">🛡 护卫 · Ⅴ</div>
+    <div class="ttl" style="color:#2471a3">高层随行</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">7</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">13</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">5</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#2471a3">
+    <div class="bar" style="background:#2471a3"></div>
+    <div class="tier">🛡 护卫 · Ⅵ</div>
+    <div class="ttl" style="color:#2471a3">仓库死守</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">8</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">15</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">6</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#1e8449">
+    <div class="bar" style="background:#1e8449"></div>
+    <div class="tier">🔍 追踪 · Ⅰ</div>
+    <div class="ttl" style="color:#1e8449">AIM 残留</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">3</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">7</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">2</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#1e8449">
+    <div class="bar" style="background:#1e8449"></div>
+    <div class="tier">🔍 追踪 · Ⅱ</div>
+    <div class="ttl" style="color:#1e8449">失踪能力者</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">4</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">8</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">3</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#1e8449">
+    <div class="bar" style="background:#1e8449"></div>
+    <div class="tier">🔍 追踪 · Ⅲ</div>
+    <div class="ttl" style="color:#1e8449">尾随联络人</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">5</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">10</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#1e8449">
+    <div class="bar" style="background:#1e8449"></div>
+    <div class="tier">🔍 追踪 · Ⅳ</div>
+    <div class="ttl" style="color:#1e8449">窃听布线</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">6</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">11</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#1e8449">
+    <div class="bar" style="background:#1e8449"></div>
+    <div class="tier">🔍 追踪 · Ⅴ</div>
+    <div class="ttl" style="color:#1e8449">跨学区搜捕</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">7</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">13</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">5</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#1e8449">
+    <div class="bar" style="background:#1e8449"></div>
+    <div class="tier">🔍 追踪 · Ⅵ</div>
+    <div class="ttl" style="color:#1e8449">逆向定位</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">8</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">15</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">6</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#b9770e">
+    <div class="bar" style="background:#b9770e"></div>
+    <div class="tier">💥 爆破 · Ⅰ</div>
+    <div class="ttl" style="color:#b9770e">废弃楼层</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">3</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">7</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">2</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#b9770e">
+    <div class="bar" style="background:#b9770e"></div>
+    <div class="tier">💥 爆破 · Ⅱ</div>
+    <div class="ttl" style="color:#b9770e">车辆处理</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">4</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">8</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">3</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#b9770e">
+    <div class="bar" style="background:#b9770e"></div>
+    <div class="tier">💥 爆破 · Ⅲ</div>
+    <div class="ttl" style="color:#b9770e">仓库陷落</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">5</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">10</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#b9770e">
+    <div class="bar" style="background:#b9770e"></div>
+    <div class="tier">💥 爆破 · Ⅳ</div>
+    <div class="ttl" style="color:#b9770e">定时装置</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">6</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">11</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#b9770e">
+    <div class="bar" style="background:#b9770e"></div>
+    <div class="tier">💥 爆破 · Ⅴ</div>
+    <div class="ttl" style="color:#b9770e">地下管道</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">7</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">13</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">5</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#b9770e">
+    <div class="bar" style="background:#b9770e"></div>
+    <div class="tier">💥 爆破 · Ⅵ</div>
+    <div class="ttl" style="color:#b9770e">证据销毁</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">8</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">15</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">6</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#6c3483">
+    <div class="bar" style="background:#6c3483"></div>
+    <div class="tier">🎭 潜入 · Ⅰ</div>
+    <div class="ttl" style="color:#6c3483">资料室</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">3</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">7</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">2</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#6c3483">
+    <div class="bar" style="background:#6c3483"></div>
+    <div class="tier">🎭 潜入 · Ⅱ</div>
+    <div class="ttl" style="color:#6c3483">学园数据库</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">4</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">8</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">3</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#6c3483">
+    <div class="bar" style="background:#6c3483"></div>
+    <div class="tier">🎭 潜入 · Ⅲ</div>
+    <div class="ttl" style="color:#6c3483">理事长室</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">5</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">10</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#6c3483">
+    <div class="bar" style="background:#6c3483"></div>
+    <div class="tier">🎭 潜入 · Ⅳ</div>
+    <div class="ttl" style="color:#6c3483">夜间校区</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">6</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">11</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">4</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#6c3483">
+    <div class="bar" style="background:#6c3483"></div>
+    <div class="tier">🎭 潜入 · Ⅴ</div>
+    <div class="ttl" style="color:#6c3483">身份置换</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">7</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">13</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">5</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+  <div class="job" style="border-color:#6c3483">
+    <div class="bar" style="background:#6c3483"></div>
+    <div class="tier">🎭 潜入 · Ⅵ</div>
+    <div class="ttl" style="color:#6c3483">暗部会议</div>
+    <div class="row"><span>⚔️ 难度 D</span><span class="big">8</span></div>
+    <div class="row"><span>💴 报酬 R</span><span class="big">15</span></div>
+    <div class="row"><span>🔥 热度 H</span><span class="big">6</span></div>
+    <div class="foot">报酬平分↓ · 热度平摊↑</div>
+  </div>
+</div>
+
+<h2>③ 角色卡（5 张 · 每人 1 张）</h2>
+<div class="grid">
+  <div class="role" style="border-color:#c0392b">
+    <div class="head" style="background:#c0392b">
+      <div class="nm">🔫 麦野沉利</div>
+      <div class="en">MUGINO SHIZURI</div>
+      <div class="lv">Level 5 · 第四位</div>
+    </div>
+    <div class="st">
+      <div><b>4</b><span>基础战力</span></div>
+      <div><b>🔫</b><span>擅长 · 歼灭</span></div>
+      <div><b>+2</b><span>擅长加成</span></div>
+    </div>
+    <div class="pas"><b>【过载】</b> 独做成功时报酬 <b>+2</b> 分；<br>每次出勤额外 <b>+1</b> 枚热标记。</div>
+    <div class="tip">体力上限 6 · 起始 3</div>
+  </div>
+  <div class="role" style="border-color:#2471a3">
+    <div class="head" style="background:#2471a3">
+      <div class="nm">🛡 绢旗最爱</div>
+      <div class="en">KINUHATA SAIAI</div>
+      <div class="lv">Level 4 · 大能力者</div>
+    </div>
+    <div class="st">
+      <div><b>3</b><span>基础战力</span></div>
+      <div><b>🛡</b><span>擅长 · 护卫</span></div>
+      <div><b>+2</b><span>擅长加成</span></div>
+    </div>
+    <div class="pas"><b>【氮气装甲】</b> 每夜结束时清除自己 <b>2</b> 枚热标记；<br>清扫结算时若自己不是靶子 <b>+2</b> 分。</div>
+    <div class="tip">体力上限 6 · 起始 3</div>
+  </div>
+  <div class="role" style="border-color:#1e8449">
+    <div class="head" style="background:#1e8449">
+      <div class="nm">🔍 泷壶理后</div>
+      <div class="en">TAKITSUBO RIKOU</div>
+      <div class="lv">Level 4 · 大能力者</div>
+    </div>
+    <div class="st">
+      <div><b>3</b><span>基础战力</span></div>
+      <div><b>🔍</b><span>擅长 · 追踪</span></div>
+      <div><b>+2</b><span>擅长加成</span></div>
+    </div>
+    <div class="pas"><b>【AIM 预读】</b> 参与的委托难度 <b>−2</b>；<br>共同作业成功 <b>+3</b> 分。</div>
+    <div class="tip">体力上限 6 · 起始 3</div>
+  </div>
+  <div class="role" style="border-color:#b9770e">
+    <div class="head" style="background:#b9770e">
+      <div class="nm">💥 芙兰达·塞维伦</div>
+      <div class="en">FRENDA SEIVELUN</div>
+      <div class="lv">Level 4 · 大能力者</div>
+    </div>
+    <div class="st">
+      <div><b>3</b><span>基础战力</span></div>
+      <div><b>💥</b><span>擅长 · 爆破</span></div>
+      <div><b>+2</b><span>擅长加成</span></div>
+    </div>
+    <div class="pas"><b>【善后】</b> 成功时报酬 <b>+1</b> 分；<br>失败不额外导热，且仍拿半额报酬。</div>
+    <div class="tip">体力上限 6 · 起始 3</div>
+  </div>
+  <div class="role" style="border-color:#6c3483">
+    <div class="head" style="background:#6c3483">
+      <div class="nm">🎭 华野超美</div>
+      <div class="en">HANANO</div>
+      <div class="lv">暗部管理层 · 第五人</div>
+    </div>
+    <div class="st">
+      <div><b>3</b><span>基础战力</span></div>
+      <div><b>🎭</b><span>擅长 · 潜入</span></div>
+      <div><b>+2</b><span>擅长加成</span></div>
+    </div>
+    <div class="pas"><b>【变装】</b> 清扫判定时自己的标记数按 <b>−3</b> 计算；<br>共同作业成功 <b>+4</b> 分。</div>
+    <div class="tip">体力上限 6 · 起始 3</div>
+  </div>
+</div>
+
+<h2>④ 装备卡（24 张 · 公共牌堆）</h2>
+<div class="sub">开局每人发 3 张，每夜结束补 1 张，手牌上限 4 张。每夜<strong>最多打出 1 张</strong>，与本夜出勤同时面朝下打出。</div>
+<div class="grid">
+  <div class="mod" style="border-color:#1f618d">
+    <div class="ic">🧪</div>
+    <div class="nm" style="color:#1f618d">氮气钢瓶</div>
+    <div class="d">本次任务战力 <b>+2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1f618d">
+    <div class="ic">🧪</div>
+    <div class="nm" style="color:#1f618d">氮气钢瓶</div>
+    <div class="d">本次任务战力 <b>+2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1f618d">
+    <div class="ic">🧪</div>
+    <div class="nm" style="color:#1f618d">氮气钢瓶</div>
+    <div class="d">本次任务战力 <b>+2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1f618d">
+    <div class="ic">🧪</div>
+    <div class="nm" style="color:#1f618d">氮气钢瓶</div>
+    <div class="d">本次任务战力 <b>+2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1f618d">
+    <div class="ic">🧪</div>
+    <div class="nm" style="color:#1f618d">氮气钢瓶</div>
+    <div class="d">本次任务战力 <b>+2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1f618d">
+    <div class="ic">🧪</div>
+    <div class="nm" style="color:#1f618d">氮气钢瓶</div>
+    <div class="d">本次任务战力 <b>+2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#566573">
+    <div class="ic">🔇</div>
+    <div class="nm" style="color:#566573">消音器</div>
+    <div class="d">本次任务热度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#566573">
+    <div class="ic">🔇</div>
+    <div class="nm" style="color:#566573">消音器</div>
+    <div class="d">本次任务热度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#566573">
+    <div class="ic">🔇</div>
+    <div class="nm" style="color:#566573">消音器</div>
+    <div class="d">本次任务热度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#566573">
+    <div class="ic">🔇</div>
+    <div class="nm" style="color:#566573">消音器</div>
+    <div class="d">本次任务热度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#566573">
+    <div class="ic">🔇</div>
+    <div class="nm" style="color:#566573">消音器</div>
+    <div class="d">本次任务热度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#7d3c98">
+    <div class="ic">🪪</div>
+    <div class="nm" style="color:#7d3c98">假身份</div>
+    <div class="d">本次任务报酬 <b>+3</b> 分</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#7d3c98">
+    <div class="ic">🪪</div>
+    <div class="nm" style="color:#7d3c98">假身份</div>
+    <div class="d">本次任务报酬 <b>+3</b> 分</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#7d3c98">
+    <div class="ic">🪪</div>
+    <div class="nm" style="color:#7d3c98">假身份</div>
+    <div class="d">本次任务报酬 <b>+3</b> 分</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#7d3c98">
+    <div class="ic">🪪</div>
+    <div class="nm" style="color:#7d3c98">假身份</div>
+    <div class="d">本次任务报酬 <b>+3</b> 分</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#7d3c98">
+    <div class="ic">🪪</div>
+    <div class="nm" style="color:#7d3c98">假身份</div>
+    <div class="d">本次任务报酬 <b>+3</b> 分</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#b9770e">
+    <div class="ic">🎯</div>
+    <div class="nm" style="color:#b9770e">诱导弹</div>
+    <div class="d">本次任务难度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#b9770e">
+    <div class="ic">🎯</div>
+    <div class="nm" style="color:#b9770e">诱导弹</div>
+    <div class="d">本次任务难度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#b9770e">
+    <div class="ic">🎯</div>
+    <div class="nm" style="color:#b9770e">诱导弹</div>
+    <div class="d">本次任务难度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#b9770e">
+    <div class="ic">🎯</div>
+    <div class="nm" style="color:#b9770e">诱导弹</div>
+    <div class="d">本次任务难度 <b>−2</b></div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1e8449">
+    <div class="ic">🩹</div>
+    <div class="nm" style="color:#1e8449">医疗包</div>
+    <div class="d">立即恢复 <b>2</b> 点体力</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1e8449">
+    <div class="ic">🩹</div>
+    <div class="nm" style="color:#1e8449">医疗包</div>
+    <div class="d">立即恢复 <b>2</b> 点体力</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1e8449">
+    <div class="ic">🩹</div>
+    <div class="nm" style="color:#1e8449">医疗包</div>
+    <div class="d">立即恢复 <b>2</b> 点体力</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+  <div class="mod" style="border-color:#1e8449">
+    <div class="ic">🩹</div>
+    <div class="nm" style="color:#1e8449">医疗包</div>
+    <div class="d">立即恢复 <b>2</b> 点体力</div>
+    <div class="tag">MOD · 每夜限 1 张</div>
+  </div>
+</div>
+
+<h2>⑤ 玩家板（5 块）</h2>
+<div class="grid">
+  <div class="pb" style="border-color:#c0392b">
+    <h4 style="color:#c0392b">🔫 麦野沉利</h4>
+    <div class="rowl">体力（起始 3 / 上限 6）</div>
+    <div class="pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">羁绊（上限 3 · 终局每点 2 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">总分 __________ ｜ 轨道上我的标记 ______</div>
+  </div>
+  <div class="pb" style="border-color:#2471a3">
+    <h4 style="color:#2471a3">🛡 绢旗最爱</h4>
+    <div class="rowl">体力（起始 3 / 上限 6）</div>
+    <div class="pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">羁绊（上限 3 · 终局每点 2 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">总分 __________ ｜ 轨道上我的标记 ______</div>
+  </div>
+  <div class="pb" style="border-color:#1e8449">
+    <h4 style="color:#1e8449">🔍 泷壶理后</h4>
+    <div class="rowl">体力（起始 3 / 上限 6）</div>
+    <div class="pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">羁绊（上限 3 · 终局每点 2 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">总分 __________ ｜ 轨道上我的标记 ______</div>
+  </div>
+  <div class="pb" style="border-color:#b9770e">
+    <h4 style="color:#b9770e">💥 芙兰达·塞维伦</h4>
+    <div class="rowl">体力（起始 3 / 上限 6）</div>
+    <div class="pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">羁绊（上限 3 · 终局每点 2 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">总分 __________ ｜ 轨道上我的标记 ______</div>
+  </div>
+  <div class="pb" style="border-color:#6c3483">
+    <h4 style="color:#6c3483">🎭 华野超美</h4>
+    <div class="rowl">体力（起始 3 / 上限 6）</div>
+    <div class="pips"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">羁绊（上限 3 · 终局每点 2 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl">总分 __________ ｜ 轨道上我的标记 ______</div>
+  </div>
+</div>
+
+<h2>⑥ 热标记 / 羁绊标记（每种颜色剪 20 枚）</h2>
+<div class="sub">热标记放在公共轨道上，谁倒了多少一眼可见 —— 这是本作最重要的<strong>物理锚点</strong>。</div>
+<div class="marks">
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#c0392b;color:#fff">🔫</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#2471a3;color:#fff">🛡</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#1e8449;color:#fff">🔍</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#b9770e;color:#fff">💥</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk" style="background:#6c3483;color:#fff">🎭</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+  <div class="mk grey">◇</div>
+</div>
+
+<h2>⑦ 一页速查</h2>
+<div class="quick">
+  <b>每夜流程（6 夜）</b>
+  <ol>
+    <li><b>派单</b>：翻开 <b>P</b> 张委托（P = 玩家人数），公开排开</li>
+    <li><b>出勤</b>：所有人<strong>同时、秘密</strong>决定「接哪一张」或「🏠 休整」，并可选面朝下打出 1 张装备卡 + 声明投入几点体力，同时揭示</li>
+    <li><b>结算</b>：逐张结算委托（无人 → 外流；有人 → 先判战力，再发报酬、放热度）</li>
+    <li><b>清扫</b>：轨道 ≥ 清扫线 → 标记最多者扣分（6 / 10 / 14 / 18 递增），然后清空轨道</li>
+    <li><b>白天</b>：休整者清 3 枚热 + 体力 +3 + <b>+3 日常分</b>；出勤者体力 +1；补 1 张装备</li>
+  </ol>
+  <table>
+    <tr><th>项目</th><th>规则</th></tr>
+    <tr><td>战力</td><td>角色战力 + 擅长 2 + 装备 + 投入体力（1 点体力 = 1 战力）</td></tr>
+    <tr><td>成功</td><td>战力 ≥ 难度；报酬在<strong>成功者</strong>间平分向下取整，余数给战力最高者</td></tr>
+    <tr><td>失败</td><td>无报酬，且额外 +2 枚热标记（芙兰达除外）</td></tr>
+    <tr><td>热度</td><td>委托 H 在<strong>所有参与者</strong>间平摊，向上取整</td></tr>
+    <tr><td>外流</td><td>无人接的委托：全员各 −1 分，轨道 +1 枚灰色标记</td></tr>
+    <tr><td>清扫线</td><td>8 + 5 × 玩家数（2人18 / 3人23 / 4人28 / 5人33）</td></tr>
+    <tr><td>清扫扣分</td><td>第 k 次清扫：<b>6 + 4 × (k−1)</b>；并列最多则并列者都扣</td></tr>
+    <tr><td>羁绊</td><td>共同作业成功各 +1（上限 3），终局每点 2 分</td></tr>
+  </table>
+</div>
+
+<footer>暗部共栖：学园都市夜班 · 打印道具 ｜ 与 README.md 配套使用 ｜ 建议打印 1 套即可开局</footer>
+
+</body>
+</html>
