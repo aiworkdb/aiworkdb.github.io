@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>子夜送亲 · 打印道具</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f7f2e9; color: #2b2118; margin: 0; padding: 24px;
+  }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: 1px; color: #7f1d1d; }
+  h2 {
+    font-size: 19px; margin: 34px 0 12px; padding: 8px 12px;
+    border-left: 5px solid #9b1c1c; background: #f9e8e8; border-radius: 4px; color: #7f1d1d;
+  }
+  .sub { color: #6b5d4f; font-size: 13px; margin-bottom: 18px; }
+  .sub a { color: #9b1c1c; }
+  .print-hint {
+    background: #fff8e1; border: 1px solid #f0c36d; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px; font-size: 14px; line-height: 1.9;
+  }
+  .print-hint strong { color: #b26a00; }
+  .print-hint ul { margin: 6px 0 0 18px; padding: 0; }
+  .grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .setlabel { width: 100%; font-size: 13px; color: #7f1d1d; margin: 14px 0 8px; font-weight: 700; }
+  .setlabel.sub2 { color: #6b5d4f; font-weight: 400; margin: 10px 0 6px; }
+
+  /* ---- 轿路地图 ---- */
+  .board { background: #fffdf6; border: 3px solid #9b1c1c; border-radius: 12px; padding: 16px; margin-bottom: 14px; page-break-inside: avoid; }
+  .brow { display: flex; align-items: stretch; gap: 4px; flex-wrap: nowrap; overflow-x: auto; }
+  .st { flex: 1; min-width: 108px; border: 2px solid #c9b699; border-radius: 8px; padding: 8px 6px; font-size: 11px; background: #fff; text-align: center; }
+  .st.start { border-color: #b98a2f; background: #fdf6e3; }
+  .st.goal { border-color: #9b1c1c; background: #f9e8e8; }
+  .st .sic { font-size: 22px; }
+  .st .snm { font-size: 13px; font-weight: 800; color: #7f1d1d; margin: 2px 0; }
+  .st .sseg { font-size: 10px; color: #b98a2f; font-weight: 700; }
+  .st .sfx { font-size: 10px; color: #5d4f3f; line-height: 1.5; margin: 4px 0; min-height: 44px; }
+  .wslot { border-top: 1px dashed #c9b699; padding-top: 4px; font-size: 9px; color: #6b5d4f; }
+  .wbox { display: inline-block; width: 10px; height: 10px; border: 1px solid #8d99ae; border-radius: 2px; background: #e9edf2; margin: 0 1px; vertical-align: middle; }
+  .arr { align-self: center; color: #9b1c1c; font-size: 14px; }
+  .clock { margin-top: 12px; border-top: 2px dashed #c9b699; padding-top: 10px; }
+  .clabel { font-size: 12px; font-weight: 700; color: #7f1d1d; margin-bottom: 6px; }
+  .crow { display: flex; gap: 4px; flex-wrap: wrap; }
+  .ccell { border: 1px solid #c9b699; border-radius: 6px; background: #fff; padding: 4px 8px; font-size: 11px; font-weight: 700; color: #7f1d1d; }
+  .ccell span { display: block; font-size: 9px; color: #6b5d4f; font-weight: 400; }
+  .ccell.last { background: #f9e8e8; border-color: #9b1c1c; }
+  .ccell.early { background: #eef4fb; border-color: #2c5f8a; color: #2c5f8a; }
+  .tracks { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .trk { flex: 1; min-width: 220px; border: 1px solid #c9b699; border-radius: 8px; background: #fff; padding: 8px 10px; font-size: 11px; color: #5d4f3f; }
+  .trk b { color: #7f1d1d; }
+  .pips { display: flex; gap: 3px; margin-top: 6px; flex-wrap: wrap; }
+  .pip { width: 18px; height: 18px; border: 1px solid #8d99ae; border-radius: 4px; background: #eef1f5; font-size: 9px; display: flex; align-items: center; justify-content: center; color: #52606d; }
+  .pip.hi { background: #f9e8e8; border-color: #9b1c1c; color: #9b1c1c; }
+  .pip.pn { background: #fdecea; border-color: #c0392b; }
+  .pip.st { background: #fdf6e3; border-color: #b98a2f; }
+  .sptable { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 12px; }
+  .sptable td, .sptable th { border: 1px solid #c9b699; padding: 4px 10px; }
+  .sptable th { background: #f9e8e8; color: #7f1d1d; text-align: left; }
+
+  /* ---- 角色板 ---- */
+  .role { width: 216px; min-height: 300px; border-radius: 12px; padding: 12px; background: #fffdf6; border: 3px solid #9b1c1c; box-shadow: 0 2px 6px rgba(0,0,0,.12); display: flex; flex-direction: column; page-break-inside: avoid; }
+  .role .head { border-radius: 8px; color: #fff; padding: 8px 10px; margin: -4px -4px 10px; background: linear-gradient(135deg, #9b1c1c, #7f1d1d); }
+  .role .nm { font-size: 17px; font-weight: 800; }
+  .role .en { font-size: 9px; opacity: .85; letter-spacing: 1px; }
+  .role .pas { background: #fdf6e3; border-left: 4px solid #b98a2f; padding: 7px 8px; border-radius: 4px; font-size: 11px; line-height: 1.7; margin-bottom: 6px; }
+  .role .pas b { color: #8a6420; }
+  .role .sk { background: #f9e8e8; border-left: 4px solid #9b1c1c; padding: 6px 8px; border-radius: 4px; font-size: 11px; line-height: 1.6; margin-bottom: 6px; }
+  .role .sk b { color: #7f1d1d; }
+  .role .deck { font-size: 10px; color: #6b5d4f; border-top: 1px dashed #c9b699; padding-top: 6px; }
+  .role .rtip { margin-top: auto; font-size: 10px; color: #6b5d4f; text-align: center; padding-top: 4px; }
+
+  /* ---- 卡牌 ---- */
+  .card { width: 152px; min-height: 208px; border-radius: 10px; padding: 10px; background: #fffdf6; border: 2px solid #2b2118; position: relative; box-shadow: 0 1px 4px rgba(0,0,0,.14); display: flex; flex-direction: column; page-break-inside: avoid; }
+  .card.labor { border-color: #2f6b3a; }
+  .card.guard { border-color: #2c5f8a; }
+  .card.skill { border-color: #b98a2f; background: #fffaf0; }
+  .card.relic { border-color: #7f1d1d; background: #fdf3f0; }
+  .card.evil { border-color: #5b2c6f; background: #f6f0fa; }
+  .card.event { border-color: #4a5568; background: #f4f6f8; }
+  .card.event.five { border-color: #c0392b; background: #fdecea; }
+  .card .ctop { display: flex; justify-content: space-between; align-items: center; }
+  .card .cic { font-size: 26px; }
+  .card .cpower { font-size: 10px; background: #5b2c6f; color: #fff; border-radius: 8px; padding: 2px 7px; }
+  .card .cnm { font-size: 14px; font-weight: 800; margin: 4px 0 2px; color: #2b2118; }
+  .card .crole { font-size: 10px; color: #7f1d1d; font-weight: 700; margin-bottom: 4px; }
+  .card .cfx { font-size: 10.5px; line-height: 1.65; color: #4a3f33; border-top: 1px dashed #c9b699; padding-top: 6px; }
+  .card .foot { margin-top: auto; font-size: 9px; color: #a3907a; text-align: center; padding-top: 4px; }
+
+  /* ---- 棋子 / 标记 ---- */
+  .piece { width: 72px; height: 72px; border-radius: 50%; border: 2px solid rgba(0,0,0,.2); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 22px; box-shadow: inset 0 -3px 6px rgba(0,0,0,.12); color: #fff; font-weight: 700; }
+  .piece .pnm { font-size: 9px; color: #fff; margin-top: 2px; }
+  .piece.sedan { background: #9b1c1c; }
+  .piece.bride { background: #c0392b; }
+  .piece.doll { background: #b98a2f; }
+  .piece.wm { background: #6b7f95; }
+  .piece.stm { background: #8a6420; }
+  .piece.pnmk { background: #d98880; }
+
+  /* ---- 速查 ---- */
+  .quick { background: #fffdf6; border: 2px solid #9b1c1c; border-radius: 10px; padding: 14px 18px; font-size: 12.5px; line-height: 1.9; page-break-inside: avoid; }
+  .quick ol { margin: 4px 0 0 20px; padding: 0; }
+  .quick table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12px; }
+  .quick td, .quick th { border: 1px solid #c9b699; padding: 5px 8px; text-align: left; }
+  .quick th { background: #f9e8e8; color: #7f1d1d; width: 70px; }
+  footer { margin-top: 40px; font-size: 12px; color: #a3907a; text-align: center; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { padding: 0; background: #fff; }
+    h2 { margin: 18px 0 10px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🏮 子夜送亲（Midnight Ghost Wedding）· 打印道具</h1>
+<div class="sub">合作类桌游 · 2-5 人 · 60-75 分钟 · 与 <a href="README.md">README.md 规则说明</a> 配套使用 · 全套约 104 件</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则卡牌颜色不会显示</li>
+    <li>卡牌（分工牌 / 法器牌 / 邪祟牌 / 事件牌 / 角色板）建议使用<strong>卡纸</strong>打印</li>
+    <li>轿路地图用普通 A4 纸即可；棋子与阴风标记建议卡纸 + 塑封</li>
+    <li>赤凶天降 ×2 仅 5 人局使用；2-3 人局子时钟用前 9 格</li>
+  </ul>
+</div>
+
+<h2>🗺️ 轿路地图（主棋盘）</h2>
+<div class="board"><div class="brow"><div class="st start ">
+    <div class="sic">🏮</div><div class="snm">喜堂</div><div class="sseg">起点</div>
+    <div class="sfx">轿由此出发；事件照常结算</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div><div class="arr">▶</div><div class="st  ">
+    <div class="sic">🌳</div><div class="snm">鬼槐林</div><div class="sseg">第1段</div>
+    <div class="sfx">聚阴：轿在此每回合夜深化额外 +1</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div><div class="arr">▶</div><div class="st  ">
+    <div class="sic">🚩</div><div class="snm">三岔口</div><div class="sseg">第2段</div>
+    <div class="sfx">抵达时选路：官道（正常需求）/ 小路（1 工，离开时翻 1 张事件）</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div><div class="arr">▶</div><div class="st  ">
+    <div class="sic">🌉</div><div class="snm">奈何桥</div><div class="sseg">第3段</div>
+    <div class="sfx">离桥时该段阴风 ≥2：桥坠（惊惶+1、阴风+1），糯米可免</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div><div class="arr">▶</div><div class="st  ">
+    <div class="sic">🪦</div><div class="snm">乱葬岗</div><div class="sseg">第4段</div>
+    <div class="sfx">厄运翻倍：在此段翻事件翻 2 张选 1 张</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div><div class="arr">▶</div><div class="st  ">
+    <div class="sic">⛩️</div><div class="snm">土地庙</div><div class="sseg">第5段</div>
+    <div class="sfx">首次到达：惊惶 −1，全队抽 2 张法器</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div><div class="arr">▶</div><div class="st  ">
+    <div class="sic">👻</div><div class="snm">回魂路</div><div class="sseg">第6段</div>
+    <div class="sfx">至阴时刻：轿在此每回合夜深化 +2</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div><div class="arr">▶</div><div class="st  goal">
+    <div class="sic">🏚️</div><div class="snm">义庄</div><div class="sseg">第7段</div>
+    <div class="sfx">拜堂终点：抵达后下一回合拜堂（香火 ≥3，2人局 ≥2）</div>
+    <div class="wslot">阴风 <span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span><span class="wbox"></span></div>
+  </div></div><div class="clock"><div class="clabel">🕰️ 子时钟（2-3 人局从第 1 格「酉时末」起程共 10 格 ｜ 4-5 人局从第 2 格「戌时」起程共 9 格）</div><div class="crow"><div class="ccell early ">1<span>酉时末(2-3人)</span></div><div class="ccell  ">2<span>戌时·初更</span></div><div class="ccell  ">3<span>戌时·二更</span></div><div class="ccell  ">4<span>亥时·三更</span></div><div class="ccell  ">5<span>亥时·四更</span></div><div class="ccell  ">6<span>子夜·五更</span></div><div class="ccell  ">7<span>子夜·六更</span></div><div class="ccell  ">8<span>子夜·七更</span></div><div class="ccell  ">9<span>子夜·八更</span></div><div class="ccell  last">10<span>子时·拜堂</span></div></div></div><div class="tracks">
+  <div class="trk"><b>🌫️ 鬼门值</b>（各段阴风总和）门槛：2人 14 ｜ 3人 12 ｜ 4人 10 ｜ 5人 8
+    <div class="pips"><span class="pip ">1</span><span class="pip ">2</span><span class="pip ">3</span><span class="pip ">4</span><span class="pip ">5</span><span class="pip ">6</span><span class="pip ">7</span><span class="pip ">8</span><span class="pip hi">9</span><span class="pip hi">10</span><span class="pip hi">11</span><span class="pip hi">12</span><span class="pip hi">13</span><span class="pip hi">14</span><span class="pip hi">15</span></div></div>
+  <div class="trk"><b>😰 新娘惊惶</b>（0-6，满 6 魂散全队失败）
+    <div class="pips"><span class="pip pn">❤️</span><span class="pip pn">❤️</span><span class="pip pn">❤️</span><span class="pip pn">❤️</span><span class="pip pn">❤️</span><span class="pip pn">❤️</span></div></div>
+  <div class="trk"><b>🦶 脚力</b>（超出需求的抬轿工可存，上限 2，下回合抵工）
+    <div class="pips"><span class="pip st">0</span><span class="pip st">1</span><span class="pip st">2</span></div></div>
+</div></div>
+<h3 style="font-size:14px;color:#7f1d1d;margin:14px 0 6px;">地形刷怪表（事件「邪祟现身」按当前段召唤）</h3>
+<table class="sptable"><tr><th>当前段</th><th>召唤邪祟</th></tr><tr><td>喜堂</td><td>路煞</td></tr><tr><td>鬼槐林</td><td>画皮</td></tr><tr><td>三岔口</td><td>路煞</td></tr><tr><td>奈何桥</td><td>水鬼</td></tr><tr><td>乱葬岗</td><td>缢鬼</td></tr><tr><td>土地庙</td><td>色鬼</td></tr><tr><td>回魂路</td><td>山魈</td></tr></table>
+
+<h2>🎭 角色板与分工牌</h2>
+<div class="setlabel">角色板 ×5（每人选 1 个，2-3 人局可双角色）</div><div class="grid"><div class="role">
+    <div class="head"><div class="nm">🧙 阴阳先生</div><div class="en">TAOIST PRIEST</div></div>
+    <div class="pas"><b>被动</b>｜护法 = 2 点（驱阴风或削邪祟强度翻倍）</div>
+    <div class="sk"><b>特技① 敕令</b><br>查看事件堆顶 1 张，可放回顶或沉底</div>
+    <div class="sk"><b>特技② 踏罡</b><br>本回合全队每张护法牌多驱 1 点</div>
+    <div class="deck">牌堆构成：💪抬轿 ×4 ｜ 📜护法 ×2 ｜ ✨特技 ×2</div>
+    <div class="rtip">手牌上限 4（纸扎匠 5）</div>
+  </div><div class="role">
+    <div class="head"><div class="nm">🎺 唢呐匠</div><div class="en">SUONA PLAYER</div></div>
+    <div class="pas"><b>被动</b>｜抬轿牌可「吹奏」：本牌 +1 工，当前段阴风 +1</div>
+    <div class="sk"><b>特技① 开路调</b><br>当前段阴风为 0 时，立即前进 1 段</div>
+    <div class="sk"><b>特技② 安魂曲</b><br>新娘惊惶 −2</div>
+    <div class="deck">牌堆构成：💪抬轿 ×4 ｜ 📜护法 ×2 ｜ ✨特技 ×2</div>
+    <div class="rtip">手牌上限 4（纸扎匠 5）</div>
+  </div><div class="role">
+    <div class="head"><div class="nm">🧸 纸扎匠</div><div class="en">PAPER ARTISAN</div></div>
+    <div class="pas"><b>被动</b>｜手牌上限 5；护法牌可改「看护」：惊惶 −1</div>
+    <div class="sk"><b>特技① 扎纸人</b><br>获得纸人替身：抵挡下一次惊惶增加</div>
+    <div class="sk"><b>特技② 塑金身</b><br>拜堂回合香火 +2</div>
+    <div class="deck">牌堆构成：💪抬轿 ×4 ｜ 📜护法 ×2 ｜ ✨特技 ×2</div>
+    <div class="rtip">手牌上限 4（纸扎匠 5）</div>
+  </div><div class="role">
+    <div class="head"><div class="nm">🕐 更夫</div><div class="en">NIGHT WATCH</div></div>
+    <div class="pas"><b>被动</b>｜巡夜强化：特技「巡夜」抽 2 张法器</div>
+    <div class="sk"><b>特技① 打更</b><br>查看事件堆顶 2 张，留 1 张在顶、另 1 张沉底</div>
+    <div class="sk"><b>特技② 巡夜</b><br>从中央法器堆抽 2 张入手</div>
+    <div class="deck">牌堆构成：💪抬轿 ×4 ｜ 📜护法 ×2 ｜ ✨特技 ×2</div>
+    <div class="rtip">手牌上限 4（纸扎匠 5）</div>
+  </div><div class="role">
+    <div class="head"><div class="nm">💪 轿夫头</div><div class="en">SEDAN CAPTAIN</div></div>
+    <div class="pas"><b>被动</b>｜齐抬：当回合有他人同时抬轿时，你的抬轿牌算 2 工</div>
+    <div class="sk"><b>特技① 血轿</b><br>立即前进 1 段，新到达段阴风 +2</div>
+    <div class="sk"><b>特技② 托轿</b><br>立即获得 2 点脚力</div>
+    <div class="deck">牌堆构成：💪抬轿 ×4 ｜ 📜护法 ×2 ｜ ✨特技 ×2</div>
+    <div class="rtip">手牌上限 4（纸扎匠 5）</div>
+  </div></div><div class="setlabel">分工牌 40 张（5 角色 × 8：抬轿×4 / 护法×2 / 特技×2）</div><div class="setlabel sub2">🧙 阴阳先生 套（8 张）</div><div class="grid"><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·敕令</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">查看事件堆顶 1 张，可放回顶或沉底</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·踏罡</div><div class="crole">🧙 阴阳先生</div>
+    <div class="cfx">本回合全队每张护法牌多驱 1 点</div>
+  </div></div><div class="setlabel sub2">🎺 唢呐匠 套（8 张）</div><div class="grid"><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·开路调</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">当前段阴风为 0 时，立即前进 1 段</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·安魂曲</div><div class="crole">🎺 唢呐匠</div>
+    <div class="cfx">新娘惊惶 −2</div>
+  </div></div><div class="setlabel sub2">🧸 纸扎匠 套（8 张）</div><div class="grid"><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·扎纸人</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">获得纸人替身：抵挡下一次惊惶增加</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·塑金身</div><div class="crole">🧸 纸扎匠</div>
+    <div class="cfx">拜堂回合香火 +2</div>
+  </div></div><div class="setlabel sub2">🕐 更夫 套（8 张）</div><div class="grid"><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·打更</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">查看事件堆顶 2 张，留 1 张在顶、另 1 张沉底</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·巡夜</div><div class="crole">🕐 更夫</div>
+    <div class="cfx">从中央法器堆抽 2 张入手</div>
+  </div></div><div class="setlabel sub2">💪 轿夫头 套（8 张）</div><div class="grid"><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card labor">
+    <div class="ctop"><span class="cic">💪</span></div>
+    <div class="cnm">抬轿</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">提供 1 个抬轿工。工数达标，轿才能前进 1 段。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card guard">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">护法</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">驱除 1 点阴风（任选一段），或削当前段邪祟 1 点强度。</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·血轿</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">立即前进 1 段，新到达段阴风 +2</div>
+  </div><div class="card skill">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">特技·托轿</div><div class="crole">💪 轿夫头</div>
+    <div class="cfx">立即获得 2 点脚力</div>
+  </div></div><div class="setlabel">法器牌 26 张（中央公共牌堆，补牌时抽取）</div><div class="grid"><div class="card relic">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">镇魂符</div>
+    <div class="cfx">任意一段阴风 −3</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">镇魂符</div>
+    <div class="cfx">任意一段阴风 −3</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">镇魂符</div>
+    <div class="cfx">任意一段阴风 −3</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">📜</span></div>
+    <div class="cnm">镇魂符</div>
+    <div class="cfx">任意一段阴风 −3</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🐔</span></div>
+    <div class="cnm">鸡血颅</div>
+    <div class="cfx">当前段邪祟强度 −3；无邪祟则阴风 −1</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🐔</span></div>
+    <div class="cnm">鸡血颅</div>
+    <div class="cfx">当前段邪祟强度 −3；无邪祟则阴风 −1</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🐔</span></div>
+    <div class="cnm">鸡血颅</div>
+    <div class="cfx">当前段邪祟强度 −3；无邪祟则阴风 −1</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🗡️</span></div>
+    <div class="cnm">桃木剑</div>
+    <div class="cfx">直接驱散山魈；否则邪祟强度 −3</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🗡️</span></div>
+    <div class="cnm">桃木剑</div>
+    <div class="cfx">直接驱散山魈；否则邪祟强度 −3</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🗡️</span></div>
+    <div class="cnm">桃木剑</div>
+    <div class="cfx">直接驱散山魈；否则邪祟强度 −3</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🍚</span></div>
+    <div class="cnm">糯米</div>
+    <div class="cfx">本回合奈何桥不坠桥、水鬼不涨阴风</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🍚</span></div>
+    <div class="cnm">糯米</div>
+    <div class="cfx">本回合奈何桥不坠桥、水鬼不涨阴风</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🧾</span></div>
+    <div class="cnm">纸钱</div>
+    <div class="cfx">当作 1 个抬轿工（撒纸钱买路）</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🧾</span></div>
+    <div class="cnm">纸钱</div>
+    <div class="cfx">当作 1 个抬轿工（撒纸钱买路）</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🧾</span></div>
+    <div class="cnm">纸钱</div>
+    <div class="cfx">当作 1 个抬轿工（撒纸钱买路）</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🧾</span></div>
+    <div class="cnm">纸钱</div>
+    <div class="cfx">当作 1 个抬轿工（撒纸钱买路）</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🔔</span></div>
+    <div class="cnm">铜铃</div>
+    <div class="cfx">把当前段邪祟移到相邻后段</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🔔</span></div>
+    <div class="cnm">铜铃</div>
+    <div class="cfx">把当前段邪祟移到相邻后段</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🧣</span></div>
+    <div class="cnm">红绸</div>
+    <div class="cfx">新娘惊惶 −2</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🧣</span></div>
+    <div class="cnm">红绸</div>
+    <div class="cfx">新娘惊惶 −2</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🏮</span></div>
+    <div class="cnm">长明灯</div>
+    <div class="cfx">本回合夜深化不注入阴风</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🏮</span></div>
+    <div class="cnm">长明灯</div>
+    <div class="cfx">本回合夜深化不注入阴风</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🔗</span></div>
+    <div class="cnm">同心结</div>
+    <div class="cfx">仅拜堂回合打出：提供 3 点香火</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">✍️</span></div>
+    <div class="cnm">朱砂黄纸</div>
+    <div class="cfx">当作 1 个护法工，且驱 2 点</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">✍️</span></div>
+    <div class="cnm">朱砂黄纸</div>
+    <div class="cfx">当作 1 个护法工，且驱 2 点</div>
+  </div><div class="card relic">
+    <div class="ctop"><span class="cic">🚩</span></div>
+    <div class="cnm">引魂幡</div>
+    <div class="cfx">本回合抬轿需求 −2</div>
+  </div></div><div class="setlabel">邪祟牌 12 张（事件「邪祟现身」按地形召唤，每段最多 1 个）</div><div class="grid"><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 3</div><span class="cic">👹</span></div>
+    <div class="cnm">路煞</div>
+    <div class="cfx">挡路：该段抬轿需求 +2</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 3</div><span class="cic">👹</span></div>
+    <div class="cnm">路煞</div>
+    <div class="cfx">挡路：该段抬轿需求 +2</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 3</div><span class="cic">👹</span></div>
+    <div class="cnm">路煞</div>
+    <div class="cfx">挡路：该段抬轿需求 +2</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 2</div><span class="cic">🌊</span></div>
+    <div class="cnm">水鬼</div>
+    <div class="cfx">阴风：每回合所在段阴风 +1</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 2</div><span class="cic">🌊</span></div>
+    <div class="cnm">水鬼</div>
+    <div class="cfx">阴风：每回合所在段阴风 +1</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 2</div><span class="cic">🌊</span></div>
+    <div class="cnm">水鬼</div>
+    <div class="cfx">阴风：每回合所在段阴风 +1</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 4</div><span class="cic">🐒</span></div>
+    <div class="cnm">山魈</div>
+    <div class="cfx">狂躁：强度每回合 +2</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 4</div><span class="cic">🐒</span></div>
+    <div class="cnm">山魈</div>
+    <div class="cfx">狂躁：强度每回合 +2</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 2</div><span class="cic">💋</span></div>
+    <div class="cnm">色鬼</div>
+    <div class="cfx">扰魂：每回合惊惶 +1</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 2</div><span class="cic">💋</span></div>
+    <div class="cnm">色鬼</div>
+    <div class="cfx">扰魂：每回合惊惶 +1</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 4</div><span class="cic">🪢</span></div>
+    <div class="cnm">缢鬼</div>
+    <div class="cfx">索命：食亲时惊惶 +2</div>
+  </div><div class="card evil">
+    <div class="ctop"><div class="cpower">强度 3</div><span class="cic">🎭</span></div>
+    <div class="cnm">画皮</div>
+    <div class="cfx">皮厚：护法与鸡血颅/朱砂对它 −1 效果</div>
+  </div></div><div class="setlabel">事件牌 16 张（标准 14 + 赤凶天降 ×2 仅 5 人局）</div><div class="grid"><div class="card event">
+    <div class="ctop"><span class="cic">🌑</span></div>
+    <div class="cnm">鬼哭狼嚎</div>
+    <div class="cfx">当前段阴风 +2</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">🌑</span></div>
+    <div class="cnm">鬼哭狼嚎</div>
+    <div class="cfx">当前段阴风 +2</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">🌀</span></div>
+    <div class="cnm">阴风飒然</div>
+    <div class="cfx">当前段及前后相邻段各 +1</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">🌀</span></div>
+    <div class="cnm">阴风飒然</div>
+    <div class="cfx">当前段及前后相邻段各 +1</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">👤</span></div>
+    <div class="cnm">邪祟现身</div>
+    <div class="cfx">按当前段地形放 1 张对应邪祟（已有则改阴风 +2）</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">👤</span></div>
+    <div class="cnm">邪祟现身</div>
+    <div class="cfx">按当前段地形放 1 张对应邪祟（已有则改阴风 +2）</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">👤</span></div>
+    <div class="cnm">邪祟现身</div>
+    <div class="cfx">按当前段地形放 1 张对应邪祟（已有则改阴风 +2）</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">👤</span></div>
+    <div class="cnm">邪祟现身</div>
+    <div class="cfx">按当前段地形放 1 张对应邪祟（已有则改阴风 +2）</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">🌉</span></div>
+    <div class="cnm">桥索断裂</div>
+    <div class="cfx">轿在奈何桥段则阴风 +1，否则当前段 +1</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">🕯️</span></div>
+    <div class="cnm">迷魂香</div>
+    <div class="cfx">惊惶 +1</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">📦</span></div>
+    <div class="cnm">纸轿破损</div>
+    <div class="cfx">本回合抬轿需求 +1</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">⛩️</span></div>
+    <div class="cnm">土地庇佑</div>
+    <div class="cfx">全队抽 2 张法器</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">✨</span></div>
+    <div class="cnm">萤火引路</div>
+    <div class="cfx">本回合抬轿需求 −1</div>
+  </div><div class="card event">
+    <div class="ctop"><span class="cic">🙏</span></div>
+    <div class="cnm">先人庇护</div>
+    <div class="cfx">当前段阴风 −2</div>
+  </div><div class="card event five">
+    <div class="ctop"><span class="cic">🔴</span></div>
+    <div class="cnm">赤凶天降</div>
+    <div class="cfx">当前段阴风 +3（仅 5 人局洗入）</div>
+  </div><div class="card event five">
+    <div class="ctop"><span class="cic">🔴</span></div>
+    <div class="cnm">赤凶天降</div>
+    <div class="cfx">当前段阴风 +3（仅 5 人局洗入）</div>
+  </div></div>
+
+<h2>🧰 棋子与标记</h2>
+<div class="grid"><div class="piece sedan">🪷<div class="pnm">魂轿</div></div><div class="piece bride">👰<div class="pnm">纸新娘</div></div><div class="piece doll">🧸<div class="pnm">纸人替身</div></div><div class="piece wm">🌫️<div class="pnm">阴风 +1</div></div><div class="piece wm">🌫️<div class="pnm">阴风 +1</div></div><div class="piece wm">🌫️<div class="pnm">阴风 +1</div></div><div class="piece wm">🌫️<div class="pnm">阴风 +1</div></div><div class="piece wm">🌫️<div class="pnm">阴风 +1</div></div><div class="piece stm">🦶<div class="pnm">脚力 +1</div></div><div class="piece stm">🦶<div class="pnm">脚力 +1</div></div><div class="piece pnmk">😰<div class="pnm">惊惶 +1</div></div><div class="piece pnmk">😰<div class="pnm">惊惶 +1</div></div><div class="piece pnmk">😰<div class="pnm">惊惶 +1</div></div><div class="piece pnmk">😰<div class="pnm">惊惶 +1</div></div><div class="piece pnmk">😰<div class="pnm">惊惶 +1</div></div><div class="piece pnmk">😰<div class="pnm">惊惶 +1</div></div></div>
+
+<h2>📋 一页速查</h2>
+<div class="quick">
+<b>⚡ 一页速查（打印 5 份，每人一份）</b>
+<ol>
+<li><b>翻事件</b>：每回合开始翻 1 张事件牌（乱葬岗段翻 2 选 1）。</li>
+<li><b>暗出分工</b>：每人从手牌暗选 1 张扣在轿前。</li>
+<li><b>揭晓结算</b>：从阴阳先生起顺时针结算（抬轿累计工 / 护法驱阴风压邪祟 / 特技法器按牌面）。</li>
+<li><b>推进</b>：工 ≥ 当前段需求 ⇒ 前进 1 段（一轿一程，每回合最多 1 段）；超出存脚力（上限 2）。</li>
+<li><b>夜深化</b>：当前段阴风 +1（回魂路 +2 / 鬼槐林额外 +1 / 长明灯免）。</li>
+<li><b>邪祟作乱</b>：轿不在场则强度 +1（山魈永远 +1）；水鬼涨阴风；色鬼涨惊惶；强度 ≥5 食亲（惊惶 +1，缢鬼 +2，强度回 3）。</li>
+<li><b>补牌</b>：每人抽 1 张（个人牌堆空洗弃牌堆 / 抽中央法器堆）。</li>
+</ol>
+<table>
+<tr><th>段需求</th><td>2 工（2 人局 1 工）＋ 邪祟在场 +2 ＋ 破损 +1 − 萤火 −1 − 引魂幡 −2；三岔口小路 = 1 工（邪祟惩罚照算）</td></tr>
+<tr><th>鬼门值</th><td>各段阴风总和 ≥ 14/12/10/8（2/3/4/5 人）⇒ 失败</td></tr>
+<tr><th>惊惶</th><td>≥ 6 ⇒ 失败；降压：红绸/安魂曲/看护/替身/土地庙</td></tr>
+<tr><th>拜堂</th><td>抵义庄后下回合：每人出 1 张牌，香火 ≥ 3（2 人局 2）；法器 2 点、同心结 3 点、塑金身 +2</td></tr>
+<tr><th>齐抬</th><td>轿夫头的抬轿牌在他人同回合抬轿时算 2 工</td></tr>
+<tr><th>吹奏</th><td>唢呐匠抬轿牌可 +1 工 ⇔ 当前段阴风 +1</td></tr>
+</table>
+</div>
+
+<footer>子夜送亲 · Midnight Ghost Wedding ｜ 打印道具与 <a href="README.md">README.md</a> 配套 ｜ 建议卡纸打印并塑封</footer>
+
+</body>
+</html>
