@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>罗小黑：开学补课大作战 · 打印道具</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f4f6f8; color: #1f2933; margin: 0; padding: 24px;
+  }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: 1px; }
+  h2 {
+    font-size: 19px; margin: 34px 0 12px; padding: 8px 12px;
+    border-left: 5px solid #e67e22; background: #fdf2e9; border-radius: 4px;
+  }
+  .sub { color: #52606d; font-size: 13px; margin-bottom: 18px; }
+  .print-hint {
+    background: #fff8e1; border: 1px solid #f0c36d; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px; font-size: 14px; line-height: 1.9;
+  }
+  .print-hint strong { color: #b26a00; }
+  .print-hint ul { margin: 6px 0 0 18px; padding: 0; }
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .setlabel { width: 100%; font-size: 12px; color: #52606d; margin: 10px 0 6px; font-weight: 700; }
+
+  /* ---- 教室地图 ---- */
+  .classroom {
+    width: 100%; background: #fff; border: 3px solid #e67e22; border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 14px; page-break-inside: avoid;
+  }
+  .classroom h3 { margin: 0 0 4px; font-size: 17px; color: #b9670e; }
+  .classroom .note { font-size: 12px; color: #52606d; margin-bottom: 12px; }
+  .czones { display: flex; gap: 10px; flex-wrap: wrap; }
+  .czone { flex: 1; min-width: 200px; border: 2px dashed #d68910; border-radius: 8px; padding: 10px; font-size: 12px; background: #fffdf7; }
+  .czone b { display: block; font-size: 13px; margin-bottom: 4px; color: #b9670e; }
+  .czone .slot { display: inline-block; border: 1px solid #e0c9a6; border-radius: 4px; padding: 2px 7px; margin: 2px; background: #fff; font-size: 11px; }
+  .etrack { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 4px; }
+  .etrack .e { width: 16px; height: 16px; border: 1px solid #e0a800; border-radius: 3px; background: #fffbe6; }
+  .seats { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
+  .seat { border: 2px solid #bdc3c7; border-radius: 10px; padding: 6px 10px; background: #fff; font-size: 13px; font-weight: 700; text-align: center; }
+  .arrow { font-size: 16px; color: #b9670e; font-weight: 800; }
+  .flow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .flow .st { background: #fdf2e9; border: 1px solid #f0c9a0; border-radius: 14px; padding: 4px 12px; font-size: 12px; }
+  .flow .st b { color: #b9670e; }
+
+  /* ---- 关卡卡 ---- */
+  .lvl {
+    width: 168px; height: 236px; border-radius: 10px; padding: 10px;
+    background: #fff; border: 2px solid #333; position: relative;
+    box-shadow: 0 1px 4px rgba(0,0,0,.14); display: flex; flex-direction: column;
+    page-break-inside: avoid;
+  }
+  .lvl .bar { height: 6px; border-radius: 4px; margin: -4px -4px 6px; }
+  .lvl .tier { font-size: 10px; color: #7b8794; letter-spacing: 1px; }
+  .lvl .ttl { font-size: 15px; font-weight: 700; margin: 2px 0 6px; line-height: 1.25; }
+  .lvl .dbox { font-size: 11px; color: #3e4c59; background: #f4f6f8; border-radius: 4px; padding: 5px 7px; margin-bottom: 6px; }
+  .lvl .dbox b { font-size: 13px; }
+  .lvl .rule { font-size: 10px; color: #b26a00; background: #fff8e1; border-radius: 4px; padding: 5px 6px; line-height: 1.55; }
+  .lvl .rule.none { color: #7b8794; background: #f4f6f8; }
+  .lvl .foot { margin-top: auto; font-size: 9px; color: #7b8794; text-align: center; padding-top: 4px; }
+
+  /* ---- 教具卡 ---- */
+  .tcard {
+    width: 108px; height: 150px; border-radius: 9px; padding: 8px; background: #fff;
+    border: 2px solid #333; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .tcard.sp { border-style: dashed; }
+  .tcard .bar { height: 5px; border-radius: 4px; margin: -3px -3px 5px; }
+  .tcard .tic { font-size: 24px; }
+  .tcard .tnm { font-size: 12px; font-weight: 700; margin: 4px 0 6px; line-height: 1.2; }
+  .tcard .tval { color: #fff; border-radius: 8px; padding: 3px 0; font-size: 13px; font-weight: 800; }
+  .tcard .tdesc { font-size: 9px; color: #3e4c59; line-height: 1.45; margin-top: 5px; text-align: left; }
+  .tcard .ttag { margin-top: auto; font-size: 9px; color: #7b8794; }
+
+  /* ---- 导师卡 ---- */
+  .role {
+    width: 210px; height: 300px; border-radius: 12px; padding: 12px; background: #fff;
+    border: 3px solid #145a32; box-shadow: 0 2px 6px rgba(0,0,0,.16);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .role .head { border-radius: 8px; color: #fff; padding: 8px 10px; margin: -4px -4px 10px; }
+  .role .nm { font-size: 17px; font-weight: 800; }
+  .role .en { font-size: 9px; opacity: .85; letter-spacing: .5px; }
+  .role .skill { background: #eaf2f8; border-left: 4px solid #2980b9; padding: 6px 8px; border-radius: 4px; font-size: 12px; line-height: 1.6; margin-bottom: 6px; }
+  .role .skill b { color: #1a5276; }
+  .role .pas { background: #fdf3e3; border-left: 4px solid #d68910; padding: 7px 8px; border-radius: 4px; font-size: 12px; line-height: 1.75; }
+  .role .pas b { color: #b9770e; }
+  .role .rtip { margin-top: auto; font-size: 10px; color: #7b8794; text-align: center; }
+
+  /* ---- 玩家板 ---- */
+  .pb {
+    width: 230px; height: 210px; border: 2px solid #34495e; border-radius: 10px;
+    background: #fff; padding: 10px; font-size: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    page-break-inside: avoid;
+  }
+  .pb h4 { margin: 0 0 6px; font-size: 14px; }
+  .pb .pips { display: flex; gap: 3px; margin: 3px 0 8px; flex-wrap: wrap; }
+  .pb .pip { width: 17px; height: 17px; border: 1px solid #7b8794; border-radius: 3px; }
+  .pb .rowl { font-size: 11px; color: #52606d; line-height: 1.6; }
+  .marks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mk {
+    width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(0,0,0,.25);
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,.12); color: #fff; font-weight: 700;
+  }
+  .cat {
+    width: 120px; height: 120px; border-radius: 12px; border: 3px dashed #333;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; text-align: center; line-height: 1.2; page-break-inside: avoid;
+  }
+  .cat .cn { font-size: 13px; font-weight: 800; margin-top: 4px; }
+
+  /* ---- 速查 ---- */
+  .quick { background: #fff; border: 2px solid #e67e22; border-radius: 10px; padding: 14px 18px; font-size: 13px; line-height: 1.95; page-break-inside: avoid; }
+  .quick ol { margin: 4px 0 0 20px; padding: 0; }
+  .quick table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12px; }
+  .quick td, .quick th { border: 1px solid #cbd2d9; padding: 5px 8px; text-align: left; }
+  .quick th { background: #fdf2e9; }
+  footer { margin-top: 40px; font-size: 12px; color: #7b8794; text-align: center; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { padding: 0; background: #fff; }
+    h2 { margin: 18px 0 10px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🏫 罗小黑：开学补课大作战（Xiaohei's Cram Session）· 打印道具</h1>
+<div class="sub">派对类桌游 · 3-6 人 · 30-45 分钟 · 与 <a href="README.md">README.md 规则说明</a> 配套使用</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则卡牌颜色不会显示</li>
+    <li>关卡卡 / 教具卡 / 导师卡 / 玩家板建议使用<strong>卡纸（200g 以上）</strong>打印，裁剪后可塑封</li>
+    <li>精力 ⚡ 与喜爱 💗 标记可用卡纸打印后贴在硬币 / 玻璃珠上；教室地图用普通 A4 纸即可</li>
+    <li>打印份数：<strong>教室地图 1 张 · 关卡卡 15 张（1 套）· 教具卡 52 张（1 套）· 导师卡 6 张 · 玩家板 6 块 · 导师棋子 6 枚 · 小黑棋子 1 枚 · 起始者旗 1 枚 · 精力标记 10 枚 · 喜爱标记 15 枚 · 速查卡 1 张</strong></li>
+  </ul>
+</div>
+
+<h2>🏫 教室地图（打印 1 张 · 桌面中央）</h2>
+<div class="classroom">
+  <h3>小白的家 · 补习教室</h3>
+  <div class="note">本作唯一的"地图"：所有公共信息都摊在上面——小黑的精力、今天的课表、谁坐哪儿、从谁开始出牌。</div>
+  <div class="czones">
+    <div class="czone"><b>😺 讲台 · 小黑的座位</b>小黑棋子放这里；<b>🚩 起始者旗</b>插在当前起始者面前，每关结束后传给下一位。<div class="slot">小黑：别让我炸毛 🙀</div></div>
+    <div class="czone"><b>⚡ 小黑精力轨（开局 10 点）</b>未通过 −1 ｜ 填鸭 −1 ｜ 危险实验未过 −2 ｜ 期末汇演填鸭 −2；恢复：小鱼干随时弃掉 +1、保温杯在完美关 +1、爷爷晨练 +2。归零 = 小黑炸毛，全班留堂！
+      <div class="etrack"><div class="e"></div><div class="e"></div><div class="e"></div><div class="e"></div><div class="e"></div><div class="e"></div><div class="e"></div><div class="e"></div><div class="e"></div><div class="e"></div></div>
+    </div>
+    <div class="czone" style="flex:2"><b>📋 课程表（15 关按顺序翻）</b>
+      <div class="slot">一阶：📖拼音 🔢口算 🔤字母 🔬观察 🏃跳绳</div>
+      <div class="slot">二阶：📖写字 🔢应用题 🔤单词 🔬实验 🏃跑步(逆时针)</div>
+      <div class="slot">三阶：📖作文(无特长) 🔢图形 🔤对话(静音) 🔬自然(危险) 🏃汇演(双倍)</div>
+    </div>
+  </div>
+  <div class="seats">
+    <div class="seat" style="border-color:#2980b9;color:#2980b9">📚 小白</div><span class="arrow">→</span>
+    <div class="seat" style="border-color:#8e44ad;color:#8e44ad">🎤 山新</div><span class="arrow">→</span>
+    <div class="seat" style="border-color:#27ae60;color:#27ae60">🧮 阿根</div><span class="arrow">→</span>
+    <div class="seat" style="border-color:#c0392b;color:#c0392b">🧓 爷爷</div><span class="arrow">→</span>
+    <div class="seat" style="border-color:#5d6d7e;color:#5d6d7e">⚡ 无限</div><span class="arrow">→</span>
+    <div class="seat" style="border-color:#16a085;color:#16a085">🐾 比丢</div>
+    <span style="font-size:11px;color:#52606d">（按实际使用的导师围坐，顺时针出牌）</span>
+  </div>
+  <div class="flow">
+    <div class="st"><b>① 翻关卡</b> 读出学科与 D</div>
+    <div class="st"><b>② 依次出牌</b> 打 1 张或跳过，后出者看累计</div>
+    <div class="st"><b>③ 结算</b> 完美 / 填鸭 / 未通过</div>
+    <div class="st"><b>④ 补牌</b> 出过牌的补到 5 张</div>
+    <div class="st"><b>⑤ 传起始</b> 小黑旗下传一位</div>
+  </div>
+</div>
+
+<h2>📋 关卡卡（15 张 · 打印 1 套）</h2>
+<div class="sub">5 学科 × 3 阶；难度 D 按人数取列。完美窗口 = [D, D+1]，超过 D+1 就是填鸭。</div>
+<div class="grid">
+<div class="lvl" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tier">第 01 关 · 1 阶</div>
+  <div class="ttl">📖 语文 · 拼音关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#2980b9">8 / 10 / 12 / 14</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tier">第 02 关 · 1 阶</div>
+  <div class="ttl">🔢 数学 · 口算关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#27ae60">8 / 10 / 12 / 14</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tier">第 03 关 · 1 阶</div>
+  <div class="ttl">🔤 英语 · 字母关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#8e44ad">8 / 10 / 12 / 14</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">第 04 关 · 1 阶</div>
+  <div class="ttl">🔬 科学 · 观察关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#d35400">8 / 10 / 12 / 14</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">第 05 关 · 1 阶</div>
+  <div class="ttl">🏃 体育 · 跳绳关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#c0392b">8 / 10 / 12 / 14</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tier">第 06 关 · 2 阶</div>
+  <div class="ttl">📖 语文 · 写字关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#2980b9">10 / 12 / 14 / 16</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tier">第 07 关 · 2 阶</div>
+  <div class="ttl">🔢 数学 · 应用题关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#27ae60">10 / 12 / 14 / 16</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tier">第 08 关 · 2 阶</div>
+  <div class="ttl">🔤 英语 · 单词关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#8e44ad">10 / 12 / 14 / 16</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">第 09 关 · 2 阶</div>
+  <div class="ttl">🔬 科学 · 实验关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#d35400">10 / 12 / 14 / 16</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">第 10 关 · 2 阶</div>
+  <div class="ttl">🏃 体育 · 跑步关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#c0392b">10 / 12 / 14 / 16</b></div>
+  <div class="rule ">🏃 随风奔跑：本关逆时针出牌</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tier">第 11 关 · 3 阶</div>
+  <div class="ttl">📖 语文 · 作文关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#2980b9">11 / 14 / 16 / 18</b></div>
+  <div class="rule ">💤 灵感枯竭：本关所有学科特长加成无效（特技不受影响）</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tier">第 12 关 · 3 阶</div>
+  <div class="ttl">🔢 数学 · 图形关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#27ae60">11 / 14 / 16 / 18</b></div>
+  <div class="rule none">无特殊规则</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tier">第 13 关 · 3 阶</div>
+  <div class="ttl">🔤 英语 · 情景对话关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#8e44ad">11 / 14 / 16 / 18</b></div>
+  <div class="rule ">🤫 静音关：出牌期间禁止说话，只能用表情和动作</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">第 14 关 · 3 阶</div>
+  <div class="ttl">🔬 科学 · 自然关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#d35400">11 / 14 / 16 / 18</b></div>
+  <div class="rule ">⚠ 危险实验：本关若未通过，精力 −2</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+<div class="lvl" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">第 15 关 · 3 阶</div>
+  <div class="ttl">🏃 体育 · 广播体操关</div>
+  <div class="dbox">难度 D（3/4/5/6 人）<b style="color:#c0392b">11 / 14 / 16 / 18</b></div>
+  <div class="rule ">🌟 期末汇演：本关星赏双倍（完美 +2/+2；填鸭 +2 学分 −2 喜爱，精力 −2）</div>
+  <div class="foot">教学力 S：D ≤ S ≤ D+1 完美 ｜ S ≥ D+2 填鸭 ｜ S &lt; D 未通过</div>
+</div>
+</div>
+
+<h2>📚 学科教具卡（40 张 · 打印 1 套）</h2>
+<div class="sub">5 学科各 8 张，数值分布完全相同 [1,2,2,3,3,4,4,5]——强弱只来自导师特长，不来自牌堆。</div>
+<div class="grid">
+<div class="setlabel">📖 语文 教具 · 8 张</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">拼音卡片</div>
+  <div class="tval" style="background:#2980b9">教学力 1</div>
+  <div class="ttag">语文教具</div>
+</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">铅笔</div>
+  <div class="tval" style="background:#2980b9">教学力 2</div>
+  <div class="ttag">语文教具</div>
+</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">田字格本</div>
+  <div class="tval" style="background:#2980b9">教学力 2</div>
+  <div class="ttag">语文教具</div>
+</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">字典</div>
+  <div class="tval" style="background:#2980b9">教学力 3</div>
+  <div class="ttag">语文教具</div>
+</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">古诗卡片</div>
+  <div class="tval" style="background:#2980b9">教学力 3</div>
+  <div class="ttag">语文教具</div>
+</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">看图说话</div>
+  <div class="tval" style="background:#2980b9">教学力 4</div>
+  <div class="ttag">语文教具</div>
+</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">作文精选</div>
+  <div class="tval" style="background:#2980b9">教学力 4</div>
+  <div class="ttag">语文教具</div>
+</div>
+<div class="tcard" style="border-color:#2980b9">
+  <div class="bar" style="background:#2980b9"></div>
+  <div class="tic" style="color:#2980b9">📖</div>
+  <div class="tnm">猫猫书法课</div>
+  <div class="tval" style="background:#2980b9">教学力 5</div>
+  <div class="ttag">语文教具</div>
+</div><div class="setlabel">🔢 数学 教具 · 8 张</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">火柴棒</div>
+  <div class="tval" style="background:#27ae60">教学力 1</div>
+  <div class="ttag">数学教具</div>
+</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">三角尺</div>
+  <div class="tval" style="background:#27ae60">教学力 2</div>
+  <div class="ttag">数学教具</div>
+</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">圆规</div>
+  <div class="tval" style="background:#27ae60">教学力 2</div>
+  <div class="ttag">数学教具</div>
+</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">口算卡片</div>
+  <div class="tval" style="background:#27ae60">教学力 3</div>
+  <div class="ttag">数学教具</div>
+</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">计算器</div>
+  <div class="tval" style="background:#27ae60">教学力 3</div>
+  <div class="ttag">数学教具</div>
+</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">应用题精选</div>
+  <div class="tval" style="background:#27ae60">教学力 4</div>
+  <div class="ttag">数学教具</div>
+</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">几何模型</div>
+  <div class="tval" style="background:#27ae60">教学力 4</div>
+  <div class="ttag">数学教具</div>
+</div>
+<div class="tcard" style="border-color:#27ae60">
+  <div class="bar" style="background:#27ae60"></div>
+  <div class="tic" style="color:#27ae60">🔢</div>
+  <div class="tnm">阿根的算盘</div>
+  <div class="tval" style="background:#27ae60">教学力 5</div>
+  <div class="ttag">数学教具</div>
+</div><div class="setlabel">🔤 英语 教具 · 8 张</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">字母磁贴</div>
+  <div class="tval" style="background:#8e44ad">教学力 1</div>
+  <div class="ttag">英语教具</div>
+</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">单词卡片</div>
+  <div class="tval" style="background:#8e44ad">教学力 2</div>
+  <div class="ttag">英语教具</div>
+</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">录音磁带</div>
+  <div class="tval" style="background:#8e44ad">教学力 2</div>
+  <div class="ttag">英语教具</div>
+</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">英文绘本</div>
+  <div class="tval" style="background:#8e44ad">教学力 3</div>
+  <div class="ttag">英语教具</div>
+</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">口语对练</div>
+  <div class="tval" style="background:#8e44ad">教学力 3</div>
+  <div class="ttag">英语教具</div>
+</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">情景对话卡</div>
+  <div class="tval" style="background:#8e44ad">教学力 4</div>
+  <div class="ttag">英语教具</div>
+</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">单词测试卷</div>
+  <div class="tval" style="background:#8e44ad">教学力 4</div>
+  <div class="ttag">英语教具</div>
+</div>
+<div class="tcard" style="border-color:#8e44ad">
+  <div class="bar" style="background:#8e44ad"></div>
+  <div class="tic" style="color:#8e44ad">🔤</div>
+  <div class="tnm">山新的配音稿</div>
+  <div class="tval" style="background:#8e44ad">教学力 5</div>
+  <div class="ttag">英语教具</div>
+</div><div class="setlabel">🔬 科学 教具 · 8 张</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">放大镜</div>
+  <div class="tval" style="background:#d35400">教学力 1</div>
+  <div class="ttag">科学教具</div>
+</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">标本盒</div>
+  <div class="tval" style="background:#d35400">教学力 2</div>
+  <div class="ttag">科学教具</div>
+</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">量杯</div>
+  <div class="tval" style="background:#d35400">教学力 2</div>
+  <div class="ttag">科学教具</div>
+</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">植物图鉴</div>
+  <div class="tval" style="background:#d35400">教学力 3</div>
+  <div class="ttag">科学教具</div>
+</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">浮力实验盒</div>
+  <div class="tval" style="background:#d35400">教学力 3</div>
+  <div class="ttag">科学教具</div>
+</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">天气日记</div>
+  <div class="tval" style="background:#d35400">教学力 4</div>
+  <div class="ttag">科学教具</div>
+</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">星座图</div>
+  <div class="tval" style="background:#d35400">教学力 4</div>
+  <div class="ttag">科学教具</div>
+</div>
+<div class="tcard" style="border-color:#d35400">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tic" style="color:#d35400">🔬</div>
+  <div class="tnm">无限的讲解</div>
+  <div class="tval" style="background:#d35400">教学力 5</div>
+  <div class="ttag">科学教具</div>
+</div><div class="setlabel">🏃 体育 教具 · 8 张</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">跳绳</div>
+  <div class="tval" style="background:#c0392b">教学力 1</div>
+  <div class="ttag">体育教具</div>
+</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">秒表</div>
+  <div class="tval" style="background:#c0392b">教学力 2</div>
+  <div class="ttag">体育教具</div>
+</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">起跑器</div>
+  <div class="tval" style="background:#c0392b">教学力 2</div>
+  <div class="ttag">体育教具</div>
+</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">热身操音乐</div>
+  <div class="tval" style="background:#c0392b">教学力 3</div>
+  <div class="ttag">体育教具</div>
+</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">跑步训练鞋</div>
+  <div class="tval" style="background:#c0392b">教学力 3</div>
+  <div class="ttag">体育教具</div>
+</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">体能测试表</div>
+  <div class="tval" style="background:#c0392b">教学力 4</div>
+  <div class="ttag">体育教具</div>
+</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">篮球</div>
+  <div class="tval" style="background:#c0392b">教学力 4</div>
+  <div class="ttag">体育教具</div>
+</div>
+<div class="tcard" style="border-color:#c0392b">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tic" style="color:#c0392b">🏃</div>
+  <div class="tnm">爷爷的太极剑</div>
+  <div class="tval" style="background:#c0392b">教学力 5</div>
+  <div class="ttag">体育教具</div>
+</div>
+</div>
+
+<h2>✨ 特殊教具卡（12 张 · 打印 1 套）</h2>
+<div class="sub">小鱼干 ×6 ｜ 配音秀 ×3 ｜ 保温杯 ×3。虚线边框 = 特殊教具。</div>
+<div class="grid">
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🐟</div>
+  <div class="tnm">小鱼干</div>
+  <div class="tval" style="background:#16a085">教学力 3</div>
+  <div class="tdesc">任意学科 · 也可随时弃掉：精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🐟</div>
+  <div class="tnm">小鱼干</div>
+  <div class="tval" style="background:#16a085">教学力 3</div>
+  <div class="tdesc">任意学科 · 也可随时弃掉：精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🐟</div>
+  <div class="tnm">小鱼干</div>
+  <div class="tval" style="background:#16a085">教学力 3</div>
+  <div class="tdesc">任意学科 · 也可随时弃掉：精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🐟</div>
+  <div class="tnm">小鱼干</div>
+  <div class="tval" style="background:#16a085">教学力 3</div>
+  <div class="tdesc">任意学科 · 也可随时弃掉：精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🐟</div>
+  <div class="tnm">小鱼干</div>
+  <div class="tval" style="background:#16a085">教学力 3</div>
+  <div class="tdesc">任意学科 · 也可随时弃掉：精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🐟</div>
+  <div class="tnm">小鱼干</div>
+  <div class="tval" style="background:#16a085">教学力 3</div>
+  <div class="tdesc">任意学科 · 也可随时弃掉：精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🎭</div>
+  <div class="tnm">配音秀</div>
+  <div class="tval" style="background:#16a085">教学力 1</div>
+  <div class="tdesc">任意学科 · 打出后，若本关完美通过，你额外 +1 学分</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🎭</div>
+  <div class="tnm">配音秀</div>
+  <div class="tval" style="background:#16a085">教学力 1</div>
+  <div class="tdesc">任意学科 · 打出后，若本关完美通过，你额外 +1 学分</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🎭</div>
+  <div class="tnm">配音秀</div>
+  <div class="tval" style="background:#16a085">教学力 1</div>
+  <div class="tdesc">任意学科 · 打出后，若本关完美通过，你额外 +1 学分</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🍵</div>
+  <div class="tnm">保温杯</div>
+  <div class="tval" style="background:#16a085">教学力 2</div>
+  <div class="tdesc">任意学科 · 打出后，若本关完美通过，小黑精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🍵</div>
+  <div class="tnm">保温杯</div>
+  <div class="tval" style="background:#16a085">教学力 2</div>
+  <div class="tdesc">任意学科 · 打出后，若本关完美通过，小黑精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+<div class="tcard sp" style="border-color:#16a085">
+  <div class="bar" style="background:#16a085"></div>
+  <div class="tic" style="color:#16a085">🍵</div>
+  <div class="tnm">保温杯</div>
+  <div class="tval" style="background:#16a085">教学力 2</div>
+  <div class="tdesc">任意学科 · 打出后，若本关完美通过，小黑精力 +1</div>
+  <div class="ttag">特殊教具</div>
+</div>
+</div>
+
+<h2>🧑‍🏫 导师卡（6 张 · 每人 1 张）</h2>
+<div class="sub">3 人局从 6 张中任选 3 张使用；其余同理。每名导师 = 1 个擅长学科 + 1 个特技。</div>
+<div class="grid">
+<div class="role" style="border-color:#2980b9">
+  <div class="head" style="background:#2980b9">
+    <div class="nm">📚 小白</div>
+    <div class="en">Xiaobai · 语文课代表</div>
+  </div>
+  <div class="skill"><b>擅长</b>语文关教学力 +2</div>
+  <div class="pas"><b>特技</b>课代表：语文关完美通过时，额外 +1 喜爱（每局 1 次）</div>
+  <div class="rtip">小黑的"人类姐姐"，补习课代表</div>
+</div>
+<div class="role" style="border-color:#8e44ad">
+  <div class="head" style="background:#8e44ad">
+    <div class="nm">🎤 山新</div>
+    <div class="en">Shanxin · 英语课代表</div>
+  </div>
+  <div class="skill"><b>擅长</b>英语关教学力 +2</div>
+  <div class="pas"><b>特技</b>一人分饰全部：每局 2 次，宣布后本关视为你的擅长关（仅你本人 +2）</div>
+  <div class="rtip">小白的闺蜜，给全番角色配音的女人</div>
+</div>
+<div class="role" style="border-color:#27ae60">
+  <div class="head" style="background:#27ae60">
+    <div class="nm">🧮 阿根</div>
+    <div class="en">Agen · 数学课代表</div>
+  </div>
+  <div class="skill"><b>擅长</b>数学关教学力 +2</div>
+  <div class="pas"><b>特技</b>压轴出场：作为本关最后一名出牌时，教学力 +1（每局 2 次）</div>
+  <div class="rtip">小白的"哥哥"，深藏不露的玄离</div>
+</div>
+<div class="role" style="border-color:#c0392b">
+  <div class="head" style="background:#c0392b">
+    <div class="nm">🧓 爷爷</div>
+    <div class="en">Yeye · 体育课代表</div>
+  </div>
+  <div class="skill"><b>擅长</b>体育关教学力 +2</div>
+  <div class="pas"><b>特技</b>晨练时间：每局 1 次，随时发动，精力 +2</div>
+  <div class="rtip">隐居高手，每天清晨在院子里打太极</div>
+</div>
+<div class="role" style="border-color:#5d6d7e">
+  <div class="head" style="background:#5d6d7e">
+    <div class="nm">⚡ 无限</div>
+    <div class="en">Wuxian · 三阶全科 +1课代表</div>
+  </div>
+  <div class="skill"><b>擅长</b>三阶关卡中，任意学科教学力 +1</div>
+  <div class="pas"><b>特技</b>师父出手：每局 3 次，打出教具时宣布，该牌 +3；若本关完美通过，额外 +1 喜爱</div>
+  <div class="rtip">最强的执行者，小黑的师父</div>
+</div>
+<div class="role" style="border-color:#16a085">
+  <div class="head" style="background:#16a085">
+    <div class="nm">🐾 比丢</div>
+    <div class="en">Bidiu · 万能吉祥物</div>
+  </div>
+  <div class="skill"><b>擅长</b>手牌上限 6；小鱼干打出时牌面值视为 5</div>
+  <div class="pas"><b>特技</b>大胃王：每打出 1 张小鱼干，精力 +1（每局最多 2 次）</div>
+  <div class="rtip">什么都吃的小精灵，补习班的吉祥物</div>
+</div>
+</div>
+
+<h2>📝 玩家板（6 块 · 每人 1 块）</h2>
+<div class="sub">💗 喜爱是胜利条件；📗 学分是平手时的暗分。用笔在格子里打勾即可。</div>
+<div class="grid">
+<div class="pb">
+  <h4 style="color:undefined">undefined undefined · 玩家板</h4>
+  <div class="rowl">💗 喜爱（胜利条件）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">📗 学分（平手时的暗分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">特技次数：大胃王 ○○×2 ｜ 手牌上限 5</div>
+</div>
+<div class="pb">
+  <h4 style="color:undefined">undefined undefined · 玩家板</h4>
+  <div class="rowl">💗 喜爱（胜利条件）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">📗 学分（平手时的暗分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">特技次数：大胃王 ○○×2 ｜ 手牌上限 5</div>
+</div>
+<div class="pb">
+  <h4 style="color:undefined">undefined undefined · 玩家板</h4>
+  <div class="rowl">💗 喜爱（胜利条件）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">📗 学分（平手时的暗分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">特技次数：大胃王 ○○×2 ｜ 手牌上限 5</div>
+</div>
+<div class="pb">
+  <h4 style="color:undefined">undefined undefined · 玩家板</h4>
+  <div class="rowl">💗 喜爱（胜利条件）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">📗 学分（平手时的暗分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">特技次数：大胃王 ○○×2 ｜ 手牌上限 5</div>
+</div>
+<div class="pb">
+  <h4 style="color:undefined">undefined undefined · 玩家板</h4>
+  <div class="rowl">💗 喜爱（胜利条件）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">📗 学分（平手时的暗分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">特技次数：大胃王 ○○×2 ｜ 手牌上限 5</div>
+</div>
+<div class="pb">
+  <h4 style="color:undefined">undefined undefined · 玩家板</h4>
+  <div class="rowl">💗 喜爱（胜利条件）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">📗 学分（平手时的暗分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl">特技次数：大胃王 ○○×2 ｜ 手牌上限 5</div>
+</div>
+</div>
+
+<h2>♟ 棋子与标记</h2>
+<div class="sub">导师棋子 6 枚（放到座位圈的对应座位上）· 小黑棋子 1 枚（放到精力轨上）· 起始者旗 1 枚 · 精力标记 10 枚 · 喜爱标记 15 枚（可贴在硬币/玻璃珠上）。</div>
+<div class="grid">
+  <div class="mk" style="background:#2c3e50;width:64px;height:64px;font-size:28px">😺</div>
+  <div class="mk" style="background:#7f8c8d;width:64px;height:64px;font-size:22px">🚩</div>
+  <div class="mk" style="background:#2980b9" title="小白">📚</div><div class="mk" style="background:#8e44ad" title="山新">🎤</div><div class="mk" style="background:#27ae60" title="阿根">🧮</div><div class="mk" style="background:#c0392b" title="爷爷">🧓</div><div class="mk" style="background:#5d6d7e" title="无限">⚡</div><div class="mk" style="background:#16a085" title="比丢">🐾</div>
+</div>
+<div class="setlabel">⚡ 精力标记 ×10</div>
+<div class="marks"><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div><div class="mk" style="background:#f39c12">⚡</div></div>
+<div class="setlabel">💗 喜爱标记 ×15</div>
+<div class="marks"><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div><div class="mk" style="background:#e84393">💗</div></div>
+
+<h2>⚡ 一页速查（打印 1 张 · 建议过塑放桌上）</h2>
+<div class="quick">
+  <b>每关流程：</b>
+  <ol>
+    <li>翻开下一张关卡卡，读出学科、阶数与难度 D（按玩家人数取 3/4/5/6 人列）。</li>
+    <li>从起始者开始<b>顺时针依次出牌</b>：每人打出 1 张教具卡或跳过（跳过 = 0 教学力，不耗牌也不补牌）。后出的人能看到当前累计教学力。</li>
+    <li>教学力 = 牌面值 + 加成（擅长关 +2；无限三阶 +1；阿根压轴 +1；师父出手 +3；比丢的小鱼干视为 5）。</li>
+    <li>结算累计 S：<b>S &lt; D</b> 未通过（精力 −1，危险实验 −2）；<b>D ≤ S ≤ D+1</b> 完美通过；<b>S ≥ D+2</b> 填鸭（精力 −1）。</li>
+    <li>完美通过：唯一最高牌 +1 💗喜爱 +1 📗学分；所有牌面 ≤2 的玩家各 +1 💗（分寸感）；语文关小白 +1 💗（每局 1 次）。</li>
+    <li>填鸭：唯一最高牌 +1 📗学分 −1 💗喜爱（讲太多，小黑听懵了）。</li>
+    <li>出过牌的玩家补手牌到 5 张（比丢 6 张）；教具堆空了就把弃牌堆洗混。</li>
+    <li>起始者旗传给下一位，进入下一关。</li>
+  </ol>
+  <table>
+    <tr><th>终局</th><th>规则</th></tr>
+    <tr><td>补课成功</td><td>15 关打完且精力 &gt; 0：💗喜爱最高者 =「小黑最好的朋友」；平手比 📗学分，再平手共享胜利</td></tr>
+    <tr><td>全班留堂</td><td>精力 ≤ 0：小黑炸毛，无人获胜（可用变体：发"最佳安慰奖"给喜爱最高者）</td></tr>
+  </table>
+</div>
+
+<footer>《罗小黑：开学补课大作战》· 原创设计，灵感来自《罗小黑战记》系列 · 与任何影视作品无官方关联 · 生成于 2026-10-28</footer>
+
+</body>
+</html>
