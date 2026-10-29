@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大床游戏：古宅六夜 · 打印道具</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #efe7d7; color: #241a16; margin: 0; padding: 24px;
+  }
+  h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: 2px; color: #5e1f1a; }
+  h2 {
+    font-size: 19px; margin: 34px 0 12px; padding: 8px 12px;
+    border-left: 5px solid #7b2d26; background: #f6e9d8; border-radius: 4px; color: #5e1f1a;
+  }
+  .sub { color: #6b5a4e; font-size: 13px; margin-bottom: 18px; line-height: 1.8; }
+  .print-hint {
+    background: #fdf3dc; border: 1px solid #c9a227; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px; font-size: 14px; line-height: 1.9;
+  }
+  .print-hint strong { color: #8a5a00; }
+  .print-hint ul { margin: 6px 0 0 18px; padding: 0; }
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .setlabel { width: 100%; font-size: 12px; color: #6b5a4e; margin: 12px 0 4px; font-weight: 700; letter-spacing: 1px; }
+
+  /* ---- 大床板 ---- */
+  .bed {
+    width: 100%; background: #fffdf6; border: 4px double #7b2d26; border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 14px; page-break-inside: avoid;
+  }
+  .bed h3 { margin: 0 0 4px; font-size: 18px; color: #7b2d26; letter-spacing: 2px; }
+  .bed .note { font-size: 12px; color: #6b5a4e; margin-bottom: 12px; }
+  .bedart {
+    background: #3b2118; color: #e8d6b8; border-radius: 10px; padding: 14px;
+    font-family: "Courier New", monospace; font-size: 13px; line-height: 1.55;
+    white-space: pre; overflow-x: auto; margin-bottom: 12px;
+  }
+  .bedrow { display: flex; gap: 10px; flex-wrap: wrap; }
+  .bunk {
+    flex: 1; min-width: 150px; border: 2px dashed #a8895c; border-radius: 8px;
+    padding: 10px; background: #fffaf0; font-size: 12px; line-height: 1.7;
+  }
+  .bunk b { display: block; font-size: 13px; margin-bottom: 4px; color: #7b2d26; }
+  .rtable { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 12px; }
+  .rtable td, .rtable th { border: 1px solid #c9b28a; padding: 5px 8px; text-align: center; }
+  .rtable th { background: #f0dfc0; color: #5e1f1a; }
+  .rtable td.rb { background: #f7ecd8; font-weight: 700; }
+
+  /* ---- 夜帖 ---- */
+  .night {
+    width: 168px; height: 240px; border-radius: 10px; padding: 10px; background: #fff;
+    border: 2px solid #7b2d26; position: relative; box-shadow: 0 1px 4px rgba(0,0,0,.16);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .night .bar { height: 7px; border-radius: 4px; margin: -4px -4px 7px; background: #7b2d26; }
+  .night .tier { font-size: 10px; color: #8a7563; letter-spacing: 2px; }
+  .night .ic { font-size: 34px; text-align: center; margin: 2px 0; }
+  .night .ttl { font-size: 16px; font-weight: 800; text-align: center; margin-bottom: 6px; color: #5e1f1a; letter-spacing: 1px; }
+  .night .flavor { font-size: 10px; color: #6b5a4e; font-style: italic; text-align: center; line-height: 1.5; }
+  .night .rbox { background: #7b2d26; color: #fff; border-radius: 8px; padding: 5px 0; text-align: center; font-size: 15px; font-weight: 800; margin: 7px 0; }
+  .night .rbox small { display: block; font-size: 9px; font-weight: 400; opacity: .85; }
+  .night .rule { font-size: 10px; color: #7b2d26; background: #fbeee0; border-radius: 4px; padding: 5px 6px; line-height: 1.55; }
+  .night .rule.none { color: #8a7563; background: #f3ece2; }
+  .night .foot { margin-top: auto; font-size: 9px; color: #8a7563; text-align: center; padding-top: 4px; }
+
+  /* ---- 动静牌 ---- */
+  .mv {
+    width: 84px; height: 118px; border-radius: 8px; border: 2px solid #333;
+    background: #fff; text-align: center; padding: 6px 4px; display: flex; flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0,0,0,.14); page-break-inside: avoid; position: relative;
+  }
+  .mv .v { font-size: 40px; font-weight: 900; line-height: 1; margin: auto 0; }
+  .mv .lbl { font-size: 9px; color: #6b5a4e; letter-spacing: 1px; }
+  .mv .pips { display: flex; justify-content: center; gap: 2px; margin-top: 3px; flex-wrap: wrap; }
+  .mv .pips i { width: 7px; height: 7px; border-radius: 50%; background: #7b2d26; display: block; }
+  .mv .owner { position: absolute; top: 3px; left: 4px; font-size: 9px; font-weight: 800; }
+  .mv .back { font-size: 8px; color: #8a7563; margin-top: 3px; line-height: 1.3; }
+
+  /* ---- 物件牌 ---- */
+  .obj {
+    width: 108px; height: 152px; border-radius: 9px; padding: 8px; background: #fff;
+    border: 2px solid #333; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .obj.bad { border-style: dashed; }
+  .obj .tic { font-size: 28px; }
+  .obj .tnm { font-size: 12px; font-weight: 800; margin: 4px 0 5px; line-height: 1.2; }
+  .obj .tval { color: #fff; border-radius: 8px; padding: 3px 0; font-size: 14px; font-weight: 800; }
+  .obj .tdesc { font-size: 9px; color: #5b4a3e; line-height: 1.5; margin-top: 5px; text-align: left; }
+  .obj .ttag { margin-top: auto; font-size: 9px; color: #8a7563; }
+
+  /* ---- 角色卡 ---- */
+  .role {
+    width: 214px; height: 306px; border-radius: 12px; padding: 12px; background: #fff;
+    border: 3px solid #5e1f1a; box-shadow: 0 2px 6px rgba(0,0,0,.16);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .role .head { border-radius: 8px; color: #fff; padding: 8px 10px; margin: -4px -4px 10px; background: #5e1f1a; }
+  .role .nm { font-size: 18px; font-weight: 800; }
+  .role .en { font-size: 9px; opacity: .85; letter-spacing: 1px; }
+  .role .skill { background: #fbeee0; border-left: 4px solid #c9a227; padding: 6px 8px; border-radius: 4px; font-size: 12px; line-height: 1.65; margin-bottom: 6px; }
+  .role .skill b { color: #8a5a00; }
+  .role .pas { background: #f3ece2; border-left: 4px solid #7b2d26; padding: 7px 8px; border-radius: 4px; font-size: 11px; line-height: 1.7; }
+  .role .pas b { color: #5e1f1a; }
+  .role .rtip { margin-top: auto; font-size: 10px; color: #6b5a4e; line-height: 1.5; }
+
+  /* ---- 玩家板 ---- */
+  .pb {
+    width: 236px; height: 216px; border: 2px solid #4a3b2a; border-radius: 10px;
+    background: #fffdf6; padding: 10px; font-size: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    page-break-inside: avoid;
+  }
+  .pb h4 { margin: 0 0 6px; font-size: 14px; color: #5e1f1a; }
+  .pb .pips { display: flex; gap: 3px; margin: 3px 0 7px; flex-wrap: wrap; }
+  .pb .pip { width: 16px; height: 16px; border: 1px solid #8a7563; border-radius: 3px; background: #fff; }
+  .pb .rowl { font-size: 11px; color: #5b4a3e; line-height: 1.7; }
+  .pb .memo { margin-top: 6px; border-top: 1px dashed #c9b28a; padding-top: 5px; font-size: 10px; color: #8a7563; }
+
+  /* ---- 挡板 / 标记 / 棋子 ---- */
+  .shield {
+    width: 150px; height: 96px; border: 3px solid #4a3b2a; border-radius: 8px 8px 0 0;
+    background: repeating-linear-gradient(45deg, #f3ece2, #f3ece2 8px, #e9dfcd 8px, #e9dfcd 16px);
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    font-weight: 800; color: #5e1f1a; text-align: center; line-height: 1.5; page-break-inside: avoid;
+  }
+  .marks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mk {
+    width: 46px; height: 46px; border-radius: 50%; border: 2px solid rgba(0,0,0,.25);
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,.12); color: #fff; font-weight: 800;
+  }
+  .lamp {
+    width: 130px; height: 130px; border-radius: 50%; border: 4px solid #c9a227;
+    background: radial-gradient(circle at 40% 35%, #fff3c4, #e8b93b 70%, #a87c14);
+    display: flex; align-items: center; justify-content: center; font-size: 40px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.2); page-break-inside: avoid;
+  }
+  .quick { background: #fffdf6; border: 2px solid #7b2d26; border-radius: 10px; padding: 14px 18px; font-size: 13px; line-height: 1.95; page-break-inside: avoid; }
+  .quick ol { margin: 4px 0 0 20px; padding: 0; }
+  .quick table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12px; }
+  .quick td, .quick th { border: 1px solid #c9b28a; padding: 5px 8px; text-align: left; }
+  .quick th { background: #f0dfc0; }
+  footer { margin-top: 40px; font-size: 12px; color: #8a7563; text-align: center; line-height: 1.8; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { padding: 0; background: #fff; }
+    h2 { margin: 18px 0 10px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🛏️ 大床游戏：古宅六夜</h1>
+<div class="sub">
+打印道具包 · 大床板 / 夜帖 12 / 动静牌 72（6 套 × 12）/ 物件牌 24 / 角色卡 6 / 玩家板 6 / 床围挡板 6 / 管家灯 / 镇静·惊惧标记 / 速查卡<br>
+对应规则：[README.md](README.md)　|　题材致敬：电影《床下有人 5》「大床游戏」密室设定（2026-10-30 上映）
+</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+    <li>卡牌和棋子建议使用<strong>卡纸</strong>（200g 以上）打印，打印后可裁剪并塑封</li>
+    <li>床围挡板建议用<strong>硬卡纸</strong>，沿虚线折成 ⌐ 形竖立在桌面上</li>
+    <li>镇静 / 惊惧标记可用<strong>两色小圆片</strong>或纽扣代替</li>
+  </ul>
+</div>
+
+<h2>① 大床板（中央摆放 · 1 张）</h2>
+<div class="bed">
+  <h3>陆家正厅 · 三进雕花大床</h3>
+  <div class="note">把这张板摊在桌子正中。每位玩家选一个<b>床位</b>坐下，把<b>床围挡板</b>立在自己面前，动静牌从挡板后面推进床位。</div>
+  <div class="bedart">        ╔══════════════════════════════════════════════╗
+        ║   🕯 烛台          【 床 顶 雕 花 】         🕯 烛台   ║
+        ╠═══════╦═══════╦═══════╦═══════╦═══════╦═══════╣
+        ║ 床位1 ║ 床位2 ║ 床位3 ║ 床位4 ║ 床位5 ║ 床位6 ║
+        ║  🛌   ║  🛌   ║  🛌   ║  🛌   ║  🛌   ║  🛌   ║
+        ║ ───── ║ ───── ║ ───── ║ ───── ║ ───── ║ ───── ║
+        ║ 挡板  ║ 挡板  ║ 挡板  ║ 挡板  ║ 挡板  ║ 挡板  ║
+        ╚═══════╩═══════╩═══════╩═══════╩═══════╩═══════╝
+              ↕                    ↕                    ↕
+        ┌────────────────────────────────────────────────┐
+        │  🕳  床  肚  （暗出区 · 只有管家能看）          │
+        └────────────────────────────────────────────────┘
+   🏮 管家灯：每夜顺时针传一格 → 灯在谁面前，谁就是本夜管家</div>
+  <div class="bedrow">
+    <div class="bunk"><b>🛌 床位</b>你每夜把 1 张动静牌<b>面朝下</b>推到自己的床位里，别人看不见。</div>
+    <div class="bunk"><b>🕳 床肚</b>收牌区。非管家的玩家把牌推进去，管家看过后<b>面朝下</b>退还，不公开。</div>
+    <div class="bunk"><b>🏮 管家灯</b>本夜管家：第一个开口、收牌、宣布判定，<b>但本夜不得指认 / 刨根</b>。结算后传给左手玩家。</div>
+    <div class="bunk"><b>📜 夜帖位</b>每夜翻开 1 张夜帖放在这里，<b>所有人都能看到 R</b>（床下今夜响几次）。</div>
+  </div>
+  <table class="rtable">
+    <tr><th>夜帖基准 R₀</th><th>3 人局</th><th>4 人局</th><th>5 人局</th><th>6 人局</th><th>含义</th></tr>
+    <tr><td class="rb">1　🌙 静夜</td><td>2</td><td>2</td><td>3</td><td>3</td><td>床下只响一两声</td></tr>
+    <tr><td class="rb">2　🕯 寻常夜</td><td>3</td><td>4</td><td>5</td><td>6</td><td>规矩照旧</td></tr>
+    <tr><td class="rb">3　😴 眠不安</td><td>5</td><td>6</td><td>8</td><td>9</td><td>有人整夜翻身</td></tr>
+    <tr><td class="rb">4　👣 床下有响</td><td>6</td><td>8</td><td>10</td><td>12</td><td>床板底下在挪</td></tr>
+    <tr><th colspan="6">换算公式：R = ⌈ R₀ × 人数 ÷ 2 ⌉（向上取整）</th></tr>
+  </table>
+</div>
+<h2>② 夜帖（12 张 · 每局随机抽 6 张，一局 6 夜）</h2>
+<div class="grid">
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 01</div>
+    <div class="ic">🌙</div>
+    <div class="ttl">静夜</div>
+    <div class="flavor">夜深得像一口井。谁都不敢翻身。</div>
+    <div class="rbox">基准 R₀ = 1<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 02</div>
+    <div class="ic">🌙</div>
+    <div class="ttl">静夜</div>
+    <div class="flavor">夜深得像一口井。谁都不敢翻身。</div>
+    <div class="rbox">基准 R₀ = 1<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 03</div>
+    <div class="ic">🕯</div>
+    <div class="ttl">寻常夜</div>
+    <div class="flavor">灯芯爆了个花。规矩照旧。</div>
+    <div class="rbox">基准 R₀ = 2<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 04</div>
+    <div class="ic">🕯</div>
+    <div class="ttl">寻常夜</div>
+    <div class="flavor">灯芯爆了个花。规矩照旧。</div>
+    <div class="rbox">基准 R₀ = 2<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 05</div>
+    <div class="ic">🕯</div>
+    <div class="ttl">寻常夜</div>
+    <div class="flavor">灯芯爆了个花。规矩照旧。</div>
+    <div class="rbox">基准 R₀ = 2<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 06</div>
+    <div class="ic">😴</div>
+    <div class="ttl">眠不安</div>
+    <div class="flavor">有人整夜在梦里赶路。</div>
+    <div class="rbox">基准 R₀ = 3<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 07</div>
+    <div class="ic">😴</div>
+    <div class="ttl">眠不安</div>
+    <div class="flavor">有人整夜在梦里赶路。</div>
+    <div class="rbox">基准 R₀ = 3<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 08</div>
+    <div class="ic">👣</div>
+    <div class="ttl">床下有响</div>
+    <div class="flavor">木板缝里，有东西在挪。</div>
+    <div class="rbox">基准 R₀ = 4<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 09</div>
+    <div class="ic">👣</div>
+    <div class="ttl">床下有响</div>
+    <div class="flavor">木板缝里，有东西在挪。</div>
+    <div class="rbox">基准 R₀ = 4<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule none">无附加规矩：开口、指认、刨根照常。</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 10</div>
+    <div class="ic">💡</div>
+    <div class="ttl">点灯夜</div>
+    <div class="flavor">灯全点着，看得清每张脸。</div>
+    <div class="rbox">基准 R₀ = 2<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule">本夜指认落空<b>免于惊惧</b>（只损失机会）</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 11</div>
+    <div class="ic">🤫</div>
+    <div class="ttl">闭口夜</div>
+    <div class="flavor">谁都别出声，出声就完了。</div>
+    <div class="rbox">基准 R₀ = 3<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule">本夜<b>不得开口、不得指认、不得刨根</b>；无人获得诚实奖励</div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="night">
+    <div class="bar"></div>
+    <div class="tier">夜帖 12</div>
+    <div class="ic">🛏</div>
+    <div class="ttl">翻身夜</div>
+    <div class="flavor">床板吱呀作响，像有人在下面数数。</div>
+    <div class="rbox">基准 R₀ = 4<small>本夜床下响 R 次<br>（按人数换算，见大床板）</small></div>
+    <div class="rule">本夜 T&gt;R 时，最吵者<b>额外 −2 镇静</b></div>
+    <div class="foot">大床游戏 · 古宅六夜</div>
+  </div>
+</div>
+<h2>③ 动静牌（每人 1 套 12 张 · 共 6 套 72 张）</h2>
+<div class="sub">每套构成：<b>0 × 3　1 × 4　2 × 3　3 × 2</b>（合计 15 点动静）。一局只打 6 张，余牌是"你还能怎么演"的余地。<br>
+牌面数字 = 你今夜在床上翻了几次身。数字越大越吵，越容易在「太吵」的夜里被点名；数字越小越静，越容易在「太静」的夜里被点名。</div>
+<div class="setlabel">玩家 1 的一套（12 张）· 建议用同色卡纸打印</div>
+<div class="grid">
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#7b2d26">
+    <div class="owner" style="color:#7b2d26">P1</div>
+    <div class="v" style="color:#7b2d26">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+</div>
+<div class="setlabel">玩家 2 的一套（12 张）· 建议用同色卡纸打印</div>
+<div class="grid">
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#1f4e5f">
+    <div class="owner" style="color:#1f4e5f">P2</div>
+    <div class="v" style="color:#1f4e5f">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+</div>
+<div class="setlabel">玩家 3 的一套（12 张）· 建议用同色卡纸打印</div>
+<div class="grid">
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#4a3b6b">
+    <div class="owner" style="color:#4a3b6b">P3</div>
+    <div class="v" style="color:#4a3b6b">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+</div>
+<div class="setlabel">玩家 4 的一套（12 张）· 建议用同色卡纸打印</div>
+<div class="grid">
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#5c4a1e">
+    <div class="owner" style="color:#5c4a1e">P4</div>
+    <div class="v" style="color:#5c4a1e">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+</div>
+<div class="setlabel">玩家 5 的一套（12 张）· 建议用同色卡纸打印</div>
+<div class="grid">
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#2f5d3a">
+    <div class="owner" style="color:#2f5d3a">P5</div>
+    <div class="v" style="color:#2f5d3a">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+</div>
+<div class="setlabel">玩家 6 的一套（12 张）· 建议用同色卡纸打印</div>
+<div class="grid">
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">0</div>
+    <div class="lbl">一动没动</div>
+    <div class="pips"><span style="font-size:11px;color:#8a7563">——</span></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">1</div>
+    <div class="lbl">翻了个身</div>
+    <div class="pips"><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">2</div>
+    <div class="lbl">翻来覆去</div>
+    <div class="pips"><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+  <div class="mv" style="border-color:#6b2f5a">
+    <div class="owner" style="color:#6b2f5a">P6</div>
+    <div class="v" style="color:#6b2f5a">3</div>
+    <div class="lbl">整夜折腾</div>
+    <div class="pips"><i></i><i></i><i></i></div>
+    <div class="back">面朝下推进床位</div>
+  </div>
+</div>
+<h2>④ 物件牌（床下的东西 · 24 张，面朝下堆在床肚旁）</h2>
+<div class="sub">被点名的人必须「下去看看」并摸 1 张。24 张合计 <b>+18 分</b>，均值 <b>+0.75 分</b>，区间 <b>−5 ~ +5</b> —— 下去看看不是奖励，是<b>抽卡</b>。</div>
+<div class="grid">
+  <div class="obj">
+    <div class="tic">🕯</div>
+    <div class="tnm">半截红烛</div>
+    <div class="tval" style="background:#2f6b3f">+1 分</div>
+    <div class="tdesc">烧到一半就灭了，蜡油还热着。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🕯</div>
+    <div class="tnm">半截红烛</div>
+    <div class="tval" style="background:#2f6b3f">+1 分</div>
+    <div class="tdesc">烧到一半就灭了，蜡油还热着。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🕯</div>
+    <div class="tnm">半截红烛</div>
+    <div class="tval" style="background:#2f6b3f">+1 分</div>
+    <div class="tdesc">烧到一半就灭了，蜡油还热着。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">📿</div>
+    <div class="tnm">断线佛珠</div>
+    <div class="tval" style="background:#2f6b3f">+2 分</div>
+    <div class="tdesc">散了一地，怎么数都少一颗。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">📿</div>
+    <div class="tnm">断线佛珠</div>
+    <div class="tval" style="background:#2f6b3f">+2 分</div>
+    <div class="tdesc">散了一地，怎么数都少一颗。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">📿</div>
+    <div class="tnm">断线佛珠</div>
+    <div class="tval" style="background:#2f6b3f">+2 分</div>
+    <div class="tdesc">散了一地，怎么数都少一颗。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">📿</div>
+    <div class="tnm">断线佛珠</div>
+    <div class="tval" style="background:#2f6b3f">+2 分</div>
+    <div class="tdesc">散了一地，怎么数都少一颗。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🪞</div>
+    <div class="tnm">裂纹铜镜</div>
+    <div class="tval" style="background:#2f6b3f">+2 分</div>
+    <div class="tdesc">照出来的人，比你多一个。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🪞</div>
+    <div class="tnm">裂纹铜镜</div>
+    <div class="tval" style="background:#2f6b3f">+2 分</div>
+    <div class="tdesc">照出来的人，比你多一个。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🪞</div>
+    <div class="tnm">裂纹铜镜</div>
+    <div class="tval" style="background:#2f6b3f">+2 分</div>
+    <div class="tdesc">照出来的人，比你多一个。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🗝</div>
+    <div class="tnm">生锈钥匙</div>
+    <div class="tval" style="background:#2f6b3f">+3 分</div>
+    <div class="tdesc">不知道开哪扇门，但你不想试。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🗝</div>
+    <div class="tnm">生锈钥匙</div>
+    <div class="tval" style="background:#2f6b3f">+3 分</div>
+    <div class="tdesc">不知道开哪扇门，但你不想试。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">🗝</div>
+    <div class="tnm">生锈钥匙</div>
+    <div class="tval" style="background:#2f6b3f">+3 分</div>
+    <div class="tdesc">不知道开哪扇门，但你不想试。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">📜</div>
+    <div class="tnm">泛黄地契</div>
+    <div class="tval" style="background:#2f6b3f">+4 分</div>
+    <div class="tdesc">宅子的名字被人用墨涂掉了。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">📜</div>
+    <div class="tnm">泛黄地契</div>
+    <div class="tval" style="background:#2f6b3f">+4 分</div>
+    <div class="tdesc">宅子的名字被人用墨涂掉了。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj">
+    <div class="tic">💰</div>
+    <div class="tnm">一吊铜钱</div>
+    <div class="tval" style="background:#2f6b3f">+5 分</div>
+    <div class="tdesc">串钱的绳是新的。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🕸</div>
+    <div class="tnm">蛛网</div>
+    <div class="tval" style="background:#8a2020">-1 分</div>
+    <div class="tdesc">粘了一脸，怎么擦都擦不干净。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🕸</div>
+    <div class="tnm">蛛网</div>
+    <div class="tval" style="background:#8a2020">-1 分</div>
+    <div class="tdesc">粘了一脸，怎么擦都擦不干净。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🐀</div>
+    <div class="tnm">死老鼠</div>
+    <div class="tval" style="background:#8a2020">-2 分</div>
+    <div class="tdesc">已经硬了，尾巴还是软的。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🐀</div>
+    <div class="tnm">死老鼠</div>
+    <div class="tval" style="background:#8a2020">-2 分</div>
+    <div class="tdesc">已经硬了，尾巴还是软的。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🩸</div>
+    <div class="tnm">干血手印</div>
+    <div class="tval" style="background:#8a2020">-3 分</div>
+    <div class="tdesc">五根手指，比你的手小一号。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🩸</div>
+    <div class="tnm">干血手印</div>
+    <div class="tval" style="background:#8a2020">-3 分</div>
+    <div class="tdesc">五根手指，比你的手小一号。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🕷</div>
+    <div class="tnm">蝎子</div>
+    <div class="tval" style="background:#8a2020">-4 分</div>
+    <div class="tdesc">它抬着尾巴看着你。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+  <div class="obj bad">
+    <div class="tic">🪱</div>
+    <div class="tnm">一窝白虫</div>
+    <div class="tval" style="background:#8a2020">-5 分</div>
+    <div class="tdesc">在动。全都在动。</div>
+    <div class="ttag">床下 · 摸到即计分</div>
+  </div>
+</div>
+<h2>⑤ 角色卡（6 张 · 每位玩家随机发 1 张，公开）</h2>
+<div class="grid">
+  <div class="role">
+    <div class="head"><div class="nm">🧣 沈少奶奶</div><div class="en">MADAM SHEN</div></div>
+    <div class="skill"><b>【反咬】</b> 每局 3 次<br>当别人指认你、而你报的却是真话时：指认者<b>惊惧额外 +1</b>，你<b>镇静 +2</b>。</div>
+    <div class="pas"><b>怎么用：</b>她是全场唯一能从"被冤枉"里赚钱的人。别急着用，留到有人连着点你两次。</div>
+    <div class="rtip">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="role">
+    <div class="head"><div class="nm">🚬 陆三爷</div><div class="en">MASTER LU</div></div>
+    <div class="skill"><b>【熟睡】</b> 被动 · 常驻<br>你每夜的<b>诚实奖励为 +3</b>（他人 +2）。但你被点名时<b>惊惧 +2</b>。</div>
+    <div class="pas"><b>怎么用：</b>老宅主人睡得最死，也最怕吵。老实做人 +6 分，但千万别当最吵或最静的那个。</div>
+    <div class="rtip">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="role">
+    <div class="head"><div class="nm">👁 小翠</div><div class="en">XIAOCUI</div></div>
+    <div class="skill"><b>【添茶】</b> 每局 2 次<br>每夜结算后：让一名玩家<b>惊惧 −1</b>，你<b>镇静 +2</b>。</div>
+    <div class="pas"><b>怎么用：</b>添茶救的是别人，赚的是自己。给自己用就是 2 分换 2 分，不如拿去换人情。</div>
+    <div class="rtip">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="role">
+    <div class="head"><div class="nm">📻 吴先生</div><div class="en">MR. WU</div></div>
+    <div class="skill"><b>【刨根】</b> 每夜 1 次<br>让一名玩家<b>立刻亮出本夜的动静牌</b>：他若撒谎 → 他<b>惊惧 +1</b>、你<b>镇静 +5</b>；他若诚实 → 他<b>镇静 +1</b>。</div>
+    <div class="pas"><b>怎么用：</b>比指认温和：抓到赚 5 分，抓空只是给对方送 1 分。问那个你最想确认的人。</div>
+    <div class="rtip">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="role">
+    <div class="head"><div class="nm">🕯 老周</div><div class="en">OLD ZHOU</div></div>
+    <div class="skill"><b>【代受】</b> 每局 2 次<br>点名后：替一名被点名者下床 —— 他<b>免于惊惧</b>，你<b>镇静 +1</b> 并<b>摸 1 张物件牌</b>。</div>
+    <div class="pas"><b>怎么用：</b>更夫的灯笼照过整条巷子。你下床不吃惊惧，等于把别人的 −2 分变成自己的 +2.75 分。</div>
+    <div class="rtip">大床游戏 · 古宅六夜</div>
+  </div>
+  <div class="role">
+    <div class="head"><div class="nm">🐈 阿墨</div><div class="en">AMO THE CAT</div></div>
+    <div class="skill"><b>【夜眼】</b> 每局 2 次<br>指认前<b>先看 1 名玩家的动静牌</b>。若据此指认成立：被指者<b>惊惧 +2</b>，你只<b>镇静 +2</b>。</div>
+    <div class="pas"><b>怎么用：</b>猫不会说话，功劳算别人头上。它是"定点清除"，不是"刷分机器"。</div>
+    <div class="rtip">大床游戏 · 古宅六夜</div>
+  </div>
+</div>
+<h2>⑥ 玩家板（6 张 · 每人 1 张，公开摆放）</h2>
+<div class="grid">
+  <div class="pb" style="border-color:#7b2d26">
+    <h4 style="color:#7b2d26">玩家 1 的床头账</h4>
+    <div class="rowl"><b>😌 镇静</b>（每格 1 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl"><b>😱 惊惧</b>（每格 <span style="color:#8a2020">−2 分</span>）</div>
+    <div class="pips"><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div></div>
+    <div class="rowl"><b>🎒 物件</b>：摸到的物件牌摊在自己面前，终局一起算</div>
+    <div class="memo">终局得分　=　镇静　＋　物件分　−　2 × 惊惧</div>
+  </div>
+  <div class="pb" style="border-color:#1f4e5f">
+    <h4 style="color:#1f4e5f">玩家 2 的床头账</h4>
+    <div class="rowl"><b>😌 镇静</b>（每格 1 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl"><b>😱 惊惧</b>（每格 <span style="color:#8a2020">−2 分</span>）</div>
+    <div class="pips"><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div></div>
+    <div class="rowl"><b>🎒 物件</b>：摸到的物件牌摊在自己面前，终局一起算</div>
+    <div class="memo">终局得分　=　镇静　＋　物件分　−　2 × 惊惧</div>
+  </div>
+  <div class="pb" style="border-color:#4a3b6b">
+    <h4 style="color:#4a3b6b">玩家 3 的床头账</h4>
+    <div class="rowl"><b>😌 镇静</b>（每格 1 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl"><b>😱 惊惧</b>（每格 <span style="color:#8a2020">−2 分</span>）</div>
+    <div class="pips"><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div></div>
+    <div class="rowl"><b>🎒 物件</b>：摸到的物件牌摊在自己面前，终局一起算</div>
+    <div class="memo">终局得分　=　镇静　＋　物件分　−　2 × 惊惧</div>
+  </div>
+  <div class="pb" style="border-color:#5c4a1e">
+    <h4 style="color:#5c4a1e">玩家 4 的床头账</h4>
+    <div class="rowl"><b>😌 镇静</b>（每格 1 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl"><b>😱 惊惧</b>（每格 <span style="color:#8a2020">−2 分</span>）</div>
+    <div class="pips"><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div></div>
+    <div class="rowl"><b>🎒 物件</b>：摸到的物件牌摊在自己面前，终局一起算</div>
+    <div class="memo">终局得分　=　镇静　＋　物件分　−　2 × 惊惧</div>
+  </div>
+  <div class="pb" style="border-color:#2f5d3a">
+    <h4 style="color:#2f5d3a">玩家 5 的床头账</h4>
+    <div class="rowl"><b>😌 镇静</b>（每格 1 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl"><b>😱 惊惧</b>（每格 <span style="color:#8a2020">−2 分</span>）</div>
+    <div class="pips"><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div></div>
+    <div class="rowl"><b>🎒 物件</b>：摸到的物件牌摊在自己面前，终局一起算</div>
+    <div class="memo">终局得分　=　镇静　＋　物件分　−　2 × 惊惧</div>
+  </div>
+  <div class="pb" style="border-color:#6b2f5a">
+    <h4 style="color:#6b2f5a">玩家 6 的床头账</h4>
+    <div class="rowl"><b>😌 镇静</b>（每格 1 分）</div>
+    <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="rowl"><b>😱 惊惧</b>（每格 <span style="color:#8a2020">−2 分</span>）</div>
+    <div class="pips"><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div><div class="pip" style="border-color:#8a2020"></div></div>
+    <div class="rowl"><b>🎒 物件</b>：摸到的物件牌摊在自己面前，终局一起算</div>
+    <div class="memo">终局得分　=　镇静　＋　物件分　−　2 × 惊惧</div>
+  </div>
+</div>
+<h2>⑦ 床围挡板 · 管家灯 · 镇静 / 惊惧标记</h2>
+<div class="grid">
+  <div class="shield">床围挡板<br>（立在你面前 · 挡住你的动静牌）</div>
+  <div class="shield">床围挡板<br>（立在你面前 · 挡住你的动静牌）</div>
+  <div class="shield">床围挡板<br>（立在你面前 · 挡住你的动静牌）</div>
+  <div class="shield">床围挡板<br>（立在你面前 · 挡住你的动静牌）</div>
+  <div class="shield">床围挡板<br>（立在你面前 · 挡住你的动静牌）</div>
+  <div class="shield">床围挡板<br>（立在你面前 · 挡住你的动静牌）</div>
+</div>
+<div class="grid" style="margin-top:14px">
+  <div class="lamp">🏮<br><span style="font-size:11px">管家灯</span></div>
+  <div style="flex:1;min-width:280px">
+    <div class="setlabel">😌 镇静标记（建议米白 / 金色）</div>
+    <div class="marks"><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div><div class="mk" style="background:#c9a227">😌</div></div>
+    <div class="setlabel">😱 惊惧标记（建议深红 / 黑色）</div>
+    <div class="marks"><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div><div class="mk" style="background:#7b2d26">😱</div></div>
+  </div>
+</div>
+<h2>⑧ 一页速查（建议每人 1 份）</h2>
+<div class="quick">
+  <b>每夜六步</b>
+  <ol>
+    <li><b>入夜</b>：翻 1 张夜帖 → 读出本夜的 R（按人数换算）</li>
+    <li><b>暗出</b>：每人从手牌选 1 张动静牌（0–3），<b>面朝下</b>推进自己的床位</li>
+    <li><b>开口</b>：管家第一个，然后顺时针 —— 每人<b>大声报一个 0–3 的数字，可以撒谎</b></li>
+    <li><b>收牌</b>：非管家把牌推进床肚，管家查看后宣布「合拍 / 太吵 / 太静」并点名，随后<b>面朝下退还</b>（不公开具体值）</li>
+    <li><b>点名</b>：被点名者<b>亮出</b>自己的动静牌 → 惊惧 +1 → 下去看看（摸 1 张物件牌）</li>
+    <li><b>揭谎</b>：从管家左手起，每人可指认 1 人「他撒谎」（管家除外）→ 结算 → 管家灯传左手</li>
+  </ol>
+  <table>
+    <tr><th>情形</th><th>谁获利</th><th>分数</th></tr>
+    <tr><td>全场动静总和 T <b>恰好等于</b> R</td><td>全体</td><td>镇静 +2（陆三爷再 +1）</td></tr>
+    <tr><td>T &gt; R（太吵）</td><td>—</td><td><b>动静最大者</b>惊惧 +1（并列则全部）</td></tr>
+    <tr><td>T &lt; R（太静）</td><td>—</td><td><b>动静最小者</b>惊惧 +1（并列则全部）</td></tr>
+    <tr><td>报数 = 实际（诚实）</td><td>本人</td><td>镇静 +2（陆三爷 +3）</td></tr>
+    <tr><td>撒谎且<b>无人指认</b></td><td>本人</td><td>镇静 +5</td></tr>
+    <tr><td>撒谎且<b>被指认命中</b></td><td>指认者</td><td>指认者镇静 +6；撒谎者惊惧 +2</td></tr>
+    <tr><td>指认落空（对方是诚实的）</td><td>被指者</td><td>指认者惊惧 +1</td></tr>
+  </table>
+  <div style="margin-top:8px"><b>两条盈亏平衡点（本作的灵魂）</b><br>
+  · 撒谎：诚实 +2 / 骗过 +5 / 被抓 −4 ⇒ <b>被抓率 33.3% 是分水岭</b><br>
+  · 指认：命中 +6 / 落空 −2 ⇒ <b>命中率 25% 是分水岭</b><br>
+  · 两者之间（25%–33.3%）是<b>共存区</b>：这时撒谎与指认都划算，游戏最热闹。</div>
+</div>
+
+<footer>
+大床游戏：古宅六夜 · 打印道具　|　3–6 人 · 30–45 分钟 · 派对 / 社交推理<br>
+题材致敬：电影《床下有人 5》「五名来客受邀参加一场大床游戏」的密室设定（2026-10-30 上映）<br>
+完整规则见 <a href="README.md">README.md</a>
+</footer>
+</body>
+</html>
