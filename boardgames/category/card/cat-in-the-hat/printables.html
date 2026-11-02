@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>戴帽子的猫：妈妈回来前 — 打印道具</title>
+<style>
+  :root{
+    --ink:#2f2419; --sub:#7a6a56; --line:#e2d6c3; --paper:#fbf6ec; --cream:#fffdf8;
+    --red:#c0392b; --gold:#b8860b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;padding:26px;background:var(--paper);color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans CJK SC",sans-serif;line-height:1.55;}
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:1px;}
+  h1 span{font-size:14px;color:var(--sub);letter-spacing:0;font-weight:400;}
+  h2{font-size:18px;margin:0 0 12px;padding-left:10px;border-left:6px solid var(--red);}
+  h3{font-size:13px;margin:14px 0 6px;color:var(--sub);letter-spacing:1px;}
+  .sub{color:var(--sub);font-size:13px;margin:0 0 18px;}
+  .page{margin-bottom:34px;}
+  .grid{display:flex;flex-wrap:wrap;gap:10px;}
+  .print-hint{background:#fff8e1;border:2px solid #e6c063;border-radius:12px;padding:14px 18px;margin-bottom:24px;font-size:13.5px;}
+  .print-hint strong{color:#8a5a00;}
+  .print-hint ul{margin:8px 0 0;padding-left:20px;}
+  hr.sep{border:0;border-top:1px dashed var(--line);margin:26px 0;}
+
+  /* 车程轨 */
+  .track{border:3px solid var(--ink);border-radius:14px;background:var(--cream);padding:12px 14px;}
+  .thead{font-weight:800;font-size:15px;margin-bottom:10px;}
+  .trow{display:flex;gap:0;}
+  .stop{flex:1;border:2px solid var(--line);border-right:none;padding:8px 6px;text-align:center;position:relative;}
+  .stop:last-child{border-right:2px solid var(--line);border-radius:0 10px 10px 0;}
+  .stop:first-child{border-radius:10px 0 0 10px;}
+  .stop .sn{font-size:11px;color:var(--sub);}
+  .stop .se{font-size:13px;font-weight:700;margin-top:2px;}
+  .stop em{display:block;font-size:10px;color:var(--red);font-style:normal;margin-top:3px;}
+  .stop.late{background:#fdecea;}
+  .tnote{font-size:12px;color:var(--red);margin-top:8px;}
+
+  /* 房间板 */
+  .board{width:100%;border:3px solid var(--ink);border-radius:14px;background:var(--bg);padding:12px;}
+  .bh{display:flex;align-items:center;gap:10px;border-bottom:2px dashed var(--line);padding-bottom:8px;}
+  .be{font-size:30px;}
+  .bn{font-weight:800;font-size:19px;color:var(--ink);}
+  .bs{font-size:11px;color:var(--sub);}
+  .bcap{margin-left:auto;font-size:12px;font-weight:800;color:var(--red);border:2px solid var(--red);border-radius:8px;padding:3px 8px;}
+  .ruler{display:flex;gap:0;margin:10px 0;}
+  .tick{flex:1;text-align:center;font-size:10px;color:var(--sub);border:1px solid var(--line);border-right:none;padding:3px 0;}
+  .tick:last-child{border-right:1px solid var(--line);}
+  .tick.hot{background:#fdecea;color:var(--red);font-weight:800;border-color:var(--red);}
+  .lanes{display:flex;gap:8px;}
+  .lane{flex:1;min-height:104px;border:2px solid var(--line);border-radius:10px;background:rgba(255,255,255,.65);
+    position:relative;padding-top:20px;}
+  .lane .ln{position:absolute;top:2px;left:6px;font-size:11px;font-weight:800;color:var(--pc);}
+  .fishlane{flex:.8;background:rgba(224,242,254,.8);border-style:dashed;}
+  .bfoot{font-size:11px;color:var(--sub);margin-top:8px;}
+
+  /* 卡牌 */
+  .card{width:140px;height:188px;border-radius:11px;border:3px solid var(--ink);background:var(--bg);
+    padding:9px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 5px rgba(0,0,0,.10);}
+  .ch{display:flex;align-items:center;gap:5px;border-bottom:2px solid var(--line);padding-bottom:5px;}
+  .ce{font-size:17px;}
+  .cn{font-size:12px;font-weight:800;color:var(--ink);}
+  .cname{font-size:14px;font-weight:800;text-align:center;margin:6px 0;}
+  .cname.sm{font-size:12.5px;}
+  .cval{text-align:center;}
+  .cval b{display:block;font-size:44px;line-height:1;color:var(--ink);font-family:Georgia,serif;}
+  .cval i{font-size:10px;color:var(--sub);font-style:normal;}
+  .ctext{font-size:11px;line-height:1.5;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .cf{font-size:9.5px;color:var(--sub);text-align:center;border-top:1px dashed var(--line);padding-top:4px;}
+
+  /* 角色卡 */
+  .role{width:186px;min-height:212px;border:3px solid var(--ink);border-radius:12px;background:var(--cream);padding:11px;display:flex;flex-direction:column;}
+  .rh{display:flex;align-items:center;gap:8px;}
+  .rh .re{font-size:26px;}
+  .rh .rn{font-weight:800;font-size:14px;}
+  .rh .rt{font-size:10px;color:var(--sub);}
+  .rab{font-size:11px;line-height:1.5;margin-top:8px;border-top:1px dashed var(--line);padding-top:7px;flex:1;}
+  .rtip{font-size:10.5px;color:var(--sub);margin-top:6px;}
+
+  /* 玩家板 */
+  .pboard{width:236px;border:3px solid var(--ink);border-radius:12px;background:var(--cream);padding:10px;}
+  .ph{display:flex;justify-content:space-between;align-items:center;font-size:13px;}
+  .ph b{color:var(--pc);}
+  .slot{font-size:9.5px;color:var(--sub);}
+  .ptitle{font-size:10px;color:var(--sub);margin:8px 0 3px;letter-spacing:2px;}
+  .score{display:flex;flex-wrap:wrap;gap:2px;}
+  .sc{width:20px;height:18px;border:1px solid var(--line);border-radius:3px;font-size:9px;
+    display:flex;align-items:center;justify-content:center;background:#fff;color:var(--sub);}
+  .sc.m5{background:#f3ede2;color:var(--ink);font-weight:800;border-color:#c9b89f;}
+  .prow{display:flex;align-items:center;gap:5px;font-size:11px;margin-top:7px;}
+  .bx{width:15px;height:15px;border:2px solid var(--line);border-radius:4px;display:inline-block;background:#fff;}
+  .hintmini{font-size:9px;color:var(--sub);}
+
+  /* 标记 */
+  .tokrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+  .tok{width:44px;height:44px;border-radius:50%;background:var(--pc);color:#fff;font-weight:800;font-size:12px;
+    display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,.6);box-shadow:0 1px 4px rgba(0,0,0,.2);}
+  .tok.sm{width:52px;height:34px;border-radius:8px;font-size:10px;}
+  .tok.mark{background:#fff;color:#111;border:3px solid #111;}
+
+  /* 速查 */
+  .cheat{width:100%;border:3px solid var(--ink);border-radius:12px;background:var(--cream);padding:14px 18px;columns:2;column-gap:26px;font-size:12px;}
+  .cheat b{color:var(--red);}
+  .cheat li{margin-bottom:5px;break-inside:avoid;}
+
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .print-hint { display: none; }
+    body{padding:0;background:#fff;}
+    .page{page-break-inside:avoid;margin-bottom:16px;}
+    .grid{gap:7px;}
+    h2{font-size:16px;}
+  }
+</style>
+</head>
+<body>
+<h1>🎩 戴帽子的猫：妈妈回来前 <span>THE CAT IN THE HAT: Before Mom Gets Home</span></h1>
+<p class="sub">卡牌类 ｜ 3-5 人 ｜ 30-40 分钟 ｜ 8 岁以上 ｜ 共 106 张卡（101 张行动牌 + 5 张角色卡）+ 3 张房间板 + 1 张车程轨 + 5 张玩家板</p>
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，页边距设为<strong>最小</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形 / Background graphics"</strong>，否则卡牌颜色会全部丢失</li>
+    <li>卡牌、角色卡、玩家板建议用 <strong>200g 以上卡纸</strong>打印；房间板建议 A3 或两张 A4 拼接</li>
+    <li>打印后沿实线裁切，卡牌可塑封或用牌套，耐用度提升明显</li>
+    <li>胡闹牌按房间分三叠（客厅 / 厨房 / 浴室），背面可用对应颜色的纸</li>
+    <li>乱局刻度上的 <strong>12</strong> 是曝光线，建议用红笔描一遍</li>
+  </ul>
+</div>
+
+<div class="page">
+<h2>1. 妈妈的车程轨（1 张 · 横向）</h2>
+<div class="track">
+  <div class="thead">妈妈的车程 ｜ 每回合前进 1 站，走到第 7 站立即终局</div>
+  <div class="trow"><div class="stop"><div class="sn">1</div><div class="se">🏢 公司</div></div><div class="stop"><div class="sn">2</div><div class="se">🛒 超市</div></div><div class="stop"><div class="sn">3</div><div class="se">🥖 面包店</div></div><div class="stop"><div class="sn">4</div><div class="se">🚦 红绿灯</div></div><div class="stop"><div class="sn">5</div><div class="se">🌳 转角的树</div></div><div class="stop late"><div class="sn">6</div><div class="se">↩️ 拐进街口</div><em>起不再曝光</em></div><div class="stop late"><div class="sn">7</div><div class="se">🏠 家门口</div><em>终局清算</em></div></div>
+  <div class="tnote">⚠️ 第 6 站起（拐进街口）房间不再触发曝光 —— 乱局全部留到终局原价结算</div>
+</div>
+</div>
+
+<hr class="sep">
+
+<div class="page">
+<h2>2. 房间板（3 张 · 客厅 / 厨房 / 浴室）</h2>
+<h3>每张房间板 = 一条 0-20 乱局刻度 + 5 条玩家泳道 + 1 个鱼堆</h3>
+<div class="grid" style="flex-direction:column;">
+<div class="board" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="bh"><span class="be">🛋️</span><div><div class="bn">客厅</div><div class="bs">沙发、地毯、电视、鱼缸</div></div>
+    <div class="bcap">乱局 12 = 曝光线</div></div>
+  <div class="ruler"><span class="tick">0</span><span class="tick">1</span><span class="tick">2</span><span class="tick">3</span><span class="tick">4</span><span class="tick">5</span><span class="tick">6</span><span class="tick">7</span><span class="tick">8</span><span class="tick">9</span><span class="tick">10</span><span class="tick">11</span><span class="tick hot">12</span><span class="tick">13</span><span class="tick">14</span><span class="tick">15</span><span class="tick">16</span><span class="tick">17</span><span class="tick">18</span><span class="tick">19</span><span class="tick">20</span></div>
+  <div class="lanes"><div class="lane" style="--pc:#c2410c"><span class="ln">P1</span></div><div class="lane" style="--pc:#1d4ed8"><span class="ln">P2</span></div><div class="lane" style="--pc:#15803d"><span class="ln">P3</span></div><div class="lane" style="--pc:#7e22ce"><span class="ln">P4</span></div><div class="lane" style="--pc:#0f766e"><span class="ln">P5</span></div><div class="lane fishlane"><span class="ln">🐟</span></div></div>
+  <div class="bfoot">卡片按玩家颜色叠进自己的泳道 · 鱼堆的乱局不属于任何人</div>
+</div>
+<div class="board" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="bh"><span class="be">🍳</span><div><div class="bn">厨房</div><div class="bs">面粉、锅盖、冰箱、洗碗池</div></div>
+    <div class="bcap">乱局 12 = 曝光线</div></div>
+  <div class="ruler"><span class="tick">0</span><span class="tick">1</span><span class="tick">2</span><span class="tick">3</span><span class="tick">4</span><span class="tick">5</span><span class="tick">6</span><span class="tick">7</span><span class="tick">8</span><span class="tick">9</span><span class="tick">10</span><span class="tick">11</span><span class="tick hot">12</span><span class="tick">13</span><span class="tick">14</span><span class="tick">15</span><span class="tick">16</span><span class="tick">17</span><span class="tick">18</span><span class="tick">19</span><span class="tick">20</span></div>
+  <div class="lanes"><div class="lane" style="--pc:#c2410c"><span class="ln">P1</span></div><div class="lane" style="--pc:#1d4ed8"><span class="ln">P2</span></div><div class="lane" style="--pc:#15803d"><span class="ln">P3</span></div><div class="lane" style="--pc:#7e22ce"><span class="ln">P4</span></div><div class="lane" style="--pc:#0f766e"><span class="ln">P5</span></div><div class="lane fishlane"><span class="ln">🐟</span></div></div>
+  <div class="bfoot">卡片按玩家颜色叠进自己的泳道 · 鱼堆的乱局不属于任何人</div>
+</div>
+<div class="board" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="bh"><span class="be">🛁</span><div><div class="bn">浴室</div><div class="bs">泡泡、浴帘、毛巾、水龙头</div></div>
+    <div class="bcap">乱局 12 = 曝光线</div></div>
+  <div class="ruler"><span class="tick">0</span><span class="tick">1</span><span class="tick">2</span><span class="tick">3</span><span class="tick">4</span><span class="tick">5</span><span class="tick">6</span><span class="tick">7</span><span class="tick">8</span><span class="tick">9</span><span class="tick">10</span><span class="tick">11</span><span class="tick hot">12</span><span class="tick">13</span><span class="tick">14</span><span class="tick">15</span><span class="tick">16</span><span class="tick">17</span><span class="tick">18</span><span class="tick">19</span><span class="tick">20</span></div>
+  <div class="lanes"><div class="lane" style="--pc:#c2410c"><span class="ln">P1</span></div><div class="lane" style="--pc:#1d4ed8"><span class="ln">P2</span></div><div class="lane" style="--pc:#15803d"><span class="ln">P3</span></div><div class="lane" style="--pc:#7e22ce"><span class="ln">P4</span></div><div class="lane" style="--pc:#0f766e"><span class="ln">P5</span></div><div class="lane fishlane"><span class="ln">🐟</span></div></div>
+  <div class="bfoot">卡片按玩家颜色叠进自己的泳道 · 鱼堆的乱局不属于任何人</div>
+</div>
+</div>
+</div>
+
+<hr class="sep">
+
+<div class="page">
+<h2>3. 胡闹牌 · 客厅 🛋️（20 张）</h2>
+<h3>数值 = 乱局 = 乐趣。牌放哪间房，乱局就记在哪间房，也记在你名下。</h3>
+<div class="grid">
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">沙发翻个面</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">靠垫大雪山</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">台灯当球踢</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">地毯卷成筒</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">窗帘荡秋千</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">书架变楼梯</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">电视开成马戏团</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">鱼缸前的独木桥</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">相框歪成笑脸</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">遥控器赛车</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">花瓶插满袜子</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">拼图撒成雨</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">椅子倒立塔</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">时钟倒着走</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">唱片机跳针</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">灯罩当帽子</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">门把手系上绳</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">抱枕大战</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">报纸变纸飞机</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+<div class="card mc" style="--ink:#b45309;--bg:#fff7ed;--line:#f0c08a">
+  <div class="ch"><span class="ce">🛋️</span><span class="cn">客厅</span></div>
+  <div class="cname">全家福笑到歪</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放客厅</div>
+</div>
+</div>
+</div>
+
+<div class="page">
+<h2>4. 胡闹牌 · 厨房 🍳（20 张）</h2>
+<div class="grid">
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">面粉下雪</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">打蛋器直升机</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">锅盖击剑</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">冰箱门开趴</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">番茄滚地雷</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">榨汁机放烟花</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">面条跳绳</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">勺子交响乐</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">洗碗池造浪</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">罐头垒成塔</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">围裙当披风</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">烤箱烤袜子</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">果酱涂墙画</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">冷冻室挖矿</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">水槽钓鱼</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">冰箱贴排队</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">洗碗机开船</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">调味瓶保龄球</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">端盘走钢丝</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+<div class="card mc" style="--ink:#9f1239;--bg:#fff1f2;--line:#f4a8b8">
+  <div class="ch"><span class="ce">🍳</span><span class="cn">厨房</span></div>
+  <div class="cname">冰箱雪崩</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放厨房</div>
+</div>
+</div>
+</div>
+
+<div class="page">
+<h2>5. 胡闹牌 · 浴室 🛁（20 张）</h2>
+<div class="grid">
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">泡泡大爆炸</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">毛巾堆成山</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">牙刷当麦克风</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">浴帘拉成幕布</div>
+  <div class="cval"><b>1</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">水龙头开瀑布</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">洗发水滑梯</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">浴缸海盗船</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">排水口漩涡</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">镜子哈气写字</div>
+  <div class="cval"><b>2</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">卷纸瀑布</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">花洒下暴雨</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">橡皮鸭舰队</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">漱口杯小号</div>
+  <div class="cval"><b>3</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">防滑垫冲浪</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">洗衣篮投球</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">牙膏挤成云</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">浴球当炸弹</div>
+  <div class="cval"><b>4</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">雾气里藏人</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">毛巾杆单杠</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+<div class="card mc" style="--ink:#0e7490;--bg:#ecfeff;--line:#8fd3e1">
+  <div class="ch"><span class="ce">🛁</span><span class="cn">浴室</span></div>
+  <div class="cname">地漏黑洞</div>
+  <div class="cval"><b>5</b><i>乱局 / 乐趣</i></div>
+  <div class="cf">只放浴室</div>
+</div>
+</div>
+</div>
+
+<hr class="sep">
+
+<div class="page">
+<h2>6. 收拾牌 🧹（16 张）</h2>
+<h3>任意一间房：清掉你自己名下 2 点乱局，你 +1 乐趣。整间房的总乱局同步 −2。</h3>
+<div class="grid">
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！塞进柜子</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！一键清扫</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！抱着东西跑</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！踢进沙发底</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！全塞进抽屉</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！假装没看见</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！抹布一阵狂擦</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！倒进垃圾桶</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！抱去地下室</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！铺毯子盖住</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！假装是装饰</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！藏进浴帘后</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！装进洗衣篮</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！塞进烤箱</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！吸尘器追着跑</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+<div class="card cc" style="--ink:#475569;--bg:#f8fafc">
+  <div class="ch"><span class="ce">🧹</span><span class="cn">收拾</span></div>
+  <div class="cname sm">快收！全套归位</div>
+  <div class="ctext">一间房 −2 乱局<br>（只减你自己的泳道）<br><b>你 +1 乐趣</b></div>
+  <div class="cf">不限房间</div>
+</div>
+</div>
+</div>
+
+<div class="page">
+<h2>7. 甩锅牌 🧦（12 张）</h2>
+<h3>把你在一间房里最多 3 点乱局，搬到另一间房。乐趣不变 —— 但账单换了地方，也换了人看。</h3>
+<div class="grid">
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">东西一干的</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">东西二干的</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">不是我，是猫</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">楼上的邻居</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">风太大吹的</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">是狗弄的</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">猫尾巴扫的</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">东西一跑过去了</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">东西二翻的跟头</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">那把会飞的伞</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">都是风筝闯的祸</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+<div class="card cd" style="--ink:#7c3aed;--bg:#faf5ff">
+  <div class="ch"><span class="ce">🧦</span><span class="cn">甩锅</span></div>
+  <div class="cname sm">反正是猫的朋友</div>
+  <div class="ctext">把你自己在 A 房的<br><b>最多 3 点</b>乱局<br>搬到 B 房</div>
+  <div class="cf">必须先有乱局</div>
+</div>
+</div>
+</div>
+
+<div class="page">
+<h2>8. 猫牌 🎩（5 张 · 每人最多 1 张）</h2>
+<h3>猫替你背锅：清空你在一间房里的全部乱局，那些乱局从此不属于任何人。</h3>
+<div class="grid">
+<div class="card ck" style="--ink:#1f2937;--bg:#fef9c3">
+  <div class="ch"><span class="ce">🎩</span><span class="cn">猫牌</span></div>
+  <div class="cname sm">猫替你背锅</div>
+  <div class="ctext">清空你在一间房<br><b>全部的乱局</b><br>屋子总数同步下降</div>
+  <div class="cf">整局每人限 1 次</div>
+</div>
+<div class="card ck" style="--ink:#1f2937;--bg:#fef9c3">
+  <div class="ch"><span class="ce">🎩</span><span class="cn">猫牌</span></div>
+  <div class="cname sm">猫替你背锅</div>
+  <div class="ctext">清空你在一间房<br><b>全部的乱局</b><br>屋子总数同步下降</div>
+  <div class="cf">整局每人限 1 次</div>
+</div>
+<div class="card ck" style="--ink:#1f2937;--bg:#fef9c3">
+  <div class="ch"><span class="ce">🎩</span><span class="cn">猫牌</span></div>
+  <div class="cname sm">猫替你背锅</div>
+  <div class="ctext">清空你在一间房<br><b>全部的乱局</b><br>屋子总数同步下降</div>
+  <div class="cf">整局每人限 1 次</div>
+</div>
+<div class="card ck" style="--ink:#1f2937;--bg:#fef9c3">
+  <div class="ch"><span class="ce">🎩</span><span class="cn">猫牌</span></div>
+  <div class="cname sm">猫替你背锅</div>
+  <div class="ctext">清空你在一间房<br><b>全部的乱局</b><br>屋子总数同步下降</div>
+  <div class="cf">整局每人限 1 次</div>
+</div>
+<div class="card ck" style="--ink:#1f2937;--bg:#fef9c3">
+  <div class="ch"><span class="ce">🎩</span><span class="cn">猫牌</span></div>
+  <div class="cname sm">猫替你背锅</div>
+  <div class="ctext">清空你在一间房<br><b>全部的乱局</b><br>屋子总数同步下降</div>
+  <div class="cf">整局每人限 1 次</div>
+</div>
+</div>
+</div>
+
+<div class="page">
+<h2>9. 鱼牌 🐟（8 张）</h2>
+<h3>鱼在尖叫，全屋都听见了：一间房 +2 点「无主乱局」，你 +2 乐趣。无主乱局会撑大账单，但不算在任何人头上。</h3>
+<div class="grid">
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+<div class="card cf2" style="--ink:#0369a1;--bg:#eff6ff">
+  <div class="ch"><span class="ce">🐟</span><span class="cn">鱼牌</span></div>
+  <div class="cname sm">鱼在尖叫</div>
+  <div class="ctext">指定一间房<br><b>+2 无主乱局</b><br>你 +2 乐趣</div>
+  <div class="cf">不算任何人的账</div>
+</div>
+</div>
+</div>
+
+<hr class="sep">
+
+<div class="page">
+<h2>10. 角色卡（5 张 · 可选）</h2>
+<h3>新手局建议不用角色卡；熟悉后每人抽 1 张，能力都是「每局限次」，用完翻面。</h3>
+<div class="grid">
+<div class="role"><div class="rh"><span class="re">🎩</span><div><div class="rn">戴帽子的猫</div><div class="rt">混乱之源</div></div></div>
+<div class="rab">每局 2 次：你打出胡闹牌时，额外 +2 乐趣（乱局不变）。</div><div class="rtip">💡 纯白拿分，别省着，越早用越安全。</div></div>
+<div class="role"><div class="rh"><span class="re">🐟</span><div><div class="rn">鱼·克莱策尔</div><div class="rt">全场唯一清醒的</div></div></div>
+<div class="rab">每局 2 次：任何房间曝光时，你 +2 乐趣（"我早就说过了！"）。</div><div class="rtip">💡 别人闹得越凶你越赚，但你得先活着。</div></div>
+<div class="role"><div class="rh"><span class="re">🧒</span><div><div class="rn">康拉德</div><div class="rt">规矩人</div></div></div>
+<div class="rab">每局 3 次：你打出的「快收！」改为该房 <b>−4 乱局</b>，且 <b>+3 乐趣</b>（原本 −2 / +1）。</div><div class="rtip">💡 唯一能把房间从红线拉回来的人。</div></div>
+<div class="role"><div class="rh"><span class="re">👧</span><div><div class="rn">莎莉</div><div class="rt">最爱玩的那个</div></div></div>
+<div class="rab">每局 2 次：你打出的胡闹牌乱局 −2（最低 1），乐趣照拿。</div><div class="rtip">💡 大牌专用，5 点只记 3 点。</div></div>
+<div class="role"><div class="rh"><span class="re">🧦</span><div><div class="rn">东西一·东西二</div><div class="rt">两个一起才是一个</div></div></div>
+<div class="rab">每局 2 次：你打出的胡闹牌乱局一半记在鱼堆上，一半记在你名下。</div><div class="rtip">💡 账单变大，但你的名字只占一半。</div></div>
+</div>
+</div>
+
+<div class="page">
+<h2>11. 玩家板（5 张）</h2>
+<h3>0-40 的乐趣计分轨，配一枚同色圆片当计分标记；右下角方格记录能力使用次数。</h3>
+<div class="grid">
+<div class="pboard" style="--pc:#c2410c">
+  <div class="ph"><b>玩家 1</b><span class="slot">角色：____________</span></div>
+  <div class="ptitle">乐趣（分数）</div>
+  <div class="score"><span class="sc m5">0</span><span class="sc">1</span><span class="sc">2</span><span class="sc">3</span><span class="sc">4</span><span class="sc m5">5</span><span class="sc">6</span><span class="sc">7</span><span class="sc">8</span><span class="sc">9</span><span class="sc m5">10</span><span class="sc">11</span><span class="sc">12</span><span class="sc">13</span><span class="sc">14</span><span class="sc m5">15</span><span class="sc">16</span><span class="sc">17</span><span class="sc">18</span><span class="sc">19</span><span class="sc m5">20</span><span class="sc">21</span><span class="sc">22</span><span class="sc">23</span><span class="sc">24</span><span class="sc m5">25</span><span class="sc">26</span><span class="sc">27</span><span class="sc">28</span><span class="sc">29</span><span class="sc m5">30</span><span class="sc">31</span><span class="sc">32</span><span class="sc">33</span><span class="sc">34</span><span class="sc m5">35</span><span class="sc">36</span><span class="sc">37</span><span class="sc">38</span><span class="sc">39</span><span class="sc m5">40</span></div>
+  <div class="prow"><span>能力已用</span><i class="bx"></i><i class="bx"></i><i class="bx"></i></div>
+  <div class="prow"><span>猫牌</span><i class="bx"></i><span class="hintmini">整局 1 次</span></div>
+</div>
+<div class="pboard" style="--pc:#1d4ed8">
+  <div class="ph"><b>玩家 2</b><span class="slot">角色：____________</span></div>
+  <div class="ptitle">乐趣（分数）</div>
+  <div class="score"><span class="sc m5">0</span><span class="sc">1</span><span class="sc">2</span><span class="sc">3</span><span class="sc">4</span><span class="sc m5">5</span><span class="sc">6</span><span class="sc">7</span><span class="sc">8</span><span class="sc">9</span><span class="sc m5">10</span><span class="sc">11</span><span class="sc">12</span><span class="sc">13</span><span class="sc">14</span><span class="sc m5">15</span><span class="sc">16</span><span class="sc">17</span><span class="sc">18</span><span class="sc">19</span><span class="sc m5">20</span><span class="sc">21</span><span class="sc">22</span><span class="sc">23</span><span class="sc">24</span><span class="sc m5">25</span><span class="sc">26</span><span class="sc">27</span><span class="sc">28</span><span class="sc">29</span><span class="sc m5">30</span><span class="sc">31</span><span class="sc">32</span><span class="sc">33</span><span class="sc">34</span><span class="sc m5">35</span><span class="sc">36</span><span class="sc">37</span><span class="sc">38</span><span class="sc">39</span><span class="sc m5">40</span></div>
+  <div class="prow"><span>能力已用</span><i class="bx"></i><i class="bx"></i><i class="bx"></i></div>
+  <div class="prow"><span>猫牌</span><i class="bx"></i><span class="hintmini">整局 1 次</span></div>
+</div>
+<div class="pboard" style="--pc:#15803d">
+  <div class="ph"><b>玩家 3</b><span class="slot">角色：____________</span></div>
+  <div class="ptitle">乐趣（分数）</div>
+  <div class="score"><span class="sc m5">0</span><span class="sc">1</span><span class="sc">2</span><span class="sc">3</span><span class="sc">4</span><span class="sc m5">5</span><span class="sc">6</span><span class="sc">7</span><span class="sc">8</span><span class="sc">9</span><span class="sc m5">10</span><span class="sc">11</span><span class="sc">12</span><span class="sc">13</span><span class="sc">14</span><span class="sc m5">15</span><span class="sc">16</span><span class="sc">17</span><span class="sc">18</span><span class="sc">19</span><span class="sc m5">20</span><span class="sc">21</span><span class="sc">22</span><span class="sc">23</span><span class="sc">24</span><span class="sc m5">25</span><span class="sc">26</span><span class="sc">27</span><span class="sc">28</span><span class="sc">29</span><span class="sc m5">30</span><span class="sc">31</span><span class="sc">32</span><span class="sc">33</span><span class="sc">34</span><span class="sc m5">35</span><span class="sc">36</span><span class="sc">37</span><span class="sc">38</span><span class="sc">39</span><span class="sc m5">40</span></div>
+  <div class="prow"><span>能力已用</span><i class="bx"></i><i class="bx"></i><i class="bx"></i></div>
+  <div class="prow"><span>猫牌</span><i class="bx"></i><span class="hintmini">整局 1 次</span></div>
+</div>
+<div class="pboard" style="--pc:#7e22ce">
+  <div class="ph"><b>玩家 4</b><span class="slot">角色：____________</span></div>
+  <div class="ptitle">乐趣（分数）</div>
+  <div class="score"><span class="sc m5">0</span><span class="sc">1</span><span class="sc">2</span><span class="sc">3</span><span class="sc">4</span><span class="sc m5">5</span><span class="sc">6</span><span class="sc">7</span><span class="sc">8</span><span class="sc">9</span><span class="sc m5">10</span><span class="sc">11</span><span class="sc">12</span><span class="sc">13</span><span class="sc">14</span><span class="sc m5">15</span><span class="sc">16</span><span class="sc">17</span><span class="sc">18</span><span class="sc">19</span><span class="sc m5">20</span><span class="sc">21</span><span class="sc">22</span><span class="sc">23</span><span class="sc">24</span><span class="sc m5">25</span><span class="sc">26</span><span class="sc">27</span><span class="sc">28</span><span class="sc">29</span><span class="sc m5">30</span><span class="sc">31</span><span class="sc">32</span><span class="sc">33</span><span class="sc">34</span><span class="sc m5">35</span><span class="sc">36</span><span class="sc">37</span><span class="sc">38</span><span class="sc">39</span><span class="sc m5">40</span></div>
+  <div class="prow"><span>能力已用</span><i class="bx"></i><i class="bx"></i><i class="bx"></i></div>
+  <div class="prow"><span>猫牌</span><i class="bx"></i><span class="hintmini">整局 1 次</span></div>
+</div>
+<div class="pboard" style="--pc:#0f766e">
+  <div class="ph"><b>玩家 5</b><span class="slot">角色：____________</span></div>
+  <div class="ptitle">乐趣（分数）</div>
+  <div class="score"><span class="sc m5">0</span><span class="sc">1</span><span class="sc">2</span><span class="sc">3</span><span class="sc">4</span><span class="sc m5">5</span><span class="sc">6</span><span class="sc">7</span><span class="sc">8</span><span class="sc">9</span><span class="sc m5">10</span><span class="sc">11</span><span class="sc">12</span><span class="sc">13</span><span class="sc">14</span><span class="sc m5">15</span><span class="sc">16</span><span class="sc">17</span><span class="sc">18</span><span class="sc">19</span><span class="sc m5">20</span><span class="sc">21</span><span class="sc">22</span><span class="sc">23</span><span class="sc">24</span><span class="sc m5">25</span><span class="sc">26</span><span class="sc">27</span><span class="sc">28</span><span class="sc">29</span><span class="sc m5">30</span><span class="sc">31</span><span class="sc">32</span><span class="sc">33</span><span class="sc">34</span><span class="sc m5">35</span><span class="sc">36</span><span class="sc">37</span><span class="sc">38</span><span class="sc">39</span><span class="sc m5">40</span></div>
+  <div class="prow"><span>能力已用</span><i class="bx"></i><i class="bx"></i><i class="bx"></i></div>
+  <div class="prow"><span>猫牌</span><i class="bx"></i><span class="hintmini">整局 1 次</span></div>
+</div>
+</div>
+</div>
+
+<div class="page">
+<h2>12. 棋子与标记</h2>
+<h3>圆片 = 计分标记（每色 1 枚）；方片 = 车程标记（1 枚）；乱局标记 = 房间板刻度上的游标（每房 1 枚）。</h3>
+<div class="tokrow"><div class="tok" style="--pc:#c2410c">P1</div><div class="tok" style="--pc:#1d4ed8">P2</div><div class="tok" style="--pc:#15803d">P3</div><div class="tok" style="--pc:#7e22ce">P4</div><div class="tok" style="--pc:#0f766e">P5</div></div>
+<div class="tokrow"><div class="tok sm" style="--pc:#c2410c">车程</div><div class="tok sm" style="--pc:#1d4ed8">车程</div><div class="tok sm" style="--pc:#15803d">车程</div><div class="tok sm" style="--pc:#7e22ce">车程</div><div class="tok sm" style="--pc:#0f766e">车程</div></div>
+<div class="tokrow"><div class="tok mark" style="--pc:#111">乱局</div><div class="tok mark" style="--pc:#111">乱局</div><div class="tok mark" style="--pc:#111">乱局</div></div>
+<p class="sub" style="margin-top:10px;">※ 用硬币、围棋棋子、乐高小人替代完全不影响游戏。</p>
+</div>
+
+<div class="page">
+<h2>13. 一页速查</h2>
+<div class="cheat">
+<ul>
+<li><b>目标</b>：7 回合后乐趣最高者获胜。乱局不是分数，是账单。</li>
+<li><b>每回合</b>：全员同时暗出 1 张牌（含目标房间）→ 一起翻开 → 按 客厅→厨房→浴室 结算 → 补 1 张牌。</li>
+<li><b>胡闹牌</b>：该房乱局 +N，你乐趣 +N。</li>
+<li><b>收拾牌</b>：该房你的泳道 −2，乐趣 +1。</li>
+<li><b>甩锅牌</b>：你自己的乱局从 A 房搬到 B 房，最多 3 点。</li>
+<li><b>猫牌</b>：清空你在一间房的全部乱局，整局 1 次。</li>
+<li><b>鱼牌</b>：一间房 +2 无主乱局，你 +2 乐趣。</li>
+<li><b>曝光（乱局 ≥12）</b>：最脏者付 ⌈乱局 ÷ 2⌉；第二脏者 +⌊乱局 ÷ 3⌋；其余每人 −1；该房清零。</li>
+<li><b>第 6 站起不再曝光</b>：乱局全部留到终局，<b>原价</b>结算。</li>
+<li><b>终局</b>：每间房，最脏者付<b>全额乱局</b>，第二脏者 +⌊乱局 ÷ 3⌋（无人第二则作废）。</li>
+<li><b>平手</b>：并列最脏 = 全部付全额；并列第二 = 全部拿奖金。</li>
+<li><b>铁律</b>：账单是<b>整间房的总账</b>，不是你自己那几张牌。</li>
+</ul>
+</div>
+</div>
+
+</body>
+</html>
