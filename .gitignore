@@ -71,3 +71,18 @@ docs/发布状态总结.md
 docs/CLOUD_ENV_LIMITATION.md
 docs/PUBLISH_REPORT.md
 teambuilding/ROADMAP.md
+# 🔴 微信后台登录凭证（绝对不能提交）
+.secrets/
+.sync_snapshot.json
+# teambuilding 巡检临时产物
+teambuilding/__harness.html
+teambuilding/.audit/
+teambuilding/_data/
+
+# teambuilding 本地素材目录（仓库为公开库，以下内容不随站点发布）
+# teambuilding/wechat/  公众号文章源 + 228MB 封面素材 + 公众号 AppID/Secret 所在目录
+# teambuilding/wiki/    59MB 调研 wiki（原始资料与综述，非站点内容）
+# teambuilding/generated/  内部分析稿
+teambuilding/wechat/
+teambuilding/wiki/
+teambuilding/generated/
