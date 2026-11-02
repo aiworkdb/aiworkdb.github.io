@@ -9,10 +9,11 @@ cover: "https://placehold.co/1200x630/FF6B6B/white?text=Ice+Breaker"
 # 美食挑战赛（团建改造版）
 
 
-> **原游戏**：[美食挑战赛](https://aiworkdb.github.io/teambuilding/boardgames/category/party/food-challenge/README.html)
+> **原游戏**：派对 / 美食挑战赛（原桌游资料未随本库发布）
 
 
 | **时长** | 30–40 min |
+| **人数** | 建议 每组 4–7 人 |
 | **场景标签** | 团建 / 培训 / 破冰 |
 | **难度** | ⭐ |
 | **道具需求** | 有（食材卡 + 菜谱卡 + 计时器） |
@@ -20,6 +21,11 @@ cover: "https://placehold.co/1200x630/FF6B6B/white?text=Ice+Breaker"
 **核心目标**：在爆笑中体验「分工协作」和「接受不完美结果」——团队聚餐前的完美热身。
 
 ---
+
+**团建核心价值**：
+- 🍳 分工协作：采购、烹饪、摆摊的角色配合
+- 🤲 接受不完美：作品不完美也能交付的务实
+- 🎉 欢乐竞争：趣味比拼的松弛感
 
 ## 2. 团建改造要点
 
@@ -107,11 +113,14 @@ cover: "https://placehold.co/1200x630/FF6B6B/white?text=Ice+Breaker"
 | 金币代币 | 20–30 枚 | 可用硬币/围棋子代替 |
 
 
-> 💡 **打印提示**：原游戏有完整的打印文件，直接访问 [printables.html](https://aiworkdb.github.io/teambuilding/boardgames/category/party/food-challenge/printables.html) 打印即可。
+> 💡 **打印提示**：原桌游的打印素材未随本库发布。用 A4 纸自制卡牌即可，每张卡写一个角色名 + 一句技能描述，不影响玩法。
 
 ---
 
 ## 7. 教练笔记
 
+这套游戏的门槛在于「要不要真的做菜」。我的建议是：**不要**。
 
+用卡片和代币跑一轮，比真下厨好——真做菜会把注意力全拉到味道上，复盘就没了。如果客户坚持要动手，把做菜放在第二轮当作奖励环节。
 
+真正好玩的是事件卡翻开的瞬间。有人抱怨，有人立刻改方案，有人先去看还剩多少资源。三种反应，正好对应团队遇到突发状况时的三种角色。记住这三个人，复盘时点出来。

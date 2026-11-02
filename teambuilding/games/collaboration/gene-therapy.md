@@ -485,18 +485,18 @@ A：可以，但建议4-6人最佳。超过6人会有等待时间，影响体验
 
 ## 📚 延伸阅读
 
-- [引导话术库](toolbox/facilitation.md) - 科研场景引导和复盘话术
-- [复盘引导框架](toolbox/debrief.md) - 深度复盘的方法论
-- [团队协作游戏](collaboration/) - 更多协作类游戏
-- [创新思维游戏](creativity/) - 创新和方法论训练
+- [引导话术库](../../toolbox/facilitation.html) - 科研场景引导和复盘话术
+- [复盘引导框架](../../toolbox/debrief.html) - 深度复盘的方法论
+- [团队协作游戏](../../index.html#cat-collaboration) - 更多协作类游戏
+- [创新思维游戏](../../index.html#cat-creativity) - 创新和方法论训练
 
 ---
 
 ## 🔗 相关资源
 
-- **打印文件**：[gene-therapy-printables.zip](printables/gene-therapy-printables.zip)
-- **科研背景资料**：[基因编辑科普](references/gene-editing-intro.pdf)
-- **在线计时器**：[计时工具](tools/timer.html)
+- **打印文件**：gene-therapy-printables.zip（原附件未随库发布）
+- **科研背景资料**：基因编辑科普（原附件未随库发布）
+- **在线计时器**：[计时工具](../../play/tools/timer/index.html)
 
 ---
 

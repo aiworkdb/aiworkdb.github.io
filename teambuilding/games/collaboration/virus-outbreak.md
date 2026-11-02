@@ -494,15 +494,15 @@ A：可以，但建议4-6人最佳。超过6人会有等待时间，影响体验
 
 - [引导话术库](toolbox/facilitation.md) - 游戏引导和复盘话术
 - [复盘引导框架](toolbox/debrief.md) - 深度复盘的方法论
-- [团队协作游戏](collaboration/) - 更多协作类游戏
+- [团队协作游戏](../../index.html#cat-collaboration) - 更多协作类游戏
 
 ---
 
 ## 🔗 相关资源
 
-- **打印文件**：[virus-outbreak-printables.zip](printables/virus-outbreak-printables.zip)
-- **可视化规则**：[规则图解](images/virus-outbreak-rules.png)
-- **在线计时器**：[计时工具](tools/timer.html)
+- **打印文件**：virus-outbreak-printables.zip（原附件未随库发布）
+- **可视化规则**：规则图解（原图未随库发布）
+- **在线计时器**：[计时工具](../../play/tools/timer/index.html)
 
 ---
 

@@ -87,113 +87,435 @@
 <script>
 // 内置游戏物资数据：每款游戏 + 物资数组（名称 + 数量建议）
 var GAMES = [
-  { name: '两真一假', materials: [
-    { name: '白板笔', qty: '1 支/人' },
-    { name: '白板或纸张', qty: '1 块' },
-    { name: '计分纸', qty: '1 张' },
-    { name: '计时器', qty: '1 个' }
-  ]},
-  { name: '人类宾果', materials: [
-    { name: '宾果卡（打印）', qty: '1 张/人' },
-    { name: '笔', qty: '1 支/人' },
-    { name: '小奖品', qty: '若干' }
-  ]},
-  { name: '名字接龙', materials: [
-    { name: '无特殊物资（仅需场地）', qty: '1 块' },
-    { name: '话筒或音响（可选）', qty: '1 套' },
-    { name: '计时器', qty: '1 个' }
-  ]},
-  { name: '传话游戏', materials: [
-    { name: '词条纸条（打印）', qty: '10 张' },
-    { name: '耳塞或耳机（可选）', qty: '1 副/人' },
-    { name: '计时器', qty: '1 个' }
-  ]},
-  { name: '你说我画', materials: [
-    { name: 'A4 纸', qty: '3 张/人' },
-    { name: '笔', qty: '1 支/人' },
-    { name: '图卡（打印）', qty: '20 张' }
-  ]},
-  { name: '画图接龙', materials: [
-    { name: 'A4 纸', qty: '2 张/人' },
-    { name: '马克笔', qty: '1 支/人' },
-    { name: '计时器', qty: '1 个' }
-  ]},
-  { name: '盲人方阵', materials: [
-    { name: '眼罩', qty: '1 个/人' },
-    { name: '长绳', qty: '1 根（约 20 米）' },
-    { name: '地面标识物', qty: '若干' }
-  ]},
-  { name: '人结', materials: [
-    { name: '无特殊物资（仅需场地）', qty: '1 块' },
-    { name: '计时器', qty: '1 个' },
-    { name: '备用宽松场地', qty: '1 块' }
-  ]},
-  { name: '齐眉棍', materials: [
-    { name: '轻质长杆', qty: '1 根' },
-    { name: '秒表或计时器', qty: '1 个' },
-    { name: '备用长杆', qty: '1 根' }
-  ]},
-  { name: '珠行万里', materials: [
-    { name: 'U 型槽', qty: '1 段/人' },
-    { name: '乒乓球', qty: '3 个' },
-    { name: '纸杯', qty: '2 个' },
-    { name: '计时器', qty: '1 个' }
-  ]},
-  { name: '风火轮', materials: [
-    { name: '报纸', qty: '20 张' },
-    { name: '胶带', qty: '4 卷' },
-    { name: '剪刀', qty: '2 把' }
-  ]},
-  { name: '信任背摔', materials: [
-    { name: '高台或结实桌子', qty: '1 个' },
-    { name: '软垫', qty: '2 块' },
-    { name: '安全绳', qty: '2 条' },
-    { name: '护具（可选）', qty: '若干' }
-  ]},
-  { name: '盲行', materials: [
-    { name: '眼罩', qty: '1 个/人' },
-    { name: '障碍物道具', qty: '若干' },
-    { name: '场地标识物', qty: '若干' }
-  ]},
-  { name: '红黑游戏', materials: [
-    { name: '红黑选择卡（打印）', qty: '10 张/队' },
-    { name: '计分表（打印）', qty: '4 张' },
-    { name: '白板及白板笔', qty: '1 套' }
-  ]},
-  { name: '沙漠逃生', materials: [
-    { name: '清单表（打印）', qty: '1 张/人' },
-    { name: '笔', qty: '1 支/人' },
-    { name: '答案卡（打印）', qty: '1 份' }
-  ]},
-  { name: '报纸塔挑战', materials: [
-    { name: '报纸', qty: '30 张' },
-    { name: '胶带', qty: '6 卷' },
-    { name: '剪刀', qty: '2 把' },
-    { name: '卷尺', qty: '1 个' }
-  ]},
-  { name: '鸡蛋坠落', materials: [
-    { name: '鸡蛋', qty: '2 个/组' },
-    { name: '缓冲材料', qty: '1 包/组' },
-    { name: '塑料袋', qty: '若干' },
-    { name: '胶带', qty: '2 卷' },
-    { name: '剪刀', qty: '1 把' }
-  ]},
-  { name: '10 元买创意', materials: [
-    { name: '道具杂项（旧物）', qty: '1 箱' },
-    { name: '10 元道具钞', qty: '1 张/组' },
-    { name: '展示台', qty: '1 个' }
-  ]},
   { name: '线上宾果', materials: [
     { name: '电脑或投影', qty: '1 台' },
     { name: '网络连接', qty: '1 路' },
-    { name: '线上工具账号', qty: '1 个' }
+    { name: '线上工具账号', qty: '1 个' },
   ]},
-  { name: '团队知识竞答', materials: [
-    { name: '抢答器', qty: '1 个/组' },
-    { name: '题目卡（打印）', qty: '30 张' },
-    { name: '计分板', qty: '1 块' },
-    { name: '白板笔', qty: '2 支' }
-  ]}
+  { name: '10元买创意', materials: [
+    { name: '10元人民币', qty: '每组1份' },
+    { name: '计时器', qty: '1个' },
+    { name: '投票贴纸', qty: '1本' },
+    { name: '备用材料包', qty: '2–3份' },
+    { name: '记录工具', qty: '1套' },
+  ]},
+  { name: 'AI梦境设计师', materials: [
+    { name: '打印页', qty: '若干' },
+  ]},
+  { name: 'Yes, And：即兴接龙（Yes And Improv）', materials: [
+    { name: '白板 / 大白纸 + 白板笔（记录「叮」的次数）', qty: '若干' },
+    { name: '计时器或手机倒计时', qty: '若干' },
+    { name: '打印版「禁词卡」每组一张（可选，视觉提醒更有效）', qty: '若干' },
+    { name: '场地：能站起来的空房间，人均 1.5 平方米', qty: '若干' },
+  ]},
+  { name: '一物百用（Alternative Uses）', materials: [
+    { name: '每组', qty: '1 张' },
+    { name: '每人', qty: '1 张' },
+    { name: '3–5 个「题目物品」实物（纸杯、回形针、筷子等，实物比图片有效）', qty: '3–5 个' },
+    { name: '计时器', qty: '若干' },
+    { name: '白板（板书四类联想 + 独创榜）', qty: '若干' },
+  ]},
+  { name: '七巧板', materials: [
+    { name: '七巧板套装', qty: '7 套' },
+    { name: '任务书（打印）', qty: '教练 1 份' },
+    { name: '任务卡（每组）', qty: '7 份' },
+    { name: '记分表', qty: '教练 1 份' },
+    { name: '白板/翻转板', qty: '1 个' },
+    { name: '计时器', qty: '1 个' },
+  ]},
+  { name: '两真一假（Two Truths One Lie）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '人体拼字', materials: [
+    { name: '或题卡', qty: '若干' },
+  ]},
+  { name: '人类宾果（Human Bingo）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '人结（Human Knot）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '传话游戏（电话游戏）', materials: [
+    { name: '或纸条', qty: '若干' },
+  ]},
+  { name: '你画我猜（Pictionary）', materials: [
+    { name: '在线白板 / 共享屏幕（或：大白纸 + 马克笔）', qty: '若干' },
+    { name: '词库（分简单 / 中等 / 困难三档，建议 40–60 词；在线版自带约 90 词）', qty: '若干' },
+    { name: '内部黑话词若干（可选，但体验提升最明显的一项）', qty: '若干' },
+    { name: '计分板 / 手机计分表', qty: '若干' },
+    { name: '计时器（每轮 2 分钟）', qty: '若干' },
+  ]},
+  { name: '你说我画', materials: [
+    { name: '纸', qty: '若干' },
+    { name: '笔', qty: '若干' },
+    { name: '图片', qty: '若干' },
+  ]},
+  { name: '侦探事务所 (Detective Agency)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '信任圈（Willow in the Wind）', materials: [
+    { name: '软垫 / 瑜伽垫（必需，每组至少', qty: '2 张' },
+    { name: '平整无障碍场地（清空桌椅、地面干燥）', qty: '若干' },
+    { name: '口哨（教练紧急叫停用）', qty: '若干' },
+    { name: '急救包（常备，不用拆封）', qty: '若干' },
+    { name: '知情同意说明（提前告知有身体接触、可随时退出）', qty: '若干' },
+    { name: '观察员记录表（记录手位、松手次数）', qty: '若干' },
+  ]},
+  { name: '信任背摔（Trust Fall）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '假面晚宴 (Mask Dinner)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '办公室谜案 (Office Mystery)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '动物城大侦探（团建改造版）', materials: [
+    { name: '嫌疑人卡（打印）', qty: '每组 1 套' },
+    { name: '线索卡（打印）', qty: '每组 1 套' },
+    { name: '行动令（代币）', qty: '每组 20 枚' },
+    { name: '侦探笔记', qty: '每人 1 张' },
+    { name: '计时器', qty: '1 个' },
+  ]},
+  { name: '协作大厨 (Team Chef)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '卧底大厨', materials: [
+    { name: '打印页', qty: '若干' },
+  ]},
+  { name: '卧底档案 (Undercover File)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '危机发布会（Crisis Briefing）', materials: [
+    { name: '情景卡', qty: '1 套/组' },
+    { name: '角色卡', qty: '4 张/组' },
+    { name: '记者追问清单', qty: '2 份' },
+    { name: '计时器 + 铃', qty: '若干' },
+    { name: '白板（写评分四维度）', qty: '若干' },
+    { name: '场地：每组一张桌子，另需一块能站', qty: '1 人' },
+  ]},
+  { name: '古文明拍卖行', materials: [
+    { name: '打印页', qty: '若干' },
+  ]},
+  { name: '台词之王（团队赛版）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '名字接龙（Name Chain）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '咒术回战：术师联携 (Jujutsu United)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '团队知识竞答（Team Quiz）', materials: [
+    { name: '题库：15 道以上（线上版自带 15 道通用题并支持自建）', qty: '若干' },
+    { name: '投影设备 / 大屏 / 无线投屏', qty: '若干' },
+    { name: '抢答道具（可选：抢答器、发光棒、拍手）', qty: '若干' },
+    { name: '记分表（在线版自动计分）', qty: '若干' },
+    { name: '队名牌（可选，用颜色也行）', qty: '若干' },
+  ]},
+  { name: '基因疗法攻坚 (Gene Therapy Sprint)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '基因编辑实验室', materials: [
+    { name: '打印页', qty: '若干' },
+  ]},
+  { name: '大圣西游 (Wukong Quest)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '天命人 (Destined One)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '天庭年会（Celestial Gala）—— 团建改造版', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '岛屿求生（团建改造版）', materials: [
+    { name: '打印地图', qty: '若干' },
+    { name: '卡牌', qty: '若干' },
+    { name: '标记物', qty: '若干' },
+  ]},
+  { name: '幽灵古堡 (Ghost Castle)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '怪兽守护者 (Kaiju Defenders)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '怪物厨师 (Monster Chef)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '我从未（Never Have I Ever）', materials: [
+    { name: '话题卡', qty: '20 张' },
+    { name: '记分表（白板或手机备忘录）', qty: '若干' },
+    { name: '计时器（控制每张卡不超过 1 分钟）', qty: '若干' },
+    { name: '场地：围坐一圈，噪音可控', qty: '若干' },
+    { name: '「不聊清单」——开卡前由教练与团队确认', qty: '若干' },
+  ]},
+  { name: '我是主持人 (Host Show)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '报纸塔挑战', materials: [
+    { name: '报纸（A2/A1）', qty: '每组 10 张' },
+    { name: '透明胶带', qty: '每组 1 卷' },
+    { name: '剪刀', qty: '每组 1 把' },
+    { name: '卷尺', qty: '1 个' },
+    { name: '计时器', qty: '1 个' },
+    { name: '备用材料', qty: '2–3 份' },
+  ]},
+  { name: '探险家日记（分享引导版）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '撕名牌大战 (Name Tag War)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '数字分身上班记', materials: [
+    { name: '打印页', qty: '若干' },
+  ]},
+  { name: '时间循环案 (Time Loop Case)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '时间特工（团队推理版）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '星际医疗队 · 生死救援协作版 (Stellar Medics)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '星际拓荒者 · 从零到一版 (Star Pioneers)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '星际矿工（团队危机管理版）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '末日种子库 (Doomsday Vault)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '极挑任务卡 (Mission Cards)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '棉花糖挑战（Marshmallow Challenge）', materials: [
+    { name: '意面', qty: '20 根/组' },
+    { name: '美纹纸胶带', qty: '1 米/组' },
+    { name: '棉线', qty: '1 米/组' },
+    { name: '标准大棉花糖', qty: '1 颗/组' },
+    { name: '剪刀', qty: '1 把/组' },
+    { name: '卷尺', qty: '1–2 把' },
+    { name: '大计时器 / 投屏倒计时（让所有人看得见时间）', qty: '若干' },
+    { name: '桌面：每组至少 80cm × 60cm 平整台面', qty: '若干' },
+  ]},
+  { name: '沉默领袖', materials: [
+    { name: '眼罩', qty: '若干' },
+    { name: '任务卡', qty: '若干' },
+  ]},
+  { name: '沙漠逃生', materials: [
+    { name: '物品清单（打印）', qty: '每人 1 份' },
+    { name: '专家答案卡', qty: '教练 1 份' },
+    { name: '打分表', qty: '每组 1 份' },
+    { name: '笔', qty: '每人 1 支' },
+    { name: '计时器', qty: '1 个' },
+    { name: '白板/flipchart', qty: '1 个' },
+  ]},
+  { name: '深海探险 (Abyss Dive)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '演技派对 (Acting Party)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '火星殖民计划', materials: [
+    { name: '打印页', qty: '若干' },
+  ]},
+  { name: '猎人小队 · 协同升级版 (Hunter Squad)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '王牌对王牌 (Trivia Show)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '珠行万里（乒乓球传递）', materials: [
+    { name: 'PVC 半管（剖开）', qty: '每人 1 根' },
+    { name: '乒乓球', qty: '3–5 个' },
+    { name: '纸杯/水杯', qty: '1–2 个' },
+    { name: '平整地面', qty: '1 块' },
+    { name: '计时器', qty: '1 个' },
+  ]},
+  { name: '画图接龙', materials: [
+    { name: 'A3 纸', qty: '若干' },
+    { name: '马克笔', qty: '若干' },
+  ]},
+  { name: '疯狂厨房（团队抗压协作版）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '病毒危机 (Virus Outbreak)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '盲人方阵（Blind Polygon）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '盲盒神话（团建改造版）', materials: [
+    { name: '盲盒人物卡（打印）', qty: '每组 1 套' },
+    { name: '行动卡（打印）', qty: '每组 1 套' },
+    { name: '金币代币', qty: '每组 40–60 枚' },
+    { name: '计分表', qty: '每组 1 张' },
+    { name: '计时器', qty: '1 个' },
+  ]},
+  { name: '盲行（Blind Walk）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '神话裂隙 (Mythic Rift)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '红黑游戏（Red-Black Game）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '纸桥承重赛（Paper Bridge）', materials: [
+    { name: 'A4 纸', qty: '4 张/组' },
+    { name: '透明胶', qty: '1 卷' },
+    { name: '桥墩', qty: '2 个/组' },
+    { name: '加载硬纸板 10×10cm', qty: '1 块/组' },
+    { name: '配重：500ml 水瓶若干（约 500g/瓶，最好量化）、砝码或硬币卷', qty: '若干' },
+    { name: '电子秤（可选，称配重更精确）', qty: '若干' },
+    { name: '记录表', qty: '1 张/组' },
+    { name: '卷尺', qty: '1 把' },
+  ]},
+  { name: '绝密行动（团建改造版）', materials: [
+    { name: '打印任务卡', qty: '若干' },
+    { name: '危机卡', qty: '若干' },
+    { name: '角色卡', qty: '若干' },
+  ]},
+  { name: '综艺传声筒 (Whisper Chain)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '美食挑战赛（团建改造版）', materials: [
+    { name: '食材卡（打印）', qty: '每组 1 套' },
+    { name: '菜谱卡（打印）', qty: '每组 1 套' },
+    { name: '事件卡（打印）', qty: '每组 1 套' },
+    { name: '计时器', qty: '1 个' },
+    { name: '展示用「餐盘」', qty: '每组 1 个' },
+    { name: '金币代币', qty: '20–30 枚' },
+  ]},
+  { name: '背对背画画（Back-to-Back Drawing）', materials: [
+    { name: '图卡', qty: '3 套/组' },
+    { name: '白纸', qty: '3 张/组' },
+    { name: '硬纸板隔板（可选，比背靠背更彻底）', qty: '若干' },
+    { name: '计时器', qty: '若干' },
+    { name: '胶带（贴图用）', qty: '若干' },
+    { name: '场地：能两人背对背坐下的桌椅，人均 1.2 平方米', qty: '若干' },
+  ]},
+  { name: '芙莉莲的旅程 (Frieren\'s Journey)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '藏宝密令 (Treasure Code)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '虚拟密室逃脱（Virtual Escape Room）', materials: [
+    { name: '设备：每组至少', qty: '1 台' },
+    { name: '线下版需要投影或大屏', qty: '若干' },
+    { name: '计时器（在线版自带）', qty: '若干' },
+    { name: '复盘白板（记录各组用时与无效点击次数）', qty: '若干' },
+    { name: '场地：能围坐讨论的桌椅', qty: '若干' },
+  ]},
+  { name: '谣言工厂（沟通信任版）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '资源谈判局（Resource Negotiation）', materials: [
+    { name: '需求卡', qty: '3 张/轮' },
+    { name: '公共资源表', qty: '1 张' },
+    { name: '协议单', qty: '1 张' },
+    { name: '计时器 + 铃', qty: '若干' },
+    { name: '白板（记录时间线：第几分钟出现第一次提问）', qty: '若干' },
+    { name: '场地：能自由走动的房间，三张桌子分开摆', qty: '若干' },
+  ]},
+  { name: '轮回地下城 · 团队复盘迭代版 (Loop Dungeon)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '远征33号 · 绘母之末（团建协作版）(Expedition 33)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '银河小馆 · 双线突围版 (Galaxy Diner)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '风火轮（报纸履带）', materials: [
+    { name: '报纸（大张）', qty: '每组 30–40 张' },
+    { name: '透明胶带', qty: '每组 2–3 卷' },
+    { name: '剪刀', qty: '每组 1–2 把' },
+    { name: '卷尺/标志物', qty: '1–2 个' },
+    { name: '计时器', qty: '1 个' },
+    { name: '备用报纸', qty: '若干' },
+  ]},
+  { name: '鬼杀队：无限列车 (Demon Slayer: Infinity Train)', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '魔法学院（团队协作版）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '鸡蛋坠落挑战', materials: [
+    { name: '生鸡蛋', qty: '每组 3–4 颗' },
+    { name: '吸管', qty: '每组 20 根' },
+    { name: '牙签', qty: '每组 30 根' },
+    { name: 'A4 纸', qty: '每组 5 张' },
+    { name: '透明胶带', qty: '每组 1 卷' },
+    { name: '气球', qty: '每组 2–3 个' },
+    { name: '棉花/纸巾', qty: '每组 1 包' },
+    { name: '剪刀', qty: '每组 1 把' },
+  ]},
+  { name: '黄金结界 · 团队守护版（Huntrix: Golden Honmoon）', materials: [
+    { name: '无特殊物资（仅需场地）', qty: '1 块' },
+    { name: '计时器（可选）', qty: '1 个' },
+  ]},
+  { name: '齐眉棍（手指传棍）', materials: [
+    { name: '轻质棍子（PVC管/竹竿）', qty: '1–2 根' },
+    { name: '备用棍子', qty: '1 根' },
+    { name: '平整地面', qty: '1 块' },
+    { name: '计时器', qty: '1 个' },
+  ]},
 ];
 
 var sel = {};        // 选中状态 index -> true

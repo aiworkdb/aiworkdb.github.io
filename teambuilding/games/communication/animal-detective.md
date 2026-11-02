@@ -9,10 +9,11 @@ cover: "https://placehold.co/1200x630/45B7D1/white?text=Communication"
 # 动物城大侦探（团建改造版）
 
 
-> **原游戏**：[动物城大侦探](https://aiworkdb.github.io/teambuilding/boardgames/category/party/animal-detective/README.html)
+> **原游戏**：派对 / 动物城大侦探（原桌游资料未随本库发布）
 
 
 | **时长** | 30–45 min |
+| **人数** | 建议 每组 2–6 人（全场 6–24 人） |
 | **场景标签** | 培训 / 团建 / 破冰 |
 | **难度** | ⭐⭐ |
 | **道具需求** | 有（嫌疑人卡 + 线索卡 + 行动令） |
@@ -20,6 +21,11 @@ cover: "https://placehold.co/1200x630/45B7D1/white?text=Communication"
 **核心目标**：通过信息收集和团队推理，体验「信息共享」和「群体决策」的协作挑战。
 
 ---
+
+**团建核心价值**：
+- 📡 信息共享：分散线索的汇总与交叉验证
+- ⚖️ 群体决策：多数意见与个体坚持的平衡
+- 👂 倾听提问：从模糊描述中提取有效信息
 
 ## 2. 团建改造要点
 
@@ -53,6 +59,11 @@ cover: "https://placehold.co/1200x630/45B7D1/white?text=Communication"
 
 ### 讲解时
 
+> 「每组拿到同一叠线索卡，你们要找出真凶。
+>
+> 一条关键规则：**关键行动必须全组同意**才能执行——一个人不同意，就不算过。
+>
+> 线索在组里怎么分、要不要全部摊开、谁负责整合，规则没写，你们自己定。」
 
 ### Feelings（感受）
 - 当有人隐瞒信息、不分享时，你是什么感受？
@@ -92,7 +103,7 @@ cover: "https://placehold.co/1200x630/45B7D1/white?text=Communication"
 | 计时器 | 1 个 | 手机即可 |
 
 
-> 💡 **打印提示**：原游戏有完整的打印文件，直接访问 [printables.html](https://aiworkdb.github.io/teambuilding/boardgames/category/party/animal-detective/printables.html) 打印即可。
+> 💡 **打印提示**：原桌游的打印素材未随本库发布。用 A4 纸自制卡牌即可，每张卡写一个角色名 + 一句技能描述，不影响玩法。
 
 ---
 
@@ -100,7 +111,7 @@ cover: "https://placehold.co/1200x630/45B7D1/white?text=Communication"
 
 
 
-**原游戏链接**：[动物城大侦探完整规则](https://aiworkdb.github.io/teambuilding/boardgames/category/party/animal-detective/README.html)
+**原游戏**：派对 / 动物城大侦探（原桌游资料未随本库发布）
 
 ---
 

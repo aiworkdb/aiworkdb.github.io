@@ -229,29 +229,26 @@ def build_game_html(md_path: Path) -> str:
     )
 
 
+
 def main():
-    base = Path('d:/mycode/aiworkdb.github.io/teambuilding/games')
-    games_base = Path('d:/mycode/aiworkdb.github.io/teambuilding')
+    import sys
+    print("""
+────────────────────────────────────────────────────────────
+⛔ 此脚本已停用（2026-11 重构）
 
-    # 确保团建首页存在
-    index_html = games_base / 'index.html'
-    if not index_html.exists():
-        print(f"警告: {index_html} 不存在，链接可能无效")
+  它会把 games/*/*.html 覆盖成不含移动端适配、且会泄漏
+  YAML front matter 的旧模板。现在请统一使用：
 
-    # 遍历所有子目录中的 .md 文件
-    count = 0
-    for md_path in base.rglob('*.md'):
-        html_path = md_path.with_suffix('.html')
-        # 强制覆盖重新生成
-        print(f"生成: {html_path}")
-        try:
-            html_content = build_game_html(md_path)
-            html_path.write_text(html_content, encoding='utf-8')
-            count += 1
-        except Exception as e:
-            print(f"  错误: {e}")
+      python3 build.py all        # 元数据 + 详情页 + 首页
+      python3 build.py pages      # 只重建详情页
+      python3 build.py index      # 只重建首页
+      python3 build.py meta       # 只提取元数据并打印诊断
 
-    print(f"\n完成！共生成 {count} 个 HTML 文件")
+  旧的单文件手动生成接口仍可用：
+      import md2html; md2html.build_game_html(Path('...'))
+────────────────────────────────────────────────────────────
+""")
+    sys.exit(2)
 
 
 if __name__ == '__main__':

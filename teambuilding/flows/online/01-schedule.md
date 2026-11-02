@@ -7,6 +7,8 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/online/01-schedule.html"
 ---
 # 线上团建流程模板
 
+> **一句话**：隔着屏幕做团建，最大的敌人是「静音 + 关摄像头」。这套流程用短节奏和强互动把人留在线上。
+
 ![封面](images/cover.png)
 
 | 00:00–00:15 | 线上开场 + 破冰 | 15 min | 打破屏幕隔阂、建立存在感 |

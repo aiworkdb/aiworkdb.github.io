@@ -5,7 +5,7 @@
 import re
 from pathlib import Path
 
-BASE = Path('d:/mycode/aiworkdb.github.io/teambuilding')
+BASE = Path(__file__).resolve().parent
 GAMES_DIR = BASE / 'games'
 
 # 分类配置：顺序、图标、中文名
@@ -17,6 +17,9 @@ CATEGORIES = [
     ('leadership',   '👑', '领导力',     'leadership'),
     ('creativity',   '💡', '创意与解决问题', 'creativity'),
     ('problem-solving', '🔧', '问题解决', 'problem-solving'),
+    ('jubensha',     '🎭', '剧本杀·团建改编', 'jubensha'),
+    ('variety',      '📺', '综艺娱乐',   'variety'),
+    ('boardgame',    '🎲', '桌游团建',   'boardgame'),
 ]
 
 # 图标映射（根据游戏名称自动选择）
@@ -32,6 +35,18 @@ ICON_MAP = {
     '红黑': '⚫', '七巧板': '🧩', '沉默': '🤫',
     '10元': '💰', '报纸塔': '🗞️',
     '沙漠': '🏜️', '鸡蛋': '🥚',
+    # 桌游团建
+    '大厨': '👨‍🍳', '拍卖': '🔨', '梦境': '🌙', '数字分身': '💼',
+    '基因': '🧬', '火星': '🪐',
+    # 剧本杀·团建改编
+    '谜案': '🕵️', '假面': '🎭', '藏宝': '🗺️', '循环': '⏰',
+    '侦探': '🔍', '卧底': '🥷',
+    # 综艺娱乐
+    '撕名牌': '🏃', '王牌': '📺', '任务卡': '🎴', '传声筒': '📢',
+    '演技': '🎬', '主持人': '🎤',
+    # 桌游团建
+    '岛屿': '🏝️', '末日': '🌱', '种子': '🌱', '法庭': '⚖️',
+    '丝路': '🐫', '未来城市': '🏙️', '怪物': '👹',
 }
 
 def guess_icon(name: str) -> str:
@@ -105,8 +120,10 @@ def build_index_html():
             card_icon = guess_icon(name)
             # 时长标签
             dur_tag = duration.replace(' ', '') if duration else '20–40 min'
-            # 场景标签
-            tag_html = f'<span class="tag">{"室内/户外" if "户外" in text else "室内"}</span>'
+            # 场景标签（默认室内，下方 try 块会按文件内容修正）
+            tag_html = '<span class="tag">室内</span>'
+            # 团建能力标签（从「团建核心价值」列表提取）
+            ability_html = ''
             # 重新读取获取更准的标签
             try:
                 txt = md_path.read_text(encoding='utf-8')
@@ -124,6 +141,24 @@ def build_index_html():
                     dur_m2 = re.search(r'(\d+–\d+\s*(min|分钟))', txt)
                     if dur_m2:
                         dur_tag = dur_m2.group(1)
+
+                # 团建能力标签：仅匹配标准的「团建核心价值/核心学习目标」小节，
+                # 提取「短词：说明」列表项（老游戏其余小节措杂，宁缺毋滥）
+                abilities = []
+                m_cv = re.search(r'团建核心价值|核心学习目标', txt)
+                if m_cv:
+                    # 小节边界：到下一个二级标题或分隔线为止，防止渗漏到后续小节
+                    rest = txt[m_cv.start():]
+                    m_end = re.search(r'^## |^---$', rest[10:], re.M)
+                    seg = rest[:10 + m_end.start()] if m_end else rest[:600]
+                    for am in re.finditer(r'^- ([^：:\n]+)[：:]', seg, re.M):
+                        a = re.sub(r'^[^\w\u4e00-\u9fff]+', '', am.group(1).strip())
+                        a = a.replace('**', '').strip()
+                        if a and len(a) <= 10 and a not in abilities:
+                            abilities.append(a)
+                ability_html = ''.join(
+                    f'<span class="tag tag-ability">{a}</span>' for a in abilities[:3]
+                )
             except:
                 pass
 
@@ -131,7 +166,7 @@ def build_index_html():
         <div class="card-icon">{card_icon}</div>
         <div class="card-title">{name}</div>
         <div class="card-desc">{desc}</div>
-        <div class="card-tags">{tag_html}<span class="tag">{dur_tag}</span><span class="tag">{"团建/培训"}</span></div>
+        <div class="card-tags">{ability_html}{tag_html}<span class="tag">{dur_tag}</span><span class="tag">{"团建/培训"}</span></div>
       </a>''')
 
         if cards:
@@ -151,7 +186,8 @@ def build_index_html():
     # 组装完整 HTML
     games_section = '\n'.join(cats_html)
 
-    html = f'''<!DOCTYPE html>
+    # 注意：模板用 .format() 填充，CSS 花括号已按 {{ }} 转义，不能加 f 前缀
+    html = '''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -186,6 +222,7 @@ def build_index_html():
     .card-desc {{ font-size: 0.85em; color: #555; line-height: 1.55; }}
     .card-tags {{ margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }}
     .tag {{ font-size: 0.75em; background: #eef2ff; color: #3366cc; padding: 2px 8px; border-radius: 4px; }}
+    .tag-ability {{ font-size: 0.75em; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 4px; font-weight: 600; }}
 
     .flow-card {{ background: #fff; border-radius: 10px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; }}
     .flow-info h3 {{ font-size: 1em; font-weight: 600; margin-bottom: 4px; }}
@@ -209,7 +246,7 @@ def build_index_html():
 
 <div class="hero">
   <h1>🏕️ 团建 & 培训游戏库</h1>
-  <p>面向培训老师、团建教练的实用游戏与流程资源库。所有游戏统一收录，通过标签区分使用场景。</p>
+  <p>面向培训老师、团建教练的实用游戏与流程资源库。每款游戏均标注 🟢 团建能力标签（绿色）与培训主题——先定团队要提升什么，再选玩什么。</p>
   <div class="stats">
     <div class="stat"><div class="stat-n">{total_games}</div><div class="stat-l">款游戏</div></div>
     <div class="stat"><div class="stat-n">4</div><div class="stat-l">套流程方案</div></div>
@@ -225,8 +262,8 @@ def build_index_html():
 
   <!-- 游戏库 -->
   <div class="section">
-    <div class="section-title">🎲 游戏库（按目的分类）</div>
-    <p style="font-size:0.9em;color:#555;margin-bottom:16px;">点击游戏名称查看完整规则、引导要点和复盘问题。</p>
+    <div class="section-title">🎲 游戏库（按目的 + 玩法双维度）</div>
+    <p style="font-size:0.9em;color:#555;margin-bottom:16px;">🟢 绿色标签 = 本游戏锻炼的团队能力；每款游戏内含「适合的培训主题」与 4F 深度复盘框架。点击游戏名称查看完整规则、引导要点和复盘问题。</p>
     {games_section}
   </div>
 
@@ -311,11 +348,26 @@ function filterCards() {{
     return html
 
 
+
 def main():
-    html = build_index_html()
-    out = BASE / 'index.html'
-    out.write_text(html, encoding='utf-8')
-    print(f"已生成: {out}")
+    import sys
+    print("""
+────────────────────────────────────────────────────────────
+⛔ 此脚本已停用（2026-11 重构）
+
+  它会把 games/*/*.html 覆盖成不含移动端适配、且会泄漏
+  YAML front matter 的旧模板。现在请统一使用：
+
+      python3 build.py all        # 元数据 + 详情页 + 首页
+      python3 build.py pages      # 只重建详情页
+      python3 build.py index      # 只重建首页
+      python3 build.py meta       # 只提取元数据并打印诊断
+
+  旧的单文件手动生成接口仍可用：
+      import md2html; md2html.build_game_html(Path('...'))
+────────────────────────────────────────────────────────────
+""")
+    sys.exit(2)
 
 
 if __name__ == '__main__':

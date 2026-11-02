@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T7 综艺游戏转盘</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; -webkit-text-size-adjust: 100%; }
+  .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%); color: #fff; padding: 36px 20px 26px; text-align: center; }
+  .hero h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .hero p { font-size: 0.92em; opacity: 0.85; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 120px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 12px; }
+  .hint { font-size: 0.82em; color: #888; margin-bottom: 10px; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .chip { padding: 7px 14px; border-radius: 999px; border: 1px solid #d0d5e0; background: #fff; font-size: 0.85em; color: #555; cursor: pointer; }
+  .chip.active { background: #5b8cfe; border-color: #5b8cfe; color: #fff; font-weight: 600; }
+  .filter-label { font-size: 0.82em; color: #999; margin: 10px 0 6px; }
+  .wheel-box { position: relative; display: flex; justify-content: center; margin: 6px 0 4px; }
+  #wheel { width: 300px; height: 300px; max-width: 86vw; max-height: 86vw; }
+  .pointer { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 26px; color: #ff5a5a; filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); z-index: 2; }
+  .btn { display: inline-block; padding: 11px 18px; border: none; border-radius: 8px; font-size: 0.95em; cursor: pointer; text-align: center; background: #5b8cfe; color: #fff; }
+  .btn:active { transform: scale(0.98); }
+  .btn.big { display: block; width: 100%; font-size: 1.05em; font-weight: 600; padding: 14px; }
+  .btn.ghost { background: #fff; color: #5b8cfe; border: 1px solid #5b8cfe; }
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-row .btn { flex: 1; }
+  .result { display: none; }
+  .result.show { display: block; animation: pop .25s ease; }
+  @keyframes pop { from { transform: scale(.96); opacity: .4; } to { transform: scale(1); opacity: 1; } }
+  .result .r-name { font-size: 1.25em; font-weight: 700; color: #1a1a2e; }
+  .result .r-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 10px; }
+  .result .r-tag { font-size: 0.75em; background: #eef2ff; color: #3366cc; padding: 2px 8px; border-radius: 4px; }
+  .result .r-rule { font-size: 0.9em; color: #444; background: #f6f8fa; border-radius: 8px; padding: 10px 12px; }
+  .r-link { display: block; margin-top: 10px; font-size: 0.85em; color: #5b8cfe; word-break: break-all; }
+  .count-line { font-size: 0.82em; color: #888; text-align: center; margin-top: 8px; }
+  .footer { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid #e2e6ee; padding: 12px 16px; text-align: center; }
+  .footer a { color: #5b8cfe; font-size: 0.9em; text-decoration: none; margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🎡 综艺游戏转盘</h1>
+  <p>今晚玩什么？转一下就知道</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>先过滤，再转盘</h2>
+    <div class="filter-label">人数规模</div>
+    <div class="chip-row" id="peopleChips">
+      <button class="chip active" data-v="all">不限</button>
+      <button class="chip" data-v="s">10 人以内</button>
+      <button class="chip" data-v="m">10–20 人</button>
+      <button class="chip" data-v="l">20 人以上</button>
+    </div>
+    <div class="filter-label">场地</div>
+    <div class="chip-row" id="venueChips">
+      <button class="chip active" data-v="all">不限</button>
+      <button class="chip" data-v="indoor">室内</button>
+      <button class="chip" data-v="outdoor">户外 / 园区</button>
+    </div>
+    <div class="hint">剧本杀与综艺共 12 款新游戏 + 8 款经典游戏，按条件过滤后从转盘随机抽。</div>
+  </div>
+
+  <div class="card">
+    <div class="wheel-box">
+      <div class="pointer">▼</div>
+      <canvas id="wheel" width="600" height="600"></canvas>
+    </div>
+    <button class="btn big" id="spinBtn">开始转盘</button>
+    <div class="count-line" id="countLine"></div>
+  </div>
+
+  <div class="card result" id="resultCard">
+    <div class="r-name" id="rName"></div>
+    <div class="r-tags" id="rTags"></div>
+    <div class="r-rule" id="rRule"></div>
+    <a class="r-link" id="rLink" href="#" target="_blank" rel="noopener"></a>
+    <div class="btn-row">
+      <button class="btn ghost" id="againBtn">再转一次</button>
+      <button class="btn" id="goBtn">查看完整规则</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="https://ai.aitboy.cn/teambuilding/play/index.html">返回产品库</a>
+  <a href="https://ai.aitboy.cn/teambuilding/">游戏库首页</a>
+</div>
+
+<script>
+// 游戏库：剧本杀 6 + 综艺 6 + 经典 8
+// venue: indoor / outdoor / both
+var GAMES = [
+  { name: '10元买创意', cat: '创意激发', pmin: 4, pmax: 8, venue: 'outdoor', mins: '30–45 分钟', rule: '在极有限预算下完成创意挑战，打破"有钱才能做好"的思维定势，训练资源重构能力。', url: '../../../games/creativity/10-yuan-idea.html' },
+  { name: 'AI梦境设计师', cat: '桌游团建', pmin: 4, pmax: 5, venue: 'indoor', mins: '60 分钟', rule: '接订单、读需求、组创意——体验「需求没读懂就动手」的代价，以及客户视角下的「好」到底谁说了算。', url: '../../../games/boardgame/ai-dream-designer.html' },
+  { name: 'Yes, And：即兴接龙（Yes And Improv）', cat: '创意激发', pmin: 4, pmax: 8, venue: 'indoor', mins: '30–45 分钟', rule: '让团队亲身体验「否定」和「加码」对创意流的破坏与激活，把 Yes, And 变成会议里的口头禅', url: '../../../games/creativity/yes-and-improv.html' },
+  { name: '一物百用（Alternative Uses）', cat: '创意激发', pmin: 4, pmax: 8, venue: 'indoor', mins: '25–40 分钟', rule: '用极低门槛的发散任务，让团队看到「创意产量」和「评判过早」之间的关系', url: '../../../games/creativity/alternative-uses.html' },
+  { name: '七巧板', cat: '领导力', pmin: 3, pmax: 7, venue: 'indoor', mins: '60–90 分钟', rule: '通过资源分散的拼图任务，让参与者体验「信息孤岛」「资源争夺」「领导力缺失」等组织痛点。', url: '../../../games/leadership/tangram.html' },
+  { name: '两真一假（Two Truths One Lie）', cat: '破冰热场', pmin: 5, pmax: 30, venue: 'indoor', mins: '10–20 分钟', rule: '快速破冰、让参与者记住彼此、发现共同点', url: '../../../games/icebreaker/two-truths-one-lie.html' },
+  { name: '人体拼字', cat: '团队协作', pmin: 6, pmax: 20, venue: 'indoor', mins: '20–30 分钟', rule: '让团队在爆笑中体验「快速达成共识 + 分工协作」的快感。', url: '../../../games/collaboration/body-letters.html' },
+  { name: '人类宾果（Human Bingo）', cat: '破冰热场', pmin: 8, pmax: 50, venue: 'indoor', mins: '5–15 分钟', rule: '快速破冰、让参与者记住彼此名字、发现共同点', url: '../../../games/icebreaker/human-bingo.html' },
+  { name: '人结（Human Knot）', cat: '团队协作', pmin: 8, pmax: 20, venue: 'both', mins: '30–45 分钟', rule: '体验团队协作、非语言沟通、耐心与策略', url: '../../../games/collaboration/human-knot.html' },
+  { name: '传话游戏（电话游戏）', cat: '沟通表达', pmin: 5, pmax: 10, venue: 'indoor', mins: '15–25 分钟', rule: '用幽默的方式让参与者亲身体验「信息在传递过程中的失真」，理解精准沟通的重要性。', url: '../../../games/communication/telephone-game.html' },
+  { name: '你画我猜（Pictionary）', cat: '沟通表达', pmin: 6, pmax: 30, venue: 'both', mins: '20–30 分钟', rule: '让团队在低压力下暴露「我以为我表达清楚了」和「我以为我听懂了」之间的落差', url: '../../../games/communication/you-draw-i-guess.html' },
+  { name: '你说我画', cat: '沟通表达', pmin: 2, pmax: 4, venue: 'indoor', mins: '20–30 分钟', rule: '让参与者体验「我以为我说清楚了，但对方理解完全不同」的沟通困境，学习精准表达和主动确认。', url: '../../../games/communication/draw-guess.html' },
+  { name: '侦探事务所 (Detective Agency)', cat: '剧本杀改编', pmin: 20, pmax: 40, venue: 'indoor', mins: '60–90 分钟', rule: '把公司布置成一家「侦探事务所」：4-6 个独立小案件分布在不同房间，每队限时办案，破案后领取下一案的「委托函」。', url: '../../../games/jubensha/detective-stations.html' },
+  { name: '信任圈（Willow in the Wind）', cat: '信任建立', pmin: 6, pmax: 10, venue: 'indoor', mins: '40–55 分钟', rule: '在可控的身体风险里，让「托付」和「接住」都变成具体动作，而不是口号', url: '../../../games/trust/trust-circle.html' },
+  { name: '信任背摔（Trust Fall）', cat: '信任建立', pmin: 8, pmax: 15, venue: 'indoor', mins: '20–40 分钟', rule: '体验"交出控制权"的感受，建立团队信任基础', url: '../../../games/trust/trust-fall.html' },
+  { name: '假面晚宴 (Mask Dinner)', cat: '剧本杀改编', pmin: 15, pmax: 40, venue: 'indoor', mins: '60–90 分钟', rule: '一场 60-90 分钟的「带任务的晚宴」：每人戴一张面具、拿一个隐藏身份和三个秘密任务，在吃饭、敬酒、合影的间隙里完成任务。', url: '../../../games/jubensha/mask-dinner.html' },
+  { name: '办公室谜案 (Office Mystery)', cat: '剧本杀改编', pmin: 6, pmax: 12, venue: 'indoor', mins: '45–60 分钟', rule: '把商业剧本杀「轻量化」成一场 45 分钟的办公室推理：每个人拿到一个带秘密的角色，在搜证、盘问、结案陈词里还原事件真相。', url: '../../../games/jubensha/office-mystery.html' },
+  { name: '动物城大侦探（团建改造版）', cat: '沟通表达', pmin: 2, pmax: 6, venue: 'indoor', mins: '30–45 分钟', rule: '通过信息收集和团队推理，体验「信息共享」和「群体决策」的协作挑战。', url: '../../../games/communication/animal-detective.html' },
+  { name: '协作大厨 (Team Chef)', cat: '团队协作', pmin: 8, pmax: 20, venue: 'indoor', mins: '45–60 分钟', rule: '《协作大厨》是一款改编自桌游《怪物厨师》的团队协作类团建游戏。', url: '../../../games/collaboration/team-chef.html' },
+  { name: '卧底大厨', cat: '桌游团建', pmin: 6, pmax: 8, venue: 'indoor', mins: '60 分钟', rule: '一边合作出菜，一边找出内鬼——从模糊的怀疑走到具体举证，顺带体会一次被冤枉的滋味。', url: '../../../games/boardgame/chef-undercover.html' },
+  { name: '卧底档案 (Undercover File)', cat: '剧本杀改编', pmin: 8, pmax: 16, venue: 'indoor', mins: '30–40 分钟', rule: '「谁是卧底」的剧本杀升级版：一场「公司内部调查」中，大多数人拿到底牌（普通员工），少数人拿到卧底牌（带暗语），还有一人是「双面人」。', url: '../../../games/jubensha/undercover-file.html' },
+  { name: '危机发布会（Crisis Briefing）', cat: '领导力', pmin: 5, pmax: 8, venue: 'indoor', mins: '50–70 分钟', rule: '在信息不全、时间受限、听众焦虑的条件下，练习「先立框架再讲细节」的沟通顺序', url: '../../../games/leadership/crisis-briefing.html' },
+  { name: '古文明拍卖行', cat: '桌游团建', pmin: 5, pmax: 5, venue: 'indoor', mins: '60 分钟', rule: '密封竞价、资金有限、隐藏套装加成——把团队对「这东西值多少」的判断分歧直接摆上桌。', url: '../../../games/boardgame/ancient-auction.html' },
+  { name: '台词之王（团队赛版）', cat: '破冰热场', pmin: 6, pmax: 20, venue: 'indoor', mins: '30–50 分钟', rule: '降低社交压力、练习即兴表达、团队欢笑连接', url: '../../../games/icebreaker/line-master.html' },
+  { name: '名字接龙（Name Chain）', cat: '破冰热场', pmin: 6, pmax: 40, venue: 'both', mins: '5–10 分钟', rule: '记住彼此名字、降低陌生感、快速热身', url: '../../../games/icebreaker/name-chain.html' },
+  { name: '咒术回战：术师联携 (Jujutsu United)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–75 分钟', rule: '《咒术回战：术师联携》改编自合作桌游《咒术师团 Jujutsu Sorcerers》（灵感来自《咒术回战》）。', url: '../../../games/collaboration/jujutsu-united.html' },
+  { name: '团队知识竞答（Team Quiz）', cat: '综艺娱乐', pmin: 8, pmax: 50, venue: 'indoor', mins: '30–45 分钟', rule: '用低门槛的抢答赛制造一次公平的集体荣誉，同时暴露各团队的知识结构差异', url: '../../../games/variety/team-quiz.html' },
+  { name: '基因疗法攻坚 (Gene Therapy Sprint)', cat: '团队协作', pmin: 4, pmax: 8, venue: 'indoor', mins: '60–75 分钟', rule: '模拟基因疗法研发的紧急攻关过程，让团队在时间压力和资源限制下体验协作研发、信息共享、风险决策的重要性。', url: '../../../games/collaboration/gene-therapy.html' },
+  { name: '基因编辑实验室', cat: '桌游团建', pmin: 4, pmax: 6, venue: 'indoor', mins: '85 分钟', rule: '脱靶风险对上病毒倒计时——在「赶进度」和「保质量」之间，逼团队给出一个能站住的答案。', url: '../../../games/boardgame/gene-lab.html' },
+  { name: '大圣西游 (Wukong Quest)', cat: '团队协作', pmin: 4, pmax: 6, venue: 'indoor', mins: '60–90 分钟', rule: '《大圣西游》改编自中国古典名著《西游记》与热门游戏《黑神话：悟空》的合作类桌游。', url: '../../../games/collaboration/wukong-quest.html' },
+  { name: '天命人 (Destined One)', cat: '团队协作', pmin: 4, pmax: 6, venue: 'indoor', mins: '60–90 分钟', rule: '《天命人》改编自《黑神话：悟空》黑暗神话世界观的合作类桌游。', url: '../../../games/collaboration/destined-one.html' },
+  { name: '天庭年会（Celestial Gala）—— 团建改造版', cat: '破冰热场', pmin: 4, pmax: 8, venue: 'indoor', mins: '20–35 分钟', rule: '在欢笑中打破隔阂、释放工作压力、观察团队社交模式', url: '../../../games/icebreaker/celestial-gala.html' },
+  { name: '岛屿求生（团建改造版）', cat: '团队协作', pmin: 4, pmax: 8, venue: 'indoor', mins: '45–75 分钟', rule: '在资源有限、环境不确定的压力下，体验「团队协作决策」和「风险管理」——正是高效团队每天面对的挑战。', url: '../../../games/collaboration/island-survival.html' },
+  { name: '幽灵古堡 (Ghost Castle)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–75 分钟', rule: '《幽灵古堡》改编自合作解谜逃脱桌游《幽灵古堡 Ghost Castle》。', url: '../../../games/collaboration/ghost-castle.html' },
+  { name: '怪兽守护者 (Kaiju Defenders)', cat: '团队协作', pmin: 8, pmax: 20, venue: 'indoor', mins: '60–75 分钟', rule: '《怪兽守护者》改编自同名合作桌游，是一款团队协作模拟游戏。', url: '../../../games/collaboration/kaiju-defenders.html' },
+  { name: '怪物厨师 (Monster Chef)', cat: '团队协作', pmin: 3, pmax: 6, venue: 'indoor', mins: '50–70 分钟', rule: '《怪物厨师》是一款合作类桌游，灵感来源于热门动漫《迷宫饭》(Dungeon Meshi)。', url: '../../../games/collaboration/monster-chef.html' },
+  { name: '我从未（Never Have I Ever）', cat: '破冰热场', pmin: 6, pmax: 12, venue: 'indoor', mins: '15–25 分钟', rule: '用低风险的话题建立初步信任，让"没说过话的人"也开口', url: '../../../games/icebreaker/never-have-i-ever.html' },
+  { name: '我是主持人 (Host Show)', cat: '综艺娱乐', pmin: 8, pmax: 20, venue: 'indoor', mins: '45–60 分钟', rule: '把《脱口秀大会》《主持人大赛》的赛制搬进团建：抽签决定「主持场景」，90秒准备，即兴主持一段——公司年会、突发新闻、产品翻车发布会、相亲节目……观众…', url: '../../../games/variety/host-show.html' },
+  { name: '报纸塔挑战', cat: '创意激发', pmin: 4, pmax: 6, venue: 'outdoor', mins: '30–40 分钟', rule: '在资源受限条件下，通过快速迭代和团队协作，完成看似不可能的工程挑战。', url: '../../../games/creativity/newspaper-tower.html' },
+  { name: '探险家日记（分享引导版）', cat: '破冰热场', pmin: 6, pmax: 16, venue: 'indoor', mins: '30–45 分钟', rule: '促进成员相互了解、练习倾听与表达、建立心理安全', url: '../../../games/icebreaker/explorer-journal.html' },
+  { name: '撕名牌大战 (Name Tag War)', cat: '综艺娱乐', pmin: 10, pmax: 40, venue: 'both', mins: '40–60 分钟', rule: '《奔跑吧》的标志性环节，团建版安全重制：每人身后贴一张名牌，在规定区域内互相追逐，撕下对方名牌得分，名牌被撕者出局（或转为「裁判/摄影师」）。', url: '../../../games/variety/name-tag-war.html' },
+  { name: '数字分身上班记', cat: '桌游团建', pmin: 4, pmax: 6, venue: 'indoor', mins: '45 分钟', rule: '邮件、会议、报告同时砸来——体验优先级判断被逼到明面上，以及「忙到崩溃」的黑色幽默。', url: '../../../games/boardgame/digital-twin-work.html' },
+  { name: '时间循环案 (Time Loop Case)', cat: '剧本杀改编', pmin: 6, pmax: 12, venue: 'indoor', mins: '60–75 分钟', rule: '一个只有 10 分钟的「案发夜晚」，团队要重复经历 5 次。', url: '../../../games/jubensha/time-loop-case.html' },
+  { name: '时间特工（团队推理版）', cat: '沟通表达', pmin: 6, pmax: 12, venue: 'indoor', mins: '30–45 分钟', rule: '锻炼信息分享、逻辑推理、信任判断', url: '../../../games/communication/time-agents.html' },
+  { name: '星际医疗队 · 生死救援协作版 (Stellar Medics)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–70 分钟', rule: '《星际医疗队 · 生死救援协作版》改编自合作桌游《星际医疗队 Stellar Medics》（宇宙科幻 + 医疗救援主题）。', url: '../../../games/collaboration/stellar-medics.html' },
+  { name: '星际拓荒者 · 从零到一版 (Star Pioneers)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–70 分钟', rule: '《星际拓荒者 · 从零到一版》改编自合作生存桌游《星际拓荒者 Star Pioneers》。', url: '../../../games/collaboration/star-pioneers.html' },
+  { name: '星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–70 分钟', rule: '《星际灯塔守护者 · 守望协作版》改编自合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护主题）。', url: '../../../games/collaboration/stellar-lighthouse.html' },
+  { name: '星际矿工（团队危机管理版）', cat: '团队协作', pmin: 5, pmax: 8, venue: 'indoor', mins: '45–60 分钟', rule: '锻炼团队协作、危机应对、资源分配、领导力观察', url: '../../../games/collaboration/space-miners.html' },
+  { name: '末日种子库 (Doomsday Vault)', cat: '团队协作', pmin: 3, pmax: 6, venue: 'indoor', mins: '60–75 分钟', rule: '公元 2048 年，一场全球性的生态连锁崩溃摧毁了地表绝大部分生态系统。', url: '../../../games/collaboration/doomsday-vault.html' },
+  { name: '极挑任务卡 (Mission Cards)', cat: '综艺娱乐', pmin: 6, pmax: 30, venue: 'both', mins: '90–120 分钟', rule: '《极限挑战》式任务卡团建：每组持一部手机+一叠任务卡，在园区/商圈/景点里随机抽取任务并完成——和陌生人合影、用身体摆字、找到指定店铺、限时采购………', url: '../../../games/variety/mission-cards.html' },
+  { name: '棉花糖挑战（Marshmallow Challenge）', cat: '问题解决', pmin: 4, pmax: 6, venue: 'indoor', mins: '45–60 分钟', rule: '用一次必然暴露「先做还是先想」差异的动手任务，把原型思维和失败成本讲透', url: '../../../games/problem-solving/marshmallow-challenge.html' },
+  { name: '沉默领袖', cat: '领导力', pmin: 4, pmax: 8, venue: 'indoor', mins: '30–40 分钟', rule: '让准管理者体验「无法用权力（说话/命令）时，如何真正领导团队」——这是领导力最核心的考验。', url: '../../../games/leadership/silent-leader.html' },
+  { name: '沙漠逃生', cat: '问题解决', pmin: 5, pmax: 8, venue: 'indoor', mins: '30–45 分钟', rule: '在信息不完全、时间压力下，训练团队快速共识、理性决策的能力。', url: '../../../games/problem-solving/desert-survival.html' },
+  { name: '深海探险 (Abyss Dive)', cat: '团队协作', pmin: 3, pmax: 6, venue: 'indoor', mins: '50–70 分钟', rule: '《深海探险》是一款合作类桌游，背景设定在 2247 年：一支精英深海探险队驾驶「蛟龙号」深潜器，穿越层层深海区域，寻找传说中的远古失落文明核心——深海之心。', url: '../../../games/collaboration/abyss-dive.html' },
+  { name: '演技派对 (Acting Party)', cat: '综艺娱乐', pmin: 8, pmax: 24, venue: 'indoor', mins: '40–50 分钟', rule: '「你演我猜」的综艺联赛版：三轮赛制（个人赛→对手戏→团体大戏），从「比划词语」进化到「演一段剧情」。', url: '../../../games/variety/acting-party.html' },
+  { name: '火星殖民计划', cat: '桌游团建', pmin: 4, pmax: 6, venue: 'indoor', mins: '100 分钟', rule: '氧气、水、食物是眼前的命，科技与移民是十年后的事——团队如何在两张表之间分配资源。', url: '../../../games/boardgame/mars-colony.html' },
+  { name: '猎人小队 · 协同升级版 (Hunter Squad)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–75 分钟', rule: '《猎人小队 · 协同升级版》改编自合作桌游《独行猎人 Solo Leveling Hunters》（改编自动漫《我独自升级》的合作地下城桌游）。', url: '../../../games/collaboration/solo-hunter-squad.html' },
+  { name: '王牌对王牌 (Trivia Show)', cat: '综艺娱乐', pmin: 10, pmax: 30, venue: 'indoor', mins: '45–60 分钟', rule: '把《王牌对王牌》的综艺竞答搬进会议室：抢答、风险押注、表演题、惩罚机制全套配齐。', url: '../../../games/variety/trivia-show.html' },
+  { name: '珠行万里（乒乓球传递）', cat: '团队协作', pmin: 8, pmax: 12, venue: 'both', mins: '20–30 分钟', rule: '让团队体验「每个人都很重要，任何一个环节失误都会导致全员重来」的协作困境。', url: '../../../games/collaboration/ball-relay.html' },
+  { name: '画图接龙', cat: '沟通表达', pmin: 4, pmax: 8, venue: 'indoor', mins: '20–30 分钟', rule: '让参与者体验「接手他人的工作」时，如何在「尊重原意」和「加入自己的创意」之间找到平衡。', url: '../../../games/communication/drawing-relay.html' },
+  { name: '疯狂厨房（团队抗压协作版）', cat: '团队协作', pmin: 4, pmax: 8, venue: 'indoor', mins: '30–45 分钟', rule: '锻炼团队协作、时间管理、压力应对、角色分工', url: '../../../games/collaboration/crazy-kitchen.html' },
+  { name: '病毒危机 (Virus Outbreak)', cat: '团队协作', pmin: 4, pmax: 8, venue: 'indoor', mins: '45–60 分钟', rule: '模拟突发公共卫生事件的应急响应的过程，让团队在高压环境下体验协作决策、资源分配、信息共享的重要性。', url: '../../../games/collaboration/virus-outbreak.html' },
+  { name: '盲人方阵（Blind Polygon）', cat: '沟通表达', pmin: 8, pmax: 24, venue: 'both', mins: '30–45 分钟', rule: '体验精准沟通、角色自发分工、在信息不对称下协作', url: '../../../games/communication/blind-polygon.html' },
+  { name: '盲盒神话（团建改造版）', cat: '破冰热场', pmin: 4, pmax: 8, venue: 'indoor', mins: '30–40 分钟', rule: '通过交易谈判，体验「沟通」和「共赢思维」——不是零和游戏。', url: '../../../games/icebreaker/blind-box-myth.html' },
+  { name: '盲行（Blind Walk）', cat: '信任建立', pmin: 10, pmax: 30, venue: 'both', mins: '20–35 分钟', rule: '体验信任与控制权、非语言沟通、责任感知', url: '../../../games/trust/blind-walk.html' },
+  { name: '神话裂隙 (Mythic Rift)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '60–90 分钟', rule: '《神话裂隙》改编自合作桌游《神话裂隙 Mythic Rift》（灵感来自《黑神话：悟空》《咒术回战》《原神》等神话题材作品）。', url: '../../../games/collaboration/mythic-rift.html' },
+  { name: '红黑游戏（Red-Black Game）', cat: '领导力', pmin: 6, pmax: 10, venue: 'indoor', mins: '45–60 分钟', rule: '体验竞争vs合作、信任建立、跨部门协作的复杂性', url: '../../../games/leadership/red-black-game.html' },
+  { name: '纸桥承重赛（Paper Bridge）', cat: '问题解决', pmin: 3, pmax: 5, venue: 'indoor', mins: '40–55 分钟', rule: '在有限材料下做多轮承重测试，体验「结构改造 > 材料堆叠」和「每次只改一个变量」', url: '../../../games/problem-solving/paper-bridge.html' },
+  { name: '绝密行动（团建改造版）', cat: '团队协作', pmin: 4, pmax: 8, venue: 'indoor', mins: '45–60 分钟', rule: '在时间紧迫、危机四伏的高压环境下，体验「跨部门协作」和「角色分工」——正是高效团队面对紧急项目时的真实写照。', url: '../../../games/collaboration/secret-mission.html' },
+  { name: '综艺传声筒 (Whisper Chain)', cat: '综艺娱乐', pmin: 8, pmax: 30, venue: 'indoor', mins: '20–30 分钟', rule: '经典「传话游戏」的综艺升级版：不只是耳语传话，中间插入「比划」「方言」「一个字」三种变形规则。', url: '../../../games/variety/whisper-chain.html' },
+  { name: '美食挑战赛（团建改造版）', cat: '破冰热场', pmin: 4, pmax: 7, venue: 'indoor', mins: '30–40 分钟', rule: '在爆笑中体验「分工协作」和「接受不完美结果」——团队聚餐前的完美热身。', url: '../../../games/icebreaker/food-challenge.html' },
+  { name: '背对背画画（Back-to-Back Drawing）', cat: '信任建立', pmin: 2, pmax: 2, venue: 'indoor', mins: '30–40 分钟', rule: '让「假设对方懂了」这件事付出可见代价，练习主动确认与承认不懂', url: '../../../games/trust/back-to-back-draw.html' },
+  { name: '芙莉莲的旅程 (Frieren\'s Journey)', cat: '团队协作', pmin: 2, pmax: 4, venue: 'indoor', mins: '60–90 分钟', rule: '改编自同名合作桌游（《葬送的芙莉莲》同人创作）。玩家组成一支冒险小队，沿着艾兰大陆的旅途路线，穿越森林、山脉、荒漠与海岸，最终抵达传说中的「天国之地」。', url: '../../../games/collaboration/frieren-journey.html' },
+  { name: '藏宝密令 (Treasure Code)', cat: '剧本杀改编', pmin: 10, pmax: 60, venue: 'both', mins: '45–60 分钟', rule: '把剧本杀的「线索链」装进一场公司寻宝：一份藏宝图被撕成碎片散落在办公区/园区，每枚碎片都藏在一道谜题、一个挑战或一次「与人对话」背后。', url: '../../../games/jubensha/treasure-code.html' },
+  { name: '虚拟密室逃脱（Virtual Escape Room）', cat: '问题解决', pmin: 4, pmax: 6, venue: 'indoor', mins: '30–45 分钟', rule: '体验"信息不在一个人手里"时团队如何分工、谁做主导、谁在等', url: '../../../games/problem-solving/virtual-escape.html' },
+  { name: '谣言工厂（沟通信任版）', cat: '沟通表达', pmin: 8, pmax: 15, venue: 'indoor', mins: '30–45 分钟', rule: '体验信息传递失真、练习主动确认、建立沟通规范', url: '../../../games/communication/rumor-factory.html' },
+  { name: '资源谈判局（Resource Negotiation）', cat: '领导力', pmin: 3, pmax: 3, venue: 'indoor', mins: '60–80 分钟', rule: '在零和表象下找到非零和解，练习「先问需求、再谈分配」的谈判顺序', url: '../../../games/leadership/resource-negotiation.html' },
+  { name: '轮回地下城 · 团队复盘迭代版 (Loop Dungeon)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–60 分钟', rule: '《轮回地下城 · 团队复盘迭代版》改编自合作桌游《轮回地下城 Loop Dungeon》（灵感来自《挺进地牢》《以撒的结合》等 Roguelike …', url: '../../../games/collaboration/loop-dungeon.html' },
+  { name: '远征33号 · 绘母之末（团建协作版）(Expedition 33)', cat: '团队协作', pmin: 2, pmax: 4, venue: 'indoor', mins: '45–75 分钟', rule: '《远征33号 · 绘母之末（团建协作版）》改编自荣获 TGA 2025「年度最佳游戏」的现象级合作桌游《Clair Obscur：Expeditio…', url: '../../../games/collaboration/expedition-33.html' },
+  { name: '银河小馆 · 双线突围版 (Galaxy Diner)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–75 分钟', rule: '《银河小馆 · 双线突围版》改编自合作桌游《星际餐厅大逃亡 Space Diner Escape》（"银河小馆"是一艘穿越陨石带的太空流浪餐厅）。', url: '../../../games/collaboration/space-diner-escape.html' },
+  { name: '风火轮（报纸履带）', cat: '团队协作', pmin: 8, pmax: 15, venue: 'outdoor', mins: '30–40 分钟', rule: '让团队在「资源会耗尽」的压力下，体验协作、节奏统一和面对失败的态度。', url: '../../../games/collaboration/wind-fire-wheel.html' },
+  { name: '鬼杀队：无限列车 (Demon Slayer: Infinity Train)', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–75 分钟', rule: '《鬼杀队：无限列车》改编自合作桌游《鬼杀队：无限列车 Demon Slayer: Infinity Train》（灵感来自《鬼灭之刃》"无限列车篇"）。', url: '../../../games/collaboration/demon-slayer-train.html' },
+  { name: '魔法学院（团队协作版）', cat: '团队协作', pmin: 6, pmax: 8, venue: 'indoor', mins: '45–60 分钟', rule: '锻炼团队合作、资源共享、策略制定、角色分工', url: '../../../games/collaboration/magic-academy.html' },
+  { name: '鸡蛋坠落挑战', cat: '问题解决', pmin: 4, pmax: 6, venue: 'outdoor', mins: '45–60 分钟', rule: '在 constrained 条件下，通过快速试错和团队协作，完成工程挑战，体验「fail fast, learn fast」。', url: '../../../games/problem-solving/egg-drop.html' },
+  { name: '黄金结界 · 团队守护版（Huntrix: Golden Honmoon）', cat: '团队协作', pmin: 3, pmax: 5, venue: 'indoor', mins: '45–75 分钟', rule: '《黄金结界 · 团队守护版》把原作"偶像女团暗中守护人间"的内核，搬进了一支高绩效团队的文化与心理资本守护现场。', url: '../../../games/collaboration/huntrix-honmoon.html' },
+  { name: '齐眉棍（手指传棍）', cat: '团队协作', pmin: 6, pmax: 10, venue: 'both', mins: '20–30 分钟', rule: '让团队体验「每个人都对，但结果错了」的经典协作困境，理解系统思维和互相配合。', url: '../../../games/collaboration/eyebrow-stick.html' },
+];
+
+var PALETTE = ['#5b8cfe','#ff8a4c','#25c2b8','#a78bfa','#f6b73c','#ef7d9a','#4ecdc4','#8d9eef','#f0925b','#57c4ad','#c4a3f5','#f2c14e'];
+
+var peopleFilter = 'all', venueFilter = 'all';
+var rotation = 0;          // 当前角度（度）
+var spinning = false;
+var currentList = [];
+
+var canvas = document.getElementById('wheel');
+var ctx = canvas.getContext('2d');
+
+function inPeopleRange(g) {
+  if (peopleFilter === 'all') return true;
+  if (peopleFilter === 's') return g.pmin <= 10;
+  if (peopleFilter === 'm') return g.pmax >= 10 && g.pmin <= 20;
+  if (peopleFilter === 'l') return g.pmax >= 20;
+  return true;
+}
+function inVenueRange(g) {
+  if (venueFilter === 'all') return true;
+  if (venueFilter === 'indoor') return g.venue === 'indoor' || g.venue === 'both';
+  if (venueFilter === 'outdoor') return g.venue === 'outdoor' || g.venue === 'both';
+  return true;
+}
+function filtered() {
+  return GAMES.filter(function (g) { return inPeopleRange(g) && inVenueRange(g); });
+}
+
+function draw(list) {
+  var n = list.length;
+  var size = canvas.width;
+  var cx = size / 2, cy = size / 2, r = size / 2 - 8;
+  ctx.clearRect(0, 0, size, size);
+  if (n === 0) {
+    ctx.fillStyle = '#eef0f4';
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#999';
+    ctx.font = '26px -apple-system,"PingFang SC",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('没有符合条件的游戏', cx, cy);
+    return;
+  }
+  var seg = (Math.PI * 2) / n;
+  for (var i = 0; i < n; i++) {
+    var a0 = rotation * Math.PI / 180 + i * seg;
+    var a1 = a0 + seg;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, a0, a1);
+    ctx.closePath();
+    ctx.fillStyle = PALETTE[i % PALETTE.length];
+    ctx.fill();
+    // 文字
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(a0 + seg / 2);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 24px -apple-system,"PingFang SC",sans-serif';
+    var label = list[i].name;
+    if (label.length > 6) label = label.slice(0, 6);
+    ctx.fillText(label, r - 26, 0);
+    ctx.restore();
+  }
+  // 中心轴
+  ctx.beginPath(); ctx.arc(cx, cy, 34, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.lineWidth = 4; ctx.strokeStyle = '#1a1a2e'; ctx.stroke();
+  ctx.fillStyle = '#1a1a2e';
+  ctx.font = 'bold 22px -apple-system,"PingFang SC",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('GO', cx, cy);
+}
+
+function refresh() {
+  currentList = filtered();
+  document.getElementById('countLine').textContent =
+    currentList.length ? ('当前候选 ' + currentList.length + ' 款，转到谁玩谁') : '当前条件下没有游戏，放宽筛选试试';
+  document.getElementById('resultCard').classList.remove('show');
+  draw(currentList);
+}
+
+function spin() {
+  if (spinning || currentList.length === 0) return;
+  spinning = true;
+  document.getElementById('resultCard').classList.remove('show');
+  var n = currentList.length;
+  var seg = 360 / n;
+  // 指针在正上方：选中第 idx 片，最终旋转角使该片中心对准指针
+  var idx = Math.floor(Math.random() * n);
+  var target = 360 * 5 + (360 - (idx * seg + seg / 2)); // 多转 5 圈 + 对齐
+  var start = rotation % 360;
+  var delta = target - start + (target < start ? 360 : 0);
+  var dur = 2600;
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var p = Math.min(1, (ts - t0) / dur);
+    var e = 1 - Math.pow(1 - p, 3); // easeOutCubic
+    rotation = start + delta * e;
+    draw(currentList);
+    if (p < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      rotation = (start + delta) % 360;
+      spinning = false;
+      showResult(currentList[idx]);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+function showResult(g) {
+  document.getElementById('rName').textContent = g.name;
+  var tags = [g.cat, g.pmin + '–' + g.pmax + ' 人', g.mins,
+    g.venue === 'indoor' ? '室内' : (g.venue === 'outdoor' ? '户外/园区' : '室内/户外')];
+  document.getElementById('rTags').innerHTML = tags.map(function (t) {
+    return '<span class="r-tag">' + t + '</span>';
+  }).join('');
+  document.getElementById('rRule').textContent = g.rule;
+  var link = document.getElementById('rLink');
+  link.href = g.url;
+  link.textContent = '📖 查看《' + g.name + '》完整规则与安全条款';
+  document.getElementById('goBtn').onclick = function () { window.open(g.url, '_blank'); };
+  document.getElementById('resultCard').classList.add('show');
+  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// 筛选 chips
+function bindChips(id, cb) {
+  var box = document.getElementById(id);
+  box.addEventListener('click', function (e) {
+    var btn = e.target.closest('.chip');
+    if (!btn) return;
+    box.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('active'); });
+    btn.classList.add('active');
+    cb(btn.dataset.v);
+  });
+}
+bindChips('peopleChips', function (v) { peopleFilter = v; refresh(); });
+bindChips('venueChips', function (v) { venueFilter = v; refresh(); });
+
+document.getElementById('spinBtn').addEventListener('click', spin);
+document.getElementById('againBtn').addEventListener('click', spin);
+
+refresh();
+</script>
+
+</body>
+</html>

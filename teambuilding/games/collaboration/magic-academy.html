@@ -1,301 +1,146 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>魔法学院（团队协作版） - 团建游戏</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <style>
-        .tag { display: inline-block; padding: 0.25rem 0.5rem; margin: 0.25rem; font-size: 0.875rem; border-radius: 0.25rem; }
-        .tag-purpose { background: #e3f2fd; color: #1565c0; }
-        .tag-form { background: #f3e5f5; color: #7b1fa2; }
-        .tag-scene { background: #e8f5e9; color: #2e7d32; }
-        .difficulty { color: #ff9800; }
-        table { width: 100%; border-collapse: collapse; }
-        table th, table td { padding: 0.75rem; border: 1px solid #dee2e6; }
-        table th { background: #f8f9fa; }
-        blockquote { border-left: 4px solid #0077b6; padding-left: 1rem; margin: 1rem 0; }
-        code { background: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
-        pre { background: #f8f9fa; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#059669">
+<meta name="description" content="锻炼团队合作、资源共享、策略制定、角色分工">
+<title>魔法学院（团队协作版） · 团建游戏库</title>
+<link rel="stylesheet" href="../../assets/lib.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<style>:root{--accent:#34d399;--accent-ink:#059669;--accent-bg:#34d3991f;}</style>
 </head>
 <body>
-    <main class="container">
-        <nav>
-            <ul>
-                <li><a href="../../index.html">← 返回首页</a></li>
-                <li><a href="../../index.html">返回游戏库</a></li>
-            </ul>
-        </nav>
 
-        <article>
-            <hr>
-<p>title: "魔法学院（团队协作版）"</p>
-<p>author: "AIWorkDB"</p>
-<p>source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/magic-academy.html"</p>
-<p>cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"</p>
+<header class="topbar">
+  <a class="topbar-btn" href="../../index.html" aria-label="返回游戏库">←</a>
+  <div class="topbar-title" id="tbar">魔法学院（团队协作版）</div>
+  <button class="topbar-btn" id="share" aria-label="分享">↗</button>
+</header>
+
+<section class="hero" style="--a1:#34d399;--a2:#059669;">
+  <span class="hero-cat">🤝 团队协作</span>
+  <h1>魔法学院（团队协作版）</h1>
+  
+  <p class="hero-lede">锻炼团队合作、资源共享、策略制定、角色分工</p>
+</section>
+
+<div class="facts">
+  <div class="fact"><div class="fact-k">⏱ 时长</div><div class="fact-v">45–60 分钟</div></div>
+  <div class="fact"><div class="fact-k">👥 人数</div><div class="fact-v">6–8 人/组</div></div>
+  <div class="fact"><div class="fact-k">📍 场地</div><div class="fact-v">室内</div></div>
+  <div class="fact"><div class="fact-k">📊 难度</div><div class="fact-v">★★☆</div></div>
+  
+</div>
+
+<div class="abilities"><span class="ab">默契配合</span><span class="ab">角色认知</span><span class="ab">试错勇气</span></div>
+<div class="toc"><details><summary>📑 本页目录（5 节）</summary><ol><li class="lv2"><a href="#2-核心规则-团建扩展版">2. 核心规则（团建扩展版）</a></li><li class="lv2"><a href="#3-引导要点">3. 引导要点</a></li><li class="lv2"><a href="#5-变体适配">5. 变体适配</a></li><li class="lv2"><a href="#6-物资清单">6. 物资清单</a></li><li class="lv2"><a href="#7-教练工具箱-补充">7. 教练工具箱（补充）</a></li></ol></details></div>
+<article class="doc">
+<div class="tw"><div class="table-wrap"><table><thead><tr><th><strong>核心价值</strong></th><th>锻炼团队合作、资源共享、策略制定、角色分工</th></tr></thead><tbody></tbody></table></div></div>
+<p><strong>游戏简介</strong>：玩家们扮演魔法学徒，需要合作探索魔法学院的三层塔楼，收集魔法材料、学习法术，最终在塔顶封印黑暗之神。所有玩家共享信息、资源和策略，只有团结协作才能赢得胜利。这款游戏是观察团队角色分工和合作模式的绝佳工具。</p>
 <hr>
-<h1>魔法学院（团队协作版）</h1>
-<table>
-<thead><tr>
-<th>**时长**</th>
-<th>45–60 min</th>
-</tr></thead><tbody>
-<tr>
-<td>**难度**</td>
-<td>中等</td>
-</tr>
-<tr>
-<td>**场景标签**</td>
-<td>团建/培训/工作坊</td>
-</tr>
-<tr>
-<td>**核心价值**</td>
-<td>锻炼团队合作、资源共享、策略制定、角色分工</td>
-</tr>
-</tbody></table>
-<p>**游戏简介**：玩家们扮演魔法学徒，需要合作探索魔法学院的三层塔楼，收集魔法材料、学习法术，最终在塔顶封印黑暗之神。所有玩家共享信息、资源和策略，只有团结协作才能赢得胜利。这款游戏是观察团队角色分工和合作模式的绝佳工具。</p>
-<hr>
-<h2>2. 核心规则（团建扩展版）</h2>
-<h3>人数扩展方案</h3>
+<p><strong>团建核心价值</strong>：</p>
+<ul><li>✨ 默契配合：咒语组合需要时序与配合</li><li>🎓 角色认知：找到自己在团队中的法术位</li><li>🪄 试错勇气：念错咒语的代价与笑声</li></ul>
+<h2 id="2-核心规则-团建扩展版">2. 核心规则（团建扩展版）</h2>
+<h3 id="人数扩展方案">人数扩展方案</h3>
 <p>原版游戏支持2–4人，团建场景需要扩展至6–8人。提供两种方案：</p>
-<h4>方案A：小组竞赛模式（推荐）</h4>
-<ul>
-<li>将玩家分成2个小组（每组3–4人）</li>
-<li>每组各自对抗黑暗势力，比赛谁先封印黑暗之神</li>
-<li>共享地图（两个棋子团队），但资源和法术独立</li>
-<li>增加"互助环节"：每轮可以支援对方1张材料卡</li>
-</ul>
-<h4>方案B：大团队模式</h4>
-<ul>
-<li>所有4–8名玩家在同一地图上合作</li>
-<li>增加角色卡至8个（火/水/土/风/光/暗/雷/冰）</li>
-<li>每人每回合1次行动，严格轮流</li>
-<li>增加"团队讨论时间"：每3回合有3分钟团队策略讨论</li>
-</ul>
-<h3>准备阶段</h3>
-<ol>
-<li>**布置地图**：将三层塔楼地图（A4纸打印或手绘）放在桌面中央</li>
-<li>**选择角色**：每位玩家选择一个魔法学徒角色（确保角色能力互补）</li>
-<li>**放置棋子**：所有玩家棋子放在起点（学院大厅）</li>
-<li>**初始化资源**：</li>
-<ul>
-<li>每位玩家获得2张材料卡（随机）</li>
-<li>将法术卡洗混作为公共牌库</li>
-<li>设置黑暗计量表为0</li>
-<li>**制定策略**（5分钟）：</li>
-<li>团队讨论：谁负责攻击（消除黑暗点）？谁负责支援（治疗/护盾）？谁负责探索（收集材料）？</li>
-</ul>
-</ol>
-<h3>游戏流程（每个回合）</h3>
-<table>
-<thead><tr>
-<th>步骤</th>
-<th>内容</th>
-<th>合作要点</th>
-</tr></thead><tbody>
-<tr>
-<td>掷骰子移动</td>
-<td>掷2颗骰子，移动棋子</td>
-<td>团队可以建议最佳移动路径</td>
-</tr>
-<tr>
-<td>执行位置事件</td>
-<td>根据停留位置获得卡牌或触发事件</td>
-<td>优先让缺少资源的玩家停留在资源点</td>
-</tr>
-<tr>
-<td>施展法术</td>
-<td>消耗材料施展法术</td>
-<td>法术可以作用于自己或队友</td>
-</tr>
-<tr>
-<td>传递资源</td>
-<td>将多余的材料/法术卡传递给队友</td>
-<td>关键合作点：合理分配资源</td>
-</tr>
-<tr>
-<td>黑暗回合</td>
-<td>所有玩家回合结束后，执行黑暗行动</td>
-<td>团队共同面对挑战</td>
-</tr>
-</tbody></table>
-<h3>胜利条件（合作胜利）</h3>
+<h4 id="方案a-小组竞赛模式-推荐">方案A：小组竞赛模式（推荐）</h4>
+<ul><li>将玩家分成2个小组（每组3–4人）</li><li>每组各自对抗黑暗势力，比赛谁先封印黑暗之神</li><li>共享地图（两个棋子团队），但资源和法术独立</li><li>增加"互助环节"：每轮可以支援对方1张材料卡</li></ul>
+<h4 id="方案b-大团队模式">方案B：大团队模式</h4>
+<ul><li>所有4–8名玩家在同一地图上合作</li><li>增加角色卡至8个（火/水/土/风/光/暗/雷/冰）</li><li>每人每回合1次行动，严格轮流</li><li>增加"团队讨论时间"：每3回合有3分钟团队策略讨论</li></ul>
+<h3 id="准备阶段">准备阶段</h3>
+<ol><li><strong>布置地图</strong>：将三层塔楼地图（A4纸打印或手绘）放在桌面中央</li><li><strong>选择角色</strong>：每位玩家选择一个魔法学徒角色（确保角色能力互补）</li><li><strong>放置棋子</strong>：所有玩家棋子放在起点（学院大厅）</li><li><strong>初始化资源</strong>：</li><ul class="sub"><li>每位玩家获得2张材料卡（随机）</li><li>将法术卡洗混作为公共牌库</li><li>设置黑暗计量表为0</li></ul><li><strong>制定策略</strong>（5分钟）：</li><ul class="sub"><li>团队讨论：谁负责攻击（消除黑暗点）？谁负责支援（治疗/护盾）？谁负责探索（收集材料）？</li></ul></ol>
+<h3 id="游戏流程-每个回合">游戏流程（每个回合）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>步骤</th><th>内容</th><th>合作要点</th></tr></thead><tbody><tr><td>掷骰子移动</td><td>掷2颗骰子，移动棋子</td><td>团队可以建议最佳移动路径</td></tr><tr><td>执行位置事件</td><td>根据停留位置获得卡牌或触发事件</td><td>优先让缺少资源的玩家停留在资源点</td></tr><tr><td>施展法术</td><td>消耗材料施展法术</td><td>法术可以作用于自己或队友</td></tr><tr><td>传递资源</td><td>将多余的材料/法术卡传递给队友</td><td>关键合作点：合理分配资源</td></tr><tr><td>黑暗回合</td><td>所有玩家回合结束后，执行黑暗行动</td><td>团队共同面对挑战</td></tr></tbody></table></div></div>
+<h3 id="胜利条件-合作胜利">胜利条件（合作胜利）</h3>
 <p>达成以下任一条件即获胜：</p>
-<ol>
-<li>**封印黑暗之神**：至少1名玩家到达塔顶，并且黑暗计量表 ≤ 5</li>
-<li>**完成魔法仪式**：团队收集全部4种稀有材料并带回起点</li>
-</ol>
+<ol><li><strong>封印黑暗之神</strong>：至少1名玩家到达塔顶，并且黑暗计量表 ≤ 5</li><li><strong>完成魔法仪式</strong>：团队收集全部4种稀有材料并带回起点</li></ol>
 <hr>
-<h2>3. 引导要点</h2>
-<h3>教练讲解要点</h3>
-<ol>
-<li>**强调合作至上**：</li>
-</ol>
-<h3>Feelings（感受层面）</h3>
-<ul>
-<li>"当你手中的资源被传递给队友时，你是什么感受？"</li>
-<li>"当团队决策和你个人想法不一致时，你是什么感受？"</li>
-<li>"游戏结束时，你是感到成就感还是遗憾？为什么？"</li>
-</ul>
-<h3>Findings（发现层面）</h3>
-<ul>
-<li>"这个游戏和我们的团队合作有什么相似之处？"</li>
-<li>"在资源有限的情况下做决策，这和我们工作中的什么场景类似？"</li>
-<li>"你们团队中有没有'自然领导者'？其他人是如何配合的？"</li>
-</ul>
-<h3>Future（未来层面）</h3>
-<ul>
-<li>"如果再来一次，你们会调整什么策略？"</li>
-<li>"回到工作中，当你需要和同事共享资源或信息时，你会注意什么？"</li>
-<li>"今天我们学到了什么关于团队合作的经验？"</li>
-</ul>
+<h2 id="3-引导要点">3. 引导要点</h2>
+<h3 id="教练讲解要点">教练讲解要点</h3>
+<ol><li><strong>强调合作至上</strong>：</li></ol>
+<h3 id="feelings-感受层面">Feelings（感受层面）</h3>
+<ul><li>"当你手中的资源被传递给队友时，你是什么感受？"</li><li>"当团队决策和你个人想法不一致时，你是什么感受？"</li><li>"游戏结束时，你是感到成就感还是遗憾？为什么？"</li></ul>
+<h3 id="findings-发现层面">Findings（发现层面）</h3>
+<ul><li>"这个游戏和我们的团队合作有什么相似之处？"</li><li>"在资源有限的情况下做决策，这和我们工作中的什么场景类似？"</li><li>"你们团队中有没有'自然领导者'？其他人是如何配合的？"</li></ul>
+<h3 id="future-未来层面">Future（未来层面）</h3>
+<ul><li>"如果再来一次，你们会调整什么策略？"</li><li>"回到工作中，当你需要和同事共享资源或信息时，你会注意什么？"</li><li>"今天我们学到了什么关于团队合作的经验？"</li></ul>
 <hr>
-<h2>5. 变体适配</h2>
-<h3>变体A：角色固定模式（适合领导力观察）</h3>
-<p>**规则调整**：</p>
-<ul>
-<li>教练提前分配角色（不要让玩家自选）</li>
-<li>分配原则：领导者角色给平时不常领导的人，支援角色给平时比较强势的人</li>
-<li>观察：被迫角色是否会改变团队动态？</li>
-</ul>
-<p>**复盘重点**：角色适应、领导力分布、团队包容度</p>
+<h2 id="5-变体适配">5. 变体适配</h2>
+<h3 id="变体a-角色固定模式-适合领导力观察">变体A：角色固定模式（适合领导力观察）</h3>
+<p><strong>规则调整</strong>：</p>
+<ul><li>教练提前分配角色（不要让玩家自选）</li><li>分配原则：领导者角色给平时不常领导的人，支援角色给平时比较强势的人</li><li>观察：被迫角色是否会改变团队动态？</li></ul>
+<p><strong>复盘重点</strong>：角色适应、领导力分布、团队包容度</p>
 <hr>
-<h3>变体B：资源限制模式（适合压力测试）</h3>
-<p>**规则调整**：</p>
-<ul>
-<li>初始手牌减少至1张（原计划2张）</li>
-<li>材料点获得概率降低（只有停留在特定颜色的材料点才能获得）</li>
-<li>增加"资源危机"事件卡：随机抽取1名玩家，失去所有手牌</li>
-</ul>
-<p>**复盘重点**：压力下的决策、危机应对、团队凝聚力</p>
+<h3 id="变体b-资源限制模式-适合压力测试">变体B：资源限制模式（适合压力测试）</h3>
+<p><strong>规则调整</strong>：</p>
+<ul><li>初始手牌减少至1张（原计划2张）</li><li>材料点获得概率降低（只有停留在特定颜色的材料点才能获得）</li><li>增加"资源危机"事件卡：随机抽取1名玩家，失去所有手牌</li></ul>
+<p><strong>复盘重点</strong>：压力下的决策、危机应对、团队凝聚力</p>
 <hr>
-<h3>变体C：无声合作模式（适合沟通观察）</h3>
-<p>**规则调整**：</p>
-<ul>
-<li>前3回合禁止语言交流（只能用手势或写字）</li>
-<li>第4回合开始恢复正常交流</li>
-<li>观察：无声环境下团队如何协作？</li>
-</ul>
-<p>**复盘重点**：非语言沟通、默契程度、沟通方式多样性</p>
+<h3 id="变体c-无声合作模式-适合沟通观察">变体C：无声合作模式（适合沟通观察）</h3>
+<p><strong>规则调整</strong>：</p>
+<ul><li>前3回合禁止语言交流（只能用手势或写字）</li><li>第4回合开始恢复正常交流</li><li>观察：无声环境下团队如何协作？</li></ul>
+<p><strong>复盘重点</strong>：非语言沟通、默契程度、沟通方式多样性</p>
 <hr>
-<h3>变体D：简化版（适合时间有限）</h3>
-<p>**规则调整**：</p>
-<ul>
-<li>地图缩小至2层塔楼（原版3层）</li>
-<li>胜利条件简化为：任意2名玩家到达第二层终点</li>
-<li>游戏时长缩短至30分钟</li>
-</ul>
-<p>**适用场景**：作为培训中的一个小环节，而不是主打游戏</p>
+<h3 id="变体d-简化版-适合时间有限">变体D：简化版（适合时间有限）</h3>
+<p><strong>规则调整</strong>：</p>
+<ul><li>地图缩小至2层塔楼（原版3层）</li><li>胜利条件简化为：任意2名玩家到达第二层终点</li><li>游戏时长缩短至30分钟</li></ul>
+<p><strong>适用场景</strong>：作为培训中的一个小环节，而不是主打游戏</p>
 <hr>
-<h2>6. 物资清单</h2>
-<h3>完整版（使用桌游道具）</h3>
-<table>
-<thead><tr>
-<th>物品</th>
-<th>数量</th>
-<th>用途</th>
-<th>准备时间</th>
-</tr></thead><tbody>
-<tr>
-<td>游戏地图（三层塔楼）</td>
-<td>1张</td>
-<td>展示魔法学院布局</td>
-<td>打印5分钟</td>
-</tr>
-<tr>
-<td>玩家棋子</td>
-<td>8个</td>
-<td>代表学徒位置</td>
-<td>替代物5分钟</td>
-</tr>
-<tr>
-<td>魔法骰子</td>
-<td>2颗</td>
-<td>决定移动步数</td>
-<td>手机APP</td>
-</tr>
-<tr>
-<td>角色卡</td>
-<td>8张</td>
-<td>定义玩家能力</td>
-<td>打印5分钟</td>
-</tr>
-<tr>
-<td>法术卡</td>
-<td>30张</td>
-<td>施展魔法</td>
-<td>打印10分钟</td>
-</tr>
-<tr>
-<td>材料卡</td>
-<td>40张</td>
-<td>施法材料</td>
-<td>打印10分钟</td>
-</tr>
-<tr>
-<td>事件卡</td>
-<td>15张</td>
-<td>随机事件</td>
-<td>打印5分钟</td>
-</tr>
-<tr>
-<td>黑暗卡</td>
-<td>10张</td>
-<td>敌对行动</td>
-<td>打印5分钟</td>
-</tr>
-<tr>
-<td>黑暗计量表</td>
-<td>1个</td>
-<td>追踪黑暗进度</td>
-<td>纸笔记录</td>
-</tr>
-</tbody></table>
-<h3>简化版（无道具）</h3>
-<table>
-<thead><tr>
-<th>物品</th>
-<th>数量</th>
-<th>用途</th>
-</tr></thead><tbody>
-<tr>
-<td>A3纸</td>
-<td>1张</td>
-<td>手绘地图</td>
-</tr>
-<tr>
-<td>棋子（硬币/纽扣）</td>
-<td>8个</td>
-<td>代表玩家位置</td>
-</tr>
-<tr>
-<td>普通骰子</td>
-<td>2颗</td>
-<td>决定移动步数</td>
-</tr>
-<tr>
-<td>扑克牌</td>
-<td>2副</td>
-<td>代替卡牌（红心=法术、黑桃=材料、方片=事件、梅花=黑暗）</td>
-</tr>
-<tr>
-<td>白板笔 + 白板</td>
-<td>1套</td>
-<td>记录黑暗计量表</td>
-</tr>
-</tbody></table>
-<p>**准备时间**：15分钟以内</p>
+<h2 id="6-物资清单">6. 物资清单</h2>
+<h3 id="完整版-使用桌游道具">完整版（使用桌游道具）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物品</th><th>数量</th><th>用途</th><th>准备时间</th></tr></thead><tbody><tr><td>游戏地图（三层塔楼）</td><td>1张</td><td>展示魔法学院布局</td><td>打印5分钟</td></tr><tr><td>玩家棋子</td><td>8个</td><td>代表学徒位置</td><td>替代物5分钟</td></tr><tr><td>魔法骰子</td><td>2颗</td><td>决定移动步数</td><td>手机APP</td></tr><tr><td>角色卡</td><td>8张</td><td>定义玩家能力</td><td>打印5分钟</td></tr><tr><td>法术卡</td><td>30张</td><td>施展魔法</td><td>打印10分钟</td></tr><tr><td>材料卡</td><td>40张</td><td>施法材料</td><td>打印10分钟</td></tr><tr><td>事件卡</td><td>15张</td><td>随机事件</td><td>打印5分钟</td></tr><tr><td>黑暗卡</td><td>10张</td><td>敌对行动</td><td>打印5分钟</td></tr><tr><td>黑暗计量表</td><td>1个</td><td>追踪黑暗进度</td><td>纸笔记录</td></tr></tbody></table></div></div>
+<h3 id="简化版-无道具">简化版（无道具）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物品</th><th>数量</th><th>用途</th></tr></thead><tbody><tr><td>A3纸</td><td>1张</td><td>手绘地图</td></tr><tr><td>棋子（硬币/纽扣）</td><td>8个</td><td>代表玩家位置</td></tr><tr><td>普通骰子</td><td>2颗</td><td>决定移动步数</td></tr><tr><td>扑克牌</td><td>2副</td><td>代替卡牌（红心=法术、黑桃=材料、方片=事件、梅花=黑暗）</td></tr><tr><td>白板笔 + 白板</td><td>1套</td><td>记录黑暗计量表</td></tr></tbody></table></div></div>
+<p><strong>准备时间</strong>：15分钟以内</p>
 <hr>
-<h2>7. 教练工具箱（补充）</h2>
-<h3>引导话术示例</h3>
-<p>**游戏开始前（角色分工讨论）**：</p>
-<ul>
-<li>打印道具：`boardgames/category/cooperative/magic-academy/printables.html`</li>
-</ul>
+<h2 id="7-教练工具箱-补充">7. 教练工具箱（补充）</h2>
+<h3 id="引导话术示例">引导话术示例</h3>
+<p><strong>游戏开始前（角色分工讨论）</strong>：</p>
+<ul><li>打印道具：<code>boardgames/category/cooperative/magic-academy/printables.html</code></li></ul>
 <hr>
 <p>_改造于：2026-06-25 | 原游戏设计：合作类桌游_</p>
-        </article>
-    </main>
+</article>
+
+<nav class="pager">
+  <a class="prev" href="demon-slayer-train.html"><span>上一个 ←</span><div class="p-title">鬼杀队：无限列车 (Demon Slayer: Infinity Train)</div></a>
+  <a class="next" href="huntrix-honmoon.html"><span>下一个 →</span><div class="p-title">黄金结界 · 团队守护版（Huntrix: Golden Honmoon）</div></a>
+</nav>
+
+<div class="related"><h2>🔗 同类推荐</h2><div class="rel-list"><a class="rel" href="kaiju-defenders.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">怪兽守护者 (Kaiju Defenders)</span><span class="r-meta">60–75 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="body-letters.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人体拼字</span><span class="r-meta">20–30 分钟 · 6–20 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="human-knot.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人结（Human Knot）</span><span class="r-meta">30–45 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="team-chef.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">协作大厨 (Team Chef)</span><span class="r-meta">45–60 分钟 · 8–20 人</span></span><span class="r-go">›</span></a></div></div>
+
+<footer class="foot">
+  <div>🤝 团队协作 · 第 30 / 32 款</div>
+  <div><a href="../../index.html">返回全部 86 款游戏</a></div>
+  <div style="margin-top:6px;opacity:.75">规则与时长以原文档为准，现场执行前请核对场地与道具。</div>
+</footer>
+
+<script>
+(function(){
+  var t=document.getElementById('tbar'),h=document.querySelector('.hero');
+  if(t&&h&&'IntersectionObserver'in window){
+    new IntersectionObserver(function(e){t.classList.toggle('on',!e[0].isIntersecting);},
+      {rootMargin:'-56px 0px 0px 0px'}).observe(h);
+  }
+  var s=document.getElementById('share');
+  if(s)s.addEventListener('click',function(){
+    var d={title:document.title,url:location.href};
+    if(navigator.share){navigator.share(d).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(location.href)
+      .then(function(){s.textContent='✓';setTimeout(function(){s.textContent='↗';},1200);});}
+  });
+  // 仅当表格真的溢出时才提示可横滑
+  function markTables(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      var box=w.querySelector('.table-wrap');
+      if(!box)return;
+      w.classList.toggle('scrollable', box.scrollWidth - box.clientWidth > 4);
+    });
+  }
+  markTables();
+  window.addEventListener('resize',markTables,{passive:true});
+})();
+</script>
 </body>
 </html>

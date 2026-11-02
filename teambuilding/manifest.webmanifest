@@ -1,0 +1,43 @@
+{
+  "name": "团建 & 培训游戏库",
+  "short_name": "团建游戏库",
+  "description": "82 款团建游戏，按人数、时长、场地、团队能力四维筛选，含完整规则与 4F 复盘框架。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8f9fb",
+  "theme_color": "#0b1120",
+  "lang": "zh-CN",
+  "categories": ["education", "productivity", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "在线直接玩",
+      "url": "./play/index.html"
+    },
+    {
+      "name": "流程方案",
+      "url": "./index.html#flows"
+    }
+  ]
+}

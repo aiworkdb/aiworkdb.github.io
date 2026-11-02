@@ -1,414 +1,155 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>黄金结界 · 团队守护版 - 团建游戏</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #f3e8ff;
-            background: linear-gradient(135deg, #0d0718 0%, #1a0e2e 55%, #16091f 100%);
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #140a22;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            overflow: hidden;
-            border: 1px solid #3b1f5e;
-        }
-        .header {
-            background: linear-gradient(135deg, #2a0e3a 0%, #7c3aed 50%, #fbbf24 100%);
-            color: #fdf4ff;
-            padding: 40px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-        }
-        .header .subtitle {
-            font-size: 1.2em;
-            opacity: 0.95;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: #0d0718;
-        }
-        .info-card {
-            background: #140a22;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-            text-align: center;
-            border: 1px solid #3b1f5e;
-        }
-        .info-card .icon {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        .info-card .label {
-            font-size: 0.9em;
-            color: #c084fc;
-            margin-bottom: 5px;
-        }
-        .info-card .value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #fbbf24;
-        }
-        .content {
-            padding: 40px;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-        .section h2 {
-            color: #fbbf24;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #a855f7;
-        }
-        .section h3 {
-            color: #c084fc;
-            margin-top: 20px;
-            margin-bottom: 15px;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .card {
-            background: #0d0718;
-            border: 2px solid #3b1f5e;
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(251,191,36,0.35);
-            border-color: #fbbf24;
-        }
-        .card h4 {
-            color: #fbbf24;
-            margin-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #3b1f5e;
-            color: #f3e8ff;
-        }
-        th {
-            background: #7c3aed;
-            color: #fdf4ff;
-            font-weight: 600;
-        }
-        tr:hover {
-            background: #0d0718;
-        }
-        .role-card {
-            background: linear-gradient(135deg, #0d0718 0%, #1a0e2e 100%);
-            border-left: 4px solid #fbbf24;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-        }
-        .role-card h4 {
-            color: #c084fc;
-            margin-bottom: 10px;
-        }
-        .tag {
-            display: inline-block;
-            background: #7c3aed;
-            color: #fdf4ff;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            margin: 5px 5px 5px 0;
-        }
-        .flow-step {
-            background: #0d0718;
-            border-left: 4px solid #fbbf24;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-        }
-        .flow-step h4 {
-            color: #fbbf24;
-            margin-bottom: 10px;
-        }
-        .highlight {
-            background: linear-gradient(120deg, #0d0718 0%, #1a0e2e 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 1px solid #a855f7;
-        }
-        .highlight h3 {
-            color: #fbbf24;
-            margin-bottom: 10px;
-        }
-        .print-section {
-            background: #1a0e2e;
-            border: 2px dashed #fbbf24;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-        .print-section h3 {
-            color: #fbbf24;
-        }
-        @media print {
-            body { background: white; color: #222; padding: 0; }
-            .container { box-shadow: none; border: none; }
-            .no-print { display: none; }
-        }
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8em; }
-            .info-grid { grid-template-columns: 1fr; }
-            .card-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#059669">
+<meta name="description" content="《黄金结界 · 团队守护版》把原作&quot;偶像女团暗中守护人间&quot;的内核，搬进了一支高绩效团队的文化与心理资本守护现场。">
+<title>黄金结界 · 团队守护版（Huntrix: Golden Honmoon） · 团建游戏库</title>
+<link rel="stylesheet" href="../../assets/lib.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<style>:root{--accent:#34d399;--accent-ink:#059669;--accent-bg:#34d3991f;}</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎤 黄金结界 · 团队守护版</h1>
-            <div class="subtitle">Huntrix: Golden Honmoon — 守护团队的信任与心理安全，把内部裂痕摆上台面</div>
-        </div>
 
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="icon">👥</div>
-                <div class="label">人数</div>
-                <div class="value">3-5人</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">⏱️</div>
-                <div class="label">时长</div>
-                <div class="value">45-75分钟</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">🛡️</div>
-                <div class="label">适合场景</div>
-                <div class="value">文化/心理安全</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">📊</div>
-                <div class="label">难度</div>
-                <div class="value">中等</div>
-            </div>
-        </div>
+<header class="topbar">
+  <a class="topbar-btn" href="../../index.html" aria-label="返回游戏库">←</a>
+  <div class="topbar-title" id="tbar">黄金结界 · 团队守护版（Huntrix: Golden Honmoon）</div>
+  <button class="topbar-btn" id="share" aria-label="分享">↗</button>
+</header>
 
-        <div class="content">
-            <!-- 游戏概述 -->
-            <div class="section">
-                <h1 style="display:none;">黄金结界 · 团队守护版</h1>
-                <h2>🎮 游戏概述</h2>
-                <p>《黄金结界 · 团队守护版》改编自合作桌游《猎魔女团：黄金结界 Huntrix: Golden Honmoon》（取材自 2025–2026 全球现象级动画音乐电影《KPop Demon Hunters / 猎魔女团 / HUNTR/X》）。原作里，风靡全球的女子组合 HUNTR/X 其实是猎魔女团，她们用<strong>歌声织起一道名为「Honmoon（结界）」的魔法屏障</strong>，把深渊恶魔挡在人间之外。玩家在 7×7 的都市棋盘上穿梭：登台应援、排练旋律、汲取灵能、装备术式、清扫恶魔之门、封印结界节点，最终击溃魔王，重新点亮「黄金结界」。</p>
-                <p style="margin-top: 15px;">团建版的关键反转在<strong>两处</strong>：① <strong>「结界 = 团队的共享心理安全与信任」</strong>——它亮着，团队就稳；它裂开，内耗、倦怠、信任裂痕、目标漂移、沉默螺旋就钻进来。② <strong>「结界是从内部裂开的」</strong>（呼应原作：隐秘的心结让屏障出现裂痕）——最危险的从不是外部攻击，而是<strong>没被说出口的痛点、被压抑的张力、缺位的心理安全</strong>。于是本游戏聚焦一个和既有改造游戏都不同的视角：<strong>团队文化与心理资本的"能量守恒"——你不能只"打怪"（救火），还必须靠登台表演（团队仪式、认可、充电）主动续能；同时把隐患摆上台面，别让它在沉默中啃噬团队。</strong></p>
+<section class="hero" style="--a1:#34d399;--a2:#059669;">
+  <span class="hero-cat">🤝 团队协作</span>
+  <h1>黄金结界 · 团队守护版（Huntrix: Golden Honmoon）</h1>
+  
+  <p class="hero-lede">《黄金结界 · 团队守护版》把原作&quot;偶像女团暗中守护人间&quot;的内核，搬进了一支高绩效团队的文化与心理资本守护现场。</p>
+</section>
 
-                <div class="highlight">
-                    <h3>🎯 团建改造重点</h3>
-                    <ul style="margin-left: 20px;">
-                        <li><strong>能量守恒（核心反转）</strong>：结界每整轮自然削弱，须靠"登台表演/团队仪式"主动续能——高绩效需要刻意充电与认可</li>
-                        <li><strong>5 团队健康支柱</strong>：目标共识 / 心理安全 / 信任 / 成长 / 认可——每维护好一个，团队韧性 +1</li>
-                        <li><strong>把痛点摆上台面</strong>：恶魔生于沉默，靠公开对话（共唱）清除——沉默才是最大杀手</li>
-                        <li><strong>角色互补</strong>：凝聚Leader / 攻坚冲突管理 / 活力带动 / 资源统筹彼此依赖</li>
-                        <li><strong>合力决战</strong>：大魔王 = 结构/文化级裂痕，需五支柱齐亮、全队同步</li>
-                        <li><strong>复盘框架</strong>：每局结束 4F 复盘，迁移到真实的团队文化建设</li>
-                    </ul>
-                </div>
-            </div>
+<div class="facts">
+  <div class="fact"><div class="fact-k">⏱ 时长</div><div class="fact-v">45–75 分钟</div></div>
+  <div class="fact"><div class="fact-k">👥 人数</div><div class="fact-v">3–5 人</div></div>
+  <div class="fact"><div class="fact-k">📍 场地</div><div class="fact-v">室内</div></div>
+  <div class="fact"><div class="fact-k">📊 难度</div><div class="fact-v">★★☆</div></div>
+  
+</div>
 
-            <!-- 团建目标 -->
-            <div class="section">
-                <h2>🎯 团建目标</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>能量守恒</h4><p>体感"结界会默默流失"，把"团队需要刻意充电、认可与仪式"具象化</p></div>
-                    <div class="card"><h4>心理安全</h4><p>看见"掩盖裂痕会蔓延"，训练把隐患、痛点、张力摆上台面讨论</p></div>
-                    <div class="card"><h4>五大支柱</h4><p>用 5 个结界节点映射团队健康维度，游戏结束变"健康度看板"</p></div>
-                    <div class="card"><h4>合力攻坚</h4><p>五支柱齐亮方能开魔王殿——全队同步、相互兜底才能啃下结构性难题</p></div>
-                </div>
-            </div>
+<div class="abilities"><span class="ab">文化守护</span><span class="ab">协同防御</span><span class="ab">隐形价值</span></div>
+<div class="toc"><details><summary>📑 本页目录（21 节）</summary><ol><li class="lv2"><a href="#游戏概述">🎮 游戏概述</a></li><li class="lv2"><a href="#团建改造重点">🎯 团建改造重点</a></li><li class="lv2"><a href="#游戏信息">📋 游戏信息</a></li><li class="lv2"><a href="#物料准备">📦 物料准备</a></li><li class="lv2"><a href="#角色分配-团建核心">🧑‍🤝‍🧑 角色分配（团建核心）</a></li><li class="lv2"><a href="#游戏规则">🎲 游戏规则</a></li><li class="lv2"><a href="#五大团队健康支柱-5-结界节点">🛡️ 五大团队健康支柱（5 结界节点）</a></li><li class="lv2"><a href="#要素映射速查">🃏 要素映射速查</a></li><li class="lv2"><a href="#团建引导提示">💡 团建引导提示</a></li><li class="lv2"><a href="#变体玩法">🔄 变体玩法</a></li><li class="lv2"><a href="#难度调整">⚙️ 难度调整</a></li><li class="lv2"><a href="#游戏要素-工作场景">🗺️ 游戏要素 → 工作场景</a></li><li class="lv2"><a href="#相关资源">🔗 相关资源</a></li><li class="lv3"><a href="#核心四人组-映射-huntr-x-经纪人">核心四人组（映射 HUNTR/X + 经纪人）</a></li><li class="lv3"><a href="#准备阶段">准备阶段</a></li><li class="lv3"><a href="#每回合流程">每回合流程</a></li><li class="lv3"><a href="#胜负条件">胜负条件</a></li><li class="lv3"><a href="#资源-团队能量货币">资源（团队能量货币）</a></li><li class="lv3"><a href="#协作术式-武器">协作术式（武器 🎤）</a></li><li class="lv3"><a href="#团队杀手-恶魔">团队杀手（恶魔 👹）</a></li><li class="lv3"><a href="#团队资产-宝藏">团队资产（宝藏 🏆）</a></li></ol></details></div>
+<article class="doc">
+<blockquote>改编自合作桌游《猎魔女团：黄金结界 Huntrix: Golden Honmoon》（取材自 2025–2026 全球现象级动画音乐电影《KPop Demon Hunters / 猎魔女团 / HUNTR/X》）。</blockquote>
+<p><strong>团建核心价值</strong>：</p>
+<ul><li>🛡️ 文化守护：团队氛围与心理资本是看不见的结界</li><li>🎵 协同防御：恶魔多路来袭时的布防配合</li><li>🕯️ 隐形价值：守护工作最容易被忽视也最重要</li></ul>
+<h2 id="游戏概述">🎮 游戏概述</h2>
+<p>《黄金结界 · 团队守护版》把原作"偶像女团暗中守护人间"的内核，搬进了一支<strong>高绩效团队的文化与心理资本守护</strong>现场。</p>
+<p>原作里，风靡全球的女子组合 HUNTR/X 其实是猎魔女团，她们用<strong>歌声织起一道名为「Honmoon（结界）」的魔法屏障</strong>，把深渊恶魔挡在人间之外；恶魔之王 Gwi-Ma 撕裂结界、五座结界节点失守、恶魔之门接连开启。玩家在 7×7 的都市棋盘上穿梭：登台应援、排练旋律、汲取灵能、装备术式、清扫恶魔之门、封印结界节点，最终正面击溃魔王，重新点亮「黄金结界」。这是一款<strong>纯合作</strong>游戏——所有人共享胜负。</p>
+<p>团建版的关键反转在<strong>两处</strong>：</p>
+<ol><li><strong>「结界 = 团队的共享心理安全与信任」</strong>。黄金结界是团队的隐形护盾，它亮着，团队就稳、就有底气；它裂开，各类"团队杀手"就钻进来——内耗、倦怠、信任裂痕、目标漂移、沉默螺旋。</li><li><strong>「结界是从内部裂开的」</strong>（呼应原作：Rumi 的隐秘心结让屏障出现裂痕）。最危险的从不是外部攻击，而是<strong>没被说出口的痛点、被压抑的张力、缺位的心理安全</strong>。能被摆上台面讨论的裂痕会愈合，被掩盖的裂痕才会蔓延。</li></ol>
+<p>于是，本游戏聚焦一个和既有改造游戏都不同的团建视角：<strong>团队文化与心理资本的"能量守恒"——你不能只"打怪"（救火），还必须靠登台表演（团队仪式、认可、充电）主动给结界续能；同时要把隐患摆上台面，别让它在沉默中啃噬团队。</strong></p>
+<hr>
+<h2 id="团建改造重点">🎯 团建改造重点</h2>
+<ul><li><strong>能量守恒（核心反转）</strong>：结界每整轮自然削弱（威胁 +1），须靠"登台表演/团队仪式"主动续能；映射到"高绩效需要刻意充电与认可，否则士气在沉默中流失"</li><li><strong>5 团队健康支柱（5 结界节点）</strong>：目标共识 / 心理安全 / 信任 / 成长 / 认可——每维护好一个，团队韧性 +1</li><li><strong>把痛点摆上台面</strong>：恶魔 = 内耗 / 倦怠 / 信任裂痕 / 目标漂移 / 沉默螺旋；它们生于"沉默"，靠"公开对话（共唱）"清除</li><li><strong>角色互补</strong>：凝聚Leader / 攻坚冲突管理 / 活力带动 / 资源统筹彼此依赖</li><li><strong>合力决战（合力一击）</strong>：大魔王 = 一场结构/文化级裂痕或重大危机，需 5 支柱齐亮、全队同步</li><li><strong>复盘框架</strong>：每局结束 4F 复盘，把"能量管理 / 心理安全 / 把隐患摆上台"迁移到真实团队</li></ul>
+<hr>
+<h2 id="游戏信息">📋 游戏信息</h2>
+<div class="kv-grid"><div class="kv"><div class="kv-k">游戏类型</div><div class="kv-v">合作 / 区域探索 + 威胁管控 + 团队战斗</div></div><div class="kv"><div class="kv-k">主题来源</div><div class="kv-v">《KPop Demon Hunters / 猎魔女团 / HUNTR/X》</div></div></div>
+<hr>
+<h2 id="物料准备">📦 物料准备</h2>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物品名称</th><th>数量</th><th>用途</th></tr></thead><tbody><tr><td>都市地图（7×7 网格）</td><td>1 张</td><td>团队战场主棋盘</td></tr><tr><td>玩家棋子</td><td>3-5 个</td><td>代表各位猎魔成员位置</td></tr><tr><td>骰子</td><td>2 颗</td><td>每回合移动步数</td></tr><tr><td>威胁标记</td><td>1 组（0-10）</td><td>记录「结界削弱程度（Threat）」</td></tr><tr><td>生命标记</td><td>每位玩家 3 个</td><td>记录每位成员的能量值（❤️×3）</td></tr><tr><td>结界封印标记</td><td>5 个</td><td>标记已维护好的 5 大健康支柱</td></tr><tr><td>恶魔棋子</td><td>6-8 个</td><td>标记盘面上游荡的"团队杀手"</td></tr></tbody></table></div></div>
+<p><strong>无打印方案（临时团建）</strong>：白纸画 7×7 网格，中央左上角标"🎤 主舞台(HQ)"；威胁值用纸带刻度 + 硬币指针；资源用三色围棋子（应援⭐黄 / 旋律🎵青 / 灵能💜紫）；卡牌用便签写名称 + 效果，分类面朝下抽；骰子用手机 APP。</p>
+<hr>
+<h2 id="角色分配-团建核心">🧑‍🤝‍🧑 角色分配（团建核心）</h2>
+<p>每位玩家承担一个专属角色，映射高绩效团队的"凝聚 / 攻坚 / 活力 / 统筹"（可按性格由教练分配，超 5 人时加"守护者"）。</p>
+<h3 id="核心四人组-映射-huntr-x-经纪人">核心四人组（映射 HUNTR/X + 经纪人）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>角色</th><th>团建映射</th><th>被动能力</th></tr></thead><tbody><tr><td><strong>🎤 主唱 · Rumi（凝聚Leader / 共同叙事）</strong></td><td>把团队故事讲好、凝聚目标与意义感——"我们为什么在一起"</td><td>封印节点时额外降低 0.5 威胁（更容易固化共识）</td></tr><tr><td><strong>🎤 Mira（说唱 · 攻坚 / 冲突管理）</strong></td><td>啃硬骨头、把冲突摆上台面、直面棘手议题</td><td>对"凝视魔/信任裂痕"类恶魔伤害 +1</td></tr><tr><td><strong>💃 Zoey（舞担 · 活力 / 新人带动）</strong></td><td>带氛围、带动新人、把团队能量点燃</td><td>在主舞台登台额外 +1 应援（把气氛带起来）</td></tr><tr><td><strong>🎧 经纪人（资源统筹 / PMO）</strong></td><td>调度资源、排期、对外争取、横向补位</td><td>每回合可多 1 个行动点用于"装备/补给"</td></tr></tbody></table></div></div>
+<blockquote><strong>扩展角色（5 人局）</strong>：<strong>🛡️ 守护者 · 后方兜底 / HRBP</strong>——为同伴挡一次风险或情绪冲击（结界护盾生效时 +1 生命），专门做"情绪缓冲 / 兜底"。</blockquote>
+<hr>
+<h2 id="游戏规则">🎲 游戏规则</h2>
+<h3 id="准备阶段">准备阶段</h3>
+<ol><li><strong>布置地图</strong>：7×7 都市网格放桌面，左上角 🎤 主舞台为全队 HQ，右下角 👑 魔王殿为决战点。</li><li><strong>选角归位</strong>：每人选一个角色棋子，全部放在 🎤 主舞台。</li><li><strong>建库</strong>：洗混应援⭐/旋律🎵/灵能💜 三套资源牌库（公共）、恶魔牌库、宝藏牌库；武器卡模板堆放 HQ 旁作"武器库"。</li><li><strong>分资源</strong>：每人从应援牌库抽 6 张 ⭐；全员能量 ❤️×3，共享威胁 0，已维护支柱 0。</li><li><strong>放恶魔</strong>：5 个恶魔棋子分别放在 5 个<strong>结界节点 🛡️</strong> 上（代表该健康支柱已被"团队杀手"占据，须先清后维护）。</li></ol>
+<h3 id="每回合流程">每回合流程</h3>
+<p>玩家顺时针轮流行动，每人每回合含：</p>
+<p><strong>① 表演 / 移动阶段（免费，每回合 1 次）</strong></p>
+<ul><li>掷 2 颗骰子，点数和 = 移动步数（2-12），只能上下左右走，停在触发格才生效。</li><li>在 🎤 主舞台可"登台表演"：不移动，改为抽 <strong>2 张应援卡 ⭐</strong>（= 团队仪式 / 认可 / 充电，主动给结界续能）。</li></ul>
+<p><strong>② 行动阶段（最多 2 个行动点 AP）</strong></p>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>行动</th><th>花费</th><th>效果</th></tr></thead><tbody><tr><td><strong>装备术式</strong></td><td>1 AP + ⭐×2 或 🎵×2（停在 🎤）</td><td>从武器库选 1 张协作术式入手牌</td></tr><tr><td><strong>采集资源</strong></td><td>1 AP（停在 ⭐/🎵/🌟）</td><td>抽对应资源卡 1 张（带宝藏则 +1）</td></tr><tr><td><strong>清除恶魔</strong></td><td>1 AP + 资源/术式（与恶魔同格或相邻）</td><td>造伤害清除"团队杀手"（见恶魔表）</td></tr><tr><td><strong>维护节点</strong></td><td>1 AP + 🎵×3 + 💜×1（停在已清空的 🛡️）</td><td>放置封印标记，威胁 −1，已维护支柱 +1</td></tr><tr><td><strong>疗愈</strong></td><td>1 AP + 🎵×1（停在 💊 休息室）</td><td>为自身或同伴恢复 1 点能量</td></tr></tbody></table></div></div>
+<p><strong>③ 恶魔结算（即时）</strong></p>
+<ul><li>在恶魔之门 🚪 停留 → 立即抽 1 张恶魔卡并结算。</li><li><strong>节点泄漏</strong>：回合结束，每个仍被恶魔占据的节点有概率再渗出 1 只低阶恶魔。</li></ul>
+<p><strong>④ 回合结束与威胁推进</strong></p>
+<ul><li>全员各行动 1 次后，共享<strong>威胁值 +1</strong>（结界自然削弱）。</li><li>威胁达到 <strong>10</strong> → 结界崩塌，<strong>全员失败</strong>。</li></ul>
+<h3 id="胜负条件">胜负条件</h3>
+<ul><li><strong>共同胜利</strong>：维护<strong>全部 5 个</strong>结界节点（已维护 = 5），魔王殿 👑 开启；全队集结与<strong>恶魔之王 Gwi-Ma（团队结构性裂痕）</strong>决战（魔王 HP 6，需合力用 ⭐/术式/💜 攻击）。魔王生命归零 → <strong>黄金结界重新点亮，全员胜利！</strong></li><li><strong>共同失败</strong>：威胁值达 10（结界崩塌）；或所有成员能量同时归零（团队耗尽）。</li></ul>
+<hr>
+<h2 id="五大团队健康支柱-5-结界节点">🛡️ 五大团队健康支柱（5 结界节点）</h2>
+<p>维护好一个节点 = 团队为这一支柱建立了一项"显性的实践/公约"，威胁 −1。</p>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>结界节点</th><th>团队健康支柱</th><th>维护它的"实践"示例</th></tr></thead><tbody><tr><td>🛡️ 共识节点</td><td><strong>目标共识</strong></td><td>把团队目标写下来、对齐优先级、周会过一遍 OKR</td></tr><tr><td>🛡️ 安全节点</td><td><strong>心理安全</strong></td><td>容错文化、"可以问 dumb 问题"、复盘对事不对人</td></tr><tr><td>🛡️ 信任节点</td><td><strong>信任</strong></td><td>承诺必达、信息透明、不背后议论</td></tr><tr><td>🛡️ 成长节点</td><td><strong>成长</strong></td><td>1on1、带练机制、把复盘沉淀成资产</td></tr><tr><td>🛡️ 认可节点</td><td><strong>认可</strong></td><td>公开赞赏、登台表演（仪式感）、及时反馈</td></tr></tbody></table></div></div>
+<blockquote>团建落点：游戏结束后，5 张节点卡可直接变成"我们团队健康度看板"——哪些支柱已经有实践（已维护），哪些还在被恶魔占据（待建设）。</blockquote>
+<hr>
+<h2 id="要素映射速查">🃏 要素映射速查</h2>
+<h3 id="资源-团队能量货币">资源（团队能量货币）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>资源</th><th>图示</th><th>获得</th><th>用途</th><th>团建映射</th></tr></thead><tbody><tr><td>应援</td><td>⭐</td><td>应援站 / 登台表演 / 击退低阶恶魔</td><td>攻击弹药、装备术式</td><td><strong>即时能量 / 外部认可输入</strong></td></tr><tr><td>旋律</td><td>🎵</td><td>排练室</td><td>维护节点、疗愈</td><td><strong>沟通节奏 / 把实践固化</strong></td></tr><tr><td>灵能</td><td>💜</td><td>灵能井 / 击败高阶恶魔</td><td>维护节点（必需）、对魔王终极一击</td><td><strong>深层意义感 / 团队底气</strong></td></tr></tbody></table></div></div>
+<h3 id="协作术式-武器">协作术式（武器 🎤）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>术式</th><th>图示</th><th>团建映射</th><th>效果</th></tr></thead><tbody><tr><td>麦剑</td><td>🎤</td><td><strong>把话说开</strong>：把问题摆上台面</td><td>近战 +2 伤</td></tr><tr><td>心火</td><td>🔥</td><td><strong>一次坦诚 1on1</strong>：远程化解</td><td>对任意 1 恶魔造成 2 伤</td></tr><tr><td>结界护盾</td><td>🛡️</td><td><strong>兜底</strong>：为同伴挡风险/情绪</td><td>免疫 1 次攻击，或 +1 能量</td></tr><tr><td>闪电步</td><td>⚡</td><td><strong>灵活补位</strong>：跨角色救场</td><td>额外移动 3 步，无视 1 个恶魔之门</td></tr><tr><td>星光杖</td><td>💎</td><td><strong>团队时刻</strong>：一次群体赋能</td><td>对同格/相邻节点所有恶魔各 -1</td></tr><tr><td>和声爆发</td><td>🎶</td><td><strong>增益同伴</strong>：信任传递</td><td>指定同伴下次攻击 +2</td></tr></tbody></table></div></div>
+<h3 id="团队杀手-恶魔">团队杀手（恶魔 👹）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>恶魔</th><th>图示</th><th>生命</th><th>团建映射</th><th>应对</th></tr></thead><tbody><tr><td>小恶鬼</td><td>👹</td><td>1</td><td><strong>内耗 / 微冲突</strong></td><td>不清除则威胁+1、扣 1 能量；⭐×1 清除</td></tr><tr><td>蛛魔</td><td>🕷️</td><td>1</td><td><strong>未决议题</strong>缠住人</td><td>下回合无法移动；⚡挣脱 或 ⭐×1</td></tr><tr><td>凝视魔</td><td>👁️</td><td>2</td><td><strong>沉默螺旋</strong></td><td>吸走 1 张🎵；🔥 2 伤清除</td></tr><tr><td>炎魔</td><td>🔥</td><td>2</td><td><strong>倦怠 / 透支</strong></td><td>造成 1 能量伤害；🛡️抵消 或 麦剑/心火清除</td></tr><tr><td>暗影</td><td>🌑</td><td>2</td><td><strong>目标漂移</strong></td><td>蔓延至魔王殿则威胁+2；💎群体 或 ⭐×2</td></tr><tr><td>魔王使者</td><td>👑</td><td>3</td><td><strong>信任崩塌</strong>（结构性裂痕）</td><td>威胁+2、封锁 1 节点；💎+麦剑 组合清除</td></tr></tbody></table></div></div>
+<h3 id="团队资产-宝藏">团队资产（宝藏 🏆）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>宝藏</th><th>图示</th><th>团建映射</th><th>效果</th></tr></thead><tbody><tr><td>黄金结界</td><td>🏆</td><td>五大支柱齐亮</td><td>决战全队攻击 +1</td></tr><tr><td>传奇舞台服</td><td>💎</td><td>团队套路 / 默契沉淀</td><td>永久每次攻击 +1</td></tr><tr><td>巨星之光</td><td>⭐</td><td>认可文化滚雪球</td><td>每次登台额外 +1 ⭐</td></tr><tr><td>天籁之音</td><td>🎵</td><td>沟通顺畅度</td><td>每次排练室额外 +1 🎵</td></tr><tr><td>灵魂共鸣</td><td>💜</td><td>心理安全兜底 / 互助</td><td>能量归零时自动回满 1 次</td></tr><tr><td>胜利王冠</td><td>👑</td><td>团队韧性 buffer</td><td>威胁上限 +1</td></tr></tbody></table></div></div>
+<hr>
+<h2 id="团建引导提示">💡 团建引导提示</h2>
+<div class="tw"><div class="table-wrap"><table><thead><tr><th>阶段</th><th>要点</th></tr></thead><tbody><tr><td><strong>游戏前（5 分钟）</strong></td><td>定调："我们守护的'黄金结界'就是团队的信任与心理安全。它会被内部裂痕（沉默、内耗、倦怠）啃噬，也会靠仪式与坦诚续能。先保住 5 大支柱，再合力打 Boss。"</td></tr><tr><td><strong>游戏中（观察）</strong></td><td>记录：谁在"登台充电"（主动认可/仪式）？谁在掩盖裂痕（沉默不说话）？5 支柱有没有被维护？能量低的成员有人兜底吗？资源（应援/旋律/灵能）投到了消耗还是沉淀？</td></tr><tr><td><strong>游戏后（4F 复盘 15-20分钟）</strong></td><td>事实→感受→发现→迁移。重点迁移三件事：①能量守恒（团队需要刻意充电与认可）②把隐患摆上台面（沉默才是最大杀手）③5 大健康支柱哪些已有实践、哪些待建设。</td></tr></tbody></table></div></div>
+<hr>
+<h2 id="变体玩法">🔄 变体玩法</h2>
+<div class="kv-grid"><div class="kv"><div class="kv-k">变体</div><div class="kv-v">说明</div></div><div class="kv"><div class="kv-k">观察员模式</div><div class="kv-v">超 5 人时多出玩家任观察员，专记"是否有人在掩盖裂痕 / 谁在主动充电 / 5 支柱覆盖了几个"，复盘给第三方视角。</div></div><div class="kv"><div class="kv-k">限时挑战</div><div class="kv-v">设 60 分钟沙漏，强化"结界倒流"的压迫感。</div></div><div class="kv"><div class="kv-k">角色轮换</div><div class="kv-v">每 3 回合轮换角色，体会凝聚/攻坚/活力/统筹不同职能，强化相互理解。</div></div><div class="kv"><div class="kv-k">无声协奏</div><div class="kv-v">部分回合禁言分配/维护，凸显"提前约定、显性同步"对抗沉默螺旋的价值。</div></div><div class="kv"><div class="kv-k">部门混编</div><div class="kv-v">拆散同部门到不同角色，强制"业务/技术/职能"跨界搭档，共守结界。</div></div><div class="kv"><div class="kv-k">真实支柱叠加</div><div class="kv-v">把 5 张节点卡换成团队真实 5 个健康维度便签（如"反馈文化""成长路径"），游戏结束变"团队健康度看板"。</div></div><div class="kv"><div class="kv-k">真实裂痕叠加</div><div class="kv-v">把恶魔卡换成团队真实痛点便签（如"跨团队墙""需求频繁变更"），清恶魔 = 把真实议题摆上台面讨论。</div></div></div>
+<hr>
+<h2 id="难度调整">⚙️ 难度调整</h2>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>模式</th><th>调整</th><th>适合</th></tr></thead><tbody><tr><td><strong>简单</strong></td><td>威胁上限 12、恶魔牌库减半、只需维护 4 个节点</td><td>新团队 / 非玩家</td></tr><tr><td><strong>标准（推荐）</strong></td><td>威胁上限 10、每整轮 +1、维护 5 个节点、魔王 HP 6</td><td>大多数团建</td></tr><tr><td><strong>困难</strong></td><td>威胁上限 8、洗入 2 张魔王使者、魔王 HP 8 且每 2 轮对全队造成 1 能量伤害</td><td>文化 / 管理 / 高绩效团队</td></tr></tbody></table></div></div>
+<hr>
+<h2 id="游戏要素-工作场景">🗺️ 游戏要素 → 工作场景</h2>
+<div class="kv-grid"><div class="kv"><div class="kv-k">游戏要素</div><div class="kv-v">工作场景</div></div><div class="kv"><div class="kv-k">黄金结界</div><div class="kv-v">团队的心理安全、信任与共享身份/士气</div></div><div class="kv"><div class="kv-k">威胁值每轮 +1</div><div class="kv-v">士气在沉默中自然流失，不主动维护就会崩</div></div><div class="kv"><div class="kv-k">登台表演（⭐续能）</div><div class="kv-v">团队仪式、公开认可、庆祝、刻意充电</div></div><div class="kv"><div class="kv-k">5 结界节点</div><div class="kv-v">目标共识 / 心理安全 / 信任 / 成长 / 认可 五大健康支柱</div></div><div class="kv"><div class="kv-k">恶魔 = 生于沉默</div><div class="kv-v">内耗 / 倦怠 / 信任裂痕 / 目标漂移 / 沉默螺旋</div></div><div class="kv"><div class="kv-k">把恶魔摆上台面清除</div><div class="kv-v">把隐患公开讨论、1on1、向上反馈</div></div><div class="kv"><div class="kv-k">合力击败魔王</div><div class="kv-v">全队同步、五支柱齐亮，攻坚结构性/文化级难题</div></div><div class="kv"><div class="kv-k">宝藏（永久增益）</div><div class="kv-v">团队默契、认可文化、沟通顺畅度等可复利的组织资产</div></div></div>
+<hr>
+<h2 id="相关资源">🔗 相关资源</h2>
+<ul><li>原始桌游：<code>boardgames/category/cooperative/huntrix-honmoon/</code></li><li>教练工具箱：<code>teambuilding/toolbox/</code></li><li>类似游戏：星际灯塔守护者（长期守护）、轮回地下城（复盘迭代）、星际医疗队（危机管控）</li></ul>
+<hr>
+<p>🤝 合作类桌游改造 | 取材自《KPop Demon Hunters / 猎魔女团 / HUNTR/X》| 聚焦团队文化与心理资本守护、能量守恒与"把隐患摆上台面" | 最后更新：2026-07-18</p>
+</article>
 
-            <!-- 物料准备 -->
-            <div class="section">
-                <h2>📦 物料准备</h2>
-                <table>
-                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
-                    <tr><td>都市地图（7×7 网格）</td><td>1张</td><td>团队战场主棋盘</td></tr>
-                    <tr><td>玩家棋子 / 骰子</td><td>3-5个 / 2颗</td><td>角色位置；移动 / 战斗判定</td></tr>
-                    <tr><td>威胁轨道 + 标记</td><td>1条 / 1个</td><td>共享「结界削弱程度（0-10）」</td></tr>
-                    <tr><td>能量标记（❤️）</td><td>每人3个</td><td>每位成员的团队能量值</td></tr>
-                    <tr><td>结界封印标记</td><td>5个</td><td>已维护好的 5 大健康支柱</td></tr>
-                    <tr><td>恶魔棋子 / 卡牌</td><td>6-8个 / 四套</td><td>"团队杀手"；资源⭐🎵💜 / 术式 / 恶魔 / 宝藏</td></tr>
-                </table>
-                <div class="print-section">
-                    <h3>🖨️ 无打印方案（临时团建）</h3>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>地图</strong>：白纸画 7×7 网格，左上角标"🎤 主舞台(HQ)"，右下角标"👑 魔王殿"</li>
-                        <li><strong>威胁值</strong>：纸带写 0-10 刻度，硬币当指针，初始指 0</li>
-                        <li><strong>资源</strong>：三色围棋子代表应援⭐黄 / 旋律🎵青 / 灵能💜紫，放公共池</li>
-                        <li><strong>卡牌</strong>：便签写名称 + 效果（⭐/🎵/💜/👹/🏆），分类面朝下抽</li>
-                        <li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li>
-                    </ul>
-                </div>
-            </div>
+<nav class="pager">
+  <a class="prev" href="magic-academy.html"><span>上一个 ←</span><div class="p-title">魔法学院（团队协作版）</div></a>
+  <a class="next" href="eyebrow-stick.html"><span>下一个 →</span><div class="p-title">齐眉棍（手指传棍）</div></a>
+</nav>
 
-            <!-- 角色分配 -->
-            <div class="section">
-                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
-                <p>每位玩家承担一个专属角色，映射高绩效团队的"凝聚 / 攻坚 / 活力 / 统筹"（超 5 人时加"守护者"）：</p>
+<div class="related"><h2>🔗 同类推荐</h2><div class="rel-list"><a class="rel" href="body-letters.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人体拼字</span><span class="r-meta">20–30 分钟 · 6–20 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="human-knot.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人结（Human Knot）</span><span class="r-meta">30–45 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="team-chef.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">协作大厨 (Team Chef)</span><span class="r-meta">45–60 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="jujutsu-united.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">咒术回战：术师联携 (Jujutsu United)</span><span class="r-meta">45–75 分钟 · 3–5 人</span></span><span class="r-go">›</span></a></div></div>
 
-                <div class="role-card">
-                    <h4>🎤 主唱 · Rumi（凝聚Leader / 共同叙事）</h4>
-                    <p><strong>被动</strong>：封印节点时额外降低 0.5 威胁</p>
-                    <p><strong>团建映射</strong>：把团队故事讲好、凝聚目标与意义感——"我们为什么在一起"</p>
-                </div>
-                <div class="role-card">
-                    <h4>🎤 Mira（说唱 · 攻坚 / 冲突管理）</h4>
-                    <p><strong>被动</strong>：对"凝视魔 / 信任裂痕"类恶魔伤害 +1</p>
-                    <p><strong>团建映射</strong>：啃硬骨头、把冲突摆上台面、直面棘手议题</p>
-                </div>
-                <div class="role-card">
-                    <h4>💃 Zoey（舞担 · 活力 / 新人带动）</h4>
-                    <p><strong>被动</strong>：在主舞台登台额外 +1 应援</p>
-                    <p><strong>团建映射</strong>：带氛围、带动新人、把团队能量点燃（主动充电）</p>
-                </div>
-                <div class="role-card">
-                    <h4>🎧 经纪人（资源统筹 / PMO）</h4>
-                    <p><strong>被动</strong>：每回合可多 1 个行动点用于"装备 / 补给"</p>
-                    <p><strong>团建映射</strong>：调度资源、排期、对外争取、横向补位</p>
-                </div>
-                <div class="role-card">
-                    <h4>🛡️ 守护者（扩展 · 后方兜底 / HRBP）</h4>
-                    <p><strong>被动</strong>：结界护盾生效时 +1 能量</p>
-                    <p><strong>团建映射</strong>：为同伴挡一次风险或情绪冲击（情绪缓冲 / 兜底），专门做"护人"</p>
-                </div>
-            </div>
+<footer class="foot">
+  <div>🤝 团队协作 · 第 31 / 32 款</div>
+  <div><a href="../../index.html">返回全部 86 款游戏</a></div>
+  <div style="margin-top:6px;opacity:.75">规则与时长以原文档为准，现场执行前请核对场地与道具。</div>
+</footer>
 
-            <!-- 游戏流程 -->
-            <div class="section">
-                <h2>🎲 游戏流程（每回合 4 阶段）</h2>
-                <p>每回合依次执行：<strong>① 表演 / 移动（每人 1 次免费）</strong> → <strong>② 行动阶段（最多 2 AP）</strong> → <strong>③ 恶魔结算（即时）</strong> → <strong>④ 回合结束与威胁推进（威胁 +1，回合 +1）</strong>。</p>
-
-                <div class="flow-step">
-                    <h4>核心机制 · 能量守恒（团建灵魂）</h4>
-                    <p>结界每整轮自然削弱（威胁 +1），不主动"登台表演"续能就会崩——对应<strong>高绩效需要刻意充电与认可，否则士气在沉默中流失</strong>。</p>
-                </div>
-                <div class="flow-step">
-                    <h4>把裂痕摆上台面（心理安全）</h4>
-                    <p>恶魔生于"沉默"：内耗 / 倦怠 / 信任裂痕 / 目标漂移 / 沉默螺旋。它们靠<strong>公开对话（共唱 / 1on1 / 向上反馈）</strong>清除——被掩盖的裂痕才会蔓延到魔王殿。</p>
-                </div>
-                <div class="flow-step">
-                    <h4>5 大健康支柱（结界节点）</h4>
-                    <p>维护好一个节点 = 为一项团队健康维度（共识 / 安全 / 信任 / 成长 / 认可）建立显性实践，威胁 −1。游戏结束，5 张节点卡即"团队健康度看板"。</p>
-                </div>
-
-                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
-                <table>
-                    <tr><th>共享轨道</th><th>初始</th><th>警告 / 失败阈值</th></tr>
-                    <tr><td>结界威胁（Threat）</td><td>0 点</td><td>每整轮 +1；达 10 = 结界崩塌（全员失败）</td></tr>
-                    <tr><td>已维护支柱</td><td>0 / 5</td><td>达 5 = 魔王殿开启</td></tr>
-                    <tr><td>成员能量 ❤️</td><td>每人 3 点</td><td>全员同时归零 = 团队耗尽（失败）</td></tr>
-                    <tr><td>资源池</td><td>每人 ⭐×6</td><td>应援⭐ / 旋律🎵 / 灵能💜 三类公共牌库</td></tr>
-                </table>
-                <p style="color:#fbbf24; margin-top:10px;">⚠️ <strong>关键</strong>：胜负不取决于"打怪最快"，而取决于"<strong>是否在结界崩塌前，维护好 5 大支柱、把隐患摆上台面、备足合力打 Boss</strong>"——光救火不充电，结界必崩；光充电不打怪，节点永远封不上。</p>
-            </div>
-
-            <!-- 团建引导 -->
-            <div class="section">
-                <h2>💡 团建引导提示</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>游戏前（5分钟）</h4><p>定调："我们守护的'黄金结界'就是团队的信任与心理安全。它会被内部裂痕啃噬，也会靠仪式与坦诚续能。先保住 5 大支柱，再合力打 Boss。"</p></div>
-                    <div class="card"><h4>游戏中（观察）</h4><p>记录：谁在"登台充电"？谁在掩盖裂痕（沉默）？5 支柱覆盖几个？低能量成员有人兜底吗？资源投到了消耗还是沉淀？</p></div>
-                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟；重点迁移能量守恒、把隐患摆上台面、5 大支柱待建设项。</p></div>
-                </div>
-            </div>
-
-            <!-- 变体玩法 -->
-            <div class="section">
-                <h2>🔄 变体玩法</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，专记"是否有人在掩盖裂痕 / 谁在主动充电 / 5 支柱覆盖几个"，复盘给第三方视角。</p></div>
-                    <div class="card"><h4>限时挑战</h4><p>设60分钟沙漏，强化"结界倒流"的压迫感与能量守恒紧迫性。</p></div>
-                    <div class="card"><h4>角色轮换</h4><p>每3回合轮换角色，体验凝聚/攻坚/活力/统筹不同职能，强化相互理解。</p></div>
-                    <div class="card"><h4>无声协奏</h4><p>部分回合禁言分配/维护，凸显"提前约定、显性同步"对抗沉默螺旋的价值。</p></div>
-                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，强制"业务/技术/职能"跨界搭档，共守结界。</p></div>
-                    <div class="card"><h4>真实支柱叠加</h4><p>把5张节点卡换成团队真实5个健康维度便签，游戏结束变"团队健康度看板"。</p></div>
-                    <div class="card"><h4>真实裂痕叠加</h4><p>把恶魔卡换成团队真实痛点便签（如"跨团队墙""需求频繁变更"），清恶魔 = 把真实议题摆上台面。</p></div>
-                </div>
-            </div>
-
-            <!-- 难度调整 -->
-            <div class="section">
-                <h2>⚙️ 难度调整</h2>
-                <table>
-                    <tr><th>模式</th><th>调整</th><th>适合</th></tr>
-                    <tr><td>简单</td><td>威胁上限12、恶魔牌库减半、只需维护4个节点</td><td>新团队/非玩家</td></tr>
-                    <tr><td>标准（推荐）</td><td>威胁上限10、每整轮+1、维护5个节点、魔王HP6</td><td>大多数团建</td></tr>
-                    <tr><td>困难</td><td>威胁上限8、洗入2张魔王使者、魔王HP8且每2轮对全队造成1能量伤害</td><td>文化/管理/高绩效团队</td></tr>
-                </table>
-            </div>
-
-            <!-- 工作场景映射 -->
-            <div class="section">
-                <h2>🗺️ 游戏要素 → 工作场景</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>黄金结界</h4><p>团队的心理安全、信任与共享身份 / 士气</p></div>
-                    <div class="card"><h4>登台表演（⭐续能）</h4><p>团队仪式、公开认可、庆祝、刻意充电</p></div>
-                    <div class="card"><h4>5 结界节点</h4><p>目标共识 / 心理安全 / 信任 / 成长 / 认可 五大健康支柱</p></div>
-                    <div class="card"><h4>恶魔 = 生于沉默</h4><p>内耗 / 倦怠 / 信任裂痕 / 目标漂移 / 沉默螺旋</p></div>
-                </div>
-                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
-                <table>
-                    <tr><th>游戏要素</th><th>工作场景</th></tr>
-                    <tr><td>威胁值每轮 +1</td><td>士气在沉默中自然流失，不维护就会崩</td></tr>
-                    <tr><td>登台表演续能</td><td>团队仪式、公开认可、庆祝、刻意充电</td></tr>
-                    <tr><td>5 结界节点</td><td>目标共识 / 心理安全 / 信任 / 成长 / 认可</td></tr>
-                    <tr><td>把恶魔摆上台面清除</td><td>把隐患公开讨论、1on1、向上反馈</td></tr>
-                    <tr><td>合力击败魔王</td><td>全队同步、五支柱齐亮，攻坚结构/文化级难题</td></tr>
-                    <tr><td>宝藏（永久增益）</td><td>团队默契、认可文化、沟通顺畅度等可复利的组织资产</td></tr>
-                </table>
-            </div>
-
-            <!-- 相关资源 -->
-            <div class="section">
-                <h2>🔗 相关资源</h2>
-                <ul style="margin-left: 20px;">
-                    <li><a href="huntrix-honmoon.md" style="color:#c084fc;">完整团建版规则（Markdown）</a></li>
-                    <li>原始桌游：boardgames/category/cooperative/huntrix-honmoon/</li>
-                    <li>教练工具箱：teambuilding/toolbox/</li>
-                    <li>类似游戏：星际灯塔守护者、轮回地下城、星际医疗队</li>
-                </ul>
-                <p style="margin-top: 20px; color: #c084fc; font-style: italic;">
-                    改编自合作桌游《猎魔女团：黄金结界 Huntrix: Golden Honmoon》（取材《KPop Demon Hunters / 猎魔女团 / HUNTR/X》）| 最后更新：2026-07-18
-                </p>
-            </div>
-        </div>
-    </div>
+<script>
+(function(){
+  var t=document.getElementById('tbar'),h=document.querySelector('.hero');
+  if(t&&h&&'IntersectionObserver'in window){
+    new IntersectionObserver(function(e){t.classList.toggle('on',!e[0].isIntersecting);},
+      {rootMargin:'-56px 0px 0px 0px'}).observe(h);
+  }
+  var s=document.getElementById('share');
+  if(s)s.addEventListener('click',function(){
+    var d={title:document.title,url:location.href};
+    if(navigator.share){navigator.share(d).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(location.href)
+      .then(function(){s.textContent='✓';setTimeout(function(){s.textContent='↗';},1200);});}
+  });
+  // 仅当表格真的溢出时才提示可横滑
+  function markTables(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      var box=w.querySelector('.table-wrap');
+      if(!box)return;
+      w.classList.toggle('scrollable', box.scrollWidth - box.clientWidth > 4);
+    });
+  }
+  markTables();
+  window.addEventListener('resize',markTables,{passive:true});
+})();
+</script>
 </body>
 </html>

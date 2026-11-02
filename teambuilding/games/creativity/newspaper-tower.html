@@ -1,183 +1,114 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>报纸塔挑战 - 团建游戏</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <style>
-        .tag { display: inline-block; padding: 0.25rem 0.5rem; margin: 0.25rem; font-size: 0.875rem; border-radius: 0.25rem; }
-        .tag-purpose { background: #e3f2fd; color: #1565c0; }
-        .tag-form { background: #f3e5f5; color: #7b1fa2; }
-        .tag-scene { background: #e8f5e9; color: #2e7d32; }
-        .difficulty { color: #ff9800; }
-        table { width: 100%; border-collapse: collapse; }
-        table th, table td { padding: 0.75rem; border: 1px solid #dee2e6; }
-        table th { background: #f8f9fa; }
-        blockquote { border-left: 4px solid #0077b6; padding-left: 1rem; margin: 1rem 0; }
-        code { background: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
-        pre { background: #f8f9fa; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#db2777">
+<meta name="description" content="在资源受限条件下，通过快速迭代和团队协作，完成看似不可能的工程挑战。">
+<title>报纸塔挑战 · 团建游戏库</title>
+<link rel="stylesheet" href="../../assets/lib.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<style>:root{--accent:#f472b6;--accent-ink:#db2777;--accent-bg:#f472b61f;}</style>
 </head>
 <body>
-    <main class="container">
-        <nav>
-            <ul>
-                <li><a href="../../index.html">← 返回首页</a></li>
-                <li><a href="../../index.html">返回游戏库</a></li>
-            </ul>
-        </nav>
 
-        <article>
-            <hr>
-<p>title: "报纸塔挑战"</p>
-<p>author: "AIWorkDB"</p>
-<p>source_url: "https://aiworkdb.github.io/teambuilding/games/creativity/newspaper-tower.html"</p>
-<p>cover: "https://placehold.co/1200x630/B8B42D/white?text=Creativity"</p>
+<header class="topbar">
+  <a class="topbar-btn" href="../../index.html" aria-label="返回游戏库">←</a>
+  <div class="topbar-title" id="tbar">报纸塔挑战</div>
+  <button class="topbar-btn" id="share" aria-label="分享">↗</button>
+</header>
+
+<section class="hero" style="--a1:#f472b6;--a2:#db2777;">
+  <span class="hero-cat">💡 创意激发</span>
+  <h1>报纸塔挑战</h1>
+  
+  <p class="hero-lede">在资源受限条件下，通过快速迭代和团队协作，完成看似不可能的工程挑战。</p>
+</section>
+
+<div class="facts">
+  <div class="fact"><div class="fact-k">⏱ 时长</div><div class="fact-v">30–40 分钟</div></div>
+  <div class="fact"><div class="fact-k">👥 人数</div><div class="fact-v">4–6 人/组</div></div>
+  <div class="fact"><div class="fact-k">📍 场地</div><div class="fact-v">户外</div></div>
+  <div class="fact"><div class="fact-k">📊 难度</div><div class="fact-v">★★☆</div></div>
+  <div class="fact fact-wide"><div class="fact-k">🧰 道具</div><div class="fact-v">有（报纸 + 胶带 + 剪刀）</div></div>
+</div>
+
+<div class="abilities"><span class="ab">快速迭代</span><span class="ab">结构协作</span><span class="ab">失败耐受</span></div>
+<div class="toc"><details><summary>📑 本页目录（13 节）</summary><ol><li class="lv2"><a href="#2-核心规则">2. 核心规则</a></li><li class="lv2"><a href="#3-引导要点">3. 引导要点</a></li><li class="lv2"><a href="#5-变体适配">5. 变体适配</a></li><li class="lv2"><a href="#6-物资清单">6. 物资清单</a></li><li class="lv2"><a href="#教练笔记">教练笔记</a></li><li class="lv3"><a href="#准备阶段-3-min">准备阶段（3 min）</a></li><li class="lv3"><a href="#设计阶段-5-min">设计阶段（5 min）</a></li><li class="lv3"><a href="#搭建阶段-20-min">搭建阶段（20 min）</a></li><li class="lv3"><a href="#测量与复盘-5-10-min">测量与复盘（5–10 min）</a></li><li class="lv3"><a href="#讲解时">讲解时</a></li><li class="lv3"><a href="#feelings-感受">Feelings（感受）</a></li><li class="lv3"><a href="#findings-发现">Findings（发现）</a></li><li class="lv3"><a href="#future-未来">Future（未来）</a></li></ol></details></div>
+<article class="doc">
+<p><strong>团建核心价值</strong>：</p>
+<ul><li>🔁 快速迭代：边搭边改的工程思维</li><li>🏗️ 结构协作：有人设计有人执行的配合</li><li>💪 失败耐受：倒了重来的成本意识</li></ul>
+<h2 id="2-核心规则">2. 核心规则</h2>
+<h3 id="准备阶段-3-min">准备阶段（3 min）</h3>
+<ol><li>将参与者分成 4–6 人小组。</li><li>每组领取材料包：</li><ul class="sub"><li><strong>报纸 10 张</strong>（A2 或 A1 大小，可调整）</li><li><strong>透明胶带 1 卷</strong>（约 5 米）</li><li><strong>剪刀 1 把</strong></li></ul><li>宣布规则：<strong>塔必须自由站立 10 秒不倒</strong>，测量高度为最终成绩。</li></ol>
+<h3 id="设计阶段-5-min">设计阶段（5 min）</h3>
+<ul><li>各组用 5 分钟讨论方案、<strong>画草图</strong></li><li>教练提醒：<strong>先想后做</strong>，避免盲目动手</li><li>此阶段<strong>不允许</strong>触碰材料</li></ul>
+<h3 id="搭建阶段-20-min">搭建阶段（20 min）</h3>
+<ul><li>计时开始，各组同时搭建</li><li><strong>中途可以修改方案</strong>，允许"推倒重来"</li><li>教练巡回观察，记录亮点：</li><ul class="sub"><li>谁提出了关键结构思路？</li><li>谁在团队分歧时起到了协调作用？</li><li>哪组进行了"快速试错"？</li></ul></ul>
+<h3 id="测量与复盘-5-10-min">测量与复盘（5–10 min）</h3>
+<ul><li>各组依次展示，教练用卷尺测量高度</li><li><strong>必须自由站立 10 秒</strong>，否则成绩无效</li><li>评选：最高塔 / 最创意结构 / 最佳团队协作</li></ul>
 <hr>
-<h1>报纸塔挑战</h1>
-<table>
-<thead><tr>
-<th>**时长**</th>
-<th>30–40 min</th>
-</tr></thead><tbody>
-<tr>
-<td>**场景标签**</td>
-<td>团建 / 培训 / 工作坊</td>
-</tr>
-<tr>
-<td>**难度**</td>
-<td>⭐⭐</td>
-</tr>
-<tr>
-<td>**道具需求**</td>
-<td>有（报纸 + 胶带 + 剪刀）</td>
-</tr>
-</tbody></table>
-<p>**核心目标**：在资源受限条件下，通过快速迭代和团队协作，完成看似不可能的工程挑战。</p>
+<h2 id="3-引导要点">3. 引导要点</h2>
+<h3 id="讲解时">讲解时</h3>
+<blockquote>「每组 10 张报纸、1 卷胶带、1 把剪刀，25 分钟，建一座尽可能高的塔。<br>唯一的硬指标：<strong>最后必须能自己站住 10 秒</strong>，我扶着不算。<br>中途可以推倒重来。材料就这些，用完了没有补。」</blockquote>
+<h3 id="feelings-感受">Feelings（感受）</h3>
+<ul><li>塔第一次倒塌时，团队里有人想放弃吗？你当时是什么感受？</li><li>看到其他组比你高时，你的第一反应是什么？</li></ul>
+<h3 id="findings-发现">Findings（发现）</h3>
+<ul><li>你们最终的结构核心原理是什么？（三角形稳定性？底座加重？）</li><li>如果重新来一次，你们会<strong>第一步</strong>做什么不同的事？</li><li>这个游戏和你们团队正在做的项目有什么相似之处？</li></ul>
+<h3 id="future-未来">Future（未来）</h3>
+<ul><li>回到工作中，当你面对"资源有限但目标很高"的任务时，你会怎么调整策略？</li><li>你们团队中，谁最擅长在混乱中找到结构？这个特质如何在日常工作中更好发挥？</li></ul>
 <hr>
-<h2>2. 核心规则</h2>
-<h3>准备阶段（3 min）</h3>
-<ol>
-<li>将参与者分成 4–6 人小组。</li>
-<li>每组领取材料包：</li>
-<ul>
-<li>**报纸 10 张**（A2 或 A1 大小，可调整）</li>
-<li>**透明胶带 1 卷**（约 5 米）</li>
-<li>**剪刀 1 把**</li>
-<li>宣布规则：**塔必须自由站立 10 秒不倒**，测量高度为最终成绩。</li>
-</ul>
-</ol>
-<h3>设计阶段（5 min）</h3>
-<ul>
-<li>各组用 5 分钟讨论方案、**画草图**</li>
-<li>教练提醒：**先想后做**，避免盲目动手</li>
-<li>此阶段**不允许**触碰材料</li>
-</ul>
-<h3>搭建阶段（20 min）</h3>
-<ul>
-<li>计时开始，各组同时搭建</li>
-<li>**中途可以修改方案**，允许"推倒重来"</li>
-<li>教练巡回观察，记录亮点：</li>
-<li>谁提出了关键结构思路？</li>
-<li>谁在团队分歧时起到了协调作用？</li>
-<li>哪组进行了"快速试错"？</li>
-</ul>
-<h3>测量与复盘（5–10 min）</h3>
-<ul>
-<li>各组依次展示，教练用卷尺测量高度</li>
-<li>**必须自由站立 10 秒**，否则成绩无效</li>
-<li>评选：最高塔 / 最创意结构 / 最佳团队协作</li>
-</ul>
+<h2 id="5-变体适配">5. 变体适配</h2>
+<div class="kv-grid"><div class="kv"><div class="kv-k">场景</div><div class="kv-v">调整方案</div></div><div class="kv"><div class="kv-k">时间紧（15 min）</div><div class="kv-v">给每组 5 张报纸 + 3 分钟搭建，强调"快速原型"</div></div><div class="kv"><div class="kv-k">户外场景</div><div class="kv-v">用 A4 纸 + 吸管代替报纸，增加风洞测试（用风扇吹）</div></div><div class="kv"><div class="kv-k">培训深度版</div><div class="kv-v">增加"客户变更需求"环节——搭建中途教练宣布"需求变更：塔必须能承受一个苹果的重量"</div></div><div class="kv"><div class="kv-k">大型团建（50+人）</div><div class="kv-v">改为"报纸城市"——各组搭建不同建筑，最终拼成一个城市，评选最佳整体规划</div></div><div class="kv"><div class="kv-k">线上场景</div><div class="kv-v">每人用自己家里的报纸/杂志，用视频会议展示，评选"最有可能在现实中实现的建筑"</div></div></div>
 <hr>
-<h2>3. 引导要点</h2>
-<h3>讲解时</h3>
-<h3>Feelings（感受）</h3>
-<ul>
-<li>塔第一次倒塌时，团队里有人想放弃吗？你当时是什么感受？</li>
-<li>看到其他组比你高时，你的第一反应是什么？</li>
-</ul>
-<h3>Findings（发现）</h3>
-<ul>
-<li>你们最终的结构核心原理是什么？（三角形稳定性？底座加重？）</li>
-<li>如果重新来一次，你们会**第一步**做什么不同的事？</li>
-<li>这个游戏和你们团队正在做的项目有什么相似之处？</li>
-</ul>
-<h3>Future（未来）</h3>
-<ul>
-<li>回到工作中，当你面对"资源有限但目标很高"的任务时，你会怎么调整策略？</li>
-<li>你们团队中，谁最擅长在混乱中找到结构？这个特质如何在日常工作中更好发挥？</li>
-</ul>
+<h2 id="6-物资清单">6. 物资清单</h2>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物资</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>报纸（A2/A1）</td><td>每组 10 张</td><td>提前收集，确保干净无异味</td></tr><tr><td>透明胶带</td><td>每组 1 卷</td><td>约 5 米，可提前裁好</td></tr><tr><td>剪刀</td><td>每组 1 把</td><td>注意安全，提前检查</td></tr><tr><td>卷尺</td><td>1 个</td><td>教练用，用于最终测量</td></tr><tr><td>计时器</td><td>1 个</td><td>手机即可，全程显示倒计时</td></tr><tr><td>备用材料</td><td>2–3 份</td><td>万一某组失误浪费材料，给予"救援包"</td></tr></tbody></table></div></div>
 <hr>
-<h2>5. 变体适配</h2>
-<table>
-<thead><tr>
-<th>场景</th>
-<th>调整方案</th>
-</tr></thead><tbody>
-<tr>
-<td>**时间紧（15 min）**</td>
-<td>给每组 5 张报纸 + 3 分钟搭建，强调"快速原型"</td>
-</tr>
-<tr>
-<td>**户外场景**</td>
-<td>用 A4 纸 + 吸管代替报纸，增加风洞测试（用风扇吹）</td>
-</tr>
-<tr>
-<td>**培训深度版**</td>
-<td>增加"客户变更需求"环节——搭建中途教练宣布"需求变更：塔必须能承受一个苹果的重量"</td>
-</tr>
-<tr>
-<td>**大型团建（50+人）**</td>
-<td>改为"报纸城市"——各组搭建不同建筑，最终拼成一个城市，评选最佳整体规划</td>
-</tr>
-<tr>
-<td>**线上场景**</td>
-<td>每人用自己家里的报纸/杂志，用视频会议展示，评选"最有可能在现实中实现的建筑"</td>
-</tr>
-</tbody></table>
-<hr>
-<h2>6. 物资清单</h2>
-<table>
-<thead><tr>
-<th>物资</th>
-<th>数量</th>
-<th>备注</th>
-</tr></thead><tbody>
-<tr>
-<td>报纸（A2/A1）</td>
-<td>每组 10 张</td>
-<td>提前收集，确保干净无异味</td>
-</tr>
-<tr>
-<td>透明胶带</td>
-<td>每组 1 卷</td>
-<td>约 5 米，可提前裁好</td>
-</tr>
-<tr>
-<td>剪刀</td>
-<td>每组 1 把</td>
-<td>注意安全，提前检查</td>
-</tr>
-<tr>
-<td>卷尺</td>
-<td>1 个</td>
-<td>教练用，用于最终测量</td>
-</tr>
-<tr>
-<td>计时器</td>
-<td>1 个</td>
-<td>手机即可，全程显示倒计时</td>
-</tr>
-<tr>
-<td>备用材料</td>
-<td>2–3 份</td>
-<td>万一某组失误浪费材料，给予"救援包"</td>
-</tr>
-</tbody></table>
-<hr>
-<h2>教练笔记</h2>
-        </article>
-    </main>
+<h2 id="教练笔记">教练笔记</h2>
+<p>我见过最多的失败，不是塔不够高，是<strong>前 10 分钟全用来讨论</strong>，最后 5 分钟疯狂赶工。</p>
+<p>所以我在巡回时会做一件小事：第 8 分钟走过每组，只说一句「你们打算什么时候开始动手」。不评价、不建议，但这句问话会让一半的组立刻散会去搬桌子。</p>
+<p>另一个观察点：塔塌了之后，第一反应是<strong>蹲下去捡</strong>还是<strong>站着看</strong>。蹲下去捡的人通常是执行者，站着看的人里往往有一个在重新算结构。两种人都需要，但团队常常只记得夸前者。</p>
+</article>
+
+<nav class="pager">
+  <a class="prev" href="alternative-uses.html"><span>上一个 ←</span><div class="p-title">一物百用（Alternative Uses）</div></a>
+  <a class="next disabled" href="#"><span>下一个</span><div class="p-title">—</div></a>
+</nav>
+
+<div class="related"><h2>🔗 同类推荐</h2><div class="rel-list"><a class="rel" href="10-yuan-idea.html"><span class="r-ico">💡</span><span class="r-body"><span class="r-name">10元买创意</span><span class="r-meta">30–45 分钟 · 4–8 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="yes-and-improv.html"><span class="r-ico">💡</span><span class="r-body"><span class="r-name">Yes, And：即兴接龙（Yes And Improv）</span><span class="r-meta">30–45 分钟 · 4–8 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="alternative-uses.html"><span class="r-ico">💡</span><span class="r-body"><span class="r-name">一物百用（Alternative Uses）</span><span class="r-meta">25–40 分钟 · 4–8 人/组</span></span><span class="r-go">›</span></a></div></div>
+
+<footer class="foot">
+  <div>💡 创意激发 · 第 4 / 4 款</div>
+  <div><a href="../../index.html">返回全部 86 款游戏</a></div>
+  <div style="margin-top:6px;opacity:.75">规则与时长以原文档为准，现场执行前请核对场地与道具。</div>
+</footer>
+
+<script>
+(function(){
+  var t=document.getElementById('tbar'),h=document.querySelector('.hero');
+  if(t&&h&&'IntersectionObserver'in window){
+    new IntersectionObserver(function(e){t.classList.toggle('on',!e[0].isIntersecting);},
+      {rootMargin:'-56px 0px 0px 0px'}).observe(h);
+  }
+  var s=document.getElementById('share');
+  if(s)s.addEventListener('click',function(){
+    var d={title:document.title,url:location.href};
+    if(navigator.share){navigator.share(d).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(location.href)
+      .then(function(){s.textContent='✓';setTimeout(function(){s.textContent='↗';},1200);});}
+  });
+  // 仅当表格真的溢出时才提示可横滑
+  function markTables(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      var box=w.querySelector('.table-wrap');
+      if(!box)return;
+      w.classList.toggle('scrollable', box.scrollWidth - box.clientWidth > 4);
+    });
+  }
+  markTables();
+  window.addEventListener('resize',markTables,{passive:true});
+})();
+</script>
 </body>
 </html>

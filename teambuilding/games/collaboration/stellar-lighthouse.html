@@ -1,430 +1,206 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星际灯塔守护者 · 守望协作版 - 团建游戏</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #e6ecf5;
-            background: linear-gradient(135deg, #070b16 0%, #0c1426 60%, #120b22 100%);
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #0f1830;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            overflow: hidden;
-            border: 1px solid #243b66;
-        }
-        .header {
-            background: linear-gradient(135deg, #1e3a8a 0%, #b45309 55%, #f59e0b 100%);
-            color: #fff8e6;
-            padding: 40px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-        }
-        .header .subtitle {
-            font-size: 1.2em;
-            opacity: 0.95;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: #0c1530;
-        }
-        .info-card {
-            background: #0f1830;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            text-align: center;
-            border: 1px solid #243b66;
-        }
-        .info-card .icon {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        .info-card .label {
-            font-size: 0.9em;
-            color: #93c5fd;
-            margin-bottom: 5px;
-        }
-        .info-card .value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #fbbf24;
-        }
-        .content {
-            padding: 40px;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-        .section h2 {
-            color: #fbbf24;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #b45309;
-        }
-        .section h3 {
-            color: #7dd3fc;
-            margin-top: 20px;
-            margin-bottom: 15px;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .card {
-            background: #0c1530;
-            border: 2px solid #243b66;
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(245,158,11,0.3);
-            border-color: #f59e0b;
-        }
-        .card h4 {
-            color: #fbbf24;
-            margin-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #243b66;
-            color: #e6ecf5;
-        }
-        th {
-            background: #b45309;
-            color: #fff8e6;
-            font-weight: 600;
-        }
-        tr:hover {
-            background: #0c1530;
-        }
-        .role-card {
-            background: linear-gradient(135deg, #0c1530 0%, #13203f 100%);
-            border-left: 4px solid #38bdf8;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-        }
-        .role-card h4 {
-            color: #7dd3fc;
-            margin-bottom: 10px;
-        }
-        .tag {
-            display: inline-block;
-            background: #b45309;
-            color: #fff8e6;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            margin: 5px 5px 5px 0;
-        }
-        .event-card {
-            background: #0f1830;
-            border: 2px solid #243b66;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .event-card.positive {
-            border-color: #2a9d8f;
-        }
-        .event-card.negative {
-            border-color: #a855f7;
-        }
-        .event-icon {
-            font-size: 2em;
-        }
-        .flow-step {
-            background: #0c1530;
-            border-left: 4px solid #f59e0b;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-        }
-        .flow-step h4 {
-            color: #fbbf24;
-            margin-bottom: 10px;
-        }
-        .highlight {
-            background: linear-gradient(120deg, #0c1530 0%, #13203f 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 1px solid #b45309;
-        }
-        .highlight h3 {
-            color: #fbbf24;
-            margin-bottom: 10px;
-        }
-        .print-section {
-            background: #13203f;
-            border: 2px dashed #f59e0b;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-        .print-section h3 {
-            color: #fbbf24;
-        }
-        @media print {
-            body { background: white; color: #222; padding: 0; }
-            .container { box-shadow: none; border: none; }
-            .no-print { display: none; }
-        }
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8em; }
-            .info-grid { grid-template-columns: 1fr; }
-            .card-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#059669">
+<meta name="description" content="《星际灯塔守护者 · 守望协作版》改编自合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护主题）。">
+<title>星际灯塔守护者 · 守望协作版 (Stellar Lighthouse) · 团建游戏库</title>
+<link rel="stylesheet" href="../../assets/lib.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<style>:root{--accent:#34d399;--accent-ink:#059669;--accent-bg:#34d3991f;}</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌟 星际灯塔守护者 · 守望协作版</h1>
-            <div class="subtitle">Stellar Lighthouse - 长期守护、精力续航与技术债预警的合作团建游戏</div>
-        </div>
 
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="icon">👥</div>
-                <div class="label">人数</div>
-                <div class="value">3-5人</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">⏱️</div>
-                <div class="label">时长</div>
-                <div class="value">45-70分钟</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">🗼</div>
-                <div class="label">适合场景</div>
-                <div class="value">长期守护·精力续航</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">📊</div>
-                <div class="label">难度</div>
-                <div class="value">中等</div>
-            </div>
-        </div>
+<header class="topbar">
+  <a class="topbar-btn" href="../../index.html" aria-label="返回游戏库">←</a>
+  <div class="topbar-title" id="tbar">星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)</div>
+  <button class="topbar-btn" id="share" aria-label="分享">↗</button>
+</header>
 
-        <div class="content">
-            <!-- 游戏概述 -->
-            <div class="section">
-                <h1 style="display:none;">星际灯塔守护者 · 守望协作版</h1>
-                <h2>🎮 游戏概述</h2>
-                <p>《星际灯塔守护者 · 守望协作版》改编自合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护主题）。玩家扮演古老太空设施「星际灯塔」的守护者：在能量持续衰减（每回合 -1）的条件下，<strong>维护灯塔设施、修复不断出现的故障、抵御黑暗能量侵蚀，把一艘艘迷失在星海中的飞船引导回灯塔核心</strong>。</p>
-                <p style="margin-top: 15px;">在团建语境下，「星际灯塔」就是一支需要<strong>长期守护某件关键事物（核心服务 / 关键系统 / 团队凝聚力）</strong>的团队：<strong>能量是团队精力 / 载荷，故障是技术债 / 流程债，迷失飞船是掉队的同事或待支持的新人 / 客户，黑暗能量是突如其来的折腾</strong>。能不能在能量见底前把船都接回来、又不让故障堆到崩溃，正是真实工作中"长期主义 + 精力管理 + 技术债可控 + 及时拉人一把"的缩影。</p>
+<section class="hero" style="--a1:#34d399;--a2:#059669;">
+  <span class="hero-cat">🤝 团队协作</span>
+  <h1>星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)</h1>
+  
+  <p class="hero-lede">《星际灯塔守护者 · 守望协作版》改编自合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护主题）。</p>
+</section>
 
-                <div class="highlight">
-                    <h3>🎯 团建改造重点</h3>
-                    <ul style="margin-left: 20px;">
-                        <li><strong>长期守护</strong>：灯塔能量是一条"只能补、不能停"的续航线——映射系统 / 团队的可持续性</li>
-                        <li><strong>精力续航</strong>：能量每回合 -1，低能触发警报——体感"精力是消耗型资源，要持续充电而非一次榨干"</li>
-                        <li><strong>技术债可视化</strong>：故障标记逐回合累积到 10 即崩——把"小毛病不管会垮"的拖延代价具象化</li>
-                        <li><strong>引导掉队者</strong>：把船引导回核心 = 拉回沉默同事 / 融入新人 / 接住客户</li>
-                        <li><strong>复盘框架</strong>：每局结束 4F 复盘，把"守护与续航"迁移到真实工作的稳定性建设</li>
-                    </ul>
-                </div>
-            </div>
+<div class="facts">
+  <div class="fact"><div class="fact-k">⏱ 时长</div><div class="fact-v">45–70 分钟</div></div>
+  <div class="fact"><div class="fact-k">👥 人数</div><div class="fact-v">3–5 人</div></div>
+  <div class="fact"><div class="fact-k">📍 场地</div><div class="fact-v">室内</div></div>
+  <div class="fact"><div class="fact-k">📊 难度</div><div class="fact-v">★★☆</div></div>
+  
+</div>
 
-            <!-- 团建目标 -->
-            <div class="section">
-                <h2>🎯 团建目标</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>守护意识</h4><p>把"维护关键事物长期可用"当作共同责任，而非谁的 KPI</p></div>
-                    <div class="card"><h4>精力续航</h4><p>体验"能量是消耗型资源，要持续补"，反思是否常一次性榨干</p></div>
-                    <div class="card"><h4>技术债直觉</h4><p>看见故障一颗颗累积，建立"小债不还是会爆"的体感</p></div>
-                    <div class="card"><h4>拉人一把</h4><p>把引导飞船当成高优动作——接住掉队同事 / 新人 / 客户</p></div>
-                </div>
-            </div>
+<div class="abilities"><span class="ab">预防维护</span><span class="ab">守望价值</span><span class="ab">分工补位</span></div>
+<div class="toc"><details><summary>📑 本页目录（13 节）</summary><ol><li class="lv2"><a href="#游戏概述-团建版">🎯 游戏概述（团建版）</a></li><li class="lv2"><a href="#游戏信息">📋 游戏信息</a></li><li class="lv2"><a href="#团建目标">🎯 团建目标</a></li><li class="lv2"><a href="#道具准备">📦 道具准备</a></li><li class="lv2"><a href="#游戏地图-简化版">🗺️ 游戏地图（简化版）</a></li><li class="lv2"><a href="#游戏规则-团建版">🎲 游戏规则（团建版）</a></li><li class="lv2"><a href="#完整游戏流程示例">📖 完整游戏流程示例</a></li><li class="lv2"><a href="#团建引导提示">💡 团建引导提示</a></li><li class="lv2"><a href="#变体玩法-团建专用">🔄 变体玩法（团建专用）</a></li><li class="lv2"><a href="#难度调整">⚙️ 难度调整</a></li><li class="lv2"><a href="#常见问题">❓ 常见问题</a></li><li class="lv2"><a href="#教练工具箱">🧰 教练工具箱</a></li><li class="lv2"><a href="#相关资源">🔗 相关资源</a></li></ol></details></div>
+<article class="doc">
+<p><strong>团建核心价值</strong>：</p>
+<ul><li>🔧 预防维护：故障修复前的巡检与预警意识</li><li>🕯️ 守望价值：看不见的守护工作最易被忽视</li><li>📋 分工补位：设施各系统的责任到人与补位</li></ul>
+<h2 id="游戏概述-团建版">🎯 游戏概述（团建版）</h2>
+<p>《星际灯塔守护者 · 守望协作版》改编自合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护主题）。玩家扮演古老太空设施「星际灯塔」的守护者：<strong>在能量持续衰减（每回合 -1）的条件下，维护灯塔设施、修复不断出现的故障、抵御黑暗能量的侵蚀，把一艘艘迷失在星海中的飞船引导回灯塔核心</strong>。</p>
+<p>游戏天然以<strong>职责守护与续航</strong>为核心——灯塔的"能量"是会耗尽的资源，故障会像债一样累积，没人能独自撑住整座灯塔。在团建语境下，「星际灯塔」就是一支需要<strong>长期守护某件关键事物（核心服务 / 关键系统 / 团队凝聚力）的团队</strong>：<strong>能量是团队精力 / 载荷，故障是技术债 / 流程债，迷失飞船是掉队的同事或待支持的新人 / 客户，黑暗能量是突如其来的折腾</strong>。<strong>能不能在能量见底前把船都接回来、又不让故障堆到崩溃</strong>，正是真实工作中"长期主义 + 精力管理 + 技术债可控 + 及时拉人一把"的缩影。</p>
+<h3 id="团建改造重点">团建改造重点</h3>
+<ul><li><strong>长期守护</strong>：灯塔能量是一条"只能补、不能停"的续航线——映射团队 / 系统的可持续性，最值得团建迁移的机制</li><li><strong>精力续航（防透支）</strong>：能量每回合 -1，低能量触发警报但不会立刻失败——体感"精力是消耗型资源，要持续充电而非一次榨干"</li><li><strong>技术债可视化</strong>：故障标记逐回合累积，到 10 个灯塔崩溃——把"小毛病不管会垮"的拖延代价具象化</li><li><strong>引导掉队者</strong>：把迷失飞船引导回核心 = 拉回沉默同事 / 融入新人 / 接住客户——成就感来自"接住"而非"歼灭"</li><li><strong>预警机制</strong>：能量 &lt; 5 触发警报、故障 ≥ 10 崩溃——训练"可观测、早暴露、别等爆了才救"</li><li><strong>复盘框架</strong>：每局结束 4F 复盘，把"守护与续航"迁移到真实工作的稳定性建设</li></ul>
+<hr>
+<h2 id="游戏信息">📋 游戏信息</h2>
+<div class="tw"><div class="table-wrap"><table><thead><tr><th><strong>主题</strong></th><th>宇宙科幻 / 设施守护 / 续航 / 风险预警</th></tr></thead><tbody></tbody></table></div></div>
+<hr>
+<h2 id="团建目标">🎯 团建目标</h2>
+<ol><li><strong>守护意识</strong>：把"维护一件关键事物长期可用"当作共同责任，而非谁的 KPI</li><li><strong>精力续航</strong>：体验"能量是消耗型资源，要持续补"，反思团队是不是常一次性榨干、疏于充电</li><li><strong>技术债直觉</strong>：看见故障标记一颗颗累积，建立"小债不还是会爆"的体感（治未病 vs 救火的另一面）</li><li><strong>拉人一把</strong>：把引导飞船当成高优动作——体感"接住掉队同事 / 融入新人 / 接住客户"的价值</li><li><strong>团队复盘</strong>：每局结束引导 4F 复盘，把"守护与续航"迁移到真实工作的稳定性建设</li></ol>
+<hr>
+<h2 id="道具准备">📦 道具准备</h2>
+<h3 id="基础道具-必选">基础道具（必选）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物品名称</th><th>数量</th><th>用途</th><th>替代方案</th></tr></thead><tbody><tr><td>灯塔地图</td><td>1张</td><td>六边形网格 + 中心灯塔，辐射状资源区</td><td>方格纸画辐射状</td></tr><tr><td>能量轨迹</td><td>1 张</td><td>灯塔能量值（初始 10，每回合 -1）</td><td>纸条写 0-15</td></tr><tr><td>故障标记</td><td>15 个</td><td>累积标记灯塔故障（见底即崩）</td><td>灰色纸片</td></tr><tr><td>飞船棋子</td><td>6-12 个</td><td>代表迷失的飞船</td><td>硬币/棋子</td></tr><tr><td>玩家棋子</td><td>3-5 个</td><td>各守护者位置</td><td>纽扣</td></tr><tr><td>角色卡</td><td>5 张</td><td>每人一张，显示职能映射</td><td>手写卡</td></tr><tr><td>骰子</td><td>1 颗</td><td>决定事件 / 黑暗卡难度</td><td>手机骰子 APP</td></tr></tbody></table></div></div>
+<h3 id="卡牌道具速览">卡牌道具速览</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>卡牌类型</th><th>数量</th><th>图示</th><th>用途</th></tr></thead><tbody><tr><td>🔋 能量卡</td><td>30 张</td><td>电池图标</td><td>为灯塔充能、抵御黑暗能量</td></tr><tr><td>🔧 零件卡</td><td>25 张</td><td>扳手图标</td><td>修复故障、升级灯塔</td></tr><tr><td>🗺️ 星图卡</td><td>20 张</td><td>星星图标</td><td>引导飞船、预测事件</td></tr><tr><td>⚡ 事件卡</td><td>20 张</td><td>闪电图标</td><td>每回合触发的随机挑战</td></tr><tr><td>🌑 黑暗卡</td><td>15 张</td><td>黑洞图标</td><td>黑暗能量攻击（故障/倒退）</td></tr><tr><td>👤 角色卡</td><td>5 张</td><td>人物图标</td><td>专属能力（守护/导航/能源/通讯/科研）</td></tr></tbody></table></div></div>
+<h3 id="简化版准备-无打印方案">简化版准备（无打印方案）</h3>
+<ol><li><strong>地图</strong>：白纸中心画"🌟灯塔"，四个角写能量站、上下写零件库、左右写星图室，外围写黑暗区</li><li><strong>能量/故障</strong>：纸条写能量 0-15 当轨迹，灰色纸片当故障标记</li><li><strong>飞船</strong>：硬币当迷失飞船，外围摆 6-12 个；便签写卡名 + 效果分类面朝下抽</li><li><strong>卡牌</strong>：便签写名称 + 效果（🔋/🔧/🗺️），分类面朝下抽</li><li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li></ol>
+<hr>
+<h2 id="游戏地图-简化版">🗺️ 游戏地图（简化版）</h2>
+<p>灯塔为<strong>中心辐射六边形网格</strong>，团建语境里它是一个需要长期守护的"系统 / 团队"：</p>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>区域</th><th>团建隐喻</th><th>功能</th></tr></thead><tbody><tr><td>🌟 灯塔核心</td><td><strong>关键服务 / 团队凝聚力</strong></td><td>所有人出发点；能量在此汇聚</td></tr><tr><td>⚡ 能量站（四角）</td><td><strong>能量入口 / 充电站</strong></td><td>抽取能量卡——给团队"充电"</td></tr><tr><td>🔧 零件库（上下）</td><td><strong>底座 / 中台</strong></td><td>抽取零件卡——修故障、治旧债</td></tr><tr><td>🗺️ 星图室（左右）</td><td><strong>导航 / 协调</strong></td><td>抽取星图卡——引导飞船、知走向</td></tr><tr><td>🌑 黑暗区（外围）</td><td><strong>折腾 / 突发</strong></td><td>事件 / 黑暗卡触发区，最易掉血</td></tr></tbody></table></div></div>
+<blockquote>💡 <strong>核心张力</strong>：能量每回合自动 -1，而故障只增不减。真正决定胜负的不是"谁冲得快"，而是<strong>有没有人持续去补能量、有人守住零件库清故障、有人专门去接飞船</strong>——这正是"长期守护型团队"的日常分工。</blockquote>
+<hr>
+<h2 id="游戏规则-团建版">🎲 游戏规则（团建版）</h2>
+<h3 id="准备阶段">准备阶段</h3>
+<ol><li><strong>展开地图</strong>：灯塔核心居中，资源区环绕；玩家棋子从核心出发</li><li><strong>放置飞船</strong>：随机摆 6 艘（新手）或 12 艘（标准）于外围黑暗区</li><li><strong>设置能量</strong>：能量轨迹放第 10 格（标准局），故障标记 0</li><li><strong>分配角色</strong>：每人选 / 抽 1 张角色卡，了解职能映射与能力</li><li><strong>洗混卡牌</strong>：能量 / 零件 / 星图各自洗混面朝下；事件卡 + 黑暗卡洗混作"事件堆"</li><li><strong>决定先手</strong>：投骰点数大者先手</li></ol>
+<h3 id="角色分工-团建核心改造">角色分工（团建核心改造）</h3>
+<p>为加强团队协作，每位玩家承担专属职能，映射真实团队中的"守护型"角色：</p>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>角色</th><th>图示</th><th>团队职能映射</th><th>被动能力（团建视角）</th></tr></thead><tbody><tr><td><strong>工程师</strong></td><td>🛠️</td><td>工程 / 中台 / 运维</td><td>修复故障效果+1、每回合免费清 1 故障——"稳底盘、还技术债"</td></tr><tr><td><strong>导航员</strong></td><td>🧭</td><td>协调 / PMO / 新人导师</td><td>引导飞船移动+1、可看下一张事件——"拉人一把、知走向"</td></tr><tr><td><strong>能源师</strong></td><td>⚡</td><td>资源 /  energetics / 后勤</td><td>充能效果+1、每回合多摸 1 能量卡——"持续给团队充电"</td></tr><tr><td><strong>通讯官</strong></td><td>📡</td><td>横向链接 / 跨部门</td><td>可与任意人交易 1 张资源卡、每回合分享 1 卡——"让资源流动"</td></tr><tr><td><strong>科学家</strong></td><td>🔬</td><td>架构 / 质量 / 改进</td><td>升级灯塔（能量上限+）；合成工具卡——"提升系统基线"</td></tr></tbody></table></div></div>
+<blockquote>💡 <strong>团建提示</strong>：3-4 人局可让任意角色"兼任"两种职能；首轮自由选角，次轮轮换（换位思考）。能量师"持续充能"是复盘重点——真实团队里"谁在负责给大家充电"？</blockquote>
+<h3 id="游戏流程-每回合-4-阶段">游戏流程（每回合 4 阶段）</h3>
+<h4 id="阶段一-事件阶段-必须">阶段一：事件阶段 ⚡（必须）</h4>
+<p>翻开 1 张事件 / 黑暗卡立即执行；黑暗卡按负面效果影响全体（故障+ / 飞船倒退 / 失去资源）。</p>
+<h4 id="阶段二-行动阶段-每人-2-行动点">阶段二：行动阶段 🎯（每人 2 行动点）</h4>
+<p>按座位顺序，每人 2 次行动（可移动 / 采集资源 / 使用资源 / 修复故障 / 引导飞船 / 用角色能力）。</p>
+<h4 id="阶段三-检查阶段-必须">阶段三：检查阶段 🔍（必须）</h4>
+<ul><li>能量 ≤ 0 → 灯塔熄灭，<strong>失败</strong></li><li>故障标记 ≥ 10 → 灯塔崩溃，<strong>失败</strong></li><li>有飞船抵达核心 → 共同获得奖励（接住一艘船）</li></ul>
+<h4 id="阶段四-结束阶段-必须">阶段四：结束阶段 🔚（必须）</h4>
+<p>能量轨迹 -1（灯塔持续耗能）；传递先手；检查是否已有 ≥ 6 艘船归港。</p>
+<h3 id="共享轨道与危机">共享轨道与危机</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>共享轨道</th><th>初始</th><th>警告 / 失败阈值</th></tr></thead><tbody><tr><td>灯塔能量</td><td>10</td><td>≤ 5 触发"低能警报"；≤ 0 即失败（系统宕机 / 团队崩）</td></tr><tr><td>故障标记</td><td>0</td><td>每回合只增不减；≥ 10 即失败（技术债爆仓）</td></tr><tr><td>迷失飞船</td><td>6-12 艘</td><td>全部飞出边界（&gt;地图）即失败（没人接住、客户流失）</td></tr></tbody></table></div></div>
+<h3 id="胜利与失败">胜利与失败</h3>
+<p><strong>主胜利（同时满足）</strong>：在能量耗尽 / 故障爆仓前，成功引导 <strong>≥ 6 艘飞船</strong> 抵达灯塔核心。</p>
+<p><strong>失败（任一即全队失败）</strong>：</p>
+<ul><li>灯塔能量 ≤ 0（系统宕机 / 团队精力归零）</li><li>故障标记 ≥ 10（技术债 / 流程债爆仓）</li><li>所有飞船都迷失（掉队者无人接住、客户流失）</li></ul>
+<hr>
+<h2 id="完整游戏流程示例">📖 完整游戏流程示例</h2>
+<h3 id="示例-5-名玩家的第-4-回合-低能警报">示例：5 名玩家的第 4 回合（低能警报）</h3>
+<p><strong>阵容</strong>：工程师（兜底）、导航员（引导）、能源师（充电）、通讯官（链接）、科学家（升级）</p>
+<p><strong>当前状态</strong>：能量第 5 格（⚠️ 低能警报）；故障标记 4 个；外围 3 艘船距核心 2-3 格。</p>
+<p><strong>阶段一 · 事件</strong>：🌑「能量泄漏」！丢失 2 张能量卡（手牌不足，能量被迫 -1 → 第 4 格）。</p>
+<p><strong>阶段二 · 行动</strong></p>
+<ul><li><strong>能源师</strong>：到能量站连抽 2 张能量卡，给灯塔充能（能量 4→6，脱离警报线）</li><li><strong>工程师</strong>：在零件库修掉 2 个故障标记（故障 4→2），并抽 2 张零件卡备着</li><li><strong>导航员</strong>：用 1 张星图卡把 3 号船向核心推 1 格，并用能力预看下张事件为"平静"</li><li><strong>通讯官</strong>：把 1 张多余能量卡转给能源师、1 张星图卡转给导航员——资源在流动</li><li><strong>科学家</strong>：消耗 2 零件卡升级灯塔，能量上限 +5（基线抬升，后面更扛造）</li></ul>
+<p><strong>阶段三 · 检查</strong>：能量 6 安全、故障 2 安全、3 号船距核心仅 1 格。</p>
+<p><strong>阶段四 · 结束</strong>：能量 6→5（再触警报线，提醒下回合务必先充电），先手传递。</p>
+<blockquote>💡 <strong>团建点</strong>：团队当场体感——"没有能源师持续充电，灯塔早就熄了；没有工程师清债，4 个故障下回合就滚到 6、7。最亮的动作不是冲刺，是把家守住。"这正是守护型团队的日常。</blockquote>
+<hr>
+<h2 id="团建引导提示">💡 团建引导提示</h2>
+<h3 id="游戏前-5分钟">游戏前（5分钟）</h3>
+<ol><li><strong>介绍主题</strong>："星际灯塔就是我们要长期守护的某件关键事物——一个服务、一套系统、甚至团队本身的凝聚力。能量是我们的精力，故障是没人管的小债。"</li><li><strong>强调续航</strong>："能量每回合自动掉，所以必须有人持续去补——这和我们'项目一结束就失速、人一累就崩'一模一样。"</li><li><strong>鼓励接船</strong>："引导一艘迷失飞船，就是拉回一个沉默同事、接住一个新人或一个客户。这是高优动作。"</li><li><strong>角色分配</strong>：自由选角，或教练按性格分配（让爱冲的人做导航员、让细致的人做工程师，体会"守护者"心态）</li></ol>
+<h3 id="游戏中-观察要点">游戏中（观察要点）</h3>
+<p>教练或观察员应记录：</p>
+<ol><li><strong>谁在充电？</strong> 有没有人持续关注能量（精力），还是全扑在"接船"上不管续航？</li><li><strong>谁在还债？</strong> 工程师默默清故障——这些"底座工作"被看见了吗？还是等堆到 8、9 才慌？</li><li><strong>谁在接船？</strong> 掉队的同事 / 新人 / 客户，有人专门去拉吗？还是"能者多劳"一个人扛？</li><li><strong>故障到几了？</strong> 团队有没有"可观测"意识——故障标记到 5 就该预警，还是等 9 才发现？</li><li><strong>通讯官在流动吗？</strong> 资源是不是卡在某人手里，没人交易、没人分享？</li></ol>
+<h3 id="游戏后-复盘框架-4f">游戏后（复盘框架 · 4F）</h3>
+<p>使用以下框架引导团队复盘（15-20分钟）：</p>
+<h4 id="1-事实-facts-4分钟">1. 事实（Facts，4分钟）</h4>
+<blockquote>"哪一回合最险？当时能量几格、故障几个？是谁先说'先去充电'还是'先去接船'？"</blockquote>
+<h4 id="2-感受-feelings-5分钟">2. 感受（Feelings，5分钟）</h4>
+<blockquote>"能量见底时你什么感受？有人默默清故障 / 充电时你注意到吗？船飞出边界时你可惜吗？"</blockquote>
+<h4 id="3-发现-findings-6分钟">3. 发现（Findings，6分钟）</h4>
+<blockquote>"我们的故障是不是又拖到快爆才管（技术债视角）？谁在负责'给团队充电'？掉队的人是被接住了，还是漂走了？"</blockquote>
+<h4 id="4-迁移-future-5分钟">4. 迁移（Future，5分钟）</h4>
+<blockquote>"这个游戏让你联想到工作中的哪个场景（如某系统告警没人盯、某新人入职后没人带、技术债一直还不上）？一件能立即做的事是什么？"</blockquote>
+<hr>
+<h2 id="变体玩法-团建专用">🔄 变体玩法（团建专用）</h2>
+<h3 id="变体1-观察员模式-适合大型团队">变体1：观察员模式（适合大型团队）</h3>
+<p>人数超 5 人时，多出玩家任 <strong>观察员</strong>：专门记录"谁在充电、谁在清债、谁在接船"，复盘时提供第三方视角。</p>
+<h3 id="变体2-限时挑战-增加紧迫感">变体2：限时挑战（增加紧迫感）</h3>
+<p>设沙漏 45 分钟，时间到即结算，以"归港飞船数 ≥ 6 否"判胜负；适合时间有限团建。</p>
+<h3 id="变体3-角色轮换-换位思考">变体3：角色轮换（换位思考）</h3>
+<p>每 2 回合轮换一次角色，确保每人都体验"充电"与"清债 / 接船"两类职能，强化相互理解。</p>
+<h3 id="变体4-无声守护-沟通挑战">变体4：无声守护（沟通挑战）</h3>
+<p>部分回合禁言，凸显"提前约定、显性同步"对守护型协作的价值。</p>
+<h3 id="变体5-部门混编-跨部门磨合">变体5：部门混编（跨部门磨合）</h3>
+<p>将同部门的人拆散到不同角色，强制跨部门搭档，专为"打破部门墙、训练横向补位"设计。</p>
+<h3 id="变体6-真实技术债叠加-稳定性主题-推荐">变体6：真实技术债叠加（稳定性主题 · 推荐）</h3>
+<p>把"故障标记"替换成团队 <strong>当前真实技术债 / 流程痛点 / 待跟进风险</strong>（便签上墙），每次"清故障"就等于认领一项并推进；游戏结束便签直接变改进看板。</p>
+<h3 id="变体7-新人护航-融入主题-推荐">变体7：新人护航（融入主题 · 推荐）</h3>
+<p>把 2-3 艘"船"标为"新人船"，要求专人（导航员）对接引导；复盘重点讨论"我们怎么让新人最快归港（融入）"。</p>
+<hr>
+<h2 id="难度调整">⚙️ 难度调整</h2>
+<h3 id="简单模式-新手团队-第一次团建">简单模式（新手团队 / 第一次团建）</h3>
+<ul><li>初始能量 = 15、手牌上限 = 7、事件卡减半、故障阈值提到 12</li><li><strong>适合</strong>：刚组建的团队、非游戏爱好者</li></ul>
+<h3 id="标准模式-推荐">标准模式（推荐）</h3>
+<ul><li>初始能量 10、每回合 -1、故障阈值 10、外围 6 艘船</li><li><strong>适合</strong>：大多数团建场景</li></ul>
+<h3 id="困难模式-成熟团队-稳定性主题">困难模式（成熟团队 / 稳定性主题）</h3>
+<ul><li>初始能量 8、每回合 -1、黑暗卡 +5、外围 12 艘船、禁交易资源</li><li><strong>适合</strong>：运维 / SRE / 中台团队，强调极限续航与债控</li></ul>
+<hr>
+<h2 id="常见问题">❓ 常见问题</h2>
+<p><strong>Q：3个人怎么玩？</strong> A：选 3 名核心角色（工程师 / 导航员 / 能源师），其余职能标注"兼任"；共享能量与故障机制不变，仍强调守护与分工。</p>
+<p><strong>Q：为什么强调"能量续航"而不是"先冲船"？</strong> A：因为能量每回合掉、归零即全队失败。真实工作里"项目一结束团队就失速、人一累就崩"正是精力被一次性榨干——守护型团队必须先保证"灯还亮着"。</p>
+<p><strong>Q：故障标记为什么只增不减？</strong> A：它隐喻技术债 / 流程债——小毛病今天不管，明天还在，还会叠加。游戏里"清故障"就是还债，逼团队建立"债不积压"的本能。</p>
+<p><strong>Q：没有骰子怎么办？</strong> A：手机骰子 APP，或准备 1-6 数字卡代替。</p>
+<p><strong>Q：为什么把故障换成真实技术债（变体6）？</strong> A：游戏瞬间变成一次低风险的"债务盘点会"，让"守护与续航"直接服务于真实工作，复盘结论更易落地。</p>
+<hr>
+<h2 id="教练工具箱">🧰 教练工具箱</h2>
+<h3 id="引导话术">引导话术</h3>
+<p><strong>游戏前</strong>：</p>
+<ul><li>"记住，你们守护的是同一座灯塔。能量是大家的，掉的也是大家的。"</li><li>"能量一直在掉——有人持续去充，灯塔才不会熄。"</li><li>"接住一艘船，就是拉回一个掉队的人。那是高优动作。"</li></ul>
+<p><strong>游戏中</strong>（适时提醒）：</p>
+<ul><li>"现在能量几格了？要不要先有人去充电？"</li><li>"故障到几个了？有没有人去清？"</li><li>"外围那艘船漂远了，谁去接一下？"</li></ul>
+<p><strong>复盘时</strong>：</p>
+<ul><li>"先安静 30 秒，回想一下灯塔上的那一声警报。"</li><li>"我想听听[沉默玩家]的想法，你当时在守哪块？"</li><li>"我们的'技术债'是不是又拖到快爆才管？下次怎么更早暴露？"</li></ul>
+<h3 id="安全与边界">安全与边界</h3>
+<ol><li><strong>心理安全</strong>：若因能量归零失败而沮丧，教练应强调"这是游戏，守护本来就是用来练手的"——把失败正常化</li><li><strong>包容性原则</strong>：对游戏不擅长的玩家提供额外指导，而非让其感到羞耻</li><li><strong>知识落地</strong>：变体6 / 7 的便签看板建议拍照留存，真的可能变成团队的改进项 / 新人计划</li><li><strong>时间管理</strong>：严格控制游戏与复盘时间，避免拖延</li></ol>
+<hr>
+<h2 id="相关资源">🔗 相关资源</h2>
+<ul><li><a href="../../README.md#协作类">返回团队协作游戏目录</a></li><li><a href="../../index.html#flows">团建流程设计方案</a></li><li><a href="../../toolbox/facilitation.html">引导话术库</a></li><li><a href="../../toolbox/debrief.html">复盘引导框架</a></li></ul>
+<hr>
+<p><strong>设计灵感</strong>：合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护合作主题） <strong>团建改造</strong>：强调长期守护、精力续航（防透支）、技术债可视化、预警机制、引导掉队者与新人融入 <strong>最后更新</strong>：2026-07-17</p>
+</article>
 
-            <!-- 物料准备 -->
-            <div class="section">
-                <h2>📦 物料准备</h2>
-                <table>
-                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
-                    <tr><td>灯塔地图</td><td>1张</td><td>六边形网格 + 中心灯塔，辐射状资源区</td></tr>
-                    <tr><td>能量轨迹</td><td>1张</td><td>灯塔能量值（初始10，每回合 -1）</td></tr>
-                    <tr><td>故障标记</td><td>15个</td><td>累积标记灯塔故障（见底即崩）</td></tr>
-                    <tr><td>飞船棋子</td><td>6-12个</td><td>代表迷失的飞船</td></tr>
-                    <tr><td>角色卡 / 骰子</td><td>5张 / 1颗</td><td>职能分工；决定事件难度</td></tr>
-                </table>
-                <div class="print-section">
-                    <h3>🖨️ 无打印方案（临时团建）</h3>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>地图</strong>：白纸中心画灯塔，四角能量站、上下零件库、左右星图室、外围黑暗区</li>
-                        <li><strong>能量/故障</strong>：纸条写能量 0-15 当轨迹，灰色纸片当故障标记</li>
-                        <li><strong>飞船</strong>：硬币当迷失飞船，外围摆 6-12 个</li>
-                        <li><strong>卡牌</strong>：便签写名称 + 效果（🔋/🔧/🗺️），分类面朝下抽</li>
-                        <li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li>
-                    </ul>
-                </div>
-            </div>
+<nav class="pager">
+  <a class="prev" href="star-pioneers.html"><span>上一个 ←</span><div class="p-title">星际拓荒者 · 从零到一版 (Star Pioneers)</div></a>
+  <a class="next" href="space-miners.html"><span>下一个 →</span><div class="p-title">星际矿工（团队危机管理版）</div></a>
+</nav>
 
-            <!-- 角色分配 -->
-            <div class="section">
-                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
-                <p>每位玩家承担一个专属角色，模拟真实团队中的"守护型"职能分工与相互依赖（也可按性格由教练分配）：</p>
+<div class="related"><h2>🔗 同类推荐</h2><div class="rel-list"><a class="rel" href="body-letters.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人体拼字</span><span class="r-meta">20–30 分钟 · 6–20 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="human-knot.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人结（Human Knot）</span><span class="r-meta">30–45 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="team-chef.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">协作大厨 (Team Chef)</span><span class="r-meta">45–60 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="jujutsu-united.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">咒术回战：术师联携 (Jujutsu United)</span><span class="r-meta">45–75 分钟 · 3–5 人</span></span><span class="r-go">›</span></a></div></div>
 
-                <div class="role-card">
-                    <h4>🛠️ 工程师 · 工程 / 中台 / 运维</h4>
-                    <p><strong>被动</strong>：修故障效果+1、每回合免费清 1 故障</p>
-                    <p><strong>团建映射</strong>：稳底盘、还技术债——"风险兜底与系统守护"</p>
-                </div>
-                <div class="role-card">
-                    <h4>🧭 导航员 · 协调 / PMO / 新人导师</h4>
-                    <p><strong>被动</strong>：引导飞船移动+1、可看下一张事件</p>
-                    <p><strong>团建映射</strong>：拉人一把、知走向——"横向协调与引导"</p>
-                </div>
-                <div class="role-card">
-                    <h4>⚡ 能源师 · 资源 / 后勤 / energetics</h4>
-                    <p><strong>被动</strong>：充能效果+1、每回合多摸 1 能量卡</p>
-                    <p><strong>团建映射</strong>：持续给团队充电——"精力续航与补给"</p>
-                </div>
-                <div class="role-card">
-                    <h4>📡 通讯官 · 横向链接 / 跨部门</h4>
-                    <p><strong>被动</strong>：可与任意人交易 1 张资源卡、每回合分享 1 卡</p>
-                    <p><strong>团建映射</strong>：让资源流动——"链接者与破壁者"</p>
-                </div>
-                <div class="role-card">
-                    <h4>🔬 科学家 · 架构 / 质量 / 改进</h4>
-                    <p><strong>被动</strong>：升级灯塔（能量上限+）、合成工具卡</p>
-                    <p><strong>团建映射</strong>：提升系统基线——"能力建设与改进"</p>
-                </div>
-            </div>
+<footer class="foot">
+  <div>🤝 团队协作 · 第 14 / 32 款</div>
+  <div><a href="../../index.html">返回全部 86 款游戏</a></div>
+  <div style="margin-top:6px;opacity:.75">规则与时长以原文档为准，现场执行前请核对场地与道具。</div>
+</footer>
 
-            <!-- 游戏流程 -->
-            <div class="section">
-                <h2>🎲 游戏流程（每回合 4 阶段）</h2>
-                <p>每回合依次执行：<strong>① 事件阶段</strong> → <strong>② 行动阶段（每人 2 行动点）</strong> → <strong>③ 检查阶段</strong> → <strong>④ 结束阶段（能量 -1）</strong>。</p>
-
-                <div class="flow-step">
-                    <h4>核心机制 · 精力续航（团建灵魂）</h4>
-                    <p>能量每回合自动 -1，<strong>≤ 5 触发低能警报、≤ 0 灯塔熄灭即失败</strong>。没有人持续去充电，灯迟早会熄——这正是"精力是消耗型资源、要持续补给而非一次性榨干"的体感。</p>
-                </div>
-                <div class="flow-step">
-                    <h4>地图 · 星际灯塔 = 需要长期守护的系统 / 团队</h4>
-                    <p>核心=关键服务；能量站=充电入口；零件库=底座/中台；星图室=导航/协调；黑暗区=折腾/突发。所有人从核心出发，各有守护段。</p>
-                </div>
-                <div class="flow-step">
-                    <h4>危机 · 故障标记 = 技术债 / 流程债</h4>
-                    <p>只增不减，<strong>堆到 10 灯塔崩溃</strong>。清故障就是还债——逼团队建立"债不积压"的本能，而非等爆仓才救。</p>
-                </div>
-
-                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
-                <table>
-                    <tr><th>共享轨道</th><th>初始</th><th>警告 / 失败阈值</th></tr>
-                    <tr><td>灯塔能量</td><td>10</td><td>≤5 低能警报；≤0 即失败（系统宕机 / 团队崩）</td></tr>
-                    <tr><td>故障标记</td><td>0</td><td>每回合只增不减；≥10 即失败（技术债爆仓）</td></tr>
-                    <tr><td>迷失飞船</td><td>6-12艘</td><td>全部飞出边界即失败（掉队者无人接住）</td></tr>
-                </table>
-                <p style="color:#fbbf24; margin-top:10px;">⚠️ <strong>关键</strong>：胜负不取决于"谁冲得快"，而取决于"有没有人持续充电、有人清债、有人专门去接船"。每一次把家守住，都让团队离全员归港更近一步。</p>
-            </div>
-
-            <!-- 团建引导 -->
-            <div class="section">
-                <h2>💡 团建引导提示</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>游戏前（5分钟）</h4><p>介绍主题："灯塔=要长期守护的关键事物，能量=精力，故障=技术债，船=掉队者/新人/客户"；强调续航、鼓励接船。</p></div>
-                    <div class="card"><h4>游戏中（观察）</h4><p>记录：谁在充电？谁在还债？谁在接船？故障到几了（可观测）？通讯官在流动吗？</p></div>
-                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟；把"守护与续航"迁移到真实工作稳定性。</p></div>
-                </div>
-            </div>
-
-            <!-- 变体玩法 -->
-            <div class="section">
-                <h2>🔄 变体玩法</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，记录"充电/清债/接船"行为，复盘提供第三方视角。</p></div>
-                    <div class="card"><h4>限时挑战</h4><p>设45分钟沙漏，以"归港≥6艘"判胜负，适合时间有限团建。</p></div>
-                    <div class="card"><h4>角色轮换</h4><p>每2回合轮换角色，体验"充电"与"清债/接船"两类职能。</p></div>
-                    <div class="card"><h4>无声守护</h4><p>部分回合禁言，凸显"提前约定、显性同步"对守护型协作的价值。</p></div>
-                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，专为"打破部门墙"设计。</p></div>
-                    <div class="card"><h4>真实技术债叠加</h4><p>把故障换成当前真实技术债/风险便签，每清一次=认领推进，便签变改进看板。</p></div>
-                    <div class="card"><h4>新人护航</h4><p>标2-3艘"新人船"由导航员对接，复盘重点："怎么让新人最快归港"。</p></div>
-                </div>
-            </div>
-
-            <!-- 难度调整 -->
-            <div class="section">
-                <h2>⚙️ 难度调整</h2>
-                <table>
-                    <tr><th>模式</th><th>调整</th><th>适合</th></tr>
-                    <tr><td>简单</td><td>能量15、手牌上限7、事件减半、故障阈值12</td><td>新团队/非玩家</td></tr>
-                    <tr><td>标准（推荐）</td><td>能量10、每回合-1、故障阈值10、外围6艘</td><td>大多数团建</td></tr>
-                    <tr><td>困难</td><td>能量8、黑暗卡+5、外围12艘、禁交易资源</td><td>运维/SRE/中台</td></tr>
-                </table>
-            </div>
-
-            <!-- 工作场景映射 -->
-            <div class="section">
-                <h2>🗺️ 游戏要素 → 工作场景</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>高度守护</h4><p>共享能量与故障，天然训练"长期主义与共同责任"</p></div>
-                    <div class="card"><h4>精力续航</h4><p>能量持续掉，体感"持续充电 vs 一次性榨干"</p></div>
-                    <div class="card"><h4>技术债预警</h4><p>故障累积到崩，建立"债不积压"直觉</p></div>
-                    <div class="card"><h4>引导掉队</h4><p>接船=接住同事/新人/客户，高优动作</p></div>
-                </div>
-                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
-                <table>
-                    <tr><th>游戏要素</th><th>工作场景</th></tr>
-                    <tr><td>星际灯塔</td><td>需要长期守护的核心服务 / 系统 / 团队凝聚力</td></tr>
-                    <tr><td>灯塔能量</td><td>团队精力 / 载荷（消耗型资源）</td></tr>
-                    <tr><td>故障标记</td><td>技术债 / 流程债（拖延的代价）</td></tr>
-                    <tr><td>迷失飞船</td><td>掉队同事 / 待融入新人 / 待支持客户</td></tr>
-                    <tr><td>黑暗能量</td><td>突如其来的折腾 / 突发故障</td></tr>
-                    <tr><td>能源师充能</td><td>Leader/PMO 的资源补给权（警惕没人负责充电）</td></tr>
-                </table>
-            </div>
-
-            <!-- 相关资源 -->
-            <div class="section">
-                <h2>🔗 相关资源</h2>
-                <ul style="margin-left: 20px;">
-                    <li><a href="stellar-lighthouse.md" style="color:#7dd3fc;">完整团建版规则（Markdown）</a></li>
-                    <li>原始桌游：boardgames/category/cooperative/stellar-lighthouse/</li>
-                    <li>教练工具箱：teambuilding/toolbox/</li>
-                    <li>类似游戏：星际医疗队、末日种子库、幽灵古堡、轮回地下城</li>
-                </ul>
-                <p style="margin-top: 20px; color: #93c5fd; font-style: italic;">
-                    改编自合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护合作主题）| 最后更新：2026-07-17
-                </p>
-            </div>
-        </div>
-    </div>
+<script>
+(function(){
+  var t=document.getElementById('tbar'),h=document.querySelector('.hero');
+  if(t&&h&&'IntersectionObserver'in window){
+    new IntersectionObserver(function(e){t.classList.toggle('on',!e[0].isIntersecting);},
+      {rootMargin:'-56px 0px 0px 0px'}).observe(h);
+  }
+  var s=document.getElementById('share');
+  if(s)s.addEventListener('click',function(){
+    var d={title:document.title,url:location.href};
+    if(navigator.share){navigator.share(d).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(location.href)
+      .then(function(){s.textContent='✓';setTimeout(function(){s.textContent='↗';},1200);});}
+  });
+  // 仅当表格真的溢出时才提示可横滑
+  function markTables(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      var box=w.querySelector('.table-wrap');
+      if(!box)return;
+      w.classList.toggle('scrollable', box.scrollWidth - box.clientWidth > 4);
+    });
+  }
+  markTables();
+  window.addEventListener('resize',markTables,{passive:true});
+})();
+</script>
 </body>
 </html>

@@ -1,260 +1,114 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>沙漠逃生 - 团建游戏</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <style>
-        .tag { display: inline-block; padding: 0.25rem 0.5rem; margin: 0.25rem; font-size: 0.875rem; border-radius: 0.25rem; }
-        .tag-purpose { background: #e3f2fd; color: #1565c0; }
-        .tag-form { background: #f3e5f5; color: #7b1fa2; }
-        .tag-scene { background: #e8f5e9; color: #2e7d32; }
-        .difficulty { color: #ff9800; }
-        table { width: 100%; border-collapse: collapse; }
-        table th, table td { padding: 0.75rem; border: 1px solid #dee2e6; }
-        table th { background: #f8f9fa; }
-        blockquote { border-left: 4px solid #0077b6; padding-left: 1rem; margin: 1rem 0; }
-        code { background: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
-        pre { background: #f8f9fa; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0891b2">
+<meta name="description" content="在信息不完全、时间压力下，训练团队快速共识、理性决策的能力。">
+<title>沙漠逃生 · 团建游戏库</title>
+<link rel="stylesheet" href="../../assets/lib.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<style>:root{--accent:#22d3ee;--accent-ink:#0891b2;--accent-bg:#22d3ee1f;}</style>
 </head>
 <body>
-    <main class="container">
-        <nav>
-            <ul>
-                <li><a href="../../index.html">← 返回首页</a></li>
-                <li><a href="../../index.html">返回游戏库</a></li>
-            </ul>
-        </nav>
 
-        <article>
-            <hr>
-<p>title: "沙漠逃生"</p>
-<p>author: "AIWorkDB"</p>
-<p>source_url: "https://aiworkdb.github.io/teambuilding/games/problem-solving/desert-survival.html"</p>
-<p>cover: "https://placehold.co/1200x630/E8A87C/white?text=Problem+Solving"</p>
+<header class="topbar">
+  <a class="topbar-btn" href="../../index.html" aria-label="返回游戏库">←</a>
+  <div class="topbar-title" id="tbar">沙漠逃生</div>
+  <button class="topbar-btn" id="share" aria-label="分享">↗</button>
+</header>
+
+<section class="hero" style="--a1:#22d3ee;--a2:#0891b2;">
+  <span class="hero-cat">🔧 问题解决</span>
+  <h1>沙漠逃生</h1>
+  
+  <p class="hero-lede">在信息不完全、时间压力下，训练团队快速共识、理性决策的能力。</p>
+</section>
+
+<div class="facts">
+  <div class="fact"><div class="fact-k">⏱ 时长</div><div class="fact-v">30–45 分钟</div></div>
+  <div class="fact"><div class="fact-k">👥 人数</div><div class="fact-v">5–8 人/组<small>全场 6–30 人</small></div></div>
+  <div class="fact"><div class="fact-k">📍 场地</div><div class="fact-v">室内</div></div>
+  <div class="fact"><div class="fact-k">📊 难度</div><div class="fact-v">★★☆</div></div>
+  <div class="fact fact-wide"><div class="fact-k">🧰 道具</div><div class="fact-v">有（道具卡/纸张）</div></div>
+</div>
+
+<div class="abilities"><span class="ab">快速共识</span><span class="ab">理性决策</span><span class="ab">专家依赖</span></div>
+<div class="toc"><details><summary>📑 本页目录（13 节）</summary><ol><li class="lv2"><a href="#2-核心规则">2. 核心规则</a></li><li class="lv2"><a href="#物品清单-供打印">物品清单（供打印）</a></li><li class="lv2"><a href="#5-变体适配">5. 变体适配</a></li><li class="lv2"><a href="#6-物资清单">6. 物资清单</a></li><li class="lv2"><a href="#教练笔记">教练笔记</a></li><li class="lv3"><a href="#背景设定-2-min">背景设定（2 min）</a></li><li class="lv3"><a href="#个人排序阶段-5-min">个人排序阶段（5 min）</a></li><li class="lv3"><a href="#团队共识阶段-15-min">团队共识阶段（15 min）</a></li><li class="lv3"><a href="#专家答案揭晓-5-min">专家答案揭晓（5 min）</a></li><li class="lv3"><a href="#反思讨论-10-min">反思讨论（10 min）</a></li><li class="lv3"><a href="#feelings-感受">Feelings（感受）</a></li><li class="lv3"><a href="#findings-发现">Findings（发现）</a></li><li class="lv3"><a href="#future-未来">Future（未来）</a></li></ol></details></div>
+<article class="doc">
+<p><strong>团建核心价值</strong>：</p>
+<ul><li>⚡ 快速共识：信息不全时收敛意见的决策训练</li><li>🧠 理性决策：物品排序的论证与论证质量</li><li>🎓 专家依赖：听不听正确答案的团队智慧</li></ul>
+<h2 id="2-核心规则">2. 核心规则</h2>
+<h3 id="背景设定-2-min">背景设定（2 min）</h3>
+<blockquote>「上午十点，你们的飞机迫降在沙漠里，机身烧毁，飞行员遇难。你们活下来了，但只剩清单上这 15 样东西。<br>救援队最快 3 天后到，也可能更久。气温 40 度，白天暴晒，夜里接近零度。<br>你们要在这些东西里排出一个优先级：1 最重要，15 最不重要。先各自排，再一起排。」</blockquote>
+<h3 id="个人排序阶段-5-min">个人排序阶段（5 min）</h3>
+<ul><li>每人拿到<strong>物品清单</strong>（见下方）</li><li><strong>独立</strong>完成排序（1 = 最重要，15 = 最不重要）</li><li>此阶段<strong>禁止讨论</strong></li></ul>
+<h3 id="团队共识阶段-15-min">团队共识阶段（15 min）</h3>
+<ul><li>小组必须就<strong>同一份排序清单</strong>达成一致</li><li>每个人都要发言，最终签字确认</li><li>教练计时，最后 2 分钟倒计时提醒</li></ul>
+<h3 id="专家答案揭晓-5-min">专家答案揭晓（5 min）</h3>
+<ul><li>教练公布「沙漠生存专家」的标准答案</li><li>各组计算<strong>偏差分</strong>（个人 vs 专家、团队 vs 专家）</li><li>偏差越小，成绩越好</li></ul>
+<h3 id="反思讨论-10-min">反思讨论（10 min）</h3>
+<ul><li>哪组团队成绩优于个人平均成绩？为什么？</li><li>讨论过程中，是否有人固执己见不愿妥协？</li></ul>
 <hr>
-<h1>沙漠逃生</h1>
-<table>
-<thead><tr>
-<th>**时长**</th>
-<th>30–45 min</th>
-</tr></thead><tbody>
-<tr>
-<td>**场景标签**</td>
-<td>培训 / 团建 / 工作坊</td>
-</tr>
-<tr>
-<td>**难度**</td>
-<td>⭐⭐</td>
-</tr>
-<tr>
-<td>**道具需求**</td>
-<td>有（道具卡/纸张）</td>
-</tr>
-</tbody></table>
-<p>**核心目标**：在信息不完全、时间压力下，训练团队快速共识、理性决策的能力。</p>
+<h2 id="物品清单-供打印">物品清单（供打印）</h2>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>编号</th><th>物品</th><th>专家组标准排序（参考）</th></tr></thead><tbody><tr><td>1</td><td>打火机（满油）</td><td>1</td></tr><tr><td>2</td><td>比地图大 2 倍的美军地图</td><td>2</td></tr><tr><td>3</td><td>每人 1 夸脱（约 1 升）水</td><td>3</td></tr><tr><td>4</td><td>24 支口香糖</td><td>4</td></tr><tr><td>5</td><td>1 盒防晒霜</td><td>5</td></tr><tr><td>6</td><td>1 瓶 15 米尼龙绳</td><td>6</td></tr><tr><td>7</td><td>2 个降落伞（红色）</td><td>7</td></tr><tr><td>8</td><td>1 个便携式取暖器</td><td>8</td></tr><tr><td>9</td><td>2 罐脱水食品</td><td>9</td></tr><tr><td>10</td><td>1 个急救包</td><td>10</td></tr><tr><td>11</td><td>1 把 0.45 口径手枪（已上膛）</td><td>11</td></tr><tr><td>12</td><td>2 瓶盐片</td><td>12</td></tr><tr><td>13</td><td>1 份《沙漠可以吃的动物》书</td><td>13</td></tr><tr><td>14</td><td>1 面镜子（15×15 cm）</td><td>14</td></tr><tr><td>15</td><td>1 瓶威士忌（1 升装）</td><td>15</td></tr></tbody></table></div></div>
+<h3 id="feelings-感受">Feelings（感受）</h3>
+<ul><li>当你的意见和大多数人不一致时，你是什么感受？</li><li>时间还剩 2 分钟但你们还没达成一致时，你焦虑吗？</li></ul>
+<h3 id="findings-发现">Findings（发现）</h3>
+<ul><li>你们组最终是如何达成一致的？是理性讨论、投票、还是某人强势拍板？</li><li>团队讨论后的答案，比你们个人独立作答更好还是更差？为什么？</li><li>这个游戏和你们团队日常开会有什么相似之处？</li></ul>
+<h3 id="future-未来">Future（未来）</h3>
+<ul><li>回到工作岗位，当你在团队中遇到「意见不合」时，你会怎么调整自己的参与方式？</li><li>你们团队可以建立一个什么样的「决策协议」，让集体决策优于个人决策？</li></ul>
 <hr>
-<h2>2. 核心规则</h2>
-<h3>背景设定（2 min）</h3>
-<h3>个人排序阶段（5 min）</h3>
-<ul>
-<li>每人拿到**物品清单**（见下方）</li>
-<li>**独立**完成排序（1 = 最重要，15 = 最不重要）</li>
-<li>此阶段**禁止讨论**</li>
-</ul>
-<h3>团队共识阶段（15 min）</h3>
-<ul>
-<li>小组必须就**同一份排序清单**达成一致</li>
-<li>每个人都要发言，最终签字确认</li>
-<li>教练计时，最后 2 分钟倒计时提醒</li>
-</ul>
-<h3>专家答案揭晓（5 min）</h3>
-<ul>
-<li>教练公布「沙漠生存专家」的标准答案</li>
-<li>各组计算**偏差分**（个人 vs 专家、团队 vs 专家）</li>
-<li>偏差越小，成绩越好</li>
-</ul>
-<h3>反思讨论（10 min）</h3>
-<ul>
-<li>哪组团队成绩优于个人平均成绩？为什么？</li>
-<li>讨论过程中，是否有人固执己见不愿妥协？</li>
-</ul>
+<h2 id="5-变体适配">5. 变体适配</h2>
+<div class="kv-grid"><div class="kv"><div class="kv-k">场景</div><div class="kv-v">调整方案</div></div><div class="kv"><div class="kv-k">时间紧（20 min）</div><div class="kv-v">去掉个人排序阶段，直接团队讨论</div></div><div class="kv"><div class="kv-k">大型团建（30+人）</div><div class="kv-v">分为 4–6 组，增加「组间辩论」环节——两组交换清单并互相质疑</div></div><div class="kv"><div class="kv-k">线上场景</div><div class="kv-v">用在线白板（Miro/Figma）进行拖拽排序，计时器共享屏幕</div></div><div class="kv"><div class="kv-k">深度培训版</div><div class="kv-v">增加「角色卡」——每人抽取一个角色（CEO/技术专家/新人/悲观者），必须<strong>站在角色立场</strong>发言</div></div><div class="kv"><div class="kv-k">信任加强版</div><div class="kv-v">讨论结束后，每人匿名写下「我觉得今天讨论中贡献最大的是__，因为__」，教练收集朗读</div></div></div>
 <hr>
-<h2>物品清单（供打印）</h2>
-<table>
-<thead><tr>
-<th>编号</th>
-<th>物品</th>
-<th>专家组标准排序（参考）</th>
-</tr></thead><tbody>
-<tr>
-<td>1</td>
-<td>打火机（满油）</td>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-<td>比地图大 2 倍的美军地图</td>
-<td>2</td>
-</tr>
-<tr>
-<td>3</td>
-<td>每人 1 夸脱（约 1 升）水</td>
-<td>3</td>
-</tr>
-<tr>
-<td>4</td>
-<td>24 支口香糖</td>
-<td>4</td>
-</tr>
-<tr>
-<td>5</td>
-<td>1 盒防晒霜</td>
-<td>5</td>
-</tr>
-<tr>
-<td>6</td>
-<td>1 瓶 15 米尼龙绳</td>
-<td>6</td>
-</tr>
-<tr>
-<td>7</td>
-<td>2 个降落伞（红色）</td>
-<td>7</td>
-</tr>
-<tr>
-<td>8</td>
-<td>1 个便携式取暖器</td>
-<td>8</td>
-</tr>
-<tr>
-<td>9</td>
-<td>2 罐脱水食品</td>
-<td>9</td>
-</tr>
-<tr>
-<td>10</td>
-<td>1 个急救包</td>
-<td>10</td>
-</tr>
-<tr>
-<td>11</td>
-<td>1 把 0.45 口径手枪（已上膛）</td>
-<td>11</td>
-</tr>
-<tr>
-<td>12</td>
-<td>2 瓶盐片</td>
-<td>12</td>
-</tr>
-<tr>
-<td>13</td>
-<td>1 份《沙漠可以吃的动物》书</td>
-<td>13</td>
-</tr>
-<tr>
-<td>14</td>
-<td>1 面镜子（15×15 cm）</td>
-<td>14</td>
-</tr>
-<tr>
-<td>15</td>
-<td>1 瓶威士忌（1 升装）</td>
-<td>15</td>
-</tr>
-</tbody></table>
-<h3>Feelings（感受）</h3>
-<ul>
-<li>当你的意见和大多数人不一致时，你是什么感受？</li>
-<li>时间还剩 2 分钟但你们还没达成一致时，你焦虑吗？</li>
-</ul>
-<h3>Findings（发现）</h3>
-<ul>
-<li>你们组最终是如何达成一致的？是理性讨论、投票、还是某人强势拍板？</li>
-<li>团队讨论后的答案，比你们个人独立作答更好还是更差？为什么？</li>
-<li>这个游戏和你们团队日常开会有什么相似之处？</li>
-</ul>
-<h3>Future（未来）</h3>
-<ul>
-<li>回到工作岗位，当你在团队中遇到「意见不合」时，你会怎么调整自己的参与方式？</li>
-<li>你们团队可以建立一个什么样的「决策协议」，让集体决策优于个人决策？</li>
-</ul>
+<h2 id="6-物资清单">6. 物资清单</h2>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物资</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>物品清单（打印）</td><td>每人 1 份</td><td>建议塑封，可重复使用</td></tr><tr><td>专家答案卡</td><td>教练 1 份</td><td>含详细解释</td></tr><tr><td>打分表</td><td>每组 1 份</td><td>用于计算偏差分</td></tr><tr><td>笔</td><td>每人 1 支</td><td></td></tr><tr><td>计时器</td><td>1 个</td><td>手机即可，投屏显示更佳</td></tr><tr><td>白板/flipchart</td><td>1 个</td><td>用于记录讨论要点</td></tr></tbody></table></div></div>
 <hr>
-<h2>5. 变体适配</h2>
-<table>
-<thead><tr>
-<th>场景</th>
-<th>调整方案</th>
-</tr></thead><tbody>
-<tr>
-<td>**时间紧（20 min）**</td>
-<td>去掉个人排序阶段，直接团队讨论</td>
-</tr>
-<tr>
-<td>**大型团建（30+人）**</td>
-<td>分为 4–6 组，增加「组间辩论」环节——两组交换清单并互相质疑</td>
-</tr>
-<tr>
-<td>**线上场景**</td>
-<td>用在线白板（Miro/Figma）进行拖拽排序，计时器共享屏幕</td>
-</tr>
-<tr>
-<td>**深度培训版**</td>
-<td>增加「角色卡」——每人抽取一个角色（CEO/技术专家/新人/悲观者），必须**站在角色立场**发言</td>
-</tr>
-<tr>
-<td>**信任加强版**</td>
-<td>讨论结束后，每人匿名写下「我觉得今天讨论中贡献最大的是__，因为__」，教练收集朗读</td>
-</tr>
-</tbody></table>
-<hr>
-<h2>6. 物资清单</h2>
-<table>
-<thead><tr>
-<th>物资</th>
-<th>数量</th>
-<th>备注</th>
-</tr></thead><tbody>
-<tr>
-<td>物品清单（打印）</td>
-<td>每人 1 份</td>
-<td>建议塑封，可重复使用</td>
-</tr>
-<tr>
-<td>专家答案卡</td>
-<td>教练 1 份</td>
-<td>含详细解释</td>
-</tr>
-<tr>
-<td>打分表</td>
-<td>每组 1 份</td>
-<td>用于计算偏差分</td>
-</tr>
-<tr>
-<td>笔</td>
-<td>每人 1 支</td>
-<td></td>
-</tr>
-<tr>
-<td>计时器</td>
-<td>1 个</td>
-<td>手机即可，投屏显示更佳</td>
-</tr>
-<tr>
-<td>白板/flipchart</td>
-<td>1 个</td>
-<td>用于记录讨论要点</td>
-</tr>
-</tbody></table>
-<hr>
-<h2>教练笔记</h2>
-<ul>
-<li>时间到了还没达成一致 → 这正是好时机："现实中的项目deadline到了，你们交不出共识怎么办？"</li>
-</ul>
-<p>**安全提示**：如有人因意见被忽视而感到不快，复盘时需特别关注，引导团队讨论「如何让每个人都被听见」。</p>
-        </article>
-    </main>
+<h2 id="教练笔记">教练笔记</h2>
+<ul><li>时间到了还没达成一致 → 这正是好时机："现实中的项目deadline到了，你们交不出共识怎么办？"</li></ul>
+<p><strong>安全提示</strong>：如有人因意见被忽视而感到不快，复盘时需特别关注，引导团队讨论「如何让每个人都被听见」。</p>
+</article>
+
+<nav class="pager">
+  <a class="prev" href="marshmallow-challenge.html"><span>上一个 ←</span><div class="p-title">棉花糖挑战（Marshmallow Challenge）</div></a>
+  <a class="next" href="paper-bridge.html"><span>下一个 →</span><div class="p-title">纸桥承重赛（Paper Bridge）</div></a>
+</nav>
+
+<div class="related"><h2>🔗 同类推荐</h2><div class="rel-list"><a class="rel" href="marshmallow-challenge.html"><span class="r-ico">🔧</span><span class="r-body"><span class="r-name">棉花糖挑战（Marshmallow Challenge）</span><span class="r-meta">45–60 分钟 · 4–6 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="paper-bridge.html"><span class="r-ico">🔧</span><span class="r-body"><span class="r-name">纸桥承重赛（Paper Bridge）</span><span class="r-meta">40–55 分钟 · 3–5 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="virtual-escape.html"><span class="r-ico">🔧</span><span class="r-body"><span class="r-name">虚拟密室逃脱（Virtual Escape Room）</span><span class="r-meta">30–45 分钟 · 4–6 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="egg-drop.html"><span class="r-ico">🔧</span><span class="r-body"><span class="r-name">鸡蛋坠落挑战</span><span class="r-meta">45–60 分钟 · 4–6 人/组</span></span><span class="r-go">›</span></a></div></div>
+
+<footer class="foot">
+  <div>🔧 问题解决 · 第 2 / 5 款</div>
+  <div><a href="../../index.html">返回全部 86 款游戏</a></div>
+  <div style="margin-top:6px;opacity:.75">规则与时长以原文档为准，现场执行前请核对场地与道具。</div>
+</footer>
+
+<script>
+(function(){
+  var t=document.getElementById('tbar'),h=document.querySelector('.hero');
+  if(t&&h&&'IntersectionObserver'in window){
+    new IntersectionObserver(function(e){t.classList.toggle('on',!e[0].isIntersecting);},
+      {rootMargin:'-56px 0px 0px 0px'}).observe(h);
+  }
+  var s=document.getElementById('share');
+  if(s)s.addEventListener('click',function(){
+    var d={title:document.title,url:location.href};
+    if(navigator.share){navigator.share(d).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(location.href)
+      .then(function(){s.textContent='✓';setTimeout(function(){s.textContent='↗';},1200);});}
+  });
+  // 仅当表格真的溢出时才提示可横滑
+  function markTables(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      var box=w.querySelector('.table-wrap');
+      if(!box)return;
+      w.classList.toggle('scrollable', box.scrollWidth - box.clientWidth > 4);
+    });
+  }
+  markTables();
+  window.addEventListener('resize',markTables,{passive:true});
+})();
+</script>
 </body>
 </html>

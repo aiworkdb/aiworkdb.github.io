@@ -1,173 +1,109 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>七巧板 - 团建游戏</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <style>
-        .tag { display: inline-block; padding: 0.25rem 0.5rem; margin: 0.25rem; font-size: 0.875rem; border-radius: 0.25rem; }
-        .tag-purpose { background: #e3f2fd; color: #1565c0; }
-        .tag-form { background: #f3e5f5; color: #7b1fa2; }
-        .tag-scene { background: #e8f5e9; color: #2e7d32; }
-        .difficulty { color: #ff9800; }
-        table { width: 100%; border-collapse: collapse; }
-        table th, table td { padding: 0.75rem; border: 1px solid #dee2e6; }
-        table th { background: #f8f9fa; }
-        blockquote { border-left: 4px solid #0077b6; padding-left: 1rem; margin: 1rem 0; }
-        code { background: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
-        pre { background: #f8f9fa; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#dc2626">
+<meta name="description" content="通过资源分散的拼图任务，让参与者体验「信息孤岛」「资源争夺」「领导力缺失」等组织痛点。">
+<title>七巧板 · 团建游戏库</title>
+<link rel="stylesheet" href="../../assets/lib.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<style>:root{--accent:#f87171;--accent-ink:#dc2626;--accent-bg:#f871711f;}</style>
 </head>
 <body>
-    <main class="container">
-        <nav>
-            <ul>
-                <li><a href="../../index.html">← 返回首页</a></li>
-                <li><a href="../../index.html">返回游戏库</a></li>
-            </ul>
-        </nav>
 
-        <article>
-            <hr>
-<p>title: "七巧板"</p>
-<p>author: "AIWorkDB"</p>
-<p>source_url: "https://aiworkdb.github.io/teambuilding/games/leadership/tangram.html"</p>
-<p>cover: "https://placehold.co/1200x630/F7DC6F/black?text=Leadership"</p>
+<header class="topbar">
+  <a class="topbar-btn" href="../../index.html" aria-label="返回游戏库">←</a>
+  <div class="topbar-title" id="tbar">七巧板</div>
+  <button class="topbar-btn" id="share" aria-label="分享">↗</button>
+</header>
+
+<section class="hero" style="--a1:#f87171;--a2:#dc2626;">
+  <span class="hero-cat">👑 领导力</span>
+  <h1>七巧板</h1>
+  
+  <p class="hero-lede">通过资源分散的拼图任务，让参与者体验「信息孤岛」「资源争夺」「领导力缺失」等组织痛点。</p>
+</section>
+
+<div class="facts">
+  <div class="fact"><div class="fact-k">⏱ 时长</div><div class="fact-v">60–90 分钟</div></div>
+  <div class="fact"><div class="fact-k">👥 人数</div><div class="fact-v">3–7 人/组<small>全场 21–49 人</small></div></div>
+  <div class="fact"><div class="fact-k">📍 场地</div><div class="fact-v">室内</div></div>
+  <div class="fact"><div class="fact-k">📊 难度</div><div class="fact-v">★★★</div></div>
+  <div class="fact fact-wide"><div class="fact-k">🧰 道具</div><div class="fact-v">有（七巧板套装 × 7 组）</div></div>
+</div>
+
+<div class="abilities"><span class="ab">信息孤岛</span><span class="ab">资源争夺</span><span class="ab">领导力缺失</span></div>
+<div class="toc"><details><summary>📑 本页目录（12 节）</summary><ol><li class="lv2"><a href="#2-核心规则">2. 核心规则</a></li><li class="lv2"><a href="#3-引导要点">3. 引导要点</a></li><li class="lv2"><a href="#5-变体适配">5. 变体适配</a></li><li class="lv2"><a href="#6-物资清单">6. 物资清单</a></li><li class="lv3"><a href="#准备阶段-5-min">准备阶段（5 min）</a></li><li class="lv3"><a href="#任务进行-40-min">任务进行（40 min）</a></li><li class="lv3"><a href="#最终评分-5-min">最终评分（5 min）</a></li><li class="lv3"><a href="#深度复盘-20-30-min">深度复盘（20–30 min）</a></li><li class="lv3"><a href="#讲解时">讲解时</a></li><li class="lv3"><a href="#feelings-感受">Feelings（感受）</a></li><li class="lv3"><a href="#findings-发现">Findings（发现）</a></li><li class="lv3"><a href="#future-未来">Future（未来）</a></li></ol></details></div>
+<article class="doc">
+<p><strong>团建核心价值</strong>：</p>
+<ul><li>🏝️ 信息孤岛：各拿一块拼图的局部视野困局</li><li>⚖️ 资源争夺：内部竞争还是资源共享的选择</li><li>👑 领导力缺失：没有指挥时团队怎么自救</li></ul>
+<h2 id="2-核心规则">2. 核心规则</h2>
+<h3 id="准备阶段-5-min">准备阶段（5 min）</h3>
+<ol><li>将参与者分成 <strong>7 个小组</strong>，每组 3–7 人。</li><li>各组坐在不同区域（最好隔得远一点）。</li><li>教练宣布：<strong>你们有 40 分钟，完成一系列拼图任务。各组的七巧板数量不同，需要互相交换。</strong></li></ol>
+<h3 id="任务进行-40-min">任务进行（40 min）</h3>
+<ul><li>教练手持<strong>任务书</strong>，各组需要向教练<strong>申请任务</strong>（每次只能申请 1 个）。</li><li>完成任务后，可以向教练<strong>换取分数</strong>。</li><li><strong>关键设定</strong>：</li><ul class="sub"><li>第 1–6 组：只能看到自己的任务，看不到其他组的</li><li>第 7 组（领导组）：可以看到所有组的任务，但没有七巧板</li><li>七巧板<strong>分散在各组</strong>，需要交换才能拼出某些图形</li></ul></ul>
+<h3 id="最终评分-5-min">最终评分（5 min）</h3>
+<ul><li>教练公布各组得分 + 总分</li><li><strong>最优结果</strong>：所有组总分最大化（而非单组分数最高）</li></ul>
+<h3 id="深度复盘-20-30-min">深度复盘（20–30 min）</h3>
+<ul><li>这是整个游戏最有价值的部分</li></ul>
 <hr>
-<h1>七巧板</h1>
-<table>
-<thead><tr>
-<th>**时长**</th>
-<th>60–90 min</th>
-</tr></thead><tbody>
-<tr>
-<td>**场景标签**</td>
-<td>培训 / 工作坊</td>
-</tr>
-<tr>
-<td>**难度**</td>
-<td>⭐⭐⭐</td>
-</tr>
-<tr>
-<td>**道具需求**</td>
-<td>有（七巧板套装 × 7 组）</td>
-</tr>
-</tbody></table>
-<p>**核心目标**：通过资源分散的拼图任务，让参与者体验「信息孤岛」「资源争夺」「领导力缺失」等组织痛点。</p>
+<h2 id="3-引导要点">3. 引导要点</h2>
+<h3 id="讲解时">讲解时</h3>
+<blockquote>「七个组，七份不同的任务，你们有 40 分钟。<br>三条规则：<br>一，任务只能向我来申请，一次一个；<br>二，完成任务来找我换分；<br>三，<strong>七巧板不在你们自己手上，得去换</strong>。<br>我不解释怎么换，也不评价你们换得对不对。」</blockquote>
+<h3 id="feelings-感受">Feelings（感受）</h3>
+<ul><li>当你发现其他组有你需要的板材，但他们不愿意交换时，你是什么感受？</li><li>你们组是专注于自己的任务，还是关注了整体得分？</li></ul>
+<h3 id="findings-发现">Findings（发现）</h3>
+<ul><li>如果重新来一次，你们会在<strong>前 5 分钟</strong>做什么不同的事？</li><li>你们组的「领导者」是自然产生的，还是指定的？TA 做了什么？</li><li>这个游戏和你们公司的<strong>部门墙</strong>、<strong>信息孤岛</strong>有什么相似之处？</li></ul>
+<h3 id="future-未来">Future（未来）</h3>
+<ul><li>回到工作岗位，当你发现「如果和其他部门协作，整体会更好」时，你会主动迈出第一步吗？</li><li>你们团队/公司可以建立一个什么样的机制，让<strong>信息流动</strong>更顺畅？</li></ul>
 <hr>
-<h2>2. 核心规则</h2>
-<h3>准备阶段（5 min）</h3>
-<ol>
-<li>将参与者分成 **7 个小组**，每组 3–7 人。</li>
-<li>各组坐在不同区域（最好隔得远一点）。</li>
-<li>教练宣布：**你们有 40 分钟，完成一系列拼图任务。各组的七巧板数量不同，需要互相交换。**</li>
-</ol>
-<h3>任务进行（40 min）</h3>
-<ul>
-<li>教练手持**任务书**，各组需要向教练**申请任务**（每次只能申请 1 个）。</li>
-<li>完成任务后，可以向教练**换取分数**。</li>
-<li>**关键设定**：</li>
-<li>第 1–6 组：只能看到自己的任务，看不到其他组的</li>
-<li>第 7 组（领导组）：可以看到所有组的任务，但没有七巧板</li>
-<li>七巧板**分散在各组**，需要交换才能拼出某些图形</li>
-</ul>
-<h3>最终评分（5 min）</h3>
-<ul>
-<li>教练公布各组得分 + 总分</li>
-<li>**最优结果**：所有组总分最大化（而非单组分数最高）</li>
-</ul>
-<h3>深度复盘（20–30 min）</h3>
-<ul>
-<li>这是整个游戏最有价值的部分</li>
-</ul>
+<h2 id="5-变体适配">5. 变体适配</h2>
+<div class="kv-grid"><div class="kv"><div class="kv-k">场景</div><div class="kv-v">调整方案</div></div><div class="kv"><div class="kv-k">人数少（12–20人）</div><div class="kv-v">改为 4 组，用 4 套简化七巧板</div></div><div class="kv"><div class="kv-k">时间紧（45 min）</div><div class="kv-v">减少任务数量，压缩为 25 分钟</div></div><div class="kv"><div class="kv-k">大型培训（50+人）</div><div class="kv-v">做 2 轮，第 2 轮让第 1 轮的「领导组」分享经验</div></div><div class="kv"><div class="kv-k">线上场景</div><div class="kv-v">用在线拼图工具（如 Miro 的拼图插件），分组用 breakout rooms</div></div><div class="kv"><div class="kv-k">深度领导力版</div><div class="kv-v">增加「每 10 分钟更换一次领导组」规则</div></div></div>
 <hr>
-<h2>3. 引导要点</h2>
-<h3>讲解时</h3>
-<h3>Feelings（感受）</h3>
-<ul>
-<li>当你发现其他组有你需要的板材，但他们不愿意交换时，你是什么感受？</li>
-<li>你们组是专注于自己的任务，还是关注了整体得分？</li>
-</ul>
-<h3>Findings（发现）</h3>
-<ul>
-<li>如果重新来一次，你们会在**前 5 分钟**做什么不同的事？</li>
-<li>你们组的「领导者」是自然产生的，还是指定的？TA 做了什么？</li>
-<li>这个游戏和你们公司的**部门墙**、**信息孤岛**有什么相似之处？</li>
-</ul>
-<h3>Future（未来）</h3>
-<ul>
-<li>回到工作岗位，当你发现「如果和其他部门协作，整体会更好」时，你会主动迈出第一步吗？</li>
-<li>你们团队/公司可以建立一个什么样的机制，让**信息流动**更顺畅？</li>
-</ul>
-<hr>
-<h2>5. 变体适配</h2>
-<table>
-<thead><tr>
-<th>场景</th>
-<th>调整方案</th>
-</tr></thead><tbody>
-<tr>
-<td>**人数少（12–20人）**</td>
-<td>改为 4 组，用 4 套简化七巧板</td>
-</tr>
-<tr>
-<td>**时间紧（45 min）**</td>
-<td>减少任务数量，压缩为 25 分钟</td>
-</tr>
-<tr>
-<td>**大型培训（50+人）**</td>
-<td>做 2 轮，第 2 轮让第 1 轮的「领导组」分享经验</td>
-</tr>
-<tr>
-<td>**线上场景**</td>
-<td>用在线拼图工具（如 Miro 的拼图插件），分组用 breakout rooms</td>
-</tr>
-<tr>
-<td>**深度领导力版**</td>
-<td>增加「每 10 分钟更换一次领导组」规则</td>
-</tr>
-</tbody></table>
-<hr>
-<h2>6. 物资清单</h2>
-<table>
-<thead><tr>
-<th>物资</th>
-<th>数量</th>
-<th>备注</th>
-</tr></thead><tbody>
-<tr>
-<td>七巧板套装</td>
-<td>7 套</td>
-<td>每套 5 块板（不同形状），可定制购买</td>
-</tr>
-<tr>
-<td>任务书（打印）</td>
-<td>教练 1 份</td>
-<td>含所有组的任务</td>
-</tr>
-<tr>
-<td>任务卡（每组）</td>
-<td>7 份</td>
-<td>各组只能看到自己的任务</td>
-</tr>
-<tr>
-<td>记分表</td>
-<td>教练 1 份</td>
-<td>记录各组得分</td>
-</tr>
-<tr>
-<td>白板/翻转板</td>
-<td>1 个</td>
-<td>用于复盘时画图解释</td>
-</tr>
-<tr>
-<td>计时器</td>
-<td>1 个</td>
-<td>手机即可，投屏更佳</td>
-</tr>
-</tbody></table>
-        </article>
-    </main>
+<h2 id="6-物资清单">6. 物资清单</h2>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物资</th><th>数量</th><th>备注</th></tr></thead><tbody><tr><td>七巧板套装</td><td>7 套</td><td>每套 5 块板（不同形状），可定制购买</td></tr><tr><td>任务书（打印）</td><td>教练 1 份</td><td>含所有组的任务</td></tr><tr><td>任务卡（每组）</td><td>7 份</td><td>各组只能看到自己的任务</td></tr><tr><td>记分表</td><td>教练 1 份</td><td>记录各组得分</td></tr><tr><td>白板/翻转板</td><td>1 个</td><td>用于复盘时画图解释</td></tr><tr><td>计时器</td><td>1 个</td><td>手机即可，投屏更佳</td></tr></tbody></table></div></div>
+</article>
+
+<nav class="pager">
+  <a class="prev disabled" href="#"><span>上一个</span><div class="p-title">—</div></a>
+  <a class="next" href="crisis-briefing.html"><span>下一个 →</span><div class="p-title">危机发布会（Crisis Briefing）</div></a>
+</nav>
+
+<div class="related"><h2>🔗 同类推荐</h2><div class="rel-list"><a class="rel" href="crisis-briefing.html"><span class="r-ico">👑</span><span class="r-body"><span class="r-name">危机发布会（Crisis Briefing）</span><span class="r-meta">50–70 分钟 · 5–8 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="silent-leader.html"><span class="r-ico">👑</span><span class="r-body"><span class="r-name">沉默领袖</span><span class="r-meta">30–40 分钟 · 4–8 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="red-black-game.html"><span class="r-ico">👑</span><span class="r-body"><span class="r-name">红黑游戏（Red-Black Game）</span><span class="r-meta">45–60 分钟 · 6–10 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="resource-negotiation.html"><span class="r-ico">👑</span><span class="r-body"><span class="r-name">资源谈判局（Resource Negotiation）</span><span class="r-meta">60–80 分钟 · 3 人/组</span></span><span class="r-go">›</span></a></div></div>
+
+<footer class="foot">
+  <div>👑 领导力 · 第 1 / 5 款</div>
+  <div><a href="../../index.html">返回全部 86 款游戏</a></div>
+  <div style="margin-top:6px;opacity:.75">规则与时长以原文档为准，现场执行前请核对场地与道具。</div>
+</footer>
+
+<script>
+(function(){
+  var t=document.getElementById('tbar'),h=document.querySelector('.hero');
+  if(t&&h&&'IntersectionObserver'in window){
+    new IntersectionObserver(function(e){t.classList.toggle('on',!e[0].isIntersecting);},
+      {rootMargin:'-56px 0px 0px 0px'}).observe(h);
+  }
+  var s=document.getElementById('share');
+  if(s)s.addEventListener('click',function(){
+    var d={title:document.title,url:location.href};
+    if(navigator.share){navigator.share(d).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(location.href)
+      .then(function(){s.textContent='✓';setTimeout(function(){s.textContent='↗';},1200);});}
+  });
+  // 仅当表格真的溢出时才提示可横滑
+  function markTables(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      var box=w.querySelector('.table-wrap');
+      if(!box)return;
+      w.classList.toggle('scrollable', box.scrollWidth - box.clientWidth > 4);
+    });
+  }
+  markTables();
+  window.addEventListener('resize',markTables,{passive:true});
+})();
+</script>
 </body>
 </html>

@@ -1,523 +1,1261 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>团建 & 培训游戏库</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #1a1a2e; }
-    a { text-decoration: none; color: inherit; }
-    a:hover { text-decoration: none; }
-    
-    .hero { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 50%, #1a1a2e 100%); color: #fff; padding: 60px 20px 50px; text-align: center; }
-    .hero h1 { font-size: 2.2em; margin-bottom: 12px; }
-    .hero p { font-size: 1.05em; opacity: 0.82; max-width: 600px; margin: 0 auto; line-height: 1.6; }
-    
-    .stats { display: flex; justify-content: center; gap: 32px; margin-top: 32px; flex-wrap: wrap; }
-    .stat { text-align: center; }
-    .stat-n { font-size: 2em; font-weight: 700; color: #5b8cfe; }
-    .stat-l { font-size: 0.82em; opacity: 0.7; margin-top: 2px; }
-    
-    .container { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
-    
-    .section { margin-top: 48px; }
-    .section-title { font-size: 1.25em; font-weight: 700; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid #e2e6ee; }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-    
-    .card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: box-shadow 0.2s, transform 0.15s; }
-    .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
-    .card-icon { font-size: 1.6em; margin-bottom: 8px; }
-    .card-title { font-size: 1em; font-weight: 600; margin-bottom: 6px; color: #1a1a2e; }
-    .card-desc { font-size: 0.85em; color: #555; line-height: 1.55; }
-    .card-tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
-    .tag { font-size: 0.75em; background: #eef2ff; color: #3366cc; padding: 2px 8px; border-radius: 4px; }
-    
-    .flow-card { background: #fff; border-radius: 10px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; }
-    .flow-info h3 { font-size: 1em; font-weight: 600; margin-bottom: 4px; }
-    .flow-info p { font-size: 0.85em; color: #555; }
-    .flow-arrow { font-size: 1.2em; color: #5b8cfe; }
-    
-    .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-    .tool-card { background: #fff; border-radius: 10px; padding: 16px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 12px; }
-    .tool-icon { font-size: 1.3em; }
-    .tool-name { font-size: 0.9em; font-weight: 600; }
-    
-    .search-box { margin: 24px 0 16px; }
-    .search-box input { width: 100%; padding: 12px 16px; border: 1px solid #d0d5e0; border-radius: 8px; font-size: 0.95em; background: #fff; }
-    .search-box input:focus { outline: none; border-color: #5b8cfe; box-shadow: 0 0 0 3px rgba(91,140,254,0.18); }
-    
-    .filters { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
-    .filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filter-label { font-size: 0.85em; color: #666; margin-right: 4px; line-height: 32px; }
-    .filter-btn { padding: 6px 14px; border: 1px solid #d0d5e0; border-radius: 6px; background: #fff; color: #555; font-size: 0.85em; cursor: pointer; transition: all 0.2s; }
-    .filter-btn:hover { border-color: #5b8cfe; color: #5b8cfe; }
-    .filter-btn.active { background: #5b8cfe; color: #fff; border-color: #5b8cfe; }
-    
-    .footer { text-align: center; padding: 32px 20px; color: #888; font-size: 0.85em; }
-    .footer a { color: #5b8cfe; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1120">
+<meta name="description" content="86 款团建游戏库：按人数、时长、场地、团队能力四维筛选，含完整规则、引导要点与 4F 复盘框架，支持在线直接玩。">
+<title>团建 &amp; 培训游戏库 · 按人数·时长·场地选游戏</title>
+<link rel="stylesheet" href="assets/lib.css">
+<link rel="stylesheet" href="assets/home.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 
-<div class="hero">
-  <h1>🏕️ 团建 & 培训游戏库</h1>
-  <p>面向培训老师、团建教练的实用游戏与流程资源库。所有游戏统一收录，通过标签区分使用场景。</p>
-  <div class="stats">
-    <div class="stat"><div class="stat-n">33</div><div class="stat-l">款游戏</div></div>
-    <div class="stat"><div class="stat-n">4</div><div class="stat-l">套流程方案</div></div>
-    <div class="stat"><div class="stat-n">4</div><div class="stat-l">个教练工具</div></div>
+<header class="h-hero">
+ <div class="h-hero-in">
+  <h1>团建 &amp; 培训游戏库</h1>
+  <p class="sub">先定团队要练什么，再选玩什么。<br>按人数、时长、场地筛选，每款含完整规则与复盘框架。</p>
+  <div class="h-stats">
+    <div><b>86</b><i>款游戏</i></div>
+    <div><b>10</b><i>个分类</i></div>
+    <div><b>6</b><i>套流程</i></div>
+    <div><b>8</b><i>款在线可玩</i></div>
+  </div>
+  <div class="quick" id="quick">
+    <button data-preset="ice">🧊 10 分钟破冰</button>
+    <button data-preset="small">👥 30 人以内</button>
+    <button data-preset="long">🕐 1 小时以上</button>
+    <button data-preset="indoor">🏢 纯室内</button>
+    <button data-preset="jubensha">🎭 剧本杀</button>
+    <button data-preset="boardgame">🎲 桌游改编</button>
+  </div>
+  <a class="h-guide" href="guide.html">
+    <span class="hg-ico">📖</span>
+    <span class="hg-t"><b>第一次带团建？</b>读这份 5 分钟指南：怎么选、怎么带、怎么收</span>
+    <span class="hg-a">›</span>
+  </a>
+ </div>
+</header>
+
+<div class="filters">
+  <div class="f-inner">
+    <div class="search">
+      <span class="ico">🔍</span>
+      <input id="q" type="search" placeholder="搜游戏名、能力标签、场景…" autocomplete="off" enterkeyhint="search">
+      <button class="clr" id="clr" aria-label="清空">✕</button>
+    </div>
+    <div class="frow" id="f-ppl">
+      <span class="lab">人数</span>
+      <button data-v="">不限</button>
+      <button data-v="u10">≤10</button>
+      <button data-v="10-30">10–30</button>
+      <button data-v="30-60">30–60</button>
+      <button data-v="60p">60+</button>
+    </div>
+    <div class="frow" id="f-dur">
+      <span class="lab">时长</span>
+      <button data-v="">不限</button>
+      <button data-v="d15">≤15 分</button>
+      <button data-v="d30">15–30</button>
+      <button data-v="d60">30–60</button>
+      <button data-v="d120">60–120</button>
+      <button data-v="d120p">120+</button>
+    </div>
+    <div class="f-more" id="f-more">
+      <div class="frow" id="f-ven">
+        <span class="lab">场地</span>
+        <button data-v="">不限</button>
+        <button data-v="indoor">室内</button>
+        <button data-v="outdoor">户外</button>
+        <button data-v="both">室内外都行</button>
+      </div>
+      <div class="frow" id="f-ab">
+        <span class="lab">能力</span>
+        <button data-v="">不限</button>
+      <button data-v="分工协作">分工协作</button>
+      <button data-v="团队协作">团队协作</button>
+      <button data-v="沟通表达">沟通表达</button>
+      <button data-v="压力释放">压力释放</button>
+      <button data-v="名字记忆">名字记忆</button>
+      <button data-v="即兴表达">即兴表达</button>
+      <button data-v="表演释放">表演释放</button>
+      <button data-v="主动确认">主动确认</button>
+      <button data-v="信息失真">信息失真</button>
+      <button data-v="信任建立">信任建立</button>
+      <button data-v="归因训练">归因训练</button>
+      <button data-v="风险决策">风险决策</button>
+      <button data-v="节奏统一">节奏统一</button>
+      <button data-v="快速共识">快速共识</button>
+      </div>
+    </div>
+    <button class="f-toggle" id="f-toggle" aria-expanded="false">更多筛选 ⌄</button>
+    <div class="f-count">
+      <span>共 <b id="hits">86</b> 款</span>
+      <span id="hint"></span>
+      <button class="reset" id="reset">清空条件</button>
+    </div>
   </div>
 </div>
 
-<div class="container">
-
-  <div class="search-box">
-    <input type="text" id="search" placeholder="搜索游戏名称、目的标签或场景…" oninput="filterCards()">
+<main class="h-main" id="list">
+<section class="cat" data-cat="icebreaker" id="cat-icebreaker">
+  <div class="cat-h"><span class="c-ico">🧊</span>破冰热场<span class="c-n">9 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/icebreaker/two-truths-one-lie.html"
+   data-p="5,30" data-d="10,20"
+   data-v="indoor" data-u="total" data-ab="自我披露|观察判断|深入了解"
+   data-s="两真一假（two truths one lie） 快速破冰、让参与者记住彼此、发现共同点 破冰热场 自我披露 观察判断 深入了解"
+   style="--cc:#38bdf8">
+  <div class="gc-name">两真一假（Two Truths One Lie）</div>
+  <div class="gc-desc">快速破冰、让参与者记住彼此、发现共同点</div>
+  <div class="gc-meta"><span>10–20 分钟</span><span>5–30 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>自我披露</span><span>观察判断</span><span>深入了解</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/human-bingo.html"
+   data-p="8,50" data-d="5,15"
+   data-v="indoor" data-u="total" data-ab="主动搭讪|共同点发现|名字记忆"
+   data-s="人类宾果（human bingo） 快速破冰、让参与者记住彼此名字、发现共同点 破冰热场 主动搭讪 共同点发现 名字记忆"
+   style="--cc:#38bdf8">
+  <div class="gc-name">人类宾果（Human Bingo）</div>
+  <div class="gc-desc">快速破冰、让参与者记住彼此名字、发现共同点</div>
+  <div class="gc-meta"><span>5–15 分钟</span><span>8–50 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>主动搭讪</span><span>共同点发现</span><span>名字记忆</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/line-master.html"
+   data-p="6,20" data-d="30,50"
+   data-v="indoor" data-u="total" data-ab="即兴表达|表演释放|默契接梗"
+   data-s="台词之王（团队赛版） 降低社交压力、练习即兴表达、团队欢笑连接 破冰热场 即兴表达 表演释放 默契接梗"
+   style="--cc:#38bdf8">
+  <div class="gc-name">台词之王（团队赛版）</div>
+  <div class="gc-desc">降低社交压力、练习即兴表达、团队欢笑连接</div>
+  <div class="gc-meta"><span>30–50 分钟</span><span>6–20 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>即兴表达</span><span>表演释放</span><span>默契接梗</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/name-chain.html"
+   data-p="6,40" data-d="5,10"
+   data-v="both" data-u="total" data-ab="名字记忆|专注倾听|快速热身"
+   data-s="名字接龙（name chain） 记住彼此名字、降低陌生感、快速热身 破冰热场 名字记忆 专注倾听 快速热身"
+   style="--cc:#38bdf8">
+  <div class="gc-name">名字接龙（Name Chain）</div>
+  <div class="gc-desc">记住彼此名字、降低陌生感、快速热身</div>
+  <div class="gc-meta"><span>5–10 分钟</span><span>6–40 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>名字记忆</span><span>专注倾听</span><span>快速热身</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/celestial-gala.html"
+   data-p="4,8" data-d="20,35"
+   data-v="indoor" data-u="total" data-ab="压力释放|社交观察|隔阂消融"
+   data-s="天庭年会（celestial gala）—— 团建改造版 在欢笑中打破隔阂、释放工作压力、观察团队社交模式 破冰热场 压力释放 社交观察 隔阂消融"
+   style="--cc:#38bdf8">
+  <div class="gc-name">天庭年会（Celestial Gala）—— 团建改造版</div>
+  <div class="gc-desc">在欢笑中打破隔阂、释放工作压力、观察团队社交模式</div>
+  <div class="gc-meta"><span>20–35 分钟</span><span>4–8 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>压力释放</span><span>社交观察</span><span>隔阂消融</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/never-have-i-ever.html"
+   data-p="6,12" data-d="15,25"
+   data-v="indoor" data-u="total" data-ab="身份标签|低风险暴露|观察视角"
+   data-s="我从未（never have i ever） 用低风险的话题建立初步信任，让&quot;没说过话的人&quot;也开口 破冰热场 身份标签 低风险暴露 观察视角"
+   style="--cc:#38bdf8">
+  <div class="gc-name">我从未（Never Have I Ever）</div>
+  <div class="gc-desc">用低风险的话题建立初步信任，让&quot;没说过话的人&quot;也开口</div>
+  <div class="gc-meta"><span>15–25 分钟</span><span>6–12 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>身份标签</span><span>低风险暴露</span><span>观察视角</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/explorer-journal.html"
+   data-p="6,16" data-d="30,45"
+   data-v="indoor" data-u="total" data-ab="分享表达|倾听反馈|自我暴露"
+   data-s="探险家日记（分享引导版） 促进成员相互了解、练习倾听与表达、建立心理安全 破冰热场 分享表达 倾听反馈 自我暴露"
+   style="--cc:#38bdf8">
+  <div class="gc-name">探险家日记（分享引导版）</div>
+  <div class="gc-desc">促进成员相互了解、练习倾听与表达、建立心理安全</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>6–16 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>分享表达</span><span>倾听反馈</span><span>自我暴露</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/blind-box-myth.html"
+   data-p="4,8" data-d="30,40"
+   data-v="indoor" data-u="group" data-ab="谈判交易|共赢思维|价值判断"
+   data-s="盲盒神话（团建改造版） 通过交易谈判，体验「沟通」和「共赢思维」——不是零和游戏。 破冰热场 谈判交易 共赢思维 价值判断"
+   style="--cc:#38bdf8">
+  <div class="gc-name">盲盒神话（团建改造版）</div>
+  <div class="gc-desc">通过交易谈判，体验「沟通」和「共赢思维」——不是零和游戏。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>谈判交易</span><span>共赢思维</span><span>价值判断</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/food-challenge.html"
+   data-p="4,7" data-d="30,40"
+   data-v="indoor" data-u="group" data-ab="分工协作|接受不完美|欢乐竞争"
+   data-s="美食挑战赛（团建改造版） 在爆笑中体验「分工协作」和「接受不完美结果」——团队聚餐前的完美热身。 破冰热场 分工协作 接受不完美 欢乐竞争"
+   style="--cc:#38bdf8">
+  <div class="gc-name">美食挑战赛（团建改造版）</div>
+  <div class="gc-desc">在爆笑中体验「分工协作」和「接受不完美结果」——团队聚餐前的完美热身。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>4–7 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>分工协作</span><span>接受不完美</span><span>欢乐竞争</span></div>
+</a>
   </div>
-  
-  <div class="filters">
-    <div class="filter-group">
-      <span class="filter-label">分类：</span>
-      <button class="filter-btn active" onclick="toggleFilter('category', 'all', this)">全部</button>
-      <button class="filter-btn" onclick="toggleFilter('category', 'icebreaker', this)">🧊 破冰</button>
-      <button class="filter-btn" onclick="toggleFilter('category', 'communication', this)">💬 沟通</button>
-      <button class="filter-btn" onclick="toggleFilter('category', 'collaboration', this)">🤝 协作</button>
-      <button class="filter-btn" onclick="toggleFilter('category', 'trust', this)">🔐 信任</button>
-      <button class="filter-btn" onclick="toggleFilter('category', 'leadership', this)">👑 领导力</button>
-      <button class="filter-btn" onclick="toggleFilter('category', 'creativity', this)">💡 创意</button>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">人数：</span>
-      <button class="filter-btn active" onclick="toggleFilter('people', 'all', this)">全部</button>
-      <button class="filter-btn" onclick="toggleFilter('people', 'small', this)"><10人</button>
-      <button class="filter-btn" onclick="toggleFilter('people', 'medium', this)">10-20人</button>
-      <button class="filter-btn" onclick="toggleFilter('people', 'large', this)">20+人</button>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">时长：</span>
-      <button class="filter-btn active" onclick="toggleFilter('duration', 'all', this)">全部</button>
-      <button class="filter-btn" onclick="toggleFilter('duration', 'short', this)"><30min</button>
-      <button class="filter-btn" onclick="toggleFilter('duration', 'medium', this)">30-60min</button>
-      <button class="filter-btn" onclick="toggleFilter('duration', 'long', this)">60+min</button>
-    </div>
+</section>
+
+<section class="cat" data-cat="communication" id="cat-communication">
+  <div class="cat-h"><span class="c-ico">💬</span>沟通表达<span class="c-n">8 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/communication/telephone-game.html"
+   data-p="5,10" data-d="15,25"
+   data-v="indoor" data-u="group" data-ab="信息失真|精准传达|传话纪律"
+   data-s="传话游戏（电话游戏） 用幽默的方式让参与者亲身体验「信息在传递过程中的失真」，理解精准沟通的重要性。 沟通表达 信息失真 精准传达 传话纪律"
+   style="--cc:#a78bfa">
+  <div class="gc-name">传话游戏（电话游戏）</div>
+  <div class="gc-desc">用幽默的方式让参与者亲身体验「信息在传递过程中的失真」，理解精准沟通的重要性。</div>
+  <div class="gc-meta"><span>15–25 分钟</span><span>5–10 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>信息失真</span><span>精准传达</span><span>传话纪律</span></div>
+</a>
+<a class="gcard" href="games/communication/you-draw-i-guess.html"
+   data-p="6,30" data-d="20,30"
+   data-v="both" data-u="total" data-ab="轮流上场|抢答节奏|护队友"
+   data-s="你画我猜（pictionary） 让团队在低压力下暴露「我以为我表达清楚了」和「我以为我听懂了」之间的落差 沟通表达 轮流上场 抢答节奏 护队友"
+   style="--cc:#a78bfa">
+  <div class="gc-name">你画我猜（Pictionary）</div>
+  <div class="gc-desc">让团队在低压力下暴露「我以为我表达清楚了」和「我以为我听懂了」之间的落差</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>6–30 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>轮流上场</span><span>抢答节奏</span><span>护队友</span></div>
+</a>
+<a class="gcard" href="games/communication/draw-guess.html"
+   data-p="2,4" data-d="20,30"
+   data-v="indoor" data-u="group" data-ab="精准表达|主动确认|换位思考"
+   data-s="你说我画 让参与者体验「我以为我说清楚了，但对方理解完全不同」的沟通困境，学习精准表达和主动确认。 沟通表达 精准表达 主动确认 换位思考"
+   style="--cc:#a78bfa">
+  <div class="gc-name">你说我画</div>
+  <div class="gc-desc">让参与者体验「我以为我说清楚了，但对方理解完全不同」的沟通困境，学习精准表达和主动确认。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>2–4 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>精准表达</span><span>主动确认</span><span>换位思考</span></div>
+</a>
+<a class="gcard" href="games/communication/animal-detective.html"
+   data-p="2,6" data-d="30,45"
+   data-v="indoor" data-u="group" data-ab="信息共享|群体决策|倾听提问"
+   data-s="动物城大侦探（团建改造版） 通过信息收集和团队推理，体验「信息共享」和「群体决策」的协作挑战。 沟通表达 信息共享 群体决策 倾听提问"
+   style="--cc:#a78bfa">
+  <div class="gc-name">动物城大侦探（团建改造版）</div>
+  <div class="gc-desc">通过信息收集和团队推理，体验「信息共享」和「群体决策」的协作挑战。</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>2–6 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>信息共享</span><span>群体决策</span><span>倾听提问</span></div>
+</a>
+<a class="gcard" href="games/communication/time-agents.html"
+   data-p="6,12" data-d="30,45"
+   data-v="indoor" data-u="total" data-ab="逻辑推理|信息拼图|表达说服"
+   data-s="时间特工（团队推理版） 锻炼信息分享、逻辑推理、信任判断 沟通表达 逻辑推理 信息拼图 表达说服"
+   style="--cc:#a78bfa">
+  <div class="gc-name">时间特工（团队推理版）</div>
+  <div class="gc-desc">锻炼信息分享、逻辑推理、信任判断</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>6–12 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>逻辑推理</span><span>信息拼图</span><span>表达说服</span></div>
+</a>
+<a class="gcard" href="games/communication/drawing-relay.html"
+   data-p="4,8" data-d="20,30"
+   data-v="indoor" data-u="group" data-ab="意图理解|传承与创新|交接规范"
+   data-s="画图接龙 让参与者体验「接手他人的工作」时，如何在「尊重原意」和「加入自己的创意」之间找到平衡。 沟通表达 意图理解 传承与创新 交接规范"
+   style="--cc:#a78bfa">
+  <div class="gc-name">画图接龙</div>
+  <div class="gc-desc">让参与者体验「接手他人的工作」时，如何在「尊重原意」和「加入自己的创意」之间找到平衡。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>意图理解</span><span>传承与创新</span><span>交接规范</span></div>
+</a>
+<a class="gcard" href="games/communication/blind-polygon.html"
+   data-p="8,24" data-d="30,45"
+   data-v="both" data-u="total" data-ab="精准沟通|自发分工|主动确认"
+   data-s="盲人方阵（blind polygon） 体验精准沟通、角色自发分工、在信息不对称下协作 沟通表达 精准沟通 自发分工 主动确认"
+   style="--cc:#a78bfa">
+  <div class="gc-name">盲人方阵（Blind Polygon）</div>
+  <div class="gc-desc">体验精准沟通、角色自发分工、在信息不对称下协作</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>8–24 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>精准沟通</span><span>自发分工</span><span>主动确认</span></div>
+</a>
+<a class="gcard" href="games/communication/rumor-factory.html"
+   data-p="8,15" data-d="30,45"
+   data-v="indoor" data-u="group" data-ab="信息失真|信任建立|归因训练"
+   data-s="谣言工厂（沟通信任版） 体验信息传递失真、练习主动确认、建立沟通规范 沟通表达 信息失真 信任建立 归因训练"
+   style="--cc:#a78bfa">
+  <div class="gc-name">谣言工厂（沟通信任版）</div>
+  <div class="gc-desc">体验信息传递失真、练习主动确认、建立沟通规范</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>8–15 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>信息失真</span><span>信任建立</span><span>归因训练</span></div>
+</a>
   </div>
+</section>
 
-  <!-- 游戏库 -->
-  <div class="section">
-    <div class="section-title">🎲 游戏库（按目的分类）</div>
-    
-    <p style="font-size:0.9em;color:#555;margin-bottom:16px;">点击游戏名称查看完整规则、引导要点和复盘问题。</p>
-    
-    <!-- 破冰热场 -->
-    <div style="font-weight:600;color:#555;margin:18px 0 10px;">🧊 破冰热场（icebreaker）</div>
-    <div class="grid" id="grid-icebreaker">
-      <a href="games/icebreaker/human-bingo.html" class="card" data-people="small" data-duration="short">
-        <div class="card-icon">🎯</div>
-        <div class="card-title">人类宾果</div>
-        <div class="card-desc">零道具、任意人数、即拿即用。最经典的破冰游戏。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">5–15 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/icebreaker/two-truths-one-lie.html" class="card" data-people="small" data-duration="short">
-        <div class="card-icon">🤥</div>
-        <div class="card-title">两真一假</div>
-        <div class="card-desc">深度了解彼此、笑声多，适合培训开场。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">10–20 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/icebreaker/name-chain.html" class="card" data-people="small" data-duration="short">
-        <div class="card-icon">🔗</div>
-        <div class="card-title">名字接龙</div>
-        <div class="card-desc">超快热身，记住所有人的名字，能量瞬间拉满。</div>
-        <div class="card-tags"><span class="tag">室内/户外</span><span class="tag">5–10 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/icebreaker/blind-box-myth.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">📦</div>
-        <div class="card-title">盲盒神话（改造版）</div>
-        <div class="card-desc">卡牌交易游戏团建改造版，体验分享与共赢思维。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/icebreaker/food-challenge.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🍳</div>
-        <div class="card-title">美食挑战赛（改造版）</div>
-        <div class="card-desc">厨房竞赛游戏改造，在欢笑中体验分工与接纳不完美。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/icebreaker/explorer-journal.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🗺️</div>
-        <div class="card-title">探险家手记（改造版）</div>
-        <div class="card-desc">旅行主题卡牌游戏改造，在分享经历中加深团队了解。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/icebreaker/line-master.html" class="card" data-people="medium" data-duration="short">
-        <div class="card-icon">🎭</div>
-        <div class="card-title">台词之王（改造版）</div>
-        <div class="card-desc">用电影台词猜谜的聚会游戏改造，轻松破冰、笑声不断。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">20–30 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/icebreaker/celestial-gala.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🎉</div>
-        <div class="card-title">天庭年会（改造版）</div>
-        <div class="card-desc">职场主题派对游戏改造，在欢笑中破冰、释放压力、观察团队社交模式。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">20–35 min</span><span class="tag">团建/年会</span></div>
-      </a>
-    </div>
-    
-    <!-- 沟通表达 -->
-    <div style="font-weight:600;color:#555;margin:18px 0 10px;">💬 沟通表达（communication）</div>
-    <div class="grid" id="grid-communication">
-      <a href="games/communication/blind-polygon.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">📐</div>
-        <div class="card-title">盲人方阵</div>
-        <div class="card-desc">经典沟通游戏，复盘价值极高，培训首选。</div>
-        <div class="card-tags"><span class="tag">室内/户外</span><span class="tag">30–45 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/communication/telephone-game.html" class="card" data-people="medium" data-duration="short">
-        <div class="card-icon">📞</div>
-        <div class="card-title">传话游戏</div>
-        <div class="card-desc">用笑声看见「信息失真」的真相，理解精准沟通的重要性。</div>
-        <div class="card-tags"><span class="tag">室内/户外</span><span class="tag">15–25 min</span><span class="tag">培训/团建</span></div>
-      </a>
-      <a href="games/communication/draw-guess.html" class="card" data-people="small" data-duration="medium">
-        <div class="card-icon">✏️</div>
-        <div class="card-title">你说我画</div>
-        <div class="card-desc">一人描述一人画图，看懂「表达」和「倾听」之间的鸿沟。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">20–30 min</span><span class="tag">培训/团建</span></div>
-      </a>
-      <a href="games/communication/drawing-relay.html" class="card" data-people="small" data-duration="medium">
-        <div class="card-icon">🎨</div>
-        <div class="card-title">画图接龙</div>
-        <div class="card-desc">每人画 10 秒接力完成一幅画，看懂接力协作与放任控制欲的平衡。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">20–30 min</span><span class="tag">团建/培训</span></div>
-      </a>
-      <a href="games/communication/animal-detective.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🕵️</div>
-        <div class="card-title">动物城大侦探（改造版）</div>
-        <div class="card-desc">将派对推理游戏转化为沟通表达 + 团队协作的团建游戏。</div>
-        <div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span><span class="tag">培训/团建</span></div>
-      </a>
-      <a href="games/communication/time-agents.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">⏰</div><div class="card-title">时间特工（改造版）</div><div class="card-desc">在心理博弈中体验信任沟通，适合中高层管理团队。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
-      </a>
-      <a href="games/communication/rumor-factory.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">📢</div><div class="card-title">谣言工厂（改造版）</div><div class="card-desc">用"传递失真"讨论沟通规范，直观看到信息是怎么失真的。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
-      </a>
-    <!-- 团队协作 -->
-    <div style="font-weight:600;color:#555;margin:18px 0 10px;">🤝 团队协作（collaboration）</div>
-    <div class="grid" id="grid-collaboration">
-      <a href="games/collaboration/human-knot.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🧩</div><div class="card-title">人结</div><div class="card-desc">在"解不开"中体验真实协作，复盘价值极高。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">30–45 min</span></div>
-      </a>
-      <a href="games/collaboration/eyebrow-stick.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">📏</div><div class="card-title">齐眉棍</div><div class="card-desc">"每个人都对，但结果错了"的经典协作困境。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–30 min</span></div>
-      </a>
-      <a href="games/collaboration/ball-relay.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">⚽</div><div class="card-title">珠行万里</div><div class="card-desc">一个环节失误全体重来，体验责任共担。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–30 min</span></div>
-      </a>
-      <a href="games/collaboration/wind-fire-wheel.html" class="card" data-people="large" data-duration="medium">
-        <div class="card-icon">🌪️</div><div class="card-title">风火轮</div><div class="card-desc">报纸履带接力，在"一定会坏"中体验一起修。</div><div class="card-tags"><span class="tag">户外</span><span class="tag">30–40 min</span></div>
-      </a>
-      <a href="games/collaboration/island-survival.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🏝️</div><div class="card-title">岛屿求生（改造版）</div><div class="card-desc">资源有限下的团队协作决策桌游改造。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-      <a href="games/collaboration/magic-academy.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🧙</div><div class="card-title">魔法学院（改造版）</div><div class="card-desc">角色分工合作通关的桌游改造，适合深度协作体验。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
-      </a>
-      <a href="games/collaboration/space-miners.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🚀</div><div class="card-title">星际矿工（改造版）</div><div class="card-desc">资源竞争与团队协作平衡的桌游改造。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
-      </a>
-      <a href="games/collaboration/crazy-kitchen.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🍳</div><div class="card-title">疯狂厨房（改造版）</div><div class="card-desc">时间压力下的流水线协作，体验瓶颈工位。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
-      </a>
-      <a href="games/collaboration/virus-outbreak.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🦠</div><div class="card-title">病毒危机（改造版）</div><div class="card-desc">团队协作应对危机，锻炼沟通决策和领导力。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
-      </a>
-      <a href="games/collaboration/body-letters.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">✋</div><div class="card-title">人体拼字</div><div class="card-desc">用身体拼出团队目标，热身破冰两用。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–30 min</span></div>
-      </a>
-      <a href="games/collaboration/abyss-dive.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🌊</div><div class="card-title">深海探险（改造版）</div><div class="card-desc">共享氧气与角色分工的深海协作，压力管理绝佳题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">50–70 min</span></div>
-      </a>
-      <a href="games/collaboration/doomsday-vault.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🌱</div><div class="card-title">末日种子库（改造版）</div><div class="card-desc">共享系统管理与远征采集的资源协作，危机取舍绝佳题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–75 min</span></div>
-      </a>
-      <a href="games/collaboration/kaiju-defenders.html" class="card" data-people="large" data-duration="long">
-        <div class="card-icon">🦖</div><div class="card-title">怪兽守护者（改造版）</div><div class="card-desc">小队跨部门协作守护城市，危机决策与资源优化。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–75 min</span></div>
-      </a>
-      <a href="games/collaboration/team-chef.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">👨‍🍳</div><div class="card-title">协作大厨（改造版）</div><div class="card-desc">分工流水线协作烹饪，体验瓶颈工位与默契配合。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
-      </a>
-      <a href="games/collaboration/secret-mission.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🕵️</div><div class="card-title">绝密行动（改造版）</div><div class="card-desc">隐秘协作完成任务，信息隔离下的团队信任与配合。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
-      </a>
-      <a href="games/collaboration/frieren-journey.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🧙</div><div class="card-title">芙莉莲的旅程（改造版）</div><div class="card-desc">慢旅途中共享时间与抉择，角色互补与目标共识的协作题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–90 min</span></div>
-      </a>
-      <a href="games/collaboration/gene-therapy.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🧬</div><div class="card-title">基因疗法攻坚（改造版）</div><div class="card-desc">病毒时钟下的科研协作，信息共享与风险决策的研发团建。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–75 min</span></div>
-      </a>
-      <a href="games/collaboration/monster-chef.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">👨‍🍳</div><div class="card-title">怪物厨师（改造版）</div><div class="card-desc">地下城协作烹饪，角色分工与共享资源管理的轻松题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">50–70 min</span></div>
-      </a>
-      <a href="games/collaboration/wukong-quest.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🐵</div><div class="card-title">大圣西游（改造版）</div><div class="card-desc">西游师徒角色互补，共享里程与信念的取经协作题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–90 min</span></div>
-      </a>
-      <a href="games/collaboration/ghost-castle.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">👻</div><div class="card-title">幽灵古堡（改造版）</div><div class="card-desc">古堡逃脱协作求生，信息共享与同伴救援的危机题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-      <a href="games/collaboration/demon-slayer-train.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🔥</div><div class="card-title">鬼杀队：无限列车（改造版）</div><div class="card-desc">列车攻坚协作，角色互补与相互扶持的危机突破题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-      <a href="games/collaboration/mythic-rift.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🌌</div><div class="card-title">神话裂隙（改造版）</div><div class="card-desc">多神话联军封印协作，角色互补与心智韧性的危机题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–90 min</span></div>
-      </a>
-      <a href="games/collaboration/destined-one.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🐵</div><div class="card-title">天命人（改造版）</div><div class="card-desc">黑神话协作探险，角色互补与共享资源管理的危机题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–90 min</span></div>
-      </a>
-      <a href="games/collaboration/jujutsu-united.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🔮</div><div class="card-title">咒术回战：术师联携（改造版）</div><div class="card-desc">咒术回战协作防御，角色互补与共享资源的风险治理题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-      <a href="games/collaboration/loop-dungeon.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🌀</div><div class="card-title">轮回地下城（改造版）</div><div class="card-desc">时间轮回+Roguelike地牢，复盘沉淀与渐进式能力建设的迭代题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
-      </a>
-      <a href="games/collaboration/stellar-medics.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🏥</div><div class="card-title">星际医疗队（改造版）</div>        <div class="card-desc">星途号生死救援，优先级分诊与风险前移（治未病）的危机管控题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–70 min</span></div>
-      </a>
-      <a href="games/collaboration/expedition-33.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🎨</div><div class="card-title">远征33号（改造版）</div><div class="card-desc">绘母抹除倒计时下的集体命运，资源分配与破防集火的目标共识题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-      <a href="games/collaboration/stellar-lighthouse.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🗼</div><div class="card-title">星际灯塔守护者（改造版）</div><div class="card-desc">能量续航与故障累积的长期守护，技术债预警与引导掉队者的守护题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–70 min</span></div>
-      </a>
-      <a href="games/collaboration/solo-hunter-squad.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">⚔️</div><div class="card-title">猎人小队（改造版）</div><div class="card-desc">把"我独自升级"改写成团队协同升级，经验共享与传帮带的能力建设题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-      <a href="games/collaboration/space-diner-escape.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🚀</div><div class="card-title">银河小馆（改造版）</div><div class="card-desc">前场交付与后场稳定的双线作战，共享预算零和分配与稳定性前移题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-      <a href="games/collaboration/star-pioneers.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🌍</div><div class="card-title">星际拓荒者（改造版）</div><div class="card-desc">未知星球揭雾拓荒，有限跑道下的目标聚焦与"消耗vs投资"的从0到1题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–70 min</span></div>
-      </a>
-      <a href="games/collaboration/huntrix-honmoon.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🎤</div><div class="card-title">黄金结界（改造版）</div><div class="card-desc">守护团队的信任与心理安全，能量守恒与"把内部裂痕摆上台面"的文化题材。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–75 min</span></div>
-      </a>
-    </div>
-
-    <!-- 信任建立 -->
-    <div style="font-weight:600;color:#555;margin:18px 0 10px;">🤖 信任建立（trust）</div>
-    <div class="grid" id="grid-trust">
-      <a href="games/trust/trust-fall.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🤝</div><div class="card-title">信任背摔</div><div class="card-desc">"敢不敢把后背交给队友"，深度信任体验。</div><div class="card-tags"><span class="tag">户外</span><span class="tag">20–40 min</span></div>
-      </a>
-      <a href="games/trust/blind-walk.html" class="card" data-people="small" data-duration="medium">
-        <div class="card-icon">👀</div><div class="card-title">盲行</div><div class="card-desc">蒙眼信任引导，体验交出控制权与肩负责任。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">20–35 min</span></div>
-      </a>
-    </div>
-
-    <!-- 领导力 -->
-    <div style="font-weight:600;color:#555;margin:18px 0 10px;">👑 领导力（leadership）</div>
-    <div class="grid" id="grid-leadership">
-      <a href="games/leadership/red-black-game.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">⚫</div><div class="card-title">红黑游戏</div><div class="card-desc">竞争vs合作的根本张力，中高层管理团队首选。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
-      </a>
-      <a href="games/leadership/tangram.html" class="card" data-people="large" data-duration="long">
-        <div class="card-icon">🧩</div><div class="card-title">七巧板</div><div class="card-desc">信息孤岛与领导力的经典大型体验游戏。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">60–90 min</span></div>
-      </a>
-      <a href="games/leadership/silent-leader.html" class="card" data-people="small" data-duration="medium">
-        <div class="card-icon">🤫</div><div class="card-title">沉默领袖</div><div class="card-desc">不能说话如何领导团队，体验非权力影响力。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span></div>
-      </a>
-    </div>
-
-    <!-- 创意与解决问题 -->
-    <div style="font-weight:600;color:#555;margin:18px 0 10px;">💡 创意与解决问题（creativity & problem-solving）</div>
-    <div class="grid" id="grid-creativity">
-      <a href="games/creativity/10-yuan-idea.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">💰</div><div class="card-title">10元买创意</div><div class="card-desc">资源受限下激发团队想象力，打破不敢提想法氛围。</div><div class="card-tags"><span class="tag">室内/户外</span><span class="tag">30–45 min</span></div>
-      </a>
-      <a href="games/creativity/newspaper-tower.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🗞️</div><div class="card-title">报纸塔挑战</div><div class="card-desc">有限材料下的创新与团队协作，动手又动脑。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–40 min</span></div>
-      </a>
-      <a href="games/problem-solving/desert-survival.html" class="card" data-people="medium" data-duration="medium">
-        <div class="card-icon">🏜️</div><div class="card-title">沙漠逃生</div><div class="card-desc">在意见不一致时体验团队共识决策。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">30–45 min</span></div>
-      </a>
-      <a href="games/problem-solving/egg-drop.html" class="card" data-people="medium" data-duration="long">
-        <div class="card-icon">🥚</div><div class="card-title">鸡蛋坠落挑战</div><div class="card-desc">不确定性中解决问题，体验失败与迭代。</div><div class="card-tags"><span class="tag">室内</span><span class="tag">45–60 min</span></div>
-      </a>
-    </div>
+<section class="cat" data-cat="collaboration" id="cat-collaboration">
+  <div class="cat-h"><span class="c-ico">🤝</span>团队协作<span class="c-n">32 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/collaboration/body-letters.html"
+   data-p="6,20" data-d="20,30"
+   data-v="indoor" data-u="group" data-ab="快速共识|身体协作|幽默解压"
+   data-s="人体拼字 让团队在爆笑中体验「快速达成共识 + 分工协作」的快感。 团队协作 快速共识 身体协作 幽默解压"
+   style="--cc:#34d399">
+  <div class="gc-name">人体拼字</div>
+  <div class="gc-desc">让团队在爆笑中体验「快速达成共识 + 分工协作」的快感。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>6–20 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>快速共识</span><span>身体协作</span><span>幽默解压</span></div>
+</a>
+<a class="gcard" href="games/collaboration/human-knot.html"
+   data-p="8,20" data-d="30,45"
+   data-v="both" data-u="total" data-ab="团队协作|非语言沟通|耐心与策略"
+   data-s="人结（human knot） 体验团队协作、非语言沟通、耐心与策略 团队协作 团队协作 非语言沟通 耐心与策略"
+   style="--cc:#34d399">
+  <div class="gc-name">人结（Human Knot）</div>
+  <div class="gc-desc">体验团队协作、非语言沟通、耐心与策略</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>8–20 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>团队协作</span><span>非语言沟通</span><span>耐心与策略</span></div>
+</a>
+<a class="gcard" href="games/collaboration/team-chef.html"
+   data-p="8,20" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="分工协作|高效沟通|互相补台"
+   data-s="协作大厨 (team chef) 《协作大厨》是一款改编自桌游《怪物厨师》的团队协作类团建游戏。 团队协作 分工协作 高效沟通 互相补台"
+   style="--cc:#34d399">
+  <div class="gc-name">协作大厨 (Team Chef)</div>
+  <div class="gc-desc">《协作大厨》是一款改编自桌游《怪物厨师》的团队协作类团建游戏。</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>8–20 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>分工协作</span><span>高效沟通</span><span>互相补台</span></div>
+</a>
+<a class="gcard" href="games/collaboration/jujutsu-united.html"
+   data-p="3,5" data-d="45,75"
+   data-v="indoor" data-u="total" data-ab="分工支援|快速补位|压力协作"
+   data-s="咒术回战：术师联携 (jujutsu united) 《咒术回战：术师联携》改编自合作桌游《咒术师团 jujutsu sorcerers》（灵感来自《咒术回战》）。 团队协作 分工支援 快速补位 压力协作"
+   style="--cc:#34d399">
+  <div class="gc-name">咒术回战：术师联携 (Jujutsu United)</div>
+  <div class="gc-desc">《咒术回战：术师联携》改编自合作桌游《咒术师团 Jujutsu Sorcerers》（灵感来自《咒术回战》）。</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>分工支援</span><span>快速补位</span><span>压力协作</span></div>
+</a>
+<a class="gcard" href="games/collaboration/gene-therapy.html"
+   data-p="4,8" data-d="60,75"
+   data-v="indoor" data-u="total" data-ab="团队协作|沟通表达|问题解决"
+   data-s="基因疗法攻坚 (gene therapy sprint) 模拟基因疗法研发的紧急攻关过程，让团队在时间压力和资源限制下体验协作研发、信息共享、风险决策的重要性。 团队协作 团队协作 沟通表达 问题解决"
+   style="--cc:#34d399">
+  <div class="gc-name">基因疗法攻坚 (Gene Therapy Sprint)</div>
+  <div class="gc-desc">模拟基因疗法研发的紧急攻关过程，让团队在时间压力和资源限制下体验协作研发、信息共享、风险决策的重要性。</div>
+  <div class="gc-meta"><span>60–75 分钟</span><span>4–8 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>团队协作</span><span>沟通表达</span><span>问题解决</span></div>
+</a>
+<a class="gcard" href="games/collaboration/wukong-quest.html"
+   data-p="4,6" data-d="60,90"
+   data-v="indoor" data-u="total" data-ab="角色互补|信念凝聚|分工承担"
+   data-s="大圣西游 (wukong quest) 《大圣西游》改编自中国古典名著《西游记》与热门游戏《黑神话：悟空》的合作类桌游。 团队协作 角色互补 信念凝聚 分工承担"
+   style="--cc:#34d399">
+  <div class="gc-name">大圣西游 (Wukong Quest)</div>
+  <div class="gc-desc">《大圣西游》改编自中国古典名著《西游记》与热门游戏《黑神话：悟空》的合作类桌游。</div>
+  <div class="gc-meta"><span>60–90 分钟</span><span>4–6 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>角色互补</span><span>信念凝聚</span><span>分工承担</span></div>
+</a>
+<a class="gcard" href="games/collaboration/destined-one.html"
+   data-p="4,6" data-d="60,90"
+   data-v="indoor" data-u="total" data-ab="策略规划|风险挑战|团队信念"
+   data-s="天命人 (destined one) 《天命人》改编自《黑神话：悟空》黑暗神话世界观的合作类桌游。 团队协作 策略规划 风险挑战 团队信念"
+   style="--cc:#34d399">
+  <div class="gc-name">天命人 (Destined One)</div>
+  <div class="gc-desc">《天命人》改编自《黑神话：悟空》黑暗神话世界观的合作类桌游。</div>
+  <div class="gc-meta"><span>60–90 分钟</span><span>4–6 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>策略规划</span><span>风险挑战</span><span>团队信念</span></div>
+</a>
+<a class="gcard" href="games/collaboration/island-survival.html"
+   data-p="4,8" data-d="45,75"
+   data-v="indoor" data-u="group" data-ab="计划弹性|危机分工|共同目标"
+   data-s="岛屿求生（团建改造版） 在资源有限、环境不确定的压力下，体验「团队协作决策」和「风险管理」——正是高效团队每天面对的挑战。 团队协作 计划弹性 危机分工 共同目标"
+   style="--cc:#34d399">
+  <div class="gc-name">岛屿求生（团建改造版）</div>
+  <div class="gc-desc">在资源有限、环境不确定的压力下，体验「团队协作决策」和「风险管理」——正是高效团队每天面对的挑战。</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>计划弹性</span><span>危机分工</span><span>共同目标</span></div>
+</a>
+<a class="gcard" href="games/collaboration/ghost-castle.html"
+   data-p="3,5" data-d="45,75"
+   data-v="indoor" data-u="total" data-ab="信息整合|协作解谜|时限压力"
+   data-s="幽灵古堡 (ghost castle) 《幽灵古堡》改编自合作解谜逃脱桌游《幽灵古堡 ghost castle》。 团队协作 信息整合 协作解谜 时限压力"
+   style="--cc:#34d399">
+  <div class="gc-name">幽灵古堡 (Ghost Castle)</div>
+  <div class="gc-desc">《幽灵古堡》改编自合作解谜逃脱桌游《幽灵古堡 Ghost Castle》。</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>信息整合</span><span>协作解谜</span><span>时限压力</span></div>
+</a>
+<a class="gcard" href="games/collaboration/kaiju-defenders.html"
+   data-p="8,20" data-d="60,75"
+   data-v="indoor" data-u="total" data-ab="角色认知|资源优化|危机沟通"
+   data-s="怪兽守护者 (kaiju defenders) 《怪兽守护者》改编自同名合作桌游，是一款团队协作模拟游戏。 团队协作 角色认知 资源优化 危机沟通"
+   style="--cc:#34d399">
+  <div class="gc-name">怪兽守护者 (Kaiju Defenders)</div>
+  <div class="gc-desc">《怪兽守护者》改编自同名合作桌游，是一款团队协作模拟游戏。</div>
+  <div class="gc-meta"><span>60–75 分钟</span><span>8–20 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>角色认知</span><span>资源优化</span><span>危机沟通</span></div>
+</a>
+<a class="gcard" href="games/collaboration/monster-chef.html"
+   data-p="3,6" data-d="50,70"
+   data-v="indoor" data-u="total" data-ab="创意组合|分工互补|试错文化"
+   data-s="怪物厨师 (monster chef) 《怪物厨师》是一款合作类桌游，灵感来源于热门动漫《迷宫饭》(dungeon meshi)。 团队协作 创意组合 分工互补 试错文化"
+   style="--cc:#34d399">
+  <div class="gc-name">怪物厨师 (Monster Chef)</div>
+  <div class="gc-desc">《怪物厨师》是一款合作类桌游，灵感来源于热门动漫《迷宫饭》(Dungeon Meshi)。</div>
+  <div class="gc-meta"><span>50–70 分钟</span><span>3–6 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>创意组合</span><span>分工互补</span><span>试错文化</span></div>
+</a>
+<a class="gcard" href="games/collaboration/stellar-medics.html"
+   data-p="3,5" data-d="45,70"
+   data-v="indoor" data-u="total" data-ab="专业分工|分诊决策|多线危机"
+   data-s="星际医疗队 · 生死救援协作版 (stellar medics) 《星际医疗队 · 生死救援协作版》改编自合作桌游《星际医疗队 stellar medics》（宇宙科幻 + 医疗救援主题）。 团队协作 专业分工 分诊决策 多线危机"
+   style="--cc:#34d399">
+  <div class="gc-name">星际医疗队 · 生死救援协作版 (Stellar Medics)</div>
+  <div class="gc-desc">《星际医疗队 · 生死救援协作版》改编自合作桌游《星际医疗队 Stellar Medics》（宇宙科幻 + 医疗救援主题）。</div>
+  <div class="gc-meta"><span>45–70 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>专业分工</span><span>分诊决策</span><span>多线危机</span></div>
+</a>
+<a class="gcard" href="games/collaboration/star-pioneers.html"
+   data-p="3,5" data-d="45,70"
+   data-v="indoor" data-u="total" data-ab="共享资源|探索分工|从零到一"
+   data-s="星际拓荒者 · 从零到一版 (star pioneers) 《星际拓荒者 · 从零到一版》改编自合作生存桌游《星际拓荒者 star pioneers》。 团队协作 共享资源 探索分工 从零到一"
+   style="--cc:#34d399">
+  <div class="gc-name">星际拓荒者 · 从零到一版 (Star Pioneers)</div>
+  <div class="gc-desc">《星际拓荒者 · 从零到一版》改编自合作生存桌游《星际拓荒者 Star Pioneers》。</div>
+  <div class="gc-meta"><span>45–70 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>共享资源</span><span>探索分工</span><span>从零到一</span></div>
+</a>
+<a class="gcard" href="games/collaboration/stellar-lighthouse.html"
+   data-p="3,5" data-d="45,70"
+   data-v="indoor" data-u="total" data-ab="预防维护|守望价值|分工补位"
+   data-s="星际灯塔守护者 · 守望协作版 (stellar lighthouse) 《星际灯塔守护者 · 守望协作版》改编自合作桌游《星际灯塔守护者 stellar lighthouse》（宇宙科幻 + 设施守护主题）。 团队协作 预防维护 守望价值 分工补位"
+   style="--cc:#34d399">
+  <div class="gc-name">星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)</div>
+  <div class="gc-desc">《星际灯塔守护者 · 守望协作版》改编自合作桌游《星际灯塔守护者 Stellar Lighthouse》（宇宙科幻 + 设施守护主题）。</div>
+  <div class="gc-meta"><span>45–70 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>预防维护</span><span>守望价值</span><span>分工补位</span></div>
+</a>
+<a class="gcard" href="games/collaboration/space-miners.html"
+   data-p="5,8" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="危机管理|收益与安全|分工协作"
+   data-s="星际矿工（团队危机管理版） 锻炼团队协作、危机应对、资源分配、领导力观察 团队协作 危机管理 收益与安全 分工协作"
+   style="--cc:#34d399">
+  <div class="gc-name">星际矿工（团队危机管理版）</div>
+  <div class="gc-desc">锻炼团队协作、危机应对、资源分配、领导力观察</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>5–8 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>危机管理</span><span>收益与安全</span><span>分工协作</span></div>
+</a>
+<a class="gcard" href="games/collaboration/doomsday-vault.html"
+   data-p="3,6" data-d="60,75"
+   data-v="indoor" data-u="total" data-ab="长期主义|优先级取舍|风险预案"
+   data-s="末日种子库 (doomsday vault) 公元 2048 年，一场全球性的生态连锁崩溃摧毁了地表绝大部分生态系统。 团队协作 长期主义 优先级取舍 风险预案"
+   style="--cc:#34d399">
+  <div class="gc-name">末日种子库 (Doomsday Vault)</div>
+  <div class="gc-desc">公元 2048 年，一场全球性的生态连锁崩溃摧毁了地表绝大部分生态系统。</div>
+  <div class="gc-meta"><span>60–75 分钟</span><span>3–6 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>长期主义</span><span>优先级取舍</span><span>风险预案</span></div>
+</a>
+<a class="gcard" href="games/collaboration/abyss-dive.html"
+   data-p="3,6" data-d="50,70"
+   data-v="indoor" data-u="total" data-ab="资源统筹|危机协作|风险决策"
+   data-s="深海探险 (abyss dive) 《深海探险》是一款合作类桌游，背景设定在 2247 年：一支精英深海探险队驾驶「蛟龙号」深潜器，穿越层层深海区域，寻找传说中的远古失落文明核心——深海之心。 团队协作 资源统筹 危机协作 风险决策"
+   style="--cc:#34d399">
+  <div class="gc-name">深海探险 (Abyss Dive)</div>
+  <div class="gc-desc">《深海探险》是一款合作类桌游，背景设定在 2247 年：一支精英深海探险队驾驶「蛟龙号」深潜器，穿越层层深海区域，寻找传说中的远古失落文明核心——深海之心。</div>
+  <div class="gc-meta"><span>50–70 分钟</span><span>3–6 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>资源统筹</span><span>危机协作</span><span>风险决策</span></div>
+</a>
+<a class="gcard" href="games/collaboration/solo-hunter-squad.html"
+   data-p="3,5" data-d="45,75"
+   data-v="indoor" data-u="total" data-ab="从个人到团队|资源共享|梯队配合"
+   data-s="猎人小队 · 协同升级版 (hunter squad) 《猎人小队 · 协同升级版》改编自合作桌游《独行猎人 solo leveling hunters》（改编自动漫《我独自升级》的合作地下城桌游）。 团队协作 从个人到团队 资源共享 梯队配合"
+   style="--cc:#34d399">
+  <div class="gc-name">猎人小队 · 协同升级版 (Hunter Squad)</div>
+  <div class="gc-desc">《猎人小队 · 协同升级版》改编自合作桌游《独行猎人 Solo Leveling Hunters》（改编自动漫《我独自升级》的合作地下城桌游）。</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>从个人到团队</span><span>资源共享</span><span>梯队配合</span></div>
+</a>
+<a class="gcard" href="games/collaboration/ball-relay.html"
+   data-p="8,12" data-d="20,30"
+   data-v="both" data-u="group" data-ab="环节责任|节奏统一|失败复盘"
+   data-s="珠行万里（乒乓球传递） 让团队体验「每个人都很重要，任何一个环节失误都会导致全员重来」的协作困境。 团队协作 环节责任 节奏统一 失败复盘"
+   style="--cc:#34d399">
+  <div class="gc-name">珠行万里（乒乓球传递）</div>
+  <div class="gc-desc">让团队体验「每个人都很重要，任何一个环节失误都会导致全员重来」的协作困境。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>8–12 人/组</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>环节责任</span><span>节奏统一</span><span>失败复盘</span></div>
+</a>
+<a class="gcard" href="games/collaboration/crazy-kitchen.html"
+   data-p="4,8" data-d="30,45"
+   data-v="indoor" data-u="total" data-ab="抗压协作|流程优化|容错心态"
+   data-s="疯狂厨房（团队抗压协作版） 锻炼团队协作、时间管理、压力应对、角色分工 团队协作 抗压协作 流程优化 容错心态"
+   style="--cc:#34d399">
+  <div class="gc-name">疯狂厨房（团队抗压协作版）</div>
+  <div class="gc-desc">锻炼团队协作、时间管理、压力应对、角色分工</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>4–8 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>抗压协作</span><span>流程优化</span><span>容错心态</span></div>
+</a>
+<a class="gcard" href="games/collaboration/virus-outbreak.html"
+   data-p="4,8" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="团队协作|沟通表达|问题解决"
+   data-s="病毒危机 (virus outbreak) 模拟突发公共卫生事件的应急响应的过程，让团队在高压环境下体验协作决策、资源分配、信息共享的重要性。 团队协作 团队协作 沟通表达 问题解决"
+   style="--cc:#34d399">
+  <div class="gc-name">病毒危机 (Virus Outbreak)</div>
+  <div class="gc-desc">模拟突发公共卫生事件的应急响应的过程，让团队在高压环境下体验协作决策、资源分配、信息共享的重要性。</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>4–8 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>团队协作</span><span>沟通表达</span><span>问题解决</span></div>
+</a>
+<a class="gcard" href="games/collaboration/mythic-rift.html"
+   data-p="3,5" data-d="60,90"
+   data-v="indoor" data-u="total" data-ab="跨背景协作|能力整合|共同敌人"
+   data-s="神话裂隙 (mythic rift) 《神话裂隙》改编自合作桌游《神话裂隙 mythic rift》（灵感来自《黑神话：悟空》《咒术回战》《原神》等神话题材作品）。 团队协作 跨背景协作 能力整合 共同敌人"
+   style="--cc:#34d399">
+  <div class="gc-name">神话裂隙 (Mythic Rift)</div>
+  <div class="gc-desc">《神话裂隙》改编自合作桌游《神话裂隙 Mythic Rift》（灵感来自《黑神话：悟空》《咒术回战》《原神》等神话题材作品）。</div>
+  <div class="gc-meta"><span>60–90 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>跨背景协作</span><span>能力整合</span><span>共同敌人</span></div>
+</a>
+<a class="gcard" href="games/collaboration/secret-mission.html"
+   data-p="4,8" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="跨部门协作|角色分工|时效管理"
+   data-s="绝密行动（团建改造版） 在时间紧迫、危机四伏的高压环境下，体验「跨部门协作」和「角色分工」——正是高效团队面对紧急项目时的真实写照。 团队协作 跨部门协作 角色分工 时效管理"
+   style="--cc:#34d399">
+  <div class="gc-name">绝密行动（团建改造版）</div>
+  <div class="gc-desc">在时间紧迫、危机四伏的高压环境下，体验「跨部门协作」和「角色分工」——正是高效团队面对紧急项目时的真实写照。</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>4–8 人</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>跨部门协作</span><span>角色分工</span><span>时效管理</span></div>
+</a>
+<a class="gcard" href="games/collaboration/frieren-journey.html"
+   data-p="2,4" data-d="60,90"
+   data-v="indoor" data-u="total" data-ab="高度合作|角色互补|时间管理"
+   data-s="芙莉莲的旅程 (frieren&#x27;s journey) 改编自同名合作桌游（《葬送的芙莉莲》同人创作）。玩家组成一支冒险小队，沿着艾兰大陆的旅途路线，穿越森林、山脉、荒漠与海岸，最终抵达传说中的「天国之地」。 团队协作 高度合作 角色互补 时间管理"
+   style="--cc:#34d399">
+  <div class="gc-name">芙莉莲的旅程 (Frieren&#x27;s Journey)</div>
+  <div class="gc-desc">改编自同名合作桌游（《葬送的芙莉莲》同人创作）。玩家组成一支冒险小队，沿着艾兰大陆的旅途路线，穿越森林、山脉、荒漠与海岸，最终抵达传说中的「天国之地」。</div>
+  <div class="gc-meta"><span>60–90 分钟</span><span>2–4 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>高度合作</span><span>角色互补</span><span>时间管理</span></div>
+</a>
+<a class="gcard" href="games/collaboration/loop-dungeon.html"
+   data-p="3,5" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="迭代复盘|知识管理|归因方式"
+   data-s="轮回地下城 · 团队复盘迭代版 (loop dungeon) 《轮回地下城 · 团队复盘迭代版》改编自合作桌游《轮回地下城 loop dungeon》（灵感来自《挺进地牢》《以撒的结合》等 roguelike … 团队协作 迭代复盘 知识管理 归因方式"
+   style="--cc:#34d399">
+  <div class="gc-name">轮回地下城 · 团队复盘迭代版 (Loop Dungeon)</div>
+  <div class="gc-desc">《轮回地下城 · 团队复盘迭代版》改编自合作桌游《轮回地下城 Loop Dungeon》（灵感来自《挺进地牢》《以撒的结合》等 Roguelike …</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>迭代复盘</span><span>知识管理</span><span>归因方式</span></div>
+</a>
+<a class="gcard" href="games/collaboration/expedition-33.html"
+   data-p="2,4" data-d="45,75"
+   data-v="indoor" data-u="total" data-ab="使命共识|牺牲与配合|逆境韧性"
+   data-s="远征33号 · 绘母之末（团建协作版）(expedition 33) 《远征33号 · 绘母之末（团建协作版）》改编自荣获 tga 2025「年度最佳游戏」的现象级合作桌游《clair obscur：expeditio… 团队协作 使命共识 牺牲与配合 逆境韧性"
+   style="--cc:#34d399">
+  <div class="gc-name">远征33号 · 绘母之末（团建协作版）(Expedition 33)</div>
+  <div class="gc-desc">《远征33号 · 绘母之末（团建协作版）》改编自荣获 TGA 2025「年度最佳游戏」的现象级合作桌游《Clair Obscur：Expeditio…</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>2–4 人</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>使命共识</span><span>牺牲与配合</span><span>逆境韧性</span></div>
+</a>
+<a class="gcard" href="games/collaboration/space-diner-escape.html"
+   data-p="3,5" data-d="45,75"
+   data-v="indoor" data-u="total" data-ab="双线作战|前后场协同|精力分配"
+   data-s="银河小馆 · 双线突围版 (galaxy diner) 《银河小馆 · 双线突围版》改编自合作桌游《星际餐厅大逃亡 space diner escape》（&quot;银河小馆&quot;是一艘穿越陨石带的太空流浪餐厅）。 团队协作 双线作战 前后场协同 精力分配"
+   style="--cc:#34d399">
+  <div class="gc-name">银河小馆 · 双线突围版 (Galaxy Diner)</div>
+  <div class="gc-desc">《银河小馆 · 双线突围版》改编自合作桌游《星际餐厅大逃亡 Space Diner Escape》（&quot;银河小馆&quot;是一艘穿越陨石带的太空流浪餐厅）。</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>双线作战</span><span>前后场协同</span><span>精力分配</span></div>
+</a>
+<a class="gcard" href="games/collaboration/wind-fire-wheel.html"
+   data-p="8,15" data-d="30,40"
+   data-v="outdoor" data-u="group" data-ab="节奏统一|资源管理|失败态度"
+   data-s="风火轮（报纸履带） 让团队在「资源会耗尽」的压力下，体验协作、节奏统一和面对失败的态度。 团队协作 节奏统一 资源管理 失败态度"
+   style="--cc:#34d399">
+  <div class="gc-name">风火轮（报纸履带）</div>
+  <div class="gc-desc">让团队在「资源会耗尽」的压力下，体验协作、节奏统一和面对失败的态度。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>8–15 人/组</span><span>户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>节奏统一</span><span>资源管理</span><span>失败态度</span></div>
+</a>
+<a class="gcard" href="games/collaboration/demon-slayer-train.html"
+   data-p="3,5" data-d="45,75"
+   data-v="indoor" data-u="total" data-ab="目标拆解|角色协同|信念坚持"
+   data-s="鬼杀队：无限列车 (demon slayer: infinity train) 《鬼杀队：无限列车》改编自合作桌游《鬼杀队：无限列车 demon slayer: infinity train》（灵感来自《鬼灭之刃》&quot;无限列车篇&quot;）。 团队协作 目标拆解 角色协同 信念坚持"
+   style="--cc:#34d399">
+  <div class="gc-name">鬼杀队：无限列车 (Demon Slayer: Infinity Train)</div>
+  <div class="gc-desc">《鬼杀队：无限列车》改编自合作桌游《鬼杀队：无限列车 Demon Slayer: Infinity Train》（灵感来自《鬼灭之刃》&quot;无限列车篇&quot;）。</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>目标拆解</span><span>角色协同</span><span>信念坚持</span></div>
+</a>
+<a class="gcard" href="games/collaboration/magic-academy.html"
+   data-p="6,8" data-d="45,60"
+   data-v="indoor" data-u="group" data-ab="默契配合|角色认知|试错勇气"
+   data-s="魔法学院（团队协作版） 锻炼团队合作、资源共享、策略制定、角色分工 团队协作 默契配合 角色认知 试错勇气"
+   style="--cc:#34d399">
+  <div class="gc-name">魔法学院（团队协作版）</div>
+  <div class="gc-desc">锻炼团队合作、资源共享、策略制定、角色分工</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>6–8 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>默契配合</span><span>角色认知</span><span>试错勇气</span></div>
+</a>
+<a class="gcard" href="games/collaboration/huntrix-honmoon.html"
+   data-p="3,5" data-d="45,75"
+   data-v="indoor" data-u="total" data-ab="文化守护|协同防御|隐形价值"
+   data-s="黄金结界 · 团队守护版（huntrix: golden honmoon） 《黄金结界 · 团队守护版》把原作&quot;偶像女团暗中守护人间&quot;的内核，搬进了一支高绩效团队的文化与心理资本守护现场。 团队协作 文化守护 协同防御 隐形价值"
+   style="--cc:#34d399">
+  <div class="gc-name">黄金结界 · 团队守护版（Huntrix: Golden Honmoon）</div>
+  <div class="gc-desc">《黄金结界 · 团队守护版》把原作&quot;偶像女团暗中守护人间&quot;的内核，搬进了一支高绩效团队的文化与心理资本守护现场。</div>
+  <div class="gc-meta"><span>45–75 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>文化守护</span><span>协同防御</span><span>隐形价值</span></div>
+</a>
+<a class="gcard" href="games/collaboration/eyebrow-stick.html"
+   data-p="6,10" data-d="20,30"
+   data-v="both" data-u="group" data-ab="系统思维|指令对齐|反思习惯"
+   data-s="齐眉棍（手指传棍） 让团队体验「每个人都对，但结果错了」的经典协作困境，理解系统思维和互相配合。 团队协作 系统思维 指令对齐 反思习惯"
+   style="--cc:#34d399">
+  <div class="gc-name">齐眉棍（手指传棍）</div>
+  <div class="gc-desc">让团队体验「每个人都对，但结果错了」的经典协作困境，理解系统思维和互相配合。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>6–10 人/组</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>系统思维</span><span>指令对齐</span><span>反思习惯</span></div>
+</a>
   </div>
+</section>
 
-  <!-- 团建流程方案 -->
-  <div class="section">
-    <div class="section-title">📋 团建流程方案</div>
-    <p style="font-size:0.9em;color:#555;margin-bottom:16px;">每套方案包含：时间轴 + 游戏选配 + 引导要点 + 复盘设计。</p>
-    
-    <a href="flows/one-day/" class="flow-card" style="margin-bottom:12px;">
-      <div class="flow-info">
-        <h3>📅 一日团建模板</h3>
-        <p>总时长 6–8 小时 · 适合 15–50 人 · 破冰 + 协作 + 复盘</p>
-      </div>
-      <div class="flow-arrow">→</div>
-    </a>
-    <a href="flows/half-day/01-schedule.md" class="flow-card" style="margin-bottom:12px;">
-      <div class="flow-info">
-        <h3>⏱️ 半日团建模板</h3>
-        <p>总时长 3–4 小时 · 适合 10–30 人 · 快速凝聚</p>
-      </div>
-      <div class="flow-arrow">→</div>
-    </a>
-    <a href="flows/workshop/leadership-awakening.md" class="flow-card" style="margin-bottom:12px;">
-      <div class="flow-info">
-        <h3>🎓 主题工作坊模板：领导力觉醒</h3>
-        <p>总时长 2.5–3 小时 · 适合 12–24 人 · 领导力深度培训</p>
-      </div>
-      <div class="flow-arrow">→</div>
-    </a>
-    <a href="flows/online/01-schedule.md" class="flow-card">
-      <div class="flow-info">
-        <h3>💻 线上团建模板</h3>
-        <p>总时长 2–2.5 小时 · 适合 8–30 人 · 远程团队团建</p>
-      </div>
-      <div class="flow-arrow">→</div>
-    </a>
+<section class="cat" data-cat="trust" id="cat-trust">
+  <div class="cat-h"><span class="c-ico">🫱</span>信任建立<span class="c-n">4 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/trust/trust-circle.html"
+   data-p="6,10" data-d="40,55"
+   data-v="indoor" data-u="group" data-ab="交付控制权|责任承接|无声协同"
+   data-s="信任圈（willow in the wind） 在可控的身体风险里，让「托付」和「接住」都变成具体动作，而不是口号 信任建立 交付控制权 责任承接 无声协同"
+   style="--cc:#fbbf24">
+  <div class="gc-name">信任圈（Willow in the Wind）</div>
+  <div class="gc-desc">在可控的身体风险里，让「托付」和「接住」都变成具体动作，而不是口号</div>
+  <div class="gc-meta"><span>40–55 分钟</span><span>6–10 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>交付控制权</span><span>责任承接</span><span>无声协同</span></div>
+</a>
+<a class="gcard" href="games/trust/trust-fall.html"
+   data-p="8,15" data-d="20,40"
+   data-v="indoor" data-u="group" data-ab="信任交付|责任承接|团队安全感"
+   data-s="信任背摔（trust fall） 体验&quot;交出控制权&quot;的感受，建立团队信任基础 信任建立 信任交付 责任承接 团队安全感"
+   style="--cc:#fbbf24">
+  <div class="gc-name">信任背摔（Trust Fall）</div>
+  <div class="gc-desc">体验&quot;交出控制权&quot;的感受，建立团队信任基础</div>
+  <div class="gc-meta"><span>20–40 分钟</span><span>8–15 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>信任交付</span><span>责任承接</span><span>团队安全感</span></div>
+</a>
+<a class="gcard" href="games/trust/blind-walk.html"
+   data-p="10,30" data-d="20,35"
+   data-v="both" data-u="total" data-ab="信任交付|非语言沟通|责任感知"
+   data-s="盲行（blind walk） 体验信任与控制权、非语言沟通、责任感知 信任建立 信任交付 非语言沟通 责任感知"
+   style="--cc:#fbbf24">
+  <div class="gc-name">盲行（Blind Walk）</div>
+  <div class="gc-desc">体验信任与控制权、非语言沟通、责任感知</div>
+  <div class="gc-meta"><span>20–35 分钟</span><span>10–30 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>信任交付</span><span>非语言沟通</span><span>责任感知</span></div>
+</a>
+<a class="gcard" href="games/trust/back-to-back-draw.html"
+   data-p="2,2" data-d="30,40"
+   data-v="indoor" data-u="group" data-ab="主动澄清|假设觉察|承认不懂"
+   data-s="背对背画画（back-to-back drawing） 让「假设对方懂了」这件事付出可见代价，练习主动确认与承认不懂 信任建立 主动澄清 假设觉察 承认不懂"
+   style="--cc:#fbbf24">
+  <div class="gc-name">背对背画画（Back-to-Back Drawing）</div>
+  <div class="gc-desc">让「假设对方懂了」这件事付出可见代价，练习主动确认与承认不懂</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>2 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>主动澄清</span><span>假设觉察</span><span>承认不懂</span></div>
+</a>
   </div>
+</section>
 
-  <!-- 教练工具箱 -->
-  <div class="section">
-    <div class="section-title">🧰 教练工具箱</div>
-    <p style="font-size:0.9em;color:#555;margin-bottom:16px;">教练/培训师专属工具，即拿即用。</p>
-    
-    <div class="tool-grid">
-      <a href="toolbox/facilitation.md" class="tool-card">
-        <div class="tool-icon">🗣️</div>
-        <div>
-          <div class="tool-name">引导话术库</div>
-          <div style="font-size:0.8em;color:#888;margin-top:2px;">开场白、规则讲解、介入干预的话术模板</div>
-        </div>
-      </a>
-      <a href="toolbox/debrief.md" class="tool-card">
-        <div class="tool-icon">🔍</div>
-        <div>
-          <div class="tool-name">复盘引导框架</div>
-          <div style="font-size:0.8em;color:#888;margin-top:2px;">4F 模型、提问清单、典型场景复盘话术</div>
-        </div>
-      </a>
-      <a href="toolbox/safety.md" class="tool-card">
-        <div class="tool-icon">🛡️</div>
-        <div>
-          <div class="tool-name">安全与管理</div>
-          <div style="font-size:0.8em;color:#888;margin-top:2px;">户外安全清单、突发情况预案、免责声明</div>
-        </div>
-      </a>
-      <a href="toolbox/checklist.md" class="tool-card">
-        <div class="tool-icon">✅</div>
-        <div>
-          <div class="tool-name">物资与效率工具</div>
-          <div style="font-size:0.8em;color:#888;margin-top:2px;">通用物资清单、分组方法、效果评估问卷</div>
-        </div>
-      </a>
-    </div>
+<section class="cat" data-cat="leadership" id="cat-leadership">
+  <div class="cat-h"><span class="c-ico">👑</span>领导力<span class="c-n">5 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/leadership/tangram.html"
+   data-p="3,7" data-d="60,90"
+   data-v="indoor" data-u="group" data-ab="信息孤岛|资源争夺|领导力缺失"
+   data-s="七巧板 通过资源分散的拼图任务，让参与者体验「信息孤岛」「资源争夺」「领导力缺失」等组织痛点。 领导力 信息孤岛 资源争夺 领导力缺失"
+   style="--cc:#f87171">
+  <div class="gc-name">七巧板</div>
+  <div class="gc-desc">通过资源分散的拼图任务，让参与者体验「信息孤岛」「资源争夺」「领导力缺失」等组织痛点。</div>
+  <div class="gc-meta"><span>60–90 分钟</span><span>3–7 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>信息孤岛</span><span>资源争夺</span><span>领导力缺失</span></div>
+</a>
+<a class="gcard" href="games/leadership/crisis-briefing.html"
+   data-p="5,8" data-d="50,70"
+   data-v="indoor" data-u="group" data-ab="结构化表达|不确定下的定力|受众视角"
+   data-s="危机发布会（crisis briefing） 在信息不全、时间受限、听众焦虑的条件下，练习「先立框架再讲细节」的沟通顺序 领导力 结构化表达 不确定下的定力 受众视角"
+   style="--cc:#f87171">
+  <div class="gc-name">危机发布会（Crisis Briefing）</div>
+  <div class="gc-desc">在信息不全、时间受限、听众焦虑的条件下，练习「先立框架再讲细节」的沟通顺序</div>
+  <div class="gc-meta"><span>50–70 分钟</span><span>5–8 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>结构化表达</span><span>不确定下的定力</span><span>受众视角</span></div>
+</a>
+<a class="gcard" href="games/leadership/silent-leader.html"
+   data-p="4,8" data-d="30,40"
+   data-v="indoor" data-u="group" data-ab="非权力领导|以身作则|团队自发"
+   data-s="沉默领袖 让准管理者体验「无法用权力（说话/命令）时，如何真正领导团队」——这是领导力最核心的考验。 领导力 非权力领导 以身作则 团队自发"
+   style="--cc:#f87171">
+  <div class="gc-name">沉默领袖</div>
+  <div class="gc-desc">让准管理者体验「无法用权力（说话/命令）时，如何真正领导团队」——这是领导力最核心的考验。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>非权力领导</span><span>以身作则</span><span>团队自发</span></div>
+</a>
+<a class="gcard" href="games/leadership/red-black-game.html"
+   data-p="6,10" data-d="45,60"
+   data-v="indoor" data-u="group" data-ab="信任建立|竞争合作|跨部门隐喻"
+   data-s="红黑游戏（red-black game） 体验竞争vs合作、信任建立、跨部门协作的复杂性 领导力 信任建立 竞争合作 跨部门隐喻"
+   style="--cc:#f87171">
+  <div class="gc-name">红黑游戏（Red-Black Game）</div>
+  <div class="gc-desc">体验竞争vs合作、信任建立、跨部门协作的复杂性</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>6–10 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>信任建立</span><span>竞争合作</span><span>跨部门隐喻</span></div>
+</a>
+<a class="gcard" href="games/leadership/resource-negotiation.html"
+   data-p="3,3" data-d="60,80"
+   data-v="indoor" data-u="group" data-ab="立场与利益|提问优先|创造选项"
+   data-s="资源谈判局（resource negotiation） 在零和表象下找到非零和解，练习「先问需求、再谈分配」的谈判顺序 领导力 立场与利益 提问优先 创造选项"
+   style="--cc:#f87171">
+  <div class="gc-name">资源谈判局（Resource Negotiation）</div>
+  <div class="gc-desc">在零和表象下找到非零和解，练习「先问需求、再谈分配」的谈判顺序</div>
+  <div class="gc-meta"><span>60–80 分钟</span><span>3 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>立场与利益</span><span>提问优先</span><span>创造选项</span></div>
+</a>
   </div>
+</section>
 
-  <!-- 使用指南 -->
-  <div class="section">
-    <div class="section-title">🚀 首次使用？</div>
-    <div style="background:#fff;border-radius:10px;padding:20px 24px;box-shadow:0 1px 4px rgba(0,0,0,0.08);line-height:1.8;font-size:0.92em;">
-      <p>👉 先读 <a href="guide.md" style="color:#3366cc;font-weight:600;">教练使用指南</a> —— 5 分钟了解如何选游戏、如何引导、如何复盘。</p>
-      <p style="margin-top:10px;">每款游戏文档包含 <strong>六个章节</strong>：概览与标签 · 核心规则 · 引导要点 · 复盘问题（4F 模型）· 变体适配 · 物资清单。</p>
-    </div>
+<section class="cat" data-cat="creativity" id="cat-creativity">
+  <div class="cat-h"><span class="c-ico">💡</span>创意激发<span class="c-n">4 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/creativity/10-yuan-idea.html"
+   data-p="4,8" data-d="30,45"
+   data-v="outdoor" data-u="group" data-ab="资源重构|创意落地|约束创新"
+   data-s="10元买创意 在极有限预算下完成创意挑战，打破&quot;有钱才能做好&quot;的思维定势，训练资源重构能力。 创意激发 资源重构 创意落地 约束创新"
+   style="--cc:#f472b6">
+  <div class="gc-name">10元买创意</div>
+  <div class="gc-desc">在极有限预算下完成创意挑战，打破&quot;有钱才能做好&quot;的思维定势，训练资源重构能力。</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>4–8 人/组</span><span>户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>资源重构</span><span>创意落地</span><span>约束创新</span></div>
+</a>
+<a class="gcard" href="games/creativity/yes-and-improv.html"
+   data-p="4,8" data-d="30,45"
+   data-v="indoor" data-u="group" data-ab="接受与加码|创意连续性|心理安全"
+   data-s="yes, and：即兴接龙（yes and improv） 让团队亲身体验「否定」和「加码」对创意流的破坏与激活，把 yes, and 变成会议里的口头禅 创意激发 接受与加码 创意连续性 心理安全"
+   style="--cc:#f472b6">
+  <div class="gc-name">Yes, And：即兴接龙（Yes And Improv）</div>
+  <div class="gc-desc">让团队亲身体验「否定」和「加码」对创意流的破坏与激活，把 Yes, And 变成会议里的口头禅</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>接受与加码</span><span>创意连续性</span><span>心理安全</span></div>
+</a>
+<a class="gcard" href="games/creativity/alternative-uses.html"
+   data-p="4,8" data-d="25,40"
+   data-v="indoor" data-u="group" data-ab="发散产量|联想跳跃|延迟评判"
+   data-s="一物百用（alternative uses） 用极低门槛的发散任务，让团队看到「创意产量」和「评判过早」之间的关系 创意激发 发散产量 联想跳跃 延迟评判"
+   style="--cc:#f472b6">
+  <div class="gc-name">一物百用（Alternative Uses）</div>
+  <div class="gc-desc">用极低门槛的发散任务，让团队看到「创意产量」和「评判过早」之间的关系</div>
+  <div class="gc-meta"><span>25–40 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>发散产量</span><span>联想跳跃</span><span>延迟评判</span></div>
+</a>
+<a class="gcard" href="games/creativity/newspaper-tower.html"
+   data-p="4,6" data-d="30,40"
+   data-v="outdoor" data-u="group" data-ab="快速迭代|结构协作|失败耐受"
+   data-s="报纸塔挑战 在资源受限条件下，通过快速迭代和团队协作，完成看似不可能的工程挑战。 创意激发 快速迭代 结构协作 失败耐受"
+   style="--cc:#f472b6">
+  <div class="gc-name">报纸塔挑战</div>
+  <div class="gc-desc">在资源受限条件下，通过快速迭代和团队协作，完成看似不可能的工程挑战。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>4–6 人/组</span><span>户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>快速迭代</span><span>结构协作</span><span>失败耐受</span></div>
+</a>
   </div>
+</section>
 
+<section class="cat" data-cat="problem-solving" id="cat-problem-solving">
+  <div class="cat-h"><span class="c-ico">🔧</span>问题解决<span class="c-n">5 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/problem-solving/marshmallow-challenge.html"
+   data-p="4,6" data-d="45,60"
+   data-v="indoor" data-u="group" data-ab="先原型后完美|目标对齐|迭代节奏"
+   data-s="棉花糖挑战（marshmallow challenge） 用一次必然暴露「先做还是先想」差异的动手任务，把原型思维和失败成本讲透 问题解决 先原型后完美 目标对齐 迭代节奏"
+   style="--cc:#22d3ee">
+  <div class="gc-name">棉花糖挑战（Marshmallow Challenge）</div>
+  <div class="gc-desc">用一次必然暴露「先做还是先想」差异的动手任务，把原型思维和失败成本讲透</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>4–6 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>先原型后完美</span><span>目标对齐</span><span>迭代节奏</span></div>
+</a>
+<a class="gcard" href="games/problem-solving/desert-survival.html"
+   data-p="5,8" data-d="30,45"
+   data-v="indoor" data-u="group" data-ab="快速共识|理性决策|专家依赖"
+   data-s="沙漠逃生 在信息不完全、时间压力下，训练团队快速共识、理性决策的能力。 问题解决 快速共识 理性决策 专家依赖"
+   style="--cc:#22d3ee">
+  <div class="gc-name">沙漠逃生</div>
+  <div class="gc-desc">在信息不完全、时间压力下，训练团队快速共识、理性决策的能力。</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>5–8 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>快速共识</span><span>理性决策</span><span>专家依赖</span></div>
+</a>
+<a class="gcard" href="games/problem-solving/paper-bridge.html"
+   data-p="3,5" data-d="40,55"
+   data-v="indoor" data-u="group" data-ab="结构思维|单变量迭代|失败数据化"
+   data-s="纸桥承重赛（paper bridge） 在有限材料下做多轮承重测试，体验「结构改造 &gt; 材料堆叠」和「每次只改一个变量」 问题解决 结构思维 单变量迭代 失败数据化"
+   style="--cc:#22d3ee">
+  <div class="gc-name">纸桥承重赛（Paper Bridge）</div>
+  <div class="gc-desc">在有限材料下做多轮承重测试，体验「结构改造 &gt; 材料堆叠」和「每次只改一个变量」</div>
+  <div class="gc-meta"><span>40–55 分钟</span><span>3–5 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>结构思维</span><span>单变量迭代</span><span>失败数据化</span></div>
+</a>
+<a class="gcard" href="games/problem-solving/virtual-escape.html"
+   data-p="4,6" data-d="30,45"
+   data-v="indoor" data-u="group" data-ab="线索串联|分工协作|注意力管理"
+   data-s="虚拟密室逃脱（virtual escape room） 体验&quot;信息不在一个人手里&quot;时团队如何分工、谁做主导、谁在等 问题解决 线索串联 分工协作 注意力管理"
+   style="--cc:#22d3ee">
+  <div class="gc-name">虚拟密室逃脱（Virtual Escape Room）</div>
+  <div class="gc-desc">体验&quot;信息不在一个人手里&quot;时团队如何分工、谁做主导、谁在等</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>4–6 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>线索串联</span><span>分工协作</span><span>注意力管理</span></div>
+</a>
+<a class="gcard" href="games/problem-solving/egg-drop.html"
+   data-p="4,6" data-d="45,60"
+   data-v="outdoor" data-u="group" data-ab="快速试错|工程协作|失败学习"
+   data-s="鸡蛋坠落挑战 在 constrained 条件下，通过快速试错和团队协作，完成工程挑战，体验「fail fast, learn fast」。 问题解决 快速试错 工程协作 失败学习"
+   style="--cc:#22d3ee">
+  <div class="gc-name">鸡蛋坠落挑战</div>
+  <div class="gc-desc">在 constrained 条件下，通过快速试错和团队协作，完成工程挑战，体验「fail fast, learn fast」。</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>4–6 人/组</span><span>户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>快速试错</span><span>工程协作</span><span>失败学习</span></div>
+</a>
+  </div>
+</section>
+
+<section class="cat" data-cat="jubensha" id="cat-jubensha">
+  <div class="cat-h"><span class="c-ico">🎭</span>剧本杀改编<span class="c-n">6 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/jubensha/detective-stations.html"
+   data-p="20,40" data-d="60,90"
+   data-v="indoor" data-u="total" data-ab="空间即游戏|良性竞赛|低门槛流动"
+   data-s="侦探事务所 (detective agency) 把公司布置成一家「侦探事务所」：4-6 个独立小案件分布在不同房间，每队限时办案，破案后领取下一案的「委托函」。 剧本杀改编 空间即游戏 良性竞赛 低门槛流动"
+   style="--cc:#c084fc">
+  <div class="gc-name">侦探事务所 (Detective Agency)</div>
+  <div class="gc-desc">把公司布置成一家「侦探事务所」：4-6 个独立小案件分布在不同房间，每队限时办案，破案后领取下一案的「委托函」。</div>
+  <div class="gc-meta"><span>60–90 分钟</span><span>20–40 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>空间即游戏</span><span>良性竞赛</span><span>低门槛流动</span></div>
+</a>
+<a class="gcard" href="games/jubensha/mask-dinner.html"
+   data-p="15,40" data-d="60,90"
+   data-v="indoor" data-u="total" data-ab="角色释放|轻推理|破圈社交"
+   data-s="假面晚宴 (mask dinner) 一场 60-90 分钟的「带任务的晚宴」：每人戴一张面具、拿一个隐藏身份和三个秘密任务，在吃饭、敬酒、合影的间隙里完成任务。 剧本杀改编 角色释放 轻推理 破圈社交"
+   style="--cc:#c084fc">
+  <div class="gc-name">假面晚宴 (Mask Dinner)</div>
+  <div class="gc-desc">一场 60-90 分钟的「带任务的晚宴」：每人戴一张面具、拿一个隐藏身份和三个秘密任务，在吃饭、敬酒、合影的间隙里完成任务。</div>
+  <div class="gc-meta"><span>60–90 分钟</span><span>15–40 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>角色释放</span><span>轻推理</span><span>破圈社交</span></div>
+</a>
+<a class="gcard" href="games/jubensha/office-mystery.html"
+   data-p="6,12" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="推理协作|沟通表达|新老融合"
+   data-s="办公室谜案 (office mystery) 把商业剧本杀「轻量化」成一场 45 分钟的办公室推理：每个人拿到一个带秘密的角色，在搜证、盘问、结案陈词里还原事件真相。 剧本杀改编 推理协作 沟通表达 新老融合"
+   style="--cc:#c084fc">
+  <div class="gc-name">办公室谜案 (Office Mystery)</div>
+  <div class="gc-desc">把商业剧本杀「轻量化」成一场 45 分钟的办公室推理：每个人拿到一个带秘密的角色，在搜证、盘问、结案陈词里还原事件真相。</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>6–12 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>推理协作</span><span>沟通表达</span><span>新老融合</span></div>
+</a>
+<a class="gcard" href="games/jubensha/undercover-file.html"
+   data-p="8,16" data-d="30,40"
+   data-v="indoor" data-u="total" data-ab="表达艺术|观察倾听|演技释放"
+   data-s="卧底档案 (undercover file) 「谁是卧底」的剧本杀升级版：一场「公司内部调查」中，大多数人拿到底牌（普通员工），少数人拿到卧底牌（带暗语），还有一人是「双面人」。 剧本杀改编 表达艺术 观察倾听 演技释放"
+   style="--cc:#c084fc">
+  <div class="gc-name">卧底档案 (Undercover File)</div>
+  <div class="gc-desc">「谁是卧底」的剧本杀升级版：一场「公司内部调查」中，大多数人拿到底牌（普通员工），少数人拿到卧底牌（带暗语），还有一人是「双面人」。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>8–16 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>表达艺术</span><span>观察倾听</span><span>演技释放</span></div>
+</a>
+<a class="gcard" href="games/jubensha/time-loop-case.html"
+   data-p="6,12" data-d="60,75"
+   data-v="indoor" data-u="total" data-ab="迭代思维|信息管理|高压沟通"
+   data-s="时间循环案 (time loop case) 一个只有 10 分钟的「案发夜晚」，团队要重复经历 5 次。 剧本杀改编 迭代思维 信息管理 高压沟通"
+   style="--cc:#c084fc">
+  <div class="gc-name">时间循环案 (Time Loop Case)</div>
+  <div class="gc-desc">一个只有 10 分钟的「案发夜晚」，团队要重复经历 5 次。</div>
+  <div class="gc-meta"><span>60–75 分钟</span><span>6–12 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>迭代思维</span><span>信息管理</span><span>高压沟通</span></div>
+</a>
+<a class="gcard" href="games/jubensha/treasure-code.html"
+   data-p="10,60" data-d="45,60"
+   data-v="both" data-u="total" data-ab="目标拆解|跨组协作|全场流动"
+   data-s="藏宝密令 (treasure code) 把剧本杀的「线索链」装进一场公司寻宝：一份藏宝图被撕成碎片散落在办公区/园区，每枚碎片都藏在一道谜题、一个挑战或一次「与人对话」背后。 剧本杀改编 目标拆解 跨组协作 全场流动"
+   style="--cc:#c084fc">
+  <div class="gc-name">藏宝密令 (Treasure Code)</div>
+  <div class="gc-desc">把剧本杀的「线索链」装进一场公司寻宝：一份藏宝图被撕成碎片散落在办公区/园区，每枚碎片都藏在一道谜题、一个挑战或一次「与人对话」背后。</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>10–60 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>目标拆解</span><span>跨组协作</span><span>全场流动</span></div>
+</a>
+  </div>
+</section>
+
+<section class="cat" data-cat="variety" id="cat-variety">
+  <div class="cat-h"><span class="c-ico">📺</span>综艺娱乐<span class="c-n">7 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/variety/team-quiz.html"
+   data-p="8,50" data-d="30,45"
+   data-v="indoor" data-u="total" data-ab="集体荣誉|知识共享|抢答纪律"
+   data-s="团队知识竞答（team quiz） 用低门槛的抢答赛制造一次公平的集体荣誉，同时暴露各团队的知识结构差异 综艺娱乐 集体荣誉 知识共享 抢答纪律"
+   style="--cc:#fb923c">
+  <div class="gc-name">团队知识竞答（Team Quiz）</div>
+  <div class="gc-desc">用低门槛的抢答赛制造一次公平的集体荣誉，同时暴露各团队的知识结构差异</div>
+  <div class="gc-meta"><span>30–45 分钟</span><span>8–50 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>集体荣誉</span><span>知识共享</span><span>抢答纪律</span></div>
+</a>
+<a class="gcard" href="games/variety/host-show.html"
+   data-p="8,20" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="即兴表达|抗压训练|观众意识"
+   data-s="我是主持人 (host show) 把《脱口秀大会》《主持人大赛》的赛制搬进团建：抽签决定「主持场景」，90秒准备，即兴主持一段——公司年会、突发新闻、产品翻车发布会、相亲节目……观众… 综艺娱乐 即兴表达 抗压训练 观众意识"
+   style="--cc:#fb923c">
+  <div class="gc-name">我是主持人 (Host Show)</div>
+  <div class="gc-desc">把《脱口秀大会》《主持人大赛》的赛制搬进团建：抽签决定「主持场景」，90秒准备，即兴主持一段——公司年会、突发新闻、产品翻车发布会、相亲节目……观众…</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>8–20 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>即兴表达</span><span>抗压训练</span><span>观众意识</span></div>
+</a>
+<a class="gcard" href="games/variety/name-tag-war.html"
+   data-p="10,40" data-d="40,60"
+   data-v="both" data-u="total" data-ab="体能释放|策略博弈|综艺效果"
+   data-s="撕名牌大战 (name tag war) 《奔跑吧》的标志性环节，团建版安全重制：每人身后贴一张名牌，在规定区域内互相追逐，撕下对方名牌得分，名牌被撕者出局（或转为「裁判/摄影师」）。 综艺娱乐 体能释放 策略博弈 综艺效果"
+   style="--cc:#fb923c">
+  <div class="gc-name">撕名牌大战 (Name Tag War)</div>
+  <div class="gc-desc">《奔跑吧》的标志性环节，团建版安全重制：每人身后贴一张名牌，在规定区域内互相追逐，撕下对方名牌得分，名牌被撕者出局（或转为「裁判/摄影师」）。</div>
+  <div class="gc-meta"><span>40–60 分钟</span><span>10–40 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>体能释放</span><span>策略博弈</span><span>综艺效果</span></div>
+</a>
+<a class="gcard" href="games/variety/mission-cards.html"
+   data-p="6,30" data-d="90,120"
+   data-v="both" data-u="total" data-ab="随机应变|执行力|素材工厂"
+   data-s="极挑任务卡 (mission cards) 《极限挑战》式任务卡团建：每组持一部手机+一叠任务卡，在园区/商圈/景点里随机抽取任务并完成——和陌生人合影、用身体摆字、找到指定店铺、限时采购……… 综艺娱乐 随机应变 执行力 素材工厂"
+   style="--cc:#fb923c">
+  <div class="gc-name">极挑任务卡 (Mission Cards)</div>
+  <div class="gc-desc">《极限挑战》式任务卡团建：每组持一部手机+一叠任务卡，在园区/商圈/景点里随机抽取任务并完成——和陌生人合影、用身体摆字、找到指定店铺、限时采购………</div>
+  <div class="gc-meta"><span>90–120 分钟</span><span>6–30 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>随机应变</span><span>执行力</span><span>素材工厂</span></div>
+</a>
+<a class="gcard" href="games/variety/acting-party.html"
+   data-p="8,24" data-d="40,50"
+   data-v="indoor" data-u="total" data-ab="压力释放|默契考验|表达训练"
+   data-s="演技派对 (acting party) 「你演我猜」的综艺联赛版：三轮赛制（个人赛→对手戏→团体大戏），从「比划词语」进化到「演一段剧情」。 综艺娱乐 压力释放 默契考验 表达训练"
+   style="--cc:#fb923c">
+  <div class="gc-name">演技派对 (Acting Party)</div>
+  <div class="gc-desc">「你演我猜」的综艺联赛版：三轮赛制（个人赛→对手戏→团体大戏），从「比划词语」进化到「演一段剧情」。</div>
+  <div class="gc-meta"><span>40–50 分钟</span><span>8–24 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>压力释放</span><span>默契考验</span><span>表达训练</span></div>
+</a>
+<a class="gcard" href="games/variety/trivia-show.html"
+   data-p="10,30" data-d="45,60"
+   data-v="indoor" data-u="total" data-ab="综艺仪式感|风险决策|表演释放"
+   data-s="王牌对王牌 (trivia show) 把《王牌对王牌》的综艺竞答搬进会议室：抢答、风险押注、表演题、惩罚机制全套配齐。 综艺娱乐 综艺仪式感 风险决策 表演释放"
+   style="--cc:#fb923c">
+  <div class="gc-name">王牌对王牌 (Trivia Show)</div>
+  <div class="gc-desc">把《王牌对王牌》的综艺竞答搬进会议室：抢答、风险押注、表演题、惩罚机制全套配齐。</div>
+  <div class="gc-meta"><span>45–60 分钟</span><span>10–30 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>综艺仪式感</span><span>风险决策</span><span>表演释放</span></div>
+</a>
+<a class="gcard" href="games/variety/whisper-chain.html"
+   data-p="8,30" data-d="20,30"
+   data-v="indoor" data-u="total" data-ab="沟通失真演示|零门槛爆笑|归因训练"
+   data-s="综艺传声筒 (whisper chain) 经典「传话游戏」的综艺升级版：不只是耳语传话，中间插入「比划」「方言」「一个字」三种变形规则。 综艺娱乐 沟通失真演示 零门槛爆笑 归因训练"
+   style="--cc:#fb923c">
+  <div class="gc-name">综艺传声筒 (Whisper Chain)</div>
+  <div class="gc-desc">经典「传话游戏」的综艺升级版：不只是耳语传话，中间插入「比划」「方言」「一个字」三种变形规则。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>8–30 人</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>沟通失真演示</span><span>零门槛爆笑</span><span>归因训练</span></div>
+</a>
+  </div>
+</section>
+
+<section class="cat" data-cat="boardgame" id="cat-boardgame">
+  <div class="cat-h"><span class="c-ico">🎲</span>桌游团建<span class="c-n">6 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/boardgame/ai-dream-designer.html"
+   data-p="4,5" data-d="60,60"
+   data-v="indoor" data-u="group" data-ab="需求理解|创意组合|客户思维"
+   data-s="ai梦境设计师 接订单、读需求、组创意——体验「需求没读懂就动手」的代价，以及客户视角下的「好」到底谁说了算。 桌游团建 需求理解 创意组合 客户思维"
+   style="--cc:#94a3b8">
+  <div class="gc-name">AI梦境设计师</div>
+  <div class="gc-desc">接订单、读需求、组创意——体验「需求没读懂就动手」的代价，以及客户视角下的「好」到底谁说了算。</div>
+  <div class="gc-meta"><span>60 分钟</span><span>4–5 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>需求理解</span><span>创意组合</span><span>客户思维</span></div>
+</a>
+<a class="gcard" href="games/boardgame/chef-undercover.html"
+   data-p="6,8" data-d="60,60"
+   data-v="indoor" data-u="group" data-ab="观察与表达|信任与验证|被冤枉的体感"
+   data-s="卧底大厨 一边合作出菜，一边找出内鬼——从模糊的怀疑走到具体举证，顺带体会一次被冤枉的滋味。 桌游团建 观察与表达 信任与验证 被冤枉的体感"
+   style="--cc:#94a3b8">
+  <div class="gc-name">卧底大厨</div>
+  <div class="gc-desc">一边合作出菜，一边找出内鬼——从模糊的怀疑走到具体举证，顺带体会一次被冤枉的滋味。</div>
+  <div class="gc-meta"><span>60 分钟</span><span>6–8 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>观察与表达</span><span>信任与验证</span><span>被冤枉的体感</span></div>
+</a>
+<a class="gcard" href="games/boardgame/ancient-auction.html"
+   data-p="5,5" data-d="60,60"
+   data-v="indoor" data-u="group" data-ab="估值判断|期望值思维|竞价策略"
+   data-s="古文明拍卖行 密封竞价、资金有限、隐藏套装加成——把团队对「这东西值多少」的判断分歧直接摆上桌。 桌游团建 估值判断 期望值思维 竞价策略"
+   style="--cc:#94a3b8">
+  <div class="gc-name">古文明拍卖行</div>
+  <div class="gc-desc">密封竞价、资金有限、隐藏套装加成——把团队对「这东西值多少」的判断分歧直接摆上桌。</div>
+  <div class="gc-meta"><span>60 分钟</span><span>5 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>估值判断</span><span>期望值思维</span><span>竞价策略</span></div>
+</a>
+<a class="gcard" href="games/boardgame/gene-lab.html"
+   data-p="4,6" data-d="85,85"
+   data-v="indoor" data-u="group" data-ab="进度与安全的平衡|专业分工与互信|时间压力下的共识"
+   data-s="基因编辑实验室 脱靶风险对上病毒倒计时——在「赶进度」和「保质量」之间，逼团队给出一个能站住的答案。 桌游团建 进度与安全的平衡 专业分工与互信 时间压力下的共识"
+   style="--cc:#94a3b8">
+  <div class="gc-name">基因编辑实验室</div>
+  <div class="gc-desc">脱靶风险对上病毒倒计时——在「赶进度」和「保质量」之间，逼团队给出一个能站住的答案。</div>
+  <div class="gc-meta"><span>85 分钟</span><span>4–6 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>进度与安全的平衡</span><span>专业分工与互信</span><span>时间压力下的共识</span></div>
+</a>
+<a class="gcard" href="games/boardgame/digital-twin-work.html"
+   data-p="4,6" data-d="45,45"
+   data-v="indoor" data-u="group" data-ab="优先级显性化|干扰管理|崩溃预警"
+   data-s="数字分身上班记 邮件、会议、报告同时砸来——体验优先级判断被逼到明面上，以及「忙到崩溃」的黑色幽默。 桌游团建 优先级显性化 干扰管理 崩溃预警"
+   style="--cc:#94a3b8">
+  <div class="gc-name">数字分身上班记</div>
+  <div class="gc-desc">邮件、会议、报告同时砸来——体验优先级判断被逼到明面上，以及「忙到崩溃」的黑色幽默。</div>
+  <div class="gc-meta"><span>45 分钟</span><span>4–6 人/组</span><span>室内</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>优先级显性化</span><span>干扰管理</span><span>崩溃预警</span></div>
+</a>
+<a class="gcard" href="games/boardgame/mars-colony.html"
+   data-p="4,6" data-d="100,100"
+   data-v="indoor" data-u="group" data-ab="短期生存与长期发展的平衡|资源分配的民主与集中|随机危机的预案思维"
+   data-s="火星殖民计划 氧气、水、食物是眼前的命，科技与移民是十年后的事——团队如何在两张表之间分配资源。 桌游团建 短期生存与长期发展的平衡 资源分配的民主与集中 随机危机的预案思维"
+   style="--cc:#94a3b8">
+  <div class="gc-name">火星殖民计划</div>
+  <div class="gc-desc">氧气、水、食物是眼前的命，科技与移民是十年后的事——团队如何在两张表之间分配资源。</div>
+  <div class="gc-meta"><span>100 分钟</span><span>4–6 人/组</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>短期生存与长期发展的平衡</span><span>资源分配的民主与集中</span><span>随机危机的预案思维</span></div>
+</a>
+  </div>
+</section>
+
+<div class="empty" id="empty">
+  <span class="e-ico">🫧</span>
+  这个组合下暂时没有游戏。<br>试着放宽人数或时长，或<a href="#" id="relax">清空所有条件</a>。
 </div>
 
-<div class="footer">
-  <p>团建 & 培训游戏库 · <a href="https://github.com/aiworkdb/aiworkdb.github.io">GitHub 仓库</a> · 最后更新：2026-06-25</p>
+<div class="blk" id="flows">
+  <div class="blk-h">📋 团建流程方案</div>
+  <div class="flow-list">
+    <a class="flow" href="flows/one-day/01-schedule.html">
+      <span class="f-ico">📅</span>
+      <span class="f-b"><span class="f-t">一日团建模板</span><span class="f-d">6–8 小时 · 15–50 人 · 破冰 + 协作 + 复盘完整闭环</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="flows/half-day/01-schedule.html">
+      <span class="f-ico">⏱️</span>
+      <span class="f-b"><span class="f-t">半日团建模板</span><span class="f-d">3–4 小时 · 10–30 人 · 快速凝聚，适合周五下午</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="flows/workshop/leadership-awakening.html">
+      <span class="f-ico">🎓</span>
+      <span class="f-b"><span class="f-t">主题工作坊：领导力觉醒</span><span class="f-d">2.5–3 小时 · 12–24 人 · 深度引导，非娱乐向</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="flows/cross-dept/01-schedule.html">
+      <span class="f-ico">🤝</span>
+      <span class="f-b"><span class="f-t">跨部门协作方案</span><span class="f-d">半天 · 20–40 人 · 打散部门重组，专治部门墙</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="flows/onboarding/01-schedule.html">
+      <span class="f-ico">🌱</span>
+      <span class="f-b"><span class="f-t">新人融入方案</span><span class="f-d">2–3 小时 · 6–20 人 · 让新人在第一个月被记住</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="flows/online/01-schedule.html">
+      <span class="f-ico">💻</span>
+      <span class="f-b"><span class="f-t">线上团建模板</span><span class="f-d">2–2.5 小时 · 8–30 人 · 远程团队，全程可在线完成</span></span>
+      <span class="f-a">›</span>
+    </a>
+  </div>
 </div>
+
+<div class="blk" id="toolbox">
+  <div class="blk-h">🧰 教练工具箱</div>
+  <div class="flow-list">
+    <a class="flow" href="toolbox/facilitation.html">
+      <span class="f-ico">🗣️</span>
+      <span class="f-b"><span class="f-t">引导话术库</span><span class="f-d">开场白 / 规则讲解 / 介入干预模板</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="toolbox/debrief.html">
+      <span class="f-ico">🔍</span>
+      <span class="f-b"><span class="f-t">复盘引导框架</span><span class="f-d">4F 模型 + 提问清单 + 典型场景话术</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="toolbox/safety.html">
+      <span class="f-ico">🛡️</span>
+      <span class="f-b"><span class="f-t">安全与管理</span><span class="f-d">户外安全清单 / 突发预案 / 免责声明</span></span>
+      <span class="f-a">›</span>
+    </a>
+    <a class="flow" href="toolbox/checklist.html">
+      <span class="f-ico">✅</span>
+      <span class="f-b"><span class="f-t">物资与效率</span><span class="f-d">通用物资清单 / 分组方法 / 评估问卷</span></span>
+      <span class="f-a">›</span>
+    </a>
+  </div>
+</div>
+
+<div class="blk">
+  <div class="blk-h">📱 在线直接玩</div>
+  <a class="flow" href="play/index.html">
+    <span class="f-ico">🎮</span>
+    <span class="f-b">
+      <span class="f-t">8 款在线游戏 + 教练工具</span>
+      <span class="f-d">手机打开即用，无需下载。评分、计时、分组、方案生成器</span>
+    </span>
+    <span class="f-a">›</span>
+  </a>
+</div>
+
+<footer class="h-foot">
+  <div>共 86 款游戏 · 内容持续更新</div>
+  <div style="margin-top:4px">
+    <a href="guide.md">教练使用指南</a> ·
+    <a href="https://github.com/aiworkdb/aiworkdb.github.io">GitHub</a>
+  </div>
+  <div style="margin-top:6px;opacity:.8">时长与人数为常规建议，现场请按实际场地、道具与人员状态调整。</div>
+</footer>
+</main>
+
+<nav class="tabbar">
+  <a class="on" href="index.html"><span class="t-ico">🎲</span>游戏库</a>
+  <a href="#flows"><span class="t-ico">📋</span>流程方案</a>
+  <a href="#toolbox"><span class="t-ico">🧰</span>工具箱</a>
+  <a href="play/index.html"><span class="t-ico">🎮</span>在线玩</a>
+</nav>
 
 <script>
-// 当前筛选状态
-var currentFilters = {
-  category: 'all',
-  people: 'all',
-  duration: 'all'
-};
+(function(){
+  var q=document.getElementById('q'),clr=document.getElementById('clr'),
+      hits=document.getElementById('hits'),hint=document.getElementById('hint'),
+      reset=document.getElementById('reset'),empty=document.getElementById('empty'),
+      cards=[].slice.call(document.querySelectorAll('.gcard')),
+      cats=[].slice.call(document.querySelectorAll('.cat')),
+      st={ppl:'',dur:'',ven:'',ab:'',q:''};
 
-function toggleFilter(type, value, btn) {
-  // 更新筛选状态
-  currentFilters[type] = value;
-  
-  // 更新按钮样式
-  var filterGroup = btn.parentElement;
-  filterGroup.querySelectorAll('.filter-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
-  btn.classList.add('active');
-  
-  // 重新筛选
-  filterCards();
-}
+  var P={'u10':[0,10],'10-30':[10,30],'30-60':[30,60],'60p':[60,9999]};
+  var D={'d15':[0,15],'d30':[15,30],'d60':[30,60],'d120':[60,120],'d120p':[120,9999]};
 
-function filterCards() {
-  var q = document.getElementById('search').value.toLowerCase();
-  
-  // 获取所有游戏卡片
-  var grids = document.querySelectorAll('.grid');
-  grids.forEach(function(grid) {
-    var cards = grid.querySelectorAll('.card');
-    cards.forEach(function(card) {
-      var t = card.innerText.toLowerCase();
-      var visible = true;
-      
-      // 关键词搜索
-      if (q !== '' && t.indexOf(q) < 0) {
-        visible = false;
+  function ov(a,b,lo,hi){ return a<=hi && b>=lo; }
+
+  function ok(el){
+    if(st.ppl){
+      var p=el.dataset.p.split(',').map(Number), r=P[st.ppl];
+      if(el.dataset.u==='group'){
+        // 每组人数：能凑出一组即可（多组并行），只排除「目标人数少于最小成组人数」
+        if(r[1] < p[0]) return false;
+      } else {
+        if(!ov(p[0], p[1]===0?9999:p[1], r[0], r[1])) return false;
       }
-      
-      // 分类筛选
-      if (visible && currentFilters.category !== 'all') {
-        var gridId = grid.id;
-        var cardCategory = gridId.replace('grid-', '');
-        if (cardCategory !== currentFilters.category) {
-          visible = false;
-        }
-      }
-      
-      // 人数筛选
-      if (visible && currentFilters.people !== 'all') {
-        var people = card.getAttribute('data-people');
-        if (people !== currentFilters.people) {
-          visible = false;
-        }
-      }
-      
-      // 时长筛选
-      if (visible && currentFilters.duration !== 'all') {
-        var duration = card.getAttribute('data-duration');
-        if (duration !== currentFilters.duration) {
-          visible = false;
-        }
-      }
-      
-      card.style.display = visible ? '' : 'none';
-    });
-    
-    // 隐藏空的grid
-    var hasVisibleCards = false;
-    cards = grid.querySelectorAll('.card');
-    cards.forEach(function(card) {
-      if (card.style.display !== 'none') {
-        hasVisibleCards = true;
-      }
-    });
-    
-    // 找到grid的标题（前一个div）
-    var gridTitle = grid.previousElementSibling;
-    if (gridTitle && gridTitle.style.fontWeight === '600') {
-      gridTitle.style.display = hasVisibleCards ? '' : 'none';
     }
-    grid.style.display = hasVisibleCards ? '' : 'none';
-  });
-}
-</script>
+    if(st.dur){ var d=el.dataset.d.split(',').map(Number), r2=D[st.dur];
+        if(!ov(d[0],d[1],r2[0],r2[1])) return false; }
+    if(st.ven){
+      var v=el.dataset.v;
+      if(st.ven==='both'){ if(v!=='both') return false; }
+      else if(v!==st.ven && v!=='both') return false;
+    }
+    if(st.ab){
+      if((el.dataset.ab||'').indexOf(st.ab)<0) return false;
+    }
+    if(st.q){
+      if((el.dataset.s||'').indexOf(st.q)<0) return false;
+    }
+    return true;
+  }
 
+  function apply(){
+    var n=0;
+    cards.forEach(function(c){ var m=ok(c); c.style.display=m?'':'none'; if(m)n++; });
+    cats.forEach(function(sec){
+      var vis=[].slice.call(sec.querySelectorAll('.gcard')).filter(function(c){return c.style.display!=='none';});
+      sec.style.display=vis.length?'':'none';
+      var cnt=sec.querySelector('.c-n'); if(cnt)cnt.textContent=vis.length+' 款';
+    });
+    hits.textContent=n;
+    empty.classList.toggle('on',n===0);
+    if((st.ven||st.ab)&&!more.classList.contains('on')){
+      more.classList.add('on'); tog.setAttribute('aria-expanded','true');
+      tog.textContent='收起筛选 ⌃';
+    }
+    var active=[st.ppl,st.dur,st.ven,st.ab,st.q].filter(Boolean).length;
+    reset.classList.toggle('on',active>0);
+    hint.textContent = st.ppl ? '· 标「/组」的可多组并行' 
+                      : (active?('· 已用 '+active+' 个条件'):'');
+  }
+
+  function bind(rowId,key){
+    var row=document.getElementById(rowId);
+    if(!row)return;
+    row.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b)return;
+      var cur=b.dataset.v===st[key];
+      row.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+      if(cur){ st[key]=''; } else { st[key]=b.dataset.v; b.classList.add('on'); }
+      apply();
+    });
+  }
+  bind('f-ppl','ppl'); bind('f-dur','dur'); bind('f-ven','ven'); bind('f-ab','ab');
+
+  var more=document.getElementById('f-more'), tog=document.getElementById('f-toggle');
+  tog.addEventListener('click',function(){
+    var on=more.classList.toggle('on');
+    tog.setAttribute('aria-expanded',on?'true':'false');
+    tog.textContent=on?'收起筛选 ⌃':'更多筛选 ⌄';
+  });
+
+  q.addEventListener('input',function(){
+    st.q=q.value.trim().toLowerCase();
+    clr.classList.toggle('on',!!q.value);
+    apply();
+  });
+  clr.addEventListener('click',function(){ q.value=''; st.q=''; clr.classList.remove('on'); apply(); q.focus(); });
+
+  function clearAll(){
+    st.ppl=st.dur=st.ven=st.ab=st.q='';
+    q.value=''; clr.classList.remove('on');
+    ['f-ppl','f-dur','f-ven','f-ab'].forEach(function(id){
+      var row=document.getElementById(id); if(!row)return;
+      row.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+    });
+    document.querySelectorAll('#quick button').forEach(function(x){x.classList.remove('on');});
+    more.classList.remove('on'); tog.setAttribute('aria-expanded','false'); tog.textContent='更多筛选 ⌄';
+    apply();
+  }
+  reset.addEventListener('click',clearAll);
+  document.getElementById('relax').addEventListener('click',function(e){e.preventDefault();clearAll();});
+
+  // 快速入口
+  var presets={
+    ice:  {ppl:'',dur:'d15',ven:'',ab:'',cat:'icebreaker'},
+    small:{ppl:'10-30',dur:'',ven:'',ab:'',cat:''},
+    long: {ppl:'',dur:'d60',ven:'',ab:'',cat:''},
+    indoor:{ppl:'',dur:'',ven:'indoor',ab:'',cat:''},
+    jubensha:{ppl:'',dur:'',ven:'',ab:'',cat:'jubensha'},
+    boardgame:{ppl:'',dur:'',ven:'',ab:'',cat:'boardgame'}
+  };
+  document.getElementById('quick').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    var on=b.classList.contains('on');
+    var all=this.querySelectorAll('button');
+    all.forEach(function(x){x.classList.remove('on');});
+    if(on){ clearAll(); return; }
+    b.classList.add('on');
+    var p=presets[b.dataset.preset];
+    clearAll();
+    b.classList.add('on');
+    st.ppl=p.ppl; st.dur=p.dur; st.ven=p.ven; st.ab=p.ab;
+    [['f-ppl','ppl'],['f-dur','dur'],['f-ven','ven'],['f-ab','ab']].forEach(function(pair){
+      var row=document.getElementById(pair[0]); if(!row||!st[pair[1]])return;
+      row.querySelectorAll('button').forEach(function(x){
+        x.classList.toggle('on',x.dataset.v===st[pair[1]]);
+      });
+    });
+    apply();
+    if(p.cat){
+      var sec=document.querySelector('[data-cat="'+p.cat+'"]');
+      if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});
+    } else {
+      document.getElementById('list').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  });
+
+  apply();
+})();
+</script>
 </body>
 </html>

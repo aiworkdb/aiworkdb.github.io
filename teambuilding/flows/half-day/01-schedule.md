@@ -7,6 +7,8 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/half-day/01-schedule.html"
 ---
 # 半日团建流程模板
 
+> **一句话**：3 小时从破冰走到复盘，闭环完整。周五下午最好用的一套流程。
+
 ![封面](images/cover.png)
 
 | 14:00–14:20 | 开场破冰 | 20 min | 放松气氛、建立安全感 |

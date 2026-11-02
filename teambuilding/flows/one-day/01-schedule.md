@@ -7,6 +7,8 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/one-day/01-schedule.html"
 ---
 # 一日团建流程方案 · 完整模板
 
+> **一句话**：6–8 小时，破冰、协作、复盘各占一段，中间留足休息和吃饭时间——排得满不等于排得好。
+
 ![封面](images/cover.png)
 
 | 09:30–10:00 | 破冰一 | [人类宾果](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html) | 记住名字、发现共同点 |

@@ -7,7 +7,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/cross-dept/01-schedul
 ---
 # 跨部门协作团建流程 · 一日模板
 
-![封面](images/cover.png)
+> **一句话**：把一个「我们部门」的会场，重组成几个「我们项目」的小组——用一天让部门墙显形，然后拆掉它。
+
 
 > **适用场景**：打破部门墙，提升跨部门协作效率
 > **时长**：6-7 小时（一日）

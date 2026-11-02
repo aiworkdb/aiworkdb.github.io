@@ -7,7 +7,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/flows/onboarding/01-schedul
 ---
 # 新员工融入团建流程 · 半日模板
 
-![封面](images/cover.png)
+> **一句话**：新人入职第一个月，最怕的不是不会做事，是没人记得他在。这套流程只解决一件事：让他被记住。
+
 
 > **适用场景**：新员工入职第一周，帮助快速融入团队
 > **时长**：3-4 小时（半日）

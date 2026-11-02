@@ -1,413 +1,211 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星际拓荒者 · 从零到一版 - 团建游戏</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #e8f3ea;
-            background: linear-gradient(135deg, #04120d 0%, #071a14 55%, #0d1a05 100%);
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #071612;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            overflow: hidden;
-            border: 1px solid #1c3a2a;
-        }
-        .header {
-            background: linear-gradient(135deg, #06231a 0%, #0f7a4f 50%, #eab308 100%);
-            color: #f2fff5;
-            padding: 40px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-        }
-        .header .subtitle {
-            font-size: 1.2em;
-            opacity: 0.95;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: #05130e;
-        }
-        .info-card {
-            background: #071612;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-            text-align: center;
-            border: 1px solid #1c3a2a;
-        }
-        .info-card .icon {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        .info-card .label {
-            font-size: 0.9em;
-            color: #6ee7b7;
-            margin-bottom: 5px;
-        }
-        .info-card .value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #eab308;
-        }
-        .content {
-            padding: 40px;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-        .section h2 {
-            color: #eab308;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #10b981;
-        }
-        .section h3 {
-            color: #6ee7b7;
-            margin-top: 20px;
-            margin-bottom: 15px;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .card {
-            background: #05130e;
-            border: 2px solid #1c3a2a;
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(234,179,8,0.35);
-            border-color: #eab308;
-        }
-        .card h4 {
-            color: #eab308;
-            margin-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #1c3a2a;
-            color: #e8f3ea;
-        }
-        th {
-            background: #0f7a4f;
-            color: #f2fff5;
-            font-weight: 600;
-        }
-        tr:hover {
-            background: #05130e;
-        }
-        .role-card {
-            background: linear-gradient(135deg, #05130e 0%, #0d1a05 100%);
-            border-left: 4px solid #eab308;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-        }
-        .role-card h4 {
-            color: #6ee7b7;
-            margin-bottom: 10px;
-        }
-        .tag {
-            display: inline-block;
-            background: #0f7a4f;
-            color: #f2fff5;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            margin: 5px 5px 5px 0;
-        }
-        .flow-step {
-            background: #05130e;
-            border-left: 4px solid #eab308;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-        }
-        .flow-step h4 {
-            color: #eab308;
-            margin-bottom: 10px;
-        }
-        .highlight {
-            background: linear-gradient(120deg, #05130e 0%, #0d1a05 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border: 1px solid #10b981;
-        }
-        .highlight h3 {
-            color: #eab308;
-            margin-bottom: 10px;
-        }
-        .print-section {
-            background: #0d1a05;
-            border: 2px dashed #eab308;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-        .print-section h3 {
-            color: #eab308;
-        }
-        @media print {
-            body { background: white; color: #222; padding: 0; }
-            .container { box-shadow: none; border: none; }
-            .no-print { display: none; }
-        }
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8em; }
-            .info-grid { grid-template-columns: 1fr; }
-            .card-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#059669">
+<meta name="description" content="《星际拓荒者 · 从零到一版》改编自合作生存桌游《星际拓荒者 Star Pioneers》。">
+<title>星际拓荒者 · 从零到一版 (Star Pioneers) · 团建游戏库</title>
+<link rel="stylesheet" href="../../assets/lib.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<style>:root{--accent:#34d399;--accent-ink:#059669;--accent-bg:#34d3991f;}</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌍 星际拓荒者 · 从零到一版</h1>
-            <div class="subtitle">Star Pioneers - 在全是迷雾的未知星球上，用有限跑道完成从 0 到 1 的拓荒</div>
-        </div>
 
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="icon">👥</div>
-                <div class="label">人数</div>
-                <div class="value">3-5人</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">⏱️</div>
-                <div class="label">时长</div>
-                <div class="value">45-70分钟</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">🚀</div>
-                <div class="label">适合场景</div>
-                <div class="value">0→1拓荒·目标聚焦</div>
-            </div>
-            <div class="info-card">
-                <div class="icon">📊</div>
-                <div class="label">难度</div>
-                <div class="value">中等</div>
-            </div>
-        </div>
+<header class="topbar">
+  <a class="topbar-btn" href="../../index.html" aria-label="返回游戏库">←</a>
+  <div class="topbar-title" id="tbar">星际拓荒者 · 从零到一版 (Star Pioneers)</div>
+  <button class="topbar-btn" id="share" aria-label="分享">↗</button>
+</header>
 
-        <div class="content">
-            <!-- 游戏概述 -->
-            <div class="section">
-                <h1 style="display:none;">星际拓荒者 · 从零到一版</h1>
-                <h2>🎮 游戏概述</h2>
-                <p>《星际拓荒者 · 从零到一版》改编自合作生存桌游《星际拓荒者 Star Pioneers》。原作里，玩家扮演开拓者号的探险队，降落在<strong>一颗完全未知的星球</strong>上——地图全被盖住，你们要一格格揭开迷雾、采集资源、建造基地、抵御威胁，并在<strong>氧气耗尽前</strong>完成星球勘测。所有人共享一格"团队氧气"，只有全员存活并达成目标才算赢。</p>
-                <p style="margin-top: 15px;">这正是<strong>从 0 到 1 团队的真实写照</strong>：新业务、新产品、新市场——没有现成地图，只能<strong>边探索边试错</strong>；手里的资源既能<strong>一次性消耗</strong>换眼前进展，也能<strong>投资建造基础设施</strong>换长期复利；而头顶始终悬着一根<strong>有限的跑道（runway）</strong>——预算、时间窗口、老板耐心。团建版把"揭开探索卡"译成"调研 / 试错 / 验证假设"，把"氧气"译成"团队跑道 / 时间窗口 / 资金余量"，把"建造基地"译成"沉淀基础设施 / 组织能力"，把"3 个目标"译成"多个方向里必须聚焦取舍的战略目标"。</p>
+<section class="hero" style="--a1:#34d399;--a2:#059669;">
+  <span class="hero-cat">🤝 团队协作</span>
+  <h1>星际拓荒者 · 从零到一版 (Star Pioneers)</h1>
+  
+  <p class="hero-lede">《星际拓荒者 · 从零到一版》改编自合作生存桌游《星际拓荒者 Star Pioneers》。</p>
+</section>
 
-                <div class="highlight">
-                    <h3>🎯 团建改造重点</h3>
-                    <ul style="margin-left: 20px;">
-                        <li><strong>拓荒心态（核心反转）</strong>：地图全是迷雾，没有标准答案——在未知里靠探索开路</li>
-                        <li><strong>消耗 vs 投资</strong>：同一份资源，一次性花掉换眼前，还是投建基础设施换复利</li>
-                        <li><strong>有限跑道</strong>：共享氧气每回合流逝，是团队的预算 / 时间窗口，所有决策都在倒计时下做</li>
-                        <li><strong>目标聚焦</strong>：开局翻出多个目标，资源做不完所有——练选主攻、砍次要</li>
-                        <li><strong>角色互补</strong>：统筹 / 建设 / 探索 / 攻坚 / 续航彼此依赖</li>
-                        <li><strong>复盘框架</strong>：每局结束 4F 复盘，迁移到真实的 0→1 工作</li>
-                    </ul>
-                </div>
-            </div>
+<div class="facts">
+  <div class="fact"><div class="fact-k">⏱ 时长</div><div class="fact-v">45–70 分钟</div></div>
+  <div class="fact"><div class="fact-k">👥 人数</div><div class="fact-v">3–5 人</div></div>
+  <div class="fact"><div class="fact-k">📍 场地</div><div class="fact-v">室内</div></div>
+  <div class="fact"><div class="fact-k">📊 难度</div><div class="fact-v">★★☆</div></div>
+  
+</div>
 
-            <!-- 团建目标 -->
-            <div class="section">
-                <h2>🎯 团建目标</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>拓荒者心态</h4><p>体感"没有地图也要开路"，把面对未知的焦虑转成"多探一格就多一分信息"的行动力</p></div>
-                    <div class="card"><h4>消耗与投资取舍</h4><p>看见"一次性花掉"与"投资建复利"的差别，反思是不是只顾眼前不攒长期</p></div>
-                    <div class="card"><h4>跑道意识</h4><p>共享氧气倒流让每个决策都带成本感，训练在有限预算/时间窗口下排优先级</p></div>
-                    <div class="card"><h4>目标聚焦</h4><p>多目标里资源做不完，练"选主攻、砍次要"的战略取舍</p></div>
-                </div>
-            </div>
+<div class="abilities"><span class="ab">共享资源</span><span class="ab">探索分工</span><span class="ab">从零到一</span></div>
+<div class="toc"><details><summary>📑 本页目录（13 节）</summary><ol><li class="lv2"><a href="#游戏概述-团建版">🎯 游戏概述（团建版）</a></li><li class="lv2"><a href="#游戏信息">📋 游戏信息</a></li><li class="lv2"><a href="#团建目标">🎯 团建目标</a></li><li class="lv2"><a href="#道具准备">📦 道具准备</a></li><li class="lv2"><a href="#游戏地图-简化版">🗺️ 游戏地图（简化版）</a></li><li class="lv2"><a href="#游戏规则-团建版">🎲 游戏规则（团建版）</a></li><li class="lv2"><a href="#完整游戏流程示例">📖 完整游戏流程示例</a></li><li class="lv2"><a href="#团建引导提示">💡 团建引导提示</a></li><li class="lv2"><a href="#变体玩法-团建专用">🔄 变体玩法（团建专用）</a></li><li class="lv2"><a href="#难度调整">⚙️ 难度调整</a></li><li class="lv2"><a href="#常见问题">❓ 常见问题</a></li><li class="lv2"><a href="#教练工具箱">🧰 教练工具箱</a></li><li class="lv2"><a href="#相关资源">🔗 相关资源</a></li></ol></details></div>
+<article class="doc">
+<p><strong>团建核心价值</strong>：</p>
+<ul><li>🫧 共享资源：一格团队氧气的命运共同体意识</li><li>🗺️ 探索分工：揭开迷雾的路径规划与协作</li><li>🏗️ 从零到一：资源匮乏期的建设顺序决策</li></ul>
+<h2 id="游戏概述-团建版">🎯 游戏概述（团建版）</h2>
+<p>《星际拓荒者 · 从零到一版》改编自合作生存桌游《星际拓荒者 Star Pioneers》。原作里，玩家扮演开拓者号的探险队，降落在<strong>一颗完全未知的星球</strong>上——地图全被盖住，你们要一格格揭开迷雾、采集资源、建造基地、抵御威胁，并在<strong>氧气耗尽前</strong>完成星球勘测。所有人共享一格"团队氧气"，只有全员存活并达成目标才算赢。</p>
+<p>这正是<strong>从 0 到 1 团队的真实写照</strong>：新业务、新产品、新市场——没有现成地图，只能<strong>边探索边试错</strong>；手里的资源既能<strong>一次性消耗</strong>换眼前进展，也能<strong>投资建造基础设施</strong>换长期复利；而头顶始终悬着一根<strong>有限的跑道（runway）</strong>——预算、时间窗口、老板耐心。团建版把"揭开探索卡"译成"调研 / 试错 / 验证假设"，把"氧气"译成"团队跑道 / 时间窗口 / 资金余量"，把"建造基地"译成"沉淀基础设施 / 组织能力"，把"3 个目标卡"译成"多个可能方向里必须聚焦取舍的战略目标"。</p>
+<h3 id="团建改造重点">团建改造重点</h3>
+<ul><li><strong>拓荒心态（核心反转）</strong>：地图全是迷雾，没有标准答案——体验"在未知里靠探索开路"，而非按图施工</li><li><strong>消耗 vs 投资</strong>：同一份资源，是一次性花掉换眼前进展，还是投进"建造基地"换长期复利——逼团队直面短期与长期的取舍</li><li><strong>有限跑道</strong>：共享氧气每回合流逝，是团队的"预算 / 时间窗口"——所有决策都在倒计时下做</li><li><strong>目标聚焦</strong>：开局翻出多个目标，资源有限做不完所有——练"选定主攻方向、砍掉次要"</li><li><strong>角色互补</strong>：队长 / 工程师 / 生物学家 / 战士 / 医生，映射真实团队的"统筹 / 建设 / 探索 / 攻坚 / 续航"</li><li><strong>复盘框架</strong>：每局结束 4F 复盘，把"探索、投资、聚焦、跑道管理"迁移到真实的 0→1 工作</li></ul>
+<hr>
+<h2 id="游戏信息">📋 游戏信息</h2>
+<div class="tw"><div class="table-wrap"><table><thead><tr><th><strong>主题</strong></th><th>太空科幻 / 拓荒生存 / 探索未知 / 跑道管理</th></tr></thead><tbody></tbody></table></div></div>
+<hr>
+<h2 id="团建目标">🎯 团建目标</h2>
+<ol><li><strong>拓荒者心态</strong>：体感"没有地图也要开路"，把面对未知的焦虑转成"多探一格就多一分信息"的行动力</li><li><strong>消耗与投资的取舍</strong>：看见"一次性花掉资源"和"投资建基础设施"的差别，反思团队是不是只顾眼前不攒复利</li><li><strong>跑道意识</strong>：共享氧气倒流让每个决策都带成本感——训练在有限预算 / 时间窗口下排优先级</li><li><strong>目标聚焦</strong>：多目标里资源做不完，练"选主攻、砍次要"的战略取舍</li><li><strong>角色互补</strong>：看见统筹 / 建设 / 探索 / 攻坚 / 续航彼此依赖，"没有谁是无用的位置"</li><li><strong>团队复盘</strong>：每局引导 4F 复盘，把"探索 / 投资 / 聚焦 / 跑道"迁移到真实的 0→1 工作</li></ol>
+<hr>
+<h2 id="道具准备">📦 道具准备</h2>
+<h3 id="基础道具-必选">基础道具（必选）</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>物品名称</th><th>数量</th><th>用途</th><th>替代方案</th></tr></thead><tbody><tr><td>星球地图（网格）</td><td>1张</td><td>8×8 六边形迷雾探索板</td><td>A3 纸画网格</td></tr><tr><td>迷雾盖片</td><td>若干</td><td>覆盖未探索格子</td><td>便签 / 扑克牌背面</td></tr><tr><td>氧气轨道</td><td>1条</td><td>共享团队跑道（0-30）</td><td>纸条写刻度</td></tr><tr><td>氧气标记</td><td>1个</td><td>指示当前氧气余量</td><td>硬币 / 磁贴</td></tr><tr><td>角色卡</td><td>5张</td><td>每人一张，显示职能映射</td><td>手写卡</td></tr><tr><td>行动点标记</td><td>每人 3 个</td><td>本回合剩余行动力</td><td>豆子</td></tr><tr><td>资源代币</td><td>40枚</td><td>矿物 / 能源 / 生物样本三色</td><td>三色围棋子 / 便签</td></tr><tr><td>骰子</td><td>1-2颗</td><td>行动 / 战斗判定</td><td>手机骰子 APP</td></tr></tbody></table></div></div>
+<h3 id="卡牌道具速览">卡牌道具速览</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>卡牌类型</th><th>数量</th><th>图示</th><th>用途</th></tr></thead><tbody><tr><td>🗺️ 探索卡</td><td>20张</td><td>星球地形</td><td>揭示新区域（= 调研 / 验证假设）</td></tr><tr><td>🪨 资源卡（矿物）</td><td>15张</td><td>蓝色矿石</td><td>建造基础设施的材料</td></tr><tr><td>⚡ 资源卡（能源）</td><td>15张</td><td>黄色闪电</td><td>激活设备 / 使用武器</td></tr><tr><td>🧬 资源卡（生物样本）</td><td>10张</td><td>绿色螺旋</td><td>研究 / 解锁能力</td></tr><tr><td>🔧 装备/建造卡</td><td>10张</td><td>齿轮</td><td>建造基地设施（= 沉淀基础设施）</td></tr><tr><td>⚠️ 事件卡</td><td>12张</td><td>感叹号</td><td>每回合触发的宇宙灾害（= 突发风险）</td></tr><tr><td>🎯 目标卡</td><td>5张</td><td>靶心</td><td>战略目标，需聚焦选定其中 3 个</td></tr></tbody></table></div></div>
+<h3 id="简化版准备-无打印方案">简化版准备（无打印方案）</h3>
+<ol><li><strong>地图</strong>：白纸画 8×8 网格，中央标"🚀降落舱"（起点），其余格贴便签当迷雾</li><li><strong>氧气</strong>：一条纸带写 0-30 刻度，一枚硬币当指针，初始指 20（3-4 人）/ 30（5 人）</li><li><strong>资源</strong>：三色围棋子代表矿物🪨/能源⚡/生物样本🧬，放公共池</li><li><strong>卡牌</strong>：便签写名称 + 效果（🗺️/🔧/⚠️/🎯），分类面朝下抽</li><li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li></ol>
+<hr>
+<h2 id="游戏地图-简化版">🗺️ 游戏地图（简化版）</h2>
+<p>星球表面是一张 <strong>8×8 六边形迷雾网格</strong>，团建语境里它是团队的<strong>未知领地沙盘</strong>——所有格子开局都盖着迷雾，只有踏上去才揭晓：</p>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>地形</th><th>图示</th><th>团建隐喻</th><th>功能</th></tr></thead><tbody><tr><td>降落舱</td><td>🚀</td><td>起点 / 大本营</td><td>所有人出发点，可存放资源</td></tr><tr><td>平原</td><td>⬢</td><td>已知安全区</td><td>无特殊效果，通行区</td></tr><tr><td>矿物区</td><td>🪨</td><td>硬资源产地</td><td>停留采集矿物（建造材料）</td></tr><tr><td>能源区</td><td>⚡</td><td>动力来源</td><td>停留采集能源（激活 / 武器）</td></tr><tr><td>生物区</td><td>🧬</td><td>研究线索</td><td>停留采集生物样本（解锁能力）</td></tr><tr><td>外星生物</td><td>👾</td><td>突发阻碍 / 风险</td><td>需战斗或绕行</td></tr><tr><td>建造点</td><td>🏗️</td><td>基础设施位</td><td>投资建造设施，效果持续全局</td></tr><tr><td>目标点</td><td>🎯</td><td>战略里程碑</td><td>达成目标的关键地点</td></tr></tbody></table></div></div>
+<blockquote>💡 <strong>核心张力</strong>：原作里"每揭一格才知道下面是资源、是威胁还是空地"——团建版里"每一次探索都是一次带成本的试错，可能踩空、可能挖到宝"。而氧气（跑道）一直在流逝，逼团队在"多探一格"与"赶紧聚焦达标"之间抉择。</blockquote>
+<hr>
+<h2 id="游戏规则-团建版">🎲 游戏规则（团建版）</h2>
+<h3 id="准备阶段">准备阶段</h3>
+<ol><li><strong>铺开地图</strong>：8×8 网格全盖迷雾，仅露出中央 🚀 降落舱</li><li><strong>设置跑道</strong>：氧气标记设为 <strong>20 点</strong>（3-4 人）或 <strong>30 点</strong>（5 人）——这是团队的总跑道</li><li><strong>分配角色</strong>：每人选 / 抽 1 张角色卡，了解职能映射与被动</li><li><strong>初始资源</strong>：每人获得 <strong>矿物×2 + 能源×1</strong></li><li><strong>翻开目标</strong>：从 5 张目标卡翻出 <strong>全部 5 张</strong>公开摆放，全队商量后<strong>圈定要主攻的 3 个</strong>（聚焦取舍）</li><li><strong>决定先手</strong>：投骰点数大者先手</li></ol>
+<h3 id="角色分工-团建核心改造">角色分工（团建核心改造）</h3>
+<p>每位玩家承担专属职能，映射 0→1 团队的"统筹 / 建设 / 探索 / 攻坚 / 续航"：</p>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>角色</th><th>图示</th><th>团队职能映射</th><th>被动能力（团建视角）</th></tr></thead><tbody><tr><td><strong>队长</strong></td><td>🧭</td><td>Leader / 统筹者</td><td>所有玩家 +1 行动力——"提升全队节奏与协同"</td></tr><tr><td><strong>工程师</strong></td><td>🔧</td><td>基建 / 平台工程</td><td>建造费用 -1 资源——"把基础设施投资做得更便宜"</td></tr><tr><td><strong>生物学家</strong></td><td>🧬</td><td>探索 / 研究 / 调研</td><td>采集生物样本额外 +1——"更高效地挖信息、验假设"</td></tr><tr><td><strong>战士</strong></td><td>⚔️</td><td>攻坚 / 啃硬骨头</td><td>武器攻击力 +1——"扫清阻碍、突破难关"</td></tr><tr><td><strong>医生</strong></td><td>💊</td><td>续航 / HRBP / 后勤</td><td>氧气消耗 -1——"帮团队省跑道、防透支"</td></tr></tbody></table></div></div>
+<blockquote>💡 <strong>团建提示</strong>：3-4 人局可让任意角色"兼任"两种职能；首轮自由选角，次轮轮换（换位思考）。<strong>工程师（投资建设）与战士（一次性攻坚）是"复利 vs 眼前"的两端</strong>——资源该投哪，正是复盘焦点。</blockquote>
+<h3 id="游戏流程-每回合-4-阶段">游戏流程（每回合 4 阶段）</h3>
+<h4 id="阶段一-事件阶段-必须">阶段一：事件阶段 ⚠️（必须）</h4>
+<p>翻 1 张事件卡立即执行（太阳风暴 / 陨石雨 / 氧气泄漏 / 外星袭击）——模拟 0→1 路上的突发风险。</p>
+<h4 id="阶段二-分配与行动-每人-3-行动点">阶段二：分配与行动 🎯（每人 3 行动点）</h4>
+<p>先全队<strong>商量本轮分工</strong>（谁探索、谁采集、谁建造、谁攻坚），再依次行动。每点可做任一操作：</p>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>行动</th><th>消耗</th><th>团建语义</th></tr></thead><tbody><tr><td>🚶 移动</td><td>1点/格</td><td>向未知推进人力</td></tr><tr><td>🗺️ 探索</td><td>1点</td><td>揭开当前迷雾格（= 调研 / 验证假设）</td></tr><tr><td>⛏️ 采集资源</td><td>1点</td><td>在资源区收资源（= 攒弹药 / 积累筹码）</td></tr><tr><td>🏗️ 建造</td><td>2点+资源</td><td>在建造点投资设施（= 沉淀基础设施，效果持续）</td></tr><tr><td>⚔️ 战斗</td><td>2点+武器</td><td>清除外星生物（= 啃硬骨头 / 攻坚阻碍）</td></tr><tr><td>🔧 使用装备</td><td>1点</td><td>激活装备效果</td></tr><tr><td>🤝 交换资源</td><td>0点</td><td>与同格队友交换资源（免费，鼓励互补）</td></tr></tbody></table></div></div>
+<blockquote>⚡ <strong>协同提示</strong>：资源可自由交换、可存进大本营；<strong>基础设施（研究站 / 防御塔 / 仓库 / 医疗站）一旦建成惠及全队</strong>——这正是"投资复利"的体感。</blockquote>
+<h4 id="阶段三-检查阶段-必须">阶段三：检查阶段 ✅（必须）</h4>
+<ol><li>检查是否达成任一<strong>已圈定目标</strong>（达成 3 个即可胜利）；</li><li>检查氧气余量，若 <strong>≤0 立即失败（跑道烧完）</strong>；</li><li>结算本回合探索揭示的地形效果。</li></ol>
+<h4 id="阶段四-跑道结算-必须">阶段四：跑道结算 ⛽（必须）</h4>
+<ol><li>团队氧气 <strong>-2</strong>（医生在场可减免，基础设施可回补）——跑道流逝；</li><li>手牌超 5 张需弃至 5 张；</li><li>回合 +1，先手权交给下一位。</li></ol>
+<h3 id="共享轨道与危机">共享轨道与危机</h3>
+<div class="tw"><div class="table-wrap"><table class="wide"><thead><tr><th>共享轨道</th><th>初始</th><th>警告 / 失败阈值</th></tr></thead><tbody><tr><td>团队氧气（跑道）</td><td>20 / 30 点</td><td>每回合 -2；≤5 = 跑道告急；≤0 = 立即失败</td></tr><tr><td>迷雾探索度</td><td>仅降落舱可见</td><td>目标"勘测星球"需揭开 80% 地图</td></tr><tr><td>资源池</td><td>每人矿×2+能×1</td><td>手牌上限 5 张；可交换 / 存大本营</td></tr><tr><td>目标进度</td><td>圈定 3 个</td><td>达成 3 个 = 胜利</td></tr></tbody></table></div></div>
+<h3 id="胜利与失败">胜利与失败</h3>
+<p><strong>主胜利（任意回合达成即赢）</strong>：</p>
+<ul><li>✅ 在氧气耗尽前，完成<strong>圈定的 3 个战略目标</strong>，且全员存活。</li></ul>
+<p><strong>失败（任一即全队失败）</strong>：</p>
+<ul><li>团队氧气降至 <strong>0 或以下</strong>（跑道烧完 = 预算 / 时间窗口耗尽）</li><li>任意玩家阵亡（生命值 ≤0）</li><li>达到 15 回合仍未完成 3 个目标（可选限时模式 = 项目被砍）</li></ul>
+<blockquote>💡 <strong>关键</strong>：胜负不取决于"探得最快"或"打得最猛"，而取决于"<strong>在有限跑道内，是否把资源投在了对的方向、达成了聚焦的目标</strong>"——探索过头会烧光氧气，只顾眼前消耗会攒不下复利。这正是 0→1 拓荒的平衡术。</blockquote>
+<hr>
+<h2 id="完整游戏流程示例">📖 完整游戏流程示例</h2>
+<h3 id="示例-5-名玩家的第-4-回合-拓荒拉扯">示例：5 名玩家的第 4 回合（拓荒拉扯）</h3>
+<p><strong>阵容</strong>：队长（统筹）、工程师（基建）、生物学家（探索）、战士（攻坚）、医生（续航）。</p>
+<p><strong>当前状态</strong>：氧气 12（跑道过半）；已揭开约 40% 地图；圈定目标为「勘测星球」「收集样本」「建立基地」；建造点已建成 1 座研究站。</p>
+<p><strong>阶段一 · 事件</strong>：翻出 ☀️"太阳风暴"——全员本回合 -1 行动力。队长技能补回 +1，抵消。</p>
+<p><strong>阶段二 · 分配与行动</strong></p>
+<ul><li><strong>生物学家（3点）</strong>：移动到未探索区 → 探索揭开一片生物区 → 采集生物样本（技能 +1，实得 2 个）</li><li><strong>工程师（3点）</strong>：到第 2 个建造点 → 建造"仓库"（矿物×2，技能 -1 只花 1 个）→ 手牌上限升至 7</li><li><strong>战士（3点）</strong>：清除挡在目标点前的外星生物👾（等离子刀，技能 +1 攻击力，一击解决）</li><li><strong>医生（3点）</strong>：移动到研究站旁 → 采集能源 → 使用氧气罐（团队氧气 +2）</li><li><strong>队长（3点）</strong>：移动到降落舱统筹资源分配 → 把多余能源交换给战士备用 → 预告"再两回合就得聚焦达标了"</li></ul>
+<p><strong>阶段三 · 检查</strong>：探索度逼近 80%，「勘测星球」快达成；样本已够「收集样本」；基地建成 2 座，「建立基地」还差 1 座。三目标同时在望！</p>
+<p><strong>阶段四 · 跑道结算</strong>：氧气 -2，医生减免 1 → 实扣 1，剩余 12+2(氧气罐)-1 = 13。回合 +1。</p>
+<blockquote>💡 <strong>团建点</strong>：团队当场体感——"我们前几回合光顾着探索开图，氧气掉得飞快，是医生和那座研究站把跑道续了回来；而工程师早早建的仓库和研究站，现在每回合都在帮全队省力——<strong>当初那两点建造投入，正是现在的复利</strong>。要不是第 4 回合果断聚焦这 3 个目标、砍掉'击败威胁'，跑道根本不够。"正是"探索、投资、聚焦、跑道管理"的日常。</blockquote>
+<hr>
+<h2 id="团建引导提示">💡 团建引导提示</h2>
+<h3 id="游戏前-5分钟">游戏前（5分钟）</h3>
+<ol><li><strong>拓荒定调</strong>："今天没有地图——地上全是迷雾，你们要边探边走，在氧气烧完前完成 3 个战略目标。"</li><li><strong>跑道即预算</strong>："氧气是团队的跑道——预算 / 时间窗口 / 老板耐心，每回合都在流逝，所有决策都带成本。"</li><li><strong>投资提醒</strong>："资源可以一次性花掉换眼前进展，也可以建成基础设施持续惠及全队——想想哪种更划算。"</li><li><strong>聚焦提醒</strong>："5 个目标只需完成 3 个，资源做不完所有——开局就要商量主攻哪 3 个、砍哪 2 个。"</li></ol>
+<h3 id="游戏中-观察要点">游戏中（观察要点）</h3>
+<p>教练或观察员应记录：</p>
+<ol><li><strong>探索 vs 聚焦失衡了吗？</strong> 是无限开图停不下来，还是过早收缩、信息不足就赌方向？</li><li><strong>资源怎么花？</strong> 全拿去一次性消耗（战斗 / 采集）了，还是舍得投建造攒复利？</li><li><strong>谁在管跑道？</strong> 有没有人盯着氧气余量提醒"该收了"？还是烧到告急才慌？</li><li><strong>目标聚焦了吗？</strong> 3 个目标是开局就定死主攻，还是三心二意每个都碰一点？</li><li><strong>谁在续航兜底？</strong> 医生 / 基础设施默默省跑道——这些"不显眼的底座工作"被看见了吗？</li></ol>
+<h3 id="游戏后-复盘框架-4f">游戏后（复盘框架 · 4F）</h3>
+<p>使用以下框架引导团队复盘（15-20分钟）：</p>
+<h4 id="1-事实-facts-4分钟">1. 事实（Facts，4分钟）</h4>
+<blockquote>"哪一回合氧气最险？当时探索到几成、目标完成几个？是谁先说'该聚焦了'还是'再探一格'？"</blockquote>
+<h4 id="2-感受-feelings-5分钟">2. 感受（Feelings，5分钟）</h4>
+<blockquote>"面对全是迷雾的地图开局时什么感受？眼看跑道快烧完却还没达标时你急吗？被劝'砍掉那个目标'时甘心吗？"</blockquote>
+<h4 id="3-发现-findings-6分钟">3. 发现（Findings，6分钟）</h4>
+<blockquote>"我们是探索上瘾还是过早收缩？资源是花在眼前还是投了复利？跑道是有人管着排优先级，还是烧到告急才反应？"</blockquote>
+<h4 id="4-迁移-future-5分钟">4. 迁移（Future，5分钟）</h4>
+<blockquote>"这局让你想到工作里哪个场景（如新业务无限调研不落地、只顾眼前不攒能力、预算烧光才聚焦）？一件能立即做的事是什么？"</blockquote>
+<hr>
+<h2 id="变体玩法-团建专用">🔄 变体玩法（团建专用）</h2>
+<h3 id="变体1-观察员模式-适合大型团队">变体1：观察员模式（适合大型团队）</h3>
+<p>人数超 5 人时，多出玩家任 <strong>观察员</strong>：专门记录"探索/聚焦是否失衡、资源投在消耗还是复利、谁在管跑道"，复盘时提供第三方视角。</p>
+<h3 id="变体2-限时挑战-增加紧迫感">变体2：限时挑战（增加紧迫感）</h3>
+<p>设沙漏 60 分钟 / 15 回合即结算，以"是否达成 3 目标"判胜负；适合时间有限团建，强化跑道压迫感。</p>
+<h3 id="变体3-角色轮换-换位思考">变体3：角色轮换（换位思考）</h3>
+<p>每 3 回合轮换角色，确保每人都体验"探索""建设""攻坚""续航"不同职能，强化相互理解。</p>
+<h3 id="变体4-无声拓荒-沟通挑战">变体4：无声拓荒（沟通挑战）</h3>
+<p>部分回合禁言分配 / 探索，凸显"提前约定探索边界、显性同步目标"对拓荒协作的价值。</p>
+<h3 id="变体5-部门混编-跨部门磨合">变体5：部门混编（跨部门磨合）</h3>
+<p>将同部门的人拆散到不同角色，强制"业务 / 技术 / 职能"跨界搭档，专为打破部门墙、共探新领域设计。</p>
+<h3 id="变体6-真实目标叠加-战略聚焦主题-推荐">变体6：真实目标叠加（战略聚焦主题 · 推荐）</h3>
+<p>把 5 张"目标卡"替换成团队 <strong>当前真实的 5 个候选方向 / OKR</strong>（便签上墙），开局圈定主攻 3 个；游戏结束便签直接变成"聚焦哪 3 个、砍哪 2 个"的战略取舍看板。</p>
+<h3 id="变体7-真实基建叠加-能力沉淀主题-推荐">变体7：真实基建叠加（能力沉淀主题 · 推荐）</h3>
+<p>把"建造点设施"替换成团队 <strong>想沉淀的基础设施 / 组织能力</strong>（如自动化工具、知识库、复用组件），每建成 1 座 = 立一项能力资产；复盘直接盘点"哪些该投资建、哪些还在重复造轮子"。</p>
+<hr>
+<h2 id="难度调整">⚙️ 难度调整</h2>
+<h3 id="简单模式-新手团队-第一次团建">简单模式（新手团队 / 第一次团建）</h3>
+<ul><li>初始氧气 <strong>+10</strong>；外星生物生命值 -1；事件卡数量减半；只需完成 <strong>2 个目标</strong>即可获胜</li><li><strong>适合</strong>：刚组建的团队、非游戏爱好者</li></ul>
+<h3 id="标准模式-推荐">标准模式（推荐）</h3>
+<ul><li>氧气 20/30、每回合 -2、每人 3 行动力、圈定并完成 <strong>3 个目标</strong>即胜</li><li><strong>适合</strong>：大多数团建场景</li></ul>
+<h3 id="困难模式-成熟团队-战略聚焦攻坚主题">困难模式（成熟团队 / 战略聚焦攻坚主题）</h3>
+<ul><li>初始氧气 <strong>-5</strong>；外星生物数量 +2、生命值 +1；每回合翻 <strong>2 张</strong>事件卡；需完成 <strong>4 个目标</strong>；增加"黑夜阶段"（每 3 回合已探索区重新盖雾，需复探）</li><li><strong>适合</strong>：战略 / 创新 / 0→1 团队，强调极限跑道下的取舍与韧性</li></ul>
+<hr>
+<h2 id="常见问题">❓ 常见问题</h2>
+<p><strong>Q：3个人怎么玩？</strong> A：选 3 名核心角色（如队长 / 工程师 / 生物学家），其余职能标注"兼任"；共享氧气、探索、聚焦机制不变，仍强调拓荒协同。</p>
+<p><strong>Q：为什么强调"资源可消耗也可投资建造"？</strong> A：这是核心张力——真实 0→1 团队里，同一份预算 / 人力既能换眼前进展（消耗），也能沉淀成基础设施 / 能力（复利）。游戏把这种取舍具象化了。</p>
+<p><strong>Q：氧气为什么每回合都在掉？</strong> A：隐喻"跑道有限"——预算、时间窗口、老板耐心都在流逝。它逼团队"带着成本感做每个决策"，区别于只强调救火的危机类游戏。</p>
+<p><strong>Q：5 个目标为什么只完成 3 个？</strong> A：因为资源永远做不完所有事。这训练"选主攻、砍次要"的战略聚焦，而不是三心二意每个都碰一点。</p>
+<p><strong>Q：没有骰子怎么办？</strong> A：手机骰子 APP，或准备 1-6 数字卡代替；行动点也可用抽卡数字决定。</p>
+<p><strong>Q：为什么把目标 / 基建和真实工作结合（变体6/7）？</strong> A：游戏瞬间变成一次低风险的"战略聚焦会 / 能力沉淀盘点会"，让拓荒决策直接服务真实工作，复盘结论更易落地。</p>
+<hr>
+<h2 id="教练工具箱">🧰 教练工具箱</h2>
+<h3 id="引导话术">引导话术</h3>
+<p><strong>游戏前</strong>：</p>
+<ul><li>"今天没有地图——全是迷雾，边探边走，在氧气烧完前完成 3 个目标。"</li><li>"氧气是团队的跑道，预算 / 时间窗口在流逝，每个决策都带成本。"</li><li>"资源可以花掉换眼前，也可以建成设施攒复利——想清楚投哪。"</li></ul>
+<p><strong>游戏中</strong>（适时提醒）：</p>
+<ul><li>"还在无限探索吗？该聚焦了没？"</li><li>"这份资源是一次性花，还是投去建基础设施？"</li><li>"谁在盯氧气余量？跑道还够几回合？"</li></ul>
+<p><strong>复盘时</strong>：</p>
+<ul><li>"先安静 30 秒，回想一下氧气最险那一刻。"</li><li>"我想听听[沉默玩家]的想法，你当时在守哪块？"</li><li>"我们是不是探索上瘾 / 只顾眼前不攒复利？下次怎么平衡？"</li></ul>
+<h3 id="安全与边界">安全与边界</h3>
+<ol><li><strong>心理安全</strong>：若因跑道烧完 / 方向选错失败而沮丧，教练应强调"这是游戏，拓荒本就充满试错"——把失败正常化</li><li><strong>包容性原则</strong>：对游戏不擅长的玩家提供额外指导，而非让其感到羞耻</li><li><strong>知识落地</strong>：变体 6 / 7 的便签看板建议拍照留存，真的可能变成团队的战略聚焦清单 / 能力沉淀路线图</li><li><strong>时间管理</strong>：严格控制游戏与复盘时间，避免拖延</li></ol>
+<hr>
+<h2 id="相关资源">🔗 相关资源</h2>
+<ul><li><a href="../../README.md#协作类">返回团队协作游戏目录</a></li><li><a href="../../index.html#flows">团建流程设计方案</a></li><li><a href="../../toolbox/facilitation.html">引导话术库</a></li><li><a href="../../toolbox/debrief.html">复盘引导框架</a></li></ul>
+<hr>
+<p><strong>设计灵感</strong>：合作生存桌游《星际拓荒者 Star Pioneers》（开拓者号降落未知星球、揭雾探索 + 采集建造 + 氧气倒计时） <strong>团建改造</strong>：将"探索未知星球 + 氧气生存"翻转为"从 0 到 1 拓荒 + 有限跑道下的目标聚焦与基础设施投资"，强调探索试错、消耗 vs 复利、战略取舍 <strong>最后更新</strong>：2026-07-18</p>
+</article>
 
-            <!-- 物料准备 -->
-            <div class="section">
-                <h2>📦 物料准备</h2>
-                <table>
-                    <tr><th>物品名称</th><th>数量</th><th>用途</th></tr>
-                    <tr><td>星球地图（8×8 网格）</td><td>1张</td><td>迷雾探索板</td></tr>
-                    <tr><td>迷雾盖片</td><td>若干</td><td>覆盖未探索格子</td></tr>
-                    <tr><td>氧气轨道 + 标记</td><td>1条 / 1个</td><td>共享团队跑道（0-30）</td></tr>
-                    <tr><td>资源代币（三色）</td><td>40枚</td><td>矿物 / 能源 / 生物样本</td></tr>
-                    <tr><td>角色卡 / 骰子</td><td>5张 / 1-2颗</td><td>职能分工；行动 / 战斗判定</td></tr>
-                </table>
-                <div class="print-section">
-                    <h3>🖨️ 无打印方案（临时团建）</h3>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li><strong>地图</strong>：白纸画 8×8 网格，中央标"🚀降落舱"，其余格贴便签当迷雾</li>
-                        <li><strong>氧气</strong>：纸带写 0-30 刻度，硬币当指针，初始指 20（3-4人）/ 30（5人）</li>
-                        <li><strong>资源</strong>：三色围棋子代表矿物🪨/能源⚡/生物样本🧬，放公共池</li>
-                        <li><strong>卡牌</strong>：便签写名称 + 效果（🗺️/🔧/⚠️/🎯），分类面朝下抽</li>
-                        <li><strong>骰子</strong>：手机骰子 APP，或 1-6 数字卡抽签</li>
-                    </ul>
-                </div>
-            </div>
+<nav class="pager">
+  <a class="prev" href="stellar-medics.html"><span>上一个 ←</span><div class="p-title">星际医疗队 · 生死救援协作版 (Stellar Medics)</div></a>
+  <a class="next" href="stellar-lighthouse.html"><span>下一个 →</span><div class="p-title">星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)</div></a>
+</nav>
 
-            <!-- 角色分配 -->
-            <div class="section">
-                <h2>🧑‍🤝‍🧑 角色分配（团建核心）</h2>
-                <p>每位玩家承担一个专属角色，映射 0→1 团队的"统筹 / 建设 / 探索 / 攻坚 / 续航"（也可按性格由教练分配）：</p>
+<div class="related"><h2>🔗 同类推荐</h2><div class="rel-list"><a class="rel" href="body-letters.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人体拼字</span><span class="r-meta">20–30 分钟 · 6–20 人/组</span></span><span class="r-go">›</span></a><a class="rel" href="human-knot.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">人结（Human Knot）</span><span class="r-meta">30–45 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="team-chef.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">协作大厨 (Team Chef)</span><span class="r-meta">45–60 分钟 · 8–20 人</span></span><span class="r-go">›</span></a><a class="rel" href="jujutsu-united.html"><span class="r-ico">🤝</span><span class="r-body"><span class="r-name">咒术回战：术师联携 (Jujutsu United)</span><span class="r-meta">45–75 分钟 · 3–5 人</span></span><span class="r-go">›</span></a></div></div>
 
-                <div class="role-card">
-                    <h4>🧭 队长 · Leader / 统筹者</h4>
-                    <p><strong>被动</strong>：所有玩家 +1 行动力</p>
-                    <p><strong>团建映射</strong>：提升全队节奏与协同——"把节奏带起来"</p>
-                </div>
-                <div class="role-card">
-                    <h4>🔧 工程师 · 基建 / 平台工程</h4>
-                    <p><strong>被动</strong>：建造费用 -1 资源</p>
-                    <p><strong>团建映射</strong>：把基础设施投资做得更便宜——"攒复利的人"</p>
-                </div>
-                <div class="role-card">
-                    <h4>🧬 生物学家 · 探索 / 研究 / 调研</h4>
-                    <p><strong>被动</strong>：采集生物样本额外 +1</p>
-                    <p><strong>团建映射</strong>：更高效地挖信息、验假设——"在未知里开路"</p>
-                </div>
-                <div class="role-card">
-                    <h4>⚔️ 战士 · 攻坚 / 啃硬骨头</h4>
-                    <p><strong>被动</strong>：武器攻击力 +1</p>
-                    <p><strong>团建映射</strong>：扫清阻碍、突破难关——"啃最硬的骨头"</p>
-                </div>
-                <div class="role-card">
-                    <h4>💊 医生 · 续航 / HRBP / 后勤</h4>
-                    <p><strong>被动</strong>：氧气消耗 -1</p>
-                    <p><strong>团建映射</strong>：帮团队省跑道、防透支——"让大家跑得更久"</p>
-                </div>
-            </div>
+<footer class="foot">
+  <div>🤝 团队协作 · 第 13 / 32 款</div>
+  <div><a href="../../index.html">返回全部 86 款游戏</a></div>
+  <div style="margin-top:6px;opacity:.75">规则与时长以原文档为准，现场执行前请核对场地与道具。</div>
+</footer>
 
-            <!-- 游戏流程 -->
-            <div class="section">
-                <h2>🎲 游戏流程（每回合 4 阶段）</h2>
-                <p>每回合依次执行：<strong>① 事件阶段</strong> → <strong>② 分配与行动（每人 3 行动点）</strong> → <strong>③ 检查阶段</strong> → <strong>④ 跑道结算（氧气 -2，回合 +1）</strong>。</p>
-
-                <div class="flow-step">
-                    <h4>核心机制 · 拓荒未知（团建灵魂）</h4>
-                    <p>地图全盖迷雾，<strong>每次探索都是一次带成本的试错</strong>——可能踩空、可能挖到宝。团队必须在"多探一格"与"赶紧聚焦达标"之间抉择。</p>
-                </div>
-                <div class="flow-step">
-                    <h4>资源 · 消耗 vs 投资（复利抉择）</h4>
-                    <p>同一份资源，<strong>一次性花掉换眼前进展</strong>，还是<strong>投进建造换持续复利</strong>——基础设施一旦建成惠及全队，这正是"短期 vs 长期"的取舍。</p>
-                </div>
-                <div class="flow-step">
-                    <h4>跑道 · 氧气 = 预算 / 时间窗口</h4>
-                    <p>团队氧气每回合 <strong>-2</strong>，是有限的跑道。烧到 <strong>≤0 立即失败</strong>——逼团队"带着成本感做每个决策"。</p>
-                </div>
-
-                <h3 style="margin-top: 30px;">共享轨道与危机</h3>
-                <table>
-                    <tr><th>共享轨道</th><th>初始</th><th>警告 / 失败阈值</th></tr>
-                    <tr><td>团队氧气（跑道）</td><td>20 / 30 点</td><td>每回合 -2；≤5 = 告急；≤0 = 立即失败</td></tr>
-                    <tr><td>迷雾探索度</td><td>仅降落舱可见</td><td>目标"勘测星球"需揭开 80% 地图</td></tr>
-                    <tr><td>资源池</td><td>每人矿×2+能×1</td><td>手牌上限 5 张；可交换 / 存大本营</td></tr>
-                    <tr><td>目标进度</td><td>圈定 3 个</td><td>达成 3 个 = 胜利</td></tr>
-                </table>
-                <p style="color:#eab308; margin-top:10px;">⚠️ <strong>关键</strong>：胜负不取决于"探得最快"或"打得最猛"，而取决于"<strong>在有限跑道内，是否把资源投在对的方向、达成聚焦的目标</strong>"——探索过头会烧光氧气，只顾眼前消耗会攒不下复利。</p>
-            </div>
-
-            <!-- 团建引导 -->
-            <div class="section">
-                <h2>💡 团建引导提示</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>游戏前（5分钟）</h4><p>拓荒定调："没有地图，边探边走，在氧气烧完前完成 3 个战略目标。"</p></div>
-                    <div class="card"><h4>游戏中（观察）</h4><p>记录：探索/聚焦失衡？资源花在消耗还是复利？谁在管跑道？目标聚焦了吗？谁在续航兜底？</p></div>
-                    <div class="card"><h4>游戏后（4F复盘）</h4><p>事实→感受→发现→迁移，约15-20分钟；把"探索/投资/聚焦/跑道"迁移到真实工作。</p></div>
-                </div>
-            </div>
-
-            <!-- 变体玩法 -->
-            <div class="section">
-                <h2>🔄 变体玩法</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>观察员模式</h4><p>超5人时多出玩家任观察员，记录"探索/聚焦是否失衡、资源投消耗还是复利、谁管跑道"，复盘提供第三方视角。</p></div>
-                    <div class="card"><h4>限时挑战</h4><p>设60分钟 / 15 回合沙漏，以"是否达成3目标"判胜负，强化跑道压迫感。</p></div>
-                    <div class="card"><h4>角色轮换</h4><p>每3回合轮换角色，体验探索/建设/攻坚/续航不同职能，强化相互理解。</p></div>
-                    <div class="card"><h4>无声拓荒</h4><p>部分回合禁言分配/探索，凸显"提前约定边界、显性同步目标"的价值。</p></div>
-                    <div class="card"><h4>部门混编</h4><p>拆散同部门到不同角色，强制"业务/技术/职能"跨界搭档，共探新领域。</p></div>
-                    <div class="card"><h4>真实目标叠加</h4><p>把5张目标卡换成团队真实5个候选方向/OKR便签，圈定主攻3个，游戏结束变战略取舍看板。</p></div>
-                    <div class="card"><h4>真实基建叠加</h4><p>把建造设施换成想沉淀的基础设施/组织能力便签，每建成1座=立一项能力资产。</p></div>
-                </div>
-            </div>
-
-            <!-- 难度调整 -->
-            <div class="section">
-                <h2>⚙️ 难度调整</h2>
-                <table>
-                    <tr><th>模式</th><th>调整</th><th>适合</th></tr>
-                    <tr><td>简单</td><td>氧气+10、生物生命-1、事件减半、只需完成2个目标</td><td>新团队/非玩家</td></tr>
-                    <tr><td>标准（推荐）</td><td>氧气20/30、每回合-2、每人3行动力、圈定并完成3个目标</td><td>大多数团建</td></tr>
-                    <tr><td>困难</td><td>氧气-5、生物+2且生命+1、每回合2张事件卡、完成4个目标、加黑夜复探</td><td>战略/创新/0→1团队</td></tr>
-                </table>
-            </div>
-
-            <!-- 工作场景映射 -->
-            <div class="section">
-                <h2>🗺️ 游戏要素 → 工作场景</h2>
-                <div class="card-grid">
-                    <div class="card"><h4>揭雾探索</h4><p>调研 / 试错 / 验证假设，在未知领域开路</p></div>
-                    <div class="card"><h4>消耗 vs 建造</h4><p>一次性花掉换眼前 vs 投资基础设施换复利</p></div>
-                    <div class="card"><h4>氧气跑道</h4><p>预算 / 时间窗口 / 老板耐心，逼带成本感决策</p></div>
-                    <div class="card"><h4>目标聚焦</h4><p>5选3，练选主攻、砍次要的战略取舍</p></div>
-                </div>
-                <h3 style="margin-top: 30px;">与工作场景的映射</h3>
-                <table>
-                    <tr><th>游戏要素</th><th>工作场景</th></tr>
-                    <tr><td>揭开迷雾探索</td><td>市场调研 / 用户验证 / 试错开路</td></tr>
-                    <tr><td>建造基地设施</td><td>沉淀基础设施 / 复用组件 / 组织能力</td></tr>
-                    <tr><td>团队氧气</td><td>预算 / 时间窗口 / 资金跑道（runway）</td></tr>
-                    <tr><td>5 选 3 目标</td><td>战略聚焦 / OKR 取舍</td></tr>
-                    <tr><td>事件卡灾害</td><td>0→1 路上的突发风险</td></tr>
-                    <tr><td>15 回合限时</td><td>项目窗口期 / 立项周期</td></tr>
-                </table>
-            </div>
-
-            <!-- 相关资源 -->
-            <div class="section">
-                <h2>🔗 相关资源</h2>
-                <ul style="margin-left: 20px;">
-                    <li><a href="star-pioneers.md" style="color:#6ee7b7;">完整团建版规则（Markdown）</a></li>
-                    <li>原始桌游：boardgames/category/cooperative/star-pioneers/</li>
-                    <li>教练工具箱：teambuilding/toolbox/</li>
-                    <li>类似游戏：银河小馆、星际灯塔守护者、星际医疗队、远征33号</li>
-                </ul>
-                <p style="margin-top: 20px; color: #6ee7b7; font-style: italic;">
-                    改编自合作生存桌游《星际拓荒者 Star Pioneers》（降落未知星球、揭雾探索 + 采集建造 + 氧气倒计时）| 最后更新：2026-07-18
-                </p>
-            </div>
-        </div>
-    </div>
+<script>
+(function(){
+  var t=document.getElementById('tbar'),h=document.querySelector('.hero');
+  if(t&&h&&'IntersectionObserver'in window){
+    new IntersectionObserver(function(e){t.classList.toggle('on',!e[0].isIntersecting);},
+      {rootMargin:'-56px 0px 0px 0px'}).observe(h);
+  }
+  var s=document.getElementById('share');
+  if(s)s.addEventListener('click',function(){
+    var d={title:document.title,url:location.href};
+    if(navigator.share){navigator.share(d).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(location.href)
+      .then(function(){s.textContent='✓';setTimeout(function(){s.textContent='↗';},1200);});}
+  });
+  // 仅当表格真的溢出时才提示可横滑
+  function markTables(){
+    document.querySelectorAll('.tw').forEach(function(w){
+      var box=w.querySelector('.table-wrap');
+      if(!box)return;
+      w.classList.toggle('scrollable', box.scrollWidth - box.clientWidth > 4);
+    });
+  }
+  markTables();
+  window.addEventListener('resize',markTables,{passive:true});
+})();
+</script>
 </body>
 </html>
