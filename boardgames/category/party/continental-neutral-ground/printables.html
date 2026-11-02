@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大陆酒店：中立地带 · 打印道具</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f4f6f8; color: #1f2933; margin: 0; padding: 24px;
+  }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: 1px; }
+  h2 {
+    font-size: 19px; margin: 34px 0 12px; padding: 8px 12px;
+    border-left: 5px solid #145a32; background: #e8f1ec; border-radius: 4px;
+  }
+  .sub { color: #52606d; font-size: 13px; margin-bottom: 18px; }
+  .print-hint {
+    background: #fff8e1; border: 1px solid #f0c36d; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px; font-size: 14px; line-height: 1.9;
+  }
+  .print-hint strong { color: #b26a00; }
+  .print-hint ul { margin: 6px 0 0 18px; padding: 0; }
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .setlabel { width: 100%; font-size: 12px; color: #52606d; margin: 10px 0 6px; font-weight: 700; }
+
+  /* ---- 大堂板（地图） ---- */
+  .lobby {
+    width: 100%; background: #fff; border: 3px solid #145a32; border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 14px; page-break-inside: avoid;
+  }
+  .lobby h3 { margin: 0 0 4px; font-size: 17px; color: #145a32; }
+  .lobby .note { font-size: 12px; color: #52606d; margin-bottom: 12px; }
+  .lzones { display: flex; gap: 10px; flex-wrap: wrap; }
+  .lzone { flex: 1; min-width: 150px; border: 2px dashed #7f8c8d; border-radius: 8px; padding: 10px; font-size: 12px; background: #fbfdfc; }
+  .lzone b { display: block; font-size: 13px; margin-bottom: 4px; color: #145a32; }
+  .lzone .slot { display: inline-block; border: 1px solid #bdc3c7; border-radius: 4px; padding: 2px 7px; margin: 2px; background: #fff; font-size: 11px; }
+  .flow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .flow .st { background: #e8f1ec; border: 1px solid #a9cbb7; border-radius: 14px; padding: 4px 12px; font-size: 12px; }
+  .flow .st b { color: #145a32; }
+
+  /* ---- 委托卡 ---- */
+  .job {
+    width: 168px; height: 236px; border-radius: 10px; padding: 10px;
+    background: #fff; border: 2px solid #333; position: relative;
+    box-shadow: 0 1px 4px rgba(0,0,0,.14); display: flex; flex-direction: column;
+    page-break-inside: avoid;
+  }
+  .job.risky { border: 2px dashed #c0392b; }
+  .job .bar { height: 6px; border-radius: 4px; margin: -4px -4px 6px; }
+  .job .tier { font-size: 10px; color: #7b8794; letter-spacing: 1px; }
+  .job .ttl { font-size: 15px; font-weight: 700; margin: 2px 0 6px; line-height: 1.25; }
+  .job .chip { color: #fff; font-size: 11px; border-radius: 10px; padding: 2px 8px; align-self: flex-start; margin-bottom: 6px; }
+  .job .row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-top: 1px dashed #cbd2d9; }
+  .job .big { font-size: 19px; font-weight: 800; }
+  .job .risk { font-size: 10px; color: #c0392b; background: #fdedec; border-radius: 4px; padding: 4px 6px; line-height: 1.5; margin-top: 4px; }
+  .job .risk.none { color: #7b8794; background: #f4f6f8; }
+  .job .foot { margin-top: auto; font-size: 10px; color: #7b8794; text-align: center; padding-top: 4px; }
+
+  /* ---- 技法卡 ---- */
+  .tech {
+    width: 108px; height: 150px; border-radius: 9px; padding: 8px; background: #fff;
+    border: 2px solid #333; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .tech .tic { font-size: 26px; }
+  .tech .tnm { font-size: 12px; font-weight: 700; margin: 4px 0 6px; }
+  .tech .tval { color: #fff; border-radius: 8px; padding: 3px 0; font-size: 14px; font-weight: 800; }
+  .tech .ttag { margin-top: auto; font-size: 9px; color: #7b8794; }
+
+  /* ---- 情报 / 事件卡 ---- */
+  .mod {
+    width: 128px; height: 176px; border-radius: 9px; padding: 9px; background: #fff;
+    border: 2px solid #34495e; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .mod .ic { font-size: 30px; }
+  .mod .nm { font-size: 13px; font-weight: 700; margin: 4px 0 6px; }
+  .mod .d { font-size: 11px; line-height: 1.7; color: #3e4c59; }
+  .mod .tag { margin-top: auto; font-size: 9px; color: #7b8794; letter-spacing: 1px; }
+  .evt {
+    width: 150px; height: 200px; border-radius: 10px; padding: 10px; background: #fff;
+    border: 2px solid #5d6d7e; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .evt .eic { font-size: 30px; }
+  .evt .enm { font-size: 14px; font-weight: 700; margin: 4px 0 6px; }
+  .evt .ed { font-size: 11px; line-height: 1.7; color: #3e4c59; text-align: left; }
+  .evt .etag { margin-top: auto; font-size: 9px; color: #7b8794; }
+
+  /* ---- 角色卡 ---- */
+  .role {
+    width: 210px; height: 300px; border-radius: 12px; padding: 12px; background: #fff;
+    border: 3px solid #145a32; box-shadow: 0 2px 6px rgba(0,0,0,.16);
+    display: flex; flex-direction: column; page-break-inside: avoid;
+  }
+  .role .head { border-radius: 8px; color: #fff; padding: 8px 10px; margin: -4px -4px 10px; background: #145a32; }
+  .role .nm { font-size: 17px; font-weight: 800; }
+  .role .en { font-size: 9px; opacity: .85; letter-spacing: .5px; }
+  .role .lv { font-size: 10px; margin-top: 3px; background: rgba(255,255,255,.22); display: inline-block; padding: 1px 6px; border-radius: 8px; }
+  .role .pas { background: #fdf3e3; border-left: 4px solid #d68910; padding: 7px 8px; border-radius: 4px; font-size: 12px; line-height: 1.8; }
+  .role .pas b { color: #b9770e; }
+  .role .rtip { margin-top: auto; font-size: 10px; color: #7b8794; text-align: center; }
+
+  /* ---- 玩家板 / 标记 ---- */
+  .pb {
+    width: 230px; height: 210px; border: 2px solid #34495e; border-radius: 10px;
+    background: #fff; padding: 10px; font-size: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.14);
+    page-break-inside: avoid;
+  }
+  .pb h4 { margin: 0 0 6px; font-size: 14px; }
+  .pb .pips { display: flex; gap: 3px; margin: 3px 0 8px; flex-wrap: wrap; }
+  .pb .pip { width: 17px; height: 17px; border: 1px solid #7b8794; border-radius: 50%; }
+  .pb .pip.sm { width: 15px; height: 15px; font-size: 8px; display: flex; align-items: center; justify-content: center; color: #7b8794; }
+  .pb .rowl { font-size: 11px; color: #52606d; line-height: 1.6; }
+  .pb .coinbox { font-size: 13px; font-weight: 700; margin: 2px 0 6px; }
+  .marks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mk {
+    width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(0,0,0,.25);
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,.12); color: #fff; font-weight: 700;
+  }
+
+  /* ---- 速查 ---- */
+  .quick { background: #fff; border: 2px solid #145a32; border-radius: 10px; padding: 14px 18px; font-size: 13px; line-height: 1.95; page-break-inside: avoid; }
+  .quick ol { margin: 4px 0 0 20px; padding: 0; }
+  .quick table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12px; }
+  .quick td, .quick th { border: 1px solid #cbd2d9; padding: 5px 8px; text-align: left; }
+  .quick th { background: #e8f1ec; }
+  footer { margin-top: 40px; font-size: 12px; color: #7b8794; text-align: center; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { padding: 0; background: #fff; }
+    h2 { margin: 18px 0 10px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🏨 大陆酒店：中立地带（CONTINENTAL: Neutral Ground）· 打印道具</h1>
+<div class="sub">派对类桌游 · 3-6 人 · 30-45 分钟 · 与 <a href="README.md">README.md 规则说明</a> 配套使用</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则卡牌颜色不会显示</li>
+    <li>委托卡 / 角色卡 / 事件卡 / 情报卡 / 技法卡建议使用<strong>卡纸（200g 以上）</strong>打印，裁剪后可塑封</li>
+    <li>金币与伤口、入住标记可用卡纸打印后贴在硬币 / 玻璃珠上，手感更佳</li>
+    <li>打印份数：<strong>大堂板 1 张 · 委托卡 36 张（1 套）· 技法卡 6 套（每人 1 套 9 张）· 情报卡 12 张 · 事件卡 12 张 · 角色卡 6 张 · 玩家板 6 块 · 金币 40 枚 · 伤口标记 12 枚 · 入住标记 12 枚 · 速查卡 1 张</strong></li>
+  </ul>
+</div>
+
+<h2>🏨 大堂板（游戏地图 · 打印 1 张）</h2>
+<div class="lobby">
+  <h3>大陆酒店大堂 · 中立地带</h3>
+  <div class="note">本作唯一的地图：全场公共信息的家。酒店之内不谈生意——这里没有攻击，只有交易、情报和入住。</div>
+  <div class="lzones">
+    <div class="lzone"><b>🚪 委托张贴墙</b>每夜张贴 人数+1 张委托，公开朝上：<div class="slot">委托 1</div><div class="slot">委托 2</div><div class="slot">委托 3</div><div class="slot">委托 4</div><div class="slot">委托 5</div><div class="slot">委托 6</div><div class="slot">委托 7</div></div>
+    <div class="lzone"><b>🪙 金库（Charon 保管）</b>所有暗拍服务费与事件罚金堆在这里；终局由入住次数最多的玩家结账领走（封顶 15 枚）。</div>
+    <div class="lzone"><b>🗝 登记处</b>选择入住的玩家把入住标记移到这里；累计第 2、4 次入住时各 +1 声望（酒店人脉）。</div>
+    <div class="lzone"><b>🍸 吧台 · 情报市场</b>入住抽情报卡的地方；温斯顿在此多抽 1 张并记帐 2 金币。</div>
+  </div>
+  <div class="flow">
+    <div class="st"><b>① 翻事件</b> 张贴前</div>
+    <div class="st"><b>② 张贴委托</b> 人数+1 张</div>
+    <div class="st"><b>③ 同时暗拍</b> 选 1 张 + 出价 0-3</div>
+    <div class="st"><b>④ 执行委托</b> 打技法卡 + 补金币</div>
+    <div class="st"><b>⑤ 结算入住 / 流拍</b></div>
+  </div>
+</div>
+
+<h2>📜 委托卡（36 张 · 打印 1 套）</h2>
+<div class="sub">3 类标签 × 12 档；报酬 = 难度 + 固定溢价，难度是流动性门槛与方差开关，不是收益阶梯。⚠ 虚线边框 = 风险委托。</div>
+<div class="grid">
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C01 · 大陆酒店委托</div>
+  <div class="ttl">教训小混混</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D4</span></div>
+  <div class="row"><span>报酬</span><span class="big">R7 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C02 · 大陆酒店委托</div>
+  <div class="ttl">码头交货</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D5</span></div>
+  <div class="row"><span>报酬</span><span class="big">R8 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C03 · 大陆酒店委托</div>
+  <div class="ttl">仓库清场</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D5</span></div>
+  <div class="row"><span>报酬</span><span class="big">R9 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C04 · 大陆酒店委托</div>
+  <div class="ttl">清算叛徒</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D6</span></div>
+  <div class="row"><span>报酬</span><span class="big">R9 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C05 · 大陆酒店委托</div>
+  <div class="ttl">护送线人</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D6</span></div>
+  <div class="row"><span>报酬</span><span class="big">R10 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C06 · 大陆酒店委托</div>
+  <div class="ttl">夜总会立威</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D7</span></div>
+  <div class="row"><span>报酬</span><span class="big">R13 🪙</span></div>
+  <div class="risk">⚠ 善后费：成功后支付 3 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C07 · 大陆酒店委托</div>
+  <div class="ttl">截杀车队</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D7</span></div>
+  <div class="row"><span>报酬</span><span class="big">R10 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C08 · 大陆酒店委托</div>
+  <div class="ttl">公寓攻坚</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D8</span></div>
+  <div class="row"><span>报酬</span><span class="big">R13 🪙</span></div>
+  <div class="risk">⚠ 硬茬子：失败受到 2 伤口</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C09 · 大陆酒店委托</div>
+  <div class="ttl">赌场取货</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D8</span></div>
+  <div class="row"><span>报酬</span><span class="big">R11 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C10 · 大陆酒店委托</div>
+  <div class="ttl">除掉会计师</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D9</span></div>
+  <div class="row"><span>报酬</span><span class="big">R14 🪙</span></div>
+  <div class="risk">⚠ 阴沟翻船：失败失去 4 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C11 · 大陆酒店委托</div>
+  <div class="ttl">边境交货</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D9</span></div>
+  <div class="row"><span>报酬</span><span class="big">R12 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#c0392b"></div>
+  <div class="tier">C12 · 大陆酒店委托</div>
+  <div class="ttl">斩首行动</div>
+  <div class="chip" style="background:#c0392b">🔫 枪斗术</div>
+  <div class="row"><span>难度</span><span class="big">D10</span></div>
+  <div class="row"><span>报酬</span><span class="big">R17 🪙</span></div>
+  <div class="risk">⚠ 传奇难度：失败受到 2 伤口并失去 2 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C13 · 大陆酒店委托</div>
+  <div class="ttl">酒馆讨债</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D4</span></div>
+  <div class="row"><span>报酬</span><span class="big">R7 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C14 · 大陆酒店委托</div>
+  <div class="ttl">健身房谈判</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D5</span></div>
+  <div class="row"><span>报酬</span><span class="big">R8 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C15 · 大陆酒店委托</div>
+  <div class="ttl">仓库劝架</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D5</span></div>
+  <div class="row"><span>报酬</span><span class="big">R9 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C16 · 大陆酒店委托</div>
+  <div class="ttl">旅馆问话</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D6</span></div>
+  <div class="row"><span>报酬</span><span class="big">R9 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C17 · 大陆酒店委托</div>
+  <div class="ttl">夜巷拦人</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D6</span></div>
+  <div class="row"><span>报酬</span><span class="big">R10 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C18 · 大陆酒店委托</div>
+  <div class="ttl">会所清场</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D7</span></div>
+  <div class="row"><span>报酬</span><span class="big">R13 🪙</span></div>
+  <div class="risk">⚠ 善后费：成功后支付 3 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C19 · 大陆酒店委托</div>
+  <div class="ttl">拳馆立棍</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D7</span></div>
+  <div class="row"><span>报酬</span><span class="big">R10 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C20 · 大陆酒店委托</div>
+  <div class="ttl">天台对决</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D8</span></div>
+  <div class="row"><span>报酬</span><span class="big">R13 🪙</span></div>
+  <div class="risk">⚠ 硬茬子：失败受到 2 伤口</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C21 · 大陆酒店委托</div>
+  <div class="ttl">车队截停</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D8</span></div>
+  <div class="row"><span>报酬</span><span class="big">R11 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C22 · 大陆酒店委托</div>
+  <div class="ttl">公寓逼供</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D9</span></div>
+  <div class="row"><span>报酬</span><span class="big">R14 🪙</span></div>
+  <div class="risk">⚠ 阴沟翻船：失败失去 4 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C23 · 大陆酒店委托</div>
+  <div class="ttl">边境押送</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D9</span></div>
+  <div class="row"><span>报酬</span><span class="big">R12 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#d35400"></div>
+  <div class="tier">C24 · 大陆酒店委托</div>
+  <div class="ttl">徒手拆弹</div>
+  <div class="chip" style="background:#d35400">🥊 近身格斗</div>
+  <div class="row"><span>难度</span><span class="big">D10</span></div>
+  <div class="row"><span>报酬</span><span class="big">R17 🪙</span></div>
+  <div class="risk">⚠ 传奇难度：失败受到 2 伤口并失去 2 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C25 · 大陆酒店委托</div>
+  <div class="ttl">偷取账本</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D4</span></div>
+  <div class="row"><span>报酬</span><span class="big">R7 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C26 · 大陆酒店委托</div>
+  <div class="ttl">潜入取证</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D5</span></div>
+  <div class="row"><span>报酬</span><span class="big">R8 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C27 · 大陆酒店委托</div>
+  <div class="ttl">停车场拷贝</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D5</span></div>
+  <div class="row"><span>报酬</span><span class="big">R9 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C28 · 大陆酒店委托</div>
+  <div class="ttl">会议室监听</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D6</span></div>
+  <div class="row"><span>报酬</span><span class="big">R9 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C29 · 大陆酒店委托</div>
+  <div class="ttl">旅馆踩点</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D6</span></div>
+  <div class="row"><span>报酬</span><span class="big">R10 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C30 · 大陆酒店委托</div>
+  <div class="ttl">博物馆夜游</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D7</span></div>
+  <div class="row"><span>报酬</span><span class="big">R13 🪙</span></div>
+  <div class="risk">⚠ 善后费：成功后支付 3 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C31 · 大陆酒店委托</div>
+  <div class="ttl">办公室开锁</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D7</span></div>
+  <div class="row"><span>报酬</span><span class="big">R10 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C32 · 大陆酒店委托</div>
+  <div class="ttl">屋顶潜行</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D8</span></div>
+  <div class="row"><span>报酬</span><span class="big">R13 🪙</span></div>
+  <div class="risk">⚠ 硬茬子：失败受到 2 伤口</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C33 · 大陆酒店委托</div>
+  <div class="ttl">尾随目标</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D8</span></div>
+  <div class="row"><span>报酬</span><span class="big">R11 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C34 · 大陆酒店委托</div>
+  <div class="ttl">档案室取件</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D9</span></div>
+  <div class="row"><span>报酬</span><span class="big">R14 🪙</span></div>
+  <div class="risk">⚠ 阴沟翻船：失败失去 4 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C35 · 大陆酒店委托</div>
+  <div class="ttl">车库换牌</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D9</span></div>
+  <div class="row"><span>报酬</span><span class="big">R12 🪙</span></div>
+  <div class="risk none">无风险</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+<div class="job risky">
+  <div class="bar" style="background:#7d3c98"></div>
+  <div class="tier">C36 · 大陆酒店委托</div>
+  <div class="ttl">无声撤离</div>
+  <div class="chip" style="background:#7d3c98">🥷 潜行</div>
+  <div class="row"><span>难度</span><span class="big">D10</span></div>
+  <div class="row"><span>报酬</span><span class="big">R17 🪙</span></div>
+  <div class="risk">⚠ 传奇难度：失败受到 2 伤口并失去 2 金币</div>
+  <div class="foot">完成任务：声望 +1</div>
+</div>
+</div>
+
+<h2>🥷 技法卡（6 套 × 9 张 · 每位玩家 1 套）</h2>
+<div class="sub">每套：枪斗术 / 近身格斗 / 潜行 各 3 张（火力 2 / 3 / 4）。执行委托时打出 1 张，标签匹配 +1 火力，可再花最多 5 金币补火力。</div>
+<div class="setlabel">第 1 套技法牌（每位玩家 1 套，共 9 张）</div>
+<div class="grid"><div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">手枪速射</div>
+  <div class="tval" style="background:#c0392b">火力 2</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">长枪点射</div>
+  <div class="tval" style="background:#c0392b">火力 3</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">双枪齐鸣</div>
+  <div class="tval" style="background:#c0392b">火力 4</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">擒拿摔投</div>
+  <div class="tval" style="background:#d35400">火力 2</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">近身肘击</div>
+  <div class="tval" style="background:#d35400">火力 3</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">组合拳</div>
+  <div class="tval" style="background:#d35400">火力 4</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">悄步尾随</div>
+  <div class="tval" style="background:#7d3c98">火力 2</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗锁开启</div>
+  <div class="tval" style="background:#7d3c98">火力 3</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗影穿梭</div>
+  <div class="tval" style="background:#7d3c98">火力 4</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div></div>
+<div class="setlabel">第 2 套技法牌（每位玩家 1 套，共 9 张）</div>
+<div class="grid"><div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">手枪速射</div>
+  <div class="tval" style="background:#c0392b">火力 2</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">长枪点射</div>
+  <div class="tval" style="background:#c0392b">火力 3</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">双枪齐鸣</div>
+  <div class="tval" style="background:#c0392b">火力 4</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">擒拿摔投</div>
+  <div class="tval" style="background:#d35400">火力 2</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">近身肘击</div>
+  <div class="tval" style="background:#d35400">火力 3</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">组合拳</div>
+  <div class="tval" style="background:#d35400">火力 4</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">悄步尾随</div>
+  <div class="tval" style="background:#7d3c98">火力 2</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗锁开启</div>
+  <div class="tval" style="background:#7d3c98">火力 3</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗影穿梭</div>
+  <div class="tval" style="background:#7d3c98">火力 4</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div></div>
+<div class="setlabel">第 3 套技法牌（每位玩家 1 套，共 9 张）</div>
+<div class="grid"><div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">手枪速射</div>
+  <div class="tval" style="background:#c0392b">火力 2</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">长枪点射</div>
+  <div class="tval" style="background:#c0392b">火力 3</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">双枪齐鸣</div>
+  <div class="tval" style="background:#c0392b">火力 4</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">擒拿摔投</div>
+  <div class="tval" style="background:#d35400">火力 2</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">近身肘击</div>
+  <div class="tval" style="background:#d35400">火力 3</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">组合拳</div>
+  <div class="tval" style="background:#d35400">火力 4</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">悄步尾随</div>
+  <div class="tval" style="background:#7d3c98">火力 2</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗锁开启</div>
+  <div class="tval" style="background:#7d3c98">火力 3</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗影穿梭</div>
+  <div class="tval" style="background:#7d3c98">火力 4</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div></div>
+<div class="setlabel">第 4 套技法牌（每位玩家 1 套，共 9 张）</div>
+<div class="grid"><div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">手枪速射</div>
+  <div class="tval" style="background:#c0392b">火力 2</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">长枪点射</div>
+  <div class="tval" style="background:#c0392b">火力 3</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">双枪齐鸣</div>
+  <div class="tval" style="background:#c0392b">火力 4</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">擒拿摔投</div>
+  <div class="tval" style="background:#d35400">火力 2</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">近身肘击</div>
+  <div class="tval" style="background:#d35400">火力 3</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">组合拳</div>
+  <div class="tval" style="background:#d35400">火力 4</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">悄步尾随</div>
+  <div class="tval" style="background:#7d3c98">火力 2</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗锁开启</div>
+  <div class="tval" style="background:#7d3c98">火力 3</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗影穿梭</div>
+  <div class="tval" style="background:#7d3c98">火力 4</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div></div>
+<div class="setlabel">第 5 套技法牌（每位玩家 1 套，共 9 张）</div>
+<div class="grid"><div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">手枪速射</div>
+  <div class="tval" style="background:#c0392b">火力 2</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">长枪点射</div>
+  <div class="tval" style="background:#c0392b">火力 3</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">双枪齐鸣</div>
+  <div class="tval" style="background:#c0392b">火力 4</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">擒拿摔投</div>
+  <div class="tval" style="background:#d35400">火力 2</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">近身肘击</div>
+  <div class="tval" style="background:#d35400">火力 3</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">组合拳</div>
+  <div class="tval" style="background:#d35400">火力 4</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">悄步尾随</div>
+  <div class="tval" style="background:#7d3c98">火力 2</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗锁开启</div>
+  <div class="tval" style="background:#7d3c98">火力 3</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗影穿梭</div>
+  <div class="tval" style="background:#7d3c98">火力 4</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div></div>
+<div class="setlabel">第 6 套技法牌（每位玩家 1 套，共 9 张）</div>
+<div class="grid"><div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">手枪速射</div>
+  <div class="tval" style="background:#c0392b">火力 2</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">长枪点射</div>
+  <div class="tval" style="background:#c0392b">火力 3</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#c0392b">
+  <div class="tic" style="color:#c0392b">🔫</div>
+  <div class="tnm">双枪齐鸣</div>
+  <div class="tval" style="background:#c0392b">火力 4</div>
+  <div class="ttag">枪斗术 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">擒拿摔投</div>
+  <div class="tval" style="background:#d35400">火力 2</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">近身肘击</div>
+  <div class="tval" style="background:#d35400">火力 3</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#d35400">
+  <div class="tic" style="color:#d35400">🥊</div>
+  <div class="tnm">组合拳</div>
+  <div class="tval" style="background:#d35400">火力 4</div>
+  <div class="ttag">近身格斗 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">悄步尾随</div>
+  <div class="tval" style="background:#7d3c98">火力 2</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗锁开启</div>
+  <div class="tval" style="background:#7d3c98">火力 3</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div>
+<div class="tech" style="border-color:#7d3c98">
+  <div class="tic" style="color:#7d3c98">🥷</div>
+  <div class="tnm">暗影穿梭</div>
+  <div class="tval" style="background:#7d3c98">火力 4</div>
+  <div class="ttag">潜行 · 执行时打出</div>
+</div></div>
+
+<h2>🔍 情报卡（12 张 · 4 类 × 3）</h2>
+<div class="sub">入住时抽取；「预知」「窃听」不改变数值，但能让你看清局势。</div>
+<div class="grid">
+<div class="mod">
+  <div class="ic">🔍</div>
+  <div class="nm">预知</div>
+  <div class="d">查看委托堆顶 3 张，并按任意顺序放回</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">🔍</div>
+  <div class="nm">预知</div>
+  <div class="d">查看委托堆顶 3 张，并按任意顺序放回</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">🔍</div>
+  <div class="nm">预知</div>
+  <div class="d">查看委托堆顶 3 张，并按任意顺序放回</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">🗣</div>
+  <div class="nm">窃听</div>
+  <div class="d">查看一名其他玩家的技法手牌</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">🗣</div>
+  <div class="nm">窃听</div>
+  <div class="d">查看一名其他玩家的技法手牌</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">🗣</div>
+  <div class="nm">窃听</div>
+  <div class="d">查看一名其他玩家的技法手牌</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">💉</div>
+  <div class="nm">医疗</div>
+  <div class="d">立即治疗 1 伤口</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">💉</div>
+  <div class="nm">医疗</div>
+  <div class="d">立即治疗 1 伤口</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">💉</div>
+  <div class="nm">医疗</div>
+  <div class="d">立即治疗 1 伤口</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">💵</div>
+  <div class="nm">门匙</div>
+  <div class="d">立即获得 2 金币</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">💵</div>
+  <div class="nm">门匙</div>
+  <div class="d">立即获得 2 金币</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+<div class="mod">
+  <div class="ic">💵</div>
+  <div class="nm">门匙</div>
+  <div class="d">立即获得 2 金币</div>
+  <div class="tag">情报卡 · 入住抽取</div>
+</div>
+</div>
+
+<h2>🎲 事件卡（12 张）</h2>
+<div class="sub">每夜张贴委托前从牌堆顶翻 1 张，影响本夜。12 张用完后洗混重复。</div>
+<div class="grid">
+<div class="evt">
+  <div class="eic">🚪</div>
+  <div class="enm">外廊枪声</div>
+  <div class="ed">金币最多的玩家失去 4 金币入金库（平手各失 2）</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🩸</div>
+  <div class="enm">清道夫</div>
+  <div class="ed">每个有伤口的玩家失去 2 金币入金库</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🛎</div>
+  <div class="enm">Charon 的款待</div>
+  <div class="ed">本夜入住的玩家额外抽 1 张情报卡</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">⚖️</div>
+  <div class="enm">高桌召见</div>
+  <div class="ed">声望最高的玩家支付 3 金币入金库，否则 −1 声望</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🏥</div>
+  <div class="enm">地下医生</div>
+  <div class="ed">所有受伤的玩家治疗 1 伤口</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">💰</div>
+  <div class="enm">客户预付</div>
+  <div class="ed">每名玩家从银行获得 2 金币</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🎯</div>
+  <div class="enm">连锁悬赏</div>
+  <div class="ed">本夜完成难度最高委托的玩家 +1 声望（平手不得）</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🥃</div>
+  <div class="enm">大堂和平夜</div>
+  <div class="ed">本夜入住的玩家治疗 2 伤口</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">📞</div>
+  <div class="enm">限时加急</div>
+  <div class="ed">本夜所有委托报酬 +2 金币</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🚗</div>
+  <div class="enm">酒店满房</div>
+  <div class="ed">本夜不可入住</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🗝</div>
+  <div class="enm">旧标记</div>
+  <div class="ed">金库向入住次数最多的玩家支付 3 金币</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+<div class="evt">
+  <div class="eic">🃏</div>
+  <div class="enm">情报贩子</div>
+  <div class="ed">所有玩家可弃掉任意情报卡并重抽等量</div>
+  <div class="etag">事件卡 · 每夜张贴前翻 1 张</div>
+</div>
+</div>
+
+<h2>🕴️ 角色卡（6 张 · 每人选 1 张）</h2>
+<div class="sub">不对称被动。角色要和流派搭配：温斯顿配住客流、丐帮王配囤币/情报流，其余角色配接单/高风险流。</div>
+<div class="grid">
+<div class="role">
+  <div class="head"><div class="nm">🕴️ 约翰·威克</div><div class="en">JOHN WICK</div><div class="lv">适合：接单流 · 高风险流</div></div>
+  <div class="pas"><b>专属被动</b><br>枪斗术大师：每完成一张🔫枪斗术委托，额外获得 3 金币（客户点名要最好的枪手）</div>
+  <div class="rtip">开局金币 8 · 技法手牌 5 张</div>
+</div>
+<div class="role">
+  <div class="head"><div class="nm">🎩 温斯顿</div><div class="en">WINSTON</div><div class="lv">适合：住客流</div></div>
+  <div class="pas"><b>专属被动</b><br>酒店经理：入住时额外获得 2 金币，并额外抽 1 张情报卡</div>
+  <div class="rtip">开局金币 8 · 技法手牌 5 张</div>
+</div>
+<div class="role">
+  <div class="head"><div class="nm">🛎 查伦</div><div class="en">CHARON</div><div class="lv">适合：任意流派</div></div>
+  <div class="pas"><b>专属被动</b><br>门房：暗拍出现平手时，你赢得该委托（整局仅 1 次）</div>
+  <div class="rtip">开局金币 8 · 技法手牌 5 张</div>
+</div>
+<div class="role">
+  <div class="head"><div class="nm">🧥 丐帮王</div><div class="en">BOWERY KING</div><div class="lv">适合：囤币流 · 情报流</div></div>
+  <div class="pas"><b>专属被动</b><br>地下之眼：本夜没有成功完成委托时，可支付 2 金币接手一张流拍委托</div>
+  <div class="rtip">开局金币 8 · 技法手牌 5 张</div>
+</div>
+<div class="role">
+  <div class="head"><div class="nm">👠 索菲亚</div><div class="en">SOFIA</div><div class="lv">适合：接单流 · 高风险流</div></div>
+  <div class="pas"><b>专属被动</b><br>一击必杀：整局一次，自动完成一张难度 ≤9 的委托，且该委托报酬 +3</div>
+  <div class="rtip">开局金币 8 · 技法手牌 5 张</div>
+</div>
+<div class="role">
+  <div class="head"><div class="nm">🔪 卡西安</div><div class="en">CASSIAN</div><div class="lv">适合：接单流 · 高风险流</div></div>
+  <div class="pas"><b>专属被动</b><br>专业收尾：完成带⚠风险委托额外获得 3 金币；竞拍⚠风险委托时出价 −1（最低 0）</div>
+  <div class="rtip">开局金币 8 · 技法手牌 5 张</div>
+</div>
+</div>
+
+<h2>📋 玩家板（6 块 · 每人 1 块）</h2>
+<div class="grid">
+<div class="pb" style="border-color:#c0392b">
+  <h4 style="color:#c0392b">玩家板 P1</h4>
+  <div class="rowl"><b>金币</b>（放筹码，终局 1 枚 = 1 分）</div>
+  <div class="coinbox">🪙 数量：______</div>
+  <div class="rowl"><b>声望</b>（每完成 1 委托 +1；第 2/4 次入住 +1）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div><div class="pip sm">6</div><div class="pip sm">7</div><div class="pip sm">8</div></div>
+  <div class="rowl"><b>伤口</b>（3 格满 → 送医：跳过下一夜并降到 2；终局每伤 −2 分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl"><b>入住次数</b>（最多者终局领金库分红）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div></div>
+</div>
+<div class="pb" style="border-color:#2471a3">
+  <h4 style="color:#2471a3">玩家板 P2</h4>
+  <div class="rowl"><b>金币</b>（放筹码，终局 1 枚 = 1 分）</div>
+  <div class="coinbox">🪙 数量：______</div>
+  <div class="rowl"><b>声望</b>（每完成 1 委托 +1；第 2/4 次入住 +1）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div><div class="pip sm">6</div><div class="pip sm">7</div><div class="pip sm">8</div></div>
+  <div class="rowl"><b>伤口</b>（3 格满 → 送医：跳过下一夜并降到 2；终局每伤 −2 分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl"><b>入住次数</b>（最多者终局领金库分红）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div></div>
+</div>
+<div class="pb" style="border-color:#1e8449">
+  <h4 style="color:#1e8449">玩家板 P3</h4>
+  <div class="rowl"><b>金币</b>（放筹码，终局 1 枚 = 1 分）</div>
+  <div class="coinbox">🪙 数量：______</div>
+  <div class="rowl"><b>声望</b>（每完成 1 委托 +1；第 2/4 次入住 +1）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div><div class="pip sm">6</div><div class="pip sm">7</div><div class="pip sm">8</div></div>
+  <div class="rowl"><b>伤口</b>（3 格满 → 送医：跳过下一夜并降到 2；终局每伤 −2 分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl"><b>入住次数</b>（最多者终局领金库分红）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div></div>
+</div>
+<div class="pb" style="border-color:#b9770e">
+  <h4 style="color:#b9770e">玩家板 P4</h4>
+  <div class="rowl"><b>金币</b>（放筹码，终局 1 枚 = 1 分）</div>
+  <div class="coinbox">🪙 数量：______</div>
+  <div class="rowl"><b>声望</b>（每完成 1 委托 +1；第 2/4 次入住 +1）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div><div class="pip sm">6</div><div class="pip sm">7</div><div class="pip sm">8</div></div>
+  <div class="rowl"><b>伤口</b>（3 格满 → 送医：跳过下一夜并降到 2；终局每伤 −2 分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl"><b>入住次数</b>（最多者终局领金库分红）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div></div>
+</div>
+<div class="pb" style="border-color:#7d3c98">
+  <h4 style="color:#7d3c98">玩家板 P5</h4>
+  <div class="rowl"><b>金币</b>（放筹码，终局 1 枚 = 1 分）</div>
+  <div class="coinbox">🪙 数量：______</div>
+  <div class="rowl"><b>声望</b>（每完成 1 委托 +1；第 2/4 次入住 +1）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div><div class="pip sm">6</div><div class="pip sm">7</div><div class="pip sm">8</div></div>
+  <div class="rowl"><b>伤口</b>（3 格满 → 送医：跳过下一夜并降到 2；终局每伤 −2 分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl"><b>入住次数</b>（最多者终局领金库分红）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div></div>
+</div>
+<div class="pb" style="border-color:#117864">
+  <h4 style="color:#117864">玩家板 P6</h4>
+  <div class="rowl"><b>金币</b>（放筹码，终局 1 枚 = 1 分）</div>
+  <div class="coinbox">🪙 数量：______</div>
+  <div class="rowl"><b>声望</b>（每完成 1 委托 +1；第 2/4 次入住 +1）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div><div class="pip sm">6</div><div class="pip sm">7</div><div class="pip sm">8</div></div>
+  <div class="rowl"><b>伤口</b>（3 格满 → 送医：跳过下一夜并降到 2；终局每伤 −2 分）</div>
+  <div class="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <div class="rowl"><b>入住次数</b>（最多者终局领金库分红）</div>
+  <div class="pips"><div class="pip sm">1</div><div class="pip sm">2</div><div class="pip sm">3</div><div class="pip sm">4</div><div class="pip sm">5</div></div>
+</div>
+</div>
+
+<h2>🪙 金币（40 枚）</h2>
+<div class="sub">开局每人 8 枚。可用扑克筹码、玻璃珠或乐高颗粒替代。</div>
+<div class="marks">
+<div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div><div class="mk" style="background:#d4ac0d">1</div>
+</div>
+
+<h2>🩸 伤口标记（12 枚）</h2>
+<div class="sub">放在玩家板上；第 4 个伤口触发送医。终局每个伤口 −2 分。</div>
+<div class="marks">
+<div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div><div class="mk" style="background:#c0392b">✚</div>
+</div>
+
+<h2>🗝 入住标记（12 枚）</h2>
+<div class="sub">放在登记处记录入住次数；终局入住最多者领取金库分红。</div>
+<div class="marks">
+<div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div><div class="mk" style="background:#2471a3">🗝</div>
+</div>
+
+<h2>⚡ 一页速查</h2>
+<div class="quick">
+  <b>每夜流程：</b>
+  <ol>
+    <li><b>翻事件</b>：从事件牌堆顶翻 1 张，立即生效（连锁悬赏在执行后结算）。</li>
+    <li><b>张贴委托</b>：翻开 人数+1 张委托。</li>
+    <li><b>同时暗拍</b>：每位玩家暗中选定 1 张委托并出价 0-3 金币（或选择入住酒店）。同时亮出。</li>
+    <li><b>暗拍结算</b>：每张委托出价最高者得，支付出价入金库；最高价平手则流拍退还；无人出价也流拍。查伦可赢 1 次平手。</li>
+    <li><b>入住结算</b>：治疗 1 伤（和平夜 2 伤）+ 抽 1 情报；第 2/4 次入住 +1 声望；温斯顿额外 +2 金币 +1 情报。</li>
+    <li><b>执行委托</b>：得主打 1 张技法卡（标签匹配 +1），可花最多 5 金币补火力；火力 ≥ 难度即成功：报酬 + 声望 1。</li>
+    <li><b>流拍捡漏</b>：丐帮王本夜未得手可付 2 金币接手一张流拍委托并立即执行。</li>
+  </ol>
+  <table>
+    <tr><th>结算</th><th>说明</th></tr>
+    <tr><td>终局计分</td><td>声望 ×3 + 剩余金币 + 结账分红 − 伤口 ×2</td></tr>
+    <tr><td>Charon 结账</td><td>入住次数最多的玩家领取金库（封顶 15 枚），平手均分</td></tr>
+    <tr><td>失败惩罚</td><td>普通委托 1 伤；⚠ 委托按卡面（2 伤 / 失 4 金币 / 2 伤+失 2 金币）</td></tr>
+    <tr><td>送医</td><td>伤口达到 4 → 降到 2 并跳过下一夜</td></tr>
+  </table>
+</div>
+
+<footer>
+  大陆酒店：中立地带 · 自制桌游 · 规则详情见 <a href="README.md">README.md</a> ·
+  返回 <a href="../../../../README.md">桌游目录</a> ·
+  开发规范见 <a href="../../../../development-guide.md">development-guide.md</a>
+</footer>
+
+</body>
+</html>

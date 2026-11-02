@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>玩具不许动：安迪的房间 — 打印道具</title>
+<style>
+
+:root{
+  --ink:#2f2a25; --sub:#6b6158; --line:#d9cdbb; --paper:#fffdf8;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; padding:18px; background:#f4efe6; color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  line-height:1.5;
+}
+header.hd{
+  background:linear-gradient(135deg,#ffd79a,#ffb9a3 45%,#c7b6f0);
+  border:2px solid #b79a6d; border-radius:14px; padding:16px 18px; margin-bottom:16px;
+}
+header.hd h1{margin:0 0 4px; font-size:24px; letter-spacing:1px;}
+header.hd p{margin:0; font-size:13px; color:#5b4a33;}
+.print-hint{
+  background:#fff8d9; border:2px dashed #d8a72a; border-radius:10px;
+  padding:10px 14px; margin:12px 0 18px; font-size:13px;
+}
+.print-hint ul{margin:6px 0 0; padding-left:20px;}
+.sec{margin:0 0 26px; padding:14px 12px; background:var(--paper);
+     border:1px solid var(--line); border-radius:12px;}
+.sec h2{margin:0 0 4px; font-size:19px; border-left:6px solid #e0a24a; padding-left:8px;}
+.note{margin:0 0 12px; font-size:12.5px; color:var(--sub);}
+.grid{display:flex; flex-wrap:wrap; gap:10px;}
+.card{
+  width:74mm; min-height:50mm; border:2px solid #b9a888; border-radius:10px;
+  padding:8px 8px 16px; position:relative; box-shadow:0 1px 3px rgba(0,0,0,.12);
+  break-inside:avoid; page-break-inside:avoid;
+}
+.cico{font-size:26px; line-height:1.1;}
+.cname{font-weight:700; font-size:14px; margin-top:2px;}
+.csub{font-size:11px; color:var(--sub); margin-bottom:4px;}
+.cbody{font-size:11.5px; color:#443c34;}
+.badge{position:absolute; right:7px; bottom:5px; font-size:11px; color:#8a7a63;}
+.mapwrap{display:flex; flex-wrap:wrap; gap:18px; align-items:flex-start;}
+.map{display:grid; grid-template-columns:repeat(3,60mm); grid-auto-rows:44mm; gap:4px;}
+.cell{border:3px solid #b58b52; border-radius:10px; padding:6px;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      text-align:center;}
+.cell .mico{font-size:30px;}
+.cell .mname{font-weight:700; font-size:14px; margin-top:2px;}
+.cell .mtip{font-size:10.5px; color:#6a5c4c; margin-top:3px;}
+.legend{border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+        background:#fffdf6; font-size:12px; min-width:64mm;}
+.legend h3{margin:0 0 6px; font-size:14px; legend:0;}
+.legend li{margin:3px 0;}
+.track{display:flex; flex-wrap:wrap; gap:2px; margin-top:4px;}
+.tk{width:9.5mm; height:11mm; border:1px solid #a89a86; border-radius:3px;
+    font-size:10px; display:flex; align-items:center; justify-content:center; background:#fff;}
+.tk.mark{background:#ffcfcf; font-weight:700;}
+.tk.zero{background:#e9f7ea;}
+.tok{width:32mm; height:32mm; border:2px solid #9c8b72; border-radius:50%;
+     display:flex; flex-direction:column; align-items:center; justify-content:center;
+     background:#fff4e0; font-size:22px;}
+.tok span{font-size:9.5px; color:#7b6a54;}
+.pawn{width:34mm; height:44mm; border:2px solid #9c8b72; border-radius:8px 8px 14px 14px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      background:#fff6ea; font-size:30px;}
+.pawn span{font-size:11px; font-weight:700;}
+.pawn small{font-size:9px; color:#7b6a54;}
+.face{width:74mm; min-height:52mm; border:3px solid #8d7a5e; border-radius:10px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      font-size:34px; padding:8px;}
+.face b{font-size:15px; margin-top:4px;}
+.face small{font-size:10.5px; color:#6a5c4c;}
+.qr{width:96mm; border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+    background:#fffdf6; font-size:11.5px;}
+.qr h3{margin:0 0 6px; font-size:14px;}
+.qr table{border-collapse:collapse; width:100%; font-size:11px;}
+.qr td,.qr th{border:1px solid var(--line); padding:2px 4px; text-align:center;}
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint { display: none; }
+    body { background:#fff; padding:0; }
+    .sec { border:none; page-break-after: always; }
+    .sec:last-child { page-break-after: auto; }
+}
+@media print {
+    .print-hint {
+        display: none;
+    }
+}
+@page { size: A4; margin: 8mm; }
+
+</style></head><body>
+<header class="hd">
+<h1>🧸 玩具不许动：安迪的房间 🧊</h1>
+<p>打印道具包 · 房间地图 / 曝光条 / 状态卡 / 动静卡 / 角色卡 / 道具卡 / 夜间任务卡 / 安迪翻身卡 / 伙伴标记 / 棋子 / 速查卡</p>
+</header>
+<div class="print-hint">
+<strong>⚠️ 重要打印提示：</strong><ul>
+<li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li>
+<li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项</li>
+<li>卡牌和棋子建议使用<strong>卡纸</strong>打印，裁剪后可塑封</li>
+<li>状态卡请把「🧸 活动中」与「🧊 已定格」两面<strong>背靠背粘贴</strong>（或双面打印对折）</li>
+</ul></div>
+<section class="sec"><h2>一、房间地图</h2><p class="note">A4 普通纸打印，摊在桌子中央。</p><div class="mapwrap"><div class="map"><div class="cell" style="background:#dff0fb"><div class="mico">🪟</div><div class="mname">窗台</div><div class="mtip">高处・月光最亮</div></div><div class="cell" style="background:#f7e2ea"><div class="mico">🛏️</div><div class="mname">安迪的床</div><div class="mtip">软・动静易传出去</div></div><div class="cell" style="background:#eae4fb"><div class="mico">📚</div><div class="mname">书架</div><div class="mtip">高处・书会掉</div></div><div class="cell" style="background:#ffe9cf"><div class="mico">🧱</div><div class="mname">积木角</div><div class="mtip">散落・好捡东西</div></div><div class="cell" style="background:#ffd9d9"><div class="mico">🟥</div><div class="mname">地毯</div><div class="mtip">房间正中・最显眼</div></div><div class="cell" style="background:#e6f7e2"><div class="mico">🧸</div><div class="mname">玩具箱</div><div class="mtip">★起始格</div></div><div class="cell" style="background:#ffe0c4"><div class="mico">🚪</div><div class="mname">门口</div><div class="mtip">通往楼梯・最危险</div></div><div class="cell" style="background:#e2eefc"><div class="mico">🚗</div><div class="mname">赛车车道</div><div class="mtip">光滑・跑得快</div></div><div class="cell" style="background:#f2ead9"><div class="mico">🐶</div><div class="mname">狗窝</div><div class="mtip">狗会打呼噜掩护</div></div></div><div class="legend"><h3>🗺️ 地图规则</h3><ul><li>3×3 共 9 格，只能<b>上下左右</b>走，<b>不能斜走</b>，每时刻移动 1 格（可不动）</li><li>所有玩具从 <b>🧸 玩具箱</b>（起始格）出发，每夜开始回到这里</li><li>「伙伴标记」由<b>夜间任务卡</b>决定放在哪 2 格</li><li>「安迪视线格」由<b>安迪翻身卡</b>决定，用 👀 标记压在上面</li><li>🟥 地毯与 🚪 门口是<b>最容易被撞见</b>的两格，出现在视线卡上的概率最高</li></ul></div></div></section>
+<section class="sec"><h2>二、曝光条</h2><p class="note">推到对应人数的红色格子即触发「安迪醒了」。</p><div class="track"><div class="tk zero">0</div><div class="tk">1</div><div class="tk">2</div><div class="tk">3</div><div class="tk">4</div><div class="tk">5</div><div class="tk">6</div><div class="tk">7</div><div class="tk">8</div><div class="tk">9</div><div class="tk">10</div><div class="tk">11</div><div class="tk">12</div><div class="tk">13</div><div class="tk">14</div><div class="tk mark">15<br>3人</div><div class="tk">16</div><div class="tk">17</div><div class="tk">18</div><div class="tk mark">19<br>4人</div><div class="tk">20</div><div class="tk">21</div><div class="tk">22</div><div class="tk mark">23<br>5-6人</div></div><div class="legend" style="margin-top:10px"><h3>📈 曝光条用法</h3><ul><li>用一个小夹子或回形针当游标，从 0 开始往右推</li><li>上限：<b>3人 15 / 4人 19 / 5-6人 23</b>（= 每夜曝光下限 × 4 + 3）</li><li>游标推到<b>本局上限格</b> ⇒ 安迪彻底醒来，游戏<b>立即结束</b>，此刻仍「活动中」的玩具各 −6 螺丝</li></ul></div></section>
+<section class="sec"><h2>三、状态卡（双面，每人 1 张，共 6 张）</h2><p class="note">一夜中随时可以翻到 🧊，但 <b>本夜不能再翻回 🧸</b>。每夜开始全部翻回 🧸。</p><div class="grid"><div class="face" style="background:#ffe9c9"><div>🧸</div><b>活动中</b><small>可以移动、可以出动静卡、可以拿伙伴<br>但越线时每个活动中的玩具 +1 曝光</small></div><div class="face" style="background:#dbeeff"><div>🧊</div><b>已定格</b><small>不能移动、不能出牌、不能拿伙伴<br>完全免疫曝光；夜末 +5 螺丝（最佳定格）</small></div></div></section>
+<section class="sec"><h2>四、动静卡（每人 1 套 3 张，共 18 张）</h2><p class="note">每时刻暗置 1 张，揭示后<b>收回</b>——它只是「选择指示物」，不是消耗品。</p><div class="grid"><div class="card " style="background:#dff5e6"><div class="cico">🤫</div><div class="cname">蹑手蹑脚</div><div class="csub">声响 0 点</div><div class="cbody">零声响。<br>最安全，但本时刻<br>不推进任务、不拿零件</div><div class="badge">×6</div></div><div class="card " style="background:#dbe9fb"><div class="cico">🚶</div><div class="cname">正常行动</div><div class="csub">声响 1 点</div><div class="cbody">中等动静。<br>推进 1 点任务<br>并拿 1 颗螺丝</div><div class="badge">×6</div></div><div class="card " style="background:#ffdcd6"><div class="cico">💥</div><div class="cname">大动作</div><div class="csub">声响 2 点</div><div class="cbody">巨大动静。<br>推进 2 点任务<br>并拿 2 颗螺丝</div><div class="badge">×6</div></div></div></section>
+<section class="sec"><h2>五、玩具角色卡（6 张，每人发 1 张）</h2><p class="note">建议<b>随机发放</b>。能力都是「每夜一次」或被动加成，不会互相冲突。</p><div class="grid"><div class="card " style="background:#ffe3ee"><div class="cico">🤠</div><div class="cname">牛仔队长</div><div class="csub">玩具角色</div><div class="cbody">每夜一次：<br>本时刻可以移动 <b>2 格</b></div><div class="badge">×1</div></div><div class="card " style="background:#ffe3ee"><div class="cico">🚀</div><div class="cname">太空骑警</div><div class="csub">玩具角色</div><div class="cbody">每夜一次：你打出 💥大动作 时，<br><b>声响按 1 计</b>，<br>任务进度与螺丝仍按 2 计</div><div class="badge">×1</div></div><div class="card " style="background:#ffe3ee"><div class="cico">🦖</div><div class="cname">塑料恐龙</div><div class="csub">玩具角色</div><div class="cbody">你「最佳定格」的奖励<br><b>+2 螺丝</b>（共 6 颗）</div><div class="badge">×1</div></div><div class="card " style="background:#ffe3ee"><div class="cico">🥔</div><div class="cname">土豆先生</div><div class="csub">玩具角色</div><div class="cbody">每夜一次：揭示后你可以<br><b>收回并重出</b>本时刻的动静卡</div><div class="badge">×1</div></div><div class="card " style="background:#ffe3ee"><div class="cico">🐩</div><div class="cname">弹簧狗</div><div class="csub">玩具角色</div><div class="cbody">每夜一次：本时刻<br><b>额外移动 1 格</b></div><div class="badge">×1</div></div><div class="card " style="background:#ffe3ee"><div class="cico">🐉</div><div class="cname">抱抱龙</div><div class="csub">玩具角色</div><div class="cbody">你救回的每个伙伴<br><b>额外 +1 螺丝</b>（共 5 颗）</div><div class="badge">×1</div></div></div></section>
+<section class="sec"><h2>六、夜间任务卡（10 张，每夜翻 1 张）</h2><p class="note">决定本夜<b>伙伴标记放哪两格</b>。任务需求 M 一律 = 3 × 人数 + 4（4 人局 = 16）。</p><div class="grid"><div class="card " style="background:#eee4fb"><div class="cico">🧹</div><div class="cname">收拾积木</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🧱积木角</b> 与 <b>🟥地毯</b><br><span style="color:#7a6b58">安迪把积木撒了一地</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🚗</div><div class="cname">赛车归位</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🚗赛车车道</b> 与 <b>🧸玩具箱</b><br><span style="color:#7a6b58">赛车还在地板上过夜</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">📚</div><div class="cname">书本上架</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>📚书架</b> 与 <b>🛏️安迪的床</b><br><span style="color:#7a6b58">绘本被踢到了床脚</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🐶</div><div class="cname">给小狗添水</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🐶狗窝</b> 与 <b>🚪门口</b><br><span style="color:#7a6b58">水碗早就空了</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🪟</div><div class="cname">关上窗户</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🪟窗台</b> 与 <b>🛏️安迪的床</b><br><span style="color:#7a6b58">半夜起风了</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🧹</div><div class="cname">找回失踪伙伴</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🧸玩具箱</b> 与 <b>🪟窗台</b><br><span style="color:#7a6b58">有伙伴掉到了床缝里</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🎨</div><div class="cname">擦掉蜡笔印</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🟥地毯</b> 与 <b>📚书架</b><br><span style="color:#7a6b58">地毯上多了一幅抽象画</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🚪</div><div class="cname">堵住门缝</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🚪门口</b> 与 <b>🧱积木角</b><br><span style="color:#7a6b58">门缝里透进走廊的灯光</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🛏️</div><div class="cname">铺好被子</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🛏️安迪的床</b> 与 <b>🐶狗窝</b><br><span style="color:#7a6b58">被子被蹬到了地上</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div><div class="card " style="background:#eee4fb"><div class="cico">🧽</div><div class="cname">深夜大扫除</div><div class="csub">夜间任务</div><div class="cbody">伙伴标记放在：<br><b>🚗赛车车道</b> 与 <b>🪟窗台</b><br><span style="color:#7a6b58">今晚居然格外地乱</span><br>本夜任务需求 M = 3×人数 + 4</div><div class="badge">×1</div></div></div></section>
+<section class="sec"><h2>七、安迪翻身卡（10 张，每夜翻 1 张）</h2><p class="note">把 2 个 👀 标记压在这两格上。<b>任务卡与翻身卡分开洗牌、分别翻</b>，重叠时就是高风险高回报。</p><div class="grid"><div class="card " style="background:#dfe6f7"><div class="cico">😴</div><div class="cname">翻了个身</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🟥地毯</b> 与 <b>🛏️安迪的床</b><br><span style="color:#7a6b58">最普通的一夜</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">🥛</div><div class="cname">起来喝水</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🚪门口</b> 与 <b>🐶狗窝</b><br><span style="color:#7a6b58">他会经过门口</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">🌙</div><div class="cname">月光洒进来</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🪟窗台</b> 与 <b>🟥地毯</b><br><span style="color:#7a6b58">屋里比平时亮</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">😶‍🌫️</div><div class="cname">安迪梦游</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🚗赛车车道</b> 与 <b>📚书架</b><br><span style="color:#7a6b58">别挡他的路</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">👩</div><div class="cname">妈妈推门看一眼</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🚪门口</b> 与 <b>🟥地毯</b><br><span style="color:#7a6b58">大人更容易发现异常</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">🦵</div><div class="cname">踢开了被子</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🛏️安迪的床</b> 与 <b>🧱积木角</b><br><span style="color:#7a6b58">被子飞到了积木上</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">💡</div><div class="cname">小夜灯亮了</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🧸玩具箱</b> 与 <b>🪟窗台</b><br><span style="color:#7a6b58">玩具箱被照亮</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">🗣️</div><div class="cname">说了句梦话</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🐶狗窝</b> 与 <b>🛏️安迪的床</b><br><span style="color:#7a6b58">他半睁着眼</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">🐕</div><div class="cname">狗叫了两声</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🐶狗窝</b> 与 <b>🚗赛车车道</b><br><span style="color:#7a6b58">狗也醒了</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div><div class="card " style="background:#dfe6f7"><div class="cico">🛌</div><div class="cname">安迪坐了起来</div><div class="csub">安迪翻身</div><div class="cbody">本夜安迪的视线：<br><b>🟥地毯</b> 与 <b>🚪门口</b><br><span style="color:#7a6b58">最危险的一夜</span><br>站在视线格上若本时刻越线 ⇒ <b>额外 +2 曝光</b></div><div class="badge">×1</div></div></div></section>
+<section class="sec"><h2>八、道具卡（8 种 ×3 = 24 张）</h2><p class="note">每夜开始每人抽 1 张，<b>每夜最多用 1 张</b>，夜末弃掉（不累积到下一夜）。</p><div class="grid"><div class="card " style="background:#fff4cf"><div class="cico">🧦</div><div class="cname">绒拖鞋</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">本时刻你的动静<b>按 0 计</b>，<br>但任务进度与螺丝仍按原值算</div><div class="badge">×3</div></div><div class="card " style="background:#fff4cf"><div class="cico">🔦</div><div class="cname">手电筒</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">本时刻你若站在安迪视线格，<br><b>不受额外 +2 曝光</b></div><div class="badge">×3</div></div><div class="card " style="background:#fff4cf"><div class="cico">🧴</div><div class="cname">润滑油</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">本时刻你的动静值 <b>+1</b><br>（声响/进度/螺丝同步 +1）</div><div class="badge">×3</div></div><div class="card " style="background:#fff4cf"><div class="cico">🎧</div><div class="cname">隔音耳罩</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">本时刻结算声响时，<br>全场声响 S <b>−1</b></div><div class="badge">×3</div></div><div class="card " style="background:#fff4cf"><div class="cico">🧲</div><div class="cname">小磁铁</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">本时刻你可以<br><b>额外移动 1 格</b></div><div class="badge">×3</div></div><div class="card " style="background:#fff4cf"><div class="cico">📦</div><div class="cname">纸箱盾</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">本时刻你<b>不因「活动中」被 +1 曝光</b><br>（视线格仍 +2）</div><div class="badge">×3</div></div><div class="card " style="background:#fff4cf"><div class="cico">⏰</div><div class="cname">小闹钟</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">本夜你的「最佳定格」奖励<br><b>+2 螺丝</b></div><div class="badge">×3</div></div><div class="card " style="background:#fff4cf"><div class="cico">🪞</div><div class="cname">小镜子</div><div class="csub">道具 · 每夜限用 1 张</div><div class="cbody">揭示前，你可以<br><b>偷看 1 名玩家</b>的动静卡</div><div class="badge">×3</div></div></div></section>
+<section class="sec"><h2>九、伙伴标记（12 个，每夜只放 2 个）</h2><p class="note">本时刻<b>动静 ≥ 1 且站在该格</b>即可拿走；同格有多人时，<b>动静值最高且唯一最高</b>者拿到（平局都拿不到）。</p><div class="grid"><div class="tok">🐻<span>伙伴 1<br>终局 +4 螺丝</span></div><div class="tok">🐷<span>伙伴 2<br>终局 +4 螺丝</span></div><div class="tok">🦕<span>伙伴 3<br>终局 +4 螺丝</span></div><div class="tok">🐸<span>伙伴 4<br>终局 +4 螺丝</span></div><div class="tok">🤖<span>伙伴 5<br>终局 +4 螺丝</span></div><div class="tok">🐰<span>伙伴 6<br>终局 +4 螺丝</span></div><div class="tok">🐙<span>伙伴 7<br>终局 +4 螺丝</span></div><div class="tok">🐤<span>伙伴 8<br>终局 +4 螺丝</span></div><div class="tok">🪆<span>伙伴 9<br>终局 +4 螺丝</span></div><div class="tok">🐢<span>伙伴 10<br>终局 +4 螺丝</span></div><div class="tok">🐨<span>伙伴 11<br>终局 +4 螺丝</span></div><div class="tok">🦊<span>伙伴 12<br>终局 +4 螺丝</span></div></div></section>
+<section class="sec"><h2>十、玩家棋子（6 个）</h2><p class="note">卡纸打印后<b>对折立起来</b>，或用现成的小玩偶 / 瓶盖代替。棋子颜色与角色卡对应。</p><div class="grid"><div class="pawn">🤠<span>牛仔队长</span><small>棋子</small></div><div class="pawn">🚀<span>太空骑警</span><small>棋子</small></div><div class="pawn">🦖<span>塑料恐龙</span><small>棋子</small></div><div class="pawn">🥔<span>土豆先生</span><small>棋子</small></div><div class="pawn">🐩<span>弹簧狗</span><small>棋子</small></div><div class="pawn">🐉<span>抱抱龙</span><small>棋子</small></div></div></section>
+<section class="sec"><h2>十一、速查卡（建议每人印 1 张）</h2><p class="note">贴在桌角，第一局照着走就行。</p>
+<div class="qr">
+<h3>🧸 一页速查：每个时刻做什么</h3>
+<ol style="margin:4px 0 8px; padding-left:18px;">
+<li><b>收工（随时、不可逆）</b>：把状态卡翻到 🧊，本夜退出</li>
+<li><b>移动</b>：🧸 的玩具可移动 1 格（上下左右）</li>
+<li><b>暗置动静卡</b>：🤫0 / 🚶1 / 💥2</li>
+<li><b>同时揭示</b> → 结算声响 S</li>
+<li><b>拿伙伴</b>：动静 ≥1 且站在伙伴格</li>
+<li><b>曝光判定</b></li>
+</ol>
+<h3>📊 阈值与需求（每夜 3 个时刻）</h3>
+<table>
+<tr><th>人数</th><th>阈值 T</th><th>安全上限<br>/时刻</th><th>任务<br>需求 M</th><th>越线时刻<br>最少活跃</th><th>每夜曝光<br>下限</th><th>曝光<br>上限</th></tr>
+<tr><td>3</td><td>5</td><td>4</td><td>13</td><td>2</td><td>3</td><td>15</td></tr>
+<tr><td>4</td><td>6</td><td>5</td><td>16</td><td>3</td><td>4</td><td>19</td></tr>
+<tr><td>5</td><td>7</td><td>6</td><td>19</td><td>4</td><td>5</td><td>23</td></tr>
+<tr><td>6</td><td>8</td><td>7</td><td>22</td><td>4</td><td>5</td><td>23</td></tr>
+</table>
+<p style="margin:6px 0 0"><b>恒等式：</b>每夜零风险产出 = 3×(T−1)，而任务需求 M = 3×(T−1)+1
+⇒ <b>每夜必然至少越线 1 点</b>。越线时声响要够 T，单人上限 2 ⇒ 至少 ⌈T/2⌉ 个人还在活动
+⇒ <b>每夜曝光下限 = 1 + ⌈T/2⌉</b>。曝光上限 = 下限 × 4 + 3 ⇒ <b>完美打法结束时，距爆点恒好剩 2 点</b>。</p>
+<h3>🔢 曝光怎么加</h3>
+<ul style="margin:4px 0 0; padding-left:18px;">
+<li>S &lt; T ⇒ <b>+0</b>（安全，什么都不会发生）</li>
+<li>S ≥ T ⇒ 曝光 <b>+(S − T + 1)</b></li>
+<li>且<b>每个 🧸 状态玩具 +1</b>（被安迪看见）</li>
+<li>且站在<b>安迪视线格</b>上的 🧸 玩具<b>额外 +2</b></li>
+<li>夜末任务未完成 ⇒ 曝光 <b>+3</b>，全员 −2 螺丝</li>
+</ul>
+<h3>🏆 计分</h3>
+<ul style="margin:4px 0 0; padding-left:18px;">
+<li>每点动静 = 1 螺丝</li>
+<li>每夜任务完成：全员 +3</li>
+<li>夜末「最佳定格」（🧊）：+5</li>
+<li>终局每个伙伴标记：+4</li>
+<li>撑过 4 夜（天亮了）：全员 +5</li>
+<li>曝光到顶时仍 🧸：−6</li>
+</ul>
+</div>
+</section>
+</body></html>

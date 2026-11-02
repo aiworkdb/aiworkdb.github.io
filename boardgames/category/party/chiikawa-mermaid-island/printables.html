@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吉伊卡哇：人鱼岛的馈赠 · 打印道具</title>
+<style>
+:root{
+    --sea-deep:#123c5a;
+    --sea:#1f6f8b;
+    --sea-lt:#4fa3bf;
+    --shallow:#8fd3e0;
+    --sand:#f2e2bd;
+    --sand-lt:#fdf6e6;
+    --coral:#ef7d63;
+    --coral-d:#c9503a;
+    --gold:#e0b04a;
+    --ink:#22323f;
+    --ink-soft:#6b7f8c;
+    --paper:#fdfaf3;
+    --line:#c9dbe2;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;
+    background:
+        radial-gradient(circle at 15% 0%, #ffffff 0%, transparent 55%),
+        linear-gradient(180deg,#fdfaf3 0%,#eaf4f7 100%);
+    color:var(--ink);
+    line-height:1.6;
+    padding:24px 16px 60px;
+}
+.wrap{max-width:1180px;margin:0 auto;}
+
+/* ================= 页头 ================= */
+header{
+    text-align:center;
+    padding:34px 20px 26px;
+    background:
+        radial-gradient(circle at 50% 130%, rgba(143,211,224,.45) 0%, transparent 62%),
+        linear-gradient(165deg,#0f3a56 0%,#1f6f8b 55%,#3f9bb5 100%);
+    border-radius:18px;
+    color:#fff;
+    margin-bottom:22px;
+    border:3px solid var(--gold);
+    box-shadow:0 10px 26px rgba(15,58,86,.28);
+}
+header h1{font-size:32px;letter-spacing:3px;margin-bottom:6px;text-shadow:0 2px 10px rgba(0,0,0,.35);}
+header .en{font-size:13px;color:#ffe9b0;letter-spacing:3px;}
+header .quote{
+    margin-top:14px;font-size:13px;color:#e2f2f7;
+    border-top:1px solid rgba(255,233,176,.35);padding-top:12px;
+}
+
+/* ================= 打印提示 ================= */
+.print-hint{
+    background:#fff8e6;
+    border:2px dashed var(--gold);
+    border-left:6px solid var(--coral);
+    border-radius:12px;
+    padding:15px 20px;
+    margin-bottom:28px;
+    font-size:14px;
+}
+.print-hint h3{color:var(--coral-d);font-size:16px;margin-bottom:6px;}
+.print-hint ul{margin-left:20px;}
+.print-hint li{margin-bottom:3px;}
+.print-hint .em{color:var(--coral);font-weight:bold;}
+
+/* ================= 区块 ================= */
+section{margin-bottom:42px;}
+h2{
+    font-size:21px;color:var(--sea-deep);
+    border-left:6px solid var(--gold);
+    padding-left:12px;margin-bottom:6px;letter-spacing:1px;
+}
+.h2note{font-size:13px;color:var(--ink-soft);margin:0 0 16px 18px;}
+
+/* ================= 地图 ================= */
+.board{
+    background:
+        radial-gradient(circle at 50% 30%, #ffffff 0%, transparent 60%),
+        linear-gradient(170deg,#f7fbee 0%,#dff0f5 60%,#cfe7ef 100%);
+    border:4px solid var(--sea);border-radius:18px;padding:20px;
+    box-shadow:inset 0 0 40px rgba(31,111,139,.12);
+}
+.board-inner{max-width:1000px;margin:0 auto;}
+.sea-edge{
+    text-align:right;font-size:12px;color:var(--sea);font-weight:bold;
+    letter-spacing:1px;margin-bottom:8px;
+}
+.board-main{display:flex;gap:14px;align-items:stretch;}
+.dock{
+    flex:0 0 96px;
+    background:linear-gradient(160deg,#f7e6c4 0%,#e8cfa0 100%);
+    border:3px dashed #b9904a;border-radius:14px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:14px 6px;text-align:center;
+}
+.dock-t{font-size:22px;line-height:1.35;font-weight:bold;color:#7a5a24;}
+.dock-n{font-size:11px;color:#8a6a34;margin-top:8px;line-height:1.5;}
+.dock-n span{font-size:10px;color:#a08050;}
+.grid-wrap{flex:1;min-width:0;}
+.colhead{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px;}
+.ch{text-align:center;font-size:11px;color:var(--ink-soft);}
+.chn{display:block;font-weight:bold;color:var(--sea);}
+.cht{display:block;}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.cell{
+    background:var(--cc);
+    border:2px solid rgba(18,60,90,.28);
+    border-radius:10px;
+    min-height:112px;
+    padding:6px 4px;
+    text-align:center;
+    display:flex;flex-direction:column;
+    position:relative;
+}
+.cn{
+    position:absolute;top:3px;left:5px;
+    font-size:9px;color:rgba(34,50,63,.5);font-weight:bold;
+}
+.ci{font-size:22px;line-height:1.2;margin-top:12px;}
+.ct{font-size:12px;font-weight:bold;color:#1d3a48;margin-bottom:5px;}
+.cslot{margin-top:auto;display:flex;flex-direction:column;gap:3px;}
+.sl{
+    font-size:9px;border-radius:5px;padding:3px 2px;
+    border:1px dashed rgba(34,50,63,.35);
+    color:rgba(34,50,63,.6);
+}
+.sl-t{background:rgba(255,255,255,.55);}
+.sl-m{background:rgba(192,90,68,.18);color:#8e3a2c;border-color:rgba(192,90,68,.5);}
+.tide-track{margin-top:16px;}
+.tk{font-size:12px;color:var(--sea-deep);font-weight:bold;}
+.tts{display:flex;gap:6px;margin-top:6px;align-items:stretch;flex-wrap:wrap;}
+.tt{
+    flex:1;min-width:96px;
+    background:linear-gradient(180deg,#eaf6fa 0%,#cfe7ef 100%);
+    border:2px solid var(--sea-lt);border-radius:8px;
+    padding:6px;text-align:center;
+}
+.ttn{display:block;font-size:20px;font-weight:bold;color:var(--sea-deep);}
+.ttl{display:block;font-size:10px;color:var(--ink-soft);}
+.tide-mark{
+    background:linear-gradient(180deg,#d4eef6 0%,#8fd3e0 100%);
+    border-color:var(--sea);flex:0 0 150px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;color:var(--sea-deep);font-weight:bold;
+}
+
+/* ================= 通用卡 ================= */
+.card{
+    background:var(--sand-lt);
+    border:2px solid var(--line);
+    border-left:5px solid var(--ac,var(--sea-lt));
+    border-radius:10px;
+    padding:9px 10px;
+    min-height:150px;
+    position:relative;
+    display:flex;flex-direction:column;
+    box-shadow:0 2px 6px rgba(18,60,90,.08);
+}
+.cnt{
+    position:absolute;top:5px;right:7px;
+    font-size:10px;font-weight:bold;color:#fff;
+    background:var(--coral);border-radius:9px;padding:1px 7px;
+}
+.c-top{display:flex;justify-content:space-between;align-items:center;gap:4px;margin-bottom:5px;}
+.c-badge{
+    font-size:9px;color:#fff;background:var(--sea-lt);
+    border-radius:4px;padding:1px 6px;letter-spacing:1px;white-space:nowrap;
+}
+.c-kana{font-size:9px;color:var(--ink-soft);text-align:right;}
+.c-mid{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.c-icon{font-size:20px;line-height:1;}
+.c-icon.big{font-size:28px;}
+.c-name{font-size:15px;font-weight:bold;letter-spacing:1px;}
+.c-sub{font-size:10px;color:var(--coral-d);margin-bottom:5px;font-weight:bold;}
+.c-text{font-size:11px;line-height:1.55;color:#3a4a55;margin-top:auto;}
+.c-score{font-size:12px;font-weight:bold;color:var(--coral-d);}
+.c-bars{display:flex;gap:3px;margin:4px 0 5px;}
+.tb{flex:1;height:5px;border-radius:3px;background:#dbe6ea;}
+.tb.on{background:var(--sea);}
+.c-fero{
+    font-size:11px;background:rgba(184,64,47,.12);color:#8e3a2c;
+    border-radius:5px;padding:2px 6px;margin-bottom:5px;text-align:center;
+}
+.c-rate{
+    font-size:11px;line-height:1.6;background:rgba(224,176,74,.16);
+    border-radius:6px;padding:5px 7px;margin-top:auto;color:#7a5a24;text-align:center;
+}
+.tide{--ac:var(--sea);}
+.tide-l{--ac:var(--coral);}
+.tide-s{--ac:#7ab8a0;}
+
+/* 卡组网格 */
+.deck{display:grid;gap:10px;}
+.deck-act{grid-template-columns:repeat(auto-fill,minmax(178px,1fr));}
+.deck-tre{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+.deck-tide{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));}
+.deck-mon{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+
+/* ================= 棋子 ================= */
+.deck-pawn{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.pawn{
+    background:linear-gradient(170deg,#fff 0%,var(--pc) 100%);
+    border:3px solid var(--sea);border-radius:12px;
+    padding:10px;text-align:center;min-height:196px;
+    display:flex;flex-direction:column;
+    box-shadow:0 3px 8px rgba(18,60,90,.12);
+}
+.p-icon{font-size:44px;line-height:1;}
+.p-name{font-size:16px;font-weight:bold;margin-top:6px;letter-spacing:1px;}
+.p-title{font-size:10px;color:var(--coral-d);margin-bottom:6px;}
+.p-ability{
+    font-size:11px;line-height:1.55;color:#3a4a55;text-align:left;
+    background:rgba(255,255,255,.6);border-radius:7px;padding:6px;margin-top:auto;
+}
+.p-fold{
+    font-size:9px;color:var(--ink-soft);margin-top:7px;
+    border-top:1px dashed rgba(34,50,63,.3);padding-top:4px;
+}
+
+/* ================= 小舟板 ================= */
+.deck-boat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+.boat{
+    background:linear-gradient(165deg,#fdf1d8 0%,#e9cf9d 100%);
+    border:3px solid #b9904a;border-radius:12px;padding:10px 12px;
+}
+.b-title{font-size:14px;font-weight:bold;color:#7a5a24;margin-bottom:7px;}
+.b-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+.bs{height:38px;border:2px dashed #c4a068;border-radius:7px;background:rgba(255,255,255,.45);}
+.b-foot{font-size:10px;color:#8a6a34;margin-top:7px;}
+
+/* ================= 速查表 ================= */
+.quick{
+    background:#fff;border:3px solid var(--sea);border-radius:14px;padding:18px 22px;
+}
+.quick h3{font-size:16px;color:var(--sea-deep);margin-bottom:8px;}
+.quick table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.quick th,.quick td{border:1px solid var(--line);padding:5px 8px;text-align:left;}
+.quick th{background:var(--shallow);color:var(--sea-deep);}
+.quick td.c{text-align:center;}
+.quick ol{margin-left:20px;font-size:12px;line-height:1.8;}
+.quick ul{margin-left:20px;font-size:12px;line-height:1.8;}
+
+footer{
+    text-align:center;font-size:12px;color:var(--ink-soft);
+    border-top:1px solid var(--line);padding-top:16px;margin-top:10px;
+}
+
+/* ================= 打印 ================= */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint { display: none; }
+}
+@media print {
+    body{padding:0;background:#fff;}
+    section{page-break-inside:avoid;}
+    .card,.pawn,.boat,.cell{page-break-inside:avoid;}
+    header{box-shadow:none;}
+}
+@page { size: A4; margin: 10mm; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <h1>🐚 吉伊卡哇：人鱼岛的馈赠</h1>
+    <div class="en">CHIIKAWA · GIFTS OF MERMAID ISLAND · 打印道具</div>
+    <div class="quote">「潮水要涨上来了 —— 在它淹到神殿之前，把最喜欢的那枚贝壳带回家吧。」</div>
+</header>
+
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用<strong>A4 纸张</strong>打印，在打印对话框中设置<strong>最小边距</strong></li>
+        <li>务必<strong>勾选「背景图形」</strong>选项，否则地形颜色和卡牌底色会全部丢失</li>
+        <li>卡牌、棋子、小舟板建议使用<strong>200g 以上卡纸</strong>打印</li>
+        <li>地图可用普通 A4 纸，打印后建议<strong>塑封或贴冷裱膜</strong>以便反复使用</li>
+        <li>卡纸打印后沿<strong>卡牌外框</strong>裁剪；棋子沿虚线对折即可立起</li>
+    </ul>
+</div>
+<!-- ============ 地图 ============ -->
+<section>
+<h2>🗺️ 人鱼岛潮间带地图</h2>
+<p class="h2note">5 列 × 3 行 = 15 格。左侧是永远安全的<b>小舟码头</b>，右侧神殿前庭宝物最好、也最先被淹。</p>
+<div class="board">
+<div class="board-inner">
+    <div class="sea-edge">🌊 潮水来向 · 越靠右越先被淹</div>
+    <div class="board-main">
+        <div class="dock">
+            <div class="dock-t">🛶<br>小舟<br>码头</div>
+            <div class="dock-n">安全区<br><span>抵达即卸货</span></div>
+        </div>
+        <div class="grid-wrap">
+            <div class="colhead"><div class="ch"><span class="chn">第1列</span><span class="cht">浅滩</span></div><div class="ch"><span class="chn">第2列</span><span class="cht">贝壳滩</span></div><div class="ch"><span class="chn">第3列</span><span class="cht">岩礁带</span></div><div class="ch"><span class="chn">第4列</span><span class="cht">珊瑚台地</span></div><div class="ch"><span class="chn">第5列</span><span class="cht">神殿前庭</span></div></div>
+            <div class="grid5"><div class="cell" style="--cc:#d3ecf2">
+<div class="cn">1-1</div>
+<div class="ci">🏖️</div>
+<div class="ct">浅滩</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#bfe0e8">
+<div class="cn">2-1</div>
+<div class="ci">🐚</div>
+<div class="ct">贝壳滩</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#a5d0dc">
+<div class="cn">3-1</div>
+<div class="ci">🪨</div>
+<div class="ct">岩礁带</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#f4c9c1">
+<div class="cn">4-1</div>
+<div class="ci">🪸</div>
+<div class="ct">珊瑚台地</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#ecb8c6">
+<div class="cn">5-1</div>
+<div class="ci">⛩️</div>
+<div class="ct">神殿前庭</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#d3ecf2">
+<div class="cn">1-2</div>
+<div class="ci">🏖️</div>
+<div class="ct">浅滩</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#bfe0e8">
+<div class="cn">2-2</div>
+<div class="ci">🐚</div>
+<div class="ct">贝壳滩</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#a5d0dc">
+<div class="cn">3-2</div>
+<div class="ci">🪨</div>
+<div class="ct">岩礁带</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#f4c9c1">
+<div class="cn">4-2</div>
+<div class="ci">🪸</div>
+<div class="ct">珊瑚台地</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#ecb8c6">
+<div class="cn">5-2</div>
+<div class="ci">⛩️</div>
+<div class="ct">神殿前庭</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#d3ecf2">
+<div class="cn">1-3</div>
+<div class="ci">🏖️</div>
+<div class="ct">浅滩</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#bfe0e8">
+<div class="cn">2-3</div>
+<div class="ci">🐚</div>
+<div class="ct">贝壳滩</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#a5d0dc">
+<div class="cn">3-3</div>
+<div class="ci">🪨</div>
+<div class="ct">岩礁带</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#f4c9c1">
+<div class="cn">4-3</div>
+<div class="ci">🪸</div>
+<div class="ct">珊瑚台地</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div><div class="cell" style="--cc:#ecb8c6">
+<div class="cn">5-3</div>
+<div class="ci">⛩️</div>
+<div class="ct">神殿前庭</div>
+<div class="cslot"><span class="sl sl-t">宝物位</span><span class="sl sl-m">海怪位</span></div>
+</div></div>
+        </div>
+    </div>
+    <div class="tide-track">
+        <span class="tk">潮汐轨（潮水由右向左推进）</span>
+        <div class="tts"><div class="tt"><span class="ttn">1</span><span class="ttl">神殿前庭</span></div><div class="tt"><span class="ttn">2</span><span class="ttl">珊瑚台地</span></div><div class="tt"><span class="ttn">3</span><span class="ttl">岩礁带</span></div><div class="tt"><span class="ttn">4</span><span class="ttl">贝壳滩</span></div><div class="tt"><span class="ttn">5</span><span class="ttl">浅滩</span></div><div class="tt tide-mark">🌊 潮水标记由此出发</div></div>
+    </div>
+</div>
+</div>
+</section>
+<!-- ============ 棋子 ============ -->
+<section>
+<h2>🐹 玩家棋子（6 只）</h2>
+<p class="h2note">每人选 1 只小可爱。6 只能力各不相同，可自由选择，也可随机抽取。</p>
+<div class="deck-pawn">
+<div class="pawn" style="--pc:#fbe6d2">
+<div class="p-head"><span class="p-icon">🐹</span></div>
+<div class="p-name">吉伊卡哇</div>
+<div class="p-title">认真的主角</div>
+<div class="p-ability">同格队友休整时，可收回 <b>2 张</b>疲劳牌（而非 1 张）。</div>
+<div class="p-fold">— 沿此线对折立起 —</div>
+</div>
+<div class="pawn" style="--pc:#d9edf9">
+<div class="p-head"><span class="p-icon">🐱</span></div>
+<div class="p-name">哈奇</div>
+<div class="p-title">乐观的好奇宝宝</div>
+<div class="p-ability">每局 <b>1 次</b>，讨伐失败时可以<b>不掉落</b>携带宝物。</div>
+<div class="p-fold">— 沿此线对折立起 —</div>
+</div>
+<div class="pawn" style="--pc:#fdf2cc">
+<div class="p-head"><span class="p-icon">🐰</span></div>
+<div class="p-name">乌萨奇</div>
+<div class="p-title">精力过剩的捣蛋鬼</div>
+<div class="p-ability">出 🐰 捣蛋牌抢到宝物时，终局<b>额外 +1 分</b>（可与「捣蛋时刻」叠加）。</div>
+<div class="p-fold">— 沿此线对折立起 —</div>
+</div>
+<div class="pawn" style="--pc:#cfd4db">
+<div class="p-head"><span class="p-icon">🛡️</span></div>
+<div class="p-name">铠甲先生</div>
+<div class="p-title">沉稳可靠的大人</div>
+<div class="p-ability">你的<b>讨伐判定 +1</b>（可与「常潮·铠甲先生」叠加为 +2）。</div>
+<div class="p-fold">— 沿此线对折立起 —</div>
+</div>
+<div class="pawn" style="--pc:#ecd3ab">
+<div class="p-head"><span class="p-icon">🐿️</span></div>
+<div class="p-name">鼯鼠</div>
+<div class="p-title">什么都想带走</div>
+<div class="p-ability">你的<b>携带上限 +1</b>（即 5 枚）；但被潮水冲走时<b>多掉 1 枚</b>。</div>
+<div class="p-fold">— 沿此线对折立起 —</div>
+</div>
+<div class="pawn" style="--pc:#f4cba4">
+<div class="p-head"><span class="p-icon">🦦</span></div>
+<div class="p-name">海獭</div>
+<div class="p-title">泡在水里最开心</div>
+<div class="p-ability">你被潮水冲走时<b>不掉落</b>任何宝物。</div>
+<div class="p-fold">— 沿此线对折立起 —</div>
+</div>
+</div>
+</section>
+<!-- ============ 小舟板 ============ -->
+<section>
+<h2>🛶 小舟记分板（6 张）</h2>
+<p class="h2note">抵达码头后把携带的宝物<b>面朝下</b>卸到自己的小舟上，终局翻开计分。每船 10 个格位，通常够用。</p>
+<div class="deck-boat">
+<div class="boat">
+<div class="b-title">🛶 玩家 1 的小舟</div>
+<div class="b-slots"><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span></div>
+<div class="b-foot">卸下的宝物<b>面朝下</b>放这里 · 终局翻开计分</div>
+</div>
+<div class="boat">
+<div class="b-title">🛶 玩家 2 的小舟</div>
+<div class="b-slots"><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span></div>
+<div class="b-foot">卸下的宝物<b>面朝下</b>放这里 · 终局翻开计分</div>
+</div>
+<div class="boat">
+<div class="b-title">🛶 玩家 3 的小舟</div>
+<div class="b-slots"><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span></div>
+<div class="b-foot">卸下的宝物<b>面朝下</b>放这里 · 终局翻开计分</div>
+</div>
+<div class="boat">
+<div class="b-title">🛶 玩家 4 的小舟</div>
+<div class="b-slots"><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span></div>
+<div class="b-foot">卸下的宝物<b>面朝下</b>放这里 · 终局翻开计分</div>
+</div>
+<div class="boat">
+<div class="b-title">🛶 玩家 5 的小舟</div>
+<div class="b-slots"><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span></div>
+<div class="b-foot">卸下的宝物<b>面朝下</b>放这里 · 终局翻开计分</div>
+</div>
+<div class="boat">
+<div class="b-title">🛶 玩家 6 的小舟</div>
+<div class="b-slots"><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span><span class="bs"></span></div>
+<div class="b-foot">卸下的宝物<b>面朝下</b>放这里 · 终局翻开计分</div>
+</div>
+</div>
+</section>
+<!-- ============ 行动牌 ============ -->
+<section>
+<h2>🎴 行动牌（共 36 张）</h2>
+<p class="h2note">每位玩家使用<b>完全相同的一套 6 张</b>（采集 ×2、跋涉 ×1、讨伐 ×1、捣蛋 ×1、休整 ×1）。下表按 6 人份一次印足，按人数分给每人一套即可。</p>
+<div class="deck deck-act">
+<div class="card act" style="--ac:#3f8fa8">
+<div class="cnt">×12</div>
+<div class="c-top"><span class="c-badge" style="background:#3f8fa8">采集</span></div>
+<div class="c-mid"><span class="c-icon">🧺</span><span class="c-name">采集</span></div>
+<div class="c-sub">拿走所在格 1 枚宝物</div>
+<div class="c-text"><b>拿走你所在格的 1 枚宝物</b>，放入携带区。<br>该格若有<b>海怪</b>则无法采集，需先讨伐。<br>该格已空 → 本轮<b>空手而归</b>。</div>
+</div>
+<div class="card act" style="--ac:#5a8f6a">
+<div class="cnt">×6</div>
+<div class="c-top"><span class="c-badge" style="background:#5a8f6a">移动</span></div>
+<div class="c-mid"><span class="c-icon">🥾</span><span class="c-name">跋涉</span></div>
+<div class="c-sub">移动 1-2 步</div>
+<div class="c-text"><b>移动 1 或 2 步</b>（上下左右相邻算 1 步，斜向不算）。<br>抵达<b>码头</b>时，立即把携带的宝物<b>全部卸入小舟</b>。</div>
+</div>
+<div class="card act" style="--ac:#c05a44">
+<div class="cnt">×6</div>
+<div class="c-top"><span class="c-badge" style="background:#c05a44">战斗</span></div>
+<div class="c-mid"><span class="c-icon">⚔️</span><span class="c-name">讨伐</span></div>
+<div class="c-sub">击败所在格的海怪</div>
+<div class="c-text">掷 <b>D6 ≥ 海怪凶暴度</b> 即成功。<br>成功 → 移除海怪、得 <b>讨伐证 ×1</b>，并<b>立即采集该格 1 枚宝物</b>。<br>失败 → <b>掉落 1 枚</b>携带宝物到该格（没带则不掉）。</div>
+</div>
+<div class="card act" style="--ac:#d19a2c">
+<div class="cnt">×6</div>
+<div class="c-top"><span class="c-badge" style="background:#d19a2c">互动</span></div>
+<div class="c-mid"><span class="c-icon">🐰</span><span class="c-name">捣蛋</span></div>
+<div class="c-sub">跳过去抢 1 枚宝物</div>
+<div class="c-text"><b>跳到任意 1 名其他玩家所在格</b>，抢走他<b>携带中</b>的 1 枚宝物（由他挑一枚给你）。<br>所有其他玩家都空手 → 改为<b>跋涉 1 步</b>。</div>
+</div>
+<div class="card act" style="--ac:#7a6ba8">
+<div class="cnt">×6</div>
+<div class="c-top"><span class="c-badge" style="background:#7a6ba8">休息</span></div>
+<div class="c-mid"><span class="c-icon">😴</span><span class="c-name">休整</span></div>
+<div class="c-sub">收回全部疲劳牌</div>
+<div class="c-text">本轮<b>不行动</b>，并<b>收回全部疲劳牌</b>。<br>此时若站在<b>码头</b> → 吃便当 <b>+1 分</b>。<br>同格的每位队友可收回 <b>1 张</b>疲劳牌（吉伊卡哇在场为 2 张）。</div>
+</div>
+</div>
+</section>
+<!-- ============ 宝物卡 ============ -->
+<section>
+<h2>💎 宝物卡（共 30 张）</h2>
+<p class="h2note">开局按「浅滩组 / 岩礁组 / 珊瑚组 / 神殿组」分组铺 <b>15 张</b>到地图上（每格 1 张，正面朝上），剩下 <b>15 张</b>面朝下作为<b>备用堆</b>，供「鱼群」「贝壳潮」等潮汐事件补充。</p>
+<div class="deck deck-tre">
+<div class="card tre" style="--ac:#8fb8c4">
+<div class="cnt">×9</div>
+<div class="c-top"><span class="c-badge" style="background:#8fb8c4">普通</span><span class="c-score">1分</span></div>
+<div class="c-mid"><span class="c-icon big">🐚</span><span class="c-name">小贝壳</span></div>
+<div class="c-text">浅滩最常见的贝壳，洗干净也挺好看的。</div>
+</div>
+<div class="card tre" style="--ac:#6fa3b5">
+<div class="cnt">×9</div>
+<div class="c-top"><span class="c-badge" style="background:#6fa3b5">不错</span><span class="c-score">2分</span></div>
+<div class="c-mid"><span class="c-icon big">🦪</span><span class="c-name">珍珠贝</span></div>
+<div class="c-text">合得紧紧的壳，据说里面藏着小小的珠子。</div>
+</div>
+<div class="card tre" style="--ac:#6fa3b5">
+<div class="cnt">×3</div>
+<div class="c-top"><span class="c-badge" style="background:#6fa3b5">不错</span><span class="c-score">2分</span></div>
+<div class="c-mid"><span class="c-icon big">🦐</span><span class="c-name">樱花虾</span></div>
+<div class="c-text">粉红色的小虾，烤起来特别香。</div>
+</div>
+<div class="card tre" style="--ac:#d99a4a">
+<div class="cnt">×6</div>
+<div class="c-top"><span class="c-badge" style="background:#d99a4a">稀有</span><span class="c-score">3分</span></div>
+<div class="c-mid"><span class="c-icon big">🌙</span><span class="c-name">夜光贝</span></div>
+<div class="c-text">夜里会自己发光的贝壳，人鱼岛的名产。</div>
+</div>
+<div class="card tre" style="--ac:#c06a8a">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge" style="background:#c06a8a">珍贵</span><span class="c-score">4分</span></div>
+<div class="c-mid"><span class="c-icon big">🫧</span><span class="c-name">人鱼之鳞</span></div>
+<div class="c-text">脱落的一片鳞，握在手心会轻微发烫。</div>
+</div>
+<div class="card tre" style="--ac:#8e4fa0">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge" style="background:#8e4fa0">传说</span><span class="c-score">5分</span></div>
+<div class="c-mid"><span class="c-icon big">👑</span><span class="c-name">人鱼冠冕</span></div>
+<div class="c-text">传说中人鱼公主的头冠，全岛只有一顶。</div>
+</div>
+</div>
+</section>
+<!-- ============ 潮汐卡 ============ -->
+<section>
+<h2>🌊 潮汐卡（共 12 张）</h2>
+<p class="h2note">每轮开始<b>翻开 1 张</b>，先读事件，本轮结束时按卡面推进潮水。洗匀后面朝下放成一堆，抽完 6 张即游戏结束（也可全部洗牌重复使用）。</p>
+<div class="deck deck-tide">
+<div class="card tide tide-s">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">小潮</span><span class="c-kana">推进 <b>0</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🌤️</span><span class="c-name">小潮·平稳</span></div>
+<div class="c-bars"><span class="tb"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">本轮<b>不涨潮</b>。所有玩家可<b>公开讨论 30 秒</b>——这是全场唯一一次可以明牌说话的机会。</div>
+</div>
+<div class="card tide tide-s">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">小潮</span><span class="c-kana">推进 <b>0</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🌅</span><span class="c-name">小潮·晓光</span></div>
+<div class="c-bars"><span class="tb"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">本轮<b>不涨潮</b>。本轮采集到的<b>分值 ≥2</b> 的宝物，终局计分时<b>额外 +1 分</b>（在卡上放个记号）。</div>
+</div>
+<div class="card tide tide-s">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">小潮</span><span class="c-kana">推进 <b>0</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🌙</span><span class="c-name">小潮·月夜</span></div>
+<div class="c-bars"><span class="tb"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">本轮<b>不涨潮</b>。本轮<b>所有人的携带上限 +1</b>（普通 5 枚，鼯鼠 6 枚）。</div>
+</div>
+<div class="card tide tide-s">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">小潮</span><span class="c-kana">推进 <b>0</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🐚</span><span class="c-name">小潮·贝壳潮</span></div>
+<div class="c-bars"><span class="tb"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">本轮<b>不涨潮</b>。从备用宝物堆翻 <b>2 张</b>，正面朝上放到<b>第 1 列</b>的空格上。</div>
+</div>
+<div class="card tide tide-m">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">常潮</span><span class="c-kana">推进 <b>1</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🌊</span><span class="c-name">常潮</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">平缓上涨的一轮，没有额外事件。</div>
+</div>
+<div class="card tide tide-m">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">常潮</span><span class="c-kana">推进 <b>1</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🐟</span><span class="c-name">常潮·鱼群</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">从备用宝物堆翻 <b>3 张</b>，正面朝上放到<b>当前最靠右且未被淹没的列</b>的空格上（每格最多 1 张）。</div>
+</div>
+<div class="card tide tide-m">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">常潮</span><span class="c-kana">推进 <b>1</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🐟</span><span class="c-name">常潮·鱼群</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">从备用宝物堆翻 <b>3 张</b>，正面朝上放到<b>当前最靠右且未被淹没的列</b>的空格上（每格最多 1 张）。</div>
+</div>
+<div class="card tide tide-m">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">常潮</span><span class="c-kana">推进 <b>1</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🐰</span><span class="c-name">常潮·捣蛋时刻</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">本轮出 <b>🐰 捣蛋</b> 牌的玩家，抢到的那枚宝物终局<b>额外 +1 分</b>。</div>
+</div>
+<div class="card tide tide-m">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">常潮</span><span class="c-kana">推进 <b>1</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🛡️</span><span class="c-name">常潮·铠甲先生</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">本轮<b>所有讨伐判定 +1</b>（铠甲先生角色可再 +1，合计 +2）。</div>
+</div>
+<div class="card tide tide-m">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">常潮</span><span class="c-kana">推进 <b>1</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🥣</span><span class="c-name">常潮·便当时间</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb"></span><span class="tb"></span></div>
+<div class="c-text">本轮出 <b>😴 休整</b> 牌的玩家，<b>无论身在何处</b>都吃到便当（+1 分）。</div>
+</div>
+<div class="card tide tide-l">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">大潮</span><span class="c-kana">推进 <b>2</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🌪️</span><span class="c-name">大潮</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb on"></span><span class="tb"></span></div>
+<div class="c-text">潮水一口气推进 <b>2 列</b>，没有额外事件。</div>
+</div>
+<div class="card tide tide-l">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge">大潮</span><span class="c-kana">推进 <b>2</b> 列</span></div>
+<div class="c-mid"><span class="c-icon">🌀</span><span class="c-name">大潮·离岸流</span></div>
+<div class="c-bars"><span class="tb on"></span><span class="tb on"></span><span class="tb"></span></div>
+<div class="c-text">潮水推进 <b>2 列</b>；<b>结算后</b>，所有不在码头的玩家<b>各自向岸移动 1 格</b>。</div>
+</div>
+</div>
+</section>
+<!-- ============ 海怪卡 ============ -->
+<section>
+<h2>👾 海怪卡（共 8 张）</h2>
+<p class="h2note">开局洗匀后取 <b>6 张</b>，在第 3、4、5 列<b>各放 2 只</b>（每格最多 1 只），剩下 2 张放回盒中不用。海怪所在格必须<b>先讨伐</b>才能采集。</p>
+<div class="deck deck-mon">
+<div class="card mon" style="--ac:#5f9e6e">
+<div class="cnt">×3</div>
+<div class="c-top"><span class="c-badge" style="background:#5f9e6e">并</span><span class="c-kana">凶暴度 2</span></div>
+<div class="c-mid"><span class="c-icon big">🌿</span><span class="c-name">海藻怪</span></div>
+<div class="c-fero">需掷 D6 ≥ <b>2</b></div>
+<div class="c-text">缠住脚踝的海藻团，看起来其实有点可怜。</div>
+</div>
+<div class="card mon" style="--ac:#c98a3c">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge" style="background:#c98a3c">强</span><span class="c-kana">凶暴度 3</span></div>
+<div class="c-mid"><span class="c-icon big">🦀</span><span class="c-name">寄居蟹</span></div>
+<div class="c-fero">需掷 D6 ≥ <b>3</b></div>
+<div class="c-text">霸占了贝壳的螃蟹，钳子很有力气。</div>
+</div>
+<div class="card mon" style="--ac:#c98a3c">
+<div class="cnt">×2</div>
+<div class="c-top"><span class="c-badge" style="background:#c98a3c">强</span><span class="c-kana">凶暴度 3</span></div>
+<div class="c-mid"><span class="c-icon big">🐙</span><span class="c-name">章鱼</span></div>
+<div class="c-fero">需掷 D6 ≥ <b>3</b></div>
+<div class="c-text">八条腕足，会把宝物卷走藏起来。</div>
+</div>
+<div class="card mon" style="--ac:#b8402f">
+<div class="cnt">×1</div>
+<div class="c-top"><span class="c-badge" style="background:#b8402f">凶</span><span class="c-kana">凶暴度 4</span></div>
+<div class="c-mid"><span class="c-icon big">🦈</span><span class="c-name">深海鮫</span></div>
+<div class="c-fero">需掷 D6 ≥ <b>4</b></div>
+<div class="c-text">神殿前庭的守卫，全岛最凶的一只。</div>
+</div>
+</div>
+</section>
+<!-- ============ 讨伐证 ============ -->
+<section>
+<h2>📜 讨伐证（共 18 张）</h2>
+<p class="h2note">讨伐成功即得 1 张，公开放在自己面前。每张 2 分，集满 3 张额外 +3 分，集满 5 张再 +5 分。</p>
+<div class="deck deck-mon">
+<div class="card cert">
+<div class="cnt">×18</div>
+<div class="c-mid"><span class="c-icon big">📜</span><span class="c-name">讨伐证</span></div>
+<div class="c-rate">每张 <b>2 分</b><br>集满 3 张 <b>+3 分</b><br>集满 5 张再 <b>+5 分</b></div>
+</div>
+</div>
+</section>
+<!-- ============ 速查表 ============ -->
+<section>
+<h2>📋 一页速查表</h2>
+<p class="h2note">打印 1 份放在桌边，新手不用反复翻规则书。</p>
+<div class="quick">
+<h3>每轮流程（一个「汐」）</h3>
+<ol>
+<li><b>翻潮汐卡</b> —— 翻开 1 张，全員读一遍本轮事件</li>
+<li><b>暗置行动</b> —— 每人从自己的手牌中<b>背面朝下</b>打出 1 张</li>
+<li><b>同时揭示</b> —— 一起翻开，按以下顺序结算：<b>休整 → 跋涉 → 捣蛋 → 讨伐 → 采集</b></li>
+<li><b>潮水推进</b> —— 潮水标记左移，被淹的列成为深水区；站在上面的人<b>被冲回码头并掉落一半携带物</b>（向下取整）</li>
+<li><b>卸货</b> —— 任何时刻抵达码头都立即把携带宝物<b>全部卸入小舟</b></li>
+</ol>
+<h3>行动牌一览</h3>
+<table>
+<tr><th>牌</th><th>效果</th><th>要点</th></tr>
+<tr><td class="c">🧺 采集</td><td>拿走所在格 1 枚宝物</td><td>该格有海怪或有空格 → 无法采集</td></tr>
+<tr><td class="c">🥾 跋涉</td><td>移动 1-2 步</td><td>上下左右算 1 步，斜向不算</td></tr>
+<tr><td class="c">⚔️ 讨伐</td><td>掷 D6 ≥ 凶暴度</td><td>成功 → 讨伐证 +1 并立即采集该格</td></tr>
+<tr><td class="c">🐰 捣蛋</td><td>抢别人 1 枚携带宝物</td><td>全员空手 → 改为跋涉 1 步</td></tr>
+<tr><td class="c">😴 休整</td><td>收回<b>全部</b>疲劳牌</td><td>在码头休整 → 便当 +1 分</td></tr>
+</table>
+<h3>终局计分</h3>
+<ul>
+<li>小舟上的宝物：<b>按卡面分值累加</b></li>
+<li>讨伐证：每张 <b>2 分</b>；集满 3 张 <b>+3 分</b>；集满 5 张再 <b>+5 分</b></li>
+<li>便当：每次在码头休整 <b>+1 分</b></li>
+<li>潮汐卡给予的额外加分（晓光 +1 / 捣蛋时刻 +1 / 乌萨奇角色 +1 等）</li>
+<li><b>总分最高者获胜</b>；平局比宝物数量，再平则并列</li>
+</ul>
+<h3>关键数字</h3>
+<table>
+<tr><th>项目</th><th>数值</th></tr>
+<tr><td>携带上限</td><td class="c">4 枚（鼯鼠 5 枚，月夜 +1）</td></tr>
+<tr><td>行动步骤</td><td class="c">跋涉 1-2 步</td></tr>
+<tr><td>游戏长度</td><td class="c">最多 6 轮；潮水淹到第 1 列即终局</td></tr>
+<tr><td>被潮水冲走</td><td class="c">掉落<b>一半</b>携带物（向下取整，自己挑）</td></tr>
+</table>
+</div>
+</section>
+<footer>
+🐚 吉伊卡哇：人鱼岛的馈赠 · 打印道具 &nbsp;|&nbsp;
+规则详见 <b>README.md</b> &nbsp;|&nbsp; 建议 200g 卡纸 + 勾选「背景图形」
+</footer>
+
+</div>
+</body>
+</html>

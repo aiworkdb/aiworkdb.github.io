@@ -76,7 +76,6 @@ boardgames/
 | [星际餐厅大逃亡](category/cooperative/space-diner-escape/README.md) | 合作 | 1-5人 | 45-75分钟 | 中等 |
 | [台词之王](category/party/line-master/README.md) | 派对 | 3-8人 | 25-45分钟 | 简单 |
 | [时空驿站](category/party/chrono-station/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
-| [芙莉莲的旅程](category/cooperative/frieren-journey/README.md) | 合作 | 2-4人 | 45-90分钟 | 中等 |
 | [独行猎人](category/cooperative/solo-level-ing-hunters/README.md) | 合作 | 1-4人 | 60-90分钟 | 中等/困难 |
 | [神话裂隙](category/cooperative/mythic-rift/README.md) | 合作 | 2-5人 | 60-90分钟 | 中等/困难 |
 | [间谍家庭派对](category/party/spy-family-party/README.md) | 派对 | 4-8人 | 30-45分钟 | 简单 |
@@ -107,6 +106,46 @@ boardgames/
 | [远征33：绘母之末](category/cooperative/expedition-33/README.md) | 合作 | 2-4人 | 45-75分钟 | 中等/困难 |
 | [罪恶都市：莱奥尼达帝国](category/strategy/vice-city-empire/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等 |
 | [猎魔女团：黄金结界](category/cooperative/huntrix-honmoon/README.md) | 合作 | 2-4人 | 45-75分钟 | 中等/困难 |
+| [八仙渡海：打工人成仙记](category/party/baxian-crossing-sea/README.md) | 派对 | 3-8人 | 20-40分钟 | 简单 |
+| [长安荔枝：转运使之争](category/strategy/lychee-of-chang-an/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等/困难 |
+| [链锯人：恶魔契约](category/card/chainsaw-man-contracts/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
+| [龙珠集结：神龙召唤](category/cooperative/dragon-ball-shenron/README.md) | 合作 | 2-5人 | 45-75分钟 | 中等 |
+| [时光代理人：记忆照片](category/strategy/link-click-memory/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等 |
+| [后室：无尽层级](category/cooperative/backrooms-levels/README.md) | 合作 | 1-5人 | 50-80分钟 | 中等偏难 |
+| [奥德赛：归乡航程](category/card/odyssey-voyage-home/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等 |
+| [山海御灵录](category/card/shanhai-spirit-codex/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
+| [鬼武者：幻魔京都](category/card/onimusha-genma-kyoto/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
+| [吉伊卡哇：人鱼岛的馈赠](category/party/chiikawa-mermaid-island/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
+| [魔女之夜：灵魂宝石](category/strategy/walpurgis-soul-gem/README.md) | 策略 | 3-5人 | 60-90分钟 | 中等偏难 |
+| [三猿拆弹：无声引信](category/party/three-monkeys-defuse/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
+| [只狼：苇名架势](category/card/sekiro-ashina-posture/README.md) | 卡牌 | 2-4人 | 40-70分钟 | 中等 |
+| [黎明行者：桑格拉三十夜](category/strategy/dawnwalker-sangora-nights/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等偏难 |
+| [玩具不许动：安迪的房间](category/party/toy-freeze-andy-room/README.md) | 派对 | 3-6人 | 35-55分钟 | 中等 |
+| [英灵殿：最后的席位](category/card/valhalla-last-seats/README.md) | 卡牌 | 2-5人 | 40-65分钟 | 中等 |
+| [乐高蝙蝠侠：哥谭积木夜](category/party/lego-batman-gotham-bricks/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单 |
+| [恶魔城：贝尔蒙特的诅咒](category/card/castlevania-belmont-curse/README.md) | 卡牌 | 2-5人 | 45-60分钟 | 中等 |
+| [海绵宝宝：水母田大捕捞](category/party/spongebob-jellyfish-roundup/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单/中等 |
+| [水浒传：一百零八星宿](category/strategy/water-margin-108-stars/README.md) | 策略 | 2-4人 | 60-90分钟 | 中等偏难 |
+| [影之刃：杀气连斩](category/card/phantom-blade-killing-intent/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等 |
+| [深潜：深渊raid](category/party/deep-dive-abyss-raid/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
+| [FX战士：杠杆风暴](category/card/fx-warrior-leverage-storm/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等偏难 |
+| [钻石王牌：王牌投捕](category/strategy/diamond-ace-battery/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
+| [土俵：大相扑场所](category/party/grand-sumo-basho/README.md) | 派对 | 3-6人 | 30-50分钟 | 简单/中等 |
+| [铁旅：接续时刻表](category/card/rail-journey-timetable/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
+| [社团博览会：抢新大战](category/party/club-fair-scramble/README.md) | 派对 | 3-6人 | 30-50分钟 | 中等 |
+| [魔法骑士：塞菲罗支柱](category/card/magic-knight-cephiro/README.md) | 卡牌 | 2-5人 | 40-70分钟 | 中等 |
+| [痕迹：现场勘查](category/party/trace-evidence-sweep/README.md) | 派对 | 3-6人 | 40-50分钟 | 中等 |
+| [铁球疾走：横断大陆赛马](category/card/iron-ball-derby/README.md) | 卡牌 | 2-5人 | 30-50分钟 | 中等 |
+| [农场惊魂夜：怪兽来袭](category/party/farm-fright-night/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单 |
+| [探方：三星堆发掘季](category/strategy/sanxingdui-dig/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
+| [碗池：滨江跳出彩](category/strategy/bowl-riverside-air-time/README.md) | 策略 | 2-4人 | 45-70分钟 | 中等偏难 |
+| [暗部共栖：学园都市夜班](category/card/dark-side-cohabitation/README.md) | 卡牌 | 2-5人 | 45-75分钟 | 中等偏难 |
+| [大陆酒店：中立地带](category/party/continental-neutral-ground/README.md) | 派对 | 3-6人 | 30-45分钟 | 中等偏简单 |
+| [子夜送亲](category/cooperative/midnight-ghost-wedding/README.md) | 合作 | 2-5人 | 60-75分钟 | 中等偏难 |
+| [罗小黑：开学补课大作战](category/party/xiaohei-cram-session/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单 |
+| [黑木崖：江湖不允](category/card/blackwood-cliff/README.md) | 卡牌 | 3-5人 | 40-60分钟 | 中等 |
+| [大床游戏：古宅六夜](category/party/big-bed-game/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单偏中 |
+| [哥斯拉-0.0：怒涛防线](category/strategy/godzilla-zero-tideline/README.md) | 策略 | 3-5人 | 50-75分钟 | 中等偏难 |
 
 ## 添加新桌游
 

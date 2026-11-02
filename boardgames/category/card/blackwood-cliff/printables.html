@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黑木崖：江湖不允 · 打印道具</title>
+<style>
+  :root{
+    --ink:#231a14; --paper:#fbf7f0; --line:#cbb69a;
+    --renown:#b8860b; --grudge:#b03a3a; --qi:#2f6fb0; --gold:#d9b26a;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; padding:24px;
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    background:#efe7db; color:var(--ink); line-height:1.5;
+  }
+  h1{ font-size:26px; margin:0 0 4px; letter-spacing:2px; }
+  h2{
+    font-size:19px; margin:30px 0 10px; padding:8px 12px;
+    background:linear-gradient(90deg,#3a2b20,#6b4c34); color:#f6e9d2;
+    border-radius:6px; letter-spacing:1px;
+  }
+  h2 .sub{ font-size:13px; font-weight:400; opacity:.85; margin-left:8px; }
+  .lead{ margin:6px 0 16px; color:#5b4632; font-size:14px; }
+  .print-hint{
+    background:#fff8e1; border:2px solid #e0b84c; border-radius:8px;
+    padding:12px 16px; margin:14px 0 22px; font-size:14px;
+  }
+  .print-hint strong{ color:#8a5a00; }
+  .print-hint ul{ margin:8px 0 0 20px; padding:0; }
+  .grid{ display:flex; flex-wrap:wrap; gap:10px; }
+  .grid.tight{ gap:7px; }
+  /* ===== 卡牌 ===== */
+  .card{
+    width:112px; height:158px; border-radius:9px; border:2px solid #7b6034;
+    background:var(--paper); position:relative; padding:7px 8px;
+    box-shadow:0 2px 5px rgba(0,0,0,.16); overflow:hidden; page-break-inside:avoid;
+  }
+  .card .val{
+    position:absolute; top:5px; left:8px; font-size:38px; font-weight:800;
+    line-height:1; color:var(--ink);
+  }
+  .card .pip{ position:absolute; top:8px; right:8px; font-size:20px; }
+  .card .mid{
+    position:absolute; top:52px; left:0; right:0; text-align:center;
+    font-size:46px; opacity:.13;
+  }
+  .card .band{
+    position:absolute; left:0; right:0; bottom:0; height:24px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; color:#fff; letter-spacing:1px;
+  }
+  .card .name{
+    position:absolute; bottom:28px; left:0; right:0; text-align:center;
+    font-size:11px; color:#6b5642;
+  }
+  /* ===== 江湖帖 ===== */
+  .tile{
+    width:168px; border-radius:10px; border:3px double #8a6a34;
+    background:linear-gradient(180deg,#fffdf6,#f4e8cf); padding:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,.18); page-break-inside:avoid;
+  }
+  .tile .no{
+    display:inline-block; background:#3a2b20; color:#f6e9d2; border-radius:50%;
+    width:24px; height:24px; line-height:24px; text-align:center; font-size:13px; font-weight:700;
+  }
+  .tile .nm{ font-size:16px; font-weight:800; margin:6px 0 4px; }
+  .tile .ico{ font-size:30px; float:right; margin-top:-34px; }
+  .tile .row{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:6px; padding:5px 8px; border-radius:5px; font-size:13px; font-weight:700;
+  }
+  .tile .r{ background:#fdf0d0; color:#8a6410; border:1px solid #d9b26a; }
+  .tile .e{ background:#fbe3e3; color:#96272d; border:1px solid #d99a9a; }
+  .tile .net{
+    margin-top:7px; font-size:11px; text-align:center; color:#5b4632;
+    border-top:1px dashed #c4ab84; padding-top:5px;
+  }
+  /* ===== 角色卡 ===== */
+  .role{
+    width:268px; border-radius:12px; border:3px solid; padding:12px 14px;
+    background:var(--paper); box-shadow:0 3px 8px rgba(0,0,0,.18); page-break-inside:avoid;
+  }
+  .role .hd{ display:flex; align-items:center; gap:10px; }
+  .role .ico{ font-size:34px; }
+  .role .nm{ font-size:20px; font-weight:800; }
+  .role .en{ font-size:10px; letter-spacing:1px; color:#8a7358; }
+  .role .sk{ margin-top:9px; font-size:12.5px; padding:8px; border-radius:6px; }
+  .role .dk{ margin-top:8px; font-size:12px; color:#4a3a2a; }
+  .role .tip{ margin-top:7px; font-size:11.5px; color:#7a5a20; font-style:italic; }
+  /* ===== 玩家板 ===== */
+  .board{
+    width:330px; border:3px solid #6b4c34; border-radius:12px; padding:12px;
+    background:linear-gradient(180deg,#fffdf7,#f2e7d3); page-break-inside:avoid;
+  }
+  .board .ttl{ font-size:16px; font-weight:800; text-align:center; margin-bottom:8px; letter-spacing:2px; }
+  .track{ display:flex; align-items:center; margin:5px 0; }
+  .track .lb{ width:56px; font-size:13px; font-weight:700; }
+  .track .boxes{ display:flex; flex-wrap:wrap; gap:2px; }
+  .track .b{ width:13px; height:13px; border:1px solid #a89070; border-radius:2px; background:#fff; }
+  .track .b.rn{ background:#f0d69a; }
+  .track .b.gr{ background:#f0b8b8; }
+  .track .b.qi{ background:#bcd6f0; }
+  .board .foot{ margin-top:9px; font-size:11px; color:#5b4632; border-top:1px dashed #c4ab84; padding-top:7px; }
+  /* ===== 地图 ===== */
+  .map{
+    width:100%; max-width:960px; border:5px solid #5b4126; border-radius:14px;
+    background:linear-gradient(180deg,#fdf6e6,#efe0c4); padding:16px; page-break-inside:avoid;
+  }
+  .map .mttl{ text-align:center; font-size:20px; font-weight:800; letter-spacing:5px; margin-bottom:10px; }
+  .map .night{ display:flex; justify-content:center; gap:6px; margin-bottom:12px; }
+  .map .night span{
+    width:26px; height:26px; line-height:24px; text-align:center; border:2px solid #8a6a34;
+    border-radius:50%; font-size:12px; background:#fff;
+  }
+  .map .tile-slot{
+    margin:0 auto 12px; width:300px; border:2px dashed #8a6a34; border-radius:8px;
+    padding:12px; text-align:center; background:#fffdf6;
+  }
+  .map .tile-slot .t{ font-size:13px; color:#7a6244; }
+  .map .tile-slot .b{ font-size:16px; font-weight:800; margin-top:4px; }
+  .seats{ display:flex; justify-content:center; align-items:stretch; gap:14px; flex-wrap:wrap; }
+  .seat{
+    flex:1; min-width:190px; border:3px solid; border-radius:10px; padding:10px;
+    text-align:center; background:#fffdf7;
+  }
+  .seat .sico{ font-size:30px; }
+  .seat .snm{ font-size:16px; font-weight:800; margin:3px 0; }
+  .seat .sdesc{ font-size:12px; color:#4a3a2a; }
+  .wine{
+    align-self:center; font-size:34px; padding:0 6px;
+  }
+  .close{
+    margin:12px auto 0; width:100%; border:2px dotted #7a6244; border-radius:8px;
+    padding:8px; text-align:center; font-size:13px; color:#5b4632; background:#f7efdd;
+  }
+  .seatrow{ display:flex; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .seatrow .s{
+    width:112px; border:2px solid #8a6a34; border-radius:8px; padding:6px;
+    text-align:center; background:#fffdf7; font-size:12px; font-weight:700;
+  }
+  /* ===== 标记 ===== */
+  .token{
+    width:58px; height:58px; border-radius:50%; border:3px solid;
+    display:flex; align-items:center; justify-content:center; font-size:20px;
+    font-weight:800; page-break-inside:avoid;
+  }
+  .sq{
+    width:64px; height:64px; border-radius:8px; border:3px solid;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:11px; font-weight:800; page-break-inside:avoid; text-align:center; line-height:1.2;
+  }
+  /* ===== 棋子 ===== */
+  .pawn{
+    width:74px; border:3px solid; border-radius:8px 8px 4px 4px; background:#fffdf7;
+    padding:6px 4px; text-align:center; page-break-inside:avoid;
+  }
+  .pawn .p{ font-size:28px; }
+  .pawn .n{ font-size:11px; font-weight:700; margin-top:2px; }
+  /* ===== 速查 ===== */
+  .quick{
+    width:100%; max-width:960px; border:4px solid #5b4126; border-radius:12px;
+    background:#fffdf6; padding:16px 20px; font-size:13.5px; page-break-inside:avoid;
+  }
+  .quick h3{ margin:0 0 8px; font-size:18px; letter-spacing:3px; text-align:center; }
+  .quick ol{ margin:6px 0 6px 20px; padding:0; }
+  .quick li{ margin:3px 0; }
+  .quick .sec{ margin-top:10px; padding-top:8px; border-top:1px dashed #c4ab84; }
+  .quick .k{ font-weight:800; }
+  table.mini{ width:100%; border-collapse:collapse; margin-top:8px; font-size:12.5px; }
+  table.mini th, table.mini td{ border:1px solid #c4ab84; padding:4px 6px; text-align:center; }
+  table.mini th{ background:#f0e2c6; }
+  .pagebreak{ page-break-after:always; height:0; }
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .print-hint { display: none; }
+    body { background:#fff; padding:0; }
+    h2 { page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🗡️ 黑木崖：江湖不允 · 打印道具</h1>
+<div class="lead">BLACKWOOD CLIFF: No One Leaves the Jianghu ｜ 卡牌类桌游 ｜ 3-5 人 ｜ 40-60 分钟 ｜ 规则见 <b>README.md</b></div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项，否则所有色带会变白</li>
+    <li>酒令牌、江湖帖建议使用 <strong>200-250g 卡纸</strong>打印</li>
+    <li>玩家板、夜宴图可用普通 A4，建议过塑</li>
+    <li>5 副酒令牌请用<strong>不同颜色牌套</strong>或卡背，方便分拣</li>
+    <li>全部组件共约 <strong>191 件</strong>（5 人局满配；4 人局取 4 副酒令牌约 160 件）</li>
+  </ul>
+</div>
+<h2>🗺️ 黑木崖夜宴图 <span class="sub">1 张 · 桌中央 · 普通 A4</span></h2>
+<div class="map">
+  <div class="mttl">黑 木 崖 · 十 夜 夜 宴</div>
+  <div class="night"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+  <div class="tile-slot">
+    <div class="t">📜 今 夜 江 湖 帖</div>
+    <div class="b">声望 +R　｜　恩怨 +E</div>
+  </div>
+  <div class="seats">
+    <div class="seat" style="border-color:#b8860b;background:#fdf6e0;">
+      <div class="sico">👑</div>
+      <div class="snm">令 主 席</div>
+      <div class="sdesc">唯一·最高<br>🎖️声望 +R　⚔️恩怨 +E</div>
+    </div>
+    <div class="wine">🍶<div style="font-size:11px;">对饮酒坛</div></div>
+    <div class="seat" style="border-color:#2f6fb0;background:#eaf2fb;">
+      <div class="sico">🧊</div>
+      <div class="snm">藏 锋 席</div>
+      <div class="sdesc">唯一·最低<br>💠真气 +2　⚔️恩怨 −1</div>
+    </div>
+  </div>
+  <div class="close">🧘 闭 关 区　—　本夜不出牌者把棋子放这里（恩怨 −2 · 真气 +1）</div>
+  <div class="seatrow">
+    <div class="s">⚔️ 令狐冲席<br>🎖️ ⚔️ 💠</div>
+    <div class="s">🌸 东方不败席<br>🎖️ ⚔️ 💠</div>
+    <div class="s">🎶 任盈盈席<br>🎖️ ⚔️ 💠</div>
+    <div class="s">👊 任我行席<br>🎖️ ⚔️ 💠</div>
+    <div class="s">🐍 蓝凤凰席<br>🎖️ ⚔️ 💠</div>
+  </div>
+  <div style="margin-top:12px;font-size:12px;color:#5b4632;text-align:center;">
+    🍶 对饮：令主与藏锋都在场时，令主 💠真气 +2，<b>双方各 ⚔️恩怨 −1</b>　｜　撞酒 ⇒ 席位作废　｜　全场无人接帖 ⇒ 在场者各 ⚔️恩怨 +1
+  </div>
+</div>
+<div class="pagebreak"></div>
+<h2>📜 江湖帖 <span class="sub">10 张 · 按夜数顺序翻开 · 卡纸</span></h2>
+<div class="lead">净恩怨 = E − 1（对饮抵消 1 点）。前 5 夜几乎免费，后 5 夜急剧涨价 —— 这就是「一入江湖岁月催」。</div>
+<div class="grid"><div class="tile">
+    <span class="no">1</span><span class="ico">🛶</span>
+    <div class="nm">初入江湖</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+6</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+1</span></div>
+    <div class="net">净恩怨 <b>+0</b>　（需 0 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">2</span><span class="ico">🏔️</span>
+    <div class="nm">华山夜话</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+7</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+1</span></div>
+    <div class="net">净恩怨 <b>+0</b>　（需 0 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">3</span><span class="ico">⛓️</span>
+    <div class="nm">浪人营救</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+8</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+2</span></div>
+    <div class="net">净恩怨 <b>+1</b>　（需 0.5 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">4</span><span class="ico">🍶</span>
+    <div class="nm">湖上对饮</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+9</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+2</span></div>
+    <div class="net">净恩怨 <b>+1</b>　（需 0.5 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">5</span><span class="ico">📕</span>
+    <div class="nm">葵花宝典</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+10</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+2</span></div>
+    <div class="net">净恩怨 <b>+1</b>　（需 0.5 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">6</span><span class="ico">⚖️</span>
+    <div class="nm">正邪之辩</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+11</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+2</span></div>
+    <div class="net">净恩怨 <b>+1</b>　（需 0.5 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">7</span><span class="ico">🪡</span>
+    <div class="nm">绣花针</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+12</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+2</span></div>
+    <div class="net">净恩怨 <b>+1</b>　（需 0.5 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">8</span><span class="ico">💊</span>
+    <div class="nm">三尸脑神丹</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+13</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+3</span></div>
+    <div class="net">净恩怨 <b>+2</b>　（需 1.0 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">9</span><span class="ico">🌙</span>
+    <div class="nm">日月神教</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+14</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+3</span></div>
+    <div class="net">净恩怨 <b>+2</b>　（需 1.0 次藏锋来还）</div>
+  </div><div class="tile">
+    <span class="no">10</span><span class="ico">🗡️</span>
+    <div class="nm">黑木崖大战</div>
+    <div class="row r"><span>🎖️ 声望</span><span>+18</span></div>
+    <div class="row e"><span>⚔️ 恩怨</span><span>+4</span></div>
+    <div class="net">净恩怨 <b>+3</b>　（需 1.5 次藏锋来还）</div>
+  </div></div><div class="pagebreak"></div><h2>🍶 酒令牌 <span class="sub">5 副 × 15 张 = 75 张 · 每副牌组总和均为 52 · 卡纸</span></h2>
+<div class="lead">每副牌洗好后抽 3 张起手，每夜出 1 张、补 1 张。牌面数字 = 酒令值，可花真气加值（每夜最多 +2）。</div><h3 style="font-size:15px;margin:18px 0 6px;color:#2f6fb0;">⚔️ 令狐冲 的酒令牌（15 张 · Σ=52 · 1 / 1 / 2 / 2 / 3 / 3 / 3 / 3 / 4 / 4 / 5 / 5 / 5 / 5 / 6）</h3><div class="grid tight"><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">1</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">1</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">2</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">2</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">3</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">3</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">3</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">3</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">4</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">4</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">5</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">5</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">5</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">5</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div><div class="card" style="background:#e8f1fb;border-color:#2f6fb0;">
+      <div class="val" style="color:#2f6fb0;">6</div>
+      <div class="pip">⚔️</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f6fb0;">令狐冲</div>
+    </div></div><h3 style="font-size:15px;margin:18px 0 6px;color:#b03a5b;">🌸 东方不败 的酒令牌（15 张 · Σ=52 · 1 / 1 / 2 / 2 / 2 / 3 / 3 / 3 / 4 / 4 / 4 / 5 / 6 / 6 / 6）</h3><div class="grid tight"><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">1</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">1</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">2</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">2</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">2</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">3</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">3</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">3</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">4</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">4</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">4</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">5</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">6</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">6</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div><div class="card" style="background:#fdeef2;border-color:#b03a5b;">
+      <div class="val" style="color:#b03a5b;">6</div>
+      <div class="pip">🌸</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#b03a5b;">东方不败</div>
+    </div></div><h3 style="font-size:15px;margin:18px 0 6px;color:#7a52a8;">🎶 任盈盈 的酒令牌（15 张 · Σ=52 · 1 / 1 / 2 / 3 / 3 / 3 / 3 / 3 / 4 / 4 / 4 / 4 / 5 / 6 / 6）</h3><div class="grid tight"><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">1</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">1</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">2</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">3</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">3</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">3</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">3</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">3</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">4</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">4</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">4</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">4</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">5</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">6</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div><div class="card" style="background:#f3edfb;border-color:#7a52a8;">
+      <div class="val" style="color:#7a52a8;">6</div>
+      <div class="pip">🎶</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#7a52a8;">任盈盈</div>
+    </div></div><h3 style="font-size:15px;margin:18px 0 6px;color:#8a5a20;">👊 任我行 的酒令牌（15 张 · Σ=52 · 1 / 1 / 1 / 2 / 2 / 3 / 3 / 3 / 4 / 4 / 5 / 5 / 6 / 6 / 6）</h3><div class="grid tight"><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">1</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">1</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">1</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">2</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">2</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">3</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">3</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">3</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">4</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">4</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">5</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">5</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">6</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">6</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div><div class="card" style="background:#fbf3e6;border-color:#8a5a20;">
+      <div class="val" style="color:#8a5a20;">6</div>
+      <div class="pip">👊</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#8a5a20;">任我行</div>
+    </div></div><h3 style="font-size:15px;margin:18px 0 6px;color:#2f7a5a;">🐍 蓝凤凰 的酒令牌（15 张 · Σ=52 · 1 / 1 / 2 / 2 / 3 / 3 / 3 / 3 / 4 / 4 / 4 / 5 / 5 / 6 / 6）</h3><div class="grid tight"><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">1</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">1</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">2</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">2</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">3</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">3</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">3</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">3</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">4</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">4</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">4</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">5</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">5</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#fffdf7;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">6</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div><div class="card" style="background:#e9f6f1;border-color:#2f7a5a;">
+      <div class="val" style="color:#2f7a5a;">6</div>
+      <div class="pip">🐍</div>
+      <div class="mid">🍶</div>
+      <div class="name">酒令牌</div>
+      <div class="band" style="background:#2f7a5a;">蓝凤凰</div>
+    </div></div><div class="pagebreak"></div><h2>🎴 角色卡 <span class="sub">5 张 · 公开摆放 · 卡纸</span></h2>
+<div class="grid"><div class="role" style="border-color:#2f6fb0;">
+    <div class="hd"><div class="ico">⚔️</div>
+      <div><div class="nm" style="color:#2f6fb0;">令狐冲</div><div class="en">LINGHUCHONG</div></div></div>
+    <div class="sk" style="background:#e8f1fb;border:1px solid #2f6fb0;">独孤九剑：成为令主且最终值恰好比第二高高 1 点时，+2 声望（整局限 3 次）</div>
+    <div class="dk"><b>牌组 15 张：</b>1 / 1 / 2 / 2 / 3 / 3 / 3 / 3 / 4 / 4 / 5 / 5 / 5 / 5 / 6</div>
+    <div class="tip">💡 用 5 而不是 6 去抢——你要的是「恰好高一招」</div>
+  </div><div class="role" style="border-color:#b03a5b;">
+    <div class="hd"><div class="ico">🌸</div>
+      <div><div class="nm" style="color:#b03a5b;">东方不败</div><div class="en">DONGFANG BUBAI</div></div></div>
+    <div class="sk" style="background:#fdeef2;border:1px solid #b03a5b;">绣花针·藏：藏锋时 +3 声望、+1 真气｜绣花针·杀：令主时本夜恩怨 −1｜人就是江湖：每当他人退隐 +3 声望｜退隐门槛 −3</div>
+    <div class="dk"><b>牌组 15 张：</b>1 / 1 / 2 / 2 / 2 / 3 / 3 / 3 / 4 / 4 / 4 / 5 / 6 / 6 / 6</div>
+    <div class="tip">💡 门槛只要 7，第 3-4 夜就该准备退隐</div>
+  </div><div class="role" style="border-color:#7a52a8;">
+    <div class="hd"><div class="ico">🎶</div>
+      <div><div class="nm" style="color:#7a52a8;">任盈盈</div><div class="en">REN YINGYING</div></div></div>
+    <div class="sk" style="background:#f3edfb;border:1px solid #7a52a8;">清心普善咒：闭关时无需弃牌、额外 +1 真气，且闭关恩怨改为 −3（而非常规 −2）</div>
+    <div class="dk"><b>牌组 15 张：</b>1 / 1 / 2 / 3 / 3 / 3 / 3 / 3 / 4 / 4 / 4 / 4 / 5 / 6 / 6</div>
+    <div class="tip">💡 全场唯一能不亏手牌清债的人，恩怨≥5 就闭关</div>
+  </div><div class="role" style="border-color:#8a5a20;">
+    <div class="hd"><div class="ico">👊</div>
+      <div><div class="nm" style="color:#8a5a20;">任我行</div><div class="en">REN WOXING</div></div></div>
+    <div class="sk" style="background:#fbf3e6;border:1px solid #8a5a20;">吸星大法：每夜若你不是令主且场上有令主，令主 −1 声望、你 +1 声望（整局限 3 次）</div>
+    <div class="dk"><b>牌组 15 张：</b>1 / 1 / 1 / 2 / 2 / 3 / 3 / 3 / 4 / 4 / 5 / 5 / 6 / 6 / 6</div>
+    <div class="tip">💡 别抢帖！分数来自藏锋 + 吸星 + 退隐奖励</div>
+  </div><div class="role" style="border-color:#2f7a5a;">
+    <div class="hd"><div class="ico">🐍</div>
+      <div><div class="nm" style="color:#2f7a5a;">蓝凤凰</div><div class="en">LAN FENGHUANG</div></div></div>
+    <div class="sk" style="background:#e9f6f1;border:1px solid #2f7a5a;">蛊术：每夜可花 1 真气指定 1 名其他玩家，其本夜最终值 −1（每夜限 1 次）｜趁乱而起：每当某夜无人接帖，你 +4 声望</div>
+    <div class="dk"><b>牌组 15 张：</b>1 / 1 / 2 / 2 / 3 / 3 / 3 / 3 / 4 / 4 / 4 / 5 / 5 / 6 / 6</div>
+    <div class="tip">💡 人越多越强，每夜施蛊打压声望最高者</div>
+  </div></div><div class="pagebreak"></div><h2>📋 玩家板 <span class="sub">5 块 · 每位玩家 1 块 · 建议过塑</span></h2>
+<div class="grid"><div class="board" style="border-color:#2f6fb0;">
+    <div class="ttl" style="color:#2f6fb0;">⚔️ 令狐冲</div>
+    <div class="track"><div class="lb">🎖️ 声望</div><div class="boxes"><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div></div></div>
+    <div class="track"><div class="lb">⚔️ 恩怨</div><div class="boxes"><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div></div></div>
+    <div class="track"><div class="lb">💠 真气</div><div class="boxes"><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div></div></div>
+    <div class="foot">
+      特技次数：☐ ☐ ☐（令狐冲 3 次 / 任我行 3 次）<br>
+      退隐门槛 T = 10 + 2 × 已退隐人数<br>
+      退隐条件：恩怨 ≤ 0 且 声望 ≥ T
+    </div>
+  </div><div class="board" style="border-color:#b03a5b;">
+    <div class="ttl" style="color:#b03a5b;">🌸 东方不败</div>
+    <div class="track"><div class="lb">🎖️ 声望</div><div class="boxes"><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div></div></div>
+    <div class="track"><div class="lb">⚔️ 恩怨</div><div class="boxes"><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div></div></div>
+    <div class="track"><div class="lb">💠 真气</div><div class="boxes"><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div></div></div>
+    <div class="foot">
+      特技次数：☐ ☐ ☐（令狐冲 3 次 / 任我行 3 次）<br>
+      退隐门槛 T = 10 + 2 × 已退隐人数 − 3 = <b>7 起</b><br>
+      退隐条件：恩怨 ≤ 0 且 声望 ≥ T
+    </div>
+  </div><div class="board" style="border-color:#7a52a8;">
+    <div class="ttl" style="color:#7a52a8;">🎶 任盈盈</div>
+    <div class="track"><div class="lb">🎖️ 声望</div><div class="boxes"><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div></div></div>
+    <div class="track"><div class="lb">⚔️ 恩怨</div><div class="boxes"><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div></div></div>
+    <div class="track"><div class="lb">💠 真气</div><div class="boxes"><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div></div></div>
+    <div class="foot">
+      特技次数：☐ ☐ ☐（令狐冲 3 次 / 任我行 3 次）<br>
+      退隐门槛 T = 10 + 2 × 已退隐人数<br>
+      退隐条件：恩怨 ≤ 0 且 声望 ≥ T
+    </div>
+  </div><div class="board" style="border-color:#8a5a20;">
+    <div class="ttl" style="color:#8a5a20;">👊 任我行</div>
+    <div class="track"><div class="lb">🎖️ 声望</div><div class="boxes"><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div></div></div>
+    <div class="track"><div class="lb">⚔️ 恩怨</div><div class="boxes"><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div></div></div>
+    <div class="track"><div class="lb">💠 真气</div><div class="boxes"><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div></div></div>
+    <div class="foot">
+      特技次数：☐ ☐ ☐（令狐冲 3 次 / 任我行 3 次）<br>
+      退隐门槛 T = 10 + 2 × 已退隐人数<br>
+      退隐条件：恩怨 ≤ 0 且 声望 ≥ T
+    </div>
+  </div><div class="board" style="border-color:#2f7a5a;">
+    <div class="ttl" style="color:#2f7a5a;">🐍 蓝凤凰</div>
+    <div class="track"><div class="lb">🎖️ 声望</div><div class="boxes"><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div><div class="b rn"></div></div></div>
+    <div class="track"><div class="lb">⚔️ 恩怨</div><div class="boxes"><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div><div class="b gr"></div></div></div>
+    <div class="track"><div class="lb">💠 真气</div><div class="boxes"><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div><div class="b qi"></div></div></div>
+    <div class="foot">
+      特技次数：☐ ☐ ☐（令狐冲 3 次 / 任我行 3 次）<br>
+      退隐门槛 T = 10 + 2 × 已退隐人数<br>
+      退隐条件：恩怨 ≤ 0 且 声望 ≥ T
+    </div>
+  </div></div><div class="pagebreak"></div><h2>♟️ 角色棋子 <span class="sub">5 枚 · 卡纸对折或插棋座</span></h2>
+<div class="grid"><div class="pawn" style="border-color:#2f6fb0;">
+    <div class="p">⚔️</div><div class="n" style="color:#2f6fb0;">令狐冲</div>
+  </div><div class="pawn" style="border-color:#b03a5b;">
+    <div class="p">🌸</div><div class="n" style="color:#b03a5b;">东方不败</div>
+  </div><div class="pawn" style="border-color:#7a52a8;">
+    <div class="p">🎶</div><div class="n" style="color:#7a52a8;">任盈盈</div>
+  </div><div class="pawn" style="border-color:#8a5a20;">
+    <div class="p">👊</div><div class="n" style="color:#8a5a20;">任我行</div>
+  </div><div class="pawn" style="border-color:#2f7a5a;">
+    <div class="p">🐍</div><div class="n" style="color:#2f7a5a;">蓝凤凰</div>
+  </div></div><h2>🔘 资源标记 <span class="sub">剪成小圆片 / 小方片</span></h2>
+<div class="grid">
+  <div class="token" style="border-color:#b8860b;background:#fdf0d0;color:#8a6410;">🎖️</div>
+  <div class="token" style="border-color:#b03a3a;background:#fbe3e3;color:#96272d;">⚔️</div>
+  <div class="token" style="border-color:#2f6fb0;background:#dceaf8;color:#1d4e80;">💠</div>
+  <div class="sq" style="border-color:#6b4c34;background:#f4e8cf;">🏔️<br>退隐 #1<br>+14</div>
+  <div class="sq" style="border-color:#6b4c34;background:#f4e8cf;">🏔️<br>退隐 #2<br>+10</div>
+  <div class="sq" style="border-color:#6b4c34;background:#f4e8cf;">🏔️<br>退隐 #3<br>+7</div>
+  <div class="sq" style="border-color:#6b4c34;background:#f4e8cf;">🏔️<br>退隐 #4<br>+4</div>
+  <div class="sq" style="border-color:#6b4c34;background:#f4e8cf;">🏔️<br>退隐 #5<br>+2</div>
+  <div class="sq" style="border-color:#3a2b20;background:#efe0c4;">🌙<br>夜数<br>标记</div>
+  <div class="sq" style="border-color:#8a6a34;background:#fdf6e6;">👑<br>令主</div>
+  <div class="sq" style="border-color:#8a6a34;background:#fdf6e6;">🧊<br>藏锋</div>
+  <div class="sq" style="border-color:#8a6a34;background:#fdf6e6;">🧘<br>闭关</div>
+</div>
+<div class="lead">建议数量：🎖️ 声望 30 枚 ／ ⚔️ 恩怨 30 枚 ／ 💠 真气 20 枚（5 人局满配）。</div>
+<div class="pagebreak"></div><h2>📄 一页速查卡 <span class="sub">1 张 · 建议过塑放桌上</span></h2>
+<div class="quick">
+  <h3>黑木崖：江湖不允 · 一页速查</h3>
+  <div class="sec"><span class="k">每一夜流程：</span>
+    <ol>
+      <li>翻开本夜江湖帖（🎖️声望 +R ／ ⚔️恩怨 +E）</li>
+      <li><b>同时</b>决定：出牌 或 闭关（弃 1 张手牌，恩怨 −2，真气 +1）</li>
+      <li><b>同时暗出</b> 1 张酒令牌 + 暗花真气（0-2 点，1 真气 = +1 值）</li>
+      <li><b>唯一最高</b> = 👑令主（+R 声望 / +E 恩怨）；<b>唯一最低</b> = 🧊藏锋（+2 真气 / −1 恩怨）</li>
+      <li>撞酒 ⇒ 该席位作废；全场无人接帖 ⇒ 在场者各恩怨 +1</li>
+      <li>🍶 对饮（令主与藏锋都在）：令主 +2 真气，双方各 −1 恩怨</li>
+      <li>角色特技结算 → 退隐判定 → 补牌至 3 张 → 夜数 +1</li>
+    </ol>
+  </div>
+  <div class="sec"><span class="k">退隐：</span>恩怨 ≤ 0 且 声望 ≥ T；T = 10 + 2 × 已退隐人数（东方不败 −3）；顺位奖励 +14 / +10 / +7 / +4 / +2</div>
+  <div class="sec"><span class="k">终局：</span>已退隐 = 声望 + 真气 + 顺位奖励　｜　未退隐 = 声望 + 真气 − 2 × 恩怨</div>
+  <div class="sec"><span class="k">清债手段：</span>🥇 藏锋 −2（可能撞酒）　🥈 闭关 −2（必定，弃 1 牌）　🥉 对饮 −1（你是令主时）　🎶 任盈盈闭关 −3 且不弃牌</div>
+  <div class="sec"><span class="k">五条铁律：</span>
+    <ol>
+      <li>中间值是死区 —— 要么冲顶，要么垫底</li>
+      <li>前 5 夜抢，后 5 夜还</li>
+      <li>恩怨 ≥ 4 立刻闭关</li>
+      <li>够门槛 + 恩怨清零 ⇒ 立刻退隐，别贪</li>
+      <li>声望是资产，恩怨是负债，净资产才是分数</li>
+    </ol>
+  </div>
+  <table class="mini">
+    <tr><th>夜</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>
+    <tr><th>帖</th><td>🛶</td><td>🏔️</td><td>⛓️</td><td>🍶</td><td>📕</td><td>⚖️</td><td>🪡</td><td>💊</td><td>🌙</td><td>🗡️</td></tr>
+    <tr><th>声望</th><td>+6</td><td>+7</td><td>+8</td><td>+9</td><td>+10</td><td>+11</td><td>+12</td><td>+13</td><td>+14</td><td>+18</td></tr>
+    <tr><th>恩怨</th><td>+1</td><td>+1</td><td>+2</td><td>+2</td><td>+2</td><td>+2</td><td>+2</td><td>+3</td><td>+3</td><td>+4</td></tr>
+    <tr><th><b>净</b></th><td><b>+0</b></td><td><b>+0</b></td><td><b>+1</b></td><td><b>+1</b></td><td><b>+1</b></td><td><b>+1</b></td><td><b>+1</b></td><td><b>+2</b></td><td><b>+2</b></td><td><b>+3</b></td></tr>
+  </table>
+  <table class="mini">
+    <tr><th>人数</th><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+    <tr><th>两席位齐备率</th><td>83.4%</td><td>55.8%</td><td><b>45.9%</b></td><td>36.9%</td></tr>
+    <tr><th>退隐率</th><td>—</td><td>72.6%</td><td><b>57.9%</b></td><td>38.3%</td></tr>
+    <tr><th>场均分</th><td>—</td><td>35.8</td><td><b>31.2</b></td><td>24.3</td></tr>
+  </table>
+</div>
+
+<div style="margin-top:28px;padding:14px;border:1px dashed #a89070;border-radius:8px;font-size:12.5px;color:#5b4632;background:#f7efdd;">
+  <b>组件统计（满配 5 人局）：</b>
+  夜宴图 1 ＋ 江湖帖 10 ＋ 酒令牌 75（5×15）＋ 角色卡 5 ＋ 玩家板 5 ＋ 棋子 5 ＋ 资源标记 80 ＋ 退隐凭证 5 ＋ 席位/夜数标记 4 ＋ 速查卡 1 ＝ <b>191 件</b>
+  <br>（4 人局按需取用：酒令牌取 4 副 60 张即可，共约 <b>160 件</b>）
+  <br><br>
+  <b>主题致敬：</b>《笑傲江湖 2：东方不败》4K 修复版 2026 年 10 月 30 日首次登陆内地院线（距 1992 年香港首映 34 年）。
+  「人就是江湖，你怎么退出」——任我行。
+</div>
+
+</body>
+</html>

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奥德赛：归乡航程 · 打印道具</title>
+<style>
+:root{
+    --sea-deep:#0d3b66;
+    --sea:#1565a8;
+    --sea-light:#3d94d4;
+    --foam:#e8f4fb;
+    --gold:#c8952c;
+    --gold-light:#e8bf62;
+    --parchment:#fbf3e0;
+    --parchment-2:#f3e6c8;
+    --ink:#2b2118;
+    --ink-soft:#5c4c3a;
+    --wrath:#b3341f;
+    --wrath-dark:#6d1d10;
+    --supply:#4a7c3f;
+    --glory:#8b6b1f;
+    --line:#c8b48a;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+    font-family:"Georgia","Songti SC","STSong","SimSun",serif;
+    background:
+        radial-gradient(circle at 20% 0%, #e8f4fb 0%, transparent 55%),
+        linear-gradient(180deg,#fbf3e0 0%,#f3e6c8 100%);
+    color:var(--ink);
+    line-height:1.6;
+    padding:24px 16px 60px;
+}
+
+.wrap{max-width:1180px;margin:0 auto;}
+
+/* ---------- 页头 ---------- */
+header{
+    text-align:center;
+    padding:28px 20px 22px;
+    background:linear-gradient(160deg,var(--sea-deep) 0%,var(--sea) 60%,var(--sea-light) 100%);
+    border-radius:14px;
+    color:#fff;
+    margin-bottom:22px;
+    border:3px solid var(--gold);
+    box-shadow:0 6px 20px rgba(13,59,102,.28);
+}
+header h1{font-size:32px;letter-spacing:3px;margin-bottom:6px;text-shadow:0 2px 6px rgba(0,0,0,.35);}
+header .sub{font-size:15px;color:var(--gold-light);letter-spacing:2px;}
+header .quote{
+    margin-top:12px;font-size:13px;color:#d8e9f7;font-style:italic;
+    border-top:1px solid rgba(232,191,98,.45);padding-top:10px;
+}
+
+/* ---------- 打印提示 ---------- */
+.print-hint{
+    background:#fff8e1;
+    border:2px dashed var(--gold);
+    border-left:6px solid var(--gold);
+    border-radius:10px;
+    padding:14px 18px;
+    margin-bottom:24px;
+    font-size:14px;
+}
+.print-hint h3{color:var(--wrath-dark);font-size:16px;margin-bottom:6px;}
+.print-hint ul{margin-left:20px;}
+.print-hint li{margin-bottom:3px;}
+.print-hint .em{color:var(--wrath);font-weight:bold;}
+
+/* ---------- 区块 ---------- */
+section{margin-bottom:38px;}
+h2{
+    font-size:22px;
+    color:var(--sea-deep);
+    border-left:6px solid var(--gold);
+    padding-left:12px;
+    margin-bottom:6px;
+    letter-spacing:1px;
+}
+.h2note{font-size:13px;color:var(--ink-soft);margin:0 0 14px 18px;}
+
+/* ---------- 航线地图 ---------- */
+.mapboard{
+    background:linear-gradient(170deg,#dff0fb 0%,#bcdcf2 45%,#96c6e6 100%);
+    border:4px solid var(--sea-deep);
+    border-radius:14px;
+    padding:20px;
+    position:relative;
+    overflow:hidden;
+}
+.mapboard::before{
+    content:"";position:absolute;inset:0;
+    background:
+        repeating-linear-gradient(0deg,transparent 0 22px,rgba(21,101,168,.055) 22px 23px),
+        repeating-linear-gradient(90deg,transparent 0 22px,rgba(21,101,168,.055) 22px 23px);
+    pointer-events:none;
+}
+.map-title{
+    text-align:center;font-size:19px;color:var(--sea-deep);
+    letter-spacing:4px;margin-bottom:14px;position:relative;
+}
+.routeline{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:8px;
+    position:relative;
+    padding:8px 0;
+}
+.node{
+    background:var(--parchment);
+    border:3px solid var(--sea-deep);
+    border-radius:10px;
+    padding:8px 4px;
+    text-align:center;
+    position:relative;
+    min-height:120px;
+    box-shadow:0 2px 5px rgba(0,0,0,.14);
+}
+.node .num{
+    position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+    background:var(--gold);color:#2b2118;font-weight:bold;
+    width:24px;height:24px;line-height:22px;border-radius:50%;
+    border:2px solid var(--sea-deep);font-size:13px;
+}
+.node .icon{font-size:24px;margin:8px 0 3px;}
+.node .nm{font-size:12px;font-weight:bold;color:var(--sea-deep);line-height:1.25;}
+.node .req{
+    margin-top:5px;font-size:10px;color:var(--ink-soft);
+    border-top:1px dashed var(--line);padding-top:4px;line-height:1.35;
+}
+.node .req b{color:var(--wrath-dark);}
+.node.hard{border-color:var(--wrath-dark);box-shadow:0 2px 7px rgba(109,29,16,.3);}
+.node.final{background:linear-gradient(160deg,#fde8c8,#f7d9a8);border-width:4px;}
+
+.mapfoot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;position:relative;}
+.track{
+    background:rgba(255,255,255,.82);
+    border:2px solid var(--sea);
+    border-radius:10px;padding:10px 12px;
+}
+.track h4{font-size:13px;color:var(--sea-deep);margin-bottom:6px;letter-spacing:1px;}
+.wrathcells{display:flex;gap:2px;}
+.wrathcells div{
+    flex:1;height:26px;border:1.5px solid var(--wrath-dark);border-radius:3px;
+    font-size:10px;display:flex;align-items:center;justify-content:center;
+    background:#fff;color:var(--wrath-dark);font-weight:bold;
+}
+.wrathcells div.storm{background:#f7b6a4;}
+.wrathcells div.dead{background:var(--wrath-dark);color:#fff;}
+.track .note{font-size:10px;color:var(--ink-soft);margin-top:5px;}
+
+/* ---------- 卡牌栅格 ---------- */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(158px,1fr));
+    gap:12px;
+}
+.card{
+    width:100%;
+    min-height:212px;
+    border-radius:11px;
+    border:3px solid var(--sea-deep);
+    background:var(--parchment);
+    padding:9px 9px 7px;
+    position:relative;
+    display:flex;flex-direction:column;
+    box-shadow:0 2px 7px rgba(0,0,0,.16);
+    break-inside:avoid;
+}
+.card .top{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    border-bottom:2px solid var(--line);padding-bottom:5px;margin-bottom:6px;
+}
+.card .cname{font-size:13.5px;font-weight:bold;color:var(--sea-deep);line-height:1.25;flex:1;}
+.card .cicon{font-size:25px;line-height:1;margin-left:4px;}
+.card .ctype{
+    font-size:9.5px;color:#fff;background:var(--sea);
+    border-radius:8px;padding:1px 6px;display:inline-block;margin-bottom:5px;
+    align-self:flex-start;letter-spacing:.5px;
+}
+.card .body{font-size:11px;color:var(--ink);flex:1;line-height:1.5;}
+.card .body b{color:var(--wrath-dark);}
+.card .foot{
+    border-top:1px dashed var(--line);margin-top:5px;padding-top:4px;
+    font-size:9.5px;color:var(--ink-soft);display:flex;justify-content:space-between;
+}
+.stat{display:flex;gap:4px;justify-content:center;margin:4px 0 5px;}
+.stat span{
+    font-size:10px;padding:1.5px 5px;border-radius:6px;font-weight:bold;
+    border:1.5px solid;
+}
+.stat .atk{color:#8e2d16;border-color:#c88778;background:#fdeae4;}
+.stat .wis{color:#1f5c7a;border-color:#90bcd6;background:#e4f1f8;}
+.stat .pie{color:#7a5410;border-color:#d6bd76;background:#fbf3dc;}
+.cnt{
+    position:absolute;top:-9px;right:-9px;
+    background:var(--gold);color:#2b2118;font-size:10px;font-weight:bold;
+    border:2px solid var(--sea-deep);border-radius:9px;padding:0 6px;
+}
+
+/* 卡牌配色 */
+.t-crew{border-color:var(--sea-deep);}
+.t-crew .ctype{background:var(--sea-deep);}
+.t-artifact{border-color:#7a4b8f;background:linear-gradient(165deg,#fbf3e0,#f0e2f2);}
+.t-artifact .ctype{background:#7a4b8f;}
+.t-offering{border-color:var(--supply);background:linear-gradient(165deg,#fbf3e0,#e7f2e0);}
+.t-offering .ctype{background:var(--supply);}
+.t-blessing{border-color:var(--gold);background:linear-gradient(165deg,#fff8e4,#f7e7bd);}
+.t-blessing .ctype{background:var(--gold);color:#2b2118;}
+.t-trial{border-color:var(--wrath-dark);background:linear-gradient(165deg,#fbf3e0,#f8e2db);}
+.t-trial .ctype{background:var(--wrath-dark);}
+.t-wind{border-color:#2f7d84;background:linear-gradient(165deg,#fbf3e0,#dff0f0);}
+.t-wind .ctype{background:#2f7d84;}
+.t-oracle{border-color:var(--ink-soft);background:linear-gradient(165deg,#fbf3e0,#ece0cd);}
+.t-oracle .ctype{background:var(--ink-soft);}
+
+.card.bad{border-style:double;border-width:4px;}
+.card.good{border-style:solid;}
+
+/* ---------- 玩家棋子 / 标记 ---------- */
+.pieces{display:flex;flex-wrap:wrap;gap:14px;}
+.piece{
+    width:104px;border:3px solid var(--sea-deep);border-radius:10px;
+    background:var(--parchment);padding:8px;text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.piece .ship{font-size:34px;line-height:1.1;}
+.piece .pname{font-size:12px;font-weight:bold;color:var(--sea-deep);margin-top:3px;}
+.piece .pbar{height:7px;border-radius:4px;margin-top:5px;border:1px solid rgba(0,0,0,.2);}
+
+.tokens{display:flex;flex-wrap:wrap;gap:12px;}
+.token{
+    border:2px solid var(--sea-deep);border-radius:50%;
+    width:60px;height:60px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;font-size:21px;
+    background:var(--parchment);box-shadow:0 2px 5px rgba(0,0,0,.15);
+}
+.token small{font-size:9px;color:var(--ink-soft);margin-top:1px;}
+.token.wrath{background:linear-gradient(160deg,#e9735c,#b3341f);color:#fff;}
+.token.supply{background:linear-gradient(160deg,#8fc47f,#4a7c3f);color:#fff;}
+.token.glory{background:linear-gradient(160deg,#f0d489,#c8952c);color:#2b2118;}
+.token.wound{background:#3a3a3a;color:#fff;}
+.token.coward{background:repeating-linear-gradient(45deg,#fff,#fff 6px,#ddd 6px,#ddd 12px);}
+
+/* ---------- 记分板 ---------- */
+.scoreboard{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;
+}
+.scorecard{
+    border:3px solid var(--sea);border-radius:11px;background:var(--parchment);
+    padding:11px 13px;
+}
+.scorecard h4{font-size:14px;color:var(--sea-deep);margin-bottom:7px;}
+.scorecard .row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;}
+.scorecard .row i{
+    width:19px;height:19px;border:1.5px solid var(--glory);border-radius:3px;
+    display:inline-block;background:#fff;
+}
+.scorecard .lbl{font-size:10px;color:var(--ink-soft);}
+
+/* ---------- 页脚 ---------- */
+footer{
+    text-align:center;font-size:12px;color:var(--ink-soft);
+    border-top:2px solid var(--line);padding-top:14px;margin-top:20px;
+}
+
+/* ---------- 打印 ---------- */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint {
+        display: none;
+    }
+    body{background:#fff;padding:0;}
+    .wrap{max-width:100%;}
+    header{border-radius:0;box-shadow:none;}
+    section{page-break-inside:avoid;break-inside:avoid;}
+    .card{page-break-inside:avoid;break-inside:avoid;}
+    .node{page-break-inside:avoid;break-inside:avoid;}
+    .mapboard{page-break-inside:avoid;break-inside:avoid;}
+    h2{page-break-after:avoid;break-after:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <h1>⚓ 奥德赛：归乡航程 ⚓</h1>
+    <div class="sub">ODYSSEY · VOYAGE HOME · 打印道具包</div>
+    <div class="quote">"愿顺风与你同在，愿波塞冬沉睡不醒。" —— 2-5 人 · 45-75 分钟 · 卡牌 / 半合作</div>
+</header>
+
+<div class="print-hint">
+    <h3>⚠️ 重要打印提示</h3>
+    <ul>
+        <li>使用 <strong>A4 纸张</strong> 打印，建议设置 <strong>最小边距</strong></li>
+        <li>在打印对话框中，务必 <strong class="em">勾选"背景图形"</strong> 选项（否则地图与卡牌底色全部丢失）</li>
+        <li>卡牌和棋子建议使用 <strong class="em">卡纸（200-250g）</strong> 打印，增加耐用性与手感</li>
+        <li>打印后沿边框裁剪，建议配合 <strong>63×88mm 标准牌套</strong> 使用（共 113 张，需约 2 包）</li>
+        <li>右上角黄色角标 <strong>×N</strong> 表示 <strong class="em">该种卡牌需要打印 N 张</strong>，请勿每种只打印一张</li>
+        <li>记分板与一页速查表建议打印 1 份即可，贴在桌角公用</li>
+    </ul>
+</div>
+
+<!-- ===================== 航线地图 ===================== -->
+<section>
+<h2>🗺️ 一、航线地图（打印 1 张）</h2>
+<p class="h2note">建议 A4 横向或 A3 打印。地图中央为从特洛伊到伊萨卡的 12 段海域，底部为神怒轨与补给池。</p>
+
+<div class="mapboard">
+    <div class="map-title">爱 琴 海 · 归 乡 航 线</div>
+    <div class="routeline">
+        <div class="node">
+            <div class="num">1</div>
+            <div class="icon">🏛️</div>
+            <div class="nm">特洛伊海岸</div>
+            <div class="req">焚船启航<br><b>⚔️3 / 🦉2</b></div>
+        </div>
+        <div class="node">
+            <div class="num">2</div>
+            <div class="icon">🌸</div>
+            <div class="nm">忘忧花岛</div>
+            <div class="req">洛托法戈伊<br><b>🦉4 / 🔥2</b></div>
+        </div>
+        <div class="node hard">
+            <div class="num">3</div>
+            <div class="icon">🗿</div>
+            <div class="nm">独眼巨人洞窟</div>
+            <div class="req">波吕斐摩斯<br><b>⚔️6 / 🦉4</b></div>
+        </div>
+        <div class="node">
+            <div class="num">4</div>
+            <div class="icon">🌬️</div>
+            <div class="nm">风神之岛</div>
+            <div class="req">埃俄罗斯风袋<br><b>⚔️2/🦉3/🔥3</b></div>
+        </div>
+        <div class="node hard">
+            <div class="num">5</div>
+            <div class="icon">🪨</div>
+            <div class="nm">食人族海岸</div>
+            <div class="req">莱斯特律戈涅斯<br><b>⚔️5 / 🦉2</b></div>
+        </div>
+        <div class="node hard">
+            <div class="num">6</div>
+            <div class="icon">🏝️</div>
+            <div class="nm">埃埃亚岛</div>
+            <div class="req">喀耳刻魔药<br><b>⚔️2/🦉5/🔥3</b></div>
+        </div>
+        <div class="node">
+            <div class="num">7</div>
+            <div class="icon">🌑</div>
+            <div class="nm">冥界入口</div>
+            <div class="req">泰瑞西阿斯<br><b>🦉3 / 🔥6</b></div>
+        </div>
+        <div class="node hard">
+            <div class="num">8</div>
+            <div class="icon">🎶</div>
+            <div class="nm">塞壬海礁</div>
+            <div class="req">塞壬歌声<br><b>🦉6 / 🔥2</b></div>
+        </div>
+        <div class="node hard">
+            <div class="num">9</div>
+            <div class="icon">🌊</div>
+            <div class="nm">六头海妖峡</div>
+            <div class="req">斯库拉&amp;卡律布狄斯<br><b>⚔️7 / 🦉3</b></div>
+        </div>
+        <div class="node">
+            <div class="num">10</div>
+            <div class="icon">☀️</div>
+            <div class="nm">太阳神之岛</div>
+            <div class="req">赫利俄斯圣牛<br><b>⚔️1/🦉2/🔥7</b></div>
+        </div>
+        <div class="node">
+            <div class="num">11</div>
+            <div class="icon">🧚</div>
+            <div class="nm">卡吕普索之岛</div>
+            <div class="req">俄古吉亚挽留<br><b>🦉4 / 🔥5</b></div>
+        </div>
+        <div class="node final">
+            <div class="num">12</div>
+            <div class="icon">🏠</div>
+            <div class="nm">伊萨卡</div>
+            <div class="req">求婚者的围攻<br><b>⚔️8/🦉4/🔥2</b></div>
+        </div>
+    </div>
+
+    <div class="mapfoot">
+        <div class="track">
+            <h4>🔱 神怒轨（Divine Wrath）· 公共</h4>
+            <div class="wrathcells">
+                <div>0</div><div>1</div><div>2</div><div>3</div><div>4</div>
+                <div class="storm">5</div><div>6</div><div>7</div><div>8</div><div>9</div>
+                <div class="dead">10</div>
+            </div>
+            <div class="note">⚠️ 移动到 <b>5</b> → 触发风暴：全体补给 -2，每人弃 1 张手牌（反复横跳会反复触发）<br>
+            ☠️ 到达 <b>10</b> → 船队沉没，<b>全员失败</b>，游戏立即结束</div>
+        </div>
+        <div class="track">
+            <h4>🥖 补给池 &amp; ⭐ 荣光轨</h4>
+            <div class="wrathcells" style="margin-bottom:6px;">
+                <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div>
+                <div>6</div><div>7</div><div>8</div><div>9</div><div>10</div>
+                <div>11</div>
+            </div>
+            <div class="wrathcells">
+                <div>12</div><div>13</div><div>14</div><div>15</div><div>16</div>
+                <div>17</div><div>18</div><div>19</div><div>20</div>
+                <div style="background:var(--wrath-dark);color:#fff;">0</div>
+                <div style="border:none;background:transparent;"></div>
+            </div>
+            <div class="note">🥖 补给为 <b>公共资源</b>（初始 14 / 4 人局），归零则 <b>全员断粮失败</b><br>
+            ⭐ 荣光为 <b>个人分数</b>，抵达伊萨卡后最高者获「史诗主角」称号</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ===================== 船员卡 ===================== -->
+<section>
+<h2>🛡️ 二、船员卡 · Crew（共 36 张）</h2>
+<p class="h2note">每种 6 张。所有船员卡数值合计均为 3 点，强度均衡——策略在于「维度是否匹配当前海域」。⚔️勇武 / 🦉智谋 / 🔥虔诚</p>
+<div class="cards">
+
+<div class="card t-crew"><div class="cnt">×6</div>
+    <div class="top"><div class="cname">重装战士<br>Hoplite</div><div class="cicon">🛡️</div></div>
+    <div class="stat"><span class="atk">⚔️ 勇武 3</span></div>
+    <div class="body">手持青铜圆盾与长矛的重甲步兵，奥德修斯最信赖的近战力量。</div>
+    <div class="foot"><span>船员 · CREW</span><span>合计 3</span></div>
+</div>
+
+<div class="card t-crew"><div class="cnt">×6</div>
+    <div class="top"><div class="cname">弓手<br>Archer</div><div class="cicon">🏹</div></div>
+    <div class="stat"><span class="atk">⚔️ 勇武 2</span><span class="wis">🦉 智谋 1</span></div>
+    <div class="body">能在颠簸甲板上精准射出三连箭的克里特神射手。</div>
+    <div class="foot"><span>船员 · CREW</span><span>合计 3</span></div>
+</div>
+
+<div class="card t-crew"><div class="cnt">×6</div>
+    <div class="top"><div class="cname">吟游诗人<br>Bard</div><div class="cicon">🎵</div></div>
+    <div class="stat"><span class="atk">⚔️ 勇武 1</span><span class="wis">🦉 智谋 2</span></div>
+    <div class="body">用七弦琴记下一切。他唱的歌，就是你被后人记住的模样。</div>
+    <div class="foot"><span>船员 · CREW</span><span>合计 3</span></div>
+</div>
+
+<div class="card t-crew"><div class="cnt">×6</div>
+    <div class="top"><div class="cname">舵手<br>Helmsman</div><div class="cicon">⛵</div></div>
+    <div class="stat"><span class="wis">🦉 智谋 2</span><span class="pie">🔥 虔诚 1</span></div>
+    <div class="body">看得懂星象与洋流，也懂得在风暴来临前向神明低语。</div>
+    <div class="foot"><span>船员 · CREW</span><span>合计 3</span></div>
+</div>
+
+<div class="card t-crew"><div class="cnt">×6</div>
+    <div class="top"><div class="cname">先知<br>Seer</div><div class="cicon">🔮</div></div>
+    <div class="stat"><span class="wis">🦉 智谋 3</span></div>
+    <div class="body">解读飞鸟的轨迹与祭品的肝脏。他总是知道得太多了一些。</div>
+    <div class="foot"><span>船员 · CREW</span><span>合计 3</span></div>
+</div>
+
+<div class="card t-crew"><div class="cnt">×6</div>
+    <div class="top"><div class="cname">祭司<br>Priest</div><div class="cicon">🕯️</div></div>
+    <div class="stat"><span class="pie">🔥 虔诚 3</span></div>
+    <div class="body">在船尾日夜焚香的人。众神或许不仁，但香火不能断。</div>
+    <div class="foot"><span>船员 · CREW</span><span>合计 3</span></div>
+</div>
+
+</div>
+</section>
+
+<!-- ===================== 神器卡 ===================== -->
+<section>
+<h2>🗡️ 三、神器卡 · Artifacts（共 15 张）</h2>
+<p class="h2note">每种 3 张。<b>必须明示打出</b>（正面朝上），使用后从游戏中永久移除。例外：🪢 风神之袋与 🌿 神使之草可暗投，但不提供任何维度数值。</p>
+<div class="cards">
+
+<div class="card t-artifact"><div class="cnt">×3</div>
+    <div class="top"><div class="cname">风神之袋<br>Bag of Winds</div><div class="cicon">🪢</div></div>
+    <div class="body">埃俄罗斯赠予的皮袋，装着除西风外的所有风。<br><br><b>明示</b>：本回合风向改为「💨 顺风」；若本回合为 ⛈️ 风暴，改为「🫧 无风」。<br><br><i>可暗投（不提供数值，仅隐藏意图）。</i></div>
+    <div class="foot"><span>神器 · ARTIFACT</span><span>一次性</span></div>
+</div>
+
+<div class="card t-artifact"><div class="cnt">×3</div>
+    <div class="top"><div class="cname">神使之草<br>Moly Herb</div><div class="cicon">🌿</div></div>
+    <div class="body">赫尔墨斯亲手拔出的黑根白花，能抵御一切巫术。<br><br><b>明示</b>：本海域免疫一次「变形」或「诅咒」类负面（如船员被变成猪、被歌声迷惑）。<br><br><i>可暗投。</i></div>
+    <div class="foot"><span>神器 · ARTIFACT</span><span>一次性</span></div>
+</div>
+
+<div class="card t-artifact"><div class="cnt">×3</div>
+    <div class="top"><div class="cname">赫菲斯托斯之刃<br>Blade of Hephaestus</div><div class="cicon">🗡️</div></div>
+    <div class="body">锻神亲自淬火的短剑，锋刃上还留着熔炉的余温。<br><br><b>明示</b>：奉献堆中 <b>每一张</b> 卡片的 ⚔️ 勇武值 +1（<b>含队友的牌</b>）。</div>
+    <div class="foot"><span>神器 · ARTIFACT</span><span>一次性</span></div>
+</div>
+
+<div class="card t-artifact"><div class="cnt">×3</div>
+    <div class="top"><div class="cname">雅典娜之盾<br>Aegis of Athena</div><div class="cicon">🜛</div></div>
+    <div class="body">镶嵌蛇发女妖之首的神盾，凝视它的人会化作顽石。<br><br><b>明示</b>：若本海域考验 <b>失败</b>，神怒额外 <b>-1</b>（可与 🐂 公牛叠加）。</div>
+    <div class="foot"><span>神器 · ARTIFACT</span><span>一次性</span></div>
+</div>
+
+<div class="card t-artifact"><div class="cnt">×3</div>
+    <div class="top"><div class="cname">喀耳刻的药膏<br>Salve of Circe</div><div class="cicon">🧴</div></div>
+    <div class="body">魔女自调的软膏，能解百毒，也能填饱肚子。<br><br><b>明示</b>：二选一 —— 恢复 <b>3 点补给</b>；或复原 1 名被变形船员（从弃牌堆取回 1 张船员卡）。</div>
+    <div class="foot"><span>神器 · ARTIFACT</span><span>一次性</span></div>
+</div>
+
+</div>
+</section>
+
+<!-- ===================== 祭品卡 ===================== -->
+<section>
+<h2>🐑 四、祭品卡 · Offerings（共 20 张）</h2>
+<p class="h2note">每种 5 张。既能当奉献点数用掉，也能弃置换取救急效果——<b>用掉就没了，这是本作的「陷阱」</b>。</p>
+<div class="cards">
+
+<div class="card t-offering"><div class="cnt">×5</div>
+    <div class="top"><div class="cname">黑羊<br>Black Ram</div><div class="cicon">🐑</div></div>
+    <div class="stat"><span class="pie">🔥 虔诚 1</span></div>
+    <div class="body"><b>作奉献</b>：提供 1 点 🔥 虔诚。<br><b>弃置</b>：神怒 <b>-1</b>。</div>
+    <div class="foot"><span>祭品 · OFFERING</span><span>两难取舍</span></div>
+</div>
+
+<div class="card t-offering"><div class="cnt">×5</div>
+    <div class="top"><div class="cname">公牛<br>Bull</div><div class="cicon">🐂</div></div>
+    <div class="stat"><span class="pie">🔥 虔诚 2</span></div>
+    <div class="body"><b>作奉献</b>：提供 2 点 🔥 虔诚。<br><b>弃置 + 1 补给</b>：神怒 <b>-2</b>。<br><br><i>💡 最大价值是 -2 神怒，别只当虔诚打。</i></div>
+    <div class="foot"><span>祭品 · OFFERING</span><span>两难取舍</span></div>
+</div>
+
+<div class="card t-offering"><div class="cnt">×5</div>
+    <div class="top"><div class="cname">醇酒<br>Wine</div><div class="cicon">🍷</div></div>
+    <div class="stat"><span class="pie">🔥 虔诚 1</span></div>
+    <div class="body"><b>作奉献</b>：提供 1 点 🔥 虔诚。<br><b>弃置</b>：抽 <b>1 张</b> 牌。</div>
+    <div class="foot"><span>祭品 · OFFERING</span><span>两难取舍</span></div>
+</div>
+
+<div class="card t-offering"><div class="cnt">×5</div>
+    <div class="top"><div class="cname">橄榄枝<br>Olive Branch</div><div class="cicon">🫒</div></div>
+    <div class="stat"><span class="pie">🔥 虔诚 1</span></div>
+    <div class="body"><b>作奉献</b>：提供 1 点 🔥 虔诚。<br><b>弃置</b>：免疫 <b>下一张神谕卡</b> 的负面效果。</div>
+    <div class="foot"><span>祭品 · OFFERING</span><span>两难取舍</span></div>
+</div>
+
+</div>
+</section>
+
+<!-- ===================== 祝福卡 ===================== -->
+<section>
+<h2>💖 五、祝福卡 · Blessings（共 12 张 · 宝藏）</h2>
+<p class="h2note">每种 2 张。只能通过 🦅 宙斯的鹰 神谕卡获得。<b>本作唯一的「宝藏」牌堆，稀有且强力。</b></p>
+<div class="cards">
+
+<div class="card t-blessing"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">雅典娜的智略<br>Wisdom of Athena</div><div class="cicon">🦉</div></div>
+    <div class="body">灰眸女神在耳畔的低语。<br><br><b>永久效果</b>：你的手牌上限 <b>+1</b>，直到游戏结束。</div>
+    <div class="foot"><span>祝福 · BLESSING</span><span>强度 ⭐⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-blessing"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">波塞冬的平息<br>Pacified Poseidon</div><div class="cicon">🔱</div></div>
+    <div class="body">三叉戟垂下，怒涛终于归于平静。<br><br><b>立即</b>：神怒 <b>-3</b>（降至 0 以下则归 0）。</div>
+    <div class="foot"><span>祝福 · BLESSING</span><span>强度 ⭐⭐⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-blessing"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">赫尔墨斯的捷足<br>Swift Hermes</div><div class="cicon">👟</div></div>
+    <div class="body">带翼的凉鞋，一步千里。<br><br><b>立即</b>：抽 <b>2 张</b> 牌。</div>
+    <div class="foot"><span>祝福 · BLESSING</span><span>强度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-blessing"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">阿波罗的光辉<br>Radiance of Apollo</div><div class="cicon">☀️</div></div>
+    <div class="body">金色的光穿透乌云，照见前路。<br><br><b>持续</b>：<b>下一个海域</b> 的所有考验门槛 <b>-2</b>。</div>
+    <div class="foot"><span>祝福 · BLESSING</span><span>强度 ⭐⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-blessing"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">阿佛洛狄忒的眷顾<br>Favor of Aphrodite</div><div class="cicon">💖</div></div>
+    <div class="body">爱与美的女神为你加冕。<br><br><b>立即</b>：获得 <b>3 点荣光</b>。</div>
+    <div class="foot"><span>祝福 · BLESSING</span><span>强度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-blessing"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">宙斯的雷霆<br>Bolt of Zeus</div><div class="cicon">⚡</div></div>
+    <div class="body">众神之王的怒火，握在你掌心。<br><br><b>本海域</b>：奉献堆中 <b>你打出的牌</b> 数值 <b>翻倍</b>。<br><br><i>💡 配合 3 张 🛡️ 在 ➒ 号海域 = 18 点勇武。</i></div>
+    <div class="foot"><span>祝福 · BLESSING</span><span>强度 ⭐⭐⭐⭐⭐</span></div>
+</div>
+
+</div>
+</section>
+
+<!-- ===================== 考验卡 ===================== -->
+<section>
+<h2>🗿 六、考验卡 · Trials（共 12 张 · 按编号顺序叠放，不要洗牌）</h2>
+<p class="h2note">每项考验列出三项门槛，<b>必须同时满足</b> 才算通过。<b>⚠️ 考验牌堆务必按 1→12 顺序面朝下叠放，洗乱会破坏难度曲线。</b></p>
+<div class="cards">
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➊ 焚船启航<br>特洛伊海岸</div><div class="cicon">🏛️</div></div>
+    <div class="stat"><span class="atk">⚔️ 3</span><span class="wis">🦉 2</span><span class="pie">🔥 0</span></div>
+    <div class="body">烧掉战船的残骸，在灰烬中开向未知。<br><br><b>失败</b>：补给 -2</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➋ 忘忧花的诱惑<br>洛托法戈伊</div><div class="cicon">🌸</div></div>
+    <div class="stat"><span class="atk">⚔️ 0</span><span class="wis">🦉 4</span><span class="pie">🔥 2</span></div>
+    <div class="body">吃下忘忧花的人，会忘记回家的路。<br><br><b>失败</b>：随机弃 1 张手牌</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➌ 波吕斐摩斯<br>独眼巨人洞窟</div><div class="cicon">🗿</div></div>
+    <div class="stat"><span class="atk">⚔️ 6</span><span class="wis">🦉 4</span><span class="pie">🔥 0</span></div>
+    <div class="body">"无人（Outis）伤了我！"——洞外，你会忍不住喊出真名。<br><br><b>失败</b>：神怒 +2，补给 -2</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➍ 埃俄罗斯的风袋<br>风神之岛</div><div class="cicon">🌬️</div></div>
+    <div class="stat"><span class="atk">⚔️ 2</span><span class="wis">🦉 3</span><span class="pie">🔥 3</span></div>
+    <div class="body">风都装进了袋子里，只要别在看见家乡时打开它。<br><br><b>失败</b>：神怒 +1，本回合视为逆风</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➎ 莱斯特律戈涅斯<br>食人族海岸</div><div class="cicon">🪨</div></div>
+    <div class="stat"><span class="atk">⚔️ 5</span><span class="wis">🦉 2</span><span class="pie">🔥 0</span></div>
+    <div class="body">巨人从峭壁上投下巨石，十一艘船，只剩一艘。<br><br><b>失败</b>：神怒 +1，随机一名玩家下回合最多出 1 张牌</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➏ 喀耳刻的魔药<br>埃埃亚岛</div><div class="cicon">🏝️</div></div>
+    <div class="stat"><span class="atk">⚔️ 2</span><span class="wis">🦉 5</span><span class="pie">🔥 3</span></div>
+    <div class="body">她笑着递上金杯。喝下去的人，会忘记自己曾经是人。<br><br><b>失败</b>：随机 2 张船员卡被变成猪（弃置）</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➐ 泰瑞西阿斯的预言<br>冥界入口</div><div class="cicon">🌑</div></div>
+    <div class="stat"><span class="atk">⚔️ 0</span><span class="wis">🦉 3</span><span class="pie">🔥 6</span></div>
+    <div class="body">只有盲眼先知能告诉你回家的路，代价是一杯黑羊的血。<br><br><b>失败</b>：神怒 +1，全员各弃 1 张手牌</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➑ 塞壬的歌声<br>塞壬海礁</div><div class="cicon">🎶</div></div>
+    <div class="stat"><span class="atk">⚔️ 0</span><span class="wis">🦉 6</span><span class="pie">🔥 2</span></div>
+    <div class="body">她们唱的不是歌，是你心里最想听的那句话。<br><br><b>失败</b>：神怒 +2，全员荣光 -2</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➒ 斯库拉与卡律布狄斯<br>六头海妖峡</div><div class="cicon">🌊</div></div>
+    <div class="stat"><span class="atk">⚔️ 7</span><span class="wis">🦉 3</span><span class="pie">🔥 0</span></div>
+    <div class="body">左边六个头，右边一个漩涡。选哪边，都要失去六个同伴。<br><br><b>失败</b>：补给 -3，神怒 +1</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">➓ 赫利俄斯的圣牛<br>太阳神之岛</div><div class="cicon">☀️</div></div>
+    <div class="stat"><span class="atk">⚔️ 1</span><span class="wis">🦉 2</span><span class="pie">🔥 7</span></div>
+    <div class="body">"别碰那些牛。"——他们碰了。于是宙斯降下雷霆。<br><br><b>失败</b>：神怒 <b>+3</b>（本海域结束后跳过神谕）</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">⓫ 俄古吉亚的挽留<br>卡吕普索之岛</div><div class="cicon">🧚</div></div>
+    <div class="stat"><span class="atk">⚔️ 0</span><span class="wis">🦉 4</span><span class="pie">🔥 5</span></div>
+    <div class="body">她许你不死之身，只要你留在这座岛上，永远。<br><br><b>失败</b>：舰队停留 1 回合，额外消耗 2 补给</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐</span></div>
+</div>
+
+<div class="card t-trial">
+    <div class="top"><div class="cname">⓬ 求婚者的围攻<br>伊萨卡</div><div class="cicon">🏠</div></div>
+    <div class="stat"><span class="atk">⚔️ 8</span><span class="wis">🦉 4</span><span class="pie">🔥 2</span></div>
+    <div class="body">家里挤满了吃掉你一切的人。拉开那把没人拉得开的弓。<br><br><b>失败</b>：神怒 <b>+2</b>（最终决战，可重试一次）</div>
+    <div class="foot"><span>考验 · TRIAL</span><span>难度 ⭐⭐⭐⭐⭐</span></div>
+</div>
+
+</div>
+</section>
+
+<!-- ===================== 风向卡 ===================== -->
+<section>
+<h2>💨 七、风向卡 · Winds（共 8 张）</h2>
+<p class="h2note">每回合启航阶段翻开 1 张，抽完再洗。⚠️ ⛈️ 风暴只有 1 张——记住它是否已出现，是老手的关键技巧。</p>
+<div class="cards">
+
+<div class="card t-wind good"><div class="cnt">×3</div>
+    <div class="top"><div class="cname">顺风<br>Fair Wind</div><div class="cicon">💨</div></div>
+    <div class="body">西风推着船帆，海面温柔得像丝绸。<br><br><b>效果</b>：本回合每位玩家奉献后 <b>额外抽 1 张牌</b>。</div>
+    <div class="foot"><span>风向 · WIND</span><span>🟢 有利</span></div>
+</div>
+
+<div class="card t-wind bad"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">逆风<br>Head Wind</div><div class="cicon">🌊</div></div>
+    <div class="body">风从家乡的方向吹来，把你们一路推回去。<br><br><b>效果</b>：本回合所有考验门槛 <b>+2</b>。</div>
+    <div class="foot"><span>风向 · WIND</span><span>🔴 不利</span></div>
+</div>
+
+<div class="card t-wind bad"><div class="cnt">×2</div>
+    <div class="top"><div class="cname">无风<br>Dead Calm</div><div class="cicon">🫧</div></div>
+    <div class="body">海面静止如镜，连神明的恩赐都凝滞了。<br><br><b>效果</b>：本回合 <b>不能使用神器卡</b>。</div>
+    <div class="foot"><span>风向 · WIND</span><span>🔴 不利</span></div>
+</div>
+
+<div class="card t-wind bad"><div class="cnt">×1</div>
+    <div class="top"><div class="cname">风暴<br>Tempest</div><div class="cicon">⛈️</div></div>
+    <div class="body">波塞冬醒了。<br><br><b>效果</b>：本回合考验门槛 <b>+3</b>，且若失败神怒 <b>额外 +1</b>。</div>
+    <div class="foot"><span>风向 · WIND</span><span>☠️ 危险</span></div>
+</div>
+
+</div>
+</section>
+
+<!-- ===================== 神谕卡 ===================== -->
+<section>
+<h2>📜 八、神谕卡 · Oracles（共 10 张）</h2>
+<p class="h2note">每段海域结束时翻开 1 张，立即生效，抽完再洗。🟢 好 / 🔴 坏 / 🟡 双刃</p>
+<div class="cards">
+
+<div class="card t-oracle good">
+    <div class="top"><div class="cname">宙斯的鹰</div><div class="cicon">🦅</div></div>
+    <div class="body">神王的信使落在桅杆顶端。<br><br><b>效果</b>：抽取 1 张 <b>祝福卡</b>，由当前 <b>荣光最低</b> 者获得（平局则左手玩家获得）。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟢 好</span></div>
+</div>
+
+<div class="card t-oracle bad">
+    <div class="top"><div class="cname">赫拉的嫉妒</div><div class="cicon">🦚</div></div>
+    <div class="body">天后不喜欢有人比她更出风头。<br><br><b>效果</b>：当前 <b>荣光最高</b> 的玩家 <b>弃 1 张手牌</b>。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🔴 坏</span></div>
+</div>
+
+<div class="card t-oracle bad">
+    <div class="top"><div class="cname">波塞冬的怒涛</div><div class="cicon">🌊</div></div>
+    <div class="body">三叉戟又一次搅动了海底。<br><br><b>效果</b>：神怒 <b>+1</b>。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🔴 坏</span></div>
+</div>
+
+<div class="card t-oracle good">
+    <div class="top"><div class="cname">雅典娜的低语</div><div class="cicon">🦉</div></div>
+    <div class="body">智慧女神让每个人心头一亮。<br><br><b>效果</b>：所有玩家各 <b>抽 1 张牌</b>。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟢 好</span></div>
+</div>
+
+<div class="card t-oracle">
+    <div class="top"><div class="cname">阿瑞斯的战鼓</div><div class="cicon">⚔️</div></div>
+    <div class="body">战神在远处擂鼓，血在沸腾，胃在抗议。<br><br><b>效果</b>：补给 <b>-1</b>，但下个海域的 ⚔️ 勇武门槛 <b>-2</b>。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟡 双刃</span></div>
+</div>
+
+<div class="card t-oracle good">
+    <div class="top"><div class="cname">得墨忒尔的丰饶</div><div class="cicon">🌾</div></div>
+    <div class="body">谷物女神的祝福塞满了货舱。<br><br><b>效果</b>：补给 <b>+3</b>。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟢 好</span></div>
+</div>
+
+<div class="card t-oracle">
+    <div class="top"><div class="cname">赫尔墨斯的商队</div><div class="cicon">👟</div></div>
+    <div class="body">商旅之神撮合了一场不太情愿的交易。<br><br><b>效果</b>：每位玩家可与 <b>右手玩家交换 1 张手牌</b>（必须交换，不能拒绝）。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟡 中性</span></div>
+</div>
+
+<div class="card t-oracle good">
+    <div class="top"><div class="cname">赫菲斯托斯的锻炉</div><div class="cicon">🔨</div></div>
+    <div class="body">锻神愿意回收旧货。<br><br><b>效果</b>：可弃 1 张神器卡，抽 <b>2 张</b> 牌（<b>可选</b>）。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟢 好</span></div>
+</div>
+
+<div class="card t-oracle good">
+    <div class="top"><div class="cname">阿尔忒弥斯的狩猎</div><div class="cicon">🏹</div></div>
+    <div class="body">猎神欣赏饱腹者的精准。<br><br><b>效果</b>：补给每有 <b>5 点</b>，本轮第一贡献者 <b>额外 +1 荣光</b>。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟢 好</span></div>
+</div>
+
+<div class="card t-oracle">
+    <div class="top"><div class="cname">哈迪斯的阴影</div><div class="cicon">💀</div></div>
+    <div class="body">冥王收走了一些东西，又还回来了一些。<br><br><b>效果</b>：神怒 <b>+1</b>，但所有玩家可从弃牌堆 <b>回收 1 张船员卡</b>。</div>
+    <div class="foot"><span>神谕 · ORACLE</span><span>🟡 双刃</span></div>
+</div>
+
+</div>
+</section>
+
+<!-- ===================== 玩家棋子 ===================== -->
+<section>
+<h2>🚢 九、船长棋子 &amp; 桌面标记（卡纸打印后裁剪）</h2>
+<p class="h2note">棋子可沿虚线对折做成站立的船旗，或直接平放在桌面上使用。</p>
+<div class="pieces">
+    <div class="piece"><div class="ship">🚢</div><div class="pname">P1 · 蓝帆</div><div class="pbar" style="background:#2f6fb0;"></div></div>
+    <div class="piece"><div class="ship">🚢</div><div class="pname">P2 · 绿帆</div><div class="pbar" style="background:#3f8a4f;"></div></div>
+    <div class="piece"><div class="ship">🚢</div><div class="pname">P3 · 黄帆</div><div class="pbar" style="background:#c8952c;"></div></div>
+    <div class="piece"><div class="ship">🚢</div><div class="pname">P4 · 红帆</div><div class="pbar" style="background:#b3341f;"></div></div>
+    <div class="piece"><div class="ship">🚢</div><div class="pname">P5 · 紫帆</div><div class="pbar" style="background:#7a4b8f;"></div></div>
+</div>
+
+<h2 style="margin-top:24px;">🔖 状态标记（建议多打印几份）</h2>
+<div class="tokens">
+    <div class="token wrath">🔱<small>神怒标记</small></div>
+    <div class="token supply">🥖<small>补给 ×20</small></div>
+    <div class="token glory">⭐<small>荣光 ×30</small></div>
+    <div class="token wound">🌑<small>创伤标记</small></div>
+    <div class="token coward">🏳️<small>懦夫标记</small></div>
+    <div class="token" style="background:linear-gradient(160deg,#f0d489,#c8952c);">👑<small>旗舰标记</small></div>
+    <div class="token" style="background:linear-gradient(160deg,#e8f4fb,#9cc8e8);">🂠<small>奉献遮板 ×5</small></div>
+</div>
+</section>
+
+<!-- ===================== 记分板 ===================== -->
+<section>
+<h2>📊 十、荣光记分板（打印 1 张，公用）</h2>
+<p class="h2note">每格代表 1 点荣光，用笔填涂或用 ⭐ 荣光标记覆盖。</p>
+<div class="scoreboard">
+    <div class="scorecard">
+        <h4>🟦 P1 · 蓝帆</h4>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lbl">合计：____ 分 ｜ 创伤 🌑：____</div>
+    </div>
+    <div class="scorecard">
+        <h4>🟩 P2 · 绿帆</h4>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lbl">合计：____ 分 ｜ 创伤 🌑：____</div>
+    </div>
+    <div class="scorecard">
+        <h4>🟨 P3 · 黄帆</h4>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lbl">合计：____ 分 ｜ 创伤 🌑：____</div>
+    </div>
+    <div class="scorecard">
+        <h4>🟥 P4 · 红帆</h4>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lbl">合计：____ 分 ｜ 创伤 🌑：____</div>
+    </div>
+    <div class="scorecard">
+        <h4>🟪 P5 · 紫帆</h4>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lbl">合计：____ 分 ｜ 创伤 🌑：____</div>
+    </div>
+</div>
+</section>
+
+<!-- ===================== 速查表 ===================== -->
+<section>
+<h2>⚡ 十一、一页速查表（建议打印贴在桌角）</h2>
+<div class="mapboard" style="background:linear-gradient(170deg,#fbf3e0,#f3e6c8);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;position:relative;">
+        <div>
+            <h4 style="color:var(--sea-deep);margin-bottom:6px;">🔄 回合六阶段</h4>
+            <p style="font-size:12.5px;line-height:1.9;">
+            ① 启航（抽风向）→ ② 揭示考验<br>
+            ③ 议事（可撒谎）→ ④ 暗投奉献<br>
+            ⑤ 结算 → ⑥ 补给整备 + 神谕 + 轮转旗舰
+            </p>
+            <h4 style="color:var(--sea-deep);margin:10px 0 6px;">✅ 通过判定</h4>
+            <p style="font-size:12.5px;">⚔️勇武 / 🦉智谋 / 🔥虔诚 <b style="color:var(--wrath);">必须全部满足</b>，缺一项即失败。</p>
+        </div>
+        <div>
+            <h4 style="color:var(--sea-deep);margin-bottom:6px;">⭐ 荣光分配</h4>
+            <p style="font-size:12.5px;line-height:1.9;">
+            <b>通过</b>：第1名 +3 ｜ 第2名 +2 ｜ 第3名 +1<br>
+            <b>失败</b>：最高贡献 +1<br>
+            <b>0 贡献</b>：<span style="color:var(--wrath);">-1</span>（无论成败）
+            </p>
+            <h4 style="color:var(--sea-deep);margin:10px 0 6px;">☠️ 失败条件</h4>
+            <p style="font-size:12.5px;">神怒到 <b>10</b> → 沉没 ｜ 补给归 <b>0</b> → 断粮<br>神怒到 <b>5</b> → 风暴（补给 -2，各弃 1 牌）</p>
+        </div>
+        <div>
+            <h4 style="color:var(--sea-deep);margin-bottom:6px;">🔧 整备四选一</h4>
+            <p style="font-size:12.5px;line-height:1.9;">
+            🥖 加餐：2 补给 → 抽 1 张<br>
+            🪵 节约：弃 1 牌 → 补给 +1<br>
+            🔥 献祭：弃 1 祭品 + 1 补给 → 神怒 -2<br>
+            🔨 修补：弃 1 神器 → 补给 +2
+            </p>
+        </div>
+        <div>
+            <h4 style="color:var(--sea-deep);margin-bottom:6px;">🛡️ 船员数值速记</h4>
+            <p style="font-size:12.5px;line-height:1.9;">
+            🛡️ 3勇 ｜ 🏹 2勇1智 ｜ 🎵 1勇2智<br>
+            ⛵ 2智1虔 ｜ 🔮 3智 ｜ 🕯️ 3虔<br>
+            <i>（所有船员合计均为 3 点）</i>
+            </p>
+            <h4 style="color:var(--sea-deep);margin:10px 0 6px;">⚠️ 懦夫的烙印</h4>
+            <p style="font-size:12.5px;">连续 <b>2 次 0 贡献</b> → 神怒 +1，终局 -2 荣光，下回合强制出牌</p>
+        </div>
+    </div>
+</div>
+</section>
+
+<footer>
+    ⚓ 奥德赛：归乡航程 · Odyssey: Voyage Home ｜ 完整规则见
+    <a href="README.md" style="color:var(--sea);">README.md</a><br>
+    共 113 张卡牌 + 1 张地图 ｜ 打印时请务必勾选「背景图形」
+</footer>
+
+</div>
+</body>
+</html>

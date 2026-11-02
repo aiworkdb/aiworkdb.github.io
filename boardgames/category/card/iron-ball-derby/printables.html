@@ -1,0 +1,177 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>铁球疾走：横断大陆赛马 · 打印道具</title>
+<style>
+:root{
+  --ink:#2b2118; --sub:#6b5a48; --line:#d9c7ad; --bg:#fdf8f0;
+  --card:#fffdf8; --gold:#c8a24a; --red:#b23a2f; --blue:#2f5d8a;
+  --green:#3f7a4a; --purple:#6b4a8a; --sand:#e8d3a9; --rock:#bdb3a4;
+  --grass:#c7dcb0; --east:#cdc3d8;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:1px}
+h2{font-size:19px;margin:30px 0 12px;padding-left:10px;border-left:5px solid var(--gold)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.print-hint{background:#fff6e0;border:1px solid var(--gold);border-radius:8px;
+  padding:12px 16px;margin-bottom:22px;font-size:13px;line-height:1.9}
+.print-hint ul{margin:6px 0 0;padding-left:20px}
+.grid{display:flex;flex-wrap:wrap;gap:10px}
+.card{width:104px;height:146px;border-radius:9px;border:2px solid var(--line);
+  background:var(--card);padding:7px 6px;position:relative;page-break-inside:avoid;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;flex-direction:column}
+.card .ico{font-size:27px;text-align:center;line-height:1.15}
+.card .nm{font-size:12px;font-weight:700;text-align:center;margin-top:2px}
+.card .val{font-size:21px;font-weight:800;text-align:center;color:var(--red)}
+.card .txt{font-size:9.5px;line-height:1.35;color:var(--sub);margin-top:4px;text-align:center;flex:1}
+.card .tag{position:absolute;top:-7px;left:-7px;background:var(--gold);color:#fff;
+  font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700}
+.card .qty{position:absolute;bottom:-7px;right:-7px;background:var(--ink);color:#fff;
+  font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700}
+.s1{background:linear-gradient(180deg,#fdf3e0,#f6e6c8)}
+.s2{background:linear-gradient(180deg,#f7f0e4,#eadfc9)}
+.s3{background:linear-gradient(180deg,#f2f5ea,#e2ead4)}
+.s4{background:linear-gradient(180deg,#fdf6e6,#f4e7cb)}
+.s5{background:linear-gradient(180deg,#f7ecf0,#ecdde3)}
+.gear{background:linear-gradient(180deg,#eef4fa,#dde8f2);border-color:#9db8cf}
+.haz{background:linear-gradient(180deg,#fdeeea,#f6ddd6);border-color:#d9a99d}
+.relic{background:linear-gradient(180deg,#fdf6d8,#f4e6a8);border-color:var(--gold)}
+.track{display:flex;flex-wrap:wrap;gap:0;width:100%;border:2px solid var(--ink);
+  border-radius:8px;overflow:hidden;page-break-inside:avoid}
+.cell{width:calc(100% / 12);min-width:56px;height:64px;border-right:1px solid #fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;position:relative}
+.cell .n{position:absolute;top:2px;left:3px;font-size:9px;opacity:.65}
+.cell .r{font-size:14px}
+.segbar{display:flex;width:100%;font-size:11px;font-weight:700;text-align:center;page-break-inside:avoid}
+.segbar div{flex:1;padding:5px 2px;color:#3a2c1c}
+.token{width:96px;height:96px;border-radius:50%;border:3px solid var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:30px;font-weight:800;background:var(--card);page-break-inside:avoid}
+.token small{font-size:10px;font-weight:600;color:var(--sub)}
+.bar{width:100%;max-width:620px;display:flex;gap:2px;margin:6px 0 16px;page-break-inside:avoid}
+.bar i{flex:1;height:24px;border:1px solid var(--line);display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:700;background:#fff}
+.bar i.hot{background:#f3d9d3}
+.panel{border:2px solid var(--line);border-radius:9px;padding:12px 14px;background:var(--card);
+  margin:10px 0;page-break-inside:avoid;font-size:12px;line-height:1.75}
+.panel h3{margin:0 0 6px;font-size:14px}
+table{border-collapse:collapse;font-size:12px;width:100%}
+th,td{border:1px solid var(--line);padding:5px 7px;text-align:left}
+th{background:#f3e9d6}
+@media print{
+  *{-webkit-print-color-adjust: exact !important;print-color-adjust: exact !important;}
+  .print-hint{display:none;}
+  body{padding:0}
+  h2{page-break-after:avoid}
+  .card,.token,.track,.panel,.bar{page-break-inside:avoid}
+}
+</style></head><body>
+<h1>🐎 铁球疾走：横断大陆赛马 · 打印道具</h1>
+<div class="sub">1890 年，全长 6000 公里的横断大陆大赛。打印本页即可开局｜共 9 轮 · 2-5 人 · 建议卡纸</div>
+<div class="print-hint"><strong>⚠️ 重要打印提示：</strong><ul><li>使用 A4 纸张打印，建议设置<strong>最小边距</strong></li><li>在打印对话框中，务必<strong>勾选「背景图形」</strong>选项，否则赛段底色与卡面不会显示</li><li>卡牌与棋子建议使用<strong>卡纸（200g 以上）</strong>打印，并可塑封延长寿命</li><li>赛道板建议 A3 或在 A4 上分两行打印后拼接</li><li>本页所有数量角标 <strong>×N</strong> 即为需要打印的份数</li></ul></div>
+<h2>一、赛道板（1 张）</h2>
+<div class="segbar">
+<div style="background:var(--sand)">🏜️ 圣迭戈沙漠（1-6）<br><span style="font-weight:400;font-size:10px">起点赛段，平坦无修正</span></div>
+<div style="background:var(--rock)">⛰️ 落基山脉（7-12）<br><span style="font-weight:400;font-size:10px">本轮开始位于此段 ⇒ 步幅 −1</span></div>
+<div style="background:var(--grass)">🌾 中央大平原（13-18）<br><span style="font-weight:400;font-size:10px">一马平川，适合冲刺</span></div>
+<div style="background:var(--east)">🌉 东岸工业区（19-24）<br><span style="font-weight:400;font-size:10px">终点前的最后 6 格</span></div>
+</div>
+<div class="track">
+<div class="cell" style="background:var(--sand)"><span class="n">1</span></div>
+<div class="cell" style="background:var(--sand)"><span class="n">2</span></div>
+<div class="cell" style="background:var(--sand)"><span class="n">3</span></div>
+<div class="cell" style="background:var(--sand)"><span class="n">4</span><div class="r">🖐️</div></div>
+<div class="cell" style="background:var(--sand)"><span class="n">5</span></div>
+<div class="cell" style="background:var(--sand)"><span class="n">6</span></div>
+<div class="cell" style="background:var(--rock)"><span class="n">7</span></div>
+<div class="cell" style="background:var(--rock)"><span class="n">8</span><div class="r">👁️</div></div>
+<div class="cell" style="background:var(--rock)"><span class="n">9</span></div>
+<div class="cell" style="background:var(--rock)"><span class="n">10</span></div>
+<div class="cell" style="background:var(--rock)"><span class="n">11</span></div>
+<div class="cell" style="background:var(--rock)"><span class="n">12</span><div class="r">🦴</div></div>
+<div class="cell" style="background:var(--grass)"><span class="n">13</span></div>
+<div class="cell" style="background:var(--grass)"><span class="n">14</span></div>
+<div class="cell" style="background:var(--grass)"><span class="n">15</span></div>
+<div class="cell" style="background:var(--grass)"><span class="n">16</span><div class="r">🦵</div></div>
+<div class="cell" style="background:var(--grass)"><span class="n">17</span></div>
+<div class="cell" style="background:var(--grass)"><span class="n">18</span></div>
+<div class="cell" style="background:var(--east)"><span class="n">19</span></div>
+<div class="cell" style="background:var(--east)"><span class="n">20</span><div class="r">❤️</div></div>
+<div class="cell" style="background:var(--east)"><span class="n">21</span></div>
+<div class="cell" style="background:var(--east)"><span class="n">22</span></div>
+<div class="cell" style="background:var(--east)"><span class="n">23</span></div>
+<div class="cell" style="background:var(--east)"><span class="n">24</span><div class="r">🏁</div></div>
+</div>
+<div class="panel"><h3>赛道读法</h3>① 从起点（第 0 格，赛道左外侧）出发，向右推进到第 24 格冲线。<br>② <strong>本轮开始时</strong>你的马停在落基山脉（7-12 格）⇒ 本轮步幅 −1。<br>③ 格 4 / 8 / 12 / 16 / 20 各埋着 1 枚「圣人遗体」部件，本轮<strong>跨过或停在该格</strong>的马中，位置最靠前者拿走。<br>④ 同一格最多容纳 2 匹马；若落点已满，停在其后方最近的空位。</div>
+<h2>二、步幅卡（5 套 × 9 张 = 45 张）</h2>
+<div class="panel">每位骑手拿到<strong>一整套 9 张</strong>：1 / 2 / 3 / 3 / 3 / 4 / 4 / 4 / 5，合计 <strong>29 点步幅</strong>。9 轮各打 1 张，全部打完。<br><strong>★ 恒等式 A：29 − 24（赛道）= 5</strong> ⇒ 你整局只有 5 点「坡 + 风 + 退 − 尾」的损耗预算。</div>
+<div class="grid">
+<div class="card s1"><span class="tag">步幅</span><span class="qty">×5</span><div class="ico">🐎</div><div class="nm">步幅 1</div><div class="val">1</div><div class="txt">保底 / 攒体力</div></div>
+<div class="card s2"><span class="tag">步幅</span><span class="qty">×5</span><div class="ico">🐎</div><div class="nm">步幅 2</div><div class="val">2</div><div class="txt">过弯 / 省体力</div></div>
+<div class="card s3"><span class="tag">步幅</span><span class="qty">×15</span><div class="ico">🐎</div><div class="nm">步幅 3</div><div class="val">3</div><div class="txt">标准巡航</div></div>
+<div class="card s4"><span class="tag">步幅</span><span class="qty">×15</span><div class="ico">🐎</div><div class="nm">步幅 4</div><div class="val">4</div><div class="txt">抢圣骸 / 冲坡</div></div>
+<div class="card s5"><span class="tag">步幅</span><span class="qty">×5</span><div class="ico">🐎</div><div class="nm">步幅 5</div><div class="val">5</div><div class="txt">爆发 / 需 5 点体力</div></div>
+</div>
+<div class="panel"><h3>每位骑手的一套（按颜色区分 5 名玩家）</h3><table><tr><th>值</th><th>张数</th><th>合计</th><th>典型用法</th></tr><tr><td>1</td><td>1</td><td>1</td><td>体力见底时的保底轮</td></tr><tr><td>2</td><td>1</td><td>2</td><td>攒体力、等待尾流</td></tr><tr><td>3</td><td>3</td><td>9</td><td>巡航主力</td></tr><tr><td>4</td><td>3</td><td>12</td><td>抢圣骸、快速翻山</td></tr><tr><td>5</td><td>1</td><td>5</td><td>终局冲刺 / 一槌定音</td></tr><tr><th>合计</th><th>9 张</th><th>29</th><th>赛道 24 格 ⇒ 预算 5</th></tr></table></div>
+<h2>三、骑具卡（工具卡，6 种 × 3 张 = 18 张）</h2>
+<div class="panel">开局每人<strong>随机发 2 张</strong>，整局各只能用 1 次，使用时当面摊开并立即结算。</div>
+<div class="grid">
+<div class="card gear"><span class="tag">骑具</span><span class="qty">×3</span><div class="ico">🧭</div><div class="nm">罗盘</div><div class="txt">本轮若你是领先者，无视风阻（步幅 +1）</div></div>
+<div class="card gear"><span class="tag">骑具</span><span class="qty">×3</span><div class="ico">💧</div><div class="nm">水囊</div><div class="txt">立即 +4 点体力（可超过上限，本轮末不回收）</div></div>
+<div class="card gear"><span class="tag">骑具</span><span class="qty">×3</span><div class="ico">🪨</div><div class="nm">铁球</div><div class="txt">指定前方 3 格内的 1 匹马，其本轮步幅 −2</div></div>
+<div class="card gear"><span class="tag">骑具</span><span class="qty">×3</span><div class="ico">🧤</div><div class="nm">攀岩手套</div><div class="txt">本轮若开始于落基山脉，无视爬坡 −1</div></div>
+<div class="card gear"><span class="tag">骑具</span><span class="qty">×3</span><div class="ico">🐎</div><div class="nm">马刺</div><div class="txt">本轮步幅 +2，但额外支付 2 点体力</div></div>
+<div class="card gear"><span class="tag">骑具</span><span class="qty">×3</span><div class="ico">🪶</div><div class="nm">轻鞍</div><div class="txt">本轮体力支付减半（向上取整）</div></div>
+</div>
+<h2>四、险境卡（陷阱卡，8 张，开局全部翻开排成一行）</h2>
+<div class="panel">第 1 轮没有险境；第 2 轮起每轮翻 1 张，按序号推进。<strong>整条险境轨开局即公开</strong>——这是本作唯一的「天气预报」，请据此规划出牌顺序。</div>
+<div class="grid">
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">🌵</div><div class="nm">仙人掌丛</div><div class="val">第 2 轮</div><div class="txt">本轮结束时停在圣迭戈沙漠的马，后退 1 格</div></div>
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">🌪️</div><div class="nm">沙暴</div><div class="val">第 3 轮</div><div class="txt">本轮所有马步幅 −1</div></div>
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">🐍</div><div class="nm">响尾蛇</div><div class="val">第 4 轮</div><div class="txt">当前最领先的马后退 1 格</div></div>
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">🪨</div><div class="nm">落石</div><div class="val">第 5 轮</div><div class="txt">本轮开始时位于落基山的马，−1 点体力</div></div>
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">☀️</div><div class="nm">烈日</div><div class="val">第 6 轮</div><div class="txt">本轮所有马额外支付 1 点体力</div></div>
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">🐺</div><div class="nm">狼群</div><div class="val">第 7 轮</div><div class="txt">当前最后一名的马后退 1 格</div></div>
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">🌉</div><div class="nm">断桥</div><div class="val">第 8 轮</div><div class="txt">本轮结束时停在东岸的马，后退 1 格</div></div>
+<div class="card haz"><span class="tag">险境</span><span class="qty">×1</span><div class="ico">🍀</div><div class="nm">顺风</div><div class="val">第 9 轮</div><div class="txt">本轮所有马步幅 +1</div></div>
+</div>
+<h2>五、圣骸卡（宝藏卡，5 张）</h2>
+<div class="panel">开局把 5 枚圣骸<strong>正面朝上</strong>摆到赛道第 4 / 8 / 12 / 16 / 20 格旁；被拾取后由该骑手收走。<br>计分：每枚 <strong>3 分</strong>；集齐 2 枚 ⇒ <strong>共鸣 +4</strong>；集齐 3 枚及以上 ⇒ <strong>觉醒 +8</strong>（不叠加）。</div>
+<div class="grid">
+<div class="card relic"><span class="tag">圣骸</span><span class="qty">×1</span><div class="ico">🖐️</div><div class="nm">左手</div><div class="val">第 4 格</div><div class="txt">跨过或停在此格者中最靠前者获得 · 3 分</div></div>
+<div class="card relic"><span class="tag">圣骸</span><span class="qty">×1</span><div class="ico">👁️</div><div class="nm">左眼</div><div class="val">第 8 格</div><div class="txt">跨过或停在此格者中最靠前者获得 · 3 分</div></div>
+<div class="card relic"><span class="tag">圣骸</span><span class="qty">×1</span><div class="ico">🦴</div><div class="nm">脊骨</div><div class="val">第 12 格</div><div class="txt">跨过或停在此格者中最靠前者获得 · 3 分</div></div>
+<div class="card relic"><span class="tag">圣骸</span><span class="qty">×1</span><div class="ico">🦵</div><div class="nm">右腿</div><div class="val">第 16 格</div><div class="txt">跨过或停在此格者中最靠前者获得 · 3 分</div></div>
+<div class="card relic"><span class="tag">圣骸</span><span class="qty">×1</span><div class="ico">❤️</div><div class="nm">心脏</div><div class="val">第 20 格</div><div class="txt">跨过或停在此格者中最靠前者获得 · 3 分</div></div>
+</div>
+<h2>六、骑手棋子与体力条（各 5 份）</h2>
+<div class="grid">
+<div class="token" style="border-color:#b23a2f">🐎<small>赤鬃 · P1</small></div>
+<div class="token" style="border-color:#7a5c3a">🐎<small>褐骝 · P2</small></div>
+<div class="token" style="border-color:#3f7a4a">🐎<small>青骢 · P3</small></div>
+<div class="token" style="border-color:#c8a24a">🐎<small>金栗 · P4</small></div>
+<div class="token" style="border-color:#6b4a8a">🐎<small>紫骓 · P5</small></div>
+</div>
+<div class="panel"><h3>体力条（每人 1 条，起始 8，上限 12）</h3>用一枚夹子或棋子卡在数字上。每轮支付步幅值后左移，轮末 +3（不超过 12）。</div>
+<div class="bar">
+<i class="">0</i>
+<i class="">1</i>
+<i class="">2</i>
+<i class="">3</i>
+<i class="">4</i>
+<i class="">5</i>
+<i class="">6</i>
+<i class="">7</i>
+<i class="">8</i>
+<i class="">9</i>
+<i class="hot">10</i>
+<i class="hot">11</i>
+<i class="hot">12</i>
+</div>
+<h2>七、速查卡（2 张）</h2>
+<div class="panel"><h3>每轮流程（速查 A）</h3>① 翻开本轮险境卡 → ② 全体<strong>同时暗置</strong> 1 张步幅卡（可同时使用骑具卡）→ ③ 判定风阻 / 尾流 / 爬坡 → ④ 由<strong>最后一名</strong>开始依次移动 → ⑤ 结算圣骸 → ⑥ 险境退格 → ⑦ 冲线判定 → ⑧ 全体体力 +3</div>
+<div class="panel"><h3>计分与恒等式（速查 B）</h3><table><tr><th>项目</th><th>分值</th></tr><tr><td>冲线第 1 / 2 / 3 / 4 / 5 名</td><td>14 / 10 / 7 / 5 / 3</td></tr><tr><td>未冲线</td><td>已跑格数 ÷ 8（向下取整）</td></tr><tr><td>圣骸</td><td>每枚 3 分</td></tr><tr><td>集齐 2 枚 · 共鸣</td><td>+4</td></tr><tr><td>集齐 3 枚 · 觉醒</td><td>+8</td></tr><tr><td>剩余体力</td><td>每 3 点 1 分</td></tr><tr><th>理论满分</th><th>41 分</th></tr></table><p style="margin:8px 0 0">★ <strong>恒等式 A</strong>：坡 + 风 + 退 − 尾 ≤ <strong>5</strong><br>★ <strong>恒等式 B</strong>：体力总供给 32 − 总需求 29 = <strong>3</strong>（与人数无关）</p></div>
+<div class="sub" style="margin-top:26px">打印完即可开局。更多规则与完整示例见 <a href="README.md">README.md</a>。</div>
+</body></html>

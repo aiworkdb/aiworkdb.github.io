@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英灵殿：最后的席位 · 打印道具</title>
+<style>
+:root{
+  --ink:#20262e; --sub:#5b6672; --line:#c9d3dd; --bg:#eef3f8;
+  --gold:#b8860b; --ice:#2f6f9f; --blood:#a02c2c; --stone:#dfe6ec;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:1px;}
+h1 small{display:block;font-size:13px;font-weight:400;color:var(--sub);letter-spacing:0;}
+h2{font-size:19px;margin:30px 0 6px;padding:6px 0 6px 12px;border-left:6px solid var(--ice);
+  background:linear-gradient(90deg,#dbeaf5,transparent);}
+h3{font-size:15px;margin:18px 0 6px;color:var(--ice);}
+p.desc{margin:4px 0 12px;color:var(--sub);font-size:13px;line-height:1.7;}
+.print-hint{background:#fff8e1;border:2px solid #f0c36d;border-radius:10px;padding:14px 18px;margin:16px 0 22px;}
+.print-hint strong{color:#8a5a00;}
+.print-hint ul{margin:8px 0 0;padding-left:20px;font-size:13px;line-height:1.9;}
+.section-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+.cnt{font-size:12px;color:var(--sub);background:#fff;border:1px solid var(--line);
+  border-radius:20px;padding:2px 12px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px;}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(196px,1fr));}
+
+/* ---- 卡 ---- */
+.card{border:1px solid var(--line);border-radius:9px;padding:8px 9px;background:#fff;
+  position:relative;min-height:120px;box-shadow:0 1px 3px rgba(0,0,0,.07);page-break-inside:avoid;}
+.card .ico{font-size:22px;line-height:1;}
+.card .nm{font-size:13px;font-weight:700;margin-top:2px;}
+.card .tag{display:inline-block;font-size:10px;border-radius:9px;padding:1px 7px;
+  background:var(--stone);color:var(--sub);margin-top:3px;}
+.card .tx{font-size:11px;color:var(--sub);line-height:1.5;margin-top:5px;}
+.card .pw{position:absolute;top:7px;right:8px;font-size:15px;font-weight:800;color:var(--blood);}
+.card .mv{position:absolute;top:7px;right:8px;font-size:19px;font-weight:800;color:var(--ice);}
+.card .cn{position:absolute;bottom:6px;right:8px;font-size:10px;color:#9aa5b1;}
+
+.c-warrior{background:linear-gradient(160deg,#fff,var(--wc,#f5f5f5));}
+.c-warrior .nm{color:var(--wd,#333);}
+.c-march{background:linear-gradient(160deg,#f7fbff,#e3eef8);}
+.c-oracle{background:linear-gradient(160deg,#fffdf3,#f6efdd);}
+.c-frost{background:linear-gradient(160deg,#f4fbff,#dceef8);}
+
+/* ---- 席位板 ---- */
+.hall{border:3px solid var(--gold);border-radius:12px;background:
+  linear-gradient(180deg,#fdfaf2,#f0e7d2);padding:14px;margin-bottom:14px;}
+.hall-title{text-align:center;font-size:17px;font-weight:800;letter-spacing:4px;
+  color:#7a5a10;margin-bottom:10px;}
+.lane{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.lane .cname{width:96px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px;}
+.seats{display:flex;gap:5px;flex:1;}
+.seat{flex:1;height:42px;border:2px dashed #b9a370;border-radius:6px;background:#fffdf6;
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:#c2b28c;}
+.seat.s1{border-color:var(--gold);background:#fff6dc;}
+.lane .tot{width:56px;text-align:right;font-size:11px;color:var(--sub);}
+
+/* ---- 侧栏 ---- */
+.side{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px;}
+.pad{border:2px solid var(--ice);border-radius:9px;background:#f2f8fd;padding:9px;
+  font-size:11px;color:var(--sub);min-height:74px;}
+.pad b{display:block;font-size:12px;color:var(--ice);margin-bottom:3px;}
+.frost-track{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.fstep{border:1px solid var(--ice);border-radius:5px;background:#e8f3fa;padding:3px 8px;font-size:11px;}
+
+/* ---- 标记 / 棋子 ---- */
+.tok{width:66px;height:66px;border-radius:50%;border:3px solid var(--bc,#888);
+  background:var(--bg2,#eee);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;font-size:20px;page-break-inside:avoid;}
+.tok span{font-size:9px;margin-top:2px;font-weight:700;color:var(--bd,#555);}
+.chip{border:1px solid var(--line);border-radius:6px;background:#fff;padding:5px 8px;
+  font-size:11px;text-align:center;}
+
+/* ---- 速查 ---- */
+.cheat{border:2px solid var(--ice);border-radius:10px;background:#fff;padding:12px 14px;
+  font-size:12px;line-height:1.9;}
+.cheat b{color:var(--ice);}
+.cheat ul{margin:5px 0;padding-left:18px;}
+.foot{margin-top:30px;text-align:center;font-size:11px;color:#8b97a3;}
+
+@media print{
+  *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .print-hint{display:none;}
+  body{padding:0;background:#fff;}
+  h2{page-break-after:avoid;}
+  .card,.tok,.hall,.cheat{page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+
+<h1>英灵殿：最后的席位
+  <small>Valhalla: The Last Seats ｜ 2-5 人 · 40-65 分钟 · 卡牌/竞速 ｜ 打印道具全集</small>
+</h1>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议把页边距设为<strong>「最小」</strong>；席位板建议<strong>横向</strong>打印。</li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>（Background graphics）选项，否则所有底色与边框都不会印出来。</li>
+    <li>勇士卡、战阵卡、神谕卡建议使用 <strong>200-250g 卡纸</strong>打印；席位板可用普通 A4 纸过塑。</li>
+    <li>打印后沿实线裁剪；年岁标记与卢恩可用圆形打孔器或直接剪成小方片。</li>
+  </ul>
+</div>
+
+<p class="desc">
+本页包含《英灵殿：最后的席位》的全部实体道具：<strong>英灵殿席位板</strong>（5 条氏族长廊共 30 席）、
+<strong>勇士卡 40 张</strong>（8 模板 × 5 氏族）、<strong>战阵卡 30 张</strong>（6 张 × 5 套）、
+<strong>神谕卡 12 张</strong>、<strong>寒潮卡 6 张</strong>、<strong>氏族棋子 5 枚</strong>、
+年岁/卢恩/赫尔标记与<strong>规则速查卡</strong>。
+若人数不足 5 人，多余的氏族卡与长廊无需使用。
+</p>
+
+<h2>🏛️ 一、英灵殿席位板与中央区</h2>
+<div class="hall">
+  <div class="hall-title">🏛️ 英 灵 殿 · 席 位 板</div>
+  <div class="lane">
+  <div class="cname" style="color:#3a2413">🐻 熊氏族</div>
+  <div class="seats"><div class="seat s1">首席 ×2</div><div class="seat">第2席</div><div class="seat">第3席</div><div class="seat">第4席</div><div class="seat">第5席</div><div class="seat">第6席</div></div>
+  <div class="tot">6 席</div>
+</div>
+<div class="lane">
+  <div class="cname" style="color:#123a56">🦅 鹰氏族</div>
+  <div class="seats"><div class="seat s1">首席 ×2</div><div class="seat">第2席</div><div class="seat">第3席</div><div class="seat">第4席</div><div class="seat">第5席</div><div class="seat">第6席</div></div>
+  <div class="tot">6 席</div>
+</div>
+<div class="lane">
+  <div class="cname" style="color:#1b3f21">🐍 蛇氏族</div>
+  <div class="seats"><div class="seat s1">首席 ×2</div><div class="seat">第2席</div><div class="seat">第3席</div><div class="seat">第4席</div><div class="seat">第5席</div><div class="seat">第6席</div></div>
+  <div class="tot">6 席</div>
+</div>
+<div class="lane">
+  <div class="cname" style="color:#533309">🦌 鹿氏族</div>
+  <div class="seats"><div class="seat s1">首席 ×2</div><div class="seat">第2席</div><div class="seat">第3席</div><div class="seat">第4席</div><div class="seat">第5席</div><div class="seat">第6席</div></div>
+  <div class="tot">6 席</div>
+</div>
+<div class="lane">
+  <div class="cname" style="color:#3f2249">🐎 马氏族</div>
+  <div class="seats"><div class="seat s1">首席 ×2</div><div class="seat">第2席</div><div class="seat">第3席</div><div class="seat">第4席</div><div class="seat">第5席</div><div class="seat">第6席</div></div>
+  <div class="tot">6 席</div>
+</div>
+  <div style="text-align:center;font-size:11px;color:#8a7a50;margin-top:8px">
+    金色实线为「首席」，其上英灵终局额外 +2 分 · 每氏族 6 席，坐满后方可封殿
+  </div>
+</div>
+<div class="side">
+  <div class="pad"><b>❄️ 寒潮轨</b>每纪开始翻开 1 张寒潮卡，效果当纪生效。
+    <div class="frost-track"><span class="fstep">1 初雪</span><span class="fstep">2 冰封</span>
+    <span class="fstep">3 长夜</span><span class="fstep">4 嚎叫</span>
+    <span class="fstep">5 洪水</span><span class="fstep">6 烈火</span></div></div>
+  <div class="pad"><b>🥁 战阵暗置区</b>每名玩家面前一个位置，暗置本纪战阵卡，同时揭示。</div>
+  <div class="pad"><b>🔮 神谕牌堆</b>背面朝上。花 1 卢恩抽 1 张并立即使用。</div>
+  <div class="pad"><b>⭐ 卢恩堆</b>公共供应。游戏结束每枚 +1 分。</div>
+  <div class="pad"><b>🪦 赫尔区</b>放草死（−3）与堕赫尔（−2）的勇士卡，终局结算。</div>
+  <div class="pad"><b>⏳ 年岁标记</b>放在勇士卡上，每点 1 枚。满 6 枚即草死。</div>
+</div>
+
+<h2>⚔️ 二、勇士卡（40 张｜每氏族 8 张，战力 4/3/3/2/2/2/1/1）</h2>
+<p class="desc">每名玩家拿走一整个氏族的 8 张勇士卡，全部<strong>正面朝上</strong>摊在自己面前的「营地」区。
+战死后翻面（或插进席位槽）表示成为英灵。卡右上角的红色数字是<strong>战力</strong>，入座即得该分数。</p>
+<div class="grid"><div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">4</div>
+  <div class="ico">⚔️</div>
+  <div class="nm">血斧狂战士</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">战吼震落枝头积雪，他自己从不打算活着回来。</div>
+  <div class="cn">战力 4</div>
+</div>
+<div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">3</div>
+  <div class="ico">⚓</div>
+  <div class="nm">长船舵手</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">掌舵的手磨出厚茧，也握得住断桨当兵器。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">3</div>
+  <div class="ico">🥁</div>
+  <div class="nm">战鼓手</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">鼓点一响，最怕死的人也会往前冲。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">2</div>
+  <div class="ico">🏹</div>
+  <div class="nm">荒野猎手</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">在林子里追了十年驯鹿，追人也一样稳。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">2</div>
+  <div class="ico">⚒️</div>
+  <div class="nm">营地铁匠</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">锤子落下是钉子，抬起就是武器。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">2</div>
+  <div class="ico">🔱</div>
+  <div class="nm">叉鱼渔夫</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">在结冰的海面上叉了半辈子鱼。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">1</div>
+  <div class="ico">📜</div>
+  <div class="nm">记史者</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">他不杀人，他决定谁被记住。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#f3e2cf;--wd:#3a2413">
+  <div class="pw">1</div>
+  <div class="ico">🕯️</div>
+  <div class="nm">守夜人</div>
+  <div class="tag">🐻 熊氏族</div>
+  <div class="tx">整夜守着火不灭，天亮时多半也没了。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">4</div>
+  <div class="ico">⚔️</div>
+  <div class="nm">血斧狂战士</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">战吼震落枝头积雪，他自己从不打算活着回来。</div>
+  <div class="cn">战力 4</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">3</div>
+  <div class="ico">⚓</div>
+  <div class="nm">长船舵手</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">掌舵的手磨出厚茧，也握得住断桨当兵器。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">3</div>
+  <div class="ico">🥁</div>
+  <div class="nm">战鼓手</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">鼓点一响，最怕死的人也会往前冲。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">2</div>
+  <div class="ico">🏹</div>
+  <div class="nm">荒野猎手</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">在林子里追了十年驯鹿，追人也一样稳。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">2</div>
+  <div class="ico">⚒️</div>
+  <div class="nm">营地铁匠</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">锤子落下是钉子，抬起就是武器。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">2</div>
+  <div class="ico">🔱</div>
+  <div class="nm">叉鱼渔夫</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">在结冰的海面上叉了半辈子鱼。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">1</div>
+  <div class="ico">📜</div>
+  <div class="nm">记史者</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">他不杀人，他决定谁被记住。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#d9ecf7;--wd:#123a56">
+  <div class="pw">1</div>
+  <div class="ico">🕯️</div>
+  <div class="nm">守夜人</div>
+  <div class="tag">🦅 鹰氏族</div>
+  <div class="tx">整夜守着火不灭，天亮时多半也没了。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">4</div>
+  <div class="ico">⚔️</div>
+  <div class="nm">血斧狂战士</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">战吼震落枝头积雪，他自己从不打算活着回来。</div>
+  <div class="cn">战力 4</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">3</div>
+  <div class="ico">⚓</div>
+  <div class="nm">长船舵手</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">掌舵的手磨出厚茧，也握得住断桨当兵器。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">3</div>
+  <div class="ico">🥁</div>
+  <div class="nm">战鼓手</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">鼓点一响，最怕死的人也会往前冲。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">2</div>
+  <div class="ico">🏹</div>
+  <div class="nm">荒野猎手</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">在林子里追了十年驯鹿，追人也一样稳。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">2</div>
+  <div class="ico">⚒️</div>
+  <div class="nm">营地铁匠</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">锤子落下是钉子，抬起就是武器。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">2</div>
+  <div class="ico">🔱</div>
+  <div class="nm">叉鱼渔夫</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">在结冰的海面上叉了半辈子鱼。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">1</div>
+  <div class="ico">📜</div>
+  <div class="nm">记史者</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">他不杀人，他决定谁被记住。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#dcefdc;--wd:#1b3f21">
+  <div class="pw">1</div>
+  <div class="ico">🕯️</div>
+  <div class="nm">守夜人</div>
+  <div class="tag">🐍 蛇氏族</div>
+  <div class="tx">整夜守着火不灭，天亮时多半也没了。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">4</div>
+  <div class="ico">⚔️</div>
+  <div class="nm">血斧狂战士</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">战吼震落枝头积雪，他自己从不打算活着回来。</div>
+  <div class="cn">战力 4</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">3</div>
+  <div class="ico">⚓</div>
+  <div class="nm">长船舵手</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">掌舵的手磨出厚茧，也握得住断桨当兵器。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">3</div>
+  <div class="ico">🥁</div>
+  <div class="nm">战鼓手</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">鼓点一响，最怕死的人也会往前冲。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">2</div>
+  <div class="ico">🏹</div>
+  <div class="nm">荒野猎手</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">在林子里追了十年驯鹿，追人也一样稳。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">2</div>
+  <div class="ico">⚒️</div>
+  <div class="nm">营地铁匠</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">锤子落下是钉子，抬起就是武器。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">2</div>
+  <div class="ico">🔱</div>
+  <div class="nm">叉鱼渔夫</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">在结冰的海面上叉了半辈子鱼。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">1</div>
+  <div class="ico">📜</div>
+  <div class="nm">记史者</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">他不杀人，他决定谁被记住。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#f8ecd2;--wd:#533309">
+  <div class="pw">1</div>
+  <div class="ico">🕯️</div>
+  <div class="nm">守夜人</div>
+  <div class="tag">🦌 鹿氏族</div>
+  <div class="tx">整夜守着火不灭，天亮时多半也没了。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">4</div>
+  <div class="ico">⚔️</div>
+  <div class="nm">血斧狂战士</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">战吼震落枝头积雪，他自己从不打算活着回来。</div>
+  <div class="cn">战力 4</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">3</div>
+  <div class="ico">⚓</div>
+  <div class="nm">长船舵手</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">掌舵的手磨出厚茧，也握得住断桨当兵器。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">3</div>
+  <div class="ico">🥁</div>
+  <div class="nm">战鼓手</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">鼓点一响，最怕死的人也会往前冲。</div>
+  <div class="cn">战力 3</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">2</div>
+  <div class="ico">🏹</div>
+  <div class="nm">荒野猎手</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">在林子里追了十年驯鹿，追人也一样稳。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">2</div>
+  <div class="ico">⚒️</div>
+  <div class="nm">营地铁匠</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">锤子落下是钉子，抬起就是武器。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">2</div>
+  <div class="ico">🔱</div>
+  <div class="nm">叉鱼渔夫</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">在结冰的海面上叉了半辈子鱼。</div>
+  <div class="cn">战力 2</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">1</div>
+  <div class="ico">📜</div>
+  <div class="nm">记史者</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">他不杀人，他决定谁被记住。</div>
+  <div class="cn">战力 1</div>
+</div>
+<div class="card c-warrior" style="--wc:#edddf3;--wd:#3f2249">
+  <div class="pw">1</div>
+  <div class="ico">🕯️</div>
+  <div class="nm">守夜人</div>
+  <div class="tag">🐎 马氏族</div>
+  <div class="tx">整夜守着火不灭，天亮时多半也没了。</div>
+  <div class="cn">战力 1</div>
+</div></div>
+
+<h2>🥁 三、战阵卡（30 张｜每人一套 6 张：0/1/2/2/3/4）</h2>
+<p class="desc">每纪暗置 1 张，6 纪正好用完。右上角蓝色数字是本纪<strong>出征人数</strong>。
+出征人数不能超过你营地里的存活勇士数——超出的部分作废，所以大牌要趁营地人多时打。</p>
+<div class="grid"><div class="card c-march">
+  <div class="mv">0</div>
+  <div class="ico">🌙</div>
+  <div class="nm">守夜</div>
+  <div class="tag" style="background:#f3e2cf;color:#3a2413">🐻 熊氏族</div>
+  <div class="tx">本纪无人出征。营地每名勇士照常 +1 年岁。额外 +1 卢恩。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">1</div>
+  <div class="ico">🗡️</div>
+  <div class="nm">突袭</div>
+  <div class="tag" style="background:#f3e2cf;color:#3a2413">🐻 熊氏族</div>
+  <div class="tx">出征 1 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🛡️</div>
+  <div class="nm">盾墙</div>
+  <div class="tag" style="background:#f3e2cf;color:#3a2413">🐻 熊氏族</div>
+  <div class="tx">出征 2 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🐗</div>
+  <div class="nm">猪突</div>
+  <div class="tag" style="background:#f3e2cf;color:#3a2413">🐻 熊氏族</div>
+  <div class="tx">出征 2 名。与「盾墙」同值，只是更难被猜中。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">3</div>
+  <div class="ico">🩸</div>
+  <div class="nm">血战</div>
+  <div class="tag" style="background:#f3e2cf;color:#3a2413">🐻 熊氏族</div>
+  <div class="tx">出征 3 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">4</div>
+  <div class="ico">☠️</div>
+  <div class="nm">全员出击</div>
+  <div class="tag" style="background:#f3e2cf;color:#3a2413">🐻 熊氏族</div>
+  <div class="tx">出征 4 名。几乎必然成为血王。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">0</div>
+  <div class="ico">🌙</div>
+  <div class="nm">守夜</div>
+  <div class="tag" style="background:#d9ecf7;color:#123a56">🦅 鹰氏族</div>
+  <div class="tx">本纪无人出征。营地每名勇士照常 +1 年岁。额外 +1 卢恩。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">1</div>
+  <div class="ico">🗡️</div>
+  <div class="nm">突袭</div>
+  <div class="tag" style="background:#d9ecf7;color:#123a56">🦅 鹰氏族</div>
+  <div class="tx">出征 1 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🛡️</div>
+  <div class="nm">盾墙</div>
+  <div class="tag" style="background:#d9ecf7;color:#123a56">🦅 鹰氏族</div>
+  <div class="tx">出征 2 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🐗</div>
+  <div class="nm">猪突</div>
+  <div class="tag" style="background:#d9ecf7;color:#123a56">🦅 鹰氏族</div>
+  <div class="tx">出征 2 名。与「盾墙」同值，只是更难被猜中。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">3</div>
+  <div class="ico">🩸</div>
+  <div class="nm">血战</div>
+  <div class="tag" style="background:#d9ecf7;color:#123a56">🦅 鹰氏族</div>
+  <div class="tx">出征 3 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">4</div>
+  <div class="ico">☠️</div>
+  <div class="nm">全员出击</div>
+  <div class="tag" style="background:#d9ecf7;color:#123a56">🦅 鹰氏族</div>
+  <div class="tx">出征 4 名。几乎必然成为血王。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">0</div>
+  <div class="ico">🌙</div>
+  <div class="nm">守夜</div>
+  <div class="tag" style="background:#dcefdc;color:#1b3f21">🐍 蛇氏族</div>
+  <div class="tx">本纪无人出征。营地每名勇士照常 +1 年岁。额外 +1 卢恩。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">1</div>
+  <div class="ico">🗡️</div>
+  <div class="nm">突袭</div>
+  <div class="tag" style="background:#dcefdc;color:#1b3f21">🐍 蛇氏族</div>
+  <div class="tx">出征 1 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🛡️</div>
+  <div class="nm">盾墙</div>
+  <div class="tag" style="background:#dcefdc;color:#1b3f21">🐍 蛇氏族</div>
+  <div class="tx">出征 2 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🐗</div>
+  <div class="nm">猪突</div>
+  <div class="tag" style="background:#dcefdc;color:#1b3f21">🐍 蛇氏族</div>
+  <div class="tx">出征 2 名。与「盾墙」同值，只是更难被猜中。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">3</div>
+  <div class="ico">🩸</div>
+  <div class="nm">血战</div>
+  <div class="tag" style="background:#dcefdc;color:#1b3f21">🐍 蛇氏族</div>
+  <div class="tx">出征 3 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">4</div>
+  <div class="ico">☠️</div>
+  <div class="nm">全员出击</div>
+  <div class="tag" style="background:#dcefdc;color:#1b3f21">🐍 蛇氏族</div>
+  <div class="tx">出征 4 名。几乎必然成为血王。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">0</div>
+  <div class="ico">🌙</div>
+  <div class="nm">守夜</div>
+  <div class="tag" style="background:#f8ecd2;color:#533309">🦌 鹿氏族</div>
+  <div class="tx">本纪无人出征。营地每名勇士照常 +1 年岁。额外 +1 卢恩。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">1</div>
+  <div class="ico">🗡️</div>
+  <div class="nm">突袭</div>
+  <div class="tag" style="background:#f8ecd2;color:#533309">🦌 鹿氏族</div>
+  <div class="tx">出征 1 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🛡️</div>
+  <div class="nm">盾墙</div>
+  <div class="tag" style="background:#f8ecd2;color:#533309">🦌 鹿氏族</div>
+  <div class="tx">出征 2 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🐗</div>
+  <div class="nm">猪突</div>
+  <div class="tag" style="background:#f8ecd2;color:#533309">🦌 鹿氏族</div>
+  <div class="tx">出征 2 名。与「盾墙」同值，只是更难被猜中。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">3</div>
+  <div class="ico">🩸</div>
+  <div class="nm">血战</div>
+  <div class="tag" style="background:#f8ecd2;color:#533309">🦌 鹿氏族</div>
+  <div class="tx">出征 3 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">4</div>
+  <div class="ico">☠️</div>
+  <div class="nm">全员出击</div>
+  <div class="tag" style="background:#f8ecd2;color:#533309">🦌 鹿氏族</div>
+  <div class="tx">出征 4 名。几乎必然成为血王。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">0</div>
+  <div class="ico">🌙</div>
+  <div class="nm">守夜</div>
+  <div class="tag" style="background:#edddf3;color:#3f2249">🐎 马氏族</div>
+  <div class="tx">本纪无人出征。营地每名勇士照常 +1 年岁。额外 +1 卢恩。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">1</div>
+  <div class="ico">🗡️</div>
+  <div class="nm">突袭</div>
+  <div class="tag" style="background:#edddf3;color:#3f2249">🐎 马氏族</div>
+  <div class="tx">出征 1 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🛡️</div>
+  <div class="nm">盾墙</div>
+  <div class="tag" style="background:#edddf3;color:#3f2249">🐎 马氏族</div>
+  <div class="tx">出征 2 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">2</div>
+  <div class="ico">🐗</div>
+  <div class="nm">猪突</div>
+  <div class="tag" style="background:#edddf3;color:#3f2249">🐎 马氏族</div>
+  <div class="tx">出征 2 名。与「盾墙」同值，只是更难被猜中。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">3</div>
+  <div class="ico">🩸</div>
+  <div class="nm">血战</div>
+  <div class="tag" style="background:#edddf3;color:#3f2249">🐎 马氏族</div>
+  <div class="tx">出征 3 名。</div>
+</div>
+<div class="card c-march">
+  <div class="mv">4</div>
+  <div class="ico">☠️</div>
+  <div class="nm">全员出击</div>
+  <div class="tag" style="background:#edddf3;color:#3f2249">🐎 马氏族</div>
+  <div class="tx">出征 4 名。几乎必然成为血王。</div>
+</div></div>
+
+<h2>🔮 四、神谕卡（12 张）</h2>
+<p class="desc">背面朝上堆成公共牌堆。<strong>花 1 卢恩</strong>可抽 1 张并立即使用（标注「本纪」的持续到本纪结束）。</p>
+<div class="grid wide"><div class="card c-oracle">
+  <div class="ico">👁️</div>
+  <div class="nm">奥丁的注视</div>
+  <div class="tag">即时</div>
+  <div class="tx">立即 +2 卢恩。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🧵</div>
+  <div class="nm">弗丽嘉的纺线</div>
+  <div class="tag">即时</div>
+  <div class="tx">选 1 名在营勇士，年岁归零。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">⚖️</div>
+  <div class="nm">提尔的裁决</div>
+  <div class="tag">本纪</div>
+  <div class="tx">本纪你的出征数视为 +1（仅用于血王判定，不真的多出兵）。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🔨</div>
+  <div class="nm">索尔的雷霆</div>
+  <div class="tag">即时</div>
+  <div class="tx">选 1 名在营勇士，立即战死并入座（席位已满则堕赫尔）。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🎭</div>
+  <div class="nm">洛基的诡计</div>
+  <div class="tag">本纪</div>
+  <div class="tx">本纪若你是唯一血王，改为「无人是唯一最高」，全员全灭。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">📯</div>
+  <div class="nm">海姆达尔的号角</div>
+  <div class="tag">即时</div>
+  <div class="tx">查看所有玩家本纪暗置的战阵卡。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🪶</div>
+  <div class="nm">芙蕾雅的羽衣</div>
+  <div class="tag">本纪</div>
+  <div class="tx">本纪你的幸存者年岁 +1 而非 +2。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🐉</div>
+  <div class="nm">尼德霍格的啃噬</div>
+  <div class="tag">即时</div>
+  <div class="tx">指定 1 名对手，其 1 名已入座英灵战力 −1（最低为 1）。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🍯</div>
+  <div class="nm">密米尔之泉</div>
+  <div class="tag">即时</div>
+  <div class="tx">抽 2 张神谕卡，留 1 张，另 1 张置底。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🖐️</div>
+  <div class="nm">赫尔的手</div>
+  <div class="tag">即时</div>
+  <div class="tx">指定 1 名对手，其 1 名在营勇士 +2 年岁。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">💀</div>
+  <div class="nm">巴德尔之死</div>
+  <div class="tag">即时</div>
+  <div class="tx">所有玩家各 +1 卢恩。</div>
+</div>
+<div class="card c-oracle">
+  <div class="ico">🔮</div>
+  <div class="nm">命运三女神</div>
+  <div class="tag">本纪</div>
+  <div class="tx">重抽：弃掉本纪你已暗置的战阵卡，改暗置另 1 张未使用的。</div>
+</div></div>
+
+<h2>❄️ 五、寒潮卡（6 张）</h2>
+<p class="desc">按 1→6 顺序背面朝上叠好，每纪开始时翻开最上面一张，效果在<strong>该纪内</strong>生效。</p>
+<div class="grid wide"><div class="card c-frost">
+  <div class="mv">1</div>
+  <div class="ico">🧊</div>
+  <div class="nm">初雪</div>
+  <div class="tag">第 1 纪</div>
+  <div class="tx">没有效果。用来熟悉流程的一纪。</div>
+</div>
+<div class="card c-frost">
+  <div class="mv">2</div>
+  <div class="ico">❄️</div>
+  <div class="nm">冰封港口</div>
+  <div class="tag">第 2 纪</div>
+  <div class="tx">所有玩家：每名在营勇士 +1 年岁。</div>
+</div>
+<div class="card c-frost">
+  <div class="mv">3</div>
+  <div class="ico">🌨️</div>
+  <div class="nm">长夜</div>
+  <div class="tag">第 3 纪</div>
+  <div class="tx">本纪所有玩家的出征数上限 −1（最低为 0）。</div>
+</div>
+<div class="card c-frost">
+  <div class="mv">4</div>
+  <div class="ico">🐺</div>
+  <div class="nm">芬里尔的嚎叫</div>
+  <div class="tag">第 4 纪</div>
+  <div class="tx">本纪的唯一血王 −2 卢恩；不足则改为其 1 名幸存者再 +2 年岁。</div>
+</div>
+<div class="card c-frost">
+  <div class="mv">5</div>
+  <div class="ico">🌊</div>
+  <div class="nm">洪水</div>
+  <div class="tag">第 5 纪</div>
+  <div class="tx">所有玩家各弃 1 卢恩；不足者改为其 1 名在营勇士 +2 年岁。</div>
+</div>
+<div class="card c-frost">
+  <div class="mv">6</div>
+  <div class="ico">🔥</div>
+  <div class="nm">苏尔特尔之火</div>
+  <div class="tag">第 6 纪</div>
+  <div class="tx">本纪结束时，所有仍在营的勇士立即草死（每名 −3）。已封殿者免疫。</div>
+</div></div>
+
+<h2>🐻 六、氏族棋子（5 枚）</h2>
+<div class="grid"><div class="tok" style="--bc:#6b4423;--bg2:#f3e2cf;--bd:#3a2413">
+  <div>🐻</div><span>熊氏族</span></div>
+<div class="tok" style="--bc:#1f5f8b;--bg2:#d9ecf7;--bd:#123a56">
+  <div>🦅</div><span>鹰氏族</span></div>
+<div class="tok" style="--bc:#2f6b3a;--bg2:#dcefdc;--bd:#1b3f21">
+  <div>🐍</div><span>蛇氏族</span></div>
+<div class="tok" style="--bc:#8a5a1a;--bg2:#f8ecd2;--bd:#533309">
+  <div>🦌</div><span>鹿氏族</span></div>
+<div class="tok" style="--bc:#6a3b7a;--bg2:#edddf3;--bd:#3f2249">
+  <div>🐎</div><span>马氏族</span></div></div>
+
+<h2>⭐ 七、标记（自行剪裁或代用）</h2>
+<div class="grid">
+  <div class="chip">⏳ 年岁标记<br><span style="color:#8b97a3">约 40 枚 · 也可用骰子/纸片</span></div>
+  <div class="chip">⭐ 卢恩<br><span style="color:#8b97a3">约 30 枚 · 终局每枚 1 分</span></div>
+  <div class="chip">🪦 赫尔标记<br><span style="color:#8b97a3">草死 −3 / 堕赫尔 −2</span></div>
+  <div class="chip">🏅 首席标记<br><span style="color:#8b97a3">放在长廊第一席的英灵上</span></div>
+  <div class="chip">🚪 封殿标记<br><span style="color:#8b97a3">宣告封殿后插在长廊末端</span></div>
+</div>
+
+<h2>📜 八、规则速查卡（建议每人 1 张）</h2>
+<div class="cheat">
+  <b>【核心一句话】</b>让勇士<b>战死</b>才能进英灵殿；病死老死只能去赫尔。<br>
+  <b>【血王规则】</b>本纪出征数<b>唯一最高</b>的人是「血王」：他战死 = 第二高的出征数，其余勇士<b>幸存归营</b>（各 +2 年岁）。
+  除血王外，<b>所有人出征的勇士全部战死</b>。若多人并列最高，则无人是血王，<b>全场全灭</b>。<br>
+  <b>【每纪流程】</b>
+  <ul>
+    <li>① 寒潮：翻开本纪寒潮卡</li>
+    <li>② 点兵：暗置 1 张战阵卡（或宣告封殿）</li>
+    <li>③ 揭示：算实际出征（≤营地人数）→ 判血王 → 算战死/幸存</li>
+    <li>④ 引渡：战死者放进自己席位的空槽（席位已满则堕赫尔 −2）</li>
+    <li>⑤ 衰老：幸存 +2 年岁，留守 +1 年岁；年岁 ≥6 草死（−3）</li>
+    <li>⑥ 结算：每人 +1 卢恩；本纪战死最多者再 +2；每有 1 名草死 +1</li>
+  </ul>
+  <b>【三个恒等式】</b>
+  <ul>
+    <li>出征 12 = 战死 6（席位满）+ 幸存 6 ⇒ <b>你必然要制造约 6 点幸存</b></li>
+    <li>6 点幸存至少摊给 <b>3 名</b>勇士，摊给 2 名就是 −6 分</li>
+    <li>8 勇士 − 6 席位 = <b>2 名勇士注定活到终局</b>；全程留守者第 6 纪末正好草死</li>
+  </ul>
+  <b>【计分】</b>入座英灵战力之和 ＋ 封殿奖励（8 + 2×剩余纪数）＋ 卢恩数 − 3×草死数 − 2×堕赫尔数<br>
+  <b>【卢恩用法】</b>2 枚＝1 名勇士「光荣赴死」直接入座 ｜ 2 枚＝1 名勇士年岁 −2 ｜ 1 枚＝抽 1 张神谕 ｜ 3 枚＝+5 分
+</div>
+
+<div class="foot">
+《英灵殿：最后的席位》· 打印道具 ｜ 规则详见 <b>README.md</b> ｜ 返回
+<a href="../../../README.md">桌游总索引</a>
+</div>
+
+</body>
+</html>

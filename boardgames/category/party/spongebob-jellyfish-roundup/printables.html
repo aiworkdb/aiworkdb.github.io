@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海绵宝宝：水母田大捕捞 - 打印道具</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f0f9ff;color:#1f2937;padding:20px;line-height:1.5}
+h1{font-size:26px;text-align:center;margin-bottom:6px;color:#0c4a6e}
+h2{font-size:20px;margin:26px 0 12px;padding:8px 12px;background:#0ea5e9;color:#fff;border-radius:6px}
+h3{font-size:16px;margin:16px 0 8px;color:#0369a1}
+.sub{text-align:center;color:#64748b;margin-bottom:18px;font-size:14px}
+.print-hint{background:#fff7ed;border:2px solid #fb923c;border-radius:8px;padding:14px 18px;margin-bottom:22px}
+.print-hint strong{color:#c2410c}
+.print-hint ul{margin:8px 0 0 20px}
+.print-hint li{margin:4px 0}
+.grid{display:flex;flex-wrap:wrap;gap:10px}
+.card{border-radius:8px;padding:8px;position:relative;page-break-inside:avoid;break-inside:avoid;
+      box-shadow:0 1px 3px rgba(0,0,0,.15);display:flex;flex-direction:column;justify-content:space-between}
+.badge{position:absolute;top:-6px;right:-6px;background:#1f2937;color:#fff;font-size:11px;
+       border-radius:10px;padding:2px 7px;font-weight:700}
+.jelly{width:96px;height:132px;border:3px solid;text-align:center}
+.jelly .ic{font-size:34px;line-height:1.1}
+.jelly .nm{font-size:12px;font-weight:700;margin-top:2px}
+.jelly .vv{font-size:20px;font-weight:800;margin-top:4px}
+.jelly .pt{font-size:13px;font-weight:700;background:rgba(255,255,255,.75);border-radius:4px;margin-top:3px}
+.net{width:96px;height:132px;border:3px solid #a16207;background:#fef9c3;text-align:center}
+.net .ic{font-size:32px}
+.net .big{font-size:26px;font-weight:800;color:#92400e}
+.net .lb{font-size:11px;color:#78350f;font-weight:700}
+.role{width:112px;height:150px;border:3px solid;text-align:center}
+.role .ic{font-size:36px}
+.role .nm{font-size:13px;font-weight:800;margin-top:2px}
+.role .sf{font-size:11px;font-weight:700;background:rgba(255,255,255,.8);border-radius:4px;margin:3px 4px}
+.role .ab{font-size:10px;line-height:1.3;white-space:pre-line;margin-top:2px}
+.evt{width:104px;height:132px;border:3px solid #475569;background:#f1f5f9;text-align:center}
+.evt .rd{font-size:11px;font-weight:800;color:#475569}
+.evt .ic{font-size:30px}
+.evt .nm{font-size:13px;font-weight:800;margin-top:2px}
+.evt .fx{font-size:10px;line-height:1.25;white-space:pre-line;color:#334155;margin-top:3px}
+.board{background:#fff;border:3px solid #0ea5e9;border-radius:10px;padding:14px;margin-bottom:14px;
+       page-break-inside:avoid;break-inside:avoid}
+.board h3{margin-top:0}
+.pb{width:100%;background:#ecfeff;border:2px solid #0891b2;border-radius:8px;padding:10px;
+    page-break-inside:avoid;break-inside:avoid}
+.pb .hd{display:flex;justify-content:space-between;font-weight:800;font-size:13px;margin-bottom:6px}
+.bar{display:flex;gap:2px}
+.bar .c{flex:1;text-align:center;font-size:10px;padding:4px 0;border-radius:3px;font-weight:700}
+.c.safe{background:#bbf7d0;border:1px solid #16a34a}
+.c.dang{background:#fecaca;border:1px solid #dc2626}
+.pb .haul{display:flex;gap:6px;margin-top:8px}
+.pb .slot{flex:1;border:2px dashed #94a3b8;border-radius:6px;min-height:52px;text-align:center;
+          font-size:11px;padding:3px}
+.pb .tip{font-size:10px;color:#475569;margin-top:6px;line-height:1.4}
+.field{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.field .s{width:74px;height:96px;border:3px dashed #94a3b8;border-radius:8px;display:flex;
+         align-items:center;justify-content:center;font-size:11px;color:#94a3b8;
+         background:#f8fafc;text-align:center;padding:4px}
+.track{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.track .t{width:88px;height:64px;border:2px solid #64748b;border-radius:6px;background:#f1f5f9;
+         text-align:center;font-size:11px;padding:3px}
+.pawn{width:78px;height:78px;border:3px solid #0ea5e9;border-radius:50%;background:#e0f2fe;
+      display:flex;align-items:center;justify-content:center;font-size:34px}
+.token{width:60px;height:60px;border:3px solid #dc2626;border-radius:50%;background:#fee2e2;
+       display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#b91c1c}
+.cheat{width:100%;background:#fffbeb;border:2px solid #f59e0b;border-radius:8px;padding:10px;
+       font-size:12px;page-break-inside:avoid;break-inside:avoid}
+.cheat table{width:100%;border-collapse:collapse;margin-top:6px}
+.cheat th,.cheat td{border:1px solid #fbbf24;padding:3px 6px;text-align:center;font-size:11px}
+.note{font-size:12px;color:#475569;margin:6px 0}
+@media print{
+  *{-webkit-print-color-adjust: exact !important;print-color-adjust: exact !important}
+  .print-hint{display:none}
+  body{padding:0;background:#fff}
+  h2{page-break-before:auto}
+  .card,.board,.pb,.cheat{page-break-inside:avoid;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<h1>🪼 海绵宝宝：水母田大捕捞</h1>
+<div class="sub">SpongeBob: Jellyfish Roundup · 打印道具包</div>
+<div class="print-hint">
+<strong>⚠️ 重要打印提示：</strong>
+<ul>
+<li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+<li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则卡牌颜色会丢失</li>
+<li>水母卡与网子卡建议使用<strong>卡纸</strong>（200g 以上）打印，可裁剪后塑封</li>
+<li>玩家板可用普通 A4 纸打印，也可用卡纸增加耐用性</li>
+<li>建议先打印 1 份试排版，确认无误后再批量打印</li>
+</ul>
+</div>
+<h2>1. 水母田中央板（打印 1 份）</h2>
+<div class="board">
+<h3>🪼 水母田 · 本轮翻出的水母摆放区</h3>
+<div class="field">
+<div class="s">槽 1</div>
+<div class="s">槽 2</div>
+<div class="s">槽 3</div>
+<div class="s">槽 4</div>
+<div class="s">槽 5</div>
+<div class="s">槽 6</div>
+<div class="s">槽 7</div>
+<div class="s">槽 8</div>
+</div>
+<div class="note">每轮从牌堆翻出「人数 + 2」只水母，正面朝上摆入槽位。🌊 洋流事件时额外翻 2 只（最多占满 8 槽）。轮末没被捞走的水母直接移除。</div>
+</div>
+<div class="board">
+<h3>🦠 痞老板事件轨（开局全部翻开，排成一列）</h3>
+<div class="track">
+<div class="t"><strong>R1</strong><br>🫧 泡泡日</div>
+<div class="t"><strong>R2</strong><br>⚡ 雷暴</div>
+<div class="t"><strong>R3</strong><br>🧲 磁力网</div>
+<div class="t"><strong>R4</strong><br>🌊 洋流</div>
+<div class="t"><strong>R5</strong><br>🥶 寒流</div>
+<div class="t"><strong>R6</strong><br>🔥 热浪</div>
+<div class="t"><strong>R7</strong><br>🕶️ 隐形水母</div>
+<div class="t"><strong>R8</strong><br>🦠 痞老板的阴谋</div>
+</div>
+<div class="note">把这 8 张事件卡按 R1-R8 顺序正面朝上排开，用一枚标记指示当前轮次。事件轨全程公开，玩家可提前 8 轮规划。</div>
+</div>
+<h2>2. 玩家板（每人 1 张，共打印 6 张）</h2>
+<div class="pb">
+<div class="hd"><span>👤 玩家板 1</span><span>安全线：___ 格</span></div>
+<div class="bar">
+<div class="c safe">0</div>
+<div class="c safe">1</div>
+<div class="c safe">2</div>
+<div class="c safe">3</div>
+<div class="c safe">4</div>
+<div class="c safe">5</div>
+<div class="c safe">6</div>
+<div class="c safe">7</div>
+<div class="c safe">8</div>
+<div class="c dang">9</div>
+<div class="c dang">10</div>
+<div class="c dang">11</div>
+<div class="c dang">12</div>
+</div>
+<div class="note">⚡ 电量条：用一枚夹子标示当前电压。绿色 = 安全区，红色 = 封冻区（超过安全线）。</div>
+<div class="haul">
+<div class="slot">🟣 泡泡<br>×0</div>
+<div class="slot">🔵 海蓝<br>×0</div>
+<div class="slot">🟡 黄金<br>×0</div>
+<div class="slot">🔴 电王<br>×0</div>
+</div>
+<div class="tip">🧺 战利品栏：捞到的水母按颜色分列摆放。成组奖励 → 3 只 +3 / 4 只 +6 / 5 只 +9 / 6 只及以上 +12（封顶）</div>
+</div>
+<br>
+<div class="pb">
+<div class="hd"><span>👤 玩家板 2</span><span>安全线：___ 格</span></div>
+<div class="bar">
+<div class="c safe">0</div>
+<div class="c safe">1</div>
+<div class="c safe">2</div>
+<div class="c safe">3</div>
+<div class="c safe">4</div>
+<div class="c safe">5</div>
+<div class="c safe">6</div>
+<div class="c safe">7</div>
+<div class="c safe">8</div>
+<div class="c dang">9</div>
+<div class="c dang">10</div>
+<div class="c dang">11</div>
+<div class="c dang">12</div>
+</div>
+<div class="note">⚡ 电量条：用一枚夹子标示当前电压。绿色 = 安全区，红色 = 封冻区（超过安全线）。</div>
+<div class="haul">
+<div class="slot">🟣 泡泡<br>×0</div>
+<div class="slot">🔵 海蓝<br>×0</div>
+<div class="slot">🟡 黄金<br>×0</div>
+<div class="slot">🔴 电王<br>×0</div>
+</div>
+<div class="tip">🧺 战利品栏：捞到的水母按颜色分列摆放。成组奖励 → 3 只 +3 / 4 只 +6 / 5 只 +9 / 6 只及以上 +12（封顶）</div>
+</div>
+<br>
+<div class="pb">
+<div class="hd"><span>👤 玩家板 3</span><span>安全线：___ 格</span></div>
+<div class="bar">
+<div class="c safe">0</div>
+<div class="c safe">1</div>
+<div class="c safe">2</div>
+<div class="c safe">3</div>
+<div class="c safe">4</div>
+<div class="c safe">5</div>
+<div class="c safe">6</div>
+<div class="c safe">7</div>
+<div class="c safe">8</div>
+<div class="c dang">9</div>
+<div class="c dang">10</div>
+<div class="c dang">11</div>
+<div class="c dang">12</div>
+</div>
+<div class="note">⚡ 电量条：用一枚夹子标示当前电压。绿色 = 安全区，红色 = 封冻区（超过安全线）。</div>
+<div class="haul">
+<div class="slot">🟣 泡泡<br>×0</div>
+<div class="slot">🔵 海蓝<br>×0</div>
+<div class="slot">🟡 黄金<br>×0</div>
+<div class="slot">🔴 电王<br>×0</div>
+</div>
+<div class="tip">🧺 战利品栏：捞到的水母按颜色分列摆放。成组奖励 → 3 只 +3 / 4 只 +6 / 5 只 +9 / 6 只及以上 +12（封顶）</div>
+</div>
+<br>
+<div class="pb">
+<div class="hd"><span>👤 玩家板 4</span><span>安全线：___ 格</span></div>
+<div class="bar">
+<div class="c safe">0</div>
+<div class="c safe">1</div>
+<div class="c safe">2</div>
+<div class="c safe">3</div>
+<div class="c safe">4</div>
+<div class="c safe">5</div>
+<div class="c safe">6</div>
+<div class="c safe">7</div>
+<div class="c safe">8</div>
+<div class="c dang">9</div>
+<div class="c dang">10</div>
+<div class="c dang">11</div>
+<div class="c dang">12</div>
+</div>
+<div class="note">⚡ 电量条：用一枚夹子标示当前电压。绿色 = 安全区，红色 = 封冻区（超过安全线）。</div>
+<div class="haul">
+<div class="slot">🟣 泡泡<br>×0</div>
+<div class="slot">🔵 海蓝<br>×0</div>
+<div class="slot">🟡 黄金<br>×0</div>
+<div class="slot">🔴 电王<br>×0</div>
+</div>
+<div class="tip">🧺 战利品栏：捞到的水母按颜色分列摆放。成组奖励 → 3 只 +3 / 4 只 +6 / 5 只 +9 / 6 只及以上 +12（封顶）</div>
+</div>
+<br>
+<div class="pb">
+<div class="hd"><span>👤 玩家板 5</span><span>安全线：___ 格</span></div>
+<div class="bar">
+<div class="c safe">0</div>
+<div class="c safe">1</div>
+<div class="c safe">2</div>
+<div class="c safe">3</div>
+<div class="c safe">4</div>
+<div class="c safe">5</div>
+<div class="c safe">6</div>
+<div class="c safe">7</div>
+<div class="c safe">8</div>
+<div class="c dang">9</div>
+<div class="c dang">10</div>
+<div class="c dang">11</div>
+<div class="c dang">12</div>
+</div>
+<div class="note">⚡ 电量条：用一枚夹子标示当前电压。绿色 = 安全区，红色 = 封冻区（超过安全线）。</div>
+<div class="haul">
+<div class="slot">🟣 泡泡<br>×0</div>
+<div class="slot">🔵 海蓝<br>×0</div>
+<div class="slot">🟡 黄金<br>×0</div>
+<div class="slot">🔴 电王<br>×0</div>
+</div>
+<div class="tip">🧺 战利品栏：捞到的水母按颜色分列摆放。成组奖励 → 3 只 +3 / 4 只 +6 / 5 只 +9 / 6 只及以上 +12（封顶）</div>
+</div>
+<br>
+<div class="pb">
+<div class="hd"><span>👤 玩家板 6</span><span>安全线：___ 格</span></div>
+<div class="bar">
+<div class="c safe">0</div>
+<div class="c safe">1</div>
+<div class="c safe">2</div>
+<div class="c safe">3</div>
+<div class="c safe">4</div>
+<div class="c safe">5</div>
+<div class="c safe">6</div>
+<div class="c safe">7</div>
+<div class="c safe">8</div>
+<div class="c dang">9</div>
+<div class="c dang">10</div>
+<div class="c dang">11</div>
+<div class="c dang">12</div>
+</div>
+<div class="note">⚡ 电量条：用一枚夹子标示当前电压。绿色 = 安全区，红色 = 封冻区（超过安全线）。</div>
+<div class="haul">
+<div class="slot">🟣 泡泡<br>×0</div>
+<div class="slot">🔵 海蓝<br>×0</div>
+<div class="slot">🟡 黄金<br>×0</div>
+<div class="slot">🔴 电王<br>×0</div>
+</div>
+<div class="tip">🧺 战利品栏：捞到的水母按颜色分列摆放。成组奖励 → 3 只 +3 / 4 只 +6 / 5 只 +9 / 6 只及以上 +12（封顶）</div>
+</div>
+<br>
+<h2>3. 水母卡（共 64 张）</h2>
+<div class="note">按人数取用：3人 40 张 / 4人 48 张 / 5人 56 张 / 6人 64 张，详见 README 第 3.3 节。多出的卡放回盒中。</div>
+<div class="grid">
+<div class="card jelly" style="background:#f3e8ff;border-color:#a855f7">
+<span class="badge">×19</span>
+<div><div class="ic">🟣</div><div class="nm">泡泡水母</div></div>
+<div><div class="vv">⚡1</div><div class="pt">1 分</div></div>
+</div>
+<div class="card jelly" style="background:#dbeafe;border-color:#3b82f6">
+<span class="badge">×19</span>
+<div><div class="ic">🔵</div><div class="nm">海蓝水母</div></div>
+<div><div class="vv">⚡2</div><div class="pt">3 分</div></div>
+</div>
+<div class="card jelly" style="background:#fef3c7;border-color:#f59e0b">
+<span class="badge">×16</span>
+<div><div class="ic">🟡</div><div class="nm">黄金水母</div></div>
+<div><div class="vv">⚡3</div><div class="pt">6 分</div></div>
+</div>
+<div class="card jelly" style="background:#fee2e2;border-color:#ef4444">
+<span class="badge">×10</span>
+<div><div class="ic">🔴</div><div class="nm">电王水母</div></div>
+<div><div class="vv">⚡4</div><div class="pt">10 分</div></div>
+</div>
+</div>
+<h2>4. 网子卡（每人 8 张，6 人共 48 张）</h2>
+<div class="note">每人发 1 套：<strong>1眼4压 ×2、2眼3压 ×2、2眼5压 ×2、3眼4压 ×1、4眼5压 ×1</strong>。⭐ 派大星额外加 1 张「2眼/4压」（9 选 8 用）。</div>
+<div class="grid">
+<div class="card net">
+<span class="badge">×12</span>
+<div><div class="ic">🕸️</div><div class="lb">网眼</div><div class="big">1</div></div>
+<div><div class="lb">电压容量</div><div class="big">4</div></div>
+</div>
+<div class="card net">
+<span class="badge">×12</span>
+<div><div class="ic">🕸️</div><div class="lb">网眼</div><div class="big">2</div></div>
+<div><div class="lb">电压容量</div><div class="big">3</div></div>
+</div>
+<div class="card net">
+<span class="badge">×12</span>
+<div><div class="ic">🕸️</div><div class="lb">网眼</div><div class="big">2</div></div>
+<div><div class="lb">电压容量</div><div class="big">5</div></div>
+</div>
+<div class="card net">
+<span class="badge">×6</span>
+<div><div class="ic">🕸️</div><div class="lb">网眼</div><div class="big">3</div></div>
+<div><div class="lb">电压容量</div><div class="big">4</div></div>
+</div>
+<div class="card net">
+<span class="badge">×6</span>
+<div><div class="ic">🕸️</div><div class="lb">网眼</div><div class="big">4</div></div>
+<div><div class="lb">电压容量</div><div class="big">5</div></div>
+</div>
+</div>
+<h2>5. 角色卡（各 1 张，共 6 张）</h2>
+<div class="grid">
+<div class="card role" style="background:#fef08a;border-color:#ca8a04">
+<div>
+<div class="ic">🧽</div>
+<div class="nm">海绵宝宝</div>
+<div class="sf">安全线 9 · 预算 16</div>
+</div>
+<div class="ab">无副作用
+安全线全场最高</div>
+</div>
+<div class="card role" style="background:#fce7f3;border-color:#db2777">
+<div>
+<div class="ic">⭐</div>
+<div class="nm">派大星</div>
+<div class="sf">安全线 8 · 预算 15</div>
+</div>
+<div class="ab">额外 1 张
+「2眼/4压」网子
+9 选 8 用</div>
+</div>
+<div class="card role" style="background:#dcfce7;border-color:#16a34a">
+<div>
+<div class="ic">🐙</div>
+<div class="nm">章鱼哥</div>
+<div class="sf">安全线 7 · 预算 14</div>
+</div>
+<div class="ab">恒定第 1 顺位
+但安全线仅 7</div>
+</div>
+<div class="card role" style="background:#ffedd5;border-color:#ea580c">
+<div>
+<div class="ic">🐿️</div>
+<div class="nm">珊迪</div>
+<div class="sf">安全线 8 · 预算 17</div>
+</div>
+<div class="ab">2 次把 1 只水母
+电压 −1</div>
+</div>
+<div class="card role" style="background:#fee2e2;border-color:#dc2626">
+<div>
+<div class="ic">🦀</div>
+<div class="nm">蟹老板</div>
+<div class="sf">安全线 6 · 预算 13</div>
+</div>
+<div class="ab">每只水母 +1 分
+但安全线仅 6</div>
+</div>
+<div class="card role" style="background:#e0e7ff;border-color:#4f46e5">
+<div>
+<div class="ic">🐌</div>
+<div class="nm">小蜗</div>
+<div class="sf">安全线 8 · 预算 15</div>
+</div>
+<div class="ab">电量 ≤4 时
+恒定第 1 顺位</div>
+</div>
+</div>
+<h2>6. 痞老板事件卡（各 1 张，共 8 张）</h2>
+<div class="grid">
+<div class="card evt">
+<div><div class="rd">R1</div><div class="ic">🫧</div><div class="nm">泡泡日</div></div>
+<div class="fx">本轮所有水母电压 −1（最低 1）
+分值不变</div>
+</div>
+<div class="card evt">
+<div><div class="rd">R2</div><div class="ic">⚡</div><div class="nm">雷暴</div></div>
+<div class="fx">本轮所有水母电压 +1</div>
+</div>
+<div class="card evt">
+<div><div class="rd">R3</div><div class="ic">🧲</div><div class="nm">磁力网</div></div>
+<div class="fx">本轮全场网子电压容量 +2</div>
+</div>
+<div class="card evt">
+<div><div class="rd">R4</div><div class="ic">🌊</div><div class="nm">洋流</div></div>
+<div class="fx">本轮额外翻出 2 只水母</div>
+</div>
+<div class="card evt">
+<div><div class="rd">R5</div><div class="ic">🥶</div><div class="nm">寒流</div></div>
+<div class="fx">本轮散热 +1（每人多散 1 点）</div>
+</div>
+<div class="card evt">
+<div><div class="rd">R6</div><div class="ic">🔥</div><div class="nm">热浪</div></div>
+<div class="fx">本轮不散热</div>
+</div>
+<div class="card evt">
+<div><div class="rd">R7</div><div class="ic">🕶️</div><div class="nm">隐形水母</div></div>
+<div class="fx">本轮所有水母分值 +1（永久）</div>
+</div>
+<div class="card evt">
+<div><div class="rd">R8</div><div class="ic">🦠</div><div class="nm">痞老板的阴谋</div></div>
+<div class="fx">电量最高者最后挑
+⚡≥3 的水母 +2 分</div>
+</div>
+</div>
+<h2>7. 棋子与电量标记（各 6 枚）</h2>
+<div class="grid">
+<div class="pawn">🧽</div>
+<div class="pawn">⭐</div>
+<div class="pawn">🐙</div>
+<div class="pawn">🐿️</div>
+<div class="pawn">🦀</div>
+<div class="pawn">🐌</div>
+</div>
+<br>
+<div class="grid">
+<div class="token">⚡</div>
+<div class="token">⚡</div>
+<div class="token">⚡</div>
+<div class="token">⚡</div>
+<div class="token">⚡</div>
+<div class="token">⚡</div>
+</div>
+<div class="note">电量标记放在玩家板电量条上标示当前电压；棋子用于标示角色身份。</div>
+<h2>8. 速查卡（打印 2 张）</h2>
+<div class="cheat">
+<strong>📌 每轮 5 步</strong>
+<div class="note">① 翻水母（人数+2 只）→ ② 定顺位（电量从低到高）→ ③ 暗置并同时翻开网子 → ④ 按顺位依次捞取 → ⑤ 加电压、散热 −1、清场</div>
+<strong>📌 捞取三条件</strong>
+<div class="note">① 已捞只数 &lt; 网眼数　② 已捞电压 + 该只 ≤ 电压容量　③ 当前电量 + 已捞 + 该只 ≤ 安全线</div>
+</div>
+<br>
+<div class="cheat">
+<strong>⚡ 三条恒等式</strong>
+<table>
+<tr><th>恒等式</th><th>内容</th></tr>
+<tr><td>A</td><td>电压预算 = 安全线 + 7 = <strong>15</strong>（与人数无关）</td></tr>
+<tr><td>B</td><td>6 只 🟣 = 6 电压 = <strong>18 分</strong>，效率 3.00 全场最高</td></tr>
+<tr><td>C</td><td>🔴 电王 ⚡4 ⇒ 需要「电量 ≤ 安全线 − 4」</td></tr>
+</table>
+<table>
+<tr><th>种类</th><th>🟣 泡泡</th><th>🔵 海蓝</th><th>🟡 黄金</th><th>🔴 电王</th></tr>
+<tr><td>电压</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+<tr><td>分值</td><td>1</td><td>3</td><td>6</td><td>10</td></tr>
+<tr><td>效率</td><td>1.00</td><td>1.50</td><td>2.00</td><td>2.50</td></tr>
+</table>
+<div class="note">成组奖励：3 只 +3 / 4 只 +6 / 5 只 +9 / 6 只及以上 +12（封顶）</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FX战士：杠杆风暴 - 打印道具</title>
+<style>
+
+:root{
+  --ink:#1b2430; --sub:#5f6b7a; --line:#d7dee7; --paper:#ffffff;
+  --navy:#1a3a6b; --navy-l:#eef3fa; --gold:#a8801f; --gold-l:#fdf5e0;
+  --up:#d93025; --up-l:#fdecea; --down:#0f9d58; --down-l:#e8f5ed;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:22px 18px 60px;background:#f4f7fb;color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  font-size:13px;line-height:1.65;}
+.wrap{max-width:1180px;margin:0 auto;}
+h1{font-size:26px;margin:0 0 4px;color:var(--navy);letter-spacing:.5px;}
+.sub-title{color:var(--sub);font-size:13px;margin:0 0 16px;}
+.print-hint{background:var(--gold-l);border:1px solid #e6d3a3;border-left:5px solid var(--gold);
+  border-radius:8px;padding:12px 16px;margin:0 0 22px;}
+.print-hint strong{color:#8a6812;}
+.print-hint ul{margin:6px 0 0;padding-left:20px;}
+.print-hint li{margin:3px 0;}
+.sec{margin:30px 0 12px;padding:6px 0 6px 12px;font-size:17px;color:var(--navy);
+  border-left:5px solid var(--navy);background:var(--navy-l);border-radius:0 6px 6px 0;}
+.sec-note{float:right;font-size:12px;font-weight:400;color:var(--sub);margin-right:10px;}
+.grid{display:flex;flex-wrap:wrap;gap:12px;}
+.grid-wide{display:flex;flex-wrap:wrap;gap:16px;}
+.card{position:relative;width:170px;min-height:236px;border:2px solid #ccc;border-radius:10px;
+  overflow:hidden;break-inside:avoid;page-break-inside:avoid;
+  box-shadow:0 1px 3px rgba(20,40,70,.14);background:#fff;}
+.card-head{display:flex;align-items:center;gap:6px;padding:7px 9px;font-weight:700;font-size:13.5px;}
+.ch-icon{font-size:16px;}
+.ch-title{letter-spacing:.3px;}
+.card-body{padding:8px 10px 10px;min-height:180px;}
+.c-sub{font-size:11px;font-weight:700;letter-spacing:.4px;margin-bottom:5px;
+  border-bottom:1px dashed rgba(0,0,0,.16);padding-bottom:4px;}
+.c-text{font-size:11.5px;line-height:1.55;}
+.c-text b{color:#111;}
+.qty{position:absolute;top:6px;right:6px;color:#fff;font-size:10.5px;font-weight:700;
+  padding:1px 6px;border-radius:9px;letter-spacing:.3px;}
+.panel{width:100%;border:2px solid var(--navy);border-radius:10px;overflow:hidden;
+  break-inside:avoid;page-break-inside:avoid;background:#fff;margin-bottom:12px;}
+.panel-h{background:var(--navy);color:#fff;padding:7px 12px;font-weight:700;font-size:14px;
+  display:flex;justify-content:space-between;align-items:center;}
+.panel-b{padding:10px 12px;}
+table{border-collapse:collapse;width:100%;font-size:11.5px;}
+th,td{border:1px solid var(--line);padding:4px 7px;text-align:center;}
+th{background:var(--navy-l);color:var(--navy);font-weight:700;}
+td.l{text-align:left;}
+.track{display:flex;flex-wrap:wrap;gap:2px;margin:8px 0;}
+.tk{width:46px;height:56px;border:1px solid var(--line);border-radius:4px;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:12px;}
+.tk-neg{background:#e8f5ed;color:#0b7a44;}
+.tk-pos{background:#fdecea;color:#b3261e;}
+.tk-zero{background:#fdf5e0;color:#8a6812;border-width:2px;border-color:var(--gold);}
+.tk small{font-size:9px;font-weight:400;color:var(--sub);}
+.chip{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:700;
+  margin:2px 3px 2px 0;}
+.chip-up{background:var(--up-l);color:#b3261e;}
+.chip-down{background:var(--down-l);color:#0b7a44;}
+.chip-gold{background:var(--gold-l);color:#8a6812;}
+.chip-navy{background:var(--navy-l);color:var(--navy);}
+.pawn{width:62px;height:62px;border-radius:50%;border:3px solid var(--navy);background:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:22px;break-inside:avoid;font-weight:700;}
+.pawn small{font-size:9px;color:var(--sub);}
+.qcard{width:100%;border:2px solid var(--gold);border-radius:10px;background:#fffdf6;
+  padding:10px 14px;margin-bottom:12px;break-inside:avoid;page-break-inside:avoid;}
+.qcard h3{margin:0 0 6px;font-size:14px;color:#8a6812;}
+.qcard table{margin-bottom:8px;}
+.note{background:#fff;border:1px dashed var(--line);border-radius:8px;padding:10px 14px;
+  font-size:12px;color:var(--sub);margin-top:6px;}
+@media print{
+  *{-webkit-print-color-adjust: exact !important;print-color-adjust: exact !important;}
+  .print-hint{display:none;}
+  body{background:#fff;padding:0;}
+  .sec{page-break-after:avoid;}
+}
+
+</style>
+</head>
+<body><div class="wrap">
+<h1>💹 FX战士：杠杆风暴　打印道具</h1>
+<p class="sub-title">FX Warrior: Leverage Storm　·　2-5 人　·　45-75 分钟　·　卡牌类　·　共 132 张卡牌 + 汇率轨 + 5 块交易面板</p>
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong> 打印，建议设置 <strong>最小边距</strong>。</li>
+    <li>在打印对话框中，务必 <strong>勾选「背景图形」</strong> 选项，否则所有彩色底色会丢失。</li>
+    <li>卡牌建议使用 <strong>卡纸（200-250g）</strong> 打印并塑封；汇率轨与交易面板可用普通 A4。</li>
+    <li>订单卡、行情卡建议装入不透明牌套；指标卡需要<b>全程公开</b>，不要装套。</li>
+    <li>「×N」角标表示该卡需要打印 N 份。</li>
+  </ul>
+</div>
+  <h2 class="sec">1. 汇率轨板（1 张，横向放置）<span class="sec-note">指针起始在 0；触到 ±10 触发「央行干预」强制回弹 2 点</span></h2>
+  <div class="panel">
+    <div class="panel-h"><span>💱 USD/JPY 汇率轨　−10 ←→ +10</span><span style="font-weight:400;font-size:11px;">每格 = 1 点　·　每手每点盈亏 = 1　·　起始 0</span></div>
+    <div class="panel-b">
+      <div class="track">
+        <div class="tk tk-neg">-10<small>央妈</small></div>
+        <div class="tk tk-neg">-9<small></small></div>
+        <div class="tk tk-neg">-8<small></small></div>
+        <div class="tk tk-neg">-7<small></small></div>
+        <div class="tk tk-neg">-6<small></small></div>
+        <div class="tk tk-neg">-5<small></small></div>
+        <div class="tk tk-neg">-4<small></small></div>
+        <div class="tk tk-neg">-3<small></small></div>
+        <div class="tk tk-neg">-2<small></small></div>
+        <div class="tk tk-neg">-1<small></small></div>
+        <div class="tk tk-zero">0<small>起始</small></div>
+        <div class="tk tk-pos">+1<small></small></div>
+        <div class="tk tk-pos">+2<small></small></div>
+        <div class="tk tk-pos">+3<small></small></div>
+        <div class="tk tk-pos">+4<small></small></div>
+        <div class="tk tk-pos">+5<small></small></div>
+        <div class="tk tk-pos">+6<small></small></div>
+        <div class="tk tk-pos">+7<small></small></div>
+        <div class="tk tk-pos">+8<small></small></div>
+        <div class="tk tk-pos">+9<small></small></div>
+        <div class="tk tk-pos">+10<small>央妈</small></div>
+      </div>
+      <div class="note"><b>逐点移动规则（本作最关键的一条）：</b>行情卡给出 ±N 点后，指针<b>一格一格</b>移动，每移动一格立即检查一次 —— <b>先查止损、再查爆仓</b>。所以止损会在「触及的那一格」成交，而不是等今天的行情走完。这也是为什么「止损位必须小于爆仓距离」：两者在同一格同时触发时，判爆仓。</div>
+    </div>
+  </div>
+  <h2 class="sec">2. 玩家交易面板（5 张）<span class="sec-note">每人 1 块，用白板笔或筹码记录</span></h2>
+  <div class="panel">
+    <div class="panel-h"><span>📋 交易面板　玩家 1</span><span style="font-weight:400;font-size:11px;">起始资金 20　·　点差每笔 1</span></div>
+    <div class="panel-b">
+      <table>
+        <tr><th style="width:16%;">资金 F</th><th style="width:16%;">当前杠杆</th><th style="width:16%;">持仓方向</th><th style="width:16%;">持仓手数</th><th style="width:16%;">开仓价位</th><th style="width:20%;">止损距离</th></tr>
+        <tr><td style="height:34px;"></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <table style="margin-top:8px;">
+        <tr><th colspan="4">爆仓距离速算：⌊资金 ÷ 手数⌋　（与杠杆无关）</th></tr>
+        <tr><td>手数 1</td><td>2</td><td>3</td><td>4</td></tr>
+        <tr><td>5</td><td>6</td><td>8</td><td>10</td></tr>
+      </table>
+      <div style="margin-top:8px;"><span class="chip chip-navy">⚠️ 追加保证金 ×___</span><span class="chip chip-gold">终局每枚 −8 分</span><span class="chip chip-up">第 3 次爆仓 ⇒ 出局（记 0 分）</span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><span>📋 交易面板　玩家 2</span><span style="font-weight:400;font-size:11px;">起始资金 20　·　点差每笔 1</span></div>
+    <div class="panel-b">
+      <table>
+        <tr><th style="width:16%;">资金 F</th><th style="width:16%;">当前杠杆</th><th style="width:16%;">持仓方向</th><th style="width:16%;">持仓手数</th><th style="width:16%;">开仓价位</th><th style="width:20%;">止损距离</th></tr>
+        <tr><td style="height:34px;"></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <table style="margin-top:8px;">
+        <tr><th colspan="4">爆仓距离速算：⌊资金 ÷ 手数⌋　（与杠杆无关）</th></tr>
+        <tr><td>手数 1</td><td>2</td><td>3</td><td>4</td></tr>
+        <tr><td>5</td><td>6</td><td>8</td><td>10</td></tr>
+      </table>
+      <div style="margin-top:8px;"><span class="chip chip-navy">⚠️ 追加保证金 ×___</span><span class="chip chip-gold">终局每枚 −8 分</span><span class="chip chip-up">第 3 次爆仓 ⇒ 出局（记 0 分）</span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><span>📋 交易面板　玩家 3</span><span style="font-weight:400;font-size:11px;">起始资金 20　·　点差每笔 1</span></div>
+    <div class="panel-b">
+      <table>
+        <tr><th style="width:16%;">资金 F</th><th style="width:16%;">当前杠杆</th><th style="width:16%;">持仓方向</th><th style="width:16%;">持仓手数</th><th style="width:16%;">开仓价位</th><th style="width:20%;">止损距离</th></tr>
+        <tr><td style="height:34px;"></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <table style="margin-top:8px;">
+        <tr><th colspan="4">爆仓距离速算：⌊资金 ÷ 手数⌋　（与杠杆无关）</th></tr>
+        <tr><td>手数 1</td><td>2</td><td>3</td><td>4</td></tr>
+        <tr><td>5</td><td>6</td><td>8</td><td>10</td></tr>
+      </table>
+      <div style="margin-top:8px;"><span class="chip chip-navy">⚠️ 追加保证金 ×___</span><span class="chip chip-gold">终局每枚 −8 分</span><span class="chip chip-up">第 3 次爆仓 ⇒ 出局（记 0 分）</span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><span>📋 交易面板　玩家 4</span><span style="font-weight:400;font-size:11px;">起始资金 20　·　点差每笔 1</span></div>
+    <div class="panel-b">
+      <table>
+        <tr><th style="width:16%;">资金 F</th><th style="width:16%;">当前杠杆</th><th style="width:16%;">持仓方向</th><th style="width:16%;">持仓手数</th><th style="width:16%;">开仓价位</th><th style="width:20%;">止损距离</th></tr>
+        <tr><td style="height:34px;"></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <table style="margin-top:8px;">
+        <tr><th colspan="4">爆仓距离速算：⌊资金 ÷ 手数⌋　（与杠杆无关）</th></tr>
+        <tr><td>手数 1</td><td>2</td><td>3</td><td>4</td></tr>
+        <tr><td>5</td><td>6</td><td>8</td><td>10</td></tr>
+      </table>
+      <div style="margin-top:8px;"><span class="chip chip-navy">⚠️ 追加保证金 ×___</span><span class="chip chip-gold">终局每枚 −8 分</span><span class="chip chip-up">第 3 次爆仓 ⇒ 出局（记 0 分）</span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-h"><span>📋 交易面板　玩家 5</span><span style="font-weight:400;font-size:11px;">起始资金 20　·　点差每笔 1</span></div>
+    <div class="panel-b">
+      <table>
+        <tr><th style="width:16%;">资金 F</th><th style="width:16%;">当前杠杆</th><th style="width:16%;">持仓方向</th><th style="width:16%;">持仓手数</th><th style="width:16%;">开仓价位</th><th style="width:20%;">止损距离</th></tr>
+        <tr><td style="height:34px;"></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <table style="margin-top:8px;">
+        <tr><th colspan="4">爆仓距离速算：⌊资金 ÷ 手数⌋　（与杠杆无关）</th></tr>
+        <tr><td>手数 1</td><td>2</td><td>3</td><td>4</td></tr>
+        <tr><td>5</td><td>6</td><td>8</td><td>10</td></tr>
+      </table>
+      <div style="margin-top:8px;"><span class="chip chip-navy">⚠️ 追加保证金 ×___</span><span class="chip chip-gold">终局每枚 −8 分</span><span class="chip chip-up">第 3 次爆仓 ⇒ 出局（记 0 分）</span></div>
+    </div>
+  </div>
+  <h2 class="sec">3. 杠杆卡（4 档 × 5 套 = 20 张）<span class="sec-note">面朝上放在自己面前 —— 你桌上的这张卡，就是你的爆仓距离</span></h2>
+  <div class="grid">
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">⚖️</span><span class="ch-title">1× 杠杆</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">LEVERAGE 1×</div>
+      <div class="c-text">每手保证金 <b>10</b><br>满仓爆仓距离 <b>10 点</b><br>20 资金满仓 <b>2 手</b><br>满仓每点盈亏 <b>2</b><br><div style='margin-top:5px;font-weight:700;'>慢，但活得久</div></div>
+    </div>
+    <span class="qty" style="background:#0f9d58;">×5</span>
+  </div>
+  <div class="card" style="border-color:#a8801f;">
+    <div class="card-head" style="background:#a8801f;color:#fff;">
+      <span class="ch-icon">⚖️</span><span class="ch-title">2× 杠杆</span>
+    </div>
+    <div class="card-body" style="background:#fdf5e0;">
+      <div class="c-sub" style="color:#8a6812;">LEVERAGE 2×</div>
+      <div class="c-text">每手保证金 <b>5</b><br>满仓爆仓距离 <b>5 点</b><br>20 资金满仓 <b>4 手</b><br>满仓每点盈亏 <b>4</b><br><div style='margin-top:5px;font-weight:700;'>进可攻退可守</div></div>
+    </div>
+    <span class="qty" style="background:#a8801f;">×5</span>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">⚖️</span><span class="ch-title">5× 杠杆</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">LEVERAGE 5×</div>
+      <div class="c-text">每手保证金 <b>2</b><br>满仓爆仓距离 <b>2 点</b><br>20 资金满仓 <b>10 手</b><br>满仓每点盈亏 <b>10</b><br><div style='margin-top:5px;font-weight:700;'>只剩 2 点容错</div></div>
+    </div>
+    <span class="qty" style="background:#d93025;">×5</span>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">⚖️</span><span class="ch-title">10× 杠杆</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">LEVERAGE 10×</div>
+      <div class="c-text">每手保证金 <b>1</b><br>满仓爆仓距离 <b>1 点</b><br>20 资金满仓 <b>20 手</b><br>满仓每点盈亏 <b>20</b><br><div style='margin-top:5px;font-weight:700;'>止损在这里是废纸</div></div>
+    </div>
+    <span class="qty" style="background:#d93025;">×5</span>
+  </div>
+  </div>
+  <div class="note"><b>恒等式 K：</b>满仓时 <b>每点盈亏 × 爆仓距离 ≡ 20（你的全部身家）</b>。杠杆不改变你的身家，只决定把身家切成「赚多少」和「扛多久」的比例。换杠杆免费，每回合限 1 次，只能在下单阶段进行。</div>
+  <h2 class="sec">4. 订单卡（9 种模板，共 60 张）<span class="sec-note">牌库 60 张　·　起手 5 张　·　每回合补到 5 张　·　每回合最多打 2 张</span></h2>
+  <div class="grid">
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">📗</span><span class="ch-title">市价买入</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">BUY  ·  开多仓</div>
+      <div class="c-text">以当前杠杆<b>买入 3 手</b>多仓（保证金不足则开到最大可开手数）。<br>若已持空仓，先按现价平仓（付 1 点差），再开多（再付 1 点差）。<br><i>付点差 1</i></div>
+    </div>
+    <span class="qty" style="background:#d93025;">×12</span>
+  </div>
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">📕</span><span class="ch-title">市价卖出</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">SELL  ·  开空仓</div>
+      <div class="c-text">以当前杠杆<b>卖出 3 手</b>空仓（保证金不足则开到最大可开手数）。<br>若已持多仓，先按现价平仓（付 1 点差），再开空（再付 1 点差）。<br><i>付点差 1</i></div>
+    </div>
+    <span class="qty" style="background:#0f9d58;">×12</span>
+  </div>
+  <div class="card" style="border-color:#3c4a5c;">
+    <div class="card-head" style="background:#3c4a5c;color:#fff;">
+      <span class="ch-icon">⚪</span><span class="ch-title">全部平仓</span>
+    </div>
+    <div class="card-body" style="background:#eef1f5;">
+      <div class="c-sub" style="color:#2b3542;">CLOSE  ·  落袋为安</div>
+      <div class="c-text"><b>结算全部持仓</b>，浮动盈亏转为实际资金。<br>平仓后止损设置<b>继续有效</b>。<br><i>付点差 1</i></div>
+    </div>
+    <span class="qty" style="background:#3c4a5c;">×8</span>
+  </div>
+  <div class="card" style="border-color:#3c4a5c;">
+    <div class="card-head" style="background:#3c4a5c;color:#fff;">
+      <span class="ch-icon">✂️</span><span class="ch-title">减仓</span>
+    </div>
+    <div class="card-body" style="background:#eef1f5;">
+      <div class="c-sub" style="color:#2b3542;">TRIM  ·  降低敞口</div>
+      <div class="c-text"><b>平掉 2 手</b>（不足 2 手则全部平掉）。<br>减仓能把爆仓距离<b>拉长</b>，代价是少赚。<br><i>付点差 1</i></div>
+    </div>
+    <span class="qty" style="background:#3c4a5c;">×6</span>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🛑</span><span class="ch-title">止损 1 点</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">STOP  ·  最紧</div>
+      <div class="c-text">设止损距离 <b>1 点</b>。行情<b>逐点移动</b>，触及即自动平仓。<br>⚠️ 10× 杠杆下爆仓距离也是 1 点 ⇒ <b>同时触发，判爆仓</b>，这张卡是废纸。<br><i>长期有效，直到你改或爆仓</i></div>
+    </div>
+    <span class="qty" style="background:#e8890c;">×4</span>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🛑</span><span class="ch-title">止损 2 点</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">STOP  ·  适中</div>
+      <div class="c-text">设止损距离 <b>2 点</b>。行情<b>逐点移动</b>，触及即自动平仓。<br>5× 满仓的爆仓距离恰为 2 点 ⇒ 同样判爆仓，<b>只有 1 点止损能救 5×</b>。<br><i>长期有效，直到你改或爆仓</i></div>
+    </div>
+    <span class="qty" style="background:#e8890c;">×4</span>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🛑</span><span class="ch-title">止损 3 点</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">STOP  ·  宽松</div>
+      <div class="c-text">设止损距离 <b>3 点</b>。行情<b>逐点移动</b>，触及即自动平仓。<br>1×／2× 的爆仓距离是 10／5 点 ⇒ <b>3 点止损来得及生效</b>。<br><i>长期有效，直到你改或爆仓</i></div>
+    </div>
+    <span class="qty" style="background:#e8890c;">×2</span>
+  </div>
+  <div class="card" style="border-color:#1a6fb5;">
+    <div class="card-head" style="background:#1a6fb5;color:#fff;">
+      <span class="ch-icon">📊</span><span class="ch-title">技术分析</span>
+    </div>
+    <div class="card-body" style="background:#e8f2fb;">
+      <div class="c-sub" style="color:#12558c;">ANALYSIS  ·  情报</div>
+      <div class="c-text">查看<b>下一日</b>的行情卡<b>波动等级</b>（大／小），<b>看不到方向</b>。<br>然后<b>补抽 1 张</b>订单卡。<br><i>知道明天风浪大，今天就该收帆或收紧止损</i></div>
+    </div>
+    <span class="qty" style="background:#1a6fb5;">×8</span>
+  </div>
+  <div class="card" style="border-color:#a8801f;">
+    <div class="card-head" style="background:#a8801f;color:#fff;">
+      <span class="ch-icon">⏸️</span><span class="ch-title">观望</span>
+    </div>
+    <div class="card-body" style="background:#fdf5e0;">
+      <div class="c-sub" style="color:#8a6812;">WAIT  ·  隔夜利息</div>
+      <div class="c-text">本回合不再操作，<b>资金 +2</b>（隔夜利息返还）。<br>空仓时打出最划算；有仓时打出等于白扔一次机会。<br><i>「不动」也是一种仓位</i></div>
+    </div>
+    <span class="qty" style="background:#a8801f;">×4</span>
+  </div>
+  </div>
+  <div class="grid" style="margin-top:6px;">
+  <div class="card" style="border-color:#a8801f;">
+    <div class="card-head" style="background:#a8801f;color:#fff;">
+      <span class="ch-icon">🔸</span><span class="ch-title">市价单（弃牌下单）</span>
+    </div>
+    <div class="card-body" style="background:#fdf5e0;">
+      <div class="c-sub" style="color:#8a6812;">MARKET ORDER  ·  兜底行动</div>
+      <div class="c-text"><b>弃掉 1 张任意订单卡</b>，即可买入或卖出 <b>2 手</b>（付点差 1）。<br>这是<b>永远不会卡死</b>的兜底手段：手上没有方向牌时，任何一张废牌都能换成一次下单。<br><i>每张牌都有价值 —— 这就是它存在的理由。</i></div>
+    </div>
+  </div>
+  </div>
+  <div class="note"><b>牌库构成：</b>📗买入 ×12　📕卖出 ×12　⚪平仓 ×8　✂️减仓 ×6　🛑止损1 ×4　🛑止损2 ×4　🛑止损3 ×2　📊分析 ×8　⏸️观望 ×4　＝ <b>60 张</b>。弃牌堆用尽时洗回重来。</div>
+  <h2 class="sec">5. 行情卡（7 种模板，共 24 张）<span class="sec-note">每局随机抽 12 张，暗置成牌堆，每日翻 1 张</span></h2>
+  <div class="grid">
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">📉</span><span class="ch-title">-3 点</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">TICK  -3</div>
+      <div class="c-text"><div style='font-size:26px;font-weight:800;text-align:center;margin:14px 0 8px;'>-3</div><div style='text-align:center;font-weight:700;'>🔻 贬值</div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>指针向左移动 3 格</div></div>
+    </div>
+    <span class="qty" style="background:#0f9d58;">×2</span>
+  </div>
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">📉</span><span class="ch-title">-2 点</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">TICK  -2</div>
+      <div class="c-text"><div style='font-size:26px;font-weight:800;text-align:center;margin:14px 0 8px;'>-2</div><div style='text-align:center;font-weight:700;'>🔻 贬值</div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>指针向左移动 2 格</div></div>
+    </div>
+    <span class="qty" style="background:#0f9d58;">×4</span>
+  </div>
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">📉</span><span class="ch-title">-1 点</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">TICK  -1</div>
+      <div class="c-text"><div style='font-size:26px;font-weight:800;text-align:center;margin:14px 0 8px;'>-1</div><div style='text-align:center;font-weight:700;'>🔻 贬值</div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>指针向左移动 1 格</div></div>
+    </div>
+    <span class="qty" style="background:#0f9d58;">×5</span>
+  </div>
+  <div class="card" style="border-color:#a8801f;">
+    <div class="card-head" style="background:#a8801f;color:#fff;">
+      <span class="ch-icon">➖</span><span class="ch-title">0 点</span>
+    </div>
+    <div class="card-body" style="background:#fdf5e0;">
+      <div class="c-sub" style="color:#8a6812;">TICK  0</div>
+      <div class="c-text"><div style='font-size:26px;font-weight:800;text-align:center;margin:14px 0 8px;'>0</div><div style='text-align:center;font-weight:700;'>⏸️ 持平</div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>指针不移动 0 格</div></div>
+    </div>
+    <span class="qty" style="background:#a8801f;">×2</span>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">📈</span><span class="ch-title">+1 点</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">TICK  +1</div>
+      <div class="c-text"><div style='font-size:26px;font-weight:800;text-align:center;margin:14px 0 8px;'>+1</div><div style='text-align:center;font-weight:700;'>🔺 升值</div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>指针向右移动 1 格</div></div>
+    </div>
+    <span class="qty" style="background:#d93025;">×5</span>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">📈</span><span class="ch-title">+2 点</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">TICK  +2</div>
+      <div class="c-text"><div style='font-size:26px;font-weight:800;text-align:center;margin:14px 0 8px;'>+2</div><div style='text-align:center;font-weight:700;'>🔺 升值</div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>指针向右移动 2 格</div></div>
+    </div>
+    <span class="qty" style="background:#d93025;">×4</span>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">📈</span><span class="ch-title">+3 点</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">TICK  +3</div>
+      <div class="c-text"><div style='font-size:26px;font-weight:800;text-align:center;margin:14px 0 8px;'>+3</div><div style='text-align:center;font-weight:700;'>🔺 升值</div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>指针向右移动 3 格</div></div>
+    </div>
+    <span class="qty" style="background:#d93025;">×2</span>
+  </div>
+  </div>
+  <div class="note"><b>牌堆构成：</b>−3 ×2　−2 ×4　−1 ×5　0 ×2　+1 ×5　+2 ×4　+3 ×2 ＝ <b>24 张</b>。期望 0.000，标准差 1.803，E|d| = 1.583。<b>变体（规划型）：</b>不用随机牌堆，直接把 README 7.x 示例里的固定序列（<code>+2 +3 −1 −3 −2 +3 +1 −3 −2 +2 +3 −2</code>）做成 12 张公开牌堆，适合教学局。</div>
+  <h2 class="sec">6. 指标卡（12 张，开局全部翻开）<span class="sec-note">这是公开信息 —— 你能提前 12 日规划，这正是本作的策略深度所在</span></h2>
+  <div class="grid">
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">🔺</span><span class="ch-title">第 1 日</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">SIGNAL  DAY 01</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>上行</div><div style='text-align:center;'>波动预期：<b>小</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">🔺</span><span class="ch-title">第 2 日</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">SIGNAL  DAY 02</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>上行</div><div style='text-align:center;'>波动预期：<b>大</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#3c4a5c;">
+    <div class="card-head" style="background:#3c4a5c;color:#fff;">
+      <span class="ch-icon">⚖️</span><span class="ch-title">第 3 日</span>
+    </div>
+    <div class="card-body" style="background:#eef1f5;">
+      <div class="c-sub" style="color:#2b3542;">SIGNAL  DAY 03</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>震荡</div><div style='text-align:center;'>波动预期：<b>小</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">🔻</span><span class="ch-title">第 4 日</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">SIGNAL  DAY 04</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>下行</div><div style='text-align:center;'>波动预期：<b>大</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div><div style='margin-top:6px;padding:3px 5px;background:#fff4e2;border-radius:4px;font-size:10.5px;font-weight:700;color:#c26f00;'>🦢 央行干预</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">🔻</span><span class="ch-title">第 5 日</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">SIGNAL  DAY 05</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>下行</div><div style='text-align:center;'>波动预期：<b>小</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#3c4a5c;">
+    <div class="card-head" style="background:#3c4a5c;color:#fff;">
+      <span class="ch-icon">⚖️</span><span class="ch-title">第 6 日</span>
+    </div>
+    <div class="card-body" style="background:#eef1f5;">
+      <div class="c-sub" style="color:#2b3542;">SIGNAL  DAY 06</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>震荡</div><div style='text-align:center;'>波动预期：<b>大</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">🔺</span><span class="ch-title">第 7 日</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">SIGNAL  DAY 07</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>上行</div><div style='text-align:center;'>波动预期：<b>小</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">🔺</span><span class="ch-title">第 8 日</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">SIGNAL  DAY 08</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>上行</div><div style='text-align:center;'>波动预期：<b>大</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div><div style='margin-top:6px;padding:3px 5px;background:#fff4e2;border-radius:4px;font-size:10.5px;font-weight:700;color:#c26f00;'>🦢 非农爆冷</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#0f9d58;">
+    <div class="card-head" style="background:#0f9d58;color:#fff;">
+      <span class="ch-icon">🔻</span><span class="ch-title">第 9 日</span>
+    </div>
+    <div class="card-body" style="background:#e8f5ed;">
+      <div class="c-sub" style="color:#0b7a44;">SIGNAL  DAY 09</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>下行</div><div style='text-align:center;'>波动预期：<b>小</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#3c4a5c;">
+    <div class="card-head" style="background:#3c4a5c;color:#fff;">
+      <span class="ch-icon">⚖️</span><span class="ch-title">第 10 日</span>
+    </div>
+    <div class="card-body" style="background:#eef1f5;">
+      <div class="c-sub" style="color:#2b3542;">SIGNAL  DAY 10</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>震荡</div><div style='text-align:center;'>波动预期：<b>小</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">🔺</span><span class="ch-title">第 11 日</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">SIGNAL  DAY 11</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>上行</div><div style='text-align:center;'>波动预期：<b>大</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#d93025;">
+    <div class="card-head" style="background:#d93025;color:#fff;">
+      <span class="ch-icon">🔺</span><span class="ch-title">第 12 日</span>
+    </div>
+    <div class="card-body" style="background:#fdecea;">
+      <div class="c-sub" style="color:#b3261e;">SIGNAL  DAY 12</div>
+      <div class="c-text"><div style='font-size:20px;font-weight:800;text-align:center;margin:10px 0 4px;'>上行</div><div style='text-align:center;'>波动预期：<b>小</b></div><div style='text-align:center;color:#5f6b7a;font-size:10.5px;margin-top:6px;'>市场共识，非保证</div><div style='margin-top:6px;padding:3px 5px;background:#fff4e2;border-radius:4px;font-size:10.5px;font-weight:700;color:#c26f00;'>🦢 获利了结潮</div></div>
+    </div>
+  </div>
+  </div>
+  <div class="note"><b>命中率：</b>8 个有方向的日子里命中 6 个 = <b>75%</b>。第 8 日（非农爆冷）与第 12 日（获利了结潮）是<b>指标说上行、实际收跌</b>的黑天鹅日 —— 整个示例局的胜负就在这两天分出。</div>
+  <h2 class="sec">7. 黑天鹅卡（8 张）<span class="sec-note">指标卡带 🦢 的日子额外翻 1 张</span></h2>
+  <div class="grid">
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🏦</span><span class="ch-title">央行干预</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>本日行情若为正，改为 0；若为负，再 −2。</b></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">📉</span><span class="ch-title">非农爆冷</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>本日行情额外 −1。指标说上行也有可能暴跌。</b></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">💱</span><span class="ch-title">套息平仓</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>本日行情翻倍（保持同号）。</b></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">⚡</span><span class="ch-title">闪崩</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>本日行情强制改为 −3。</b></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🗣️</span><span class="ch-title">官员放话</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>本日行情额外 +2。</b></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🌊</span><span class="ch-title">流动性枯竭</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>本日所有点差翻倍（每笔 2）。</b></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🎢</span><span class="ch-title">双向扫损</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>本日先 +2 再 −2，止损会被扫两次。</b></div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#e8890c;">
+    <div class="card-head" style="background:#e8890c;color:#fff;">
+      <span class="ch-icon">🕊️</span><span class="ch-title">避险买盘</span>
+    </div>
+    <div class="card-body" style="background:#fff4e2;">
+      <div class="c-sub" style="color:#c26f00;">BLACK SWAN</div>
+      <div class="c-text"><b>所有空头立即按开盘价平仓（各付 1 点差）。</b></div>
+    </div>
+  </div>
+  </div>
+  <h2 class="sec">8. 交易员卡（6 张，每人 1 张）<span class="sec-note">角色能力　·　2 人局建议不用，3-5 人局各选 1 张</span></h2>
+  <div class="grid">
+  <div class="card" style="border-color:#1a6fb5;">
+    <div class="card-head" style="background:#1a6fb5;color:#fff;">
+      <span class="ch-icon">🧑‍🎓</span><span class="ch-title">稳健生徒</span>
+    </div>
+    <div class="card-body" style="background:#e8f2fb;">
+      <div class="c-sub" style="color:#12558c;">TRADER  ·  起始资金 22</div>
+      <div class="c-text">起始资金 22。<br>每局 1 次：把一次爆仓改为「资金重置为 14」。</div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#1a6fb5;">
+    <div class="card-head" style="background:#1a6fb5;color:#fff;">
+      <span class="ch-icon">🕵️</span><span class="ch-title">情报员</span>
+    </div>
+    <div class="card-body" style="background:#e8f2fb;">
+      <div class="c-sub" style="color:#12558c;">TRADER  ·  起始资金 20</div>
+      <div class="c-text">起手多抽 2 张订单卡。<br>每局 2 次：免费查看下一日波动等级。</div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#1a6fb5;">
+    <div class="card-head" style="background:#1a6fb5;color:#fff;">
+      <span class="ch-icon">💼</span><span class="ch-title">大户</span>
+    </div>
+    <div class="card-body" style="background:#e8f2fb;">
+      <div class="c-sub" style="color:#12558c;">TRADER  ·  起始资金 16</div>
+      <div class="c-text">起始资金 16，但<b>点差恒为 0</b>。<br>频繁交易者的梦想。</div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#1a6fb5;">
+    <div class="card-head" style="background:#1a6fb5;color:#fff;">
+      <span class="ch-icon">🛡️</span><span class="ch-title">风控师</span>
+    </div>
+    <div class="card-body" style="background:#e8f2fb;">
+      <div class="c-sub" style="color:#12558c;">TRADER  ·  起始资金 20</div>
+      <div class="c-text">开局即视为<b>已设止损 2 点</b>（不需卡牌）。<br>可随时用止损卡改。</div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#1a6fb5;">
+    <div class="card-head" style="background:#1a6fb5;color:#fff;">
+      <span class="ch-icon">⚡</span><span class="ch-title">日内客</span>
+    </div>
+    <div class="card-body" style="background:#e8f2fb;">
+      <div class="c-sub" style="color:#12558c;">TRADER  ·  起始资金 20</div>
+      <div class="c-text">每回合可打 <b>3 张</b>订单卡（而非 2 张）。</div>
+    </div>
+  </div>
+  <div class="card" style="border-color:#1a6fb5;">
+    <div class="card-head" style="background:#1a6fb5;color:#fff;">
+      <span class="ch-icon">🎲</span><span class="ch-title">摊平客</span>
+    </div>
+    <div class="card-body" style="background:#e8f2fb;">
+      <div class="c-sub" style="color:#12558c;">TRADER  ·  起始资金 20</div>
+      <div class="c-text">每局 1 次：把当前持仓的开仓价<b>改为现价</b>（浮亏清零）。</div>
+    </div>
+  </div>
+  </div>
+  <h2 class="sec">9. 速查卡（2 张）<span class="sec-note">建议每人打印 1 份放在手边</span></h2>
+  <div class="qcard">
+    <h3>📌 一号速查 · 三张表（背下来就能玩）</h3>
+    <div style="font-weight:700;color:#1a3a6b;font-size:12.5px;margin:6px 0 3px;">杠杆档位表</div>
+    <table><tr><th>杠杆</th><th>每手保证金</th><th>20 资金满仓手数</th><th>满仓爆仓距离</th></tr>
+    <tr><td>1</td><td>10</td><td>2 手</td><td>10 点</td></tr>
+    <tr><td>2</td><td>5</td><td>4 手</td><td>5 点</td></tr>
+    <tr><td>5</td><td>2</td><td>10 手</td><td>2 点</td></tr>
+    <tr><td>10</td><td>1</td><td>20 手</td><td>1 点</td></tr>
+    </table>
+    <div style="font-size:11px;color:#8a6812;font-weight:700;margin-bottom:6px;">每手每点盈亏恒为 1 —— 与杠杆无关。</div>
+    <div style="font-weight:700;color:#1a3a6b;font-size:12.5px;margin:6px 0 3px;">爆仓距离（一般式）</div>
+    <table><tr><th>资金 F</th><th>手数 1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>8</th><th>10</th><th>20</th></tr>
+    <tr><td>20</td><td>20 点</td><td>10 点</td><td>6 点</td><td>5 点</td><td>4 点</td><td>2 点</td><td>2 点</td><td>1 点</td></tr>
+    <tr><td>40</td><td>40 点</td><td>20 点</td><td>13 点</td><td>10 点</td><td>8 点</td><td>5 点</td><td>4 点</td><td>2 点</td></tr>
+    </table>
+    <div style="font-size:11px;color:#8a6812;font-weight:700;margin-bottom:6px;">爆仓距离 = 资金 ÷ 手数，与杠杆无关。</div>
+    <div style="font-weight:700;color:#1a3a6b;font-size:12.5px;margin:6px 0 3px;">止损有效性</div>
+    <table><tr><th>杠杆</th><th>满仓爆仓距离</th><th>S=1</th><th>S=2</th><th>S=3</th></tr>
+    <tr><td>1×</td><td>10 点</td><td>✔</td><td>✔</td><td>✔</td></tr>
+    <tr><td>2×</td><td>5 点</td><td>✔</td><td>✔</td><td>✔</td></tr>
+    <tr><td>5×</td><td>2 点</td><td>✔</td><td>✘</td><td>✘</td></tr>
+    <tr><td>10×</td><td>1 点</td><td>✘</td><td>✘</td><td>✘</td></tr>
+    </table>
+    <div style="font-size:11px;color:#8a6812;font-weight:700;margin-bottom:6px;">止损位必须小于爆仓距离才有效。</div>
+  </div>
+  <div class="qcard">
+    <h3>📌 二号速查 · 一个交易日的流程</h3>
+    <table><tr><th style="width:14%;">阶段</th><th>做什么</th></tr>
+    </table>
+    <div style="margin-top:8px;font-size:11.5px;"><span class="chip chip-up">恒等式 K：每点盈亏 × 爆仓距离 ≡ 20</span><span class="chip chip-navy">恒等式 B：爆仓距离 = 资金 ÷ 手数</span><span class="chip chip-gold">恒等式 G：止损必须 &lt; 爆仓距离才有效</span><span class="chip chip-down">恒等式 D：每手点差 = 2 ÷ 手数（重仓摊薄）</span></div>
+  </div>
+  <h2 class="sec">10. 棋子与标记<span class="sec-note">用卡纸打印后沿虚线剪下，或直接用筹码 / 骰子代替</span></h2>
+  <div class="grid-wide">
+    <div class="pawn">🔵<small>玩家 1</small></div>
+    <div class="pawn">🟠<small>玩家 2</small></div>
+    <div class="pawn">🟣<small>玩家 3</small></div>
+    <div class="pawn">🟢<small>玩家 4</small></div>
+    <div class="pawn">🟡<small>玩家 5</small></div>
+    <div class="pawn" style="border-color:#a8801f;">📍<small>汇率指针</small></div>
+    <div class="pawn" style="border-color:#d93025;">⚠️<small>追加保证金 ×10</small></div>
+    <div class="pawn" style="border-color:#1a6fb5;">💰<small>资金标记 ×5</small></div>
+    <div class="pawn" style="border-color:#0f9d58;">🧮<small>手数标记 ×20</small></div>
+  </div>
+  <div class="note"><b>替代方案：</b>资金 / 手数直接用纸笔或白板笔写在交易面板上；汇率指针用一枚硬币；⚠️ 标记用红色小方块。本作<b>不需要骰子</b>。</div>
+  <div class="note" style="margin-top:26px;text-align:center;color:#8a6812;">
+    💹 <b>FX战士：杠杆风暴</b>　·　完整规则见 <a href="README.md" style="color:#1a3a6b;">README.md</a>　·　返回 <a href="../../../README.md" style="color:#1a3a6b;">桌游总索引</a>
+  </div>
+</div></body>
+</html>

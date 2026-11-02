@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>水浒传：一百零八星宿 · 打印道具</title>
+<style>
+:root{
+  --ink:#2b2118; --paper:#fbf7f0; --gold:#b8860b; --red:#8b1a1a;
+  --green:#3a5a40; --line:#cfc3ae;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"Songti SC","SimSun","Noto Serif CJK SC",serif;
+  background:#efe7da; color:var(--ink); margin:0; padding:24px 12px 60px;
+}
+.wrap{max-width:1080px;margin:0 auto;}
+h1{
+  text-align:center;font-size:30px;letter-spacing:3px;margin:0 0 4px;
+  color:var(--red);border-bottom:3px double var(--line);padding-bottom:10px;
+}
+.sub{text-align:center;color:#7a6a55;letter-spacing:1px;margin:0 0 18px;font-size:14px;}
+h2{
+  font-size:20px;margin:34px 0 12px;padding:7px 14px;color:#fff;
+  background:linear-gradient(90deg,var(--red),#b5472f);border-radius:6px;letter-spacing:2px;
+}
+h2.alt{background:linear-gradient(90deg,var(--green),#5c7f5e);}
+.print-hint{
+  background:#fff8e1;border:2px dashed var(--gold);border-radius:8px;
+  padding:14px 18px;margin:16px 0 26px;font-size:14px;line-height:1.85;
+}
+.print-hint ul{margin:8px 0 0;padding-left:22px;}
+.note{font-size:13px;color:#6f6152;background:#f4efe4;border-left:4px solid var(--line);
+  padding:8px 12px;margin:8px 0 16px;border-radius:0 5px 5px 0;}
+
+/* ---------- 招安天平（中央桌面板） ---------- */
+.board{
+  background:var(--paper);border:3px solid var(--ink);border-radius:10px;
+  padding:16px;margin-bottom:18px;
+}
+.board h3{margin:0 0 10px;font-size:17px;letter-spacing:2px;color:var(--red);text-align:center;}
+.scale{display:flex;gap:3px;justify-content:center;margin:6px 0 4px;}
+.scale .seg{
+  flex:1;max-width:74px;height:56px;border:2px solid var(--line);border-radius:5px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-weight:700;font-size:18px;background:#fff;
+}
+.scale .seg.lo{background:#eaf3e4;border-color:#8ab081;}
+.scale .seg.mid{background:#fdf6e0;border-color:#d8c274;}
+.scale .seg.hi{background:#fdeae3;border-color:#d98d7a;}
+.scale .seg .lb{font-size:10px;font-weight:400;color:#7a6a55;letter-spacing:0;}
+.scale-legend{display:flex;justify-content:space-between;font-size:11px;color:#7a6a55;padding:0 4px;}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.slot{
+  border:2px dashed var(--line);border-radius:8px;min-height:112px;background:#fffdf7;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:12px;color:#8b7c66;text-align:center;padding:6px;
+}
+.slot b{font-size:13px;color:var(--red);display:block;margin-bottom:4px;letter-spacing:1px;}
+
+/* ---------- 山寨板 ---------- */
+.camps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.camp{border:3px solid var(--ink);border-radius:10px;padding:12px;background:var(--paper);}
+.camp-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.camp-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink);flex:none;}
+.camp-name{font-size:16px;font-weight:700;letter-spacing:2px;}
+.chairs{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
+.chair{
+  border:2px solid var(--line);border-radius:5px;background:#fff;min-height:96px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:11px;color:#8b7c66;position:relative;padding:4px 2px;text-align:center;
+}
+.chair .no{font-size:14px;font-weight:700;color:var(--red);}
+.chair .hintx{font-size:9px;line-height:1.3;margin-top:3px;color:#9a8b75;}
+.camp-foot{margin-top:9px;font-size:11px;color:#6f6152;line-height:1.7;
+  border-top:1px dashed var(--line);padding-top:7px;}
+
+/* ---------- 卡牌 ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.cards.two{grid-template-columns:repeat(2,1fr);}
+.cards.four{grid-template-columns:repeat(4,1fr);}
+.card{
+  border:2px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;
+  break-inside:avoid;page-break-inside:avoid;
+}
+.h-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:3px 9px;color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;
+}
+.h-rank{font-size:22px;font-weight:800;letter-spacing:0;}
+.h-body{padding:7px 9px 9px;border:3px solid;border-top:none;border-radius:0 0 6px 6px;}
+.h-star{font-size:14px;font-weight:700;letter-spacing:1px;color:var(--green);}
+.h-name{font-size:16px;font-weight:800;margin:3px 0 5px;letter-spacing:1px;}
+.h-typ{font-size:15px;margin-right:4px;}
+.h-loy{font-size:12px;letter-spacing:1px;margin-bottom:5px;}
+.h-mult{font-size:11px;color:#8b7c66;letter-spacing:0;}
+.h-skill{font-size:10.5px;line-height:1.5;color:#4a3f33;border-top:1px dashed var(--line);padding-top:5px;}
+
+.card.edict{
+  padding:9px;text-align:center;background:#fffdf5;border-color:var(--gold);
+  display:flex;flex-direction:column;justify-content:center;min-height:118px;
+}
+.e-ico{font-size:26px;line-height:1.1;}
+.e-name{font-size:15px;font-weight:800;letter-spacing:2px;color:var(--red);margin:3px 0 5px;}
+.e-text{font-size:11px;line-height:1.6;color:#4a3f33;}
+
+/* ---------- 标记 / 棋子 / 速查 ---------- */
+.tokens{display:flex;flex-wrap:wrap;gap:9px;}
+.tok{
+  width:64px;height:64px;border-radius:50%;border:2px solid var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;background:#fff;line-height:1.25;text-align:center;
+}
+.tok .big{font-size:19px;}
+.pawns{display:flex;flex-wrap:wrap;gap:14px;}
+.pawn{
+  width:88px;height:88px;border:3px solid var(--ink);border-radius:50% 50% 44% 44%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:1.35;
+}
+.cheat{border:2px solid var(--ink);border-radius:8px;padding:12px 14px;background:#fffdf7;font-size:11.5px;line-height:1.75;}
+.cheat h4{margin:0 0 7px;font-size:14px;letter-spacing:2px;color:var(--red);}
+.cheat table{width:100%;border-collapse:collapse;font-size:11px;}
+.cheat td,.cheat th{border:1px solid var(--line);padding:3px 5px;text-align:left;}
+.cheat th{background:#f4efe4;}
+
+.page-break{page-break-before:always;}
+footer{margin-top:34px;text-align:center;font-size:12px;color:#8b7c66;
+  border-top:1px solid var(--line);padding-top:12px;}
+
+@media print{
+  *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body{background:#fff;padding:0;}
+  .print-hint{display:none;}
+  h2{page-break-after:avoid;}
+  .card{page-break-inside:avoid;}
+  .camp{page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>水浒传 · 一百零八星宿</h1>
+<p class="sub">Water Margin: 108 Stars of Destiny ｜ 打印道具全集 ｜ 72 张好汉卡 + 12 张朝廷诏令 + 山寨板 ×4 + 招安天平</p>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <b>A4 纸张</b>打印，打印设置中选择<b>「最小边距」</b>或「无边距」</li>
+    <li>在打印对话框中，务必<b>勾选「背景图形」</b>（否则卡牌底色与天平轨颜色不会印出来）</li>
+    <li>好汉卡与诏令卡建议使用 <b>200g 以上卡纸</b>打印，裁剪后可塑封</li>
+    <li>山寨板与招安天平建议用 <b>A4 普通纸</b>打印后贴在一张硬纸板上</li>
+    <li>银两 / 义气 / 忠心标记建议打印在卡纸上，用圆形打孔器（或剪刀）裁下</li>
+    <li>棋子可打印后对折立起，或用现成的米宝 / 棋子代替</li>
+  </ul>
+</div>
+
+<h2>一、招安天平 · 中央桌面板（打印 1 张）</h2>
+<div class="note">把这块板放在桌子正中央。起始把「天平标记」放在 <b>6</b> 格；每回结束时天平 <b>+1</b>；
+「扯反旗」让它 <b>−1</b>，「受招安」让它 <b>+1</b>。<b>天平走到 12 的瞬间，游戏立刻结束</b>，立刻计分。</div>
+<div class="board">
+  <h3>招 安 天 平　（朝廷的耐心）</h3>
+  <div class="scale">
+      <div class="seg lo">0<span class="lb"></span></div>
+      <div class="seg lo">1<span class="lb"></span></div>
+      <div class="seg lo">2<span class="lb"></span></div>
+      <div class="seg lo">3<span class="lb"></span></div>
+      <div class="seg lo">4<span class="lb"></span></div>
+      <div class="seg mid">5<span class="lb"></span></div>
+      <div class="seg mid">6<span class="lb">起点</span></div>
+      <div class="seg mid">7<span class="lb"></span></div>
+      <div class="seg mid">8<span class="lb"></span></div>
+      <div class="seg hi">9<span class="lb"></span></div>
+      <div class="seg hi">10<span class="lb"></span></div>
+      <div class="seg hi">11<span class="lb"></span></div>
+      <div class="seg hi">12<span class="lb">触顶</span></div>
+  </div>
+  <div class="scale-legend"><span>◀ 扯反旗（−1）：替天行道，朝廷退让</span><span>受招安（+1）：朝廷逼近 ▶</span></div>
+  <div class="slots">
+    <div class="slot"><b>招贤榜 · 壹</b>牌面向上</div>
+    <div class="slot"><b>招贤榜 · 贰</b>牌面向上</div>
+    <div class="slot"><b>招贤榜 · 叁</b>牌面向上</div>
+    <div class="slot"><b>招贤榜 · 肆</b>牌面向上</div>
+  </div>
+  <div class="slots" style="grid-template-columns:repeat(3,1fr);">
+    <div class="slot"><b>好汉牌堆</b>背面朝上<br>招走 1 张立刻补 1 张</div>
+    <div class="slot"><b>朝廷诏令堆</b>背面朝上<br>每回开始翻 1 张</div>
+    <div class="slot"><b>下山好汉弃牌堆</b>正面朝上<br>供结算核对</div>
+  </div>
+</div>
+
+<h2 class="alt">二、山寨板（每色 1 张，共 4 张）</h2>
+<div class="note">每位玩家拿一块。左起第 1 把交椅是「头领席」——永远坐你寨里星位最小的那位。
+把好汉卡横插在交椅格上，全场都能看见你的座次顺序，这就是本作的物理锚点。</div>
+<div class="camps">
+  <div class="camp">
+    <div class="camp-hd"><span class="camp-dot" style="background:#c1121f"></span>
+      <span class="camp-name">🟥 忠义堂</span></div>
+    <div class="chairs">
+      <div class="chair"><span class="no">1</span><span class="hintx">星位最小<br>最安全</span></div>
+      <div class="chair"><span class="no">2</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">3</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">4</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">5</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">6</span><span class="hintx">最右<br>最易被挤</span></div>
+    </div>
+    <div class="camp-foot">
+      ★ 铁律：好汉必须<b>按星位从小到大、从左到右</b>落座（小号在左 = 头领）。<br>
+      招入星位 x ⇒ 星位 &gt; x 的每位在寨好汉 <b>忠心 −1</b>；超过 6 人 ⇒ 最右那位<b>被挤下山</b>（义气半款）。<br>
+      结义：座次<b>相邻</b>且<b>同类型</b>（🐯🔥⛰️🌪️💰🌊）的一对，终局各计 +3 分。
+    </div>
+  </div>
+  <div class="camp">
+    <div class="camp-hd"><span class="camp-dot" style="background:#1d6fb8"></span>
+      <span class="camp-name">🟦 聚义厅</span></div>
+    <div class="chairs">
+      <div class="chair"><span class="no">1</span><span class="hintx">星位最小<br>最安全</span></div>
+      <div class="chair"><span class="no">2</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">3</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">4</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">5</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">6</span><span class="hintx">最右<br>最易被挤</span></div>
+    </div>
+    <div class="camp-foot">
+      ★ 铁律：好汉必须<b>按星位从小到大、从左到右</b>落座（小号在左 = 头领）。<br>
+      招入星位 x ⇒ 星位 &gt; x 的每位在寨好汉 <b>忠心 −1</b>；超过 6 人 ⇒ 最右那位<b>被挤下山</b>（义气半款）。<br>
+      结义：座次<b>相邻</b>且<b>同类型</b>（🐯🔥⛰️🌪️💰🌊）的一对，终局各计 +3 分。
+    </div>
+  </div>
+  <div class="camp">
+    <div class="camp-hd"><span class="camp-dot" style="background:#2d6a4f"></span>
+      <span class="camp-name">🟩 宛子城</span></div>
+    <div class="chairs">
+      <div class="chair"><span class="no">1</span><span class="hintx">星位最小<br>最安全</span></div>
+      <div class="chair"><span class="no">2</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">3</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">4</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">5</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">6</span><span class="hintx">最右<br>最易被挤</span></div>
+    </div>
+    <div class="camp-foot">
+      ★ 铁律：好汉必须<b>按星位从小到大、从左到右</b>落座（小号在左 = 头领）。<br>
+      招入星位 x ⇒ 星位 &gt; x 的每位在寨好汉 <b>忠心 −1</b>；超过 6 人 ⇒ 最右那位<b>被挤下山</b>（义气半款）。<br>
+      结义：座次<b>相邻</b>且<b>同类型</b>（🐯🔥⛰️🌪️💰🌊）的一对，终局各计 +3 分。
+    </div>
+  </div>
+  <div class="camp">
+    <div class="camp-hd"><span class="camp-dot" style="background:#b8860b"></span>
+      <span class="camp-name">🟨 蓼儿洼</span></div>
+    <div class="chairs">
+      <div class="chair"><span class="no">1</span><span class="hintx">星位最小<br>最安全</span></div>
+      <div class="chair"><span class="no">2</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">3</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">4</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">5</span><span class="hintx">&nbsp;</span></div>
+      <div class="chair"><span class="no">6</span><span class="hintx">最右<br>最易被挤</span></div>
+    </div>
+    <div class="camp-foot">
+      ★ 铁律：好汉必须<b>按星位从小到大、从左到右</b>落座（小号在左 = 头领）。<br>
+      招入星位 x ⇒ 星位 &gt; x 的每位在寨好汉 <b>忠心 −1</b>；超过 6 人 ⇒ 最右那位<b>被挤下山</b>（义气半款）。<br>
+      结义：座次<b>相邻</b>且<b>同类型</b>（🐯🔥⛰️🌪️💰🌊）的一对，终局各计 +3 分。
+    </div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+<h2>三、天罡三十六星（好汉卡 · 共 36 张，每张 1 份）</h2>
+<div class="note">天罡星位 1–36。<b>星位越小越强</b>，终局计分 <b>忠心 × 3</b>。
+但天罡初始忠心只有 1–2 点，<b>最怕被插队</b>——高分但娇气。</div>
+<div class="cards">
+
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">1</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#8b1a1a">
+      <div class="h-star">天魁星</div>
+      <div class="h-name"><span class="h-typ">💰</span>呼保义·宋江</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">疏财：安抚费 −1 银（最低 1）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">2</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#8b1a1a">
+      <div class="h-star">天罡星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>玉麒麟·卢俊义</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">镇寨：超载被挤下山时仍拿全额义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">3</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#8b1a1a">
+      <div class="h-star">天机星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>智多星·吴用</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">运筹：招贤榜对你公开 5 张</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">4</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#8b1a1a">
+      <div class="h-star">天闲星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>入云龙·公孙胜</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">作法：每回首次扯反旗额外 −1 天平</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">5</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#8b1a1a">
+      <div class="h-star">天勇星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>大刀·关胜</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">武勇：寨中时每回 +1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">6</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#8b1a1a">
+      <div class="h-star">天雄星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>豹子头·林冲</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">教头：新招好汉若与你同类型，其忠心 +1</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">7</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#8b1a1a">
+      <div class="h-star">天猛星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>霹雳火·秦明</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">性烈：受插队时只扣 0 忠心（改扣自己）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">8</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#8b1a1a">
+      <div class="h-star">天威星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>双鞭·呼延灼</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">连环马：结义分每对 +1（上限 +3）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">9</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#8b1a1a">
+      <div class="h-star">天英星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>小李广·花荣</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">神射：每回可弃 1 银令 1 名好汉 +1 忠心</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">10</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#8b1a1a">
+      <div class="h-star">天贵星</div>
+      <div class="h-name"><span class="h-typ">💰</span>小旋风·柴进</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">丹书铁券：每回 +2 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">11</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#8b1a1a">
+      <div class="h-star">天富星</div>
+      <div class="h-name"><span class="h-typ">💰</span>扑天雕·李应</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">庄主：开局额外 +5 银（仅入寨那回）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">12</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#8b1a1a">
+      <div class="h-star">天满星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>美髯公·朱仝</div>
+      <div class="h-loy">❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">义释：遣散 1 名地煞时额外 +1 义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">13</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#8b1a1a">
+      <div class="h-star">天孤星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>花和尚·鲁智深</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">禅心：忠心不会因插队降到 1 以下</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">14</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#8b1a1a">
+      <div class="h-star">天伤星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>行者·武松</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">打虎：终局若寨中忠心最高，+5 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">15</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#8b1a1a">
+      <div class="h-star">天立星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>双枪将·董平</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">双枪：招贤时可额外看 1 张榜底牌</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">16</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#8b1a1a">
+      <div class="h-star">天捷星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>没羽箭·张清</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">飞石：每回可令 1 名他人好汉 −1 忠心（每局限 2 次）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">17</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#8b1a1a">
+      <div class="h-star">天暗星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>青面兽·杨志</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">押纲：受招安额外 +2 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">18</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#8b1a1a">
+      <div class="h-star">天祐星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>金枪手·徐宁</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">钩镰枪：寨中时他人劫富济贫 −1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">19</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#8b1a1a">
+      <div class="h-star">天空星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>急先锋·索超</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">先锋：每回顺位提前一位（仅一次）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">20</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#8b1a1a">
+      <div class="h-star">天速星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>神行太保·戴宗</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">神行：招贤不消耗 AP（每局限 2 次）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">21</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#8b1a1a">
+      <div class="h-star">天异星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>赤发鬼·刘唐</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">赤发：受插队时对插队者也 −1 忠心</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">22</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#8b1a1a">
+      <div class="h-star">天杀星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>黑旋风·李逵</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">莽撞：每回 −1 银，但终局 +4 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">23</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#8b1a1a">
+      <div class="h-star">天微星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>九纹龙·史进</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">少华山：招 1 名 ⛰️ 型好汉时 +1 义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">24</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#8b1a1a">
+      <div class="h-star">天究星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>没遮拦·穆弘</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">遮拦：他人超载下山时你 +1 义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">25</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#8b1a1a">
+      <div class="h-star">天退星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>插翅虎·雷横</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">插翅：遣散费 +1（天罡 3 / 地煞 2）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">26</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#8b1a1a">
+      <div class="h-star">天寿星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>混江龙·李俊</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">水军：天平每降 1 点，你 +1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">27</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#8b1a1a">
+      <div class="h-star">天剑星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>立地太岁·阮小二</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">太岁：寨中每名 🌊 型好汉 +1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">28</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#8b1a1a">
+      <div class="h-star">天平星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>船火儿·张横</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">船火：超载下山时改算主动遣散</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">29</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#8b1a1a">
+      <div class="h-star">天罪星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>短命二郎·阮小五</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">短命：主动遣散自己时 +2 义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">30</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#8b1a1a">
+      <div class="h-star">天损星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>浪里白条·张顺</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">白条：每回可免费移动 1 名好汉到最右</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">31</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#8b1a1a">
+      <div class="h-star">天败星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>活阎罗·阮小七</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">阎罗：终局每种类型的第一对结义 +1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">32</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#8b1a1a">
+      <div class="h-star">天牢星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>病关索·杨雄</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">牢头：他人遣散天罡时你 +1 义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">33</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#8b1a1a">
+      <div class="h-star">天慧星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>拼命三郎·石秀</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">拼命：忠心为 1 时仍不下山（改为每回 −2 银）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">34</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#8b1a1a">
+      <div class="h-star">天暴星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>两头蛇·解珍</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">猎户：招 1 名 🐯 型好汉时 +1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">35</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#8b1a1a">
+      <div class="h-star">天哭星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>双尾蝎·解宝</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">猎户：招 1 名 🐯 型好汉时 +1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">天罡</span>
+      <span class="h-rank">36</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#8b1a1a">
+      <div class="h-star">天巧星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>浪子·燕青</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×3</span></div>
+      <div class="h-skill">相扑：终局银两分改为每 2 两 1 分</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-break"></div>
+<h2>四、地煞七十二星 · 精选三十六（好汉卡 · 共 36 张，每张 1 份）</h2>
+<div class="note">地煞星位 37–107（全为奇数）。终局计分 <b>忠心 × 1</b>，但初始忠心 2–3 点，
+<b>耐得住插队</b>。地煞是凑「结义同源对」的主力。</div>
+<div class="cards">
+
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">37</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#3a5a40">
+      <div class="h-star">地魁星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>神机军师·朱武</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">阵法：招贤榜顶牌若为天罡，你先看</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">39</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#3a5a40">
+      <div class="h-star">地勇星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>镇三山·黄信</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">镇山：寨中每名 ⛰️ 型好汉 +1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">41</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#3a5a40">
+      <div class="h-star">地雄星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>病尉迟·孙立</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">尉迟：受插队时改为 −0 忠心（限 1 次）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">43</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#3a5a40">
+      <div class="h-star">地英星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>丑郡马·宣赞</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">郡马：每回 +1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">45</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#3a5a40">
+      <div class="h-star">地奇星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>井木犴·郝思文</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">井木：天旱型事件卡对你无效</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">47</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#3a5a40">
+      <div class="h-star">地猛星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>百胜将·韩滔</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">百胜：寨中忠心 ≥2 时 +2 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">49</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#3a5a40">
+      <div class="h-star">地文星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>圣手书生·萧让</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">书法：每回可复制 1 张他人已用的事件效果</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">51</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地正星</div>
+      <div class="h-name"><span class="h-typ">💰</span>铁面孔目·裴宣</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">铁面：他人每次扯反旗你 +1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">53</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#3a5a40">
+      <div class="h-star">地闇星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>锦豹子·杨林</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">锦豹：顺位按寨中人数升序时你算 0 人</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">55</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#3a5a40">
+      <div class="h-star">地佐星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>锦毛虎·燕顺</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">锦毛：招 1 名 💰 型好汉时 +2 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">57</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地灵星</div>
+      <div class="h-name"><span class="h-typ">💰</span>神医·安道全</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">神医：每回可花 1 银令 1 名好汉 +1 忠心</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">59</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#3a5a40">
+      <div class="h-star">地微星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>矮脚虎·王英</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">好色：寨中每名 💰 型好汉 −1 分（下限 0）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">61</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#3a5a40">
+      <div class="h-star">地慧星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>一丈青·扈三娘</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">女将：寨中每名 🐯 型好汉 +1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">63</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#3a5a40">
+      <div class="h-star">地暴星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>丧门神·鲍旭</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">丧门：他人寨中每有 1 人忠心归 0，你 +1 义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">65</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#3a5a40">
+      <div class="h-star">地然星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>混世魔王·樊瑞</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">魔王：每回可令天平 +1，然后 +2 义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">67</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#3a5a40">
+      <div class="h-star">地猖星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>毛头星·孔明</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">毛头：受插队时对插队者也 −1 忠心</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">69</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#3a5a40">
+      <div class="h-star">地飞星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>八臂哪吒·项充</div>
+      <div class="h-loy">❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">飞刀：招贤时可弃 1 银改看牌堆顶 2 张</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">71</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#3a5a40">
+      <div class="h-star">地走星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>飞天大圣·李衮</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">飞天：终局若寨中 6 人同源对数最多，+6 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">73</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地巧星</div>
+      <div class="h-name"><span class="h-typ">💰</span>玉臂匠·金大坚</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">刻印：每回 +1 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">75</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#3a5a40">
+      <div class="h-star">地明星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>铁笛仙·马麟</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">铁笛：寨中相邻 🌊 型每对 +1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">77</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#3a5a40">
+      <div class="h-star">地进星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>出洞蛟·童威</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">出洞：超载下山时改算主动遣散</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">79</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#3a5a40">
+      <div class="h-star">地退星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>翻江蜃·童猛</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">翻江：每回可弃 2 银令天平 −1</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">81</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#3a5a40">
+      <div class="h-star">地满星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>玉幡竿·孟康</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">造船：寨中每名 🌊 型好汉 +1 银（每回）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">83</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#3a5a40">
+      <div class="h-star">地遂星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>通臂猿·侯健</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">裁缝：寨中每名好汉 +0 分，但遣散费 +1</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">85</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#3a5a40">
+      <div class="h-star">地周星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>跳涧虎·陈达</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">跳涧：招贤时该好汉忠心 +1</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">87</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#3a5a40">
+      <div class="h-star">地隐星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>白花蛇·杨春</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">白蛇：他人招贤时你 +1 银（每回限 1）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">89</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地异星</div>
+      <div class="h-name"><span class="h-typ">💰</span>白面郎君·郑天寿</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">白面：终局银两分改为每 2 两 1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#6a994e">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">91</span>
+    </div>
+    <div class="h-body" style="background:#eaf3e4;border-color:#3a5a40">
+      <div class="h-star">地理星</div>
+      <div class="h-name"><span class="h-typ">⛰️</span>九尾龟·陶宗旺</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">九尾：寨中容量对你视为 7</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">93</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地俊星</div>
+      <div class="h-name"><span class="h-typ">💰</span>铁扇子·宋清</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">掌宴：每回 +2 银</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#4d96c9">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">95</span>
+    </div>
+    <div class="h-body" style="background:#e6f0f8;border-color:#3a5a40">
+      <div class="h-star">地乐星</div>
+      <div class="h-name"><span class="h-typ">🌪️</span>铁叫子·乐和</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">铁叫：终局每种类型的第一对结义 +1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#f4a261">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">97</span>
+    </div>
+    <div class="h-body" style="background:#fdf0e0;border-color:#3a5a40">
+      <div class="h-star">地捷星</div>
+      <div class="h-name"><span class="h-typ">🐯</span>花项虎·龚旺</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">花项：受插队时只扣 0 忠心（限 1 次）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#e76f51">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">99</span>
+    </div>
+    <div class="h-body" style="background:#fdeae3;border-color:#3a5a40">
+      <div class="h-star">地速星</div>
+      <div class="h-name"><span class="h-typ">🔥</span>中箭虎·丁得孙</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">中箭：忠心归 0 时改为留下但忠心 1（限 1 次）</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#2a9d8f">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">101</span>
+    </div>
+    <div class="h-body" style="background:#e2f2ee;border-color:#3a5a40">
+      <div class="h-star">地镇星</div>
+      <div class="h-name"><span class="h-typ">🌊</span>小遮拦·穆春</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">小遮：寨中每名 🌊 型好汉 +1 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">103</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地稽星</div>
+      <div class="h-name"><span class="h-typ">💰</span>操刀鬼·曹正</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">操刀：每回可花 3 银遣散 1 人并拿全额义气</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">105</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地魔星</div>
+      <div class="h-name"><span class="h-typ">💰</span>云里金刚·宋万</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">云里：开局寨中已有此人时 +3 分</div>
+    </div>
+  </div>
+  <div class="card hero">
+    <div class="h-top" style="background:#c9a227">
+      <span class="h-side">地煞</span>
+      <span class="h-rank">107</span>
+    </div>
+    <div class="h-body" style="background:#fbf6e0;border-color:#3a5a40">
+      <div class="h-star">地妖星</div>
+      <div class="h-name"><span class="h-typ">💰</span>摸着天·杜迁</div>
+      <div class="h-loy">❤️❤️❤️ <span class="h-mult">×1</span></div>
+      <div class="h-skill">摸天：终局若你的星位跨度最大，+4 分</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-break"></div>
+<h2>五、朝廷诏令（事件卡 · 共 12 张，每回开始翻 1 张）</h2>
+<div class="note">开局把 12 张洗匀背面朝上。每回开始时翻开最上面 1 张，<b>全场共享</b>本回生效，
+回末弃掉。12 回正好用完一轮——<b>牌序是公开的，你可以提前规划</b>。</div>
+<div class="cards">
+
+  <div class="card edict">
+    <div class="e-ico">🎉</div>
+    <div class="e-name">招贤大典</div>
+    <div class="e-text">本回招贤榜补至 6 张，且每位玩家招贤不消耗 AP。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">🪙</div>
+    <div class="e-name">税银入库</div>
+    <div class="e-text">本回「劫富济贫」改为 +5 银。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">🤝</div>
+    <div class="e-name">兄弟同心</div>
+    <div class="e-text">本回「安抚兄弟」费用降为 1 银。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">⚔️</div>
+    <div class="e-name">官兵围剿</div>
+    <div class="e-text">本回结束时，每人山寨最右那名好汉忠心 −1。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">🌾</div>
+    <div class="e-name">五谷丰登</div>
+    <div class="e-text">本回开始时每人 +3 银。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">📜</div>
+    <div class="e-name">招安诏书</div>
+    <div class="e-text">本回结束时招安天平 +1。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">🏮</div>
+    <div class="e-name">替天行道</div>
+    <div class="e-text">本回结束时招安天平 −1。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">🗡️</div>
+    <div class="e-name">猛将投奔</div>
+    <div class="e-text">本回招贤榜顶牌若为天罡，其入寨时忠心 +1。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">🛶</div>
+    <div class="e-name">水泊扩大</div>
+    <div class="e-text">本回山寨容量视为 7（超载判定按 7 人算）。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">⛓️</div>
+    <div class="e-name">刺配充军</div>
+    <div class="e-text">本回结束时，寨中有地煞的玩家须遣散 1 名地煞，否则 −3 义气。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">🎭</div>
+    <div class="e-name">假意招安</div>
+    <div class="e-text">本回「受招安」改为「扯反旗」的效果（天平 −1，+1 义气）。</div>
+  </div>
+  <div class="card edict">
+    <div class="e-ico">👑</div>
+    <div class="e-name">聚义大典</div>
+    <div class="e-text">本回结束时，寨中同源相邻对数最多的玩家 +4 分。</div>
+  </div>
+
+</div>
+
+<div class="page-break"></div>
+<h2 class="alt">六、资源标记（建议卡纸 + 打孔器）</h2>
+<div class="note">按需多印几份。银两建议每人备到 40 两额度，义气备到 20 点，忠心标记用小贴纸或骰子代替也可以。
+<b>天平标记只用 1 枚</b>，放在中央桌面板的刻度上。</div>
+<div class="tokens">
+
+  <div class="tok" style="background:#fbf6e0"><span class="big">💰</span>银两<br>1 两</div>
+  <div class="tok" style="background:#fbf6e0"><span class="big">💰</span>银两<br>5 两</div>
+  <div class="tok" style="background:#fdeae3"><span class="big">🔥</span>义气<br>1 点</div>
+  <div class="tok" style="background:#fdeae3"><span class="big">🔥</span>义气<br>5 点</div>
+  <div class="tok" style="background:#fdeaea"><span class="big">❤️</span>忠心<br>1 点</div>
+  <div class="tok" style="background:#eef2f6"><span class="big">⚖️</span>天平<br>标记</div>
+
+</div>
+
+<h2 class="alt">七、玩家棋子（4 枚）</h2>
+<div class="note">棋子只用来标记「本回顺位」，实际不放在地图上。打印后对折立起，或用米宝代替。</div>
+<div class="pawns">
+
+  <div class="pawn" style="background:#c1121f">🟥<br>忠义堂</div>
+  <div class="pawn" style="background:#1d6fb8">🟦<br>聚义厅</div>
+  <div class="pawn" style="background:#2d6a4f">🟩<br>宛子城</div>
+  <div class="pawn" style="background:#b8860b">🟨<br>蓼儿洼</div>
+
+</div>
+
+<div class="page-break"></div>
+<h2>八、一页速查（每色 1 张，共 4 张，建议人手一份）</h2>
+<div class="cards two">
+  <div class="cheat">
+    <h4>每回合我能做的事（2 AP）</h4>
+    <table>
+      <tr><th>行动</th><th>AP</th><th>效果</th></tr>
+      <tr><td>⚔️ 下山招贤</td><td>1</td><td>从招贤榜招 1 位好汉（<b>每回限 1 次</b>）</td></tr>
+      <tr><td>💰 劫富济贫</td><td>1</td><td>+3 银两</td></tr>
+      <tr><td>🤝 安抚兄弟</td><td>1</td><td>花 2 银，1 位好汉 忠心 +1</td></tr>
+      <tr><td>🔥 扯反旗</td><td>1</td><td>天平 <b>−1</b>，自己 +1 义气</td></tr>
+      <tr><td>📜 受招安</td><td>1</td><td>天平 <b>+1</b>，+8 银；<b>此后不能再招贤</b>，每回末 +3 分（每局限 1 次）</td></tr>
+      <tr><td>🚪 遣散（免费）</td><td>0</td><td>随时遣散 1 位好汉：天罡 +2 义气 / 地煞 +1 义气</td></tr>
+    </table>
+    <p style="margin:8px 0 0"><b>★ 顺位</b>：寨中人数少 → 义气分低 → 上回顺位。<b>人少分低者先动。</b></p>
+  </div>
+  <div class="cheat">
+    <h4>座次铁律（最重要）</h4>
+    <table>
+      <tr><th>情况</th><th>结果</th></tr>
+      <tr><td>新好汉星位 x，寨中无人比他大</td><td>✅ 免费入座，坐最右</td></tr>
+      <tr><td>寨中有 n 人星位 &gt; x</td><td>⚠️ 那 n 人<b>各 −1 忠心</b>，他插到他们左边</td></tr>
+      <tr><td>入寨后超过 6 人</td><td>🚪 最右那位<b>被挤下山</b>，义气<b>半款</b>（天罡1/地煞0）</td></tr>
+      <tr><td>好汉忠心降到 0</td><td>🚪 立即下山，义气<b>全额</b>（天罡2/地煞1）</td></tr>
+    </table>
+    <p style="margin:8px 0 0"><b>★ 记忆锚</b>：<br>
+    ① <b>永远先挑榜上星位最大的那个</b><br>
+    ② <b>自己送走拿全款，被挤走拿半款</b><br>
+    ③ 天罡 ×3、地煞 ×1，但天罡更娇气</p>
+  </div>
+  <div class="cheat">
+    <h4>天平（本作灵魂）</h4>
+    <table>
+      <tr><th>节点</th><th>数值</th></tr>
+      <tr><td>起始</td><td>6</td></tr>
+      <tr><td>每回末自动</td><td>+1</td></tr>
+      <tr><td>触顶即结束</td><td>12</td></tr>
+      <tr><td>无人干预时的游戏长度</td><td><b>只有 6 回</b></td></tr>
+      <tr><td>想打满 12 回</td><td>全场净扯旗 <b>6 次</b></td></tr>
+    </table>
+    <p style="margin:8px 0 0"><b>★ 领先者想锁死比赛 → 受招安</b><br>
+    <b>★ 落后者想延长比赛 → 扯反旗</b><br>
+    这就是本作的自动追赶，不需要任何额外平衡规则。</p>
+  </div>
+  <div class="cheat">
+    <h4>终局计分</h4>
+    <table>
+      <tr><th>项目</th><th>计分</th></tr>
+      <tr><td>🏯 阵容分</td><td>寨中每位：忠心 ×（天罡 3 / 地煞 1）</td></tr>
+      <tr><td>🤝 结义分</td><td>相邻且同类型，每对 +3</td></tr>
+      <tr><td>🔥 义气分</td><td>离寨好汉：天罡 +2 / 地煞 +1（被挤走半款）</td></tr>
+      <tr><td>⚔️ 义举分</td><td>每次扯反旗 +1</td></tr>
+      <tr><td>📜 招安分</td><td>受招安后每回末 +3</td></tr>
+      <tr><td>💰 银两分</td><td>每 3 两 +1（向下取整）</td></tr>
+    </table>
+    <p style="margin:8px 0 0">平局：① 寨中<b>天罡数</b>多者胜 → ② <b>星位最小</b>者小者胜 → ③ 并列。</p>
+  </div>
+</div>
+
+<footer>
+  《水浒传：一百零八星宿》打印道具 ｜ 共 72 张好汉卡 + 12 张朝廷诏令 + 4 块山寨板 + 1 块招安天平<br>
+  本作为同人自制作品，四大名著题材属公有领域，仅供个人娱乐使用。
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>恶魔城：贝尔蒙特的诅咒 — 打印道具</title>
+<style>
+:root{
+  --ink:#1a1a1a; --paper:#f7f3ea; --gold:#b98b2e; --dark:#14121a; --blood:#8e1b1b;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:#2b2b33;color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;}
+.page{max-width:1180px;margin:0 auto;background:var(--paper);padding:28px 30px;
+  border-radius:6px;box-shadow:0 6px 30px rgba(0,0,0,.5);}
+h1{font-size:30px;margin:0 0 4px;color:var(--dark);letter-spacing:2px}
+h1 small{display:block;font-size:13px;color:#6b6257;letter-spacing:1px;font-weight:400;margin-top:6px}
+h2{font-size:20px;margin:34px 0 12px;padding:8px 12px;background:var(--dark);color:var(--gold);
+  border-left:6px solid var(--blood);border-radius:3px;letter-spacing:1px}
+h3{font-size:15px;margin:18px 0 8px;color:var(--blood)}
+p,li{font-size:13.5px;line-height:1.75}
+.print-hint{background:#fff8e1;border:2px dashed var(--gold);border-radius:6px;padding:14px 18px;margin:16px 0 8px}
+.print-hint ul{margin:8px 0 0;padding-left:20px}
+.grid{display:flex;flex-wrap:wrap;gap:10px}
+.card{position:relative;width:150px;border:2px solid #333;border-radius:8px;overflow:hidden;
+  background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);break-inside:avoid;page-break-inside:avoid}
+.badge{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.72);color:#fff;
+  font-size:10px;padding:1px 6px;border-radius:8px;z-index:3}
+/* 魔物卡 */
+.mcard{color:#fff}
+.mhead{display:flex;justify-content:space-between;align-items:center;padding:3px 7px;font-size:10.5px;color:#fff}
+.mno{font-weight:700;letter-spacing:1px}
+.mact{opacity:.92}
+.mbody{padding:8px 6px 4px;text-align:center;color:#1a1a1a}
+.memoji{font-size:38px;line-height:1.05}
+.mname{font-size:15px;font-weight:700;margin-top:2px}
+.mband{font-size:12px;font-weight:700;margin-top:2px}
+.mhp{font-size:13px;margin-top:3px;background:rgba(0,0,0,.08);border-radius:4px;display:inline-block;padding:1px 8px}
+.mhp b{font-size:17px;color:var(--blood)}
+.mtags{font-size:10px;margin-top:4px;color:#5b5348;min-height:14px}
+.meff{font-size:9.5px;line-height:1.45;padding:5px 6px;background:rgba(0,0,0,.82);color:#f0e6d2;min-height:38px}
+/* 副武器卡 */
+.scard{color:#fff;padding:8px 7px;text-align:center;min-height:186px}
+.semoji{font-size:38px;line-height:1.1}
+.sname{font-size:16px;font-weight:700;letter-spacing:1px;margin-top:2px}
+.sstat{margin:6px 0 5px;display:flex;justify-content:center;gap:5px}
+.pill{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);
+  border-radius:10px;font-size:11px;padding:1px 8px}
+.srow{font-size:10.5px;line-height:1.7;background:rgba(0,0,0,.18);margin:2px 0;border-radius:4px}
+.sdesc{font-size:9.5px;line-height:1.45;margin-top:5px;opacity:.95}
+/* 圣物卡 */
+.rcard{background:linear-gradient(160deg,#3b2f52,#1b1626);color:#f5e9c8;text-align:center;padding:12px 7px;min-height:170px}
+.remoji{font-size:40px}
+.rname{font-size:14px;font-weight:700;margin-top:4px;color:var(--gold)}
+.ruse{font-size:10.5px;line-height:1.6;margin-top:6px}
+.rnote{font-size:9px;opacity:.7;margin-top:8px;border-top:1px dashed rgba(255,255,255,.3);padding-top:5px}
+/* 棋 pawns */
+.pawn{width:120px;border-radius:10px;padding:10px 6px;text-align:center;color:#fff;
+  box-shadow:0 3px 7px rgba(0,0,0,.3);break-inside:avoid;page-break-inside:avoid}
+.pemoji{font-size:36px}
+.pname{font-size:11px;font-weight:700;margin-top:4px;line-height:1.35}
+/* 面板 */
+.board{width:330px;border:3px solid var(--dark);border-radius:8px;background:#fff;
+  padding:0 0 8px;margin:0 12px 14px 0;break-inside:avoid;page-break-inside:avoid}
+.btitle{color:#fff;font-size:13px;font-weight:700;padding:5px 9px;letter-spacing:1px}
+.lrow{display:flex;align-items:center;gap:4px;padding:4px 6px}
+.lhd{color:#fff;font-size:10.5px;font-weight:700;width:44px;text-align:center;
+  border-radius:4px;padding:5px 0}
+.slot{flex:1;height:34px;border:1.5px dashed #b3aa9c;border-radius:4px;background:#fbf8f2}
+.bmeta{padding:4px 8px 0}
+.mbox{font-size:11px;margin:3px 0;background:#f2ece1;border-radius:4px;padding:3px 7px}
+.track{letter-spacing:2px;font-size:10px}
+/* 地图 / 幕轨 */
+.actmap{width:100%;border-collapse:collapse;background:#fff;font-size:12px}
+.actmap th{background:var(--dark);color:var(--gold);padding:7px 6px;font-size:12px;font-weight:700}
+.actmap td{border:1px solid #cfc7b8;padding:6px 8px;text-align:center}
+.actmap tr:nth-child(even) td{background:#faf6ee}
+.curse{display:flex;gap:0;margin:10px 0;border:2px solid var(--dark);border-radius:6px;overflow:hidden}
+.curse div{flex:1;text-align:center;font-size:11px;padding:7px 0;border-right:1px solid #cfc7b8;background:#fff}
+.curse div:last-child{border-right:none}
+.curse div.hot{background:var(--blood);color:#fff;font-weight:700}
+.tok{display:inline-block;width:52px;height:52px;line-height:50px;text-align:center;font-size:24px;
+  border:2px solid var(--dark);border-radius:50%;background:#fff;margin:4px}
+.hintbox{background:#efe8da;border-left:5px solid var(--blood);padding:10px 14px;border-radius:4px;font-size:12.5px}
+code{background:#e6ddcb;padding:1px 5px;border-radius:3px;font-size:12px}
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+@media print {
+    .print-hint { display: none; }
+}
+@media print { body{background:#fff;padding:0} .page{box-shadow:none;border-radius:0;max-width:none}
+  h2{page-break-after:avoid} .card,.board,.pawn{page-break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="page">
+<h1>恶魔城：贝尔蒙特的诅咒
+<small>Castlevania: Belmont&#39;s Curse ｜ 1499 · 巴黎 ｜ 2-5 人 · 45-60 分钟 · 卡牌竞速</small></h1>
+
+<div class="print-hint">
+<strong>⚠️ 重要打印提示：</strong>
+<ul>
+<li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+<li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则所有色带与卡面底色会丢失</li>
+<li>卡牌、棋子和玩家面板建议使用 <strong>200g 以上卡纸</strong>打印，裁剪后可塑封</li>
+</ul>
+</div>
+
+<div class="hintbox">
+<strong>一分钟规则锚点：</strong>每张魔物卡带一个距离带（🟥近 / 🟨中 / 🟦远），进入你面前对应的队列。
+你的鞭子免费但只够得着近处；副武器卡够得着两条带、<b>但恒有一条盲区</b>。
+<b>别让手牌的盲区重合。</b>
+</div>
+
+<h2>1. 城堡推进轨（五幕地图）</h2>
+<table class="actmap">
+<tr><th>幕</th><th>地点</th><th>房间数</th><th>本幕 HP</th><th>🕯️</th><th>✨</th><th>关底 BOSS</th></tr>
+<tr><td><b>1</b></td><td>I 巴黎城门</td><td>6</td><td>10</td><td>3</td><td>0</td><td>🧟 墓园巨尸（HP 3）</td></tr>
+<tr><td><b>2</b></td><td>II 地下水道</td><td>6</td><td>12</td><td>3</td><td>1</td><td>🦇 血蝠女王（HP 3）</td></tr>
+<tr><td><b>3</b></td><td>III 圣母院礼拜堂</td><td>6</td><td>14</td><td>3</td><td>1</td><td>🐍 卡米拉（HP 4）</td></tr>
+<tr><td><b>4</b></td><td>IV 禁忌藏书阁</td><td>6</td><td>15</td><td>3</td><td>1</td><td>⚔️ 无头骑士（HP 4）</td></tr>
+<tr><td><b>5</b></td><td>V 钟楼</td><td>6</td><td>22</td><td>4</td><td>3</td><td>👑 德古拉（HP 7）</td></tr>
+<tr><td colspan="3"><b>合计</b></td><td><b>73</b></td><td><b>16</b></td><td><b>6</b></td><td>5 位 BOSS</td></tr>
+</table>
+<p style="font-size:12px;color:#5b5348">30 张魔物卡 = 30 回合固定时钟。每回合翻 1 张，<b>所有玩家同时面对同一只魔物</b>，各自在自己的面板上接招。</p>
+<h2>2. 诅咒轨（全场共用）</h2>
+<div class="curse"><div>0</div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div class="hot">12</div></div>
+<p style="font-size:12.5px">任一位玩家失守（某条带超过 4 只）⇒ 诅咒 +1。诅咒达到 <b>12</b> ⇒ 德古拉完全苏醒，游戏<b>立即结束</b>，所有人按当前进度结算。<b>你的失误会伤害所有人</b> —— 这是本作唯一的强制合作点。</p>
+<h2>3. 猎魔者面板（每人 1 张，共 5 张）</h2>
+<div class="grid"><div class="board">
+<div class="btitle" style="background:#c0392b">猎魔者面板 1</div>
+<div class="lrow"><div class="lhd" style="background:#c0392b">🟥 近</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#b7791f">🟨 中</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#1f5f8b">🟦 远</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+<div class="bmeta">
+  <div class="mbox">❤️ 心 <span class="track">0 1 2 3 4 5 6 7 8</span></div>
+  <div class="mbox">❤ HP <span class="track">6 5 4 3 2 1 0</span></div>
+  <div class="mbox">⏳ 刻 ⬜⬜（每回合重置）</div>
+  <div class="mbox">🪢 鞭 短(1伤)→<b>长 8❤️</b>(2伤,🟥🟨)→<b>火 12❤️</b>(2伤,全带)</div>
+</div>
+</div><div class="board">
+<div class="btitle" style="background:#1f5f8b">猎魔者面板 2</div>
+<div class="lrow"><div class="lhd" style="background:#c0392b">🟥 近</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#b7791f">🟨 中</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#1f5f8b">🟦 远</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+<div class="bmeta">
+  <div class="mbox">❤️ 心 <span class="track">0 1 2 3 4 5 6 7 8</span></div>
+  <div class="mbox">❤ HP <span class="track">6 5 4 3 2 1 0</span></div>
+  <div class="mbox">⏳ 刻 ⬜⬜（每回合重置）</div>
+  <div class="mbox">🪢 鞭 短(1伤)→<b>长 8❤️</b>(2伤,🟥🟨)→<b>火 12❤️</b>(2伤,全带)</div>
+</div>
+</div><div class="board">
+<div class="btitle" style="background:#15803d">猎魔者面板 3</div>
+<div class="lrow"><div class="lhd" style="background:#c0392b">🟥 近</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#b7791f">🟨 中</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#1f5f8b">🟦 远</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+<div class="bmeta">
+  <div class="mbox">❤️ 心 <span class="track">0 1 2 3 4 5 6 7 8</span></div>
+  <div class="mbox">❤ HP <span class="track">6 5 4 3 2 1 0</span></div>
+  <div class="mbox">⏳ 刻 ⬜⬜（每回合重置）</div>
+  <div class="mbox">🪢 鞭 短(1伤)→<b>长 8❤️</b>(2伤,🟥🟨)→<b>火 12❤️</b>(2伤,全带)</div>
+</div>
+</div><div class="board">
+<div class="btitle" style="background:#b45309">猎魔者面板 4</div>
+<div class="lrow"><div class="lhd" style="background:#c0392b">🟥 近</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#b7791f">🟨 中</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#1f5f8b">🟦 远</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+<div class="bmeta">
+  <div class="mbox">❤️ 心 <span class="track">0 1 2 3 4 5 6 7 8</span></div>
+  <div class="mbox">❤ HP <span class="track">6 5 4 3 2 1 0</span></div>
+  <div class="mbox">⏳ 刻 ⬜⬜（每回合重置）</div>
+  <div class="mbox">🪢 鞭 短(1伤)→<b>长 8❤️</b>(2伤,🟥🟨)→<b>火 12❤️</b>(2伤,全带)</div>
+</div>
+</div><div class="board">
+<div class="btitle" style="background:#7c3aed">猎魔者面板 5</div>
+<div class="lrow"><div class="lhd" style="background:#c0392b">🟥 近</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#b7791f">🟨 中</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="lrow"><div class="lhd" style="background:#1f5f8b">🟦 远</div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+<div class="bmeta">
+  <div class="mbox">❤️ 心 <span class="track">0 1 2 3 4 5 6 7 8</span></div>
+  <div class="mbox">❤ HP <span class="track">6 5 4 3 2 1 0</span></div>
+  <div class="mbox">⏳ 刻 ⬜⬜（每回合重置）</div>
+  <div class="mbox">🪢 鞭 短(1伤)→<b>长 8❤️</b>(2伤,🟥🟨)→<b>火 12❤️</b>(2伤,全带)</div>
+</div>
+</div></div>
+<p style="font-size:12px;color:#5b5348">每条带 4 个槽位。魔物进入后按先后排队，<b>你只能攻击队列头</b>。想打后面那只必须「背刺」，每次 −1 HP。</p>
+<h2>4. 魔物卡（30 张，按编号顺序洗成牌堆）</h2>
+<div class="grid"><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#01</span><span class="mact">I 巴黎城门</span>
+</div>
+<div class="mbody">
+  <div class="memoji">💀</div>
+  <div class="mname">骷髅兵</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>1</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#02</span><span class="mact">I 巴黎城门</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🦇</div>
+  <div class="mname">吸血蝙蝠</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>1</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#03</span><span class="mact">I 巴黎城门</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🧟</div>
+  <div class="mname">僵尸</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#04</span><span class="mact">I 巴黎城门</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🐕</div>
+  <div class="mname">地狱犬</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>1</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#05</span><span class="mact">I 巴黎城门</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🦴</div>
+  <div class="mname">骨枪手</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#06</span><span class="mact">I 巴黎城门</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🧟</div>
+  <div class="mname">墓园巨尸</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>3</b></div>
+  <div class="mtags">🕯️ +1❤️ · 👑 BOSS</div>
+</div>
+<div class="meff">出场时：你 🟥 线额外进 1 只「僵尸」(2HP)</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#07</span><span class="mact">II 地下水道</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🐟</div>
+  <div class="mname">鱼人</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#08</span><span class="mact">II 地下水道</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🦂</div>
+  <div class="mname">毒蝎</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>1</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#09</span><span class="mact">II 地下水道</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🐍</div>
+  <div class="mname">水蛇</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#10</span><span class="mact">II 地下水道</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🧟</div>
+  <div class="mname">僵尸</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#11</span><span class="mact">II 地下水道</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🕷️</div>
+  <div class="mname">毒蜘蛛</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#12</span><span class="mact">II 地下水道</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🦇</div>
+  <div class="mname">血蝠女王</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>3</b></div>
+  <div class="mtags">🕯️ +1❤️ · ✨ ×1 · 👑 BOSS</div>
+</div>
+<div class="meff">每回合开始：随机一条线队列头 +1 HP</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#13</span><span class="mact">III 圣母院礼拜堂</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🗿</div>
+  <div class="mname">石像鬼</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>3</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#14</span><span class="mact">III 圣母院礼拜堂</span>
+</div>
+<div class="mbody">
+  <div class="memoji">⛪</div>
+  <div class="mname">堕落修士</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#15</span><span class="mact">III 圣母院礼拜堂</span>
+</div>
+<div class="mbody">
+  <div class="memoji">👁️</div>
+  <div class="mname">美杜莎头</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">被击杀时：你弃 1 张副武器</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#16</span><span class="mact">III 圣母院礼拜堂</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🕯️</div>
+  <div class="mname">跳蚤人</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>1</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">击杀者立即 +2 ❤️</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#17</span><span class="mact">III 圣母院礼拜堂</span>
+</div>
+<div class="mbody">
+  <div class="memoji">👻</div>
+  <div class="mname">幽灵</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#18</span><span class="mact">III 圣母院礼拜堂</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🐍</div>
+  <div class="mname">卡米拉</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>4</b></div>
+  <div class="mtags">🕯️ +1❤️ · ✨ ×1 · 👑 BOSS</div>
+</div>
+<div class="meff">每回合开始：全场诅咒 +1</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#19</span><span class="mact">IV 禁忌藏书阁</span>
+</div>
+<div class="mbody">
+  <div class="memoji">📕</div>
+  <div class="mname">魔导书</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#20</span><span class="mact">IV 禁忌藏书阁</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🛡️</div>
+  <div class="mname">铁甲斧兵</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>3</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">被击杀时：击杀者 −1 HP</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#21</span><span class="mact">IV 禁忌藏书阁</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🏹</div>
+  <div class="mname">骷髅弓手</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#22</span><span class="mact">IV 禁忌藏书阁</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🔮</div>
+  <div class="mname">幻术师</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">出场时：把你 🟨 线队列洗回牌堆顶</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#23</span><span class="mact">IV 禁忌藏书阁</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🕰️</div>
+  <div class="mname">时之亡魂</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">击杀者本回合 +1 ⏳</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#24</span><span class="mact">IV 禁忌藏书阁</span>
+</div>
+<div class="mbody">
+  <div class="memoji">⚔️</div>
+  <div class="mname">无头骑士</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>4</b></div>
+  <div class="mtags">🕯️ +1❤️ · ✨ ×1 · 👑 BOSS</div>
+</div>
+<div class="meff">出场时：摧毁你所有 ❤️ 的一半（向下取整）</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#25</span><span class="mact">V 钟楼</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🦇</div>
+  <div class="mname">恶魔蝠</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>2</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#fdecea;border-color:#c0392b">
+<div class="mhead" style="background:#c0392b">
+  <span class="mno">#26</span><span class="mact">V 钟楼</span>
+</div>
+<div class="mbody">
+  <div class="memoji">💀</div>
+  <div class="mname">骷髅骑士</div>
+  <div class="mband" style="color:#c0392b">🟥 近</div>
+  <div class="mhp">HP <b>3</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">—</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#27</span><span class="mact">V 钟楼</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🐉</div>
+  <div class="mname">骨龙</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>3</b></div>
+  <div class="mtags">🕯️ +1❤️</div>
+</div>
+<div class="meff">出场时：你 🟦 线额外进 1 只「石像鬼」(3HP)</div>
+</div><div class="card mcard" style="background:#fdf6e3;border-color:#b7791f">
+<div class="mhead" style="background:#b7791f">
+  <span class="mno">#28</span><span class="mact">V 钟楼</span>
+</div>
+<div class="mbody">
+  <div class="memoji">🧛</div>
+  <div class="mname">吸血鬼贵族</div>
+  <div class="mband" style="color:#b7791f">🟨 中</div>
+  <div class="mhp">HP <b>3</b></div>
+  <div class="mtags">&nbsp;</div>
+</div>
+<div class="meff">被击杀时：全场诅咒 −1（可为负则归 0）</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#29</span><span class="mact">V 钟楼</span>
+</div>
+<div class="mbody">
+  <div class="memoji">☠️</div>
+  <div class="mname">死神</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>4</b></div>
+  <div class="mtags">🕯️ +1❤️ · ✨ ×1</div>
+</div>
+<div class="meff">出场时：每位玩家弃 1 张副武器</div>
+</div><div class="card mcard" style="background:#eaf2f8;border-color:#1f5f8b">
+<div class="mhead" style="background:#1f5f8b">
+  <span class="mno">#30</span><span class="mact">V 钟楼</span>
+</div>
+<div class="mbody">
+  <div class="memoji">👑</div>
+  <div class="mname">德古拉</div>
+  <div class="mband" style="color:#1f5f8b">🟦 远</div>
+  <div class="mhp">HP <b>7</b></div>
+  <div class="mtags">🕯️ +1❤️ · ✨ ×2 · 👑 BOSS</div>
+</div>
+<div class="meff">三阶段：HP 7→5→3，每被击破一阶段全场诅咒 +2</div>
+</div></div>
+<h2>5. 副武器卡（60 张，角标为打印张数）</h2>
+<div class="grid"><div class="card scard" style="background:#8e6e3a">
+<div class="badge">×14</div>
+<div class="semoji">🗡️</div>
+<div class="sname">小刀</div>
+<div class="sstat"><span class="pill">⚔ 1</span><span class="pill">❤ 1</span></div>
+<div class="srow">覆盖 <b>🟥 近 🟨 中</b></div>
+<div class="srow">盲区 <b>🟦 远</b></div>
+<div class="sdesc">覆盖 🟥/🟨　盲 🟦</div>
+</div><div class="card scard" style="background:#6b7280">
+<div class="badge">×12</div>
+<div class="semoji">🪓</div>
+<div class="sname">圣斧</div>
+<div class="sstat"><span class="pill">⚔ 2</span><span class="pill">❤ 2</span></div>
+<div class="srow">覆盖 <b>🟨 中 🟦 远</b></div>
+<div class="srow">盲区 <b>🟥 近</b></div>
+<div class="sdesc">覆盖 🟨/🟦　盲 🟥</div>
+</div><div class="card scard" style="background:#7c3aed">
+<div class="badge">×10</div>
+<div class="semoji">✝️</div>
+<div class="sname">圣十字</div>
+<div class="sstat"><span class="pill">⚔ 2</span><span class="pill">❤ 2</span></div>
+<div class="srow">覆盖 <b>🟥 近 🟦 远</b></div>
+<div class="srow">盲区 <b>🟨 中</b></div>
+<div class="sdesc">覆盖 🟥/🟦　盲 🟨（回旋越过中距离）</div>
+</div><div class="card scard" style="background:#0e7490">
+<div class="badge">×8</div>
+<div class="semoji">💧</div>
+<div class="sname">圣水</div>
+<div class="sstat"><span class="pill">⚔ 3</span><span class="pill">❤ 2</span></div>
+<div class="srow">覆盖 <b>🟥 近</b></div>
+<div class="srow">盲区 <b>🟨 中 🟦 远</b></div>
+<div class="sdesc">只覆盖 🟥，但伤害最高</div>
+</div><div class="card scard" style="background:#15803d">
+<div class="badge">×8</div>
+<div class="semoji">📖</div>
+<div class="sname">圣书</div>
+<div class="sstat"><span class="pill">⚔ 1</span><span class="pill">❤ 2</span></div>
+<div class="srow">覆盖 <b>🟨 中 🟦 远</b></div>
+<div class="srow">盲区 <b>🟥 近</b></div>
+<div class="sdesc">覆盖 🟨/🟦　盲 🟥；打出后额外摸 1 张</div>
+</div><div class="card scard" style="background:#b45309">
+<div class="badge">×8</div>
+<div class="semoji">⏱️</div>
+<div class="sname">怀表</div>
+<div class="sstat"><span class="pill">⚔ —</span><span class="pill">❤ 2</span></div>
+<div class="srow">覆盖 <b>🟥 近 🟨 中 🟦 远</b></div>
+<div class="srow">盲区 <b>无（不杀伤）</b></div>
+<div class="sdesc">任意带：把队列头移出游戏，不得分，解冻该带</div>
+</div></div>
+<p style="font-size:12.5px">军械架牌堆张数 = <b>人数 × 11</b>（2人22 / 3人33 / 4人44 / 5人55）。按上表比例从 60 张中配比抽取，组成该局的军械架。</p>
+<h2>6. 圣光标记 ✨（12 枚 = 6 模板 × 2）</h2>
+<div class="grid"><div class="card rcard">
+<div class="badge">×2</div>
+<div class="remoji">✨</div>
+<div class="rname">圣光</div>
+<div class="ruse">清任意带队列头并计分；未用终局 +2 分</div>
+<div class="rnote">每击杀 1 位 BOSS 获得 1 枚（全场共 6 枚）</div>
+</div><div class="card rcard">
+<div class="badge">×2</div>
+<div class="remoji">✨</div>
+<div class="rname">圣光</div>
+<div class="ruse">清任意带队列头并计分；未用终局 +2 分</div>
+<div class="rnote">每击杀 1 位 BOSS 获得 1 枚（全场共 6 枚）</div>
+</div><div class="card rcard">
+<div class="badge">×2</div>
+<div class="remoji">✨</div>
+<div class="rname">圣光</div>
+<div class="ruse">清任意带队列头并计分；未用终局 +2 分</div>
+<div class="rnote">每击杀 1 位 BOSS 获得 1 枚（全场共 6 枚）</div>
+</div><div class="card rcard">
+<div class="badge">×2</div>
+<div class="remoji">✨</div>
+<div class="rname">圣光</div>
+<div class="ruse">清任意带队列头并计分；未用终局 +2 分</div>
+<div class="rnote">每击杀 1 位 BOSS 获得 1 枚（全场共 6 枚）</div>
+</div><div class="card rcard">
+<div class="badge">×2</div>
+<div class="remoji">✨</div>
+<div class="rname">圣光</div>
+<div class="ruse">清任意带队列头并计分；未用终局 +2 分</div>
+<div class="rnote">每击杀 1 位 BOSS 获得 1 枚（全场共 6 枚）</div>
+</div><div class="card rcard">
+<div class="badge">×2</div>
+<div class="remoji">✨</div>
+<div class="rname">圣光</div>
+<div class="ruse">清任意带队列头并计分；未用终局 +2 分</div>
+<div class="rnote">每击杀 1 位 BOSS 获得 1 枚（全场共 6 枚）</div>
+</div></div>
+<p style="font-size:12.5px">每击杀 1 位 BOSS 获得 1 枚（德古拉给 2 枚，全场共 6 枚）。<b>1 枚 = 圣光</b>：立即清除任意一条带的队列头并<b>计入击杀分</b>。终局未使用的 ✨ 每枚 <b>+2 分</b> —— 清除 HP ≥ 3 的怪时用掉才划算。</p>
+<h2>7. 猎魔者棋子（5 枚）</h2>
+<div class="grid"><div class="pawn" style="background:#c0392b">
+<div class="pemoji">🌹</div><div class="pname">罗丝·贝尔蒙特</div></div><div class="pawn" style="background:#1f5f8b">
+<div class="pemoji">🪢</div><div class="pname">特雷弗·贝尔蒙特</div></div><div class="pawn" style="background:#15803d">
+<div class="pemoji">🌟</div><div class="pname">赛法·贝尔纳德斯</div></div><div class="pawn" style="background:#b45309">
+<div class="pemoji">🧗</div><div class="pname">格兰特·达纳斯提</div></div><div class="pawn" style="background:#7c3aed">
+<div class="pemoji">🌙</div><div class="pname">阿鲁卡多</div></div></div>
+<h2>8. 心 / 刻 / HP 标记</h2>
+<div class="grid"><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">❤️</span><span class="tok">⏳</span><span class="tok">⏳</span><span class="tok">⏳</span><span class="tok">⏳</span><span class="tok">⏳</span><span class="tok">⏳</span><span class="tok">💀</span><span class="tok">💀</span><span class="tok">💀</span><span class="tok">💀</span><span class="tok">💀</span></div>
+<p style="font-size:12.5px">❤️ 心：起始 3 颗；击杀 +1；带 🕯️ 再 +1；失守补偿 +2（面板心轨记录即可）。⏳ 刻：每回合 2 点，回合末清空，<b>挥鞭每回合限 1 次</b>。💀 用作失守 / 背刺的伤害指示。</p>
+<h2>9. 一页速查（每人 1 张）</h2>
+<div class="hintbox">
+<b>回合流程</b>：① 翻 1 张魔物卡，全场同时把它放进自己对应带的队列尾 →
+② 花 2 ⏳（<b>挥鞭每回合限 1 次</b> / 取械 / 炼化：弃 1 张换 1 ❤️）→
+③ 投掷副武器（<b>不花 ⏳</b>，只花 ❤️，上限 4 张）→
+④ 结算：击杀 +HP 值分 &amp; +1 ❤️（带 🕯️ 再 +1）；失守每超 1 只 −1 HP（单回合上限 −2）、
+全场诅咒 +1，失守者补偿 +2 ❤️ → ⑤ 整备：⏳ 归零，货架补 3 张，手牌上限 6。<br><br>
+<b>三大恒等式</b><br>
+A. <b>1 ❤️ = 0.849 伤害</b>，而 1 ⏳ = 1~2 伤害 ⇒ <b>能挥鞭就挥鞭</b>，副武器只用来补盲区。<br>
+B. 理论供给 <b>75.7</b> vs 需求 <b>73</b> ⇒ <b>盈余仅 3.7%</b>；升级鞭子晚 8 回合，盈余就变 2 点赤字。<br>
+C. 无论几人，<b>每人要吃的 HP 恒为 73 点</b>；人多只让军械架变薄。<br><br>
+<b>鞭子时机</b>：长鞭（8 ❤️）<b>第 8-9 回合前</b>；火鞭（12 ❤️）<b>第 18 回合前</b>。<br><br>
+<b>记忆锚</b>：① 别让手牌的盲区重合　② 要么一次打死，要么别打
+</div>
+
+<h2>10. 打印与制作建议</h2>
+<table class="actmap">
+<tr><th>内容</th><th>建议纸张</th><th>数量</th><th>备注</th></tr>
+<tr><td>魔物卡</td><td>250g 卡纸</td><td>30 张</td><td>按编号顺序洗牌，1→30</td></tr>
+<tr><td>副武器卡</td><td>250g 卡纸</td><td>60 张</td><td>按角标张数剪裁</td></tr>
+<tr><td>圣光标记 ✨</td><td>200g 卡纸</td><td>12 枚</td><td>6 模板 × 2，也可用小石子代替</td></tr>
+<tr><td>猎魔者面板</td><td>200g 卡纸</td><td>5 张</td><td>A4 横放，一人一张</td></tr>
+<tr><td>棋子</td><td>200g 卡纸 + 底座</td><td>5 枚</td><td>可对折立起</td></tr>
+<tr><td>推进轨 / 诅咒轨</td><td>普通 A4</td><td>各 1 张</td><td>桌中央摆放</td></tr>
+</table>
+<p style="font-size:12.5px;margin-top:14px">裁剪后建议用卡套或冷裱膜保护；魔物卡背面若不透明可不套牌套
+（牌堆是<b>明牌顺序</b>的，玩家需要知道接下来会来什么）。</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>铁旅：接续时刻表 — 打印道具</title>
+<style>
+:root{
+  --navy:#16324f; --navy2:#254b70; --paper:#f7f3e9; --ink:#22303c;
+  --red:#d7263d; --yellow:#f0b429; --green:#2e9e5b; --line:#b9a88a;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:18px;background:#e9e4d8;color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;}
+h1{font-size:24px;margin:0 0 4px;color:var(--navy);}
+h2{font-size:18px;margin:26px 0 10px;color:#fff;background:var(--navy);
+  padding:7px 12px;border-radius:6px;border-left:6px solid var(--yellow);}
+h3{font-size:14px;margin:14px 0 8px;color:var(--navy2);}
+p,li{font-size:13px;line-height:1.7;}
+.print-hint{background:#fff8e1;border:2px dashed var(--yellow);border-radius:8px;
+  padding:12px 16px;margin:14px 0;}
+.print-hint strong{color:var(--red);}
+.grid{display:flex;flex-wrap:wrap;gap:10px;}
+.card{position:relative;background:var(--paper);border:2px solid var(--navy);
+  border-radius:8px;padding:7px 8px;page-break-inside:avoid;break-inside:avoid;}
+.badge{position:absolute;top:-8px;right:-8px;background:var(--red);color:#fff;
+  font-size:11px;font-weight:700;border-radius:10px;padding:1px 7px;border:2px solid #fff;}
+.ico{font-size:26px;line-height:1.1;text-align:center;}
+.nm{font-size:13px;font-weight:700;text-align:center;color:var(--navy);}
+.sub{font-size:11px;text-align:center;color:#6b5c45;margin-top:2px;}
+.dsc{font-size:10.5px;line-height:1.45;margin-top:5px;color:#3a4a58;}
+/* 运转卡 */
+.op{width:104px;height:132px;}
+.op .big{font-size:30px;text-align:center;}
+.op .push{position:absolute;bottom:6px;left:0;right:0;text-align:center;
+  font-size:12px;font-weight:700;color:#fff;background:var(--navy);border-radius:4px;
+  margin:0 8px;padding:2px 0;}
+/* 旅客卡 */
+.ps{width:112px;height:78px;}
+.ps .rt{font-size:15px;font-weight:700;text-align:center;color:var(--navy);letter-spacing:1px;}
+.ps .meta{display:flex;justify-content:space-between;font-size:11px;margin-top:5px;
+  border-top:1px dashed var(--line);padding-top:4px;}
+.ps .f{color:var(--red);font-weight:700;}
+.ps .u{color:var(--green);font-weight:700;}
+/* 事件卡 */
+.ev{width:104px;height:118px;background:#fff;}
+.ev .rd{position:absolute;top:6px;left:6px;background:var(--navy2);color:#fff;
+  font-size:10px;border-radius:4px;padding:1px 5px;}
+/* 调度卡 */
+.dp{width:150px;height:120px;background:#eef6ff;}
+/* 线路图 */
+.map{background:var(--paper);border:3px solid var(--navy);border-radius:12px;padding:16px;}
+.rowmap{display:flex;align-items:stretch;gap:0;}
+.stbox{flex:0 0 92px;background:#fff;border:3px solid var(--navy);border-radius:10px;
+  padding:6px 2px;text-align:center;}
+.stbox .si{font-size:24px;}
+.stbox .sn{font-size:12px;font-weight:700;color:var(--navy);}
+.stbox .sc{font-size:10px;color:#7a6a52;}
+.seg{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 4px;}
+.trk{height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#fff;font-weight:700;}
+.up{background:var(--green);}
+.dn{background:var(--red);}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;margin-top:12px;}
+.legend span{display:inline-block;padding:2px 8px;border-radius:4px;color:#fff;}
+/* 时刻表轨 */
+.clock{display:flex;gap:3px;margin-top:6px;}
+.tk{flex:1 1 0;height:30px;border:1px solid var(--navy);border-radius:3px;display:flex;
+  align-items:center;justify-content:center;font-size:11px;font-weight:700;background:#fff;}
+.tk.mark{background:var(--yellow);}
+.tk.end{background:var(--red);color:#fff;}
+/* 站台垫 */
+.plat{width:132px;height:96px;background:#fffdf5;border:2px dashed var(--line);}
+.plat .q{display:flex;gap:6px;justify-content:center;margin-top:5px;}
+.plat .slot{width:34px;height:46px;border:1px dashed var(--line);border-radius:4px;}
+/* 棋子 */
+.pawn{width:88px;height:88px;border-radius:50%;border:4px solid var(--navy);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:30px;color:#fff;font-weight:700;}
+/* 速查 */
+.cheat{width:320px;background:#fffdf5;border:2px solid var(--navy);border-radius:8px;padding:10px;}
+.cheat table{border-collapse:collapse;width:100%;font-size:11px;}
+.cheat td,.cheat th{border:1px solid var(--line);padding:2px 4px;text-align:center;}
+.cheat th{background:var(--navy);color:#fff;}
+.note{font-size:12px;color:#5c4e3a;background:#fff;padding:8px 12px;border-radius:6px;
+  border-left:4px solid var(--yellow);margin:8px 0;}
+@media print{
+  *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .print-hint{ display: none; }
+  body{background:#fff;padding:0;}
+  h2{page-break-after:avoid;}
+  .card,.map,.cheat,.plat,.pawn{page-break-inside:avoid;break-inside:avoid;}
+  @page{ size:A4; margin:8mm; }
+}
+</style></head><body>
+<h1>🚂 铁旅：接续时刻表 — 打印道具</h1>
+<p>本页包含游戏所需的全部可打印道具：线路图、时刻表轨、待避值轨、运转卡、旅客卡、调度卡、事件卡、站台垫、列车棋子与速查卡。规则详见 <a href="README.md">README.md</a>。</p>
+<div class="print-hint">
+<strong>⚠️ 重要打印提示：</strong>
+<ul>
+<li>使用 <strong>A4 纸张</strong> 打印，建议设置<strong>最小边距</strong></li>
+<li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则所有色块与线路图会变成白色</li>
+<li>运转卡 / 旅客卡 / 事件卡 / 调度卡建议使用 <strong>卡纸（200g 以上）</strong> 打印并裁剪</li>
+<li>线路图与时刻表轨建议用普通 A4 横版打印，或过塑后用白板笔标记</li>
+<li>列车棋子建议打印两份，背对背粘合后插入小夹子或折成立牌</li>
+</ul>
+</div>
+<h2>1. 线路图（复线 6 站 / 5 区间）</h2>
+<div class="map"><div class="rowmap">
+<div class="stbox"><div class="si">🚉</div><div class="sn">中央站</div><div class="sc">S1　格 0</div></div>
+<div class="seg"><div class="trk up">T1 上行（向右）</div><div class="trk dn">T1 下行（向左）</div></div>
+<div class="stbox"><div class="si">🏫</div><div class="sn">学园站</div><div class="sc">S2　格 2</div></div>
+<div class="seg"><div class="trk up">T2 上行（向右）</div><div class="trk dn">T2 下行（向左）</div></div>
+<div class="stbox"><div class="si">🏪</div><div class="sn">市场站</div><div class="sc">S3　格 4</div></div>
+<div class="seg"><div class="trk up">T3 上行（向右）</div><div class="trk dn">T3 下行（向左）</div></div>
+<div class="stbox"><div class="si">🏭</div><div class="sn">工业站</div><div class="sc">S4　格 6</div></div>
+<div class="seg"><div class="trk up">T4 上行（向右）</div><div class="trk dn">T4 下行（向左）</div></div>
+<div class="stbox"><div class="si">⚓</div><div class="sn">港湾站</div><div class="sc">S5　格 8</div></div>
+<div class="seg"><div class="trk up">T5 上行（向右）</div><div class="trk dn">T5 下行（向左）</div></div>
+<div class="stbox"><div class="si">⛰</div><div class="sn">岭顶站</div><div class="sc">S6　格 10</div></div>
+</div>
+<div class="legend"><span style="background:#2e9e5b">上行线：向右行驶的车用</span><span style="background:#d7263d">下行线：向左行驶的车用</span><span style="background:#16324f">车站：可容纳任意多列车</span></div>
+<div class="note"><strong>复线闭塞规则：</strong>每个区间的上行线 / 下行线<strong>各只能容纳 1 趟列车</strong>；<strong>只有同向车才会互相堵塞</strong>，对向车各走一条线永不冲突。车站为多股道，可同时停靠任意多趟列车，在此上下客与会让。停在<strong>区间</strong>（不是车站）的列车本轮无法停靠。</div>
+</div>
+<h2>2. 公共时刻表轨 · 待避值轨</h2>
+<div class="map"><h3 style="margin-top:0">公共时刻表轨（0 → 20 时）</h3><div class="clock">
+<div class="tk mark">0</div>
+<div class="tk">1</div>
+<div class="tk">2</div>
+<div class="tk">3</div>
+<div class="tk">4</div>
+<div class="tk mark">5</div>
+<div class="tk">6</div>
+<div class="tk">7</div>
+<div class="tk">8</div>
+<div class="tk">9</div>
+<div class="tk mark">10</div>
+<div class="tk">11</div>
+<div class="tk">12</div>
+<div class="tk">13</div>
+<div class="tk">14</div>
+<div class="tk mark">15</div>
+<div class="tk">16</div>
+<div class="tk">17</div>
+<div class="tk">18</div>
+<div class="tk">19</div>
+<div class="tk end">20</div>
+</div><div class="note">每轮结束时刻 +1（🕐 延长运转事件除外）；时刻走到 <strong>20</strong> 时立即终局。用一枚夹子或一枚硬币当标记。</div></div>
+<div class="map" style="margin-top:12px"><h3 style="margin-top:0">待避值轨 W（每人一条，0 → 12）</h3><div class="clock">
+<div class="tk">0</div>
+<div class="tk">1</div>
+<div class="tk">2</div>
+<div class="tk">3</div>
+<div class="tk">4</div>
+<div class="tk">5</div>
+<div class="tk">6</div>
+<div class="tk">7</div>
+<div class="tk">8</div>
+<div class="tk">9</div>
+<div class="tk">10</div>
+<div class="tk">11</div>
+<div class="tk">12</div>
+</div><div class="note"><strong>移动顺序按 W 从高到低</strong>：被堵得越惨的人，下一轮越先走（自动追赶）。🛑 待避卡让 W +2，是「主动认输一轮换先手」的战术。</div></div>
+<h2>3. 运转卡（每人一套 9 张，共 5 套）</h2>
+<div class="note">一套 = 🚋×1、🚃×3、🚄×3、🚅×1、🛑×1。开局洗匀成个人牌堆，打完 9 张后<b>弃牌堆洗回</b>循环使用。</div>
+<div class="grid"><div class="card op"><span class="badge">×1</span><div class="big">🚋</div><div class="nm">各站停车</div><div class="dsc">停靠时不受「满员电车」限制</div><div class="push">推进 1</div></div>
+<div class="card op"><span class="badge">×3</span><div class="big">🚃</div><div class="nm">快速</div><div class="dsc">—</div><div class="push">推进 2</div></div>
+<div class="card op"><span class="badge">×3</span><div class="big">🚄</div><div class="nm">急行</div><div class="dsc">—</div><div class="push">推进 3</div></div>
+<div class="card op"><span class="badge">×1</span><div class="big">🚅</div><div class="nm">特急</div><div class="dsc">本轮**不停靠**（不能上下客）</div><div class="push">推进 4</div></div>
+<div class="card op"><span class="badge">×1</span><div class="big">🛑</div><div class="nm">待避</div><div class="dsc">推进 0，但待避值 W +2</div><div class="push">推进 0</div></div></div>
+<h2>4. 调度卡（每人随机 2 张，整局各用 1 次）</h2>
+<div class="grid"><div class="card dp"><span class="badge">×5</span><div class="ico">🔄</div><div class="nm">会让调整</div><div class="dsc">移动结束后，与相邻 1 趟列车交换所在格（无视闭塞）</div></div>
+<div class="card dp"><span class="badge">×5</span><div class="ico">🚦</div><div class="nm">信号优先</div><div class="dsc">本轮推进力 R +2</div></div>
+<div class="card dp"><span class="badge">×5</span><div class="ico">🎟</div><div class="nm">团体预约</div><div class="dsc">从旅客牌堆顶取 3 张，选 1 张放进任意站的候车队列</div></div></div>
+<h2>5. 事件卡（20 张公开事件轨）</h2>
+<div class="note">开局<b>全部翻开</b>排成一列，第 N 轮执行第 N 张。全程公开 ⇒ 可以提前 20 轮规划。</div>
+<div class="grid"><div class="card ev"><span class="rd">R01</span><div class="ico">🌤</div><div class="nm">好天气</div><div class="dsc">本轮全场推进力 R +1</div></div>
+<div class="card ev"><span class="rd">R02</span><div class="ico">🍂</div><div class="nm">落叶</div><div class="dsc">本轮全员待避值 W +1</div></div>
+<div class="card ev"><span class="rd">R03</span><div class="ico">🎪</div><div class="nm">祭典</div><div class="dsc">S2 学园站候车队列 +2</div></div>
+<div class="card ev"><span class="rd">R04</span><div class="ico">🌧</div><div class="nm">暴雨</div><div class="dsc">本轮全场推进力 R −1（最低 0）</div></div>
+<div class="card ev"><span class="rd">R05</span><div class="ico">🚧</div><div class="nm">线路施工</div><div class="dsc">本轮 T3 区间封闭，任何列车不得进入</div></div>
+<div class="card ev"><span class="rd">R06</span><div class="ico">🕐</div><div class="nm">延长运转</div><div class="dsc">本轮时刻不推进（白送 1 轮）</div></div>
+<div class="card ev"><span class="rd">R07</span><div class="ico">📻</div><div class="nm">无线指令</div><div class="dsc">本轮移动顺序反转（按 W 升序）</div></div>
+<div class="card ev"><span class="rd">R08</span><div class="ico">🧍</div><div class="nm">满员电车</div><div class="dsc">本轮每次停靠最多装载 1 名旅客</div></div>
+<div class="card ev"><span class="rd">R09</span><div class="ico">🌤</div><div class="nm">好天气</div><div class="dsc">本轮全场推进力 R +1</div></div>
+<div class="card ev"><span class="rd">R10</span><div class="ico">🎪</div><div class="nm">祭典</div><div class="dsc">S5 港湾站候车队列 +2</div></div>
+<div class="card ev"><span class="rd">R11</span><div class="ico">🚧</div><div class="nm">线路施工</div><div class="dsc">本轮 T1 区间封闭，任何列车不得进入</div></div>
+<div class="card ev"><span class="rd">R12</span><div class="ico">🌧</div><div class="nm">暴雨</div><div class="dsc">本轮全场推进力 R −1（最低 0）</div></div>
+<div class="card ev"><span class="rd">R13</span><div class="ico">🍂</div><div class="nm">落叶</div><div class="dsc">本轮全员待避值 W +1</div></div>
+<div class="card ev"><span class="rd">R14</span><div class="ico">🎪</div><div class="nm">祭典</div><div class="dsc">S3 市场站候车队列 +2</div></div>
+<div class="card ev"><span class="rd">R15</span><div class="ico">📻</div><div class="nm">无线指令</div><div class="dsc">本轮移动顺序反转（按 W 升序）</div></div>
+<div class="card ev"><span class="rd">R16</span><div class="ico">🚧</div><div class="nm">线路施工</div><div class="dsc">本轮 T4 区间封闭，任何列车不得进入</div></div>
+<div class="card ev"><span class="rd">R17</span><div class="ico">🧍</div><div class="nm">满员电车</div><div class="dsc">本轮每次停靠最多装载 1 名旅客</div></div>
+<div class="card ev"><span class="rd">R18</span><div class="ico">🌤</div><div class="nm">好天气</div><div class="dsc">本轮全场推进力 R +1</div></div>
+<div class="card ev"><span class="rd">R19</span><div class="ico">🕐</div><div class="nm">延长运转</div><div class="dsc">本轮时刻不推进（白送 1 轮）</div></div>
+<div class="card ev"><span class="rd">R20</span><div class="ico">🌧</div><div class="nm">暴雨</div><div class="dsc">本轮全场推进力 R −1（最低 0）</div></div></div>
+<h2>6. 旅客卡（30 种 · 共 82 张）</h2>
+<div class="note">按<b>发站</b>分成 6 小堆；开局每个站台垫上明置 3 张，被取走后从对应小堆补足。🎫 是准点送达的分数，⏱ 是上车起算的宽裕时数。箭头表示行进方向（→ 需向右行驶的列车，← 需向左行驶的列车）。</div>
+<h3>🚉 中央站 发车的旅客</h3><div class="grid">
+<div class="card ps"><span class="badge">×2</span><div class="rt">S1 → S2</div><div class="sub">中央站 ⇒ 学园站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S1 → S3</div><div class="sub">中央站 ⇒ 市场站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+<div class="card ps"><span class="badge">×3</span><div class="rt">S1 → S4</div><div class="sub">中央站 ⇒ 工业站　3 区间</div><div class="meta"><span class="f">🎫 8 分</span><span class="u">⏱ 5 时内</span></div></div>
+<div class="card ps"><span class="badge">×4</span><div class="rt">S1 → S5</div><div class="sub">中央站 ⇒ 港湾站　4 区间</div><div class="meta"><span class="f">🎫 11 分</span><span class="u">⏱ 6 时内</span></div></div>
+<div class="card ps"><span class="badge">×6</span><div class="rt">S1 → S6</div><div class="sub">中央站 ⇒ 岭顶站　5 区间</div><div class="meta"><span class="f">🎫 14 分</span><span class="u">⏱ 7 时内</span></div></div>
+</div>
+<h3>🏫 学园站 发车的旅客</h3><div class="grid">
+<div class="card ps"><span class="badge">×2</span><div class="rt">S2 ← S1</div><div class="sub">学园站 ⇒ 中央站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S2 → S3</div><div class="sub">学园站 ⇒ 市场站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S2 → S4</div><div class="sub">学园站 ⇒ 工业站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+<div class="card ps"><span class="badge">×3</span><div class="rt">S2 → S5</div><div class="sub">学园站 ⇒ 港湾站　3 区间</div><div class="meta"><span class="f">🎫 8 分</span><span class="u">⏱ 5 时内</span></div></div>
+<div class="card ps"><span class="badge">×4</span><div class="rt">S2 → S6</div><div class="sub">学园站 ⇒ 岭顶站　4 区间</div><div class="meta"><span class="f">🎫 11 分</span><span class="u">⏱ 6 时内</span></div></div>
+</div>
+<h3>🏪 市场站 发车的旅客</h3><div class="grid">
+<div class="card ps"><span class="badge">×2</span><div class="rt">S3 ← S1</div><div class="sub">市场站 ⇒ 中央站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S3 ← S2</div><div class="sub">市场站 ⇒ 学园站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S3 → S4</div><div class="sub">市场站 ⇒ 工业站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S3 → S5</div><div class="sub">市场站 ⇒ 港湾站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+<div class="card ps"><span class="badge">×3</span><div class="rt">S3 → S6</div><div class="sub">市场站 ⇒ 岭顶站　3 区间</div><div class="meta"><span class="f">🎫 8 分</span><span class="u">⏱ 5 时内</span></div></div>
+</div>
+<h3>🏭 工业站 发车的旅客</h3><div class="grid">
+<div class="card ps"><span class="badge">×3</span><div class="rt">S4 ← S1</div><div class="sub">工业站 ⇒ 中央站　3 区间</div><div class="meta"><span class="f">🎫 8 分</span><span class="u">⏱ 5 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S4 ← S2</div><div class="sub">工业站 ⇒ 学园站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S4 ← S3</div><div class="sub">工业站 ⇒ 市场站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S4 → S5</div><div class="sub">工业站 ⇒ 港湾站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S4 → S6</div><div class="sub">工业站 ⇒ 岭顶站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+</div>
+<h3>⚓ 港湾站 发车的旅客</h3><div class="grid">
+<div class="card ps"><span class="badge">×4</span><div class="rt">S5 ← S1</div><div class="sub">港湾站 ⇒ 中央站　4 区间</div><div class="meta"><span class="f">🎫 11 分</span><span class="u">⏱ 6 时内</span></div></div>
+<div class="card ps"><span class="badge">×3</span><div class="rt">S5 ← S2</div><div class="sub">港湾站 ⇒ 学园站　3 区间</div><div class="meta"><span class="f">🎫 8 分</span><span class="u">⏱ 5 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S5 ← S3</div><div class="sub">港湾站 ⇒ 市场站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S5 ← S4</div><div class="sub">港湾站 ⇒ 工业站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S5 → S6</div><div class="sub">港湾站 ⇒ 岭顶站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+</div>
+<h3>⛰ 岭顶站 发车的旅客</h3><div class="grid">
+<div class="card ps"><span class="badge">×6</span><div class="rt">S6 ← S1</div><div class="sub">岭顶站 ⇒ 中央站　5 区间</div><div class="meta"><span class="f">🎫 14 分</span><span class="u">⏱ 7 时内</span></div></div>
+<div class="card ps"><span class="badge">×4</span><div class="rt">S6 ← S2</div><div class="sub">岭顶站 ⇒ 学园站　4 区间</div><div class="meta"><span class="f">🎫 11 分</span><span class="u">⏱ 6 时内</span></div></div>
+<div class="card ps"><span class="badge">×3</span><div class="rt">S6 ← S3</div><div class="sub">岭顶站 ⇒ 市场站　3 区间</div><div class="meta"><span class="f">🎫 8 分</span><span class="u">⏱ 5 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S6 ← S4</div><div class="sub">岭顶站 ⇒ 工业站　2 区间</div><div class="meta"><span class="f">🎫 5 分</span><span class="u">⏱ 4 时内</span></div></div>
+<div class="card ps"><span class="badge">×2</span><div class="rt">S6 ← S5</div><div class="sub">岭顶站 ⇒ 港湾站　1 区间</div><div class="meta"><span class="f">🎫 2 分</span><span class="u">⏱ 3 时内</span></div></div>
+</div>
+<h2>7. 站台垫（6 个）</h2>
+<div class="grid"><div class="card plat"><div class="ico">🚉</div><div class="nm">中央站</div><div class="q"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="sub">候车队列（常驻 3 张）</div></div>
+<div class="card plat"><div class="ico">🏫</div><div class="nm">学园站</div><div class="q"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="sub">候车队列（常驻 3 张）</div></div>
+<div class="card plat"><div class="ico">🏪</div><div class="nm">市场站</div><div class="q"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="sub">候车队列（常驻 3 张）</div></div>
+<div class="card plat"><div class="ico">🏭</div><div class="nm">工业站</div><div class="q"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="sub">候车队列（常驻 3 张）</div></div>
+<div class="card plat"><div class="ico">⚓</div><div class="nm">港湾站</div><div class="q"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="sub">候车队列（常驻 3 张）</div></div>
+<div class="card plat"><div class="ico">⛰</div><div class="nm">岭顶站</div><div class="q"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div><div class="sub">候车队列（常驻 3 张）</div></div></div>
+<h2>8. 列车棋子（5 枚）</h2>
+<div class="grid"><div class="pawn" style="background:#d7263d">🚂<div style="font-size:12px;margin-top:2px">玩家 1</div></div>
+<div class="pawn" style="background:#2e6fb7">🚂<div style="font-size:12px;margin-top:2px">玩家 2</div></div>
+<div class="pawn" style="background:#2e9e5b">🚂<div style="font-size:12px;margin-top:2px">玩家 3</div></div>
+<div class="pawn" style="background:#f0b429">🚂<div style="font-size:12px;margin-top:2px">玩家 4</div></div>
+<div class="pawn" style="background:#8e44ad">🚂<div style="font-size:12px;margin-top:2px">玩家 5</div></div></div>
+<h2>9. 速查卡（建议每人 1 张）</h2>
+<div class="grid"><div class="cheat"><div class="nm">编成 — 速度 — 运力</div><table><tr><th>编成</th><th>惩罚</th><th>急行R</th><th>特急R</th><th>运力</th></tr><tr><td>0</td><td>0</td><td>3</td><td>4</td><td>0</td></tr><tr><td>1</td><td>0</td><td>3</td><td>4</td><td>3</td></tr><tr><td>2</td><td>0</td><td>3</td><td>4</td><td>6</td></tr><tr><td>3</td><td>1</td><td>2</td><td>3</td><td>6</td></tr><tr><td>4</td><td>1</td><td>2</td><td>3</td><td>8</td></tr><tr><td>5</td><td>1</td><td>2</td><td>3</td><td>10</td></tr><tr><td>6</td><td>2</td><td>1</td><td>2</td><td>6</td></tr><tr><td>7</td><td>2</td><td>1</td><td>2</td><td>7</td></tr><tr><td>8</td><td>2</td><td>1</td><td>2</td><td>8</td></tr><tr><td>9</td><td>3</td><td>0</td><td>1</td><td>0</td></tr></table><div class="nm" style="margin-top:8px">旅客票价表</div><table><tr><th>距离</th><th>票价</th><th>宽裕度</th><th>效率</th></tr><tr><td>1 区间</td><td>2 分</td><td>3 时内</td><td>1.00</td></tr><tr><td>2 区间</td><td>5 分</td><td>4 时内</td><td>1.25</td></tr><tr><td>3 区间</td><td>8 分</td><td>5 时内</td><td>1.33</td></tr><tr><td>4 区间</td><td>11 分</td><td>6 时内</td><td>1.38</td></tr><tr><td>5 区间</td><td>14 分</td><td>7 时内</td><td>1.40</td></tr></table><div class="dsc" style="margin-top:6px">记住三条：① <b>3 节 = 1 站</b>；② <b>运力峰值在 5 节</b>；③ <b>9 节 + 急行以下 = 趴窝</b>（只有特急拉得动）。</div></div><div class="cheat"><div class="nm">编成 — 速度 — 运力</div><table><tr><th>编成</th><th>惩罚</th><th>急行R</th><th>特急R</th><th>运力</th></tr><tr><td>0</td><td>0</td><td>3</td><td>4</td><td>0</td></tr><tr><td>1</td><td>0</td><td>3</td><td>4</td><td>3</td></tr><tr><td>2</td><td>0</td><td>3</td><td>4</td><td>6</td></tr><tr><td>3</td><td>1</td><td>2</td><td>3</td><td>6</td></tr><tr><td>4</td><td>1</td><td>2</td><td>3</td><td>8</td></tr><tr><td>5</td><td>1</td><td>2</td><td>3</td><td>10</td></tr><tr><td>6</td><td>2</td><td>1</td><td>2</td><td>6</td></tr><tr><td>7</td><td>2</td><td>1</td><td>2</td><td>7</td></tr><tr><td>8</td><td>2</td><td>1</td><td>2</td><td>8</td></tr><tr><td>9</td><td>3</td><td>0</td><td>1</td><td>0</td></tr></table><div class="nm" style="margin-top:8px">旅客票价表</div><table><tr><th>距离</th><th>票价</th><th>宽裕度</th><th>效率</th></tr><tr><td>1 区间</td><td>2 分</td><td>3 时内</td><td>1.00</td></tr><tr><td>2 区间</td><td>5 分</td><td>4 时内</td><td>1.25</td></tr><tr><td>3 区间</td><td>8 分</td><td>5 时内</td><td>1.33</td></tr><tr><td>4 区间</td><td>11 分</td><td>6 时内</td><td>1.38</td></tr><tr><td>5 区间</td><td>14 分</td><td>7 时内</td><td>1.40</td></tr></table><div class="dsc" style="margin-top:6px">记住三条：① <b>3 节 = 1 站</b>；② <b>运力峰值在 5 节</b>；③ <b>9 节 + 急行以下 = 趴窝</b>（只有特急拉得动）。</div></div></div>
+<h2>10. 物料统计</h2>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;font-size:13px;background:#fff"><tr style="background:#16324f;color:#fff"><th>道具</th><th>数量</th><th>说明</th></tr><tr><td>线路图</td><td>1 张</td><td>复线 6 站 5 区间</td></tr><tr><td>时刻表轨</td><td>1 条</td><td>0 → 20 时</td></tr><tr><td>待避值轨</td><td>5 条</td><td>0 → 12</td></tr><tr><td>运转卡</td><td>45 张</td><td>5 套 × 9 张</td></tr><tr><td>旅客卡</td><td>82 张</td><td>30 种，份数见角标</td></tr><tr><td>调度卡</td><td>15 张</td><td>3 种 × 5</td></tr><tr><td>事件卡</td><td>20 张</td><td>公开事件轨</td></tr><tr><td>站台垫</td><td>6 个</td><td>每站 1 个</td></tr><tr><td>列车棋子</td><td>5 枚</td><td>5 色</td></tr><tr><td>速查卡</td><td>5 张</td><td>每人 1 张</td></tr></table>
+<p style="margin-top:24px;font-size:12px;color:#6b5c45">打印后请裁剪并按类型分装入小密封袋。祝旅途准点！🚉</p>
+</body></html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>影之刃：杀气连斩 · 打印道具</title>
+<style>
+:root{
+  --ink:#1f2933; --paper:#f7f4ee; --line:#c9c2b4; --ki:#b91c1c;
+  --gold:#a97c17; --mute:#6b7280;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+  background:#e9e5dc; color:var(--ink); margin:0; padding:18px;
+}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:2px;}
+h2{font-size:19px;margin:26px 0 10px;padding:6px 0 6px 12px;
+   border-left:6px solid var(--ki);background:#efe9df;}
+h3{font-size:15px;margin:14px 0 8px;color:var(--gold);}
+.sub{color:var(--mute);font-size:13px;margin:0 0 14px;}
+.wrap{max-width:1180px;margin:0 auto;}
+.print-hint{background:#fff8e1;border:2px dashed var(--gold);border-radius:8px;
+   padding:12px 16px;margin:0 0 20px;font-size:14px;line-height:1.8;}
+.print-hint ul{margin:6px 0 0 18px;padding:0;}
+.grid{display:flex;flex-wrap:wrap;gap:10px;}
+.card{width:118px;height:170px;border-radius:8px;padding:7px 6px;position:relative;
+   background:#fffdf8;border:2px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.12);
+   break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;}
+.card .ic{font-size:26px;line-height:1;text-align:center;}
+.card .nm{font-size:13px;font-weight:700;text-align:center;margin:3px 0 2px;}
+.card .tp{font-size:9px;text-align:center;color:#fff;border-radius:3px;padding:1px 0;}
+.card .bd{font-size:10px;line-height:1.5;margin-top:4px;flex:1;}
+.card .seg{font-size:9px;line-height:1.45;margin-top:3px;
+   border-top:1px dashed var(--line);padding-top:3px;color:#444;}
+.card .ft{font-size:9px;text-align:center;color:var(--ki);font-weight:700;margin-top:2px;}
+.badge{position:absolute;top:-8px;right:-8px;background:var(--ki);color:#fff;
+   border-radius:10px;font-size:11px;font-weight:700;padding:1px 7px;
+   border:2px solid #fff;}
+.warn{position:absolute;bottom:4px;left:5px;right:5px;font-size:8px;
+   color:var(--ki);text-align:center;line-height:1.25;}
+.board{background:#fffdf8;border:2px solid var(--line);border-radius:10px;
+   padding:12px;margin:10px;break-inside:avoid;page-break-inside:avoid;}
+.board h3{margin:0 0 8px;}
+.slot{display:inline-block;width:74px;height:74px;border:2px dashed var(--line);
+  border-radius:8px;text-align:center;line-height:1.2;font-size:11px;
+  vertical-align:top;margin-right:6px;background:#faf7f0;}
+.slot b{display:block;font-size:16px;color:var(--ki);margin-top:8px;}
+.track{display:flex;border:1px solid var(--line);border-radius:5px;overflow:hidden;
+  margin:5px 0 10px;}
+.track div{flex:1;text-align:center;font-size:9px;padding:3px 0;
+  border-right:1px solid var(--line);background:#f2eee5;}
+.track div:last-child{border-right:none;}
+.track .hot{background:#fbdcdc;font-weight:700;color:var(--ki);}
+.zone{font-size:11px;padding:4px 0;}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;}
+th,td{border:1px solid var(--line);padding:4px 7px;text-align:left;}
+th{background:#efe9df;}
+.pawn{width:80px;height:80px;border-radius:50%;border:3px solid var(--gold);
+  background:#fffdf8;display:flex;align-items:center;justify-content:center;
+  font-size:34px;margin:6px;break-inside:avoid;}
+.note{font-size:12px;color:var(--mute);margin:6px 0 0;}
+@media print{
+  *{-webkit-print-color-adjust: exact !important;print-color-adjust: exact !important;}
+  .print-hint{display:none;}
+  body{background:#fff;padding:0;}
+  @page{size:A4;margin:8mm;}
+  h2{page-break-after:avoid;}
+}
+</style></head><body><div class="wrap">
+<h1>影之刃：杀气连斩 · 打印道具</h1>
+<p class="sub">Phantom Blade: Killing Intent —— 共 98 张卡牌 + 8 张板件。全部卡牌均为模板，右上角 <b>×N</b> 表示需印 N 份。</p>
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong>；</li>
+    <li>在打印对话框中，务必<strong>勾选“背景图形”</strong>选项，否则所有彩色边框、色块与刻度条不会显示；</li>
+    <li>卡牌与棋子建议使用<strong>卡纸</strong>（200–250g）打印，打印后裁剪并塑封更耐用；</li>
+    <li>板件（玩家板 / 武傀板）可用普通 A4 纸打印，或直接用白纸手绘代替。</li>
+  </ul>
+</div>
+<h2>一 · 武傀板（3 张 · 桌中央）</h2>
+<div class='grid'>
+<div class="board" style="width:430px;display:inline-block;vertical-align:top">
+  <h3>🪲 武傀 · 铁蝉　<span style="font-size:12px;color:var(--mute)">HP = 13 × 人数</span></h3>
+  <div class="track"><div>0</div><div>10</div><div>20</div><div>30</div><div>40</div><div>50</div><div>60</div><div>70</div><div>80</div><div>90</div><div>100</div></div>
+  <div class="zone">用一枚夹子 / 骰子标记当前 HP（每小格 1 点，粗线每 10 点）</div>
+  <table style="width:180px"><tr><th>人数</th><th>HP</th></tr><tr><td>2 人</td><td><b>26</b></td></tr><tr><td>3 人</td><td><b>39</b></td></tr><tr><td>4 人</td><td><b>52</b></td></tr><tr><td>5 人</td><td><b>65</b></td></tr></table>
+  <div class="zone">斩杀后本夜剩余轮次 ⇒ 全员<b>调息</b>（残命 +3，杀气照常 +3）</div>
+</div><div class="board" style="width:430px;display:inline-block;vertical-align:top">
+  <h3>🕷️ 武傀 · 赤蛛　<span style="font-size:12px;color:var(--mute)">HP = 17 × 人数</span></h3>
+  <div class="track"><div>0</div><div>10</div><div>20</div><div>30</div><div>40</div><div>50</div><div>60</div><div>70</div><div>80</div><div>90</div><div>100</div></div>
+  <div class="zone">用一枚夹子 / 骰子标记当前 HP（每小格 1 点，粗线每 10 点）</div>
+  <table style="width:180px"><tr><th>人数</th><th>HP</th></tr><tr><td>2 人</td><td><b>34</b></td></tr><tr><td>3 人</td><td><b>51</b></td></tr><tr><td>4 人</td><td><b>68</b></td></tr><tr><td>5 人</td><td><b>85</b></td></tr></table>
+  <div class="zone">斩杀后本夜剩余轮次 ⇒ 全员<b>调息</b>（残命 +3，杀气照常 +3）</div>
+</div><div class="board" style="width:430px;display:inline-block;vertical-align:top">
+  <h3>☠️ 武傀 · 阎罗　<span style="font-size:12px;color:var(--mute)">HP = 21 × 人数</span></h3>
+  <div class="track"><div>0</div><div>10</div><div>20</div><div>30</div><div>40</div><div>50</div><div>60</div><div>70</div><div>80</div><div>90</div><div>100</div></div>
+  <div class="zone">用一枚夹子 / 骰子标记当前 HP（每小格 1 点，粗线每 10 点）</div>
+  <table style="width:180px"><tr><th>人数</th><th>HP</th></tr><tr><td>2 人</td><td><b>42</b></td></tr><tr><td>3 人</td><td><b>63</b></td></tr><tr><td>4 人</td><td><b>84</b></td></tr><tr><td>5 人</td><td><b>105</b></td></tr></table>
+  <div class="zone">斩杀后本夜剩余轮次 ⇒ 全员<b>调息</b>（残命 +3，杀气照常 +3）</div>
+</div></div>
+<h2>二 · 玩家板（5 张 · 每人 1 张）</h2>
+<div class='grid'>
+<div class="board" style="width:330px;display:inline-block;vertical-align:top">
+  <h3>影 · 玩家板 1</h3>
+  <div class="zone"><b>连招链</b>（从左到右，第 n 段耗 n 杀气）</div>
+  <div>
+    <div class="slot"><b>①</b>耗1<br>基+0</div>
+    <div class="slot"><b>②</b>耗2<br>基+3</div>
+    <div class="slot"><b>③</b>耗3<br>基+6</div>
+    <div class="slot"><b>④</b>耗4<br>基+9</div>
+  </div>
+  <div class="zone" style="margin-top:8px"><b>杀气槽</b>（上限 10 · 每轮末 +3）</div>
+  <div class="track"><div class="">0</div><div class="">1</div><div class="">2</div><div class="">3</div><div class="">4</div><div class="">5</div><div class="">6</div><div class="">7</div><div class="">8</div><div class="hot">9</div><div class="hot">10</div></div>
+  <div class="zone"><b>残命</b>（起始 12 · 归零则力竭）</div>
+  <div class="zone" style="color:var(--mute)">力竭：本局链长上限 1 段，终局 −8 分</div>
+  <div class="zone" style="margin-top:6px"><b>流派卡位</b> ｜ <b>见切记录</b> ＿ 次</div>
+</div><div class="board" style="width:330px;display:inline-block;vertical-align:top">
+  <h3>影 · 玩家板 2</h3>
+  <div class="zone"><b>连招链</b>（从左到右，第 n 段耗 n 杀气）</div>
+  <div>
+    <div class="slot"><b>①</b>耗1<br>基+0</div>
+    <div class="slot"><b>②</b>耗2<br>基+3</div>
+    <div class="slot"><b>③</b>耗3<br>基+6</div>
+    <div class="slot"><b>④</b>耗4<br>基+9</div>
+  </div>
+  <div class="zone" style="margin-top:8px"><b>杀气槽</b>（上限 10 · 每轮末 +3）</div>
+  <div class="track"><div class="">0</div><div class="">1</div><div class="">2</div><div class="">3</div><div class="">4</div><div class="">5</div><div class="">6</div><div class="">7</div><div class="">8</div><div class="hot">9</div><div class="hot">10</div></div>
+  <div class="zone"><b>残命</b>（起始 12 · 归零则力竭）</div>
+  <div class="zone" style="color:var(--mute)">力竭：本局链长上限 1 段，终局 −8 分</div>
+  <div class="zone" style="margin-top:6px"><b>流派卡位</b> ｜ <b>见切记录</b> ＿ 次</div>
+</div><div class="board" style="width:330px;display:inline-block;vertical-align:top">
+  <h3>影 · 玩家板 3</h3>
+  <div class="zone"><b>连招链</b>（从左到右，第 n 段耗 n 杀气）</div>
+  <div>
+    <div class="slot"><b>①</b>耗1<br>基+0</div>
+    <div class="slot"><b>②</b>耗2<br>基+3</div>
+    <div class="slot"><b>③</b>耗3<br>基+6</div>
+    <div class="slot"><b>④</b>耗4<br>基+9</div>
+  </div>
+  <div class="zone" style="margin-top:8px"><b>杀气槽</b>（上限 10 · 每轮末 +3）</div>
+  <div class="track"><div class="">0</div><div class="">1</div><div class="">2</div><div class="">3</div><div class="">4</div><div class="">5</div><div class="">6</div><div class="">7</div><div class="">8</div><div class="hot">9</div><div class="hot">10</div></div>
+  <div class="zone"><b>残命</b>（起始 12 · 归零则力竭）</div>
+  <div class="zone" style="color:var(--mute)">力竭：本局链长上限 1 段，终局 −8 分</div>
+  <div class="zone" style="margin-top:6px"><b>流派卡位</b> ｜ <b>见切记录</b> ＿ 次</div>
+</div><div class="board" style="width:330px;display:inline-block;vertical-align:top">
+  <h3>影 · 玩家板 4</h3>
+  <div class="zone"><b>连招链</b>（从左到右，第 n 段耗 n 杀气）</div>
+  <div>
+    <div class="slot"><b>①</b>耗1<br>基+0</div>
+    <div class="slot"><b>②</b>耗2<br>基+3</div>
+    <div class="slot"><b>③</b>耗3<br>基+6</div>
+    <div class="slot"><b>④</b>耗4<br>基+9</div>
+  </div>
+  <div class="zone" style="margin-top:8px"><b>杀气槽</b>（上限 10 · 每轮末 +3）</div>
+  <div class="track"><div class="">0</div><div class="">1</div><div class="">2</div><div class="">3</div><div class="">4</div><div class="">5</div><div class="">6</div><div class="">7</div><div class="">8</div><div class="hot">9</div><div class="hot">10</div></div>
+  <div class="zone"><b>残命</b>（起始 12 · 归零则力竭）</div>
+  <div class="zone" style="color:var(--mute)">力竭：本局链长上限 1 段，终局 −8 分</div>
+  <div class="zone" style="margin-top:6px"><b>流派卡位</b> ｜ <b>见切记录</b> ＿ 次</div>
+</div><div class="board" style="width:330px;display:inline-block;vertical-align:top">
+  <h3>影 · 玩家板 5</h3>
+  <div class="zone"><b>连招链</b>（从左到右，第 n 段耗 n 杀气）</div>
+  <div>
+    <div class="slot"><b>①</b>耗1<br>基+0</div>
+    <div class="slot"><b>②</b>耗2<br>基+3</div>
+    <div class="slot"><b>③</b>耗3<br>基+6</div>
+    <div class="slot"><b>④</b>耗4<br>基+9</div>
+  </div>
+  <div class="zone" style="margin-top:8px"><b>杀气槽</b>（上限 10 · 每轮末 +3）</div>
+  <div class="track"><div class="">0</div><div class="">1</div><div class="">2</div><div class="">3</div><div class="">4</div><div class="">5</div><div class="">6</div><div class="">7</div><div class="">8</div><div class="hot">9</div><div class="hot">10</div></div>
+  <div class="zone"><b>残命</b>（起始 12 · 归零则力竭）</div>
+  <div class="zone" style="color:var(--mute)">力竭：本局链长上限 1 段，终局 −8 分</div>
+  <div class="zone" style="margin-top:6px"><b>流派卡位</b> ｜ <b>见切记录</b> ＿ 次</div>
+</div></div>
+<h2>三 · 招式卡（60 张 · 15 个模板）</h2>
+<p class='sub'>第 n 段伤害 = 卡面基础值 + 3×(n−1)；加一张到第 n 段要支付 n 点杀气。</p>
+<div class='grid'>
+<div class="card" style="border-color:#c0392b">
+  <span class="badge">×5</span>
+  <div class="ic">⚔️</div>
+  <div class="nm">上段斩</div>
+  <div class="tp" style="background:#c0392b">招式 · 基础 1</div>
+  <div class="seg"><div>第1段 <b>1</b>　耗 1 杀气</div><div>第2段 <b>4</b>　耗 2 杀气</div><div>第3段 <b>7</b>　耗 3 杀气</div><div>第4段 <b>10</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#c0392b">
+  <span class="badge">×5</span>
+  <div class="ic">⚔️</div>
+  <div class="nm">上段斩</div>
+  <div class="tp" style="background:#c0392b">招式 · 基础 2</div>
+  <div class="seg"><div>第1段 <b>2</b>　耗 1 杀气</div><div>第2段 <b>5</b>　耗 2 杀气</div><div>第3段 <b>8</b>　耗 3 杀气</div><div>第4段 <b>11</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#c0392b">
+  <span class="badge">×2</span>
+  <div class="ic">⚔️</div>
+  <div class="nm">上段斩</div>
+  <div class="tp" style="background:#c0392b">招式 · 基础 3</div>
+  <div class="seg"><div>第1段 <b>3</b>　耗 1 杀气</div><div>第2段 <b>6</b>　耗 2 杀气</div><div>第3段 <b>9</b>　耗 3 杀气</div><div>第4段 <b>12</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#8e44ad">
+  <span class="badge">×5</span>
+  <div class="ic">🗡️</div>
+  <div class="nm">下段撩</div>
+  <div class="tp" style="background:#8e44ad">招式 · 基础 1</div>
+  <div class="seg"><div>第1段 <b>1</b>　耗 1 杀气</div><div>第2段 <b>4</b>　耗 2 杀气</div><div>第3段 <b>7</b>　耗 3 杀气</div><div>第4段 <b>10</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#8e44ad">
+  <span class="badge">×5</span>
+  <div class="ic">🗡️</div>
+  <div class="nm">下段撩</div>
+  <div class="tp" style="background:#8e44ad">招式 · 基础 2</div>
+  <div class="seg"><div>第1段 <b>2</b>　耗 1 杀气</div><div>第2段 <b>5</b>　耗 2 杀气</div><div>第3段 <b>8</b>　耗 3 杀气</div><div>第4段 <b>11</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#8e44ad">
+  <span class="badge">×2</span>
+  <div class="ic">🗡️</div>
+  <div class="nm">下段撩</div>
+  <div class="tp" style="background:#8e44ad">招式 · 基础 3</div>
+  <div class="seg"><div>第1段 <b>3</b>　耗 1 杀气</div><div>第2段 <b>6</b>　耗 2 杀气</div><div>第3段 <b>9</b>　耗 3 杀气</div><div>第4段 <b>12</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#2471a3">
+  <span class="badge">×5</span>
+  <div class="ic">🔱</div>
+  <div class="nm">突刺</div>
+  <div class="tp" style="background:#2471a3">招式 · 基础 1</div>
+  <div class="seg"><div>第1段 <b>1</b>　耗 1 杀气</div><div>第2段 <b>4</b>　耗 2 杀气</div><div>第3段 <b>7</b>　耗 3 杀气</div><div>第4段 <b>10</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#2471a3">
+  <span class="badge">×5</span>
+  <div class="ic">🔱</div>
+  <div class="nm">突刺</div>
+  <div class="tp" style="background:#2471a3">招式 · 基础 2</div>
+  <div class="seg"><div>第1段 <b>2</b>　耗 1 杀气</div><div>第2段 <b>5</b>　耗 2 杀气</div><div>第3段 <b>8</b>　耗 3 杀气</div><div>第4段 <b>11</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#2471a3">
+  <span class="badge">×2</span>
+  <div class="ic">🔱</div>
+  <div class="nm">突刺</div>
+  <div class="tp" style="background:#2471a3">招式 · 基础 3</div>
+  <div class="seg"><div>第1段 <b>3</b>　耗 1 杀气</div><div>第2段 <b>6</b>　耗 2 杀气</div><div>第3段 <b>9</b>　耗 3 杀气</div><div>第4段 <b>12</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#0e6655">
+  <span class="badge">×5</span>
+  <div class="ic">🌊</div>
+  <div class="nm">横扫</div>
+  <div class="tp" style="background:#0e6655">招式 · 基础 1</div>
+  <div class="seg"><div>第1段 <b>1</b>　耗 1 杀气</div><div>第2段 <b>4</b>　耗 2 杀气</div><div>第3段 <b>7</b>　耗 3 杀气</div><div>第4段 <b>10</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#0e6655">
+  <span class="badge">×5</span>
+  <div class="ic">🌊</div>
+  <div class="nm">横扫</div>
+  <div class="tp" style="background:#0e6655">招式 · 基础 2</div>
+  <div class="seg"><div>第1段 <b>2</b>　耗 1 杀气</div><div>第2段 <b>5</b>　耗 2 杀气</div><div>第3段 <b>8</b>　耗 3 杀气</div><div>第4段 <b>11</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#0e6655">
+  <span class="badge">×2</span>
+  <div class="ic">🌊</div>
+  <div class="nm">横扫</div>
+  <div class="tp" style="background:#0e6655">招式 · 基础 3</div>
+  <div class="seg"><div>第1段 <b>3</b>　耗 1 杀气</div><div>第2段 <b>6</b>　耗 2 杀气</div><div>第3段 <b>9</b>　耗 3 杀气</div><div>第4段 <b>12</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  
+</div><div class="card" style="border-color:#5d6d7e">
+  <span class="badge">×5</span>
+  <div class="ic">⚙️</div>
+  <div class="nm">机关</div>
+  <div class="tp" style="background:#5d6d7e">招式 · 基础 2</div>
+  <div class="seg"><div>第1段 <b>2</b>　耗 1 杀气</div><div>第2段 <b>5</b>　耗 2 杀气</div><div>第3段 <b>8</b>　耗 3 杀气</div><div>第4段 <b>11</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  <div class="warn">⚠ 连续两段机关 ⇒ 过热破煞</div>
+</div><div class="card" style="border-color:#5d6d7e">
+  <span class="badge">×5</span>
+  <div class="ic">⚙️</div>
+  <div class="nm">机关</div>
+  <div class="tp" style="background:#5d6d7e">招式 · 基础 3</div>
+  <div class="seg"><div>第1段 <b>3</b>　耗 1 杀气</div><div>第2段 <b>6</b>　耗 2 杀气</div><div>第3段 <b>9</b>　耗 3 杀气</div><div>第4段 <b>12</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  <div class="warn">⚠ 连续两段机关 ⇒ 过热破煞</div>
+</div><div class="card" style="border-color:#5d6d7e">
+  <span class="badge">×2</span>
+  <div class="ic">⚙️</div>
+  <div class="nm">机关</div>
+  <div class="tp" style="background:#5d6d7e">招式 · 基础 4</div>
+  <div class="seg"><div>第1段 <b>4</b>　耗 1 杀气</div><div>第2段 <b>7</b>　耗 2 杀气</div><div>第3段 <b>10</b>　耗 3 杀气</div><div>第4段 <b>13</b>　耗 4 杀气</div></div>
+  <div class="ft">杀气 = 段位</div>
+  <div class="warn">⚠ 连续两段机关 ⇒ 过热破煞</div>
+</div></div>
+<p class='note'>招式卡合计 <b>60</b> 张。</p>
+<h2>四 · 秘具卡（24 张 · 8 个模板 × 3）</h2>
+<p class='sub'>秘具不占段位、不付杀气，附在任意一段上生效；每条连招链最多使用 1 张。</p>
+<div class='grid'>
+<div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">🪝</div>
+  <div class="nm">铁钩</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">本段伤害 +2</div>
+  <div class="ft">每链限 1 张</div>
+</div><div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">🧨</div>
+  <div class="nm">爆竹</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">本段伤害 +3；下一段 −2</div>
+  <div class="ft">每链限 1 张</div>
+</div><div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">🩸</div>
+  <div class="nm">血引</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">立即 +2 杀气（本轮上限可至 12）</div>
+  <div class="ft">每链限 1 张</div>
+</div><div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">🪞</div>
+  <div class="nm">镜面</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">本段无视封锁</div>
+  <div class="ft">每链限 1 张</div>
+</div><div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">⛓️</div>
+  <div class="nm">锁链</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">本段伤害 ×2，随后强制收招</div>
+  <div class="ft">每链限 1 张</div>
+</div><div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">🍶</div>
+  <div class="nm">药酒</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">残命 +3</div>
+  <div class="ft">每链限 1 张</div>
+</div><div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">🔪</div>
+  <div class="nm">副刃</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">复制上一段伤害（第 1 段不可用）</div>
+  <div class="ft">每链限 1 张</div>
+</div><div class="card" style="border-color:var(--gold)">
+  <span class="badge">×3</span>
+  <div class="ic">🕯️</div>
+  <div class="nm">烛照</div>
+  <div class="tp" style="background:var(--gold)">秘具 · 不占段</div>
+  <div class="bd">查看牌库顶 3 张并任意排序</div>
+  <div class="ft">每链限 1 张</div>
+</div></div>
+<p class='note'>秘具卡合计 <b>24</b> 张。</p>
+<h2>五 · 武傀招式卡（9 张 · 开局全部翻开，全程公开）</h2>
+<p class='sub'>9 轮固定顺序，第 1 轮「风压」……第 9 轮「千手」。玩家可从第 1 轮就规划整局。</p>
+<div class='grid'>
+<div class="card" style="border-color:#4a235a">
+  <span class="badge">第1轮</span>
+  <div class="ic">🪲</div>
+  <div class="nm">风压</div>
+  <div class="tp" style="background:#4a235a">武傀 · 铁蝉</div>
+  <div class="bd">封 ⚔️ 上段斩</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第2轮</span>
+  <div class="ic">🪲</div>
+  <div class="nm">甲壳</div>
+  <div class="tp" style="background:#4a235a">武傀 · 铁蝉</div>
+  <div class="bd">本轮每段伤害 −1</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第3轮</span>
+  <div class="ic">🪲</div>
+  <div class="nm">蝉鸣</div>
+  <div class="tp" style="background:#4a235a">武傀 · 铁蝉</div>
+  <div class="bd">封 🌊 横扫</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第4轮</span>
+  <div class="ic">🕷️</div>
+  <div class="nm">吐丝</div>
+  <div class="tp" style="background:#4a235a">武傀 · 赤蛛</div>
+  <div class="bd">封 🗡️ 下段撩</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第5轮</span>
+  <div class="ic">🕷️</div>
+  <div class="nm">毒牙</div>
+  <div class="tp" style="background:#4a235a">武傀 · 赤蛛</div>
+  <div class="bd">链长 ≥ 3 者残命 −2</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第6轮</span>
+  <div class="ic">🕷️</div>
+  <div class="nm">八足</div>
+  <div class="tp" style="background:#4a235a">武傀 · 赤蛛</div>
+  <div class="bd">封 🔱 突刺 + ⚙️ 机关</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第7轮</span>
+  <div class="ic">☠️</div>
+  <div class="nm">铁面</div>
+  <div class="tp" style="background:#4a235a">武傀 · 阎罗</div>
+  <div class="bd">封 ⚔️ 上段斩 + 🗡️ 下段撩</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第8轮</span>
+  <div class="ic">☠️</div>
+  <div class="nm">熔炉</div>
+  <div class="tp" style="background:#4a235a">武傀 · 阎罗</div>
+  <div class="bd">封 ⚙️ 机关；每段伤害 −2</div>
+</div><div class="card" style="border-color:#4a235a">
+  <span class="badge">第9轮</span>
+  <div class="ic">☠️</div>
+  <div class="nm">千手</div>
+  <div class="tp" style="background:#4a235a">武傀 · 阎罗</div>
+  <div class="bd">封 🔱 + 🌊 + ⚔️（三类！）</div>
+</div></div>
+<h2>六 · 流派卡（5 张 · 每人开局选 1 张）</h2>
+<div class='grid'>
+<div class="card" style="border-color:#c0392b;width:132px">
+  <div class="ic">⚡</div>
+  <div class="nm">影刃</div>
+  <div class="tp" style="background:#c0392b">流派</div>
+  <div class="bd">· 你的 ⚔️ 上段斩基础值 +1</div>
+</div><div class="card" style="border-color:#2471a3;width:132px">
+  <div class="ic">☂️</div>
+  <div class="nm">铁伞</div>
+  <div class="tp" style="background:#2471a3">流派</div>
+  <div class="bd">· 杀气上限 8（⇒ 链长上限 3 段）<div class='zone'>· 残命上限 16（+4）</div></div>
+</div><div class="card" style="border-color:#5d6d7e;width:132px">
+  <div class="ic">🦾</div>
+  <div class="nm">机关臂</div>
+  <div class="tp" style="background:#5d6d7e">流派</div>
+  <div class="bd">· 你的 ⚙️ 机关不会过热</div>
+</div><div class="card" style="border-color:#0e6655;width:132px">
+  <div class="ic">🧪</div>
+  <div class="nm">毒镖</div>
+  <div class="tp" style="background:#0e6655">流派</div>
+  <div class="bd">· 4 段满链收招时，追加 3 点伤害</div>
+</div><div class="card" style="border-color:#8e44ad;width:132px">
+  <div class="ic">🌙</div>
+  <div class="nm">双刃</div>
+  <div class="tp" style="background:#8e44ad">流派</div>
+  <div class="bd">· 手牌上限 6 张（+1）</div>
+</div></div>
+<h2>七 · 玩家棋子（5 枚）</h2>
+<div class='grid'>
+<div class="pawn">⚡<div style="font-size:11px">影刃</div></div><div class="pawn">☂️<div style="font-size:11px">铁伞</div></div><div class="pawn">🦾<div style="font-size:11px">机关臂</div></div><div class="pawn">🧪<div style="font-size:11px">毒镖</div></div><div class="pawn">🌙<div style="font-size:11px">双刃</div></div></div>
+<h2>八 · 速查卡（2 张 · 每人 1 张建议）</h2>
+<div class="board" style="width:430px;display:inline-block;vertical-align:top">
+<h3>速查 A · 段位与节奏</h3>
+<table>
+<tr><th>链长</th><th>总伤害（均值）</th><th>杀气</th><th>每轮净</th><th>定位</th></tr>
+<tr><td>1 段</td><td>1.95</td><td>1</td><td class="x">+2</td><td>攒气</td></tr>
+<tr><td>2 段</td><td>6.90</td><td>3</td><td>±0</td><td><b>呼吸（永续）</b></td></tr>
+<tr><td>3 段</td><td>14.85</td><td>6</td><td>−3</td><td>透支</td></tr>
+<tr><td>4 段</td><td>25.80</td><td>10</td><td>−7</td><td>豪赌（+5 见切）</td></tr>
+</table>
+<div class="zone">★ 1+2+3+4 = <b>10</b> = 杀气上限 ⇒ 链长硬上限 4 段，满链恰好清空满槽。</div>
+<div class="zone">★ 满链后杀气归 0 ⇒ 下轮仅 3 ⇒ 只能打 2 段。<b>爆发必接疲软。</b></div>
+<div class="zone">★ 从杀气 5 攒到 10 需连续 3 轮打 1 段。<b>一个爆发周期 = 4 轮。</b></div>
+</div>
+<div class="board" style="width:430px;display:inline-block;vertical-align:top">
+<h3>速查 B · 计分与破煞</h3>
+<div class="zone"><b>伤害分</b>：你对武傀造成的每 1 点有效伤害 = 1 分（溢出不计）。</div>
+<div class="zone"><b>名次分</b>：每尊斩杀时，本尊伤害第 1/2/3/其余 ⇒ +8 / +5 / +3 / +1。</div>
+<div class="zone"><b>见切分</b>：每次 4 段满链安全收招 ⇒ +5 分。</div>
+<div class="zone"><b>残命分</b>：终局每剩 1 点残命 +1 分。</div>
+<div class="zone"><b>力竭</b>：残命归零 ⇒ 终局 −8 分，且此后链长上限 1 段。</div>
+<hr>
+<div class="zone" style="color:var(--ki)"><b>破煞（两种）</b></div>
+<div class="zone">① 链中出现<b>本轮被封</b>的类别；② 连续两段都是 ⚙️ 机关（<b>过热</b>）。</div>
+<div class="zone">破煞 ⇒ 本链伤害归零 + 残命 −2 + 立即收招。</div>
+<div class="zone">平局裁定：残命高者优先；仍平则按顺时针座次先者优。</div>
+</div></div></body></html>

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山海御灵录 · 打印道具</title>
+<style>
+:root{
+    --paper:#faf5e8;
+    --paper-2:#f1e8d2;
+    --bamboo:#e6dcc0;
+    --ink:#2c2417;
+    --ink-soft:#6b5c43;
+    --vermilion:#b8341f;
+    --vermilion-dark:#7d2211;
+    --gold:#c8952c;
+    --gold-light:#e8c877;
+    --wood:#4a8c3f;
+    --fire:#c0392b;
+    --water:#2c6e8f;
+    --metal:#6b7a8f;
+    --earth:#b8860b;
+    --line:#c9b895;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+    font-family:"Songti SC","STSong","SimSun","Georgia",serif;
+    background:
+        radial-gradient(circle at 15% 0%, #fffdf6 0%, transparent 55%),
+        linear-gradient(180deg,#faf5e8 0%,#efe4c9 100%);
+    color:var(--ink);
+    line-height:1.55;
+    padding:24px 16px 60px;
+}
+.wrap{max-width:1200px;margin:0 auto;}
+
+/* ---------- 页头 ---------- */
+header{
+    text-align:center;
+    padding:30px 20px 24px;
+    background:linear-gradient(150deg,#3d3221 0%,#5c4a2e 55%,#7d6636 100%);
+    border-radius:14px;
+    color:#faf5e8;
+    margin-bottom:22px;
+    border:3px solid var(--gold);
+    box-shadow:0 6px 20px rgba(60,45,20,.3);
+}
+header h1{font-size:33px;letter-spacing:4px;margin-bottom:6px;text-shadow:0 2px 6px rgba(0,0,0,.4);}
+header .en{font-size:14px;color:var(--gold-light);letter-spacing:3px;}
+header .quote{
+    margin-top:12px;font-size:13px;color:#e5dcc4;font-style:italic;
+    border-top:1px solid rgba(232,200,119,.4);padding-top:10px;
+}
+
+/* ---------- 打印提示 ---------- */
+.print-hint{
+    background:#fff8e1;
+    border:2px dashed var(--gold);
+    border-left:6px solid var(--vermilion);
+    border-radius:10px;
+    padding:15px 20px;
+    margin-bottom:26px;
+    font-size:14px;
+}
+.print-hint h3{color:var(--vermilion-dark);font-size:16px;margin-bottom:6px;}
+.print-hint ul{margin-left:20px;}
+.print-hint li{margin-bottom:3px;}
+.print-hint .em{color:var(--vermilion);font-weight:bold;}
+
+/* ---------- 区块 ---------- */
+section{margin-bottom:40px;}
+h2{
+    font-size:22px;color:var(--vermilion-dark);
+    border-left:6px solid var(--gold);
+    padding-left:12px;margin-bottom:6px;letter-spacing:1px;
+}
+.h2note{font-size:13px;color:var(--ink-soft);margin:0 0 16px 18px;}
+
+/* ---------- 山海舆图 ---------- */
+.mapboard{
+    background:linear-gradient(170deg,#f7f0dc 0%,#ece0c2 55%,#e0d0aa 100%);
+    border:4px solid #5c4a2e;border-radius:14px;padding:22px;position:relative;overflow:hidden;
+}
+.mapboard::before{
+    content:"";position:absolute;inset:0;
+    background:
+        repeating-linear-gradient(0deg,transparent 0 24px,rgba(92,74,46,.05) 24px 25px),
+        repeating-linear-gradient(90deg,transparent 0 24px,rgba(92,74,46,.05) 24px 25px);
+    pointer-events:none;
+}
+.map-title{
+    text-align:center;font-size:20px;color:#5c4a2e;letter-spacing:6px;
+    margin-bottom:8px;position:relative;
+}
+.map-sub{text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:18px;position:relative;}
+.mapring{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;position:relative;
+}
+.region{
+    background:var(--paper);
+    border:3px solid #5c4a2e;border-radius:11px;padding:12px 10px;
+    text-align:center;position:relative;min-height:150px;
+    box-shadow:0 2px 6px rgba(70,55,25,.16);
+}
+.region .rname{font-size:15px;font-weight:bold;letter-spacing:1px;margin-bottom:2px;}
+.region .relem{font-size:12px;color:#fff;border-radius:20px;padding:1px 10px;display:inline-block;margin-bottom:6px;}
+.region .rdesc{font-size:11px;color:var(--ink-soft);line-height:1.5;margin-bottom:8px;}
+.region .rslot{
+    border:2px dashed #b3a17c;border-radius:8px;padding:6px 4px;
+    font-size:11px;color:var(--ink-soft);background:rgba(255,255,255,.5);
+}
+.region .rslot b{display:block;color:var(--ink);font-size:12px;margin-bottom:3px;}
+.center{
+    background:linear-gradient(160deg,#3d3221 0%,#6b5732 100%);
+    border:3px solid var(--gold);border-radius:12px;
+    color:#faf5e8;padding:14px 10px;text-align:center;
+    display:flex;flex-direction:column;justify-content:center;gap:8px;
+}
+.center .cname{font-size:14px;letter-spacing:2px;color:var(--gold-light);}
+.center .citem{font-size:11px;color:#e5dcc4;line-height:1.5;}
+.center .track{
+    display:flex;gap:3px;justify-content:center;margin-top:4px;flex-wrap:wrap;
+}
+.center .track span{
+    width:20px;height:20px;line-height:18px;border:1px solid var(--gold);
+    border-radius:4px;font-size:11px;color:var(--gold-light);
+}
+.mapfoot{
+    margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;position:relative;
+}
+.mfbox{
+    background:rgba(255,255,255,.62);border:2px solid #b3a17c;border-radius:8px;
+    padding:8px 6px;text-align:center;font-size:11px;color:var(--ink-soft);
+}
+.mfbox b{display:block;color:var(--ink);font-size:12px;margin-bottom:2px;}
+.wuxing{
+    margin-top:14px;position:relative;text-align:center;
+    background:rgba(255,255,255,.55);border:2px solid #b3a17c;border-radius:10px;padding:10px;
+    font-size:13px;color:var(--ink);letter-spacing:1px;
+}
+.wuxing .bad{color:var(--vermilion);font-weight:bold;}
+.wuxing .sub{display:block;font-size:11px;color:var(--ink-soft);margin-top:3px;letter-spacing:0;}
+
+/* ---------- 卡牌栅格 ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px;}
+.card{
+    position:relative;
+    background:var(--paper);
+    border:2px solid #8c7a52;border-radius:10px;
+    padding:8px 8px 9px;min-height:212px;
+    box-shadow:0 2px 5px rgba(70,55,25,.14);
+    display:flex;flex-direction:column;
+}
+.card .cnt{
+    position:absolute;top:-7px;right:-7px;
+    background:var(--vermilion);color:#fff;font-size:11px;font-weight:bold;
+    border-radius:20px;padding:1px 8px;border:2px solid var(--paper);
+    z-index:2;
+}
+.c-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.c-score{
+    background:var(--vermilion);color:#fff;font-size:15px;font-weight:bold;
+    width:27px;height:27px;line-height:25px;text-align:center;border-radius:50%;
+    border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.c-score.sp-title,.c-score.td-title,.c-score.tr-title{
+    width:auto;height:auto;line-height:1.3;border-radius:6px;
+    font-size:10px;padding:2px 6px;background:#5c4a2e;border:none;letter-spacing:1px;
+}
+.c-elem{font-size:11px;color:var(--ink-soft);font-weight:bold;}
+.c-mid{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:6px 0;
+}
+.c-icon{font-size:34px;line-height:1.1;}
+.c-name{font-size:16px;font-weight:bold;letter-spacing:2px;margin-top:3px;}
+.c-stats{
+    display:flex;justify-content:space-between;font-size:11px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:4px 2px;margin-bottom:5px;
+}
+.c-power{color:var(--vermilion-dark);font-weight:bold;}
+.c-tame{color:var(--ink-soft);}
+.c-ability{font-size:10.5px;line-height:1.5;color:var(--ink-soft);text-align:left;}
+.c-ability b{color:var(--vermilion-dark);font-size:11px;}
+.tide-text{font-size:11.5px;color:var(--ink);padding-top:4px;}
+
+/* 五行配色 */
+.w-wood{border-color:var(--wood);background:linear-gradient(170deg,#fbfdf7 0%,#e9f3e2 100%);}
+.w-fire{border-color:var(--fire);background:linear-gradient(170deg,#fdf8f5 0%,#f7e6df 100%);}
+.w-water{border-color:var(--water);background:linear-gradient(170deg,#f6fafd 0%,#dfeaf3 100%);}
+.w-metal{border-color:var(--metal);background:linear-gradient(170deg,#fafbfc 0%,#e6eaee 100%);}
+.w-earth{border-color:var(--earth);background:linear-gradient(170deg,#fdfaf1 0%,#f3e8cd 100%);}
+.w-wood .c-name{color:#36682d;}
+.w-fire .c-name{color:#96301f;}
+.w-water .c-name{color:#1e5878;}
+.w-metal .c-name{color:#4f5c6d;}
+.w-earth .c-name{color:#8a6508;}
+
+.c-spirit{border-color:var(--gold);background:linear-gradient(170deg,#fffdf4 0%,#f6ecd2 100%);}
+.c-spirit .c-name{color:#8a6508;}
+.c-tide-bad{border-color:#5c4a2e;background:linear-gradient(170deg,#f7f4ec 0%,#ded7c6 100%);}
+.c-tide-good{border-color:var(--wood);background:linear-gradient(170deg,#f7fdf4 0%,#ddead3 100%);}
+.c-treasure{border-color:var(--gold);background:linear-gradient(160deg,#fffaf0 0%,#f4e6c4 55%,#ecdbb4 100%);}
+.c-treasure .c-name{color:#8a6508;}
+
+/* ---------- 御灵录 ---------- */
+.codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.codex{
+    background:var(--paper);border:3px solid #5c4a2e;border-radius:12px;
+    padding:12px;box-shadow:0 3px 8px rgba(70,55,25,.16);
+}
+.codex h3{
+    font-size:15px;color:#5c4a2e;text-align:center;letter-spacing:3px;
+    border-bottom:2px solid var(--gold);padding-bottom:6px;margin-bottom:9px;
+}
+.codex .row{display:flex;gap:8px;margin-bottom:9px;}
+.codex .col{flex:1;border:2px dashed #b3a17c;border-radius:8px;padding:8px 6px;background:rgba(255,255,255,.55);}
+.codex .col.half{flex:0 0 45%;}
+.codex .label{
+    font-size:11px;font-weight:bold;color:#fff;background:#5c4a2e;
+    border-radius:5px;padding:2px 6px;display:inline-block;margin-bottom:6px;letter-spacing:1px;
+}
+.codex .hint{font-size:10.5px;color:var(--ink-soft);line-height:1.55;}
+.codex .five{display:flex;gap:4px;margin-top:4px;}
+.codex .five span{
+    flex:1;text-align:center;font-size:10px;border:1px solid #b3a17c;
+    border-radius:5px;padding:5px 0;background:rgba(255,255,255,.7);color:var(--ink-soft);
+}
+.codex .five span b{display:block;font-size:14px;color:var(--ink);}
+
+/* ---------- 棋子 ---------- */
+.pieces{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:14px 0;}
+.piece{
+    width:96px;text-align:center;
+}
+.piece .disc{
+    width:88px;height:88px;border-radius:50%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border:4px solid #5c4a2e;box-shadow:0 4px 10px rgba(70,55,25,.25);
+    margin:0 auto 6px;
+}
+.piece .disc .pi{font-size:30px;line-height:1;}
+.piece .disc .pn{font-size:14px;font-weight:bold;color:#fff;letter-spacing:3px;margin-top:3px;text-shadow:0 1px 3px rgba(0,0,0,.5);}
+.piece .fold{font-size:10.5px;color:var(--ink-soft);line-height:1.5;}
+.p-wood{background:radial-gradient(circle at 35% 30%,#7dbb6d 0%,var(--wood) 70%);}
+.p-fire{background:radial-gradient(circle at 35% 30%,#e2705c 0%,var(--fire) 70%);}
+.p-water{background:radial-gradient(circle at 35% 30%,#57a3c6 0%,var(--water) 70%);}
+.p-metal{background:radial-gradient(circle at 35% 30%,#9fb0c4 0%,var(--metal) 70%);}
+.p-earth{background:radial-gradient(circle at 35% 30%,#dbae3c 0%,var(--earth) 70%);}
+
+/* ---------- 速查表 ---------- */
+.quick{
+    background:#fffdf5;border:3px solid var(--gold);border-radius:12px;padding:16px 18px;
+    font-family:"Consolas","Courier New",monospace;font-size:12px;line-height:1.75;
+    white-space:pre-wrap;color:var(--ink);
+}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint {
+        display: none;
+    }
+    body{background:#fff;padding:0;}
+    .wrap{max-width:100%;}
+    header{border-radius:0;box-shadow:none;}
+    section{page-break-inside:avoid;break-inside:avoid;}
+    .card{page-break-inside:avoid;break-inside:avoid;}
+    .region{page-break-inside:avoid;break-inside:avoid;}
+    .codex{page-break-inside:avoid;break-inside:avoid;}
+    .piece{page-break-inside:avoid;break-inside:avoid;}
+    .mapboard{page-break-inside:avoid;break-inside:avoid;}
+    h2{page-break-after:avoid;break-after:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <h1>🐲 山海御灵录 🐲</h1>
+    <div class="en">SHANHAI SPIRIT CODEX · 打印道具包</div>
+    <div class="quote">"又西二百里，曰鹿台之山……有兽焉" —— 2-5 人 · 40-70 分钟 · 卡牌 / 收录竞速</div>
+</header>
+
+<div class="print-hint">
+    <h3>⚠️ 重要打印提示</h3>
+    <ul>
+        <li>使用 <strong>A4 纸张</strong>打印，建议在打印设置中选择 <strong>最小边距</strong></li>
+        <li>在打印对话框中，务必<span class="em">勾选"背景图形"</span>选项，否则卡牌五行底色与棋子颜色会全部丢失</li>
+        <li>异兽卡 / 灵物卡 / 荒潮卡 / 秘宝卡建议用 <strong>230g 以上卡纸</strong>打印，并装入卡套</li>
+        <li>山海舆图与御灵录建议<span class="em">塑封</span>或用厚卡纸打印，以便反复使用</li>
+        <li>打印后沿边框裁剪；棋子可沿圆形轮廓剪下后对折成立体底座</li>
+    </ul>
+</div>
+
+<section>
+<h2>🗺️ 山海舆图</h2>
+<p class="h2note">打印 1 张即可（建议塑封）。放在桌面中央，五个荒域围成相克环。</p>
+<div class="mapboard">
+    <div class="map-title">山 海 舆 图</div>
+    <div class="map-sub">SHANHAI ATLAS · 五大荒域 · 顺时针为相克环</div>
+    <div class="mapring">
+        <div class="region w-wood">
+            <div class="rname">🌿 东山经 · 青丘泽</div>
+            <div class="relem" style="background:var(--wood)">木 属性</div>
+            <div class="rdesc">水草丰美，多温顺灵兽与祥瑞之兽</div>
+            <div class="rslot"><b>异兽牌堆 · 14 张</b>背面朝上放置</div>
+            <div class="rslot" style="margin-top:6px"><b>棋子位（暗选）</b>揭示后放入</div>
+        </div>
+        <div class="region w-earth">
+            <div class="rname">⛰️ 北山经 · 幽都泽</div>
+            <div class="relem" style="background:var(--earth)">土 属性</div>
+            <div class="rdesc">幽暗之地，异相偏防御与保护</div>
+            <div class="rslot"><b>异兽牌堆 · 12 张</b>背面朝上放置</div>
+            <div class="rslot" style="margin-top:6px"><b>棋子位（暗选）</b>揭示后放入</div>
+        </div>
+        <div class="region w-water">
+            <div class="rname">💧 中山经 · 天枢泽</div>
+            <div class="relem" style="background:var(--water)">水 属性</div>
+            <div class="rdesc">天下之中，灵脉最盛，过牌与检索多</div>
+            <div class="rslot"><b>异兽牌堆 · 13 张</b>背面朝上放置</div>
+            <div class="rslot" style="margin-top:6px"><b>棋子位（暗选）</b>揭示后放入</div>
+        </div>
+        <div class="region w-fire">
+            <div class="rname">🔥 南山经 · 丹穴山</div>
+            <div class="relem" style="background:var(--fire)">火 属性</div>
+            <div class="rdesc">炎火之地，异相多为干扰与抢注</div>
+            <div class="rslot"><b>异兽牌堆 · 13 张</b>背面朝上放置</div>
+            <div class="rslot" style="margin-top:6px"><b>棋子位（暗选）</b>揭示后放入</div>
+        </div>
+        <div class="region w-metal">
+            <div class="rname">⚔️ 西山经 · 玉山</div>
+            <div class="relem" style="background:var(--metal)">金 属性</div>
+            <div class="rdesc">多凶兽，灵力消耗高但图鉴分最高</div>
+            <div class="rslot"><b>异兽牌堆 · 12 张</b>背面朝上放置</div>
+            <div class="rslot" style="margin-top:6px"><b>棋子位（暗选）</b>揭示后放入</div>
+        </div>
+        <div class="center">
+            <div class="cname">🌗 烛阴之瞳</div>
+            <div class="citem">轮次轨（放置轮数标记）</div>
+            <div class="track"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+            <div class="cname" style="margin-top:6px">🏺 秘宝堆</div>
+            <div class="citem">10 张 · 背面朝上</div>
+        </div>
+    </div>
+    <div class="mapfoot">
+        <div class="mfbox"><b>🕳️ 归墟</b>异兽弃牌堆（不重组）</div>
+        <div class="mfbox"><b>🖌️ 灵物牌堆</b>30 张 · 背面朝上</div>
+        <div class="mfbox"><b>🗑️ 灵物弃牌堆</b>抽空时洗匀重组</div>
+        <div class="mfbox"><b>🌪️ 荒潮牌堆</b>16 张 · 每轮翻 1 张</div>
+    </div>
+    <div class="wuxing">
+        五行相克环：　⚔️金 <span class="bad">克</span> 🌿木 <span class="bad">克</span> ⛰️土 <span class="bad">克</span> 💧水 <span class="bad">克</span> 🔥火 <span class="bad">克</span> ⚔️金
+        <span class="sub">借力规则：收服某异兽时，若你已录名的异兽中有属性克制它的，收服灵力 -1（不叠加）</span>
+    </div>
+</div>
+</section>
+
+<section>
+<h2>🐲 异兽卡（64 张 · 43 种）</h2>
+<p class="h2note">按五行分堆放置：木 14 / 火 13 / 水 13 / 金 12 / 土 12。角标 ×N 表示需打印的份数，无角标即为 1 张。</p>
+<div class="cards">
+<div class="card w-wood"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">2</span><span class="c-elem">🐒 木</span></div>
+<div class="c-mid"><span class="c-icon">🐒</span><span class="c-name">狌狌</span></div>
+<div class="c-stats"><span class="c-power">灵力 1</span><span class="c-tame">驯服 2</span></div>
+<div class="c-ability"><b>异相 · 能言</b><br>揭示荒域后，你可查看本荒域牌堆顶 1 张</div>
+</div>
+<div class="card w-wood"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">2</span><span class="c-elem">🌱 木</span></div>
+<div class="c-mid"><span class="c-icon">🌱</span><span class="c-name">祝余</span></div>
+<div class="c-stats"><span class="c-power">灵力 1</span><span class="c-tame">驯服 2</span></div>
+<div class="c-ability"><b>异相 · 食之不饥</b><br>每轮开始补牌时，你的手牌上限 +1</div>
+</div>
+<div class="card w-wood"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">3</span><span class="c-elem">🦌 木</span></div>
+<div class="c-mid"><span class="c-icon">🦌</span><span class="c-name">鹿蜀</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 佩之宜子孙</b><br>你每次录名时，额外抽 1 张灵物卡</div>
+</div>
+<div class="card w-wood"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">4</span><span class="c-elem">🐢 木</span></div>
+<div class="c-mid"><span class="c-icon">🐢</span><span class="c-name">旋龟</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 佩之不聋</b><br>荒潮对你的负面数值效果减半（向下取整）</div>
+</div>
+<div class="card w-wood"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">3</span><span class="c-elem">🌳 木</span></div>
+<div class="c-mid"><span class="c-icon">🌳</span><span class="c-name">白䓘</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 止痛</b><br>被抢注时，弃此卡可抵消该次抢注</div>
+</div>
+<div class="card w-wood"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🐈 木</span></div>
+<div class="c-mid"><span class="c-icon">🐈</span><span class="c-name">类</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 自为牝牡</b><br>录名时可将 1 只同属性的在编异兽一并录名，不额外耗材</div>
+</div>
+<div class="card w-wood">
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🍂 木</span></div>
+<div class="c-mid"><span class="c-icon">🍂</span><span class="c-name">帝休</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 不怒</b><br>你每有 1 只木属性已录名异兽，终局 +1 分（上限 +5）</div>
+</div>
+<div class="card w-wood">
+<div class="c-top"><span class="c-score">8</span><span class="c-elem">🌲 木</span></div>
+<div class="c-mid"><span class="c-icon">🌲</span><span class="c-name">建木</span></div>
+<div class="c-stats"><span class="c-power">灵力 5</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 通天</b><br>你可无视暗选，任选一个荒域作为本轮驻守地</div>
+</div>
+<div class="card w-fire"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">2</span><span class="c-elem">🐦‍⬛ 火</span></div>
+<div class="c-mid"><span class="c-icon">🐦‍⬛</span><span class="c-name">窃脂</span></div>
+<div class="c-stats"><span class="c-power">灵力 1</span><span class="c-tame">驯服 2</span></div>
+<div class="c-ability"><b>异相 · 御火</b><br>弃此卡，重掷 1 次抢注骰</div>
+</div>
+<div class="card w-fire"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">4</span><span class="c-elem">🐦 火</span></div>
+<div class="c-mid"><span class="c-icon">🐦</span><span class="c-name">毕方</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 衔火</b><br>你收服火属性异兽时灵力 -1</div>
+</div>
+<div class="card w-fire"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">3</span><span class="c-elem">🦔 火</span></div>
+<div class="c-mid"><span class="c-icon">🦔</span><span class="c-name">犰狳</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 见则螽蝗</b><br>你发起抢注时灵力 -1</div>
+</div>
+<div class="card w-fire">
+<div class="c-top"><span class="c-score">3</span><span class="c-elem">🐭 火</span></div>
+<div class="c-mid"><span class="c-icon">🐭</span><span class="c-name">火光兽</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 入火不焚</b><br>弃此卡，本轮免疫所有荒潮的负面效果</div>
+</div>
+<div class="card w-fire"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🐵 火</span></div>
+<div class="c-mid"><span class="c-icon">🐵</span><span class="c-name">朱厌</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 见则大兵</b><br>每次荒潮揭示后，你抽 1 张灵物卡</div>
+</div>
+<div class="card w-fire">
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🐍 火</span></div>
+<div class="c-mid"><span class="c-icon">🐍</span><span class="c-name">肥遗</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 见则大旱</b><br>所有对手下一轮收服灵力 +1</div>
+</div>
+<div class="card w-fire">
+<div class="c-top"><span class="c-score">7</span><span class="c-elem">🦊 火</span></div>
+<div class="c-mid"><span class="c-icon">🦊</span><span class="c-name">九尾狐</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 魅惑</b><br>揭示后，令同荒域 1 名对手本轮遇兽失败</div>
+</div>
+<div class="card w-fire">
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🦅 火</span></div>
+<div class="c-mid"><span class="c-icon">🦅</span><span class="c-name">鴸</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 其鸣自号</b><br>每局 1 次，与 1 名对手交换 1 张手牌</div>
+</div>
+<div class="card w-fire">
+<div class="c-top"><span class="c-score">8</span><span class="c-elem">🐆 火</span></div>
+<div class="c-mid"><span class="c-icon">🐆</span><span class="c-name">狰</span></div>
+<div class="c-stats"><span class="c-power">灵力 5</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 五尾一角</b><br>收服灵力 ≥4 的异兽时，灵力 -2</div>
+</div>
+<div class="card w-water"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">2</span><span class="c-elem">🐡 水</span></div>
+<div class="c-mid"><span class="c-icon">🐡</span><span class="c-name">冉遗鱼</span></div>
+<div class="c-stats"><span class="c-power">灵力 1</span><span class="c-tame">驯服 2</span></div>
+<div class="c-ability"><b>异相 · 御兵刃</b><br>弃此卡，免疫 1 次抢注或 1 次荒潮的弃牌</div>
+</div>
+<div class="card w-water"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">3</span><span class="c-elem">🐟 水</span></div>
+<div class="c-mid"><span class="c-icon">🐟</span><span class="c-name">蠃鱼</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 见则大水</b><br>揭示后，所有对手各弃 1 张手牌</div>
+</div>
+<div class="card w-water"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🧜 水</span></div>
+<div class="c-mid"><span class="c-icon">🧜</span><span class="c-name">鲛人</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 泣珠</b><br>你每录名 1 只异兽，获得 1 枚玉简</div>
+</div>
+<div class="card w-water">
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🐍 水</span></div>
+<div class="c-mid"><span class="c-icon">🐍</span><span class="c-name">化蛇</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 其声如诃</b><br>你发起抢注时可重掷 1 次抢注骰</div>
+</div>
+<div class="card w-water">
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🐠 水</span></div>
+<div class="c-mid"><span class="c-icon">🐠</span><span class="c-name">文鳐</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 夜飞</b><br>本轮你可额外收服 1 只翻出的异兽</div>
+</div>
+<div class="card w-water">
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🌊 水</span></div>
+<div class="c-mid"><span class="c-icon">🌊</span><span class="c-name">冰夷</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 乘两龙</b><br>揭示后，你可立即改驻另一个荒域</div>
+</div>
+<div class="card w-water">
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🦪 水</span></div>
+<div class="c-mid"><span class="c-icon">🦪</span><span class="c-name">蜃</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 吐气成楼</b><br>弃此卡，将 1 只你的在编异兽免费录名</div>
+</div>
+<div class="card w-water">
+<div class="c-top"><span class="c-score">7</span><span class="c-elem">🐢 水</span></div>
+<div class="c-mid"><span class="c-icon">🐢</span><span class="c-name">玄龟</span></div>
+<div class="c-stats"><span class="c-power">灵力 5</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 负山</b><br>你的在编异兽不能被抢注</div>
+</div>
+<div class="card w-water">
+<div class="c-top"><span class="c-score">9</span><span class="c-elem">🐉 水</span></div>
+<div class="c-mid"><span class="c-icon">🐉</span><span class="c-name">应龙</span></div>
+<div class="c-stats"><span class="c-power">灵力 6</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 蓄水</b><br>你收服水属性异兽时灵力 -2</div>
+</div>
+<div class="card w-water">
+<div class="c-top"><span class="c-score">10</span><span class="c-elem">🐍 水</span></div>
+<div class="c-mid"><span class="c-icon">🐍</span><span class="c-name">相柳</span></div>
+<div class="c-stats"><span class="c-power">灵力 6</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 九首</b><br>你收服成功时，立刻抽 3 张灵物卡</div>
+</div>
+<div class="card w-metal"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">4</span><span class="c-elem">🐕 金</span></div>
+<div class="c-mid"><span class="c-icon">🐕</span><span class="c-name">天狗</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 御凶</b><br>弃此卡，取消本轮 1 张荒潮卡的全部效果</div>
+</div>
+<div class="card w-metal"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🐴 金</span></div>
+<div class="c-mid"><span class="c-icon">🐴</span><span class="c-name">英招</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 徇四海</b><br>查看任意荒域牌堆顶 2 张</div>
+</div>
+<div class="card w-metal"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🦅 金</span></div>
+<div class="c-mid"><span class="c-icon">🦅</span><span class="c-name">蛊雕</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 食人</b><br>你收服金属性异兽时灵力 -1</div>
+</div>
+<div class="card w-metal"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">7</span><span class="c-elem">🦁 金</span></div>
+<div class="c-mid"><span class="c-icon">🦁</span><span class="c-name">开明兽</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 守昆仑</b><br>你的已录名异兽不能被秘宝或荒潮指定</div>
+</div>
+<div class="card w-metal">
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🐎 金</span></div>
+<div class="c-mid"><span class="c-icon">🐎</span><span class="c-name">乘黄</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 寿二千岁</b><br>终局时你每有 2 张未打出的手牌，+1 分</div>
+</div>
+<div class="card w-metal">
+<div class="c-top"><span class="c-score">8</span><span class="c-elem">🐯 金</span></div>
+<div class="c-mid"><span class="c-icon">🐯</span><span class="c-name">陆吾</span></div>
+<div class="c-stats"><span class="c-power">灵力 5</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 司天之九部</b><br>你每有 1 只金属性已录名异兽，终局 +1 分（上限 +5）</div>
+</div>
+<div class="card w-metal">
+<div class="c-top"><span class="c-score">8</span><span class="c-elem">🦁 金</span></div>
+<div class="c-mid"><span class="c-icon">🦁</span><span class="c-name">穷奇</span></div>
+<div class="c-stats"><span class="c-power">灵力 5</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 食人从首</b><br>你抢注成功时，额外夺取对方 1 张手牌</div>
+</div>
+<div class="card w-metal">
+<div class="c-top"><span class="c-score">9</span><span class="c-elem">⚔️ 金</span></div>
+<div class="c-mid"><span class="c-icon">⚔️</span><span class="c-name">蓐收</span></div>
+<div class="c-stats"><span class="c-power">灵力 6</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 司秋</b><br>你所有金属性已录名异兽，每张额外 +1 分</div>
+</div>
+<div class="card w-earth"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">3</span><span class="c-elem">🐗 土</span></div>
+<div class="c-mid"><span class="c-icon">🐗</span><span class="c-name">当康</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 见则大穰</b><br>你录名时可少付 1 份朱砂</div>
+</div>
+<div class="card w-earth"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">4</span><span class="c-elem">🐦 土</span></div>
+<div class="c-mid"><span class="c-icon">🐦</span><span class="c-name">精卫</span></div>
+<div class="c-stats"><span class="c-power">灵力 2</span><span class="c-tame">驯服 3</span></div>
+<div class="c-ability"><b>异相 · 填海</b><br>弃此卡，从异兽弃牌堆取回 1 张到你的在编区</div>
+</div>
+<div class="card w-earth"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">5</span><span class="c-elem">🐴 土</span></div>
+<div class="c-mid"><span class="c-icon">🐴</span><span class="c-name">䑏疏</span></div>
+<div class="c-stats"><span class="c-power">灵力 3</span><span class="c-tame">驯服 4</span></div>
+<div class="c-ability"><b>异相 · 一角错</b><br>你发起抢注时，可额外支付 1 灵力让骰点 +2</div>
+</div>
+<div class="card w-earth">
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🟤 土</span></div>
+<div class="c-mid"><span class="c-icon">🟤</span><span class="c-name">息壤</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 自长息</b><br>每轮开始补牌时，你的手牌上限 +1</div>
+</div>
+<div class="card w-earth"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🐂 土</span></div>
+<div class="c-mid"><span class="c-icon">🐂</span><span class="c-name">夔牛</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 其声如雷</b><br>揭示后，所有对手本轮抢注骰 -1</div>
+</div>
+<div class="card w-earth">
+<div class="c-top"><span class="c-score">6</span><span class="c-elem">🐉 土</span></div>
+<div class="c-mid"><span class="c-icon">🐉</span><span class="c-name">计蒙</span></div>
+<div class="c-stats"><span class="c-power">灵力 4</span><span class="c-tame">驯服 5</span></div>
+<div class="c-ability"><b>异相 · 飘风暴雨</b><br>每局 1 次，令 1 名对手跳过其下一轮的收服</div>
+</div>
+<div class="card w-earth">
+<div class="c-top"><span class="c-score">9</span><span class="c-elem">🦌 土</span></div>
+<div class="c-mid"><span class="c-icon">🦌</span><span class="c-name">白泽</span></div>
+<div class="c-stats"><span class="c-power">灵力 5</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 知万物</b><br>查看异兽弃牌堆并取回 1 张灵物卡</div>
+</div>
+<div class="card w-earth">
+<div class="c-top"><span class="c-score">8</span><span class="c-elem">🐗 土</span></div>
+<div class="c-mid"><span class="c-icon">🐗</span><span class="c-name">饕餮</span></div>
+<div class="c-stats"><span class="c-power">灵力 5</span><span class="c-tame">驯服 6</span></div>
+<div class="c-ability"><b>异相 · 有首无身</b><br>每轮可弃 2 张手牌，直接吃掉 1 只在编异兽并计分</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>🖌️ 灵物卡（30 张 · 4 种）</h2>
+<p class="h2note">资源卡。丹青笔与朱砂是录名的必需耗材，全局只有 10 笔 8 砂。缚灵索不能当 1 点灵力，但可抵 2 点。</p>
+<div class="cards">
+<div class="card c-spirit"><div class="cnt">×10</div>
+<div class="c-top"><span class="c-score sp-title">灵物</span><span class="c-elem">🖌️</span></div>
+<div class="c-mid"><span class="c-icon">🖌️</span><span class="c-name">丹青笔</span></div>
+<div class="c-stats"><span class="c-power">录名必需</span></div>
+<div class="c-ability">每录名 1 只异兽消耗 1 支。也可当 1 点灵力使用</div>
+</div>
+<div class="card c-spirit"><div class="cnt">×8</div>
+<div class="c-top"><span class="c-score sp-title">灵物</span><span class="c-elem">🔴</span></div>
+<div class="c-mid"><span class="c-icon">🔴</span><span class="c-name">朱砂</span></div>
+<div class="c-stats"><span class="c-power">录名必需</span></div>
+<div class="c-ability">每录名 1 只异兽消耗 1 份。抢注时可弃 1 份让骰点 +1</div>
+</div>
+<div class="card c-spirit"><div class="cnt">×6</div>
+<div class="c-top"><span class="c-score sp-title">灵物</span><span class="c-elem">📜</span></div>
+<div class="c-mid"><span class="c-icon">📜</span><span class="c-name">玉简</span></div>
+<div class="c-stats"><span class="c-power">检索</span></div>
+<div class="c-ability">弃 1 枚查看任一荒域牌堆顶 2 张，或重掷 1 次抢注骰</div>
+</div>
+<div class="card c-spirit"><div class="cnt">×6</div>
+<div class="c-top"><span class="c-score sp-title">灵物</span><span class="c-elem">⛓️</span></div>
+<div class="c-mid"><span class="c-icon">⛓️</span><span class="c-name">缚灵索</span></div>
+<div class="c-stats"><span class="c-power">抵扣</span></div>
+<div class="c-ability">收服时弃 1 根抵扣 2 点灵力；抢注时弃 1 根让骰点 +2</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>🌪️ 荒潮卡（16 张 · 11 种）</h2>
+<p class="h2note">每轮夜幕阶段翻 1 张，全场立即生效。绿色边框为正面效果（共 5 张），灰色为负面效果。</p>
+<div class="cards">
+<div class="card c-tide-bad"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">🔥 凶</span></div>
+<div class="c-mid"><span class="c-icon">🔥</span><span class="c-name">赤地千里</span></div>
+<div class="c-ability tide-text">本轮所有火属性异兽收服灵力 +1</div>
+</div>
+<div class="card c-tide-bad"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">💧 凶</span></div>
+<div class="c-mid"><span class="c-icon">💧</span><span class="c-name">玄冥之泽</span></div>
+<div class="c-ability tide-text">本轮所有御灵师手牌上限 -1，立即弃至上限</div>
+</div>
+<div class="card c-tide-good"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">⚔️ 吉</span></div>
+<div class="c-mid"><span class="c-icon">⚔️</span><span class="c-name">金石共鸣</span></div>
+<div class="c-ability tide-text">本轮金属性异兽图鉴分 +2</div>
+</div>
+<div class="card c-tide-bad"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">🌑 凶</span></div>
+<div class="c-mid"><span class="c-icon">🌑</span><span class="c-name">妖兽之夜</span></div>
+<div class="c-ability tide-text">本轮翻出的所有异兽卡灵力消耗 +1</div>
+</div>
+<div class="card c-tide-good"><div class="cnt">×2</div>
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">🌀 吉</span></div>
+<div class="c-mid"><span class="c-icon">🌀</span><span class="c-name">帝江之舞</span></div>
+<div class="c-ability tide-text">本轮每人可额外收服 1 只异兽</div>
+</div>
+<div class="card c-tide-bad">
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">🔥 凶</span></div>
+<div class="c-mid"><span class="c-icon">🔥</span><span class="c-name">焚简之祸</span></div>
+<div class="c-ability tide-text">所有御灵师各弃 1 张自己的在编异兽</div>
+</div>
+<div class="card c-tide-bad">
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">🌪️ 凶</span></div>
+<div class="c-mid"><span class="c-icon">🌪️</span><span class="c-name">大荒风起</span></div>
+<div class="c-ability tide-text">所有御灵师各弃 1 张手牌</div>
+</div>
+<div class="card c-tide-bad">
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">⛰️ 凶</span></div>
+<div class="c-mid"><span class="c-icon">⛰️</span><span class="c-name">灵脉枯竭</span></div>
+<div class="c-ability tide-text">本轮补牌只补到 3 张</div>
+</div>
+<div class="card c-tide-bad">
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">☄️ 凶</span></div>
+<div class="c-mid"><span class="c-icon">☄️</span><span class="c-name">星陨如雨</span></div>
+<div class="c-ability tide-text">本轮所有御灵师的在编异兽全部摧毁</div>
+</div>
+<div class="card c-tide-good">
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">📜 吉</span></div>
+<div class="c-mid"><span class="c-icon">📜</span><span class="c-name">河图现世</span></div>
+<div class="c-ability tide-text">所有御灵师各抽 2 张灵物卡</div>
+</div>
+<div class="card c-tide-bad">
+<div class="c-top"><span class="c-score td-title">荒潮</span><span class="c-elem">🌗 凶</span></div>
+<div class="c-mid"><span class="c-icon">🌗</span><span class="c-name">烛阴闭目</span></div>
+<div class="c-ability tide-text">本轮所有异相能力无法发动</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>🏺 秘宝卡（10 张 · 10 种）</h2>
+<p class="h2note">获取方式：收服图鉴分 ≥7 的异兽抽 1 张（≥9 抽 2 张），或弃 3 张灵物卡直接抽 1 张。</p>
+<div class="cards">
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">📜 终局计分</span></div>
+<div class="c-mid"><span class="c-icon">📜</span><span class="c-name">河图洛书</span></div>
+<div class="c-ability tide-text">+8 分；若你五行集齐，改为每集齐 1 种 +2 分（最高 +10）</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">🌈 终局计分</span></div>
+<div class="c-mid"><span class="c-icon">🌈</span><span class="c-name">五色石</span></div>
+<div class="c-ability tide-text">+10 分；若你五行集齐，额外 +5 分</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">🏔️ 终局计分</span></div>
+<div class="c-mid"><span class="c-icon">🏔️</span><span class="c-name">昆仑玉圭</span></div>
+<div class="c-ability tide-text">+6 分；你所有金属性与土属性已录名异兽各 +1 分</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">👁️ 立即</span></div>
+<div class="c-mid"><span class="c-icon">👁️</span><span class="c-name">烛龙之瞳</span></div>
+<div class="c-ability tide-text">查看所有荒域牌堆顶 3 张，可任意交换两个荒域的顶牌</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">📖 立即</span></div>
+<div class="c-mid"><span class="c-icon">📖</span><span class="c-name">白泽图</span></div>
+<div class="c-ability tide-text">从异兽弃牌堆取回 1 张异兽卡，放入你的在编区</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">🚣 立即</span></div>
+<div class="c-mid"><span class="c-icon">🚣</span><span class="c-name">归墟之舟</span></div>
+<div class="c-ability tide-text">从灵物弃牌堆取回任意 2 张灵物卡</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">🪨 立即</span></div>
+<div class="c-mid"><span class="c-icon">🪨</span><span class="c-name">不周山石</span></div>
+<div class="c-ability tide-text">摧毁所有其他御灵师各 1 只指定属性的在编异兽</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">🟫 立即</span></div>
+<div class="c-mid"><span class="c-icon">🟫</span><span class="c-name">息壤之土</span></div>
+<div class="c-ability tide-text">将 1 只你的在编异兽免费录名（不需要任何耗材）</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">📕 立即</span></div>
+<div class="c-mid"><span class="c-icon">📕</span><span class="c-name">大荒经卷</span></div>
+<div class="c-ability tide-text">本轮你收服任何异兽，灵力消耗 -2（最低降至 0）</div>
+</div>
+<div class="card c-treasure"><div class="cnt">×1</div>
+<div class="c-top"><span class="c-score tr-title">秘宝</span><span class="c-elem">🔒 立即</span></div>
+<div class="c-mid"><span class="c-icon">🔒</span><span class="c-name">封兽符</span></div>
+<div class="c-ability tide-text">你的所有在编异兽立即变为已录名（不需要任何耗材）</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>📕 御灵录（图鉴板）</h2>
+<p class="h2note">每人 1 张，按实际玩家人数打印（2-5 张）。左侧放"在编"异兽，右侧按五行摆放"已录名"异兽。</p>
+<div class="codex-grid">
+    <div class="codex">
+        <h3>御 灵 录 · 第 1 号</h3>
+        <div class="row">
+            <div class="col half">
+                <span class="label">在编区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">⚠️ 不计分 · 可被抢注 · 可被荒潮摧毁</div>
+            </div>
+            <div class="col half">
+                <span class="label">已录名区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">✅ 立即计分 · 永久安全 · 可发动异相</div>
+            </div>
+        </div>
+        <div class="hint">
+            录名代价：<b>1 支丹青笔 + 1 份朱砂</b>（弃置）。当康可少付 1 份朱砂；类可带 1 只同属性在编；蜃 / 息壤之土 / 封兽符可免费录名。
+        </div>
+    </div>
+    <div class="codex">
+        <h3>御 灵 录 · 第 2 号</h3>
+        <div class="row">
+            <div class="col half">
+                <span class="label">在编区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">⚠️ 不计分 · 可被抢注 · 可被荒潮摧毁</div>
+            </div>
+            <div class="col half">
+                <span class="label">已录名区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">✅ 立即计分 · 永久安全 · 可发动异相</div>
+            </div>
+        </div>
+        <div class="hint">
+            录名代价：<b>1 支丹青笔 + 1 份朱砂</b>（弃置）。当康可少付 1 份朱砂；类可带 1 只同属性在编；蜃 / 息壤之土 / 封兽符可免费录名。
+        </div>
+    </div>
+    <div class="codex">
+        <h3>御 灵 录 · 第 3 号</h3>
+        <div class="row">
+            <div class="col half">
+                <span class="label">在编区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">⚠️ 不计分 · 可被抢注 · 可被荒潮摧毁</div>
+            </div>
+            <div class="col half">
+                <span class="label">已录名区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">✅ 立即计分 · 永久安全 · 可发动异相</div>
+            </div>
+        </div>
+        <div class="hint">
+            录名代价：<b>1 支丹青笔 + 1 份朱砂</b>（弃置）。当康可少付 1 份朱砂；类可带 1 只同属性在编；蜃 / 息壤之土 / 封兽符可免费录名。
+        </div>
+    </div>
+    <div class="codex">
+        <h3>御 灵 录 · 第 4 号</h3>
+        <div class="row">
+            <div class="col half">
+                <span class="label">在编区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">⚠️ 不计分 · 可被抢注 · 可被荒潮摧毁</div>
+            </div>
+            <div class="col half">
+                <span class="label">已录名区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">✅ 立即计分 · 永久安全 · 可发动异相</div>
+            </div>
+        </div>
+        <div class="hint">
+            录名代价：<b>1 支丹青笔 + 1 份朱砂</b>（弃置）。当康可少付 1 份朱砂；类可带 1 只同属性在编；蜃 / 息壤之土 / 封兽符可免费录名。
+        </div>
+    </div>
+    <div class="codex">
+        <h3>御 灵 录 · 第 5 号</h3>
+        <div class="row">
+            <div class="col half">
+                <span class="label">在编区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">⚠️ 不计分 · 可被抢注 · 可被荒潮摧毁</div>
+            </div>
+            <div class="col half">
+                <span class="label">已录名区</span>
+                <div class="five"><span>🌿<b>木</b></span><span>🔥<b>火</b></span><span>💧<b>水</b></span><span>⚔️<b>金</b></span><span>⛰️<b>土</b></span></div>
+                <div class="hint" style="margin-top:6px">✅ 立即计分 · 永久安全 · 可发动异相</div>
+            </div>
+        </div>
+        <div class="hint">
+            录名代价：<b>1 支丹青笔 + 1 份朱砂</b>（弃置）。当康可少付 1 份朱砂；类可带 1 只同属性在编；蜃 / 息壤之土 / 封兽符可免费录名。
+        </div>
+    </div>
+</div>
+</section>
+
+<section>
+<h2>🎯 御灵师棋子</h2>
+<p class="h2note">每人 1 枚，按实际玩家人数打印。沿圆形剪下后可对折成立体底座，或用硬币 / 橡皮代替。</p>
+<div class="pieces">
+    <div class="piece">
+        <div class="disc p-wood"><span class="pi">🌿</span><span class="pn">青</span></div>
+        <div class="fold">暗选时握在手心<br>揭示时放到荒域</div>
+    </div>
+    <div class="piece">
+        <div class="disc p-fire"><span class="pi">🔥</span><span class="pn">赤</span></div>
+        <div class="fold">暗选时握在手心<br>揭示时放到荒域</div>
+    </div>
+    <div class="piece">
+        <div class="disc p-water"><span class="pi">💧</span><span class="pn">玄</span></div>
+        <div class="fold">暗选时握在手心<br>揭示时放到荒域</div>
+    </div>
+    <div class="piece">
+        <div class="disc p-metal"><span class="pi">⚔️</span><span class="pn">白</span></div>
+        <div class="fold">暗选时握在手心<br>揭示时放到荒域</div>
+    </div>
+    <div class="piece">
+        <div class="disc p-earth"><span class="pi">⛰️</span><span class="pn">黄</span></div>
+        <div class="fold">暗选时握在手心<br>揭示时放到荒域</div>
+    </div>
+</div>
+</section>
+
+<section>
+<h2>📎 一页速查表</h2>
+<p class="h2note">建议打印 1 张放在桌边，供所有玩家随时查阅。</p>
+<div class="quick">╔══════════════════════════════════════════════════════════════╗
+║                    山海御灵录 · 速查表                        ║
+╠══════════════════════════════════════════════════════════════╣
+║  每轮四阶段： ① 暗选 → ② 揭示 → ③ 遇兽与收服 → ④ 夜幕      ║
+╠══════════════════════════════════════════════════════════════╣
+║  【遇兽】翻 K 张，K = 本荒域御灵师人数（最多 3）              ║
+║  【收服】付灵力 → 进在编区                                    ║
+║      · 丹青笔 / 朱砂 / 玉简 = 1 点   缚灵索 = 2 点            ║
+║      · 借力：已录名异兽克制目标 → -1 点（不叠加）             ║
+║  【抢注】同荒域 + 对方在编区有兽                              ║
+║      · 弃 1 张灵物 + 掷 D6 ≥ 驯服难度 → 夺取                  ║
+║      · 失败：弃 2 张，本轮不可再抢                            ║
+║      · 每轮限 1 次；已录名永不可抢                            ║
+║  【录名】付 1 丹青笔 + 1 朱砂 → 移入已录名区（计分 + 安全）   ║
+╠══════════════════════════════════════════════════════════════╣
+║  五行相克： 金 → 木 → 土 → 水 → 火 → 金                      ║
+║  独享奖励： 荒域只有 1 人 → 该人获 1 枚玉简                   ║
+║  秘宝获取： 收服 ≥7 分异兽抽 1 张 / ≥9 分抽 2 张 / 弃 3 灵物  ║
+╠══════════════════════════════════════════════════════════════╣
+║  【终局计分】                                                 ║
+║   · 已录名异兽图鉴分之和        （在编不计分！）               ║
+║   · 五行集齐                     +8                          ║
+║   · 属性专精（某属性 ≥ 4 只）    该属性每只 +1                 ║
+║   · 秘宝卡                       见卡面                       ║
+╠══════════════════════════════════════════════════════════════╣
+║  ⚠️ 三条铁律                                                  ║
+║   1. 不录名 = 不计分 = 可被抢 = 可被烧                        ║
+║   2. 全局只有 10 笔 8 砂，理论录名上限 8 次                   ║
+║   3. 手牌每轮补至 5 张（祝余 / 息壤各 +1）                    ║
+╚══════════════════════════════════════════════════════════════╝</div>
+</section>
+
+<section style="text-align:center;color:#6b5c43;font-size:12px;border-top:2px solid #c9b895;padding-top:16px;">
+    《山海御灵录》打印道具包 · 共 120 张卡牌（异兽 64 + 灵物 30 + 荒潮 16 + 秘宝 10）<br>
+    完整规则请参考同目录下的 <a href="README.md" style="color:#b8341f;">README.md</a>
+</section>
+
+</div>
+</body>
+</html>

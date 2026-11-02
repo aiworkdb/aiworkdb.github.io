@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乐高蝙蝠侠：哥谭积木夜 · 打印道具</title>
+<style>
+  :root {
+    --ink: #141c2b;
+    --paper: #eef2f8;
+    --card: #ffffff;
+    --night: #16233d;
+    --gold: #f2b705;
+    --red: #d7263d;
+    --line: #c8d2e4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: 26px; margin: 0 0 4px;
+    color: var(--night); letter-spacing: 1px;
+  }
+  .sub { color: #5a6a85; font-size: 14px; margin-bottom: 18px; }
+  h2 {
+    font-size: 19px; margin: 34px 0 12px;
+    padding: 6px 12px; border-left: 6px solid var(--gold);
+    background: #e3e9f4; border-radius: 4px; color: var(--night);
+  }
+  h3 { font-size: 15px; margin: 18px 0 8px; color: #33456b; }
+  p.note { font-size: 13px; color: #4d5c78; margin: 6px 0 12px; }
+  code { background: #e3e9f4; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+  /* ---------- 打印提示 ---------- */
+  .print-hint, .screen-only {
+    background: #fff7e0; border: 2px dashed var(--gold);
+    border-radius: 8px; padding: 14px 18px; margin-bottom: 22px;
+  }
+  .print-hint strong { color: #9a6b00; }
+  .print-hint ul { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
+  .print-hint li { margin: 3px 0; }
+
+  /* ---------- 卡牌通用 ---------- */
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .card {
+    position: relative;
+    width: 63mm; min-height: 88mm;
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 7px;
+    padding: 8px 8px 10px;
+    box-shadow: 0 2px 5px rgba(20,28,43,.12);
+    display: flex; flex-direction: column;
+    page-break-inside: avoid;
+  }
+  .qty {
+    position: absolute; right: 6px; bottom: 5px;
+    background: var(--night); color: var(--gold);
+    font-size: 11px; font-weight: 700;
+    padding: 1px 7px; border-radius: 9px;
+  }
+
+  /* ---------- 砖块卡 ---------- */
+  .brick { background: #fff; border-color: var(--bc); border-width: 3px; }
+  .studs {
+    height: 16mm; border-radius: 4px 4px 0 0;
+    background-color: var(--bc);
+    background-image: radial-gradient(circle at 6mm 6mm,
+        rgba(255,255,255,.34) 3.4mm, rgba(0,0,0,.06) 3.6mm, transparent 3.8mm);
+    background-size: 12mm 12mm; background-position: 2mm 2mm;
+    margin: -8px -8px 6px;
+  }
+  .brick-face { font-size: 34px; text-align: center; line-height: 1; margin-top: 4px; }
+  .brick-name {
+    margin-top: auto; text-align: center;
+    font-size: 17px; font-weight: 800; letter-spacing: 3px;
+    color: var(--bc);
+  }
+
+  /* ---------- 装置卡 ---------- */
+  .device { background: linear-gradient(#1b2a49 0 26mm, #fff 26mm); border-color: var(--night); }
+  .dhead { display: flex; justify-content: space-between; align-items: center; color: #fff; }
+  .dno { font-size: 13px; opacity: .9; }
+  .dscore { background: var(--gold); color: var(--night); font-weight: 800;
+             font-size: 12px; padding: 1px 8px; border-radius: 9px; }
+  .dicon { font-size: 30px; text-align: center; margin: 6px 0 2px; color: #fff; }
+  .dname { text-align: center; font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .dspec { display: flex; flex-direction: column; gap: 4px; }
+  .drow { display: flex; align-items: center; gap: 6px; }
+  .dlabel { width: 18px; font-size: 12px; color: #5a6a85; font-weight: 700; }
+  .dchip {
+    flex: 1; color: #fff; font-size: 12px; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px; text-shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+  .dflavor { margin-top: 8px; font-size: 10.5px; color: #6b7893; line-height: 1.45; }
+
+  /* ---------- 反派卡 ---------- */
+  .villain { background: linear-gradient(#5b1230 0 22mm, #fff 22mm); border-color: var(--red); }
+  .vhead {
+    color: #fff; font-size: 15px; font-weight: 800; text-align: center;
+    padding-bottom: 4px; border-bottom: 2px solid rgba(255,255,255,.3);
+  }
+  .veffect { margin-top: 10px; font-size: 11.5px; line-height: 1.5; }
+  .vtip {
+    margin-top: auto; font-size: 10px; color: #6b7893;
+    border-top: 1px dotted var(--line); padding-top: 5px; line-height: 1.45;
+  }
+
+  /* ---------- 装备卡 ---------- */
+  .gear { background: linear-gradient(#123c46 0 20mm, #fff 20mm); border-color: #1f7a8c; }
+  .ghead {
+    color: #fff; font-size: 14px; font-weight: 800; text-align: center; padding-bottom: 4px;
+  }
+  .geffect { margin-top: 10px; font-size: 11.5px; line-height: 1.5; margin-bottom: 16px; }
+
+  /* ---------- 英雄卡 ---------- */
+  .hero { background: linear-gradient(#241a3d 0 24mm, #fff 24mm); border-color: #4b3a7a; }
+  .hicon { font-size: 30px; text-align: center; color: #fff; }
+  .hname { text-align: center; font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .hpower { font-size: 11.5px; line-height: 1.5; }
+
+  /* ---------- 小配件 ---------- */
+  .claw {
+    width: 22mm; height: 22mm; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffe9a3, var(--gold));
+    border: 2px solid #b98a00; color: #5a4200;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800;
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
+  }
+  .mat {
+    width: 90mm; height: 62mm; border: 2px dashed #8d9bb5; border-radius: 8px;
+    background: repeating-linear-gradient(135deg, #f7f9fc 0 8px, #eef2f8 8px 16px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #7a89a5; font-size: 13px; gap: 4px;
+  }
+  .mat b { color: var(--night); font-size: 15px; }
+
+  /* ---------- 桌面总图 ---------- */
+  .board {
+    border: 3px solid var(--night); border-radius: 10px;
+    background: #16233d; padding: 14px; color: #fff;
+  }
+  .board h3 { color: var(--gold); margin: 0 0 8px; font-size: 16px; }
+  .track { display: flex; gap: 6px; flex-wrap: nowrap; }
+  .slot {
+    flex: 1; border: 2px solid rgba(255,255,255,.25); border-radius: 6px;
+    padding: 6px 4px; text-align: center; font-size: 11px; min-width: 0;
+  }
+  .slotno { display: block; color: var(--gold); font-weight: 800; }
+  .sloticon { display: block; font-size: 18px; margin: 2px 0; }
+  .slotname { display: block; font-size: 10px; }
+  .slotscore { display: block; color: #9fb2d8; font-size: 10px; }
+  .zones { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .zone {
+    flex: 1; min-width: 110px; border: 2px solid rgba(255,255,255,.25);
+    border-radius: 6px; padding: 8px; font-size: 11px;
+  }
+  .zone b { color: var(--gold); display: block; margin-bottom: 3px; font-size: 12px; }
+
+  /* ---------- 速查表 ---------- */
+  .cheat {
+    width: 100%; border-collapse: collapse; background: #fff;
+    font-size: 12px; border: 2px solid var(--night);
+  }
+  .cheat th { background: var(--night); color: var(--gold); padding: 5px 7px; text-align: left; }
+  .cheat td { border: 1px solid var(--line); padding: 4px 7px; }
+  .cheat tr:nth-child(even) td { background: #f4f7fc; }
+  .chip {
+    display: inline-block; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 1px 7px; border-radius: 4px; text-shadow: 0 1px 2px rgba(0,0,0,.35);
+  }
+
+  .footer { margin-top: 36px; font-size: 12px; color: #7a89a5; text-align: center; }
+
+  /* ---------- 打印 ---------- */
+  @page { size: A4; margin: 8mm; }
+  @media print {
+    .print-hint { display: none; }
+  }
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .screen-only { display: none; }
+    body { padding: 0; background: #fff; }
+    h2 { page-break-after: avoid; break-after: avoid; }
+    .card, .claw, .mat { page-break-inside:avoid; break-inside:avoid; }
+    section { page-break-after: always; }
+    section:last-of-type { page-break-after: auto; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🦇 乐高蝙蝠侠：哥谭积木夜 · 打印道具</h1>
+<div class="sub">LEGO Batman: Gotham Brick Night ｜ 派对 / 拼装 / 抢夺 ｜ 3-6 人 ｜ 30-50 分钟 ｜ 共 178 件</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，建议设置<strong>最小边距</strong></li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>选项，否则砖块颜色、夜空渐变全部丢失</li>
+    <li>卡牌和棋子建议使用<strong>卡纸（200-250g）</strong>打印，增加耐用性和手感</li>
+    <li>砖块卡按 <code>×N</code> 角标数量打印对应份数（每色 24 张，共 120 张）</li>
+    <li>打印后沿边框裁剪，卡牌建议<strong>塑封</strong>或使用牌套</li>
+    <li>蝙蝠爪标记建议打印在卡纸上后剪成圆形，或用<strong>真实乐高 2×2 颗粒</strong>代替</li>
+  </ul>
+</div>
+
+<div class="screen-only">
+  <strong>🖨️ 打印顺序建议：</strong>① 桌面总图（1 张，普通纸）→ ② 装置卡 7 张 → ③ 砖块卡 120 张 →
+  ④ 反派卡 8 张 → ⑤ 装备卡 16 张 → ⑥ 英雄卡 6 张 → ⑦ 小配件与速查卡。
+  砖块卡最多，可分批打印；用<strong>真实乐高积木</strong>代替砖块卡体验更佳。
+</div>
+
+<section>
+  <h2>一、桌面总图（哥谭夜空 · 装配台）</h2>
+  <p class="note">A4 横向打印 1 张，铺在桌子中央。装置轨上依次摆放 7 张装置卡；反派轨每夜翻 1 张。</p>
+  <div class="board">
+    <h3>装置轨（哥谭夜空）— 任何时候只公开「本夜 + 明夜」两张，其余反扣</h3>
+    <div class="track"><div class="slot"><span class="slotno">1</span><span class="sloticon">🚨</span><span class="slotname">蝙蝠信号灯</span><span class="slotscore">1分</span></div><div class="slot"><span class="slotno">2</span><span class="sloticon">🪢</span><span class="slotname">抓钩枪</span><span class="slotscore">2分</span></div><div class="slot"><span class="slotno">3</span><span class="sloticon">🛡️</span><span class="slotname">防弹盾</span><span class="slotscore">3分</span></div><div class="slot"><span class="slotno">4</span><span class="sloticon">🚗</span><span class="slotname">蝙蝠车</span><span class="slotscore">4分</span></div><div class="slot"><span class="slotno">5</span><span class="sloticon">🚁</span><span class="slotname">蝙蝠翼</span><span class="slotscore">5分</span></div><div class="slot"><span class="slotno">6</span><span class="sloticon">🧪</span><span class="slotname">解毒剂</span><span class="slotscore">6分</span></div><div class="slot"><span class="slotno">7</span><span class="sloticon">🔦</span><span class="slotname">蝙蝠灯</span><span class="slotscore">7分</span></div></div>
+    <div class="zones">
+      <div class="zone"><b>🧱 砖桶</b>中央牌堆，背面朝上。每夜每人轮流从中摸 3 张。</div>
+      <div class="zone"><b>🗑️ 弃砖位</b>每夜弃掉的 1 张放回砖桶底部。急冻先生夜里改为永久移除。</div>
+      <div class="zone"><b>🃏 反派轨</b>8 张反派卡洗匀后取 7 张反扣，每夜结算后翻 1 张。</div>
+      <div class="zone"><b>🎒 装备堆</b>16 张装备卡洗匀，每人开局发 2 张。</div>
+      <div class="zone"><b>📋 顺位轨</b>按「上夜完工者排最后 → 其余塔低者在前」排列顺位卡。</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>二、装置卡 / 说明书（7 张）</h2>
+  <p class="note">
+    每张卡上的三行是<b>从塔顶往下数</b>的颜色要求：<b>顶</b>（最上面一块）、<b>次</b>（第二块）、<b>三</b>（第三块）。
+    ⚡ 关键：<b>本夜的「顶」就是明夜的「三」</b>——同一块砖同时服务两件装置。
+  </p>
+  <div class="grid">      <div class="card device">
+        <div class="dhead"><span class="dno">夜 1</span><span class="dscore">1 分</span></div>
+        <div class="dicon">🚨</div>
+        <div class="dname">蝙蝠信号灯</div>
+        <div class="dspec">
+          <div class="drow"><span class="dlabel">顶</span><span class="dchip" style="background:#d7263d">🟥 红砖</span></div><div class="drow"><span class="dlabel">次</span><span class="dchip" style="background:#2f3542">⬛ 黑砖</span></div><div class="drow"><span class="dlabel">三</span><span class="dchip" style="background:#3f8f5f">🟩 绿砖</span></div>
+        </div>
+        <div class="dflavor">把信号打上天，让整座哥谭知道——今晚有人在守着。</div>
+      </div>
+      <div class="card device">
+        <div class="dhead"><span class="dno">夜 2</span><span class="dscore">2 分</span></div>
+        <div class="dicon">🪢</div>
+        <div class="dname">抓钩枪</div>
+        <div class="dspec">
+          <div class="drow"><span class="dlabel">顶</span><span class="dchip" style="background:#f2b705">🟨 黄砖</span></div><div class="drow"><span class="dlabel">次</span><span class="dchip" style="background:#1f7a8c">🟦 蓝砖</span></div><div class="drow"><span class="dlabel">三</span><span class="dchip" style="background:#d7263d">🟥 红砖</span></div>
+        </div>
+        <div class="dflavor">一枪射出，钩住屋檐。剩下的交给地心引力。</div>
+      </div>
+      <div class="card device">
+        <div class="dhead"><span class="dno">夜 3</span><span class="dscore">3 分</span></div>
+        <div class="dicon">🛡️</div>
+        <div class="dname">防弹盾</div>
+        <div class="dspec">
+          <div class="drow"><span class="dlabel">顶</span><span class="dchip" style="background:#3f8f5f">🟩 绿砖</span></div><div class="drow"><span class="dlabel">次</span><span class="dchip" style="background:#f2b705">🟨 黄砖</span></div><div class="drow"><span class="dlabel">三</span><span class="dchip" style="background:#f2b705">🟨 黄砖</span></div>
+        </div>
+        <div class="dflavor">双面胶带加固版。别问，问就是乐高科技件。</div>
+      </div>
+      <div class="card device">
+        <div class="dhead"><span class="dno">夜 4</span><span class="dscore">4 分</span></div>
+        <div class="dicon">🚗</div>
+        <div class="dname">蝙蝠车</div>
+        <div class="dspec">
+          <div class="drow"><span class="dlabel">顶</span><span class="dchip" style="background:#2f3542">⬛ 黑砖</span></div><div class="drow"><span class="dlabel">次</span><span class="dchip" style="background:#d7263d">🟥 红砖</span></div><div class="drow"><span class="dlabel">三</span><span class="dchip" style="background:#3f8f5f">🟩 绿砖</span></div>
+        </div>
+        <div class="dflavor">四个轮子一门炮，还有两个杯子架。</div>
+      </div>
+      <div class="card device">
+        <div class="dhead"><span class="dno">夜 5</span><span class="dscore">5 分</span></div>
+        <div class="dicon">🚁</div>
+        <div class="dname">蝙蝠翼</div>
+        <div class="dspec">
+          <div class="drow"><span class="dlabel">顶</span><span class="dchip" style="background:#1f7a8c">🟦 蓝砖</span></div><div class="drow"><span class="dlabel">次</span><span class="dchip" style="background:#3f8f5f">🟩 绿砖</span></div><div class="drow"><span class="dlabel">三</span><span class="dchip" style="background:#2f3542">⬛ 黑砖</span></div>
+        </div>
+        <div class="dflavor">滑翔翼展开的那一秒，风声比警报还响。</div>
+      </div>
+      <div class="card device">
+        <div class="dhead"><span class="dno">夜 6</span><span class="dscore">6 分</span></div>
+        <div class="dicon">🧪</div>
+        <div class="dname">解毒剂</div>
+        <div class="dspec">
+          <div class="drow"><span class="dlabel">顶</span><span class="dchip" style="background:#f2b705">🟨 黄砖</span></div><div class="drow"><span class="dlabel">次</span><span class="dchip" style="background:#2f3542">⬛ 黑砖</span></div><div class="drow"><span class="dlabel">三</span><span class="dchip" style="background:#1f7a8c">🟦 蓝砖</span></div>
+        </div>
+        <div class="dflavor">一管下去，毒藤女的藤蔓都得打个喷嚏。</div>
+      </div>
+      <div class="card device">
+        <div class="dhead"><span class="dno">夜 7</span><span class="dscore">7 分</span></div>
+        <div class="dicon">🔦</div>
+        <div class="dname">蝙蝠灯</div>
+        <div class="dspec">
+          <div class="drow"><span class="dlabel">顶</span><span class="dchip" style="background:#d7263d">🟥 红砖</span></div><div class="drow"><span class="dlabel">次</span><span class="dchip" style="background:#1f7a8c">🟦 蓝砖</span></div><div class="drow"><span class="dlabel">三</span><span class="dchip" style="background:#f2b705">🟨 黄砖</span></div>
+        </div>
+        <div class="dflavor">云层上那个蝙蝠-shaped 的光——哥谭的天气预报。</div>
+      </div></div>
+</section>
+
+<section>
+  <h2>三、砖块卡（120 张 = 5 色 × 24）</h2>
+  <p class="note">
+    按角标数量打印。3 人局每色取 12 张、4 人局 16 张、5 人局 20 张、6 人局 24 张
+    （恒等式：<b>每色供给 = 人数 × 4</b>，剩余部分放回盒子）。<br>
+    每张砖块卡的<b>正面朝上</b>叠放形成你的「积木塔」——后叠的压在上面，顶部永远可见。
+  </p>
+  <div class="grid">      <div class="card brick" style="--bc:#2f3542">
+        <div class="studs"></div>
+        <div class="brick-face">⬛</div>
+        <div class="brick-name">黑砖</div>
+        <span class="qty">×24</span>
+      </div>
+      <div class="card brick" style="--bc:#d7263d">
+        <div class="studs"></div>
+        <div class="brick-face">🟥</div>
+        <div class="brick-name">红砖</div>
+        <span class="qty">×24</span>
+      </div>
+      <div class="card brick" style="--bc:#f2b705">
+        <div class="studs"></div>
+        <div class="brick-face">🟨</div>
+        <div class="brick-name">黄砖</div>
+        <span class="qty">×24</span>
+      </div>
+      <div class="card brick" style="--bc:#1f7a8c">
+        <div class="studs"></div>
+        <div class="brick-face">🟦</div>
+        <div class="brick-name">蓝砖</div>
+        <span class="qty">×24</span>
+      </div>
+      <div class="card brick" style="--bc:#3f8f5f">
+        <div class="studs"></div>
+        <div class="brick-face">🟩</div>
+        <div class="brick-name">绿砖</div>
+        <span class="qty">×24</span>
+      </div></div>
+</section>
+
+<section>
+  <h2>四、反派卡（8 张，每局洗匀取 7 张）</h2>
+  <p class="note">每夜「验收」之后翻开 1 张，按其效果立即执行，然后进入下一夜。</p>
+  <div class="grid">      <div class="card villain">
+        <div class="vhead">🤡 小丑</div>
+        <div class="veffect">本夜所有人必须把手上摸到的 3 张砖全部叠上（顺序仍自选），不得弃牌。</div>
+        <div class="vtip"><b>应对</b>　叠 3 块会把旧塔顶挤到第 4 位 ⇒ 第三位也变成新砖，本夜需 3 块指定色而非 2 块！提前留 🎨 喷漆罐。</div>
+      </div>
+      <div class="card villain">
+        <div class="vhead">🐧 企鹅人</div>
+        <div class="veffect">本夜开始前，从砖桶中永久移除 2 张 ⬛黑砖。</div>
+        <div class="vtip"><b>应对</b>　黑砖需求集中在夜1/夜4/夜6。企鹅人一出，黑砖立刻变奢侈品。</div>
+      </div>
+      <div class="card villain">
+        <div class="vhead">🧩 谜语人</div>
+        <div class="veffect">本夜叠的两块砖必须同色，否则本夜不计完工（顶砖仍需照常放置）。</div>
+        <div class="vtip"><b>应对</b>　若本夜说明书要求的两色不同，果断战略性放弃，把顶砖留对就行。</div>
+      </div>
+      <div class="card villain">
+        <div class="vhead">💪 贝恩</div>
+        <div class="veffect">完工数最多的玩家（并列取顺位最靠前者），塔顶 2 块被拆下放回砖桶底。</div>
+        <div class="vtip"><b>应对</b>　领先者挨打——这是自动追赶机制。完工第一时记得留 🛡️ 防弹披风。</div>
+      </div>
+      <div class="card villain">
+        <div class="vhead">🐱 猫女</div>
+        <div class="veffect">塔最高的玩家（并列取顺位最靠前者），其塔顶 1 块移到塔最低玩家的塔顶。</div>
+        <div class="vtip"><b>应对</b>　劫富济贫。被搬走的那一块照样算接收者的塔，常常顺手帮他接上链条。</div>
+      </div>
+      <div class="card villain">
+        <div class="vhead">🃏 哈莉·奎茵</div>
+        <div class="veffect">本夜摸砖顺位完全反转（塔最高者第一个摸）。</div>
+        <div class="vtip"><b>应对</b>　领先者翻身之夜。若你是塔最低的，本夜请做好抢不到砖的准备。</div>
+      </div>
+      <div class="card villain">
+        <div class="vhead">🧊 急冻先生</div>
+        <div class="veffect">本夜所有弃回砖桶的砖改为永久移除（冻结）。</div>
+        <div class="vtip"><b>应对</b>　本夜千万别乱弃牌，宁可多叠一块废砖也别丢。🧤 蝙蝠女侠免疫此效果。</div>
+      </div>
+      <div class="card villain">
+        <div class="vhead">🌿 毒藤女</div>
+        <div class="veffect">本夜完工的装置 −1 分（最低 0 分）；若该装置顶部 3 块中含 🟩绿砖，改为 −3 分。</div>
+        <div class="vtip"><b>应对</b>　夜1/夜2/夜3/夜4 的装置都含绿砖，撞上毒藤女几乎腰斩。最后一夜的蝙蝠灯不含绿，只 −1。</div>
+      </div></div>
+</section>
+
+<section>
+  <h2>五、装备卡（16 张 = 8 种 × 2）</h2>
+  <p class="note">洗匀后每人开局发 2 张，正面朝上摊在自己面前。所有装备均为<b>一次性</b>，用后弃置。</p>
+  <div class="grid">      <div class="card gear">
+        <div class="ghead">🎨 喷漆罐</div>
+        <div class="geffect">一次性。本夜叠砖时，可将其中 1 块砖【永久】视为任意颜色（用记号笔在卡角涂改，后续夜次均按新色计算）。</div>
+        <span class="qty">×2</span>
+      </div>
+      <div class="card gear">
+        <div class="ghead">🧲 磁吸抓钩</div>
+        <div class="geffect">一次性。查看砖桶顶部 3 张，取 1 张加入本夜摸到的砖中（本夜你摸到 4 张）。</div>
+        <span class="qty">×2</span>
+      </div>
+      <div class="card gear">
+        <div class="ghead">🔧 多功能工具</div>
+        <div class="geffect">一次性。本夜摸 4 张砖，选 2 张叠上，其余回桶底。</div>
+        <span class="qty">×2</span>
+      </div>
+      <div class="card gear">
+        <div class="ghead">🧥 防弹披风</div>
+        <div class="geffect">一次性。免疫一次「你的塔顶被拆」（含贝恩 / 猫女 / 蝙蝠爪）。</div>
+        <span class="qty">×2</span>
+      </div>
+      <div class="card gear">
+        <div class="ghead">📡 蝙蝠电脑</div>
+        <div class="geffect">一次性。立即查看下下夜的装置卡，提前两夜规划你的顶砖。</div>
+        <span class="qty">×2</span>
+      </div>
+      <div class="card gear">
+        <div class="ghead">🧱 备用零件</div>
+        <div class="geffect">一次性。本夜额外多叠 1 块砖（本夜叠 3 块），多叠的一块照常成为新塔顶。</div>
+        <span class="qty">×2</span>
+      </div>
+      <div class="card gear">
+        <div class="ghead">⏪ 时光倒流</div>
+        <div class="geffect">一次性。本夜叠砖后可全部撤回手中，重新叠一次（含是否自拆的抉择）。</div>
+        <span class="qty">×2</span>
+      </div>
+      <div class="card gear">
+        <div class="ghead">🎇 信号弹</div>
+        <div class="geffect">一次性。本夜若未完工，仍可获得本夜装置分值的一半（向下取整）。</div>
+        <span class="qty">×2</span>
+      </div></div>
+</section>
+
+<section>
+  <h2>六、英雄卡（6 张）</h2>
+  <p class="note">每人随机 1 张，正面朝上放在工作台旁。能力为<b>永久被动</b>，整局有效。</p>
+  <div class="grid">      <div class="card hero">
+        <div class="hicon">🤸</div>
+        <div class="hname">罗宾</div>
+        <div class="hpower">起始多 1 枚蝙蝠爪（共 3 枚）。整局仍限制每夜最多用 1 枚。</div>
+      </div>
+      <div class="card hero">
+        <div class="hicon">🦇</div>
+        <div class="hname">蝙蝠女</div>
+        <div class="hpower">起始塔多 1 块（3 块）：最上面仍是 🟩绿，下面两张任意。塔高天然 +1。</div>
+      </div>
+      <div class="card hero">
+        <div class="hicon">🌙</div>
+        <div class="hname">夜翼</div>
+        <div class="hpower">每夜摸砖前，可先看砖桶顶部 1 张，再决定要不要留着本夜的顺位。</div>
+      </div>
+      <div class="card hero">
+        <div class="hicon">🧤</div>
+        <div class="hname">蝙蝠女侠</div>
+        <div class="hpower">免疫「🧊 急冻先生」的冻结效果：她的弃牌照常回桶底。</div>
+      </div>
+      <div class="card hero">
+        <div class="hicon">☕</div>
+        <div class="hname">阿尔弗雷德</div>
+        <div class="hpower">终局计算塔高名次时，他的塔高 +2 计分（不实际加砖）。</div>
+      </div>
+      <div class="card hero">
+        <div class="hicon">🐕</div>
+        <div class="hname">王牌（蝙蝠猎犬）</div>
+        <div class="hpower">每夜领料时，若你是本夜顺位最后一名，可额外摸 1 张砖（本夜共摸 4 张）。</div>
+      </div></div>
+</section>
+
+<section>
+  <h2>七、小配件</h2>
+
+  <h3>7.1 蝙蝠爪标记（12 枚 = 6 人 × 2）</h3>
+  <p class="note">每人开局 2 枚。每夜最多用 1 枚，可拆掉任意一名玩家塔顶 1 块（含自己）。终局每剩 1 枚 +1 分。</p>
+  <div class="grid">
+    <div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div><div class="claw">🪝</div>
+  </div>
+
+  <h3>7.2 工作台垫（6 张）</h3>
+  <p class="note">每人 1 张，摆在面前。你的积木塔就叠在这张垫子上。</p>
+  <div class="grid">
+    <div class="mat"><b>我的积木塔</b><span>砖块正面朝上叠放</span><span>顶部 = 最新作品</span></div><div class="mat"><b>我的积木塔</b><span>砖块正面朝上叠放</span><span>顶部 = 最新作品</span></div><div class="mat"><b>我的积木塔</b><span>砖块正面朝上叠放</span><span>顶部 = 最新作品</span></div><div class="mat"><b>我的积木塔</b><span>砖块正面朝上叠放</span><span>顶部 = 最新作品</span></div><div class="mat"><b>我的积木塔</b><span>砖块正面朝上叠放</span><span>顶部 = 最新作品</span></div><div class="mat"><b>我的积木塔</b><span>砖块正面朝上叠放</span><span>顶部 = 最新作品</span></div>
+  </div>
+
+  <h3>7.3 顺位卡（1 张）</h3>
+  <p class="note">标记「本夜谁先摸砖」，每夜顺位重排：上夜完工者排最后，其余按塔高从低到高。</p>
+  <div class="grid">
+    <div class="mat"><b>顺位卡</b><span>① 上夜未完工者（塔低→塔高）</span><span>② 上夜完工者（塔低→塔高）</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>八、速查卡（每夜流程 + 说明书链）</h2>
+  <p class="note">打印 2 张，放在桌子两端。</p>
+  <table class="cheat">
+    <tr><th style="width:60px">夜</th><th style="width:110px">装置</th><th>顶（本夜塔顶 / 明夜第三位）</th><th>次</th><th>三</th><th style="width:52px">分值</th></tr>
+    <tr><td>夜 1</td><td>🚨 蝙蝠信号灯</td><td><span class="chip" style="background:#d7263d">🟥 红砖</span></td><td><span class="chip" style="background:#2f3542">⬛ 黑砖</span></td><td><span class="chip" style="background:#3f8f5f">🟩 绿砖</span></td><td>1 分</td></tr><tr><td>夜 2</td><td>🪢 抓钩枪</td><td><span class="chip" style="background:#f2b705">🟨 黄砖</span></td><td><span class="chip" style="background:#1f7a8c">🟦 蓝砖</span></td><td><span class="chip" style="background:#d7263d">🟥 红砖</span></td><td>2 分</td></tr><tr><td>夜 3</td><td>🛡️ 防弹盾</td><td><span class="chip" style="background:#3f8f5f">🟩 绿砖</span></td><td><span class="chip" style="background:#f2b705">🟨 黄砖</span></td><td><span class="chip" style="background:#f2b705">🟨 黄砖</span></td><td>3 分</td></tr><tr><td>夜 4</td><td>🚗 蝙蝠车</td><td><span class="chip" style="background:#2f3542">⬛ 黑砖</span></td><td><span class="chip" style="background:#d7263d">🟥 红砖</span></td><td><span class="chip" style="background:#3f8f5f">🟩 绿砖</span></td><td>4 分</td></tr><tr><td>夜 5</td><td>🚁 蝙蝠翼</td><td><span class="chip" style="background:#1f7a8c">🟦 蓝砖</span></td><td><span class="chip" style="background:#3f8f5f">🟩 绿砖</span></td><td><span class="chip" style="background:#2f3542">⬛ 黑砖</span></td><td>5 分</td></tr><tr><td>夜 6</td><td>🧪 解毒剂</td><td><span class="chip" style="background:#f2b705">🟨 黄砖</span></td><td><span class="chip" style="background:#2f3542">⬛ 黑砖</span></td><td><span class="chip" style="background:#1f7a8c">🟦 蓝砖</span></td><td>6 分</td></tr><tr><td>夜 7</td><td>🔦 蝙蝠灯</td><td><span class="chip" style="background:#d7263d">🟥 红砖</span></td><td><span class="chip" style="background:#1f7a8c">🟦 蓝砖</span></td><td><span class="chip" style="background:#f2b705">🟨 黄砖</span></td><td>7 分</td></tr>
+  </table>
+
+  <h3>每夜 5 步</h3>
+  <table class="cheat">
+    <tr><th style="width:70px">阶段</th><th>做什么</th></tr>
+    <tr><td>① 领料</td><td>按顺位，每人一次摸 1 张，共 3 轮 ⇒ 每夜摸 3 张砖。</td></tr>
+    <tr><td>② 交易</td><td>60 秒自由口头交易，可 1 换 1（不能换顺位、不能换装备）。</td></tr>
+    <tr><td>③ 搭建</td><td>可先<b>自拆</b>自己塔顶 1 块（每夜限 1 次，塔高 −1），再把手上 2 张按自选顺序叠到塔顶，第 3 张弃回砖桶底。</td></tr>
+    <tr><td>④ 验收</td><td>翻开本夜装置卡，从塔顶往下核对 3 块颜色：全对 = 完工，记分。</td></tr>
+    <tr><td>⑤ 夜袭</td><td>翻 1 张反派卡并执行；然后公开下一夜装置卡，重排顺位。</td></tr>
+  </table>
+
+  <h3>三条恒等式（记住这三条就够了）</h3>
+  <table class="cheat">
+    <tr><th style="width:150px">口诀</th><th>含义</th></tr>
+    <tr><td><b>2 块新砖 vs 3 块序列</b></td><td>每夜只叠 2 块，说明书却要 3 块 ⇒ 永远有 1 块是「昨天留下的遗产」。</td></tr>
+    <tr><td><b>顶砖服务两夜</b></td><td>本夜的顶砖 = 明夜的第三位。保住顶砖，比凑齐本夜更重要。</td></tr>
+    <tr><td><b>每色只有 1 块容错</b></td><td>每色供给 = 人数 × 4，需求 = 人数 × 3 ⇒ 每人每色整局只能浪费 1 块。</td></tr>
+  </table>
+</section>
+
+<div class="footer">
+  *打印道具由 <b>printables.html</b> 自动生成 ｜ 完整规则见
+  <a href="README.md">README.md</a> ｜ 返回
+  <a href="../../../README.md">桌游总索引</a>
+</div>
+
+</body>
+</html>

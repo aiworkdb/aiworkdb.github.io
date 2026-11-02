@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>农场惊魂夜：怪兽来袭 - 打印道具</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+        margin: 0; padding: 24px; background: #FFFDF7; color: #3E2C1C;
+        line-height: 1.6;
+    }
+    h1 { text-align: center; color: #B3500F; margin: 0 0 4px; font-size: 26px; }
+    .sub { text-align: center; color: #8A6A4A; margin-bottom: 18px; font-size: 14px; }
+    h2 {
+        border-left: 6px solid #E07A2F; padding-left: 10px; margin: 28px 0 12px;
+        font-size: 20px; color: #7A4A18;
+    }
+    .print-hint {
+        background: #FFF4D6; border: 2px dashed #E0A63C; border-radius: 10px;
+        padding: 12px 16px; margin-bottom: 20px; font-size: 14px;
+    }
+    .print-hint strong { color: #B3500F; }
+    .grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .card {
+        width: 63mm; min-height: 88mm; border-radius: 8px; padding: 8px;
+        border: 2px solid #C8A165; background: #FFFDF5; position: relative;
+        page-break-inside: avoid; break-inside: avoid;
+        box-shadow: 0 1px 3px rgba(0,0,0,.12); display: flex; flex-direction: column;
+    }
+    .card .top { display: flex; justify-content: space-between; align-items: center;
+        font-size: 11px; color: #7A5A34; border-bottom: 1px dashed #D9C39A; padding-bottom: 4px; }
+    .card .icon { font-size: 30px; text-align: center; margin: 6px 0 2px; }
+    .card .name { text-align: center; font-weight: 700; font-size: 14px; }
+    .card .desc { font-size: 11px; text-align: center; color: #6B5233; margin-top: 4px; }
+    .card .foot { margin-top: auto; text-align: center; font-size: 10px; color: #8A6A4A; }
+    .num { font-size: 40px; font-weight: 800; text-align: center; color: #B3500F; }
+    .num small { font-size: 13px; color: #8A6A4A; font-weight: 500; }
+    .harvest { background: #FFF8E1; border-color: #E0B84C; }
+    .harvest .num { color: #8A5A00; }
+    .monster { background: #33243F; border-color: #6C4B8A; color: #F3E7FA; }
+    .monster .icon { font-size: 40px; }
+    .monster .top, .monster .foot, .monster .desc { color: #DCC7EE; }
+    .event { background: #EAF3FF; border-color: #6E97C8; }
+    .farmer { background: #FFF1E6; border-color: #E08A4B; width: 63mm; min-height: 88mm; }
+    .night {
+        width: 88mm; min-height: 60mm; border: 3px solid #C0712F; border-radius: 10px;
+        padding: 10px; background: #FFF8EC; page-break-inside: avoid; break-inside: avoid;
+    }
+    .night h3 { margin: 0 0 6px; font-size: 16px; }
+    .night .row { display: flex; justify-content: space-between; font-size: 12px;
+        border-bottom: 1px dotted #D9BF95; padding: 2px 0; }
+    .night .flavor { font-size: 11px; color: #8A6A4A; margin-top: 6px; font-style: italic; }
+    .token {
+        width: 22mm; height: 22mm; border-radius: 50%; border: 2px solid #D9A441;
+        background: radial-gradient(circle at 30% 30%, #FFD98A, #F0A93C);
+        display: flex; align-items: center; justify-content: center; font-size: 18px;
+        page-break-inside: avoid; break-inside: avoid;
+    }
+    .fear {
+        width: 22mm; height: 22mm; border-radius: 50%; border: 2px solid #7A5A8A;
+        background: radial-gradient(circle at 30% 30%, #D9C7EA, #8B6FA8);
+        display: flex; align-items: center; justify-content: center; font-size: 18px;
+        page-break-inside: avoid; break-inside: avoid;
+    }
+    .magnet-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .basket {
+        width: 92mm; min-height: 52mm; border: 3px solid #B9832F; border-radius: 10px;
+        background: #FFF6E3; padding: 8px; page-break-inside: avoid; break-inside: avoid;
+    }
+    .basket .title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+    .slots { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
+    .slot { border: 2px dashed #D9A441; border-radius: 6px; height: 26px;
+        display: flex; align-items: center; justify-content: center; font-size: 15px; background: #FFFDF5; }
+    .slot.extra { border-color: #C0C0C0; background: #F6F2EA; }
+    .field-board {
+        border: 4px solid #7A4A18; border-radius: 14px; padding: 14px; background: #FBF3E2;
+        page-break-inside: avoid; break-inside: avoid;
+    }
+    .tracks { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 10px; }
+    .track { border: 2px solid #C8A165; border-radius: 6px; text-align: center; padding: 6px 2px;
+        background: #FFFDF5; font-size: 12px; }
+    .centre { display: flex; gap: 10px; }
+    .area { flex: 1; border: 2px dashed #B9832F; border-radius: 8px; padding: 10px; text-align: center;
+        background: #FFFDF7; font-size: 12px; }
+    .area .big { font-size: 26px; }
+    .pawn {
+        width: 46mm; min-height: 46mm; border-radius: 50%; border: 3px solid #8A5A2A;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: #FFF1DA; page-break-inside: avoid; break-inside: avoid; font-size: 22px;
+    }
+    .pawn small { font-size: 11px; color: #8A6A4A; }
+    .cheat {
+        width: 92mm; border: 2px solid #8A6A4A; border-radius: 8px; padding: 10px;
+        background: #FFFDF5; font-size: 11.5px; page-break-inside: avoid; break-inside: avoid;
+    }
+    .cheat table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .cheat td, .cheat th { border: 1px solid #D9C39A; padding: 2px 4px; text-align: left; }
+    .back {
+        width: 63mm; height: 88mm; border: 3px double #8A5A2A; border-radius: 8px;
+        background: repeating-linear-gradient(45deg, #F6E3C0, #F6E3C0 8px, #EFD6AC 8px, #EFD6AC 16px);
+        display: flex; align-items: center; justify-content: center; flex-direction: column;
+        font-size: 22px; color: #8A5A2A; page-break-inside: avoid; break-inside: avoid;
+    }
+    .count { font-size: 12px; color: #8A6A4A; margin-left: 8px; font-weight: 400; }
+    @media print {
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .print-hint { display: none; }
+        body { padding: 0; background: #fff; }
+        .card, .night, .token, .fear, .basket, .pawn, .cheat, .back, .field-board {
+            box-shadow: none;
+        }
+        h2 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body>
+<h1>🎃 农场惊魂夜：怪兽来袭 🎃</h1>
+<div class="sub">打印道具包 · 中央农庄板 / 夜色卡 / 丰收卡 / 怪兽卡 / 事件卡 / 农夫卡 / 篮子板 / 南瓜与恐惧标记 / 棋子 / 速查卡</div>
+
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用 A4 纸张打印，建议把页边距设为<strong>「最小」或「无」</strong>。</li>
+        <li>在打印对话框中，务必<strong>勾选「背景图形」</strong>（Background Graphics），否则所有底色会丢失。</li>
+        <li>丰收卡 / 怪兽卡 / 事件卡 / 农夫卡建议用<strong>卡纸（200g 以上）</strong>打印，裁剪后可塑封。</li>
+        <li>南瓜标记与恐惧标记用卡纸打印后剪成小圆片；也可用豆子、纽扣等小物件代替。</li>
+        <li>篮子板每人 1 张；中央农庄板全桌 1 张。</li>
+    </ul>
+</div>
+
+<h2>🏡 中央农庄板（全桌 1 张）</h2>
+<div class="field-board">
+<div class="tracks">
+<div class="track" style="border-color:#F6C453;background:#FFF8E1"><strong>第 1 夜</strong><br>🎃 南瓜初夜</div>
+<div class="track" style="border-color:#8FBF6F;background:#F1F8E9"><strong>第 2 夜</strong><br>🌽 玉米迷径</div>
+<div class="track" style="border-color:#E8A33D;background:#FFF3E0"><strong>第 3 夜</strong><br>🐝 蜂箱午夜</div>
+<div class="track" style="border-color:#B7A57A;background:#EFEBE0"><strong>第 4 夜</strong><br>🐑 羊圈夜奔</div>
+<div class="track" style="border-color:#8B6F4E;background:#EFE6DA"><strong>第 5 夜</strong><br>🌰 谷仓怪影</div>
+<div class="track" style="border-color:#7B4FA8;background:#F3E5F5"><strong>第 6 夜</strong><br>🎆 万圣狂欢夜</div>
+</div>
+<div class="centre">
+    <div class="area"><div class="big">🌾</div><strong>田 里</strong><br>（夜堆在此逐张翻开）</div>
+    <div class="area"><div class="big">🥔</div><strong>田里的南瓜</strong><br>暂存的替补在这里<br>（除不尽的余数与超容部分）</div>
+    <div class="area"><div class="big">🏠</div><strong>已回家</strong><br>收成安全的玩家</div>
+    <div class="area"><div class="big">🌑</div><strong>弃牌堆</strong><br>已翻开的卡放这里</div>
+</div>
+<div style="margin-top:10px;font-size:12px;color:#8A6A4A">把夜轨上的标记从第 1 夜推到第 6 夜；每夜翻开一张<b>夜色卡</b>，按上面的配方组成该夜牌堆，洗匀背面朝下放在「田里」。</div>
+</div>
+<h2>🌙 夜色卡（6 张，每夜开局翻开 1 张）<span class="count">说明该夜的牌堆配方</span></h2>
+<div class="grid">
+<div class="night" style="border-color:#F6C453;background:#FFF8E1">
+<h3>🎃 第 1 夜 · 南瓜初夜</h3>
+<div class="row"><span>🌾 丰收卡</span><span><b>5</b> 张：6、8、8、10、10</span></div>
+<div class="row"><span>🌑 怪兽卡</span><span><b>1</b> 张</span></div>
+<div class="row"><span>🌕 事件卡</span><span><b>🌕 月华初上</b> ×1</span></div>
+<div class="row"><span>合计 / Σ南瓜</span><span><b>7</b> 张 / <b>42</b> 颗</span></div>
+<div class="flavor">第一夜，怪物还在林子深处。南瓜不贵，但也不能白来。</div>
+</div>
+<div class="night" style="border-color:#8FBF6F;background:#F1F8E9">
+<h3>🌽 第 2 夜 · 玉米迷径</h3>
+<div class="row"><span>🌾 丰收卡</span><span><b>5</b> 张：8、10、10、12、12</span></div>
+<div class="row"><span>🌑 怪兽卡</span><span><b>1</b> 张</span></div>
+<div class="row"><span>🌫️ 事件卡</span><span><b>🌫️ 浓雾四起</b> ×1</span></div>
+<div class="row"><span>合计 / Σ南瓜</span><span><b>7</b> 张 / <b>52</b> 颗</span></div>
+<div class="flavor">起雾了，田里看不清，越往后的收成越薄。</div>
+</div>
+<div class="night" style="border-color:#E8A33D;background:#FFF3E0">
+<h3>🐝 第 3 夜 · 蜂箱午夜</h3>
+<div class="row"><span>🌾 丰收卡</span><span><b>5</b> 张：10、10、12、12、14</span></div>
+<div class="row"><span>🌑 怪兽卡</span><span><b>2</b> 张</span></div>
+<div class="row"><span>🐝 事件卡</span><span><b>🐝 蜂群出巢</b> ×1</span></div>
+<div class="row"><span>合计 / Σ南瓜</span><span><b>8</b> 张 / <b>58</b> 颗</span></div>
+<div class="flavor">蜜蜂被惊动了，留在田里的人反倒捡了便宜。</div>
+</div>
+<div class="night" style="border-color:#B7A57A;background:#EFEBE0">
+<h3>🐑 第 4 夜 · 羊圈夜奔</h3>
+<div class="row"><span>🌾 丰收卡</span><span><b>5</b> 张：10、12、12、14、14</span></div>
+<div class="row"><span>🌑 怪兽卡</span><span><b>2</b> 张</span></div>
+<div class="row"><span>🐑 事件卡</span><span><b>🐑 羊群踩踏</b> ×1</span></div>
+<div class="row"><span>合计 / Σ南瓜</span><span><b>8</b> 张 / <b>62</b> 颗</span></div>
+<div class="flavor">羊群炸了圈，还没走的人被踩掉一截。</div>
+</div>
+<div class="night" style="border-color:#8B6F4E;background:#EFE6DA">
+<h3>🌰 第 5 夜 · 谷仓怪影</h3>
+<div class="row"><span>🌾 丰收卡</span><span><b>6</b> 张：12、12、14、14、16、16</span></div>
+<div class="row"><span>🌑 怪兽卡</span><span><b>2</b> 张</span></div>
+<div class="row"><span>🦇 事件卡</span><span><b>🦇 蝙蝠掠影</b> ×1</span></div>
+<div class="row"><span>合计 / Σ南瓜</span><span><b>9</b> 张 / <b>84</b> 颗</span></div>
+<div class="flavor">谷仓顶上黑压压一片，怪物离得越来越近。</div>
+</div>
+<div class="night" style="border-color:#7B4FA8;background:#F3E5F5">
+<h3>🎆 第 6 夜 · 万圣狂欢夜</h3>
+<div class="row"><span>🌾 丰收卡</span><span><b>6</b> 张：12、14、14、16、18、18</span></div>
+<div class="row"><span>🌑 怪兽卡</span><span><b>3</b> 张</span></div>
+<div class="row"><span>🎆 事件卡</span><span><b>🎆 万圣烟花</b> ×1</span></div>
+<div class="row"><span>合计 / Σ南瓜</span><span><b>10</b> 张 / <b>92</b> 颗</span></div>
+<div class="flavor">最后一夜，值钱的东西全在地里——怪物也是。</div>
+</div>
+</div>
+<h2>🌾 丰收卡（共 32 张）<span class="count">卡面数字＝南瓜颗数</span></h2>
+<div class="grid">
+<div class="card harvest" style="border-color:#F6C453">
+<div class="top"><span>🌾 丰收</span><span>第 1 夜</span></div>
+<div class="num">6<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#F6C453">
+<div class="top"><span>🌾 丰收</span><span>第 1 夜</span></div>
+<div class="num">8<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#F6C453">
+<div class="top"><span>🌾 丰收</span><span>第 1 夜</span></div>
+<div class="num">8<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#F6C453">
+<div class="top"><span>🌾 丰收</span><span>第 1 夜</span></div>
+<div class="num">10<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#F6C453">
+<div class="top"><span>🌾 丰收</span><span>第 1 夜</span></div>
+<div class="num">10<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8FBF6F">
+<div class="top"><span>🌾 丰收</span><span>第 2 夜</span></div>
+<div class="num">8<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8FBF6F">
+<div class="top"><span>🌾 丰收</span><span>第 2 夜</span></div>
+<div class="num">10<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8FBF6F">
+<div class="top"><span>🌾 丰收</span><span>第 2 夜</span></div>
+<div class="num">10<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8FBF6F">
+<div class="top"><span>🌾 丰收</span><span>第 2 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8FBF6F">
+<div class="top"><span>🌾 丰收</span><span>第 2 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#E8A33D">
+<div class="top"><span>🌾 丰收</span><span>第 3 夜</span></div>
+<div class="num">10<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#E8A33D">
+<div class="top"><span>🌾 丰收</span><span>第 3 夜</span></div>
+<div class="num">10<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#E8A33D">
+<div class="top"><span>🌾 丰收</span><span>第 3 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#E8A33D">
+<div class="top"><span>🌾 丰收</span><span>第 3 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#E8A33D">
+<div class="top"><span>🌾 丰收</span><span>第 3 夜</span></div>
+<div class="num">14<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#B7A57A">
+<div class="top"><span>🌾 丰收</span><span>第 4 夜</span></div>
+<div class="num">10<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#B7A57A">
+<div class="top"><span>🌾 丰收</span><span>第 4 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#B7A57A">
+<div class="top"><span>🌾 丰收</span><span>第 4 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#B7A57A">
+<div class="top"><span>🌾 丰收</span><span>第 4 夜</span></div>
+<div class="num">14<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#B7A57A">
+<div class="top"><span>🌾 丰收</span><span>第 4 夜</span></div>
+<div class="num">14<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8B6F4E">
+<div class="top"><span>🌾 丰收</span><span>第 5 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8B6F4E">
+<div class="top"><span>🌾 丰收</span><span>第 5 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8B6F4E">
+<div class="top"><span>🌾 丰收</span><span>第 5 夜</span></div>
+<div class="num">14<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8B6F4E">
+<div class="top"><span>🌾 丰收</span><span>第 5 夜</span></div>
+<div class="num">14<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8B6F4E">
+<div class="top"><span>🌾 丰收</span><span>第 5 夜</span></div>
+<div class="num">16<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#8B6F4E">
+<div class="top"><span>🌾 丰收</span><span>第 5 夜</span></div>
+<div class="num">16<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#7B4FA8">
+<div class="top"><span>🌾 丰收</span><span>第 6 夜</span></div>
+<div class="num">12<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#7B4FA8">
+<div class="top"><span>🌾 丰收</span><span>第 6 夜</span></div>
+<div class="num">14<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#7B4FA8">
+<div class="top"><span>🌾 丰收</span><span>第 6 夜</span></div>
+<div class="num">14<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#7B4FA8">
+<div class="top"><span>🌾 丰收</span><span>第 6 夜</span></div>
+<div class="num">16<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#7B4FA8">
+<div class="top"><span>🌾 丰收</span><span>第 6 夜</span></div>
+<div class="num">18<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+<div class="card harvest" style="border-color:#7B4FA8">
+<div class="top"><span>🌾 丰收</span><span>第 6 夜</span></div>
+<div class="num">18<small> 颗</small></div>
+<div class="desc">放进田里的南瓜堆，<br>按在场人数平分</div>
+<div class="foot">装不下的留回田里</div>
+</div>
+</div>
+<h2>🌑 怪兽卡（共 11 张）<span class="count">翻开的瞬间，还在田里的人全被抓</span></h2>
+<div class="grid">
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 1 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">南瓜地的窸窣声</div>
+<div class="desc">田里剩下的南瓜被踩烂，<br>还在田里的人丢掉全部收成 +1 😱</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 2 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">林子里有东西在动</div>
+<div class="desc">它从玉米地那头过来了——<br>还没走的人，全都没了</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 3 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">一声尖叫</div>
+<div class="desc">别回头看，跑！<br>（留下来的人，篮子空了）</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 3 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">影子盖住了月光</div>
+<div class="desc">影子比南瓜藤还高——<br>这一夜到此为止</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 4 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">南瓜地的窸窣声</div>
+<div class="desc">田里剩下的南瓜被踩烂，<br>还在田里的人丢掉全部收成 +1 😱</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 4 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">林子里有东西在动</div>
+<div class="desc">它从玉米地那头过来了——<br>还没走的人，全都没了</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 5 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">一声尖叫</div>
+<div class="desc">别回头看，跑！<br>（留下来的人，篮子空了）</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 5 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">影子盖住了月光</div>
+<div class="desc">影子比南瓜藤还高——<br>这一夜到此为止</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 6 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">南瓜地的窸窣声</div>
+<div class="desc">田里剩下的南瓜被踩烂，<br>还在田里的人丢掉全部收成 +1 😱</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 6 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">林子里有东西在动</div>
+<div class="desc">它从玉米地那头过来了——<br>还没走的人，全都没了</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+<div class="card monster">
+<div class="top"><span>🌑 怪兽出没</span><span>第 6 夜</span></div>
+<div class="icon">🌑👣</div>
+<div class="name">一声尖叫</div>
+<div class="desc">别回头看，跑！<br>（留下来的人，篮子空了）</div>
+<div class="foot">本夜立刻结束</div>
+</div>
+</div>
+<h2>🎭 事件卡（6 张，每夜固定 1 张）<span class="count">只影响「此刻还在田里」的人</span></h2>
+<div class="grid">
+<div class="card event">
+<div class="top"><span>🎭 事件</span><span>第 1 夜</span></div>
+<div class="icon">🌕</div>
+<div class="name">月华初上</div>
+<div class="desc">田里每人 <b>+2 颗</b>南瓜<br>（已在屋里的人不受影响）</div>
+<div class="foot">结算后照常做去留决定</div>
+</div>
+<div class="card event">
+<div class="top"><span>🎭 事件</span><span>第 2 夜</span></div>
+<div class="icon">🌫️</div>
+<div class="name">浓雾四起</div>
+<div class="desc">本夜之后的丰收卡<b>每张 −1 颗</b>（最低 1）<br>（已在屋里的人不受影响）</div>
+<div class="foot">结算后照常做去留决定</div>
+</div>
+<div class="card event">
+<div class="top"><span>🎭 事件</span><span>第 3 夜</span></div>
+<div class="icon">🐝</div>
+<div class="name">蜂群出巢</div>
+<div class="desc">田里每人 <b>+3 颗</b>南瓜<br>（已在屋里的人不受影响）</div>
+<div class="foot">结算后照常做去留决定</div>
+</div>
+<div class="card event">
+<div class="top"><span>🎭 事件</span><span>第 4 夜</span></div>
+<div class="icon">🐑</div>
+<div class="name">羊群踩踏</div>
+<div class="desc">田里每人 <b>−2 颗</b>（最低 0）<br>（已在屋里的人不受影响）</div>
+<div class="foot">结算后照常做去留决定</div>
+</div>
+<div class="card event">
+<div class="top"><span>🎭 事件</span><span>第 5 夜</span></div>
+<div class="icon">🦇</div>
+<div class="name">蝙蝠掠影</div>
+<div class="desc">田里每人 <b>−2 颗</b>（最低 0）<br>（已在屋里的人不受影响）</div>
+<div class="foot">结算后照常做去留决定</div>
+</div>
+<div class="card event">
+<div class="top"><span>🎭 事件</span><span>第 6 夜</span></div>
+<div class="icon">🎆</div>
+<div class="name">万圣烟花</div>
+<div class="desc">田里每人 <b>+4 颗</b>南瓜<br>（已在屋里的人不受影响）</div>
+<div class="foot">结算后照常做去留决定</div>
+</div>
+</div>
+<h2>👨‍🌾 农夫卡（6 张，每人开局领 1 张）<span class="count">3 人局用 ①②③，4 人局用 ①②③④，以此类推</span></h2>
+<div class="grid">
+<div class="card farmer">
+<div class="top"><span>👨‍🌾 农夫 ①</span><span>能力</span></div>
+<div class="icon">🧺</div>
+<div class="name">大篮子</div>
+<div class="desc">篮子容量 10 颗（常人 8 颗）；每次成功回家额外 +1 颗。</div>
+<div class="foot">篮子容量 10 颗</div>
+</div>
+<div class="card farmer">
+<div class="top"><span>👨‍🌾 农夫 ②</span><span>能力</span></div>
+<div class="icon">🐕</div>
+<div class="name">牧羊犬</div>
+<div class="desc">被怪兽抓到时，保住篮中一半（向上取整）；仍获得 1 枚恐惧。</div>
+<div class="foot">篮子容量 8 颗</div>
+</div>
+<div class="card farmer">
+<div class="top"><span>👨‍🌾 农夫 ③</span><span>能力</span></div>
+<div class="icon">🐓</div>
+<div class="name">报晓鸡</div>
+<div class="desc">免疫「报晓鸡」惩罚（最早回家不扣分）；篮子容量 10 颗。</div>
+<div class="foot">篮子容量 10 颗</div>
+</div>
+<div class="card farmer">
+<div class="top"><span>👨‍🌾 农夫 ④</span><span>能力</span></div>
+<div class="icon">🎃</div>
+<div class="name">稻草人</div>
+<div class="desc">独自留在田里时，每张丰收卡额外 +2 颗、篮子容量升到 12；被怪兽抓到时保住 3 颗。</div>
+<div class="foot">篮子容量 8 颗</div>
+</div>
+<div class="card farmer">
+<div class="top"><span>👨‍🌾 农夫 ⑤</span><span>能力</span></div>
+<div class="icon">🦉</div>
+<div class="name">猫头鹰</div>
+<div class="desc">每夜第一张丰收卡，你多得 +3 颗。</div>
+<div class="foot">篮子容量 8 颗</div>
+</div>
+<div class="card farmer">
+<div class="top"><span>👨‍🌾 农夫 ⑥</span><span>能力</span></div>
+<div class="icon">🐐</div>
+<div class="name">倔山羊</div>
+<div class="desc">篮子容量 10 颗；无视负面事件与浓雾；正面事件 +2；被抓时不获得恐惧。</div>
+<div class="foot">篮子容量 10 颗</div>
+</div>
+</div>
+<h2>🧺 篮子板（每人 1 张）<span class="count">前 8 格是普通容量，灰色两格给容量 10 的农夫</span></h2>
+<div class="grid">
+<div class="basket">
+<div class="title">🧺 大篮子 的篮子（容量 10 颗）</div>
+<div class="slots">
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot extra">＋</div><div class="slot extra">＋</div>
+</div>
+<div style="font-size:11px;color:#8A6A4A;margin-top:6px">每颗入库南瓜放 1 个 🎃 标记；夜间收货时篮子里的 🎃 就是你的战利品</div>
+</div>
+<div class="basket">
+<div class="title">🐕 牧羊犬 的篮子（容量 8 颗）</div>
+<div class="slots">
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot extra">＋</div><div class="slot extra">＋</div>
+</div>
+<div style="font-size:11px;color:#8A6A4A;margin-top:6px">每颗入库南瓜放 1 个 🎃 标记；夜间收货时篮子里的 🎃 就是你的战利品</div>
+</div>
+<div class="basket">
+<div class="title">🐓 报晓鸡 的篮子（容量 10 颗）</div>
+<div class="slots">
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot extra">＋</div><div class="slot extra">＋</div>
+</div>
+<div style="font-size:11px;color:#8A6A4A;margin-top:6px">每颗入库南瓜放 1 个 🎃 标记；夜间收货时篮子里的 🎃 就是你的战利品</div>
+</div>
+<div class="basket">
+<div class="title">🎃 稻草人 的篮子（容量 8 颗）</div>
+<div class="slots">
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot extra">＋</div><div class="slot extra">＋</div>
+</div>
+<div style="font-size:11px;color:#8A6A4A;margin-top:6px">每颗入库南瓜放 1 个 🎃 标记；夜间收货时篮子里的 🎃 就是你的战利品</div>
+</div>
+<div class="basket">
+<div class="title">🦉 猫头鹰 的篮子（容量 8 颗）</div>
+<div class="slots">
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot extra">＋</div><div class="slot extra">＋</div>
+</div>
+<div style="font-size:11px;color:#8A6A4A;margin-top:6px">每颗入库南瓜放 1 个 🎃 标记；夜间收货时篮子里的 🎃 就是你的战利品</div>
+</div>
+<div class="basket">
+<div class="title">🐐 倔山羊 的篮子（容量 10 颗）</div>
+<div class="slots">
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot">🎃</div>
+<div class="slot extra">＋</div><div class="slot extra">＋</div>
+</div>
+<div style="font-size:11px;color:#8A6A4A;margin-top:6px">每颗入库南瓜放 1 个 🎃 标记；夜间收货时篮子里的 🎃 就是你的战利品</div>
+</div>
+</div>
+<h2>🎃 南瓜标记 & 😱 恐惧标记<span class="count">各打印 30 枚左右（或用豆子 / 纸片代替）</span></h2>
+<div class="magnet-row">
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+<div class="token">🎃</div>
+</div>
+<div class="magnet-row" style="margin-top:10px">
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+<div class="fear">😱</div>
+</div>
+<h2>🚶 玩家棋子（每人 1 枚）<span class="count">一面「在田里」，一面「已回家」，翻面即可</span></h2>
+<div class="grid">
+<div class="pawn"><div>🧺</div><small>大篮子<br>在田里 → 已回家</small></div>
+<div class="pawn"><div>🐕</div><small>牧羊犬<br>在田里 → 已回家</small></div>
+<div class="pawn"><div>🐓</div><small>报晓鸡<br>在田里 → 已回家</small></div>
+<div class="pawn"><div>🎃</div><small>稻草人<br>在田里 → 已回家</small></div>
+<div class="pawn"><div>🦉</div><small>猫头鹰<br>在田里 → 已回家</small></div>
+<div class="pawn"><div>🐐</div><small>倔山羊<br>在田里 → 已回家</small></div>
+</div>
+<h2>📋 速查卡（建议打印 2 张，桌面各放 1 张）</h2>
+<div class="grid">
+<div class="cheat">
+<b>一夜的流程</b>
+<table>
+<tr><th>1</th><td>翻开该夜<b>夜色卡</b>，按配方组牌堆</td></tr>
+<tr><th>2</th><td>洗匀背面朝下（<b>首张若是怪兽则与后面第一张非怪兽交换</b>）</td></tr>
+<tr><th>3</th><td>逐张翻开 → 结算 → <b>所有人同时决定留下 / 回家</b></td></tr>
+<tr><th>4</th><td>怪兽出现＝还在田里的人丢收成 +1 😱，本夜结束</td></tr>
+<tr><th>5</th><td>牌堆翻完或全员回家＝天亮，结算守夜人 / 报晓鸡</td></tr>
+</table>
+<div style="margin-top:6px"><b>平分规则</b>：（田里存量 + 新丰收）÷ 在场人数，<b>向下取整</b>，余数留田里；装不下的也留回田里。</div>
+</div>
+<div class="cheat">
+<b>计分 &amp; 常量</b>
+<table>
+<tr><th>🎃 入库南瓜</th><td>每颗 1 分</td></tr>
+<tr><th>🏮 守夜人</th><td>最晚成功回家 +3 分 + 田里残余</td></tr>
+<tr><th>🐓 报晓鸡</th><td>最早回家 −1 分</td></tr>
+<tr><th>😱 恐惧</th><td>每枚终局 −2 分</td></tr>
+<tr><th>🧺 篮子容量</th><td>8 颗（大篮子 / 报晓鸡 / 倔山羊 10 颗）</td></tr>
+</table>
+<div style="margin-top:6px"><b>下一张是怪兽的概率</b> = 牌堆里剩余的怪兽数 ÷ 剩余总张数 —— 这个数字全场都能算，敢不敢留就看它。</div>
+</div>
+</div>
+<h2>🂠 卡背（复印在卡纸背面，或直接打印 2 张样版自行复印）</h2>
+<div class="grid">
+<div class="back"><div>🌙</div><div style="font-size:13px">农场惊魂夜</div></div>
+<div class="back"><div>🌙</div><div style="font-size:13px">农场惊魂夜</div></div>
+<div class="back"><div>🌙</div><div style="font-size:13px">农场惊魂夜</div></div>
+<div class="back"><div>🌙</div><div style="font-size:13px">农场惊魂夜</div></div>
+</div>
+
+<div style="margin-top:30px;text-align:center;color:#8A6A4A;font-size:12px">
+《农场惊魂夜：怪兽来袭》打印道具 · 与 README.md 配套使用<br>
+规则、策略与完整示例见 [README.md](README.md)
+</div>
+</body>
+</html>
