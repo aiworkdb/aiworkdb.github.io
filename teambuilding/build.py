@@ -422,6 +422,49 @@ def detect_unit(ppl_raw):
     return 'total'
 
 
+VARIANT_VENUE = re.compile(
+    r'(户外场景|户外版|户外玩法|户外时|改成户外|以户外|可选户外|户外天气|'
+    r'户外版必须|→\s*户外|换到户外|移到户外)')
+
+
+def detect_venue(venue_raw, txt):
+    """判定场地，返回 (venue, vkey)。
+
+    坑：正文里出现「户外」不等于这个游戏主场地是户外。
+    「| **户外场景** | 增加距离（20 米以上）……」这类是**玩法变体说明**，
+    讲的是「同一个游戏也能在户外这么玩」，不是「这是个户外游戏」。
+    早期实现直接全文 grep '户外'，结果报纸塔、10 元买创意、鸡蛋坠落、
+    风火轮这几款纯室内桌游被标成户外，首页「纯室内」筛选直接漏掉它们。
+
+    判定顺序：
+      1) 显式字段（形式标签/场景标签/场地/适合场景…）—— 最权威
+      2) 正文里**非变体行**出现的「室内」「户外」—— 主场地证据
+      3) 只有变体行提到户外 → 主场地仍是室内（户外是可选升级）
+      4) 都没有 → 室内（场地要求比户外少，默认室内更安全）
+    """
+    field = venue_raw or ''
+
+    body_lines = txt.split('\n')
+    solid = []       # 非变体行
+    variant = []     # 只在变体说明里出现的行
+    for line in body_lines:
+        if '室内' in line or '户外' in line:
+            (variant if VARIANT_VENUE.search(line) else solid).append(line)
+
+    indoor = '室内' in field or any('室内' in l for l in solid)
+    outdoor = '户外' in field or any('户外' in l for l in solid)
+    variant_outdoor = any('户外' in l for l in variant)
+
+    if indoor and (outdoor or variant_outdoor):
+        return '室内/户外', 'both'
+    if indoor:
+        return '室内', 'indoor'
+    if outdoor:
+        return '户外', 'outdoor'
+    # 只有变体行提户外 → 主场地是室内
+    return '室内', 'indoor'
+
+
 def field(pairs, keys):
     """先精确匹配再后缀匹配——「团建人数」优先于「桌游库人数」"""
     for key in keys:
