@@ -77,7 +77,15 @@ def link_of(g):
     return '../../../' + g['html'], '查看玩法'
 
 
-# ── 物资清单：从游戏库 md 的「物资清单」小节提取，没有就用元信息「道具需求」兜底 ──
+# ── 物资清单：从游戏库 md 的物料小节提取，没有就用元信息「道具需求」兜底 ──
+#
+# 86 款游戏里物料小节的标题并不统一：物资清单 / 物料准备 / 道具准备 / 物料与打印指南
+# 共 4 种写法。早期只认「物资清单」，导致另外 40 款的清单被静默忽略、退化成「若干」。
+
+MAT_HEAD_RX = re.compile(
+    r'^(#{2,3})\s*(?:\d+\.\s*)?(?:[^\w\s]{0,3}\s*)?'
+    r'(物资清单|物资准备|物料清单|物料准备|道具清单|道具准备|物料与打印指南)',
+    re.M)
 
 QTY_RX = re.compile(r'(\d[\d\-–~ ]*\s*(?:张|个|支|块|根|条|副|米|颗|包|盒|只|人|份|圈|叠|把|卷|袋|组|台|套))')
 
@@ -112,36 +120,106 @@ def dedupe(items):
     return out
 
 
+def _strip_md(s):
+    """去掉加粗 / markdown 链接 / 裸 URL —— 否则表格与列表都会被切碎。"""
+    s = re.sub(r'\*\*(.+?)\*\*', r'\1', s)
+    s = re.sub(r'\[([^\]]+)\]\([^)]*\)', r'\1', s)
+    s = re.sub(r'https?://\S+', '', s)
+    return s.strip()
+
+
+def _clean_name(s):
+    """把「软垫 / 瑜伽垫（必需，每组至少」「场地：围坐一圈」这类带说明的条目收成物品名。
+
+    采购清单上要的是能照着买的东西，括号里的用法说明和冒号后的描述都属于正文。"""
+    s = re.split(r'——', s)[0]
+    s = re.split(r'[（(]', s)[0]
+    s = re.split(r'[：:]', s)[0]
+    return s.strip(' ，,、/×*')
+
+
+def _block_items(seg):
+    """从表格或列表里抽 (物资, 数量)。
+
+    表格取前两列（3 列版是「物资/数量/备注」，4 列版是「物品名称/数量/用途/替代方案」），
+    列表用 split_qty 把数量从句子里拆出来。"""
+    items = []
+    for line in seg.split('\n'):
+        s = line.strip()
+        if not s or s.startswith('#'):
+            continue
+        if s.startswith('|'):
+            cells = [c.strip() for c in s.strip('|').split('|')]
+            if len(cells) < 2:
+                continue
+            if re.fullmatch(r'[-: ]+', cells[0]):
+                continue
+            if re.sub(r'\s', '', cells[0]) in ('物资', '物品', '名称', '物品名称', '物资名称', '道具'):
+                continue
+            nm, qty = _clean_name(_strip_md(cells[0])), _strip_md(cells[1])
+            if nm:
+                items.append((nm, qty or '若干'))
+        else:
+            mm = re.match(r'^[-*+]\s+(?:\[[ xX]\]\s*)?(.+)$', s)
+            if not mm:
+                continue
+            txt = _strip_md(mm.group(1))
+            if not txt:
+                continue
+            nm, qty = split_qty(txt)
+            nm = _clean_name(nm)
+            # 「「不聊清单」——开卡前由教练确认」这类是规则条目，不是要买的东西
+            if not nm or nm.startswith(('「', '《', '“')):
+                continue
+            items.append((nm, qty))
+    return items
+
+
+def _print_guide_items(seg):
+    """桌游的「物料与打印指南」不是表格，只有几行散文式的 bullet。
+
+    这类游戏真正要备的是打印页本身；「零成本替代」是散文（「三类卡各写 20 张便利贴」），
+    直接按标点切会把动作词当成物品名，所以只认其中能独立成物的条目。"""
+    out = []
+    if re.search(r'打印道具|printables', seg):
+        out.append(('打印页（全套卡牌/面板）', '1 套'))
+    m = re.search(r'零成本替代\**\s*[：:]\s*(.+)', seg)
+    if m:
+        # 不按「/」切 —— 括号里的「（画厨师帽/问号）」会被切成碎片
+        for part in re.split(r'[、,，]', _strip_md(m.group(1))):
+            part = part.strip()
+            if not part:
+                continue
+            # 含动作词的片段是用法说明，不是物品（「时间块用笔在白板画」）
+            if re.search(r'[用写画搜绘决定代替实体化做]|举手|记分', part):
+                continue
+            nm = part.split('=')[0].split('＝')[0].strip()
+            if nm:
+                out.append(split_qty(nm))
+    return out
+
+
 def parse_materials(md_path, g):
     t = md_path.read_text(encoding='utf-8')
-    m = re.search(r'^#{2,3}\s*(?:6\.\s*)?物资清单.*$', t, re.M)
+    m = MAT_HEAD_RX.search(t)
     if m:
+        # 只在「同级或更高级」的标题处收尾 —— 道具准备下面常挂 ### 基础道具/### 可选道具
         rest = t[m.end():]
-        nxt = re.search(r'^#{2,3}\s', rest, re.M)
-        seg = rest[:nxt.start()] if nxt else rest
-        items = []
-        for line in seg.split('\n'):
-            s = line.strip()
-            if not s:
-                continue
-            if s.startswith('|'):
-                cells = [c.strip() for c in s.strip('|').split('|')]
-                if len(cells) < 2:
-                    continue
-                if re.fullmatch(r'[-: ]+', cells[0]) or cells[0] in ('物资', '物品', '名称'):
-                    continue
-                name, qty = cells[0], cells[1]
-                if name:
-                    items.append((re.sub(r'\*\*', '', name), re.sub(r'\*\*', '', qty) or '若干'))
-            else:
-                mm = re.match(r'^[-*+]\s+(?:\[[ xX]\]\s*)?(.+)$', s)
-                if not mm:
-                    continue
-                txt = re.sub(r'\*\*', '', mm.group(1)).strip()
-                if not txt:
-                    continue
-                nm, qty = split_qty(txt)
-                items.append((nm, qty))
+        stop = re.search(rf'^#{{1,{len(m.group(1))}}}\s', rest, re.M)
+        seg = rest[:stop.start()] if stop else rest
+
+        if m.group(2) == '物料与打印指南':
+            items = _print_guide_items(seg)
+        else:
+            # 有「必选」子节就只取必选，别让可选道具挤掉必需物资；
+            # 没有必选子节时整段保留 —— 表格常写在第一个子节之前
+            subs = list(re.finditer(r'^###\s*(.+)$', seg, re.M))
+            req = next((i for i, sm in enumerate(subs) if '必选' in sm.group(1)), None)
+            if req is not None:
+                end = subs[req + 1].start() if req + 1 < len(subs) else len(seg)
+                seg = seg[subs[req].end():end]
+            items = _block_items(seg)
+
         if items:
             return dedupe(items)[:8]
 

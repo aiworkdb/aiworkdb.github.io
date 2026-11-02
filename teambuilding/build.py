@@ -202,7 +202,9 @@ def render_markdown(body, with_toc=False):
             if not rows:
                 return ''
         # 1) 键值表：列数全为 2，且首列是短标签
-        kv_like = all(len(r) == 2 for r in rows) and len(rows) >= 2 and all(
+        #    单行也算 —— 元信息表被 strip_body_dupes 滤到只剩「主题/能量等级」这类一行时，
+        #    按表头渲染会变成一个只有 thead、tbody 全空的假表格（24 个详情页踩过）
+        kv_like = all(len(r) == 2 for r in rows) and all(
             re.match(r'^\s*(\*\*)?[^*|]{1,12}(\*\*)?\s*$', r[0] or '') for r in rows
         )
         if kv_like:
@@ -616,14 +618,7 @@ def load_game(md_path):
     unit = detect_unit(ppl_raw)
 
     # 场地
-    indoor = '室内' in (venue_raw + txt)
-    outdoor = '户外' in (venue_raw + txt)
-    if indoor and outdoor:
-        venue, vkey = '室内/户外', 'both'
-    elif outdoor:
-        venue, vkey = '户外', 'outdoor'
-    else:
-        venue, vkey = '室内', 'indoor'
+    venue, vkey = detect_venue(venue_raw, txt)
 
     stars = parse_stars(diff_raw)
 
