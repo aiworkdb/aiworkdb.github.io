@@ -146,6 +146,8 @@ boardgames/
 | [黑木崖：江湖不允](category/card/blackwood-cliff/README.md) | 卡牌 | 3-5人 | 40-60分钟 | 中等 |
 | [大床游戏：古宅六夜](category/party/big-bed-game/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单偏中 |
 | [哥斯拉-0.0：怒涛防线](category/strategy/godzilla-zero-tideline/README.md) | 策略 | 3-5人 | 50-75分钟 | 中等偏难 |
+| [戴帽子的猫：妈妈回来前](category/card/cat-in-the-hat/README.md) | 卡牌 | 3-5人 | 30-40分钟 | 中等 |
+| [绳索：最后一班](category/party/strand-last-run/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单 |
 
 ## 添加新桌游
 
