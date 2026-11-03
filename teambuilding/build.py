@@ -35,6 +35,7 @@ CATEGORIES = [
     ('problem-solving', '🔧', '问题解决',   '#22d3ee', '#0891b2'),
     ('jubensha',        '🎭', '剧本杀改编', '#c084fc', '#9333ea'),
     ('variety',         '📺', '综艺娱乐',   '#fb923c', '#ea580c'),
+    ('folk',            '🏮', '民俗趣味',   '#fca5a5', '#b91c1c'),
     ('boardgame',       '🎲', '桌游团建',   '#94a3b8', '#475569'),
 ]
 CAT_MAP = {c[0]: c for c in CATEGORIES}
@@ -648,7 +649,6 @@ def load_game(md_path):
     dur_raw = field(pairs, DUR_KEYS)
     base_dur_raw = field(pairs, BASE_DUR_KEYS)
     ppl_raw = field(pairs, PEOPLE_KEYS)
-    total_ppl = parse_total_people(ppl_raw)
     venue_raw = field(pairs, VENUE_KEYS)
     diff_raw = field(pairs, DIFF_KEYS)
     prop_raw = field(pairs, PROP_KEYS)
@@ -659,6 +659,29 @@ def load_game(md_path):
     # 人数口径：多数游戏写的是「每组 N-M 人」，多组可并行，总人数上限远大于组规模。
     # 注意「20-40人（分4-6人/队）」这类写法主数字是全场，不能被后面的「/队」带偏。
     unit = detect_unit(ppl_raw)
+
+    # 全场人数（total_ppl）与口径标注（ppl_scope）
+    # 三种来源，不可混为一谈：
+    #   total      —— 原文显式给了「全场 X–Y 人」，最权威
+    #   single_round —— 原文没写「全场」，但主数字就是「这一场来多少人」
+    #                  （桌游一套道具 / 剧本杀一局 / 人结一个大圈）。
+    #                  这类回退成主数字区间，是语义补全，不是编造。
+    #   per_group  —— 原文写的是「每组 / 每桌 N–M 人」，多组可并行，全场未知。
+    #                  这类**绝不**回退，否则 30 人玩 5 桌会被误判成「只能 3–6 人」。
+    # 判据只看 detect_unit() 的结果：不能在全文里搜「每组」——括号里的
+    # 「（分组轮转，每组 6-10 人）」是分组说明，主数字 6-60 人仍是全场。
+    # 2026-11-03 立：此前 75 款 total_ppl=None 被误读成「数据缺失」，
+    # 实际是 per_group 口径没有全场语义。加 scope 让消费方能正确判断。
+    total_ppl = parse_total_people(ppl_raw)
+    if total_ppl:
+        ppl_scope = 'total'
+    elif unit == 'group':
+        ppl_scope = 'per_group'
+    elif pmax:
+        total_ppl = (pmin, pmax)
+        ppl_scope = 'single_round'
+    else:
+        ppl_scope = 'unknown'
 
     # 场地
     venue, vkey = detect_venue(venue_raw, txt)
@@ -676,6 +699,8 @@ def load_game(md_path):
         'duration_raw': dur_raw,
         'base_duration_raw': base_dur_raw,
         'total_ppl': list(total_ppl) if total_ppl else None,
+        'ppl_scope': ppl_scope,
+        'venue_req': venue_raw,
         'dmin': dmin,
         'dmax': dmax,
         'people_raw': ppl_raw,
@@ -950,7 +975,8 @@ def build_page(g, prev_g, next_g, related, idx, total):
                  f'<div class="fact-v">{html.escape(props_txt)}</div></div>'
                  if props_txt else '')
     tp = g.get('total_ppl')
-    if tp:
+    # 全场与「每人数组」相同就不重复显示（single_round 口径下两者必然相等）
+    if tp and (g.get('ppl_scope') != 'single_round') and tuple(tp) != (g['pmin'], g['pmax']):
         ttxt = (f'{tp[0]}–{tp[1]} 人' if tp[0] != tp[1] else f'{tp[0]} 人')
         total_ppl_html = f'<small>全场 {html.escape(ttxt)}</small>'
     else:
@@ -1018,6 +1044,8 @@ FLOWS = [
      '6–8 小时 · 15–50 人 · 破冰 + 协作 + 复盘完整闭环'),
     ('flows/half-day/01-schedule.html', '⏱️', '半日团建模板',
      '3–4 小时 · 10–30 人 · 快速凝聚，适合周五下午'),
+    ('flows/fun-sports/01-schedule.html', '🏮', '趣味运动会方案',
+     '半天 · 30–60 人 · 8 个民俗项目，低成本高容错'),
     ('flows/workshop/leadership-awakening.html', '🎓', '主题工作坊：领导力觉醒',
      '2.5–3 小时 · 12–24 人 · 深度引导，非娱乐向'),
     ('flows/cross-dept/01-schedule.html', '🤝', '跨部门协作方案',
@@ -1447,6 +1475,7 @@ def cmd_docs():
         'online': '💻 线上团建方案',
         'cross-dept': '🤝 跨部门协作方案',
         'onboarding': '🌱 新人融入方案',
+        'fun-sports': '🏮 趣味运动会方案',
     }
     for d in sorted((BASE / 'flows').glob('*')):
         if not d.is_dir():

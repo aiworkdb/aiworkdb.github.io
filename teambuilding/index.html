@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1120">
-<meta name="description" content="101 款团建游戏库：按人数、时长、场地、团队能力四维筛选，含完整规则、引导要点与 4F 复盘框架，支持在线直接玩。">
+<meta name="description" content="133 款团建游戏库：按人数、时长、场地、团队能力四维筛选，含完整规则、引导要点与 4F 复盘框架，支持在线直接玩。">
 <title>团建 &amp; 培训游戏库 · 按人数·时长·场地选游戏</title>
 <link rel="stylesheet" href="assets/lib.css">
 <link rel="stylesheet" href="assets/home.css">
@@ -20,9 +20,9 @@
   <h1>团建 &amp; 培训游戏库</h1>
   <p class="sub">先定团队要练什么，再选玩什么。<br>按人数、时长、场地筛选，每款含完整规则与复盘框架。</p>
   <div class="h-stats">
-    <div><b>101</b><i>款游戏</i></div>
-    <div><b>10</b><i>个分类</i></div>
-    <div><b>6</b><i>套流程</i></div>
+    <div><b>133</b><i>款游戏</i></div>
+    <div><b>11</b><i>个分类</i></div>
+    <div><b>7</b><i>套流程</i></div>
     <div><b>8</b><i>款在线可玩</i></div>
   </div>
   <div class="quick" id="quick">
@@ -77,8 +77,11 @@
         <span class="lab">能力</span>
         <button data-v="">不限</button>
       <button data-v="分工协作">分工协作</button>
+      <button data-v="风险决策">风险决策</button>
+      <button data-v="角色互补">角色互补</button>
       <button data-v="团队协作">团队协作</button>
       <button data-v="沟通表达">沟通表达</button>
+      <button data-v="打破小圈子">打破小圈子</button>
       <button data-v="压力释放">压力释放</button>
       <button data-v="名字记忆">名字记忆</button>
       <button data-v="即兴表达">即兴表达</button>
@@ -87,14 +90,11 @@
       <button data-v="信息失真">信息失真</button>
       <button data-v="信任建立">信任建立</button>
       <button data-v="归因训练">归因训练</button>
-      <button data-v="风险决策">风险决策</button>
-      <button data-v="节奏统一">节奏统一</button>
-      <button data-v="快速共识">快速共识</button>
       </div>
     </div>
     <button class="f-toggle" id="f-toggle" aria-expanded="false">更多筛选 ⌄</button>
     <div class="f-count">
-      <span>共 <b id="hits">101</b> 款</span>
+      <span>共 <b id="hits">133</b> 款</span>
       <span id="hint"></span>
       <button class="reset" id="reset">清空条件</button>
     </div>
@@ -103,7 +103,7 @@
 
 <main class="h-main" id="list">
 <section class="cat" data-cat="icebreaker" id="cat-icebreaker">
-  <div class="cat-h"><span class="c-ico">🧊</span>破冰热场<span class="c-n">9 款</span></div>
+  <div class="cat-h"><span class="c-ico">🧊</span>破冰热场<span class="c-n">13 款</span></div>
   <div class="cards">
 <a class="gcard" href="games/icebreaker/two-truths-one-lie.html"
    data-p="5,30" data-d="10,20"
@@ -114,6 +114,16 @@
   <div class="gc-desc">快速破冰、让参与者记住彼此、发现共同点</div>
   <div class="gc-meta"><span>10–20 分钟</span><span>5–30 人</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>自我披露</span><span>观察判断</span><span>深入了解</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/human-rock-paper-scissors.html"
+   data-p="40,300" data-d="15,30"
+   data-v="both" data-u="total" data-ab="口令同步|集体一致|快速决策"
+   data-s="人体石头剪刀布（human rock-paper-scissors / 团体猜拳） 用&quot;一个人出错全队输&quot;的规则，让&quot;协调&quot;变成有代价的事 破冰热场 口令同步 集体一致 快速决策"
+   style="--cc:#38bdf8">
+  <div class="gc-name">人体石头剪刀布（Human Rock-Paper-Scissors / 团体猜拳）</div>
+  <div class="gc-desc">用&quot;一个人出错全队输&quot;的规则，让&quot;协调&quot;变成有代价的事</div>
+  <div class="gc-meta"><span>15–30 分钟</span><span>40–300 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>口令同步</span><span>集体一致</span><span>快速决策</span></div>
 </a>
 <a class="gcard" href="games/icebreaker/human-bingo.html"
    data-p="8,50" data-d="5,15"
@@ -145,6 +155,16 @@
   <div class="gc-meta"><span>5–10 分钟</span><span>6–40 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>名字记忆</span><span>专注倾听</span><span>快速热身</span></div>
 </a>
+<a class="gcard" href="games/icebreaker/big-wind-blow.html"
+   data-p="20,300" data-d="20,40"
+   data-v="both" data-u="total" data-ab="快速破冰|观察他人|打破小圈子"
+   data-s="大风吹（big wind blows / 大风吹小风吹） 用&quot;必须换座&quot;逼人离开熟人身边，是打破小圈子最快的机制 破冰热场 快速破冰 观察他人 打破小圈子"
+   style="--cc:#38bdf8">
+  <div class="gc-name">大风吹（Big Wind Blows / 大风吹小风吹）</div>
+  <div class="gc-desc">用&quot;必须换座&quot;逼人离开熟人身边，是打破小圈子最快的机制</div>
+  <div class="gc-meta"><span>20–40 分钟</span><span>20–300 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>快速破冰</span><span>观察他人</span><span>打破小圈子</span></div>
+</a>
 <a class="gcard" href="games/icebreaker/celestial-gala.html"
    data-p="4,8" data-d="20,35"
    data-v="indoor" data-u="total" data-ab="压力释放|社交观察|隔阂消融"
@@ -154,6 +174,16 @@
   <div class="gc-desc">在欢笑中打破隔阂、释放工作压力、观察团队社交模式</div>
   <div class="gc-meta"><span>20–35 分钟</span><span>4–8 人</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>压力释放</span><span>社交观察</span><span>隔阂消融</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/praise-chain.html"
+   data-p="20,200" data-d="20,40"
+   data-v="both" data-u="total" data-ab="正向反馈|具体观察|关系修复"
+   data-s="夸夸接龙（praise chain / 全员夸夸接龙） 用&quot;必须具体&quot;这条规则，暴露团队平时的反馈有多空 破冰热场 正向反馈 具体观察 关系修复"
+   style="--cc:#38bdf8">
+  <div class="gc-name">夸夸接龙（Praise Chain / 全员夸夸接龙）</div>
+  <div class="gc-desc">用&quot;必须具体&quot;这条规则，暴露团队平时的反馈有多空</div>
+  <div class="gc-meta"><span>20–40 分钟</span><span>20–200 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>正向反馈</span><span>具体观察</span><span>关系修复</span></div>
 </a>
 <a class="gcard" href="games/icebreaker/never-have-i-ever.html"
    data-p="6,12" data-d="15,25"
@@ -174,6 +204,16 @@
   <div class="gc-desc">促进成员相互了解、练习倾听与表达、建立心理安全</div>
   <div class="gc-meta"><span>30–45 分钟</span><span>6–16 人</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>分享表达</span><span>倾听反馈</span><span>自我暴露</span></div>
+</a>
+<a class="gcard" href="games/icebreaker/number-huddle.html"
+   data-p="30,300" data-d="15,25"
+   data-v="both" data-u="total" data-ab="快速反应|主动开口|打破小圈子"
+   data-s="数字抱团（number huddle / 数字抱团 · 几人几足） 用&quot;必须凑够人数&quot;的压力，强制人向陌生人开口 破冰热场 快速反应 主动开口 打破小圈子"
+   style="--cc:#38bdf8">
+  <div class="gc-name">数字抱团（Number Huddle / 数字抱团 · 几人几足）</div>
+  <div class="gc-desc">用&quot;必须凑够人数&quot;的压力，强制人向陌生人开口</div>
+  <div class="gc-meta"><span>15–25 分钟</span><span>30–300 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>快速反应</span><span>主动开口</span><span>打破小圈子</span></div>
 </a>
 <a class="gcard" href="games/icebreaker/blind-box-myth.html"
    data-p="4,8" data-d="30,40"
@@ -199,8 +239,18 @@
 </section>
 
 <section class="cat" data-cat="communication" id="cat-communication">
-  <div class="cat-h"><span class="c-ico">💬</span>沟通表达<span class="c-n">8 款</span></div>
+  <div class="cat-h"><span class="c-ico">💬</span>沟通表达<span class="c-n">10 款</span></div>
   <div class="cards">
+<a class="gcard" href="games/communication/world-cafe.html"
+   data-p="20,300" data-d="90,180"
+   data-v="indoor" data-u="total" data-ab="深度对话|观点连接|集体智慧"
+   data-s="世界咖啡（world café） 让 50 人以上真正&quot;对话&quot;而不是&quot;听会&quot;，并把散落的观点连成共识 沟通表达 深度对话 观点连接 集体智慧"
+   style="--cc:#a78bfa">
+  <div class="gc-name">世界咖啡（World Café）</div>
+  <div class="gc-desc">让 50 人以上真正&quot;对话&quot;而不是&quot;听会&quot;，并把散落的观点连成共识</div>
+  <div class="gc-meta"><span>90–180 分钟</span><span>20–300 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>深度对话</span><span>观点连接</span><span>集体智慧</span></div>
+</a>
 <a class="gcard" href="games/communication/telephone-game.html"
    data-p="5,10" data-d="15,25"
    data-v="indoor" data-u="group" data-ab="信息失真|精准传达|传话纪律"
@@ -281,11 +331,21 @@
   <div class="gc-meta"><span>30–45 分钟</span><span>8–15 人/组</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>信息失真</span><span>信任建立</span><span>归因训练</span></div>
 </a>
+<a class="gcard" href="games/communication/fishbowl.html"
+   data-p="30,300" data-d="60,120"
+   data-v="indoor" data-u="total" data-ab="发言权开放|深度旁听|角色轮换"
+   data-s="鱼缸会议（fishbowl / 鱼缸谈话） 让大场里&quot;谁能发言&quot;不再由职位决定，而由&quot;谁愿意坐进去&quot;决定 沟通表达 发言权开放 深度旁听 角色轮换"
+   style="--cc:#a78bfa">
+  <div class="gc-name">鱼缸会议（Fishbowl / 鱼缸谈话）</div>
+  <div class="gc-desc">让大场里&quot;谁能发言&quot;不再由职位决定，而由&quot;谁愿意坐进去&quot;决定</div>
+  <div class="gc-meta"><span>60–120 分钟</span><span>30–300 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>发言权开放</span><span>深度旁听</span><span>角色轮换</span></div>
+</a>
   </div>
 </section>
 
 <section class="cat" data-cat="collaboration" id="cat-collaboration">
-  <div class="cat-h"><span class="c-ico">🤝</span>团队协作<span class="c-n">32 款</span></div>
+  <div class="cat-h"><span class="c-ico">🤝</span>团队协作<span class="c-n">36 款</span></div>
   <div class="cards">
 <a class="gcard" href="games/collaboration/body-letters.html"
    data-p="6,20" data-d="20,30"
@@ -397,6 +457,16 @@
   <div class="gc-meta"><span>50–70 分钟</span><span>3–6 人</span><span>室内</span><span class="gc-star">★★</span></div>
   <div class="gc-ab"><span>创意组合</span><span>分工互补</span><span>试错文化</span></div>
 </a>
+<a class="gcard" href="games/collaboration/build-a-ship.html"
+   data-p="100,400" data-d="210,270"
+   data-v="both" data-u="total" data-ab="分段建造|曲面延续|真实承载"
+   data-s="扬帆起航（build a ship / 百人造船 · 共造巨舰） 用&quot;外皮曲面接不上&quot;这件事，暴露&quot;同时开工但没定接口&quot;的代价 团队协作 分段建造 曲面延续 真实承载"
+   style="--cc:#34d399">
+  <div class="gc-name">扬帆起航（Build a Ship / 百人造船 · 共造巨舰）</div>
+  <div class="gc-desc">用&quot;外皮曲面接不上&quot;这件事，暴露&quot;同时开工但没定接口&quot;的代价</div>
+  <div class="gc-meta"><span>210–270 分钟</span><span>100–400 人</span><span>室内/户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>分段建造</span><span>曲面延续</span><span>真实承载</span></div>
+</a>
 <a class="gcard" href="games/collaboration/stellar-medics.html"
    data-p="3,5" data-d="45,70"
    data-v="indoor" data-u="total" data-ab="专业分工|分诊决策|多线危机"
@@ -497,6 +567,16 @@
   <div class="gc-meta"><span>45–60 分钟</span><span>4–8 人</span><span>室内</span><span class="gc-star">★★</span></div>
   <div class="gc-ab"><span>团队协作</span><span>沟通表达</span><span>问题解决</span></div>
 </a>
+<a class="gcard" href="games/collaboration/hundred-drum.html"
+   data-p="20,200" data-d="40,60"
+   data-v="both" data-u="total" data-ab="力度均衡|共同焦点|快速迭代"
+   data-s="百人战鼓（hundred drum / 鼓舞飞扬） 用&quot;球一歪就掉&quot;这个物理事实，让&quot;力度不均&quot;变成可见的失败 团队协作 力度均衡 共同焦点 快速迭代"
+   style="--cc:#34d399">
+  <div class="gc-name">百人战鼓（Hundred Drum / 鼓舞飞扬）</div>
+  <div class="gc-desc">用&quot;球一歪就掉&quot;这个物理事实，让&quot;力度不均&quot;变成可见的失败</div>
+  <div class="gc-meta"><span>40–60 分钟</span><span>20–200 人</span><span>室内/户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>力度均衡</span><span>共同焦点</span><span>快速迭代</span></div>
+</a>
 <a class="gcard" href="games/collaboration/mythic-rift.html"
    data-p="3,5" data-d="60,90"
    data-v="indoor" data-u="total" data-ab="跨背景协作|能力整合|共同敌人"
@@ -527,6 +607,16 @@
   <div class="gc-meta"><span>60–90 分钟</span><span>2–4 人</span><span>室内</span><span class="gc-star">★★</span></div>
   <div class="gc-ab"><span>高度合作</span><span>角色互补</span><span>时间管理</span></div>
 </a>
+<a class="gcard" href="games/collaboration/roller-coaster.html"
+   data-p="50,200" data-d="150,200"
+   data-v="both" data-u="total" data-ab="接口协议|能量管理|反复试错"
+   data-s="超级过山车（roller coaster / 疯狂过山车） 用&quot;球停在你们段起点&quot;这个画面，让&quot;接口由谁负责&quot;变成必须回答的问题 团队协作 接口协议 能量管理 反复试错"
+   style="--cc:#34d399">
+  <div class="gc-name">超级过山车（Roller Coaster / 疯狂过山车）</div>
+  <div class="gc-desc">用&quot;球停在你们段起点&quot;这个画面，让&quot;接口由谁负责&quot;变成必须回答的问题</div>
+  <div class="gc-meta"><span>150–200 分钟</span><span>50–200 人</span><span>室内/户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>接口协议</span><span>能量管理</span><span>反复试错</span></div>
+</a>
 <a class="gcard" href="games/collaboration/loop-dungeon.html"
    data-p="3,5" data-d="45,60"
    data-v="indoor" data-u="total" data-ab="迭代复盘|知识管理|归因方式"
@@ -556,6 +646,16 @@
   <div class="gc-desc">《银河小馆 · 双线突围版》改编自合作桌游《星际餐厅大逃亡 Space Diner Escape》（&quot;银河小馆&quot;是一艘穿越陨石带的太空流浪餐厅）。</div>
   <div class="gc-meta"><span>45–75 分钟</span><span>3–5 人</span><span>室内</span><span class="gc-star">★★</span></div>
   <div class="gc-ab"><span>双线作战</span><span>前后场协同</span><span>精力分配</span></div>
+</a>
+<a class="gcard" href="games/collaboration/african-drum.html"
+   data-p="50,300" data-d="120,180"
+   data-v="both" data-u="total" data-ab="节奏同步|声部协作|角色代入"
+   data-s="非洲鼓（african drum / 鼓舞飞扬 · 非洲鼓团建） 让&quot;不合拍&quot;变成听得见的失败，而&quot;合拍&quot;变成身体的愉悦 团队协作 节奏同步 声部协作 角色代入"
+   style="--cc:#34d399">
+  <div class="gc-name">非洲鼓（African Drum / 鼓舞飞扬 · 非洲鼓团建）</div>
+  <div class="gc-desc">让&quot;不合拍&quot;变成听得见的失败，而&quot;合拍&quot;变成身体的愉悦</div>
+  <div class="gc-meta"><span>120–180 分钟</span><span>50–300 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>节奏同步</span><span>声部协作</span><span>角色代入</span></div>
 </a>
 <a class="gcard" href="games/collaboration/wind-fire-wheel.html"
    data-p="8,15" data-d="30,40"
@@ -611,7 +711,7 @@
 </section>
 
 <section class="cat" data-cat="trust" id="cat-trust">
-  <div class="cat-h"><span class="c-ico">🫱</span>信任建立<span class="c-n">8 款</span></div>
+  <div class="cat-h"><span class="c-ico">🫱</span>信任建立<span class="c-n">9 款</span></div>
   <div class="cards">
 <a class="gcard" href="games/trust/trust-circle.html"
    data-p="6,10" data-d="40,55"
@@ -642,6 +742,16 @@
   <div class="gc-desc">用「被认真听过一次」的体验，把团队从「合作顺畅」推进到「敢说真话」</div>
   <div class="gc-meta"><span>40–55 分钟</span><span>5–8 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
   <div class="gc-ab"><span>深度倾听</span><span>脆弱互惠</span><span>不给建议</span></div>
+</a>
+<a class="gcard" href="games/trust/power-circle.html"
+   data-p="20,200" data-d="40,60"
+   data-v="both" data-u="total" data-ab="集体托举|同步节奏|意志坚持"
+   data-s="团队动力圈（power circle / 动力绳圈） 让「我的安全取决于别人不松手」变成身体感受，而不是一句口号 信任建立 集体托举 同步节奏 意志坚持"
+   style="--cc:#fbbf24">
+  <div class="gc-name">团队动力圈（Power Circle / 动力绳圈）</div>
+  <div class="gc-desc">让「我的安全取决于别人不松手」变成身体感受，而不是一句口号</div>
+  <div class="gc-meta"><span>40–60 分钟</span><span>20–200 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>集体托举</span><span>同步节奏</span><span>意志坚持</span></div>
 </a>
 <a class="gcard" href="games/trust/blind-lineup.html"
    data-p="8,60" data-d="20,30"
@@ -697,7 +807,7 @@
 </section>
 
 <section class="cat" data-cat="leadership" id="cat-leadership">
-  <div class="cat-h"><span class="c-ico">👑</span>领导力<span class="c-n">8 款</span></div>
+  <div class="cat-h"><span class="c-ico">👑</span>领导力<span class="c-n">10 款</span></div>
   <div class="cards">
 <a class="gcard" href="games/leadership/tangram.html"
    data-p="3,7" data-d="60,90"
@@ -719,6 +829,16 @@
   <div class="gc-meta"><span>50–70 分钟</span><span>5–8 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
   <div class="gc-ab"><span>结构化表达</span><span>不确定下的定力</span><span>受众视角</span></div>
 </a>
+<a class="gcard" href="games/leadership/open-space.html"
+   data-p="50,300" data-d="240,720"
+   data-v="indoor" data-u="total" data-ab="自组织|责任绑定|自由流动"
+   data-s="开放空间（open space technology / ost） 让&quot;谁提的问题谁负责&quot;，把抱怨转换成议程 领导力 自组织 责任绑定 自由流动"
+   style="--cc:#f87171">
+  <div class="gc-name">开放空间（Open Space Technology / OST）</div>
+  <div class="gc-desc">让&quot;谁提的问题谁负责&quot;，把抱怨转换成议程</div>
+  <div class="gc-meta"><span>240–720 分钟</span><span>50–300 人</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>自组织</span><span>责任绑定</span><span>自由流动</span></div>
+</a>
 <a class="gcard" href="games/leadership/frostbite.html"
    data-p="4,6" data-d="50,70"
    data-v="indoor" data-u="group" data-ab="领导的手被冻住|队员的眼睛被雪盲|指令颗粒度"
@@ -738,6 +858,16 @@
   <div class="gc-desc">让准管理者体验「无法用权力（说话/命令）时，如何真正领导团队」——这是领导力最核心的考验。</div>
   <div class="gc-meta"><span>30–40 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★★★</span></div>
   <div class="gc-ab"><span>非权力领导</span><span>以身作则</span><span>团队自发</span></div>
+</a>
+<a class="gcard" href="games/leadership/desert-gold.html"
+   data-p="20,100" data-d="240,360"
+   data-v="indoor" data-u="total" data-ab="资源配置|风险决策|目标管理"
+   data-s="沙漠掘金（desert gold / 沙漠掘金沙盘） 让&quot;目标没定清、资源没规划、风险没评估&quot;这三种病在沙盘里当场发作 领导力 资源配置 风险决策 目标管理"
+   style="--cc:#f87171">
+  <div class="gc-name">沙漠掘金（Desert Gold / 沙漠掘金沙盘）</div>
+  <div class="gc-desc">让&quot;目标没定清、资源没规划、风险没评估&quot;这三种病在沙盘里当场发作</div>
+  <div class="gc-meta"><span>240–360 分钟</span><span>20–100 人</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>资源配置</span><span>风险决策</span><span>目标管理</span></div>
 </a>
 <a class="gcard" href="games/leadership/broken-squares.html"
    data-p="5,5" data-d="40,60"
@@ -783,7 +913,7 @@
 </section>
 
 <section class="cat" data-cat="creativity" id="cat-creativity">
-  <div class="cat-h"><span class="c-ico">💡</span>创意激发<span class="c-n">8 款</span></div>
+  <div class="cat-h"><span class="c-ico">💡</span>创意激发<span class="c-n">10 款</span></div>
   <div class="cards">
 <a class="gcard" href="games/creativity/10-yuan-idea.html"
    data-p="4,8" data-d="30,45"
@@ -845,6 +975,16 @@
   <div class="gc-meta"><span>30–45 分钟</span><span>4–8 人/组</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>时间压力</span><span>画而不是写</span><span>破除完美主义</span></div>
 </a>
+<a class="gcard" href="games/creativity/nazca-mural.html"
+   data-p="50,500" data-d="150,210"
+   data-v="both" data-u="total" data-ab="标准统一|局部与整体|共同成果"
+   data-s="纳斯卡巨画（nazca mural / 共绘蓝图 · 百人巨画） 用&quot;色差与接缝&quot;暴露标准缺失——单块再美，接不上就是零 创意激发 标准统一 局部与整体 共同成果"
+   style="--cc:#f472b6">
+  <div class="gc-name">纳斯卡巨画（Nazca Mural / 共绘蓝图 · 百人巨画）</div>
+  <div class="gc-desc">用&quot;色差与接缝&quot;暴露标准缺失——单块再美，接不上就是零</div>
+  <div class="gc-meta"><span>150–210 分钟</span><span>50–500 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>标准统一</span><span>局部与整体</span><span>共同成果</span></div>
+</a>
 <a class="gcard" href="games/creativity/reverse-brainstorm.html"
    data-p="4,12" data-d="35,50"
    data-v="indoor" data-u="group" data-ab="问题重构|绕开防御|允许胡说"
@@ -865,11 +1005,21 @@
   <div class="gc-meta"><span>30–40 分钟</span><span>4–10 人/组</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>随机输入</span><span>强制连接</span><span>类比思维</span></div>
 </a>
+<a class="gcard" href="games/creativity/cajon.html"
+   data-p="20,120" data-d="150,180"
+   data-v="both" data-u="total" data-ab="从零创造|结构理解|共同作品"
+   data-s="魔力箱鼓（cajon / 魔力箱鼓 · 自制乐器） 让&quot;结构决定音色&quot;变成亲手验证的事实——改一个部件，声音就变 创意激发 从零创造 结构理解 共同作品"
+   style="--cc:#f472b6">
+  <div class="gc-name">魔力箱鼓（Cajon / 魔力箱鼓 · 自制乐器）</div>
+  <div class="gc-desc">让&quot;结构决定音色&quot;变成亲手验证的事实——改一个部件，声音就变</div>
+  <div class="gc-meta"><span>150–180 分钟</span><span>20–120 人</span><span>室内/户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>从零创造</span><span>结构理解</span><span>共同作品</span></div>
+</a>
   </div>
 </section>
 
 <section class="cat" data-cat="problem-solving" id="cat-problem-solving">
-  <div class="cat-h"><span class="c-ico">🔧</span>问题解决<span class="c-n">9 款</span></div>
+  <div class="cat-h"><span class="c-ico">🔧</span>问题解决<span class="c-n">11 款</span></div>
   <div class="cards">
 <a class="gcard" href="games/problem-solving/traffic-jam.html"
    data-p="8,22" data-d="35,50"
@@ -880,6 +1030,26 @@
   <div class="gc-desc">让团队亲身体会「不先想清楚就开始动，会把局面越走越死」</div>
   <div class="gc-meta"><span>35–50 分钟</span><span>8–22 人</span><span>室内</span><span class="gc-star">★★★</span></div>
   <div class="gc-ab"><span>系统思维</span><span>先想后动</span><span>让路</span></div>
+</a>
+<a class="gcard" href="games/problem-solving/commons-dilemma.html"
+   data-p="30,200" data-d="120,180"
+   data-v="indoor" data-u="total" data-ab="资源共享|承诺可信|长期与短期"
+   data-s="公共资源博弈（commons dilemma / 公地悲剧 · 捕鱼达人） 让&quot;每个人都理性&quot;如何一步步毁掉公共资源，变成看得见的曲线 问题解决 资源共享 承诺可信 长期与短期"
+   style="--cc:#22d3ee">
+  <div class="gc-name">公共资源博弈（Commons Dilemma / 公地悲剧 · 捕鱼达人）</div>
+  <div class="gc-desc">让&quot;每个人都理性&quot;如何一步步毁掉公共资源，变成看得见的曲线</div>
+  <div class="gc-meta"><span>120–180 分钟</span><span>30–200 人</span><span>室内</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>资源共享</span><span>承诺可信</span><span>长期与短期</span></div>
+</a>
+<a class="gcard" href="games/problem-solving/city-orientation.html"
+   data-p="50,300" data-d="180,300"
+   data-v="both" data-u="total" data-ab="路线规划|时间预算|取舍决策"
+   data-s="城市定向（city orientation / 极速前进 · 城市寻宝） 用&quot;点太多、时间不够&quot;，逼出真正的优先级决策 问题解决 路线规划 时间预算 取舍决策"
+   style="--cc:#22d3ee">
+  <div class="gc-name">城市定向（City Orientation / 极速前进 · 城市寻宝）</div>
+  <div class="gc-desc">用&quot;点太多、时间不够&quot;，逼出真正的优先级决策</div>
+  <div class="gc-meta"><span>180–300 分钟</span><span>50–300 人</span><span>室内/户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>路线规划</span><span>时间预算</span><span>取舍决策</span></div>
 </a>
 <a class="gcard" href="games/problem-solving/domino-chain.html"
    data-p="4,8" data-d="50,70"
@@ -1031,7 +1201,7 @@
 </section>
 
 <section class="cat" data-cat="variety" id="cat-variety">
-  <div class="cat-h"><span class="c-ico">📺</span>综艺娱乐<span class="c-n">7 款</span></div>
+  <div class="cat-h"><span class="c-ico">📺</span>综艺娱乐<span class="c-n">14 款</span></div>
   <div class="cards">
 <a class="gcard" href="games/variety/team-quiz.html"
    data-p="8,50" data-d="30,45"
@@ -1042,6 +1212,26 @@
   <div class="gc-desc">用低门槛的抢答赛制造一次公平的集体荣誉，同时暴露各团队的知识结构差异</div>
   <div class="gc-meta"><span>30–45 分钟</span><span>8–50 人</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>集体荣誉</span><span>知识共享</span><span>抢答纪律</span></div>
+</a>
+<a class="gcard" href="games/variety/fun-sports-day.html"
+   data-p="50,500" data-d="240,420"
+   data-v="both" data-u="total" data-ab="全员参与|班组荣誉|轮转组织"
+   data-s="大型趣味运动会（fun sports day / 企业趣味运动会） 用&quot;轮转积分&quot;让每个人至少上场一次，而不是只有运动好的几个 综艺娱乐 全员参与 班组荣誉 轮转组织"
+   style="--cc:#fb923c">
+  <div class="gc-name">大型趣味运动会（Fun Sports Day / 企业趣味运动会）</div>
+  <div class="gc-desc">用&quot;轮转积分&quot;让每个人至少上场一次，而不是只有运动好的几个</div>
+  <div class="gc-meta"><span>240–420 分钟</span><span>50–500 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>全员参与</span><span>班组荣誉</span><span>轮转组织</span></div>
+</a>
+<a class="gcard" href="games/variety/rock-band.html"
+   data-p="50,200" data-d="150,210"
+   data-v="indoor" data-u="total" data-ab="角色互补|分工排练|舞台呈现"
+   data-s="巅峰乐团（rock band / 巅峰乐团 · 乐队的夏天） 让&quot;不是主角的人&quot;也必须有明确任务，否则整场演出只剩一个主唱 综艺娱乐 角色互补 分工排练 舞台呈现"
+   style="--cc:#fb923c">
+  <div class="gc-name">巅峰乐团（Rock Band / 巅峰乐团 · 乐队的夏天）</div>
+  <div class="gc-desc">让&quot;不是主角的人&quot;也必须有明确任务，否则整场演出只剩一个主唱</div>
+  <div class="gc-meta"><span>150–210 分钟</span><span>50–200 人</span><span>室内</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>角色互补</span><span>分工排练</span><span>舞台呈现</span></div>
 </a>
 <a class="gcard" href="games/variety/host-show.html"
    data-p="8,20" data-d="45,60"
@@ -1063,6 +1253,26 @@
   <div class="gc-meta"><span>40–60 分钟</span><span>10–40 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
   <div class="gc-ab"><span>体能释放</span><span>策略博弈</span><span>综艺效果</span></div>
 </a>
+<a class="gcard" href="games/variety/archery-tag.html"
+   data-p="20,100" data-d="120,180"
+   data-v="both" data-u="total" data-ab="攻守取舍|救援协同|压力决策"
+   data-s="攻防箭（archery tag / 攻防箭对抗） 用&quot;救不救队友&quot;这个选择，暴露团队的资源分配偏好 综艺娱乐 攻守取舍 救援协同 压力决策"
+   style="--cc:#fb923c">
+  <div class="gc-name">攻防箭（Archery Tag / 攻防箭对抗）</div>
+  <div class="gc-desc">用&quot;救不救队友&quot;这个选择，暴露团队的资源分配偏好</div>
+  <div class="gc-meta"><span>120–180 分钟</span><span>20–100 人</span><span>室内/户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>攻守取舍</span><span>救援协同</span><span>压力决策</span></div>
+</a>
+<a class="gcard" href="games/variety/floor-curling.html"
+   data-p="10,200" data-d="120,180"
+   data-v="both" data-u="total" data-ab="精准执行|战术沟通|延迟满足"
+   data-s="旱地冰壶（floor curling / 陆地冰壶） 让&quot;安静讨论战术&quot;成为团队协作的主形式——不靠喊，靠算 综艺娱乐 精准执行 战术沟通 延迟满足"
+   style="--cc:#fb923c">
+  <div class="gc-name">旱地冰壶（Floor Curling / 陆地冰壶）</div>
+  <div class="gc-desc">让&quot;安静讨论战术&quot;成为团队协作的主形式——不靠喊，靠算</div>
+  <div class="gc-meta"><span>120–180 分钟</span><span>10–200 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>精准执行</span><span>战术沟通</span><span>延迟满足</span></div>
+</a>
 <a class="gcard" href="games/variety/mission-cards.html"
    data-p="6,30" data-d="90,120"
    data-v="both" data-u="total" data-ab="随机应变|执行力|素材工厂"
@@ -1072,6 +1282,26 @@
   <div class="gc-desc">《极限挑战》式任务卡团建：每组持一部手机+一叠任务卡，在园区/商圈/景点里随机抽取任务并完成——和陌生人合影、用身体摆字、找到指定店铺、限时采购………</div>
   <div class="gc-meta"><span>90–120 分钟</span><span>6–30 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
   <div class="gc-ab"><span>随机应变</span><span>执行力</span><span>素材工厂</span></div>
+</a>
+<a class="gcard" href="games/variety/ultimate-frisbee.html"
+   data-p="20,100" data-d="120,180"
+   data-v="outdoor" data-u="total" data-ab="自我裁决|跑位协同|零身体接触"
+   data-s="极限飞盘（ultimate frisbee / 飞盘争夺赛） 用&quot;无裁判&quot;这件事，检验团队在无人监督时怎么处理争议 综艺娱乐 自我裁决 跑位协同 零身体接触"
+   style="--cc:#fb923c">
+  <div class="gc-name">极限飞盘（Ultimate Frisbee / 飞盘争夺赛）</div>
+  <div class="gc-desc">用&quot;无裁判&quot;这件事，检验团队在无人监督时怎么处理争议</div>
+  <div class="gc-meta"><span>120–180 分钟</span><span>20–100 人</span><span>户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>自我裁决</span><span>跑位协同</span><span>零身体接触</span></div>
+</a>
+<a class="gcard" href="games/variety/bubble-soccer.html"
+   data-p="20,60" data-d="90,120"
+   data-v="both" data-u="total" data-ab="释放压力|互助起身|轮换参与"
+   data-s="泡泡足球（bubble soccer / 泡泡足球 · 撞撞球） 用&quot;摔倒了要人扶&quot;这件小事，让&quot;互助&quot;变成身体记忆 综艺娱乐 释放压力 互助起身 轮换参与"
+   style="--cc:#fb923c">
+  <div class="gc-name">泡泡足球（Bubble Soccer / 泡泡足球 · 撞撞球）</div>
+  <div class="gc-desc">用&quot;摔倒了要人扶&quot;这件小事，让&quot;互助&quot;变成身体记忆</div>
+  <div class="gc-meta"><span>90–120 分钟</span><span>20–60 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>释放压力</span><span>互助起身</span><span>轮换参与</span></div>
 </a>
 <a class="gcard" href="games/variety/acting-party.html"
    data-p="8,24" data-d="40,50"
@@ -1102,6 +1332,102 @@
   <div class="gc-desc">经典「传话游戏」的综艺升级版：不只是耳语传话，中间插入「比划」「方言」「一个字」三种变形规则。</div>
   <div class="gc-meta"><span>20–30 分钟</span><span>8–30 人</span><span>室内</span><span class="gc-star">★</span></div>
   <div class="gc-ab"><span>沟通失真演示</span><span>零门槛爆笑</span><span>归因训练</span></div>
+</a>
+<a class="gcard" href="games/variety/flag-football.html"
+   data-p="20,100" data-d="150,200"
+   data-v="both" data-u="total" data-ab="战术设计|角色分工|攻守转换"
+   data-s="腰旗橄榄球（flag football / 腰旗橄榄球团建） 用&quot;每一档都要重新设计路线&quot;，让&quot;赛前商量&quot;变成胜负手 综艺娱乐 战术设计 角色分工 攻守转换"
+   style="--cc:#fb923c">
+  <div class="gc-name">腰旗橄榄球（Flag Football / 腰旗橄榄球团建）</div>
+  <div class="gc-desc">用&quot;每一档都要重新设计路线&quot;，让&quot;赛前商量&quot;变成胜负手</div>
+  <div class="gc-meta"><span>150–200 分钟</span><span>20–100 人</span><span>室内/户外</span><span class="gc-star">★★★</span></div>
+  <div class="gc-ab"><span>战术设计</span><span>角色分工</span><span>攻守转换</span></div>
+</a>
+  </div>
+</section>
+
+<section class="cat" data-cat="folk" id="cat-folk">
+  <div class="cat-h"><span class="c-ico">🏮</span>民俗趣味<span class="c-n">8 款</span></div>
+  <div class="cards">
+<a class="gcard" href="games/folk/sandbag-dodge.html"
+   data-p="6,40" data-d="20,30"
+   data-v="outdoor" data-u="total" data-ab="攻守换位|冒险救助|低成本高参与"
+   data-s="丢沙包 (sandbag dodge) 两端的人扔，中间的人躲。被砸中下场，但接住一个沙包就能把队友救回来——这一条规则把&quot;躲&quot;变成了&quot;冒险接&quot;，把个人项目变成了团队项目。 民俗趣味 攻守换位 冒险救助 低成本高参与"
+   style="--cc:#fca5a5">
+  <div class="gc-name">丢沙包 (Sandbag Dodge)</div>
+  <div class="gc-desc">两端的人扔，中间的人躲。被砸中下场，但接住一个沙包就能把队友救回来——这一条规则把&quot;躲&quot;变成了&quot;冒险接&quot;，把个人项目变成了团队项目。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>6–40 人</span><span>户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>攻守换位</span><span>冒险救助</span><span>低成本高参与</span></div>
+</a>
+<a class="gcard" href="games/folk/tug-of-war.html"
+   data-p="20,60" data-d="25,40"
+   data-v="both" data-u="total" data-ab="全员同频|位置价值|输赢清晰"
+   data-s="拔河 (tug of war) 拔河是大团建里几乎唯一的选择——一场能让 40 个人同时上场的项目，而且不需要任何技能。 民俗趣味 全员同频 位置价值 输赢清晰"
+   style="--cc:#fca5a5">
+  <div class="gc-name">拔河 (Tug of War)</div>
+  <div class="gc-desc">拔河是大团建里几乎唯一的选择——一场能让 40 个人同时上场的项目，而且不需要任何技能。</div>
+  <div class="gc-meta"><span>25–40 分钟</span><span>20–60 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>全员同频</span><span>位置价值</span><span>输赢清晰</span></div>
+</a>
+<a class="gcard" href="games/folk/jianqiu.html"
+   data-p="6,36" data-d="40,60"
+   data-v="both" data-u="total" data-ab="隔网协作|零身体接触|规则即公平"
+   data-s="毽球（网毽对抗）(jianqiu / shuttlecock net game) 同一个毽子，加一张网，就从个人计数变成隔网对抗。 民俗趣味 隔网协作 零身体接触 规则即公平"
+   style="--cc:#fca5a5">
+  <div class="gc-name">毽球（网毽对抗）(Jianqiu / Shuttlecock Net Game)</div>
+  <div class="gc-desc">同一个毽子，加一张网，就从个人计数变成隔网对抗。</div>
+  <div class="gc-meta"><span>40–60 分钟</span><span>6–36 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>隔网协作</span><span>零身体接触</span><span>规则即公平</span></div>
+</a>
+<a class="gcard" href="games/folk/hoop-rolling.html"
+   data-p="8,60" data-d="30,40"
+   data-v="outdoor" data-u="total" data-ab="手感习得|节奏控制|接力责任"
+   data-s="滚铁环 (hoop rolling) 一个铁圈加一根带钩的铁条，推着跑三十米。看起来简单，实际上一推就倒——慢则倒、快则失控，中间那个刚好的速度，得自己找。 民俗趣味 手感习得 节奏控制 接力责任"
+   style="--cc:#fca5a5">
+  <div class="gc-name">滚铁环 (Hoop Rolling)</div>
+  <div class="gc-desc">一个铁圈加一根带钩的铁条，推着跑三十米。看起来简单，实际上一推就倒——慢则倒、快则失控，中间那个刚好的速度，得自己找。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>8–60 人</span><span>户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>手感习得</span><span>节奏控制</span><span>接力责任</span></div>
+</a>
+<a class="gcard" href="games/folk/hopscotch.html"
+   data-p="4,40" data-d="15,25"
+   data-v="both" data-u="total" data-ab="零成本启动|领地思维|单人可玩"
+   data-s="跳房子 (hopscotch) 一支粉笔在地上画十个格子，游戏就成立了。表面上是儿童游戏，实际上它是一个领地争夺的机制——你扔中的格子会成为&quot;你的房子&quot;，别人跳过来不能落脚，只能单脚跳过去。 民俗趣味 零成本启动 领地思维 单人可玩"
+   style="--cc:#fca5a5">
+  <div class="gc-name">跳房子 (Hopscotch)</div>
+  <div class="gc-desc">一支粉笔在地上画十个格子，游戏就成立了。表面上是儿童游戏，实际上它是一个领地争夺的机制——你扔中的格子会成为&quot;你的房子&quot;，别人跳过来不能落脚，只能单脚跳过去。</div>
+  <div class="gc-meta"><span>15–25 分钟</span><span>4–40 人</span><span>室内/户外</span><span class="gc-star">★</span></div>
+  <div class="gc-ab"><span>零成本启动</span><span>领地思维</span><span>单人可玩</span></div>
+</a>
+<a class="gcard" href="games/folk/jianzi.html"
+   data-p="6,60" data-d="20,30"
+   data-v="both" data-u="total" data-ab="技能习得|低社交压力|身体唤醒"
+   data-s="踢毽子 (jianzi kick) 一个毽子几块钱，一块平地就能开。它的团建价值不在对抗，而在每个人都能在五分钟内看到自己的进步曲线——从踢不到，到踢一个，到连着踢三个。 民俗趣味 技能习得 低社交压力 身体唤醒"
+   style="--cc:#fca5a5">
+  <div class="gc-name">踢毽子 (Jianzi Kick)</div>
+  <div class="gc-desc">一个毽子几块钱，一块平地就能开。它的团建价值不在对抗，而在每个人都能在五分钟内看到自己的进步曲线——从踢不到，到踢一个，到连着踢三个。</div>
+  <div class="gc-meta"><span>20–30 分钟</span><span>6–60 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>技能习得</span><span>低社交压力</span><span>身体唤醒</span></div>
+</a>
+<a class="gcard" href="games/folk/long-rope.html"
+   data-p="10,60" data-d="30,40"
+   data-v="both" data-u="total" data-ab="节奏共识|失败可见|全员同频"
+   data-s="集体长绳八字跳 (long rope figure-8) 两根绳摇起来，十个人依次钻进去、跳一下、跑出来，绕成 8 字。这件事的难度不在体能，在默契——绳摆到哪个人该进，进早了绊绳，进晚了断绳，所有人都得重来。 民俗趣味 节奏共识 失败可见 全员同频"
+   style="--cc:#fca5a5">
+  <div class="gc-name">集体长绳八字跳 (Long Rope Figure-8)</div>
+  <div class="gc-desc">两根绳摇起来，十个人依次钻进去、跳一下、跑出来，绕成 8 字。这件事的难度不在体能，在默契——绳摆到哪个人该进，进早了绊绳，进晚了断绳，所有人都得重来。</div>
+  <div class="gc-meta"><span>30–40 分钟</span><span>10–60 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>节奏共识</span><span>失败可见</span><span>全员同频</span></div>
+</a>
+<a class="gcard" href="games/folk/kite.html"
+   data-p="10,60" data-d="150,180"
+   data-v="both" data-u="total" data-ab="真实交付|分工与妥协|即时验收"
+   data-s="风筝制作与放飞双赛 (kite making &amp; flying) 这是这个系列里唯一需要&quot;做出一个东西&quot;的项目：扎骨架、糊纸、上色、调提线，最后放上天。 民俗趣味 真实交付 分工与妥协 即时验收"
+   style="--cc:#fca5a5">
+  <div class="gc-name">风筝制作与放飞双赛 (Kite Making &amp; Flying)</div>
+  <div class="gc-desc">这是这个系列里唯一需要&quot;做出一个东西&quot;的项目：扎骨架、糊纸、上色、调提线，最后放上天。</div>
+  <div class="gc-meta"><span>150–180 分钟</span><span>10–60 人</span><span>室内/户外</span><span class="gc-star">★★</span></div>
+  <div class="gc-ab"><span>真实交付</span><span>分工与妥协</span><span>即时验收</span></div>
 </a>
   </div>
 </section>
@@ -1190,6 +1516,11 @@
       <span class="f-b"><span class="f-t">半日团建模板</span><span class="f-d">3–4 小时 · 10–30 人 · 快速凝聚，适合周五下午</span></span>
       <span class="f-a">›</span>
     </a>
+    <a class="flow" href="flows/fun-sports/01-schedule.html">
+      <span class="f-ico">🏮</span>
+      <span class="f-b"><span class="f-t">趣味运动会方案</span><span class="f-d">半天 · 30–60 人 · 8 个民俗项目，低成本高容错</span></span>
+      <span class="f-a">›</span>
+    </a>
     <a class="flow" href="flows/workshop/leadership-awakening.html">
       <span class="f-ico">🎓</span>
       <span class="f-b"><span class="f-t">主题工作坊：领导力觉醒</span><span class="f-d">2.5–3 小时 · 12–24 人 · 深度引导，非娱乐向</span></span>
@@ -1252,7 +1583,7 @@
 </div>
 
 <footer class="h-foot">
-  <div>共 101 款游戏 · 内容持续更新</div>
+  <div>共 133 款游戏 · 内容持续更新</div>
   <div style="margin-top:4px">
     <a href="guide.md">教练使用指南</a> ·
     <a href="https://github.com/aiworkdb/aiworkdb.github.io">GitHub</a>
