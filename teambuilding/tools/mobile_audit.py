@@ -77,16 +77,34 @@ def ensure_harness():
         p.write_text(HARNESS, encoding='utf-8')
 
 
+CHROME_TIMEOUT = 45      # 单页上限。virtual-time-budget 只有 4s，超 45s 基本就是卡死
+CHROME_RETRY = 1         # 失败重试次数（偶发卡死占多数，重试一次通常就过）
+
+
 def chrome(url, dump=True, shot=None, win=(W + 40, H + 40)):
+    """跑一次 headless Chrome。
+
+    必须自己兜住 TimeoutExpired —— 早先版本没有 try，只要一个页面卡住
+    （曾遇到 games/online/online-bingo.html 挂满 120s），整轮巡检直接抛异常中断，
+    后面几十页根本没被检查，而 `| tail` 还会把退出码吞掉，看起来像「跑完了」。
+    """
     args = [CHROME, '--headless=new', '--no-sandbox', '--disable-gpu',
-            '--single-process', '--hide-scrollbars', '--virtual-time-budget=4000',
+            '--disable-dev-shm-usage', '--single-process', '--hide-scrollbars',
+            '--virtual-time-budget=4000',
             f'--window-size={win[0]},{win[1]}']
     if shot:
         args += [f'--screenshot={shot}', '--force-device-scale-factor=2']
     if dump:
         args += ['--dump-dom']
     args.append(url)
-    return subprocess.run(args, capture_output=True, text=True, timeout=120).stdout
+    for attempt in range(CHROME_RETRY + 1):
+        try:
+            return subprocess.run(args, capture_output=True, text=True,
+                                  timeout=CHROME_TIMEOUT).stdout
+        except subprocess.TimeoutExpired:
+            if attempt >= CHROME_RETRY:
+                return ''      # 交给上层记「探针未返回」，不中断整轮
+    return ''
 
 
 def harness_url(rel):
@@ -131,9 +149,11 @@ def main():
         pages = [p for p in pages if any(o in p for o in a.only)]
 
     bad = 0
+    failed = []
     for rel in pages:
         r = probe(rel)
         if r is None:
+            failed.append(rel)
             print(f'  ?? {rel} 探针未返回')
             continue
         if r['sw'] > r['cw'] + 1 or r['bad']:
@@ -141,7 +161,11 @@ def main():
             print(f'  x {rel}  scrollWidth={r["sw"]} / 视口={r["cw"]}')
             for b in r['bad']:
                 print('      ', b)
-    print(f'\n巡检 {len(pages)} 页，横向溢出 {bad} 页')
+    print(f'\n巡检 {len(pages)} 页，横向溢出 {bad} 页，探针未返回 {len(failed)} 页')
+    if failed:
+        print('  未返回页面（需单独复核）：')
+        for f in failed:
+            print('   -', f)
     return 0 if bad == 0 else 1
 
 
