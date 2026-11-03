@@ -1,3 +1,10 @@
+---
+title: "火星殖民计划"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/boardgame/mars-colony.html"
+cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
+---
+
 # 火星殖民计划
 
 > **一句话**：氧气、水、食物是眼前的命，科技与移民是十年后的事——团队如何在两张表之间分配资源。

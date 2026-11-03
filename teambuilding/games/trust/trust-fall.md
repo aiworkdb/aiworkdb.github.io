@@ -1,4 +1,5 @@
 ---
+title: "信任背摔（Trust Fall）"
 author: "AIWorkDB"
 source_url: "https://aiworkdb.github.io/teambuilding/games/trust/trust-fall.html"
 cover: "https://placehold.co/1200x630/96CEB4/white?text=Trust+Building"

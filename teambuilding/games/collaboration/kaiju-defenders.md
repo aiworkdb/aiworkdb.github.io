@@ -1,3 +1,10 @@
+---
+title: "怪兽守护者 (Kaiju Defenders)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/kaiju-defenders.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 怪兽守护者 (Kaiju Defenders)
 
 ## 🎮 游戏概述

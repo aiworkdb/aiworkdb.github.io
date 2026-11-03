@@ -1,4 +1,5 @@
 ---
+title: "两真一假（Two Truths One Lie）"
 author: "AIWorkDB"
 source_url: "https://aiworkdb.github.io/teambuilding/games/icebreaker/two-truths-one-lie.html"
 cover: "https://placehold.co/1200x630/FF6B6B/white?text=Ice+Breaker"

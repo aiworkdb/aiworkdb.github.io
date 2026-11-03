@@ -1,3 +1,10 @@
+---
+title: "极挑任务卡 (Mission Cards)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/variety/mission-cards.html"
+cover: "https://placehold.co/1200x630/8B5CF6/white?text=Variety"
+---
+
 # 极挑任务卡 (Mission Cards)
 
 > **综艺竞技 · 随机挑战 · 城市/园区版**  

@@ -1,3 +1,10 @@
+---
+title: "咒术回战：术师联携 (Jujutsu United)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/jujutsu-united.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 咒术回战：术师联携 (Jujutsu United)
 
 **团建核心价值**：

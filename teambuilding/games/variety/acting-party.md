@@ -1,3 +1,10 @@
+---
+title: "演技派对 (Acting Party)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/variety/acting-party.html"
+cover: "https://placehold.co/1200x630/8B5CF6/white?text=Variety"
+---
+
 # 演技派对 (Acting Party)
 
 > **综艺竞技 · 你演我猜 · 释放型**  

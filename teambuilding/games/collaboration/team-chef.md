@@ -1,3 +1,10 @@
+---
+title: "协作大厨 (Team Chef)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/team-chef.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 协作大厨 (Team Chef)
 
 **团建核心价值**：

@@ -1,3 +1,10 @@
+---
+title: "星际医疗队 · 生死救援协作版 (Stellar Medics)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/stellar-medics.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 星际医疗队 · 生死救援协作版 (Stellar Medics)
 
 **团建核心价值**：

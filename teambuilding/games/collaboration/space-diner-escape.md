@@ -1,3 +1,10 @@
+---
+title: "银河小馆 · 双线突围版 (Galaxy Diner)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/space-diner-escape.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 银河小馆 · 双线突围版 (Galaxy Diner)
 
 **团建核心价值**：

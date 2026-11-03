@@ -1,3 +1,10 @@
+---
+title: "基因编辑实验室"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/boardgame/gene-lab.html"
+cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
+---
+
 # 基因编辑实验室
 
 > **一句话**：脱靶风险对上病毒倒计时——在「赶进度」和「保质量」之间，逼团队给出一个能站住的答案。

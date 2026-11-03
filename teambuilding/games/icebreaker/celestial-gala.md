@@ -1,4 +1,5 @@
 ---
+title: "天庭年会（Celestial Gala）—— 团建改造版"
 author: "AIWorkDB"
 source_url: "https://aiworkdb.github.io/teambuilding/games/icebreaker/celestial-gala.html"
 cover: "https://placehold.co/1200x630/FF6B6B/white?text=Celestial+Gala"

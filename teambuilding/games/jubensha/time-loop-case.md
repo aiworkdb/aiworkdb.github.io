@@ -1,3 +1,10 @@
+---
+title: "时间循环案 (Time Loop Case)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/jubensha/time-loop-case.html"
+cover: "https://placehold.co/1200x630/9333EA/white?text=Script+Killing"
+---
+
 # 时间循环案 (Time Loop Case)
 
 > **剧本杀 · 循环推理 · 极限烧脑**  

@@ -1,3 +1,10 @@
+---
+title: "我是主持人 (Host Show)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/variety/host-show.html"
+cover: "https://placehold.co/1200x630/8B5CF6/white?text=Variety"
+---
+
 # 我是主持人 (Host Show)
 
 > **综艺竞技 · 即兴主持 · 表达训练**  

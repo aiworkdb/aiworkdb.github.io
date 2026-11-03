@@ -1,3 +1,10 @@
+---
+title: "古文明拍卖行"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/boardgame/ancient-auction.html"
+cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
+---
+
 # 古文明拍卖行
 
 > **一句话**：密封竞价、资金有限、隐藏套装加成——把团队对「这东西值多少」的判断分歧直接摆上桌。

@@ -1,3 +1,10 @@
+---
+title: "末日种子库 (Doomsday Vault)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/doomsday-vault.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 末日种子库 (Doomsday Vault)
 
 **团建核心价值**：

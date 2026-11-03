@@ -1,3 +1,10 @@
+---
+title: "鬼杀队：无限列车 (Demon Slayer: Infinity Train)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/demon-slayer-train.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 鬼杀队：无限列车 (Demon Slayer: Infinity Train)
 
 **团建核心价值**：

@@ -1,3 +1,10 @@
+---
+title: "基因疗法攻坚 (Gene Therapy Sprint)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/gene-therapy.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 基因疗法攻坚 (Gene Therapy Sprint)
 
 > **团队协作 · 科研模拟 · 压力决策**  

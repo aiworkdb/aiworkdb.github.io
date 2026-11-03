@@ -1,3 +1,10 @@
+---
+title: "天命人 (Destined One)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/destined-one.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 天命人 (Destined One)
 
 **团建核心价值**：

@@ -1,3 +1,10 @@
+---
+title: "侦探事务所 (Detective Agency)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/jubensha/detective-stations.html"
+cover: "https://placehold.co/1200x630/9333EA/white?text=Script+Killing"
+---
+
 # 侦探事务所 (Detective Agency)
 
 > **剧本杀 · 分站轮换 · 大型推理**  

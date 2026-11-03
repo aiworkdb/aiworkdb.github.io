@@ -1,3 +1,10 @@
+---
+title: "病毒危机 (Virus Outbreak)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/virus-outbreak.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 病毒危机 (Virus Outbreak)
 
 > **团队协作 · 危机应对 · 沟通决策**  

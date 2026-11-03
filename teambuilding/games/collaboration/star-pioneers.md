@@ -1,3 +1,10 @@
+---
+title: "星际拓荒者 · 从零到一版 (Star Pioneers)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/star-pioneers.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 星际拓荒者 · 从零到一版 (Star Pioneers)
 
 **团建核心价值**：

@@ -1,3 +1,10 @@
+---
+title: "办公室谜案 (Office Mystery)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/jubensha/office-mystery.html"
+cover: "https://placehold.co/1200x630/9333EA/white?text=Script+Killing"
+---
+
 # 办公室谜案 (Office Mystery)
 
 > **剧本杀 · 推理沉浸 · 沟通协作**  

@@ -1,3 +1,10 @@
+---
+title: "轮回地下城 · 团队复盘迭代版 (Loop Dungeon)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/loop-dungeon.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 轮回地下城 · 团队复盘迭代版 (Loop Dungeon)
 
 **团建核心价值**：

@@ -1,3 +1,10 @@
+---
+title: "远征33号 · 绘母之末（团建协作版）(Expedition 33)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/expedition-33.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 远征33号 · 绘母之末（团建协作版）(Expedition 33)
 
 **团建核心价值**：

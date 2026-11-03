@@ -1,3 +1,10 @@
+---
+title: "卧底档案 (Undercover File)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/jubensha/undercover-file.html"
+cover: "https://placehold.co/1200x630/9333EA/white?text=Script+Killing"
+---
+
 # 卧底档案 (Undercover File)
 
 > **剧本杀 · 身份推理 · 轻量烧脑**  

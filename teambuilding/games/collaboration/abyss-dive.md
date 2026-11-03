@@ -1,3 +1,10 @@
+---
+title: "深海探险 (Abyss Dive)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/abyss-dive.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 深海探险 (Abyss Dive)
 
 **团建核心价值**：

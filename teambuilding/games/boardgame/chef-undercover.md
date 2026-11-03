@@ -1,3 +1,10 @@
+---
+title: "卧底大厨"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/boardgame/chef-undercover.html"
+cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
+---
+
 # 卧底大厨
 
 > **一句话**：一边合作出菜，一边找出内鬼——从模糊的怀疑走到具体举证，顺带体会一次被冤枉的滋味。

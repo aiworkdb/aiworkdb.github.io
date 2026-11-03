@@ -1,3 +1,10 @@
+---
+title: "数字分身上班记"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/boardgame/digital-twin-work.html"
+cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
+---
+
 # 数字分身上班记
 
 > **一句话**：邮件、会议、报告同时砸来——体验优先级判断被逼到明面上，以及「忙到崩溃」的黑色幽默。

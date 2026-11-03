@@ -1,3 +1,10 @@
+---
+title: "藏宝密令 (Treasure Code)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/jubensha/treasure-code.html"
+cover: "https://placehold.co/1200x630/9333EA/white?text=Script+Killing"
+---
+
 # 藏宝密令 (Treasure Code)
 
 > **剧本杀 · 寻宝解谜 · 全场竞技**  

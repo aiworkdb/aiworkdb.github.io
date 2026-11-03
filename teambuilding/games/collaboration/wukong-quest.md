@@ -1,3 +1,10 @@
+---
+title: "大圣西游 (Wukong Quest)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/wukong-quest.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 大圣西游 (Wukong Quest)
 
 **团建核心价值**：

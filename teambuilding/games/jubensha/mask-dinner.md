@@ -1,3 +1,10 @@
+---
+title: "假面晚宴 (Mask Dinner)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/jubensha/mask-dinner.html"
+cover: "https://placehold.co/1200x630/9333EA/white?text=Script+Killing"
+---
+
 # 假面晚宴 (Mask Dinner)
 
 > **剧本杀 · 角色扮演 · 大型宴会**  

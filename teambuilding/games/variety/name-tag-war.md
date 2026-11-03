@@ -1,3 +1,10 @@
+---
+title: "撕名牌大战 (Name Tag War)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/variety/name-tag-war.html"
+cover: "https://placehold.co/1200x630/8B5CF6/white?text=Variety"
+---
+
 # 撕名牌大战 (Name Tag War)
 
 > **综艺竞技 · 奔跑吧同款 · 大型户外**  

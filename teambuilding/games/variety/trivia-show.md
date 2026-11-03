@@ -1,3 +1,10 @@
+---
+title: "王牌对王牌 (Trivia Show)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/variety/trivia-show.html"
+cover: "https://placehold.co/1200x630/8B5CF6/white?text=Variety"
+---
+
 # 王牌对王牌 (Trivia Show)
 
 > **综艺竞技 · 团队竞答 · 室内高能**  

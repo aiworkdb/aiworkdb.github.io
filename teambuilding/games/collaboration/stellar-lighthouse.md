@@ -1,3 +1,10 @@
+---
+title: "星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/stellar-lighthouse.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 星际灯塔守护者 · 守望协作版 (Stellar Lighthouse)
 
 **团建核心价值**：

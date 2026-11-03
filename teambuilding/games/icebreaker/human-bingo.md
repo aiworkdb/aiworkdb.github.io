@@ -1,4 +1,5 @@
 ---
+title: "人类宾果（Human Bingo）"
 author: "AIWorkDB"
 source_url: "https://aiworkdb.github.io/teambuilding/games/icebreaker/human-bingo.html"
 cover: "https://placehold.co/1200x630/FF6B6B/white?text=Ice+Breaker"

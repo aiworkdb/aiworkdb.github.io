@@ -1,3 +1,10 @@
+---
+title: "芙莉莲的旅程 (Frieren's Journey)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/frieren-journey.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 芙莉莲的旅程 (Frieren's Journey)
 
 > **团队协作 · 慢旅途 · 角色互补**  

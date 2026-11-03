@@ -1,3 +1,10 @@
+---
+title: "AI梦境设计师"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/boardgame/ai-dream-designer.html"
+cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
+---
+
 # AI梦境设计师
 
 > **一句话**：接订单、读需求、组创意——体验「需求没读懂就动手」的代价，以及客户视角下的「好」到底谁说了算。

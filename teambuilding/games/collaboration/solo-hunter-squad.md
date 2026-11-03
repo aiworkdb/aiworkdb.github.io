@@ -1,3 +1,10 @@
+---
+title: "猎人小队 · 协同升级版 (Hunter Squad)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/solo-hunter-squad.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 猎人小队 · 协同升级版 (Hunter Squad)
 
 **团建核心价值**：

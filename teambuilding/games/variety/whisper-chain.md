@@ -1,3 +1,10 @@
+---
+title: "综艺传声筒 (Whisper Chain)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/variety/whisper-chain.html"
+cover: "https://placehold.co/1200x630/8B5CF6/white?text=Variety"
+---
+
 # 综艺传声筒 (Whisper Chain)
 
 > **综艺竞技 · 传话变形 · 笑声制造机**  

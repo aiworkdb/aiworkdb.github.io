@@ -1,3 +1,10 @@
+---
+title: "神话裂隙 (Mythic Rift)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/mythic-rift.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 神话裂隙 (Mythic Rift)
 
 **团建核心价值**：

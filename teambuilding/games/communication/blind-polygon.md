@@ -1,4 +1,5 @@
 ---
+title: "盲人方阵（Blind Polygon）"
 author: "AIWorkDB"
 source_url: "https://aiworkdb.github.io/teambuilding/games/communication/blind-polygon.html"
 cover: "https://placehold.co/1200x630/45B7D1/white?text=Communication"

@@ -1,3 +1,10 @@
+---
+title: "黄金结界 · 团队守护版（Huntrix: Golden Honmoon）"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/huntrix-honmoon.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 黄金结界 · 团队守护版（Huntrix: Golden Honmoon）
 
 > 改编自合作桌游《猎魔女团：黄金结界 Huntrix: Golden Honmoon》（取材自 2025–2026 全球现象级动画音乐电影《KPop Demon Hunters / 猎魔女团 / HUNTR/X》）。

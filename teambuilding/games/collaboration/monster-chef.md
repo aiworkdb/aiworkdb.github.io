@@ -1,3 +1,10 @@
+---
+title: "怪物厨师 (Monster Chef)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/monster-chef.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 怪物厨师 (Monster Chef)
 
 **团建核心价值**：

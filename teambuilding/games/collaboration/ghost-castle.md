@@ -1,3 +1,10 @@
+---
+title: "幽灵古堡 (Ghost Castle)"
+author: "AIWorkDB"
+source_url: "https://aiworkdb.github.io/teambuilding/games/collaboration/ghost-castle.html"
+cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
+---
+
 # 幽灵古堡 (Ghost Castle)
 
 **团建核心价值**：
