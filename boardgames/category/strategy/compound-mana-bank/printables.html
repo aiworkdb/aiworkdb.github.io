@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>利滚利：魔力银行 · 打印道具</title>
+<style>
+  :root{
+    --ink:#1b1f24; --ink2:#4b535d; --line:#c9ced5; --paper:#fff; --bg:#f4f5f7;
+    --amber:#b3771a; --amber-l:#fdf4e3; --slate:#39434f; --red:#a63a3a;
+    --fire:#b04b2a; --fire-l:#fbeee7; --wind:#2f6f63; --wind-l:#e9f4f1;
+    --star:#b8912a; --star-l:#fbf5e2; --blue:#2c5f86;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;padding:18px 14px 44px;background:var(--bg);color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,sans-serif;
+    font-size:13px;line-height:1.55;
+  }
+  h1{font-size:24px;margin:0 0 2px;letter-spacing:1px;}
+  .sub{color:var(--ink2);font-size:11.5px;letter-spacing:2px;margin-bottom:14px;}
+  h2{font-size:16px;margin:26px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--ink);
+     display:flex;align-items:baseline;gap:10px;}
+  h2 .cnt{font-size:11px;font-weight:400;color:var(--ink2);letter-spacing:0;}
+  h3{font-size:12px;margin:12px 0 6px;color:var(--slate);letter-spacing:.5px;}
+  .print-hint{
+    background:var(--amber-l);border:1px solid #e6cda2;border-left:5px solid var(--amber);
+    padding:12px 16px;border-radius:6px;margin-bottom:18px;font-size:12.5px;
+  }
+  .print-hint strong{color:var(--amber);}
+  .print-hint ul{margin:6px 0 0 18px;padding:0;}
+  .print-hint li{margin:3px 0;}
+
+  /* 学院板 */
+  .board{background:var(--paper);border:2px solid var(--ink);border-radius:9px;padding:18px 16px 14px;}
+  .bt{text-align:center;font-size:21px;letter-spacing:8px;font-weight:700;}
+  .bs{text-align:center;font-size:9.5px;letter-spacing:4px;color:var(--ink2);margin-bottom:14px;}
+  .track{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;}
+  .mon{border:1.5px solid var(--slate);border-radius:6px;text-align:center;padding:6px 2px 5px;background:#fbfbfc;}
+  .mon b{display:block;font-size:16px;line-height:1.1;}
+  .mon span{font-size:8.5px;color:var(--ink2);}
+  .market{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
+  .mcell{border:1.5px dashed var(--slate);border-radius:6px;height:64px;display:flex;
+    align-items:center;justify-content:center;font-size:9.5px;color:var(--ink2);background:#fafbfc;}
+  .inttable{margin-top:13px;width:100%;border-collapse:collapse;font-size:10px;}
+  .inttable th,.inttable td{border:1px solid var(--line);padding:4px 6px;text-align:center;}
+  .inttable th{background:#eef1f4;color:var(--ink2);font-weight:600;}
+  .inttable td.v{font-size:15px;font-weight:700;color:var(--red);}
+  .flow{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:13px;}
+  .fs{border:1px solid var(--line);border-radius:5px;padding:5px 4px;font-size:8.5px;color:var(--slate);background:#fafbfc;}
+  .fs b{display:block;font-size:10px;color:var(--ink);}
+
+  /* 卡牌 */
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
+  .card{
+    border:1.5px solid var(--ink);border-radius:7px;background:var(--paper);
+    padding:9px 8px 8px;text-align:center;position:relative;overflow:hidden;
+    aspect-ratio:63 / 88;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  }
+  .card::after{content:'';position:absolute;inset:4px;border:1px solid rgba(0,0,0,.07);border-radius:4px;pointer-events:none;}
+  .ct{font-size:8px;letter-spacing:1.2px;color:var(--ink2);}
+  .cname{font-size:13.5px;font-weight:700;letter-spacing:.5px;line-height:1.25;}
+  .cpts{line-height:1;}
+  .cpts b{font-size:40px;font-weight:800;}
+  .cpts small{font-size:11px;font-weight:400;margin-left:1px;}
+  .cfoot{display:flex;justify-content:space-between;align-items:center;width:100%;
+    border-top:1px solid var(--line);padding-top:4px;font-size:9px;color:var(--ink2);}
+  .ccost{letter-spacing:.5px;}
+  .cser{font-size:11px;}
+
+  .sp-F{border-color:var(--fire);background:linear-gradient(180deg,var(--fire-l) 0%,#fff 62%);}
+  .sp-F .cpts b{color:var(--fire);}
+  .sp-W{border-color:var(--wind);background:linear-gradient(180deg,var(--wind-l) 0%,#fff 62%);}
+  .sp-W .cpts b{color:var(--wind);}
+  .sp-S{border-color:var(--star);background:linear-gradient(180deg,var(--star-l) 0%,#fff 62%);}
+  .sp-S .cpts b{color:#8f6d14;}
+
+  /* 借据 */
+  .iou{background:linear-gradient(180deg,#f6f1e6 0%,#fff 55%);border-color:#8a6a2f;}
+  .iprincipal b{font-size:40px;font-weight:800;color:#8a5a1f;}
+  .iprincipal small{font-size:9px;color:var(--ink2);margin-left:1px;}
+  .iowner{font-size:8.5px;color:var(--ink2);width:100%;text-align:left;padding:0 2px;}
+  .iowner .wline{display:inline-block;min-width:52px;border-bottom:1px solid var(--ink2);height:11px;}
+  .ihint{font-size:6.5px;color:#9aa3ad;width:100%;text-align:left;padding:0 2px;letter-spacing:.2px;}
+  .itrack{width:100%;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:3px 0;}
+  .itrow{display:flex;align-items:center;font-size:8px;color:var(--slate);padding:1.5px 2px;gap:3px;}
+  .itrow .ig{flex:1;text-align:left;}
+  .itrow .iv{font-weight:700;color:var(--red);}
+  .itrow .ick{display:block;width:7px;height:7px;border:1px solid #b0b8c1;border-radius:50%;}
+  .ifoot{font-size:7.5px;color:var(--ink2);letter-spacing:1px;}
+
+  /* 角色 */
+  .role{background:linear-gradient(180deg,#f7f3e9 0%,#fff 70%);}
+  .ricon{font-size:30px;line-height:1.1;}
+  .rname{font-size:15px;font-weight:700;letter-spacing:1px;}
+  .rtag{font-size:8.5px;letter-spacing:1px;color:#fff;background:var(--slate);padding:1px 7px;border-radius:3px;}
+  .rdesc{font-size:9px;color:var(--ink2);line-height:1.35;min-height:52px;
+    display:flex;align-items:center;justify-content:center;}
+
+  /* 玩家板 */
+  .pboards{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .pboard{border:1.5px solid var(--ink);border-radius:7px;background:var(--paper);padding:9px 11px 8px;}
+  .pbh{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:6px;}
+  .pbn{font-size:13px;font-weight:700;letter-spacing:2px;}
+  .pbt{font-size:8px;letter-spacing:1px;color:#fff;background:var(--slate);padding:1px 6px;border-radius:3px;}
+  .pbl{font-size:8px;color:var(--ink2);letter-spacing:.4px;margin:5px 0 3px;}
+  .mana{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
+  .mana i{display:block;aspect-ratio:1/1;border:1px dashed #a9b2bd;border-radius:50%;background:#fbfcfd;}
+  .iouzone{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .iouzone .slot{aspect-ratio:63/88;border:1.2px dashed #b9c0c9;border-radius:5px;background:#fcfcfd;}
+  .serzone{display:flex;align-items:center;gap:4px;font-size:10px;}
+  .serzone .sb{font-size:11px;margin-right:1px;}
+  .serzone i{display:block;width:15px;height:15px;border:1px dashed var(--line);border-radius:3px;}
+  .pbf{font-size:9px;color:var(--ink2);margin-top:7px;display:flex;align-items:center;gap:6px;}
+  .scoreline{display:inline-block;flex:1;border-bottom:1px solid var(--line);height:12px;}
+
+  /* 标记 */
+  .tokens{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;}
+  .token{aspect-ratio:1/1;border:1.4px solid #6c7683;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:8px;
+    background:radial-gradient(circle at 50% 34%,#fff 0%,#e7eaee 100%);}
+  .token b{font-size:11px;color:var(--blue);}
+  .token.bad{border-color:var(--red);background:radial-gradient(circle at 50% 34%,#fff 0%,#f4dede 100%);}
+  .token.bad b{color:var(--red);font-size:9px;}
+  .token.lien{border-radius:4px;background:radial-gradient(circle at 50% 34%,#fff 0%,#f7ecd4 100%);border-color:#a5802f;}
+  .token.lien b{color:#8a5a1f;font-size:9px;}
+
+  /* 速查 */
+  .cheat{border:2px solid var(--ink);border-radius:8px;padding:14px 16px;background:var(--paper);}
+  .ch{font-size:15px;font-weight:700;letter-spacing:3px;text-align:center;
+    border-bottom:1.5px solid var(--ink);padding-bottom:7px;margin-bottom:10px;}
+  .cc{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;font-size:10px;}
+  .cc ol,.cc ul{margin:0 0 7px 15px;padding:0;}
+  .cc li{margin:2px 0;line-height:1.5;}
+  table.mini{border-collapse:collapse;font-size:9px;margin:3px 0;}
+  table.mini th,table.mini td{border:1px solid var(--line);padding:2px 4px;text-align:center;white-space:nowrap;}
+  table.mini th{background:#eef1f4;color:var(--ink2);font-weight:600;}
+  .note{font-size:8.5px;color:var(--ink2);margin:2px 0 0;}
+
+  .pagebreak{page-break-before:always;}
+  @media print{
+    @page{size:A4;margin:8mm;}
+    body{padding:0;background:#fff;font-size:12px;}
+    .pagebreak{page-break-before:always;}
+    .card,.board,.pboard,.cheat,.token,.mon,.mcell{break-inside:avoid;page-break-inside:avoid;}
+    .print-hint{display:none;}
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>💰 利滚利：魔力银行 · 打印道具</h1>
+<div class="sub">COMPOUND: THE MANA BANK ── 2-5 人 · 45-60 分钟 · 8 个月</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，页边距设置为<strong>最小</strong>（8mm）</li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形 / Background graphics」</strong>，否则卡牌配色与学院板底色会丢失</li>
+    <li>法术卡、借据卡、玩家板建议用 <strong>200g 以上卡纸</strong>打印，裁剪后可塑封</li>
+    <li>借据卡是本作的核心道具，建议<strong>双面打印或背面贴卡纸</strong>，因为要反复翻面打勾</li>
+    <li>魔力标记建议打印在卡纸上后剪成小圆片；也可直接用<strong>硬币、围棋子</strong>代替</li>
+    <li>本文件共 7 个板块：学院板 · 法术卡 52 张 · 借据卡 24 张 · 角色卡 6 张 · 玩家板 5 张 · 标记 · 速查卡</li>
+  </ul>
+</div>
+
+<h2>① 学院板 <span class="cnt">1 张 · 摊在桌中央</span></h2>
+<div class="board">
+  <div class="bt">魔 力 银 行</div>
+  <div class="bs">COMPOUND · THE MANA BANK</div>
+
+  <h3>月历轨（8 个月，结束即终局）</h3>
+  <div class="track">
+    <div class="mon"><b>1</b><span>月俸 5</span></div><div class="mon"><b>2</b><span>月俸 5</span></div><div class="mon"><b>3</b><span>月俸 5</span></div><div class="mon"><b>4</b><span>月俸 5</span></div><div class="mon"><b>5</b><span>月俸 5</span></div><div class="mon"><b>6</b><span>月俸 5</span></div><div class="mon"><b>7</b><span>月俸 5</span></div><div class="mon"><b>8</b><span>月俸 5</span></div>
+  </div>
+
+  <h3>法术市场（每月 4 张，月末补满）</h3>
+  <div class="market">
+    <div class="mcell">法术 A</div>
+    <div class="mcell">法术 B</div>
+    <div class="mcell">法术 C</div>
+    <div class="mcell">法术 D</div>
+  </div>
+
+  <h3>利息表（每张借据，按"年龄"付分）</h3>
+  <table class="inttable">
+    <tr><th>借据年龄</th><th>第 1-2 个付息日</th><th>第 3-4 个</th><th>第 5-6 个</th><th>第 7 个起</th></tr>
+    <tr><td>每张每月付</td><td class="v">1 分</td><td class="v">2 分</td><td class="v">4 分</td><td class="v">8 分</td></tr>
+  </table>
+
+  <h3>每月七步（顺序不可变）</h3>
+  <div class="flow">
+    <div class="fs"><b>① 发俸</b>每人 +5 魔力</div>
+    <div class="fs"><b>② 付息</b>借据按年龄扣分</div>
+    <div class="fs"><b>③ 催收</b>向债务人收本金</div>
+    <div class="fs"><b>④ 借款</b>向银行借 1-2 点</div>
+    <div class="fs"><b>⑤ 还本</b>付魔力撕借据</div>
+    <div class="fs"><b>⑥ 施法</b>市场买 1 张</div>
+    <div class="fs"><b>⑦ 补市</b>补满 · 魔力清零</div>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+<h2>② 法术卡 <span class="cnt">52 张 · 3 费 11 · 4 费 11 · 5 费 10 · 6 费 10 · 7 费 10</span></h2>
+<div class="grid">
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">火星术</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">灼指</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">余烬弹</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">打火印</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">疾风步</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">吹尘</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">侧风</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">轻身</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">算珠</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">零钱咒</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">星轨</div>
+        <div class="cpts"><b>3</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 3</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">爆燃</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">熔线</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">火舌缠</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">炭化</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">气流刃</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">回旋</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">顺风耳</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">风缚</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">信用评级</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">抵押契</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">星尘账</div>
+        <div class="cpts"><b>5</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 4</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">烈焰环</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">熔金术</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">火墙</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">焚风</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">飓风眼</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">升腾</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">风压壁</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">利息之眼</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">双重记账</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">星轨推演</div>
+        <div class="cpts"><b>8</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 5</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">灰烬风暴</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">岩浆迸发</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">赤日坠落</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">undefined</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">大回旋</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">风暴前夜</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">天风裂</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">债务炼金</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">破产预言</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">星河清算</div>
+        <div class="cpts"><b>12</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 6</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">焚城咒</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">万火归源</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-F">
+        <div class="ct">🔥 炎系 · 法术</div>
+        <div class="cname">熔心</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">🔥</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">风神之息</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">卷云</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-W">
+        <div class="ct">🌪️ 风系 · 法术</div>
+        <div class="cname">大气裁决</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">🌪️</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">无限复利</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">万象抵押</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">终局结算</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+      <div class="card sp-S">
+        <div class="ct">✨ 星系 · 法术</div>
+        <div class="cname">时间价值</div>
+        <div class="cpts"><b>17</b><small>分</small></div>
+        <div class="cfoot">
+          <span class="ccost">费用 7</span>
+          <span class="cser">✨</span>
+        </div>
+      </div>
+</div>
+
+<div class="pagebreak"></div>
+<h2>③ 借据卡 <span class="cnt">24 张 · 本金 1 / 2 / 3 各 8 张</span></h2>
+<h3>本金 2 点（主力，8 张）</h3>
+<div class="grid">
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>2</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+</div>
+<h3>本金 1 点（补差，8 张）</h3>
+<div class="grid">
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>1</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+</div>
+
+<div class="pagebreak"></div>
+<h3>本金 3 点（变体 / 高利贷局，8 张）</h3>
+<div class="grid">
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+      <div class="card iou">
+        <div class="ct">借据 · IOU</div>
+        <div class="iprincipal"><b>3</b><small>点本金</small></div>
+        <div class="iowner">债权人：<span class="wline"></span></div>
+        <div class="ihint">初始写「银行」，被买走后改写玩家名</div>
+        <div class="itrack">
+          <div class="itrow"><span class="ig">第1-2月</span><span class="iv">1 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第3-4月</span><span class="iv">2 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第5-6月</span><span class="iv">4 分</span><span class="ick"></span></div>
+          <div class="itrow"><span class="ig">第7月起</span><span class="iv">8 分</span><span class="ick"></span></div>
+        </div>
+        <div class="ifoot">每过一个付息日，在这一格打勾</div>
+      </div>
+</div>
+
+<h2>④ 角色卡 <span class="cnt">6 张 · 可选模块</span></h2>
+<div class="grid g3" style="grid-template-columns:repeat(3,1fr);">
+      <div class="card role">
+        <div class="ct">角色 · ROLE</div>
+        <div class="ricon">🏦</div>
+        <div class="rname">行长</div>
+        <div class="rtag">收债流</div>
+        <div class="rdesc">每月第一次成功催收，额外 +1 分。</div>
+      </div>
+      <div class="card role">
+        <div class="ct">角色 · ROLE</div>
+        <div class="ricon">📜</div>
+        <div class="rname">公证人</div>
+        <div class="rtag">长债流</div>
+        <div class="rdesc">整局 2 次：某张借据本次付息减半（向上取整，最低 1 分）。</div>
+      </div>
+      <div class="card role">
+        <div class="ct">角色 · ROLE</div>
+        <div class="ricon">🔥</div>
+        <div class="rname">火系教授</div>
+        <div class="rtag">集系流</div>
+        <div class="rdesc">每月购买 🔥 炎系法术时费用 −1（每月 1 次）。</div>
+      </div>
+      <div class="card role">
+        <div class="ct">角色 · ROLE</div>
+        <div class="ricon">🩸</div>
+        <div class="rname">收债人</div>
+        <div class="rtag">掠夺流</div>
+        <div class="rdesc">买债权时价格 −2 分（最低 2 分）。</div>
+      </div>
+      <div class="card role">
+        <div class="ct">角色 · ROLE</div>
+        <div class="ricon">👁️</div>
+        <div class="rname">审计员</div>
+        <div class="rtag">旁观流</div>
+        <div class="rdesc">其他玩家每违约 1 次，你 +2 分。</div>
+      </div>
+      <div class="card role">
+        <div class="ct">角色 · ROLE</div>
+        <div class="ricon">🎓</div>
+        <div class="rname">新生</div>
+        <div class="rtag">开局流</div>
+        <div class="rdesc">开局 +2 分；第 1 个月月俸 +2 点。</div>
+      </div>
+</div>
+
+<div class="pagebreak"></div>
+<h2>⑤ 玩家板 <span class="cnt">5 张</span></h2>
+<div class="pboards">
+      <div class="pboard">
+        <div class="pbh"><span class="pbn">玩家 1</span><span class="pbt">魔力池 · 借据区</span></div>
+        <div class="pbl">魔力（月末清零）</div>
+        <div class="mana">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="pbl">借据区（最多 2 张）</div>
+        <div class="iouzone"><div class="slot"></div><div class="slot"></div></div>
+        <div class="pbl">已施法系列（同系 3 张 +4 分）</div>
+        <div class="serzone">
+          <span class="sb">🔥</span><i></i><i></i><i></i>
+          <span class="sb">🌪️</span><i></i><i></i><i></i>
+          <span class="sb">✨</span><i></i><i></i><i></i>
+        </div>
+        <div class="pbf">得分 <span class="scoreline"></span></div>
+      </div>
+      <div class="pboard">
+        <div class="pbh"><span class="pbn">玩家 2</span><span class="pbt">魔力池 · 借据区</span></div>
+        <div class="pbl">魔力（月末清零）</div>
+        <div class="mana">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="pbl">借据区（最多 2 张）</div>
+        <div class="iouzone"><div class="slot"></div><div class="slot"></div></div>
+        <div class="pbl">已施法系列（同系 3 张 +4 分）</div>
+        <div class="serzone">
+          <span class="sb">🔥</span><i></i><i></i><i></i>
+          <span class="sb">🌪️</span><i></i><i></i><i></i>
+          <span class="sb">✨</span><i></i><i></i><i></i>
+        </div>
+        <div class="pbf">得分 <span class="scoreline"></span></div>
+      </div>
+      <div class="pboard">
+        <div class="pbh"><span class="pbn">玩家 3</span><span class="pbt">魔力池 · 借据区</span></div>
+        <div class="pbl">魔力（月末清零）</div>
+        <div class="mana">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="pbl">借据区（最多 2 张）</div>
+        <div class="iouzone"><div class="slot"></div><div class="slot"></div></div>
+        <div class="pbl">已施法系列（同系 3 张 +4 分）</div>
+        <div class="serzone">
+          <span class="sb">🔥</span><i></i><i></i><i></i>
+          <span class="sb">🌪️</span><i></i><i></i><i></i>
+          <span class="sb">✨</span><i></i><i></i><i></i>
+        </div>
+        <div class="pbf">得分 <span class="scoreline"></span></div>
+      </div>
+      <div class="pboard">
+        <div class="pbh"><span class="pbn">玩家 4</span><span class="pbt">魔力池 · 借据区</span></div>
+        <div class="pbl">魔力（月末清零）</div>
+        <div class="mana">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="pbl">借据区（最多 2 张）</div>
+        <div class="iouzone"><div class="slot"></div><div class="slot"></div></div>
+        <div class="pbl">已施法系列（同系 3 张 +4 分）</div>
+        <div class="serzone">
+          <span class="sb">🔥</span><i></i><i></i><i></i>
+          <span class="sb">🌪️</span><i></i><i></i><i></i>
+          <span class="sb">✨</span><i></i><i></i><i></i>
+        </div>
+        <div class="pbf">得分 <span class="scoreline"></span></div>
+      </div>
+      <div class="pboard">
+        <div class="pbh"><span class="pbn">玩家 5</span><span class="pbt">魔力池 · 借据区</span></div>
+        <div class="pbl">魔力（月末清零）</div>
+        <div class="mana">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="pbl">借据区（最多 2 张）</div>
+        <div class="iouzone"><div class="slot"></div><div class="slot"></div></div>
+        <div class="pbl">已施法系列（同系 3 张 +4 分）</div>
+        <div class="serzone">
+          <span class="sb">🔥</span><i></i><i></i><i></i>
+          <span class="sb">🌪️</span><i></i><i></i><i></i>
+          <span class="sb">✨</span><i></i><i></i><i></i>
+        </div>
+        <div class="pbf">得分 <span class="scoreline"></span></div>
+      </div>
+</div>
+
+<h2>⑥ 标记 <span class="cnt">魔力 60 · 违约 12 · 债权 12</span></h2>
+<h3>魔力标记（面值 1，60 枚）</h3>
+<div class="tokens"><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div><div class="token mana"><b>1</b></div></div>
+<h3 style="margin-top:14px;">违约标记（被催收却付不出本金，−5 分，12 枚）</h3>
+<div class="tokens"><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div><div class="token bad"><b>违约</b></div></div>
+<h3 style="margin-top:14px;">债权标记（压在借据卡上，表示已转手，12 枚）</h3>
+<div class="tokens"><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div><div class="token lien"><b>债权</b></div></div>
+
+<div class="pagebreak"></div>
+<h2>⑦ 速查卡 <span class="cnt">2 张 · 每人一份</span></h2>
+<div class="cheat">
+  <div class="ch">利滚利 · 一 页 速 查</div>
+  <div class="cc">
+    <div>
+      <b>每月七步</b>
+      <ol>
+        <li><b>发俸</b>：每人 +5 魔力（上月余额已清零）</li>
+        <li><b>付息</b>：每张借据按年龄付分（见右下表）</li>
+        <li><b>催收</b>：持有他人借据者可收「本金」点魔力（每人每月 1 次）</li>
+        <li><b>借款</b>：向银行借 1-2 点，放等额借据（上限 2 张）</li>
+        <li><b>还本</b>：付「本金」点魔力，撕借据（利息不退）</li>
+        <li><b>施法</b>：市场买 1 张，付费用得分；同系第 3 张 +4</li>
+        <li><b>补市</b>：补到 4 张；剩余魔力清零；起始玩家左移</li>
+      </ol>
+      <b>随时可做</b>
+      <ul>
+        <li><b>买债权</b>：付「本金 + 5」分，买下任一张银行借据（每月 1 次，当月不能催收）</li>
+      </ul>
+      <p class="note">终局：未偿本金 × 3 扣分。分高者胜；同分比未偿本金少者。</p>
+    </div>
+    <div>
+      <b>法术价目</b>
+      <table class="mini">
+        <tr><th>费用</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+        <tr><td>分值</td><td>3</td><td>5</td><td>8</td><td>12</td><td>17</td></tr>
+        <tr><td>分/点</td><td>1.00</td><td>1.25</td><td>1.60</td><td>2.00</td><td>2.43</td></tr>
+      </table>
+      <b>利息表</b>
+      <table class="mini">
+        <tr><th>年龄</th><th>1-2</th><th>3-4</th><th>5-6</th><th>7+</th></tr>
+        <tr><td>每张付</td><td>1</td><td>2</td><td>4</td><td>8</td></tr>
+      </table>
+      <b>三条铁律</b>
+      <ul>
+        <li>借 1 点买 6 费，小赚；借 2 点买 7 费，打平；只有「本来就买不起」的月份稳赚</li>
+        <li>借据 3 个月内还清；超过 4 个月，利息开始吃人</li>
+        <li>最后一个月只借不还</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:22px;text-align:center;font-size:10px;color:var(--ink2);letter-spacing:1px;">
+  利滚利：魔力银行 · 打印道具 v1.0 ── 规则与数值详见 README.md
+</div>
+
+</body>
+</html>
