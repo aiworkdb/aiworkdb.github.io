@@ -5,11 +5,20 @@
 headless Chrome 的窗口有最小宽度（约 500px），直接用 --window-size=390 量不准；
 这里把页面塞进固定 390px 的 iframe，媒体查询按 iframe 宽度生效，测量才可信。
 
+⚠️ 判据不能再退回 documentElement.scrollWidth：
+   body 带 overflow-x:hidden（lib.css 的「永不横向滚动」铁律），
+   所以 de.scrollWidth 恒等于 clientWidth，用它判溢出永远是 0。
+   同理，把 overflowX:hidden 当作「可滚动祖先」来豁免，等于给全站开免检通道
+   （2026-11-03 发现：旧版两条叠加，166 页恒报 0 溢出，属于假绿）。
+   现行判据是逐个元素比对视口宽度，且只认 auto/scroll 为可滑容器；
+   另外单独报「hidden 容器里真子元素被裁」，装饰伪元素（.h-hero::after）不误报。
+
 harness 文件固定放在仓库根的 __harness.html（只写不删，避免触发批量删除保护），
 请把它加进 .gitignore。
 
 用法：
-    python3 tools/mobile_audit.py                 # 全站巡检
+    python3 tools/mobile_audit.py                 # 全站巡检（390px）
+    python3 tools/mobile_audit.py --w 320         # 窄屏（iPhone SE / 老安卓）
     python3 tools/mobile_audit.py --only guide    # 只巡检路径含 guide 的页
     python3 tools/mobile_audit.py --shot index.html guide.html
 """
@@ -27,7 +36,7 @@ PORT = 8902
 W, H = 390, 844
 HARNESS_NAME = '__harness.html'
 
-HARNESS = """<!DOCTYPE html><html><head><meta charset="utf-8">
+HARNESS_TMPL = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <style>html,body{margin:0;padding:0;background:#111}
 iframe{width:%dpx;height:%dpx;border:0;display:block}</style></head>
 <body><iframe id="f"></iframe>
@@ -46,35 +55,66 @@ function probe(){
     document.title = 'PROBE{"err":"no-doc","tries":' + tries + '}PROBE';
     return;
   }
-  var de = d.documentElement;
-  var res = {sw: de.scrollWidth, cw: de.clientWidth, bad: [], tries: tries};
-  function scrollable(el){
-    while(el && el !== de){
-      var cs = getComputedStyle(el);
-      if(cs.overflowX === 'auto' || cs.overflowX === 'scroll' || cs.overflowX === 'hidden') return true;
-      el = el.parentElement;
+  var de = d.documentElement, body = d.body;
+  var vw = de.clientWidth;
+  // 注意：body 是 overflow-x:hidden，de.scrollWidth 恒等于 clientWidth，
+  // 拿它判溢出永远是 0 —— 必须按视口宽度逐元素比对。
+  var res = {sw: de.scrollWidth, cw: vw, bodySW: body.scrollWidth,
+             bad: [], clip: [], tries: tries};
+  function nm(el){
+    var c = el.className;
+    var s = (c && c.toString) ? c.toString().trim().split(' ').slice(0,2).join('.') : '';
+    return el.tagName + (s ? '.' + s : '');
+  }
+  // 只有 auto/scroll 才算「滑得到」。hidden 是把内容裁掉，用户根本滑不到，
+  // 早先把它也算作可滚动祖先，等于给全站开了免检通道。
+  function realScroller(el, stop){
+    var p = el.parentElement;
+    while (p && p !== stop){
+      var cs = getComputedStyle(p);
+      if (cs.overflowX === 'auto' || cs.overflowX === 'scroll') return p;
+      p = p.parentElement;
     }
-    return false;
+    return null;
   }
   d.querySelectorAll('body *').forEach(function(el){
     var r = el.getBoundingClientRect();
-    if(r.width > 0 && r.right > de.clientWidth + 1 && !scrollable(el)){
-      var cls = el.className && el.className.toString ? el.className.toString().slice(0,30) : '';
-      res.bad.push(el.tagName + '.' + cls + ' right=' + Math.round(r.right));
+    if(r.width > 0 && r.height > 0 && (r.right > vw + 1 || r.left < -1)
+       && !realScroller(el, body)){
+      res.bad.push(nm(el) + ' L=' + Math.round(r.left) + ' R=' + Math.round(r.right));
+    }
+    var cs2 = getComputedStyle(el);
+    if(cs2.overflowX === 'hidden' && el.clientWidth > 0
+       && el.scrollWidth - el.clientWidth > 1){
+      var box = el.getBoundingClientRect(), hit = null, kids = el.querySelectorAll('*');
+      for(var k = 0; k < kids.length; k++){
+        var kr = kids[k].getBoundingClientRect();
+        if(kr.width <= 0 || kr.height <= 0) continue;
+        if(realScroller(kids[k], el)) continue;   // 中间有可滑容器，不算被裁
+        if(kr.right > box.right + 1 || kr.left < box.left - 1){ hit = nm(kids[k]); break; }
+      }
+      // 没命中真元素 = 装饰光斑（.h-hero::after 这类故意超出再裁掉），不算内容丢失
+      if(hit) res.clip.push(nm(el) + ' cw=' + el.clientWidth + ' sw=' + el.scrollWidth + ' <- ' + hit);
     }
   });
   res.bad = res.bad.slice(0, 6);
+  res.clip = res.clip.slice(0, 6);
   document.title = 'PROBE' + JSON.stringify(res) + 'PROBE';
 }
 f.addEventListener('load', function(){ setTimeout(probe, 200); });
 setTimeout(probe, 400);
-</script></body></html>""" % (W, H, PORT)
+</script></body></html>"""
 
 
-def ensure_harness():
+def harness_html(w, h):
+    """按目标宽度生成 harness。窄屏（320）和宽屏（414）各跑一轮才算真的「手机端好用」。"""
+    return HARNESS_TMPL % (w, h, PORT)
+
+
+def ensure_harness(html):
     p = BASE / HARNESS_NAME
-    if not p.exists() or p.read_text(encoding='utf-8') != HARNESS:
-        p.write_text(HARNESS, encoding='utf-8')
+    if not p.exists() or p.read_text(encoding='utf-8') != html:
+        p.write_text(html, encoding='utf-8')
 
 
 CHROME_TIMEOUT = 45      # 单页上限。virtual-time-budget 只有 4s，超 45s 基本就是卡死
@@ -126,8 +166,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--shot', nargs='*', default=[])
     ap.add_argument('--only', nargs='*', default=[])
+    ap.add_argument('--w', type=int, default=W,
+                    help='目标视口宽度，默认 390；建议同时跑 320 与 414')
     a = ap.parse_args()
-    ensure_harness()
+    ensure_harness(harness_html(a.w, H))
 
     if a.shot:
         outdir = BASE / '.audit'
@@ -156,11 +198,14 @@ def main():
             failed.append(rel)
             print(f'  ?? {rel} 探针未返回')
             continue
-        if r['sw'] > r['cw'] + 1 or r['bad']:
+        # 只看 bad/clip：sw 与 cw 因 body{overflow-x:hidden} 恒等，不能作为判据
+        if r['bad'] or r.get('clip'):
             bad += 1
-            print(f'  x {rel}  scrollWidth={r["sw"]} / 视口={r["cw"]}')
+            print(f'  x {rel}  视口={r["cw"]} bodyScrollWidth={r.get("bodySW")}')
             for b in r['bad']:
-                print('      ', b)
+                print('      越界:', b)
+            for c in r.get('clip', []):
+                print('      被裁:', c)
     print(f'\n巡检 {len(pages)} 页，横向溢出 {bad} 页，探针未返回 {len(failed)} 页')
     if failed:
         print('  未返回页面（需单独复核）：')
