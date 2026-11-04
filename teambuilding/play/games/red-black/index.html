@@ -130,10 +130,11 @@
       <div class="winner-line" id="winnerLine"></div>
       <div class="penalty-box" id="penaltyBox" style="display:none"></div>
       <div class="tips-title">复盘要点</div>
-      <div class="tip-item">双黑共赢：双方都选黑时一起加分，这是合作的最优解。</div>
-      <div class="tip-item">单方选红能短期占优，但会引发对方报复，长期是双输。</div>
-      <div class="tip-item">单轮出红严格占优，但「一直出红必胜」要对方不报复、且你不怕负分才成立——算得清单轮最优，不等于赢得下整场。</div>
-      <div class="tip-item">负分要付代价：没有下行风险时，谁都不会愿意先动，博弈就死了。</div>
+      <div class="tip-item">出红严格占优：对方出红时选红(-3)好过选黑(-5)，对方出黑时选红(+5)好过选黑(+3)。这一条不用反驳——读者算得是对的。</div>
+      <div class="tip-item">唯一均衡是双方都出红：各拿 -3×轮数，全场负分，两边一起吃惩罚任务。</div>
+      <div class="tip-item">双方都出黑各拿 +3、无人受罚，但那不是均衡——一方改出红就拿走 +5，把对方压到 -5，还顺手甩掉惩罚。</div>
+      <div class="tip-item">所以整场最优的不是「一直出红」，是「说动对方跟你一起出黑」：算术只保证你不吃亏，从 -3 变成 +3 的那 6 分要靠谈。</div>
+      <div class="tip-item">负分代价没改变占优性，它改变的是赌注：让躺平变有代价，谈判才出现，那 +5 的诱惑也第一次标上了价。</div>
       <div class="tip-item">游戏隐喻工作与协作：单方面占便宜，会破坏长期合作关系。</div>
       <div class="hist-title">每轮记录</div>
       <table class="hist-table" id="histTable"></table>
@@ -220,15 +221,15 @@ function buildSchedule() {
 //    双黑 +1、单方红黑 -3，导致读者按文章算的分数和工具算的对不上）
 function calc(red, blue) {
   if (red === '红' && blue === '红') {
-    return { red: -3, blue: -3, msg: '双方都选红：两败俱伤，各扣 3 分。信任一旦破裂，合作就难了。' };
+    return { red: -3, blue: -3, msg: '双方都选红：各扣 3 分。这是唯一的均衡——出红严格占优，但全场上演就是两败俱伤，两边一起吃惩罚。' };
   }
   if (red === '黑' && blue === '黑') {
-    return { red: 3, blue: 3, msg: '双方都选黑：合作共赢，各加 3 分。双黑是长期最优解。' };
+    return { red: 3, blue: 3, msg: '双方都选黑：各加 3 分，谁都不用吃惩罚。但它靠双方都守约——一方改出红就能拿走 +5，把惩罚甩给对方。' };
   }
   if (red === '红') {
-    return { red: 5, blue: -5, msg: '红方选红：+5 分短期占优；蓝方选黑被扣 5 分。单方选红会引发对方报复，下一轮对方大概率也选红。' };
+    return { red: 5, blue: -5, msg: '红方选红：+5 分短期占优；蓝方选黑被扣 5 分。对方下一轮大概率也出红（那对他才是最优），所以单方出红不长久。' };
   }
-  return { red: -5, blue: 5, msg: '蓝方选红：+5 分短期占优；红方选黑被扣 5 分。单方选红会引发对方报复。' };
+  return { red: -5, blue: 5, msg: '蓝方选红：+5 分短期占优；红方选黑被扣 5 分。对方下一轮大概率也出红，单方出黑不长久。' };
 }
 
 // ---- 设置 ----

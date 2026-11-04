@@ -34,6 +34,7 @@ cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
 | **难度** | 中等 |
 | **类别** | 团队协作类 |
 | **主题** | 厨房协作 + 任务挑战 |
+| **道具需求** | 有（任务卡 + 技能卡 + 资源卡） |
 
 ---
 

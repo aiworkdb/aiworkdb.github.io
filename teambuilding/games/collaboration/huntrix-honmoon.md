@@ -49,6 +49,7 @@ cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
 | **适合场景** | 团队文化 / 心理安全感建设 / 能量与认可管理 / 信任凝聚团建 |
 | **游戏类型** | 合作 / 区域探索 + 威胁管控 + 团队战斗 |
 | **主题来源** | 《KPop Demon Hunters / 猎魔女团 / HUNTR/X》 |
+| **道具需求** | 有（都市地图 + 玩家棋子 + 骰子） |
 
 ---
 

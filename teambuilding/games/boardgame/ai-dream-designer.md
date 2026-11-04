@@ -24,6 +24,7 @@ cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
 | 场地 | 会议室即可，桌面留出「订单展示区」 |
 | 完整规则 | [桌游库 · AI梦境设计师](https://ai.aitboy.cn/boardgames/category/card/ai-dream-designer/) |
 | 打印道具 | [printables 打印页](https://ai.aitboy.cn/boardgames/category/card/ai-dream-designer/printables.html) |
+| **道具需求** | 有（订单卡 + 场景/情绪/元素牌） |
 
 ## 🎯 团建核心价值
 

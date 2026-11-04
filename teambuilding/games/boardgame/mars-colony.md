@@ -24,6 +24,7 @@ cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
 | 场地 | 会议室/培训室，桌面展开火星地图 |
 | 完整规则 | [桌游库 · 火星殖民计划](https://ai.aitboy.cn/boardgames/category/strategy/mars-colony/) |
 | 打印道具 | [printables 打印页](https://ai.aitboy.cn/boardgames/category/strategy/mars-colony/printables.html) |
+| **道具需求** | 有（火星地图 + 设施卡 + 危机卡） |
 
 ## 🎯 团建核心价值
 

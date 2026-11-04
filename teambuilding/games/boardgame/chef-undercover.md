@@ -24,6 +24,7 @@ cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
 | 场地 | 会议室即可，摆出「后厨」氛围 |
 | 完整规则 | [桌游库 · 卧底大厨](https://ai.aitboy.cn/boardgames/category/party/chef-undercover/) |
 | 打印道具 | [printables 打印页](https://ai.aitboy.cn/boardgames/category/party/chef-undercover/printables.html) |
+| **道具需求** | 有（身份卡 + 任务卡 + 投票标记） |
 
 ## 🎯 团建核心价值
 

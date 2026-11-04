@@ -24,6 +24,7 @@ cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
 | 场地 | 会议室即可，桌面就是「工位」 |
 | 完整规则 | [桌游库 · 数字分身上班记](https://ai.aitboy.cn/boardgames/category/party/digital-twin-work/) |
 | 打印道具 | [printables 打印页](https://ai.aitboy.cn/boardgames/category/party/digital-twin-work/printables.html) |
+| **道具需求** | 有（任务卡 + 干扰卡 + 时间块） |
 
 ## 🎯 团建核心价值
 

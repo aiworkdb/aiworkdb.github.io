@@ -24,6 +24,7 @@ cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
 | 场地 | 会议室即可，一桌一副 |
 | 完整规则 | [桌游库 · 古文明拍卖行](https://ai.aitboy.cn/boardgames/category/card/ancient-auction/) |
 | 打印道具 | [printables 打印页](https://ai.aitboy.cn/boardgames/category/card/ancient-auction/printables.html) |
+| **道具需求** | 有（文物卡 + 出价卡 + 资金卡） |
 
 ## 🎯 团建核心价值
 

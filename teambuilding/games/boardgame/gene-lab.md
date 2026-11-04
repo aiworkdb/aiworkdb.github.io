@@ -24,6 +24,7 @@ cover: "https://placehold.co/1200x630/475569/white?text=Board+Game"
 | 场地 | 会议室/培训室，桌面展开实验版图 |
 | 完整规则 | [桌游库 · 基因编辑实验室](https://ai.aitboy.cn/boardgames/category/cooperative/gene-lab/) |
 | 打印道具 | [printables 打印页](https://ai.aitboy.cn/boardgames/category/cooperative/gene-lab/printables.html) |
+| **道具需求** | 有（A4 实验面板 + 基因序列卡 + 风险事件卡） |
 
 ## 🎯 团建核心价值
 
