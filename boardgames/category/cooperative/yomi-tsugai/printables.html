@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黄泉双生 · 打印道具</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background: #f4f1e8; color: #1f2a37; margin: 0; padding: 24px;
+  }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: 2px; color: #8d2f28; }
+  h2 { font-size: 19px; margin: 34px 0 12px; padding: 8px 12px;
+       border-left: 5px solid #8d2f28; background: #f6e7e3; border-radius: 4px; color: #8d2f28; }
+  .sub { color: #5b6472; font-size: 13px; margin-bottom: 18px; }
+  .sub a { color: #8d2f28; }
+  .print-hint { background: #fdf6e0; border: 1px solid #dfc07a; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 22px; font-size: 14px; line-height: 1.9; }
+  .print-hint strong { color: #9a6a12; }
+  .print-hint ul { margin: 6px 0 0 18px; padding: 0; }
+  .grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .setlabel { width: 100%; font-size: 13px; color: #8d2f28; margin: 14px 0 8px; font-weight: 700; }
+  .setlabel .sub2 { color: #5b6472; font-weight: 400; font-size: 12px; }
+
+  /* ---------- 村落板 ---------- */
+  .board { background: #fffdf7; border: 3px solid #2b4a6f; border-radius: 12px; padding: 16px; page-break-inside: avoid; }
+  .btitle { text-align: center; font-size: 15px; letter-spacing: 6px; color: #2b4a6f; font-weight: 800; margin-bottom: 12px; }
+  .brow { display: flex; gap: 10px; justify-content: center; margin-bottom: 10px; }
+  .brow.center { justify-content: center; }
+  .bcell { border: 2px solid #c8bda4; border-radius: 10px; background: #fff; padding: 8px 10px; text-align: center; min-width: 160px; }
+  .bcell.g2 { border-color: #7a9a7e; background: #f2f7f1; }
+  .bcell.g3 { border-color: #7b8fa8; background: #f1f5fa; }
+  .bcell.g4 { border-color: #8d2f28; background: #fbf0ee; }
+  .bcell.boss { border-width: 3px; min-width: 300px; }
+  .bic { font-size: 24px; }
+  .bnm { font-size: 15px; font-weight: 800; margin: 2px 0; }
+  .bmeta { font-size: 10px; color: #5b6472; }
+  .bslots { display: flex; gap: 4px; justify-content: center; margin-top: 6px; }
+  .bslot { width: 20px; height: 20px; border: 1px dashed #8d2f28; border-radius: 3px; background: #fff; }
+  .bmid { text-align: center; font-size: 10px; color: #8a8064; letter-spacing: 2px; margin: 6px 0; }
+  .tracks { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+  .trk { flex: 1; min-width: 240px; border: 1px solid #c8bda4; border-radius: 8px; background: #fff; padding: 8px 10px; font-size: 11px; color: #46505e; }
+  .trk b { color: #2b4a6f; }
+  .pips { display: flex; gap: 3px; margin-top: 6px; flex-wrap: wrap; }
+  .pip { width: 19px; height: 19px; border: 1px solid #9aa7b6; border-radius: 4px; background: #eef1f5; font-size: 9px;
+         display: flex; align-items: center; justify-content: center; color: #46505e; }
+  .pip.hi { background: #f9e6e3; border-color: #8d2f28; color: #8d2f28; }
+  .pip.st { background: #eef3f8; border-color: #2b4a6f; color: #2b4a6f; font-weight: 700; }
+  .sptable { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 11.5px; }
+  .sptable td, .sptable th { border: 1px solid #c8bda4; padding: 4px 8px; text-align: left; }
+  .sptable th { background: #eef2f7; color: #2b4a6f; }
+
+  /* ---------- 半身卡 ---------- */
+  .half { width: 104px; height: 176px; position: relative; background: #fffdf7;
+    border: 2px solid #2b4a6f; border-radius: 8px; padding: 8px 8px 6px;
+    display: flex; flex-direction: column; align-items: center;
+    page-break-inside: avoid; box-shadow: 0 1px 3px rgba(0,0,0,.10); }
+  .half.hl { border-right-style: dashed; border-right-width: 3px; border-right-color: #8d2f28; }
+  .half.hr { border-left-style: dashed; border-left-width: 3px; border-left-color: #8d2f28; }
+  .seam { position: absolute; top: 0; bottom: 0; width: 14px; display: flex; align-items: center; justify-content: center; }
+  .half.hl .seam { right: -7px; }
+  .half.hr .seam { left: -7px; }
+  .notch { width: 16px; height: 16px; border-radius: 50%; border: 2px dashed #8d2f28; background: #f4f1e8; }
+  .htop { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+  .side { font-size: 10px; font-weight: 800; color: #8d2f28; border: 1px solid #8d2f28; border-radius: 3px; padding: 0 4px; }
+  .half.hr .side { color: #2b4a6f; border-color: #2b4a6f; }
+  .val { font-size: 15px; font-weight: 900; color: #1f2a37; background: #f0ece0; border-radius: 12px; padding: 0 7px; }
+  .glyph { font-size: 40px; font-weight: 900; color: #1f2a37; margin: 6px 0 2px; line-height: 1; }
+  .romaji { font-size: 9px; letter-spacing: 2px; color: #5b6472; }
+  .htag { margin-top: auto; font-size: 8.5px; color: #8a8064; text-align: center; line-height: 1.4; }
+
+  /* ---------- 普通卡 ---------- */
+  .card { width: 148px; height: 200px; border-radius: 10px; padding: 9px; background: #fffdf7;
+    border: 2px solid #1f2a37; display: flex; flex-direction: column;
+    page-break-inside: avoid; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  .ctop { display: flex; justify-content: space-between; align-items: flex-start; }
+  .cic { font-size: 22px; }
+  .cdx { font-size: 7.5px; letter-spacing: .5px; color: #5b6472; white-space: nowrap; text-align: right; max-width: 92px; overflow: hidden; }
+  .cnm { font-size: 14px; font-weight: 800; margin: 3px 0 4px; color: #1f2a37; }
+  .cline { font-size: 10.5px; color: #46505e; line-height: 1.6; }
+  .cline b { color: #8d2f28; }
+  .cline b.big { font-size: 15px; }
+  .cfx { font-size: 10px; line-height: 1.6; color: #46505e; border-top: 1px dashed #c8bda4; padding-top: 5px; margin-top: 5px; }
+  .cfoot { margin-top: auto; font-size: 8.5px; color: #a0917a; text-align: center; }
+  .card.tide { border-color: #2b4a6f; }
+  .card.tide.hasfx { border-color: #7b6a9a; background: #f7f4fb; }
+  .card.suku { border-color: #6b3a52; background: #fbf2f6; }
+  .tagpill { font-size: 8px; background: #6b3a52; color: #fff; border-radius: 8px; padding: 1px 6px; }
+  .card.gate { border-color: #8d2f28; background: #fdf6f4; }
+  .clinerow { display: flex; gap: 10px; font-size: 10px; color: #46505e; }
+  .kv b { color: #8d2f28; font-size: 13px; }
+  .slots { display: flex; gap: 4px; margin: 8px 0 4px; }
+  .slot { width: 18px; height: 18px; border: 1.5px dashed #8d2f28; border-radius: 3px; background: #fff; }
+  .card.role { border-color: #4a6b4f; background: #f5f8f2; height: 232px; }
+  .rtop { display: flex; justify-content: space-between; align-items: center; }
+  .ric { font-size: 22px; }
+  .ren { font-size: 8px; letter-spacing: 1px; color: #4a6b4f; }
+  .rnm { font-size: 13.5px; font-weight: 800; color: #2f4a33; margin: 3px 0 5px; }
+  .rsk { font-size: 10px; line-height: 1.65; color: #253a28; background: #fff; border-left: 3px solid #4a6b4f; padding: 5px 6px; border-radius: 3px; }
+  .rtip { font-size: 9px; line-height: 1.55; color: #5b6472; margin-top: 6px; }
+
+  /* ---------- 玩家板 ---------- */
+  .pboard { width: 268px; border: 2px solid #2b4a6f; border-radius: 10px; background: #fffdf7; padding: 10px 12px; page-break-inside: avoid; }
+  .pbhead { font-size: 13px; font-weight: 800; color: #2b4a6f; border-bottom: 2px solid #2b4a6f; padding-bottom: 5px; margin-bottom: 7px; }
+  .pbhead span { float: right; font-size: 8px; letter-spacing: 1px; color: #8a8064; font-weight: 400; }
+  .pbrow { display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px dotted #d6cdb8; }
+  .pbl { color: #46505e; }
+  .pbv { font-weight: 700; color: #8d2f28; }
+  .pbdot { width: 14px; height: 14px; border: 1.5px solid #8d2f28; border-radius: 50%; }
+  .pbline { display: inline-block; width: 96px; border-bottom: 1px dashed #8a8064; }
+  .pbnotes { font-size: 9.5px; color: #8a8064; margin-top: 8px; line-height: 1.9; }
+
+  /* ---------- 速查 ---------- */
+  .quick { background: #fffdf7; border: 2px solid #8d2f28; border-radius: 10px; padding: 14px 18px; font-size: 12px; line-height: 1.85; page-break-inside: avoid; }
+  .quick ol { margin: 4px 0 0 20px; padding: 0; }
+  .quick table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 11.5px; }
+  .quick td, .quick th { border: 1px solid #c8bda4; padding: 4px 8px; text-align: left; }
+  .quick th { background: #f6e7e3; color: #8d2f28; }
+  footer { margin-top: 40px; font-size: 12px; color: #a0917a; text-align: center; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .print-hint { display: none; }
+    body { padding: 0; background: #fff; }
+    h2 { margin: 16px 0 8px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🚪 黄泉双生 · 打印道具</h1>
+<div class="sub">YOMI TSUGAI: The Twin Vigil　|　合作类桌游 · 3-5 人 · 45-70 分钟　|　与 <a href="README.md">README.md 规则说明</a> 配套使用　|　全套 163 件</div>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸</strong>，建议设置<strong>最小边距（无）</strong>，缩放选 <strong>100%</strong>（不要"适合页面"，否则半身卡会拼不上）</li>
+    <li>在打印对话框中，务必<strong>勾选"背景图形"</strong>，否则所有底色与色框都会消失</li>
+    <li><strong>半身卡必须用卡纸</strong>打印。左半与右半的虚线缝是拼合对齐线，裁切时沿虚线内侧裁</li>
+    <li>80 张半身卡建议裁完先按搭档名分 10 叠，背面用铅笔轻轻标名，再洗牌</li>
+    <li>村落板建议 A3 或两张 A4 拼接；结界卡的 5 个层格是放封印标记的位置</li>
+  </ul>
+</div>
+
+<h2>🗺️ 村落板（1 张）</h2>
+  <div class="board">
+    <div class="btitle">东村 · 西村 · 黄泉门</div>
+    <div class="brow">
+      <div class="bcell g2">
+        <div class="bic">⛩️</div><div class="bnm">东村祠</div>
+        <div class="bmeta">隙 2 · 层 2</div>
+        <div class="bslots"><span class="bslot"></span><span class="bslot"></span></div>
+      </div><div class="bcell g3">
+        <div class="bic">🕳️</div><div class="bnm">枯井</div>
+        <div class="bmeta">隙 3 · 层 3</div>
+        <div class="bslots"><span class="bslot"></span><span class="bslot"></span><span class="bslot"></span></div>
+      </div><div class="bcell g2">
+        <div class="bic">🏮</div><div class="bnm">西村祠</div>
+        <div class="bmeta">隙 2 · 层 2</div>
+        <div class="bslots"><span class="bslot"></span><span class="bslot"></span></div>
+      </div>
+    </div>
+    <div class="bmid"><span class="bnote">◀ 东村　｜　井　｜　西村 ▶</span></div>
+    <div class="brow center">
+      <div class="bcell wide g4"><div class="bic">🌲</div><div class="bnm">山神社</div><div class="bmeta">隙 4 · 层 3</div><div class="bslots"><span class="bslot"></span><span class="bslot"></span><span class="bslot"></span></div></div>
+    </div>
+    <div class="brow center">
+      <div class="bcell boss g4"><div class="bic">🚪</div><div class="bnm">黄泉门</div><div class="bmeta">隙 4 · 层 5</div><div class="bslots"><span class="bslot"></span><span class="bslot"></span><span class="bslot"></span><span class="bslot"></span><span class="bslot"></span></div></div>
+    </div>
+    <div class="tracks">
+      <div class="trk"><b>污秽轨（0 → 11，达 12 判负）</b><div class="pips"><span class="pip">0</span><span class="pip">1</span><span class="pip">2</span><span class="pip">3</span><span class="pip">4</span><span class="pip">5</span><span class="pip">6</span><span class="pip">7</span><span class="pip">8</span><span class="pip hi">9</span><span class="pip hi">10</span><span class="pip hi">11</span></div></div>
+      <div class="trk"><b>夜次轨（第 1 → 8 夜）</b><div class="pips"><span class="pip st">1</span><span class="pip st">2</span><span class="pip st">3</span><span class="pip st">4</span><span class="pip st">5</span><span class="pip st">6</span><span class="pip st">7</span><span class="pip st">8</span></div></div>
+    </div>
+    <table class="sptable">
+      <tr><th>人数</th><th>结界</th><th>层数</th><th>夜数</th></tr>
+      <tr><td>3 人</td><td>东村祠 / 枯井 / 黄泉门</td><td>各 2（共 6）</td><td>10 夜</td></tr>
+      <tr><td>4 人</td><td>全部 5 处</td><td>2 / 2 / 3 / 3 / 5（共 15）</td><td>8 夜</td></tr>
+      <tr><td>5 人</td><td>全部 5 处</td><td>2 / 2 / 3 / 3 / 5（共 15）</td><td>8 夜</td></tr>
+      <tr><td>2 人</td><td>按 4 人配置（每人两名守夜人）</td><td>共 15</td><td>8 夜</td></tr>
+    </table>
+  </div>
+
+<h2>🚪 结界卡（5 张）</h2>
+<div class="grid">
+      <div class="card gate">
+        <div class="ctop"><span class="cic">⛩️</span><span class="cdx">EAST SHRINE</span></div>
+        <div class="cnm">东村祠</div>
+        <div class="clinerow"><span class="kv">隙值 <b>2</b></span><span class="kv">层数 <b>2</b></span></div>
+        <div class="slots"><span class="slot"></span><span class="slot"></span></div>
+        <div class="cfx">村东头的小祠，供着无名的牌位。隙最浅，祟最先从这里探头。</div>
+      </div>
+      <div class="card gate">
+        <div class="ctop"><span class="cic">🏮</span><span class="cdx">WEST SHRINE</span></div>
+        <div class="cnm">西村祠</div>
+        <div class="clinerow"><span class="kv">隙值 <b>2</b></span><span class="kv">层数 <b>2</b></span></div>
+        <div class="slots"><span class="slot"></span><span class="slot"></span></div>
+        <div class="cfx">西村的祠堂，梁上挂着三十年前的灯笼。灯油早已干了。</div>
+      </div>
+      <div class="card gate">
+        <div class="ctop"><span class="cic">🕳️</span><span class="cdx">DRY WELL</span></div>
+        <div class="cnm">枯井</div>
+        <div class="clinerow"><span class="kv">隙值 <b>3</b></span><span class="kv">层数 <b>3</b></span></div>
+        <div class="slots"><span class="slot"></span><span class="slot"></span><span class="slot"></span></div>
+        <div class="cfx">井底没有水，只有回声。往里喊一声，回来的不是你的声音。</div>
+      </div>
+      <div class="card gate">
+        <div class="ctop"><span class="cic">🌲</span><span class="cdx">MT. SHRINE</span></div>
+        <div class="cnm">山神社</div>
+        <div class="clinerow"><span class="kv">隙值 <b>4</b></span><span class="kv">层数 <b>3</b></span></div>
+        <div class="slots"><span class="slot"></span><span class="slot"></span><span class="slot"></span></div>
+        <div class="cfx">半山腰的神社，鸟居缺了一根柱子。只有力 4 的搭档压得住。</div>
+      </div>
+      <div class="card gate">
+        <div class="ctop"><span class="cic">🚪</span><span class="cdx">YOMI GATE</span></div>
+        <div class="cnm">黄泉门</div>
+        <div class="clinerow"><span class="kv">隙值 <b>4</b></span><span class="kv">层数 <b>5</b></span></div>
+        <div class="slots"><span class="slot"></span><span class="slot"></span><span class="slot"></span><span class="slot"></span><span class="slot"></span></div>
+        <div class="cfx">两村之间的那道门。门后是黄泉。要五层封印才关得上。</div>
+      </div>
+</div>
+
+<h2>🎴 半身卡（80 张 · 10 搭档 × 左 4 + 右 4）</h2>
+<div class="sub" style="margin-top:-6px">左半 = 东村半，右半 = 西村半。<strong>同名一左一右</strong>才能拼成一次「合符」。卡面右上角数字是该半身的<strong>力</strong>。</div>
+    <div class="setlabel">灯 · AKARI　<span class="sub2">the Lantern —— 力 2（左 1 / 右 1）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">灯</div>
+        <div class="romaji">AKARI</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">爪 · TSUME　<span class="sub2">the Claw —— 力 3（左 1 / 右 2）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">爪</div>
+        <div class="romaji">TSUME</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">尾 · O　<span class="sub2">the Tail —— 力 3（左 2 / 右 1）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">尾</div>
+        <div class="romaji">O</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">羽 · HANE　<span class="sub2">the Feather —— 力 3（左 1 / 右 2）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">羽</div>
+        <div class="romaji">HANE</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">牙 · KIBA　<span class="sub2">the Fang —— 力 3（左 2 / 右 1）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">牙</div>
+        <div class="romaji">KIBA</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">幕 · MAKU　<span class="sub2">the Veil —— 力 3（左 1 / 右 2）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">1</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">幕</div>
+        <div class="romaji">MAKU</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">弦 · GEN　<span class="sub2">the String —— 力 3（左 2 / 右 1）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">1</span></div>
+        <div class="glyph">弦</div>
+        <div class="romaji">GEN</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">角 · TSUNO　<span class="sub2">the Horn —— 力 4（左 2 / 右 2）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">角</div>
+        <div class="romaji">TSUNO</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">骨 · HONE　<span class="sub2">the Bone —— 力 4（左 2 / 右 2）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">骨</div>
+        <div class="romaji">HONE</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+    <div class="setlabel">眼 · ME　<span class="sub2">the Eye —— 力 4（左 2 / 右 2）· 8 张</span></div>
+    <div class="grid">
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">东村半 · 第 1 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">东村半 · 第 2 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">东村半 · 第 3 张</div>
+      </div>
+      <div class="half hl">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">左</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">东村半 · 第 4 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">西村半 · 第 1 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">西村半 · 第 2 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">西村半 · 第 3 张</div>
+      </div>
+      <div class="half hr">
+        <div class="seam"><span class="notch"></span></div>
+        <div class="htop"><span class="side">右</span><span class="val">2</span></div>
+        <div class="glyph">眼</div>
+        <div class="romaji">ME</div>
+        <div class="htag">西村半 · 第 4 张</div>
+      </div>
+    </div>
+
+
+<h2>🌊 潮汐卡（24 张）</h2>
+<div class="grid">
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">⛩️</span><span class="cdx">潮汐 01</span></div>
+        <div class="cnm">灯火将熄</div>
+        <div class="cline">侵门 · <b>东村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🏮</span><span class="cdx">潮汐 02</span></div>
+        <div class="cnm">西风过祠</div>
+        <div class="cline">侵门 · <b>西村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🕳️</span><span class="cdx">潮汐 03</span></div>
+        <div class="cnm">井底回声</div>
+        <div class="cline">侵门 · <b>枯井</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🌲</span><span class="cdx">潮汐 04</span></div>
+        <div class="cnm">山雾初起</div>
+        <div class="cline">侵门 · <b>山神社</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🚪</span><span class="cdx">潮汐 05</span></div>
+        <div class="cnm">门缝透寒</div>
+        <div class="cline">侵门 · <b>黄泉门</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">⛩️</span><span class="cdx">潮汐 06</span></div>
+        <div class="cnm">牌位轻响</div>
+        <div class="cline">侵门 · <b>东村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🕳️</span><span class="cdx">潮汐 07</span></div>
+        <div class="cnm">绳断三寸</div>
+        <div class="cline">侵门 · <b>枯井</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🏮</span><span class="cdx">潮汐 08</span></div>
+        <div class="cnm">双灯同时</div>
+        <div class="cline">侵门 · <b>西村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🌲</span><span class="cdx">潮汐 09</span></div>
+        <div class="cnm">林中有步</div>
+        <div class="cline">侵门 · <b>山神社</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🚪</span><span class="cdx">潮汐 10</span></div>
+        <div class="cnm">门轴自转</div>
+        <div class="cline">侵门 · <b>黄泉门</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">⛩️</span><span class="cdx">潮汐 11</span></div>
+        <div class="cnm">两祠同鸣</div>
+        <div class="cline">侵门 · <b>东村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🕳️</span><span class="cdx">潮汐 12</span></div>
+        <div class="cnm">井水泛红</div>
+        <div class="cline">侵门 · <b>枯井</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">🏮</span><span class="cdx">潮汐 13</span></div>
+        <div class="cnm">夜雾压村</div>
+        <div class="cline">侵门 · <b>西村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜所有合符力 −1（最低 1）。</div>
+        <div class="cfoot">异象 · 雾</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">🌲</span><span class="cdx">潮汐 14</span></div>
+        <div class="cnm">云遮山月</div>
+        <div class="cline">侵门 · <b>山神社</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜所有合符力 −1（最低 1）。</div>
+        <div class="cfoot">异象 · 雾</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">🚪</span><span class="cdx">潮汐 15</span></div>
+        <div class="cnm">雾锁门扉</div>
+        <div class="cline">侵门 · <b>黄泉门</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜所有合符力 −1（最低 1）。</div>
+        <div class="cfoot">异象 · 雾</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">⛩️</span><span class="cdx">潮汐 16</span></div>
+        <div class="cnm">灯下无影</div>
+        <div class="cline">侵门 · <b>东村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜所有合符力 −1（最低 1）。</div>
+        <div class="cfoot">异象 · 雾</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">🕳️</span><span class="cdx">潮汐 17</span></div>
+        <div class="cnm">井泥翻涌</div>
+        <div class="cline">侵门 · <b>枯井</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜净化无效。</div>
+        <div class="cfoot">异象 · 浊</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">🚪</span><span class="cdx">潮汐 18</span></div>
+        <div class="cnm">门内低语</div>
+        <div class="cline">侵门 · <b>黄泉门</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜净化无效。</div>
+        <div class="cfoot">异象 · 浊</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">🏮</span><span class="cdx">潮汐 19</span></div>
+        <div class="cnm">香灰落地</div>
+        <div class="cline">侵门 · <b>西村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜净化无效。</div>
+        <div class="cfoot">异象 · 浊</div>
+      </div>
+      <div class="card tide hasfx">
+        <div class="ctop"><span class="cic">🌲</span><span class="cdx">潮汐 20</span></div>
+        <div class="cnm">神木渗水</div>
+        <div class="cline">侵门 · <b>山神社</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜净化无效。</div>
+        <div class="cfoot">异象 · 浊</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">⛩️</span><span class="cdx">潮汐 21</span></div>
+        <div class="cnm">更鼓三响</div>
+        <div class="cline">侵门 · <b>东村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🕳️</span><span class="cdx">潮汐 22</span></div>
+        <div class="cnm">井口起雾</div>
+        <div class="cline">侵门 · <b>枯井</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🚪</span><span class="cdx">潮汐 23</span></div>
+        <div class="cnm">门后有人</div>
+        <div class="cline">侵门 · <b>黄泉门</b></div>
+        <div class="cline">祟数 T = <b class="big">2</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+      <div class="card tide ">
+        <div class="ctop"><span class="cic">🏮</span><span class="cdx">潮汐 24</span></div>
+        <div class="cnm">西村犬吠</div>
+        <div class="cline">侵门 · <b>西村祠</b></div>
+        <div class="cline">祟数 T = <b class="big">1</b></div>
+        <div class="cfx">本夜无异象。</div>
+        <div class="cfoot">—</div>
+      </div>
+</div>
+
+<h2>👹 祟卡（12 张）</h2>
+<div class="grid">
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🕯</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·吞灯</div>
+        <div class="cfx">下一夜，你不得使用守夜人技能。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">👤</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·附身</div>
+        <div class="cfx">下一夜，你的合符只算「成立」，不封层、不净化。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🌫</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·雾</div>
+        <div class="cfx">下一夜，所有合符力 −1（最低 1）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🔔</span><span class="tagpill">立即</span></div>
+        <div class="cnm">祟·鸣</div>
+        <div class="cfx">立即：污秽 +1。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">⚔</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·争</div>
+        <div class="cfx">下一夜，祟数 T +1（最高 3）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">↩</span><span class="tagpill">立即</span></div>
+        <div class="cnm">祟·回</div>
+        <div class="cfx">立即：把封印最多的一处结界移走 1 层（弃入牌堆）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🕸</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·黏</div>
+        <div class="cfx">下一夜，所有手牌上限 −1（补牌只补到 4）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🤐</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·哑</div>
+        <div class="cfx">下一夜，不得「低语」（不能公开宣告搭档名）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🦠</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·蚀</div>
+        <div class="cfx">下一夜，力 2 的合符不作数（视为落单）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🌑</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·影</div>
+        <div class="cfx">下一夜，所有结界隙值 +1。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">🩸</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·饥</div>
+        <div class="cfx">下一夜，净化无效（力 3/4 的净化不生效）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+      <div class="card suku">
+        <div class="ctop"><span class="cic">💤</span><span class="tagpill">下一夜</span></div>
+        <div class="cnm">祟·眠</div>
+        <div class="cfx">下一夜，守灯不生效（不净化、不留牌）。</div>
+        <div class="cfoot">祟 · 结界裂层时翻出</div>
+      </div>
+</div>
+
+<h2>🏮 守夜人卡（5 张）</h2>
+<div class="grid">
+      <div class="card role">
+        <div class="rtop"><span class="ric">🏮</span><span class="ren">LAMPBEARER</span></div>
+        <div class="rnm">提灯人 · 阿灯</div>
+        <div class="rsk"><b>每夜 1 次</b><br>每夜 1 次：指定一名同伴，他必须把手上第 1 张牌给你看。</div>
+        <div class="rtip">💡 早用。信息在「暗出」之前最值钱。</div>
+        <div class="cfoot">守夜人</div>
+      </div>
+      <div class="card role">
+        <div class="rtop"><span class="ric">🪡</span><span class="ren">STITCHER</span></div>
+        <div class="rnm">缝符人 · 阿缝</div>
+        <div class="rsk"><b>每夜 1 次</b><br>每夜 1 次：显形后、结算前，令一次合符的力 +1（上限 4）。</div>
+        <div class="rtip">💡 把 力3 缝成 力4，是打开黄泉门最便宜的办法。</div>
+        <div class="cfoot">守夜人</div>
+      </div>
+      <div class="card role">
+        <div class="rtop"><span class="ric">🔔</span><span class="ren">BELLRINGER</span></div>
+        <div class="rnm">摇铃人 · 阿铃</div>
+        <div class="rsk"><b>每夜 1 次</b><br>每夜 1 次：任意时刻，污秽 −1。</div>
+        <div class="rtip">💡 留在临界那夜用。别在 3 点的时候用。</div>
+        <div class="cfoot">守夜人</div>
+      </div>
+      <div class="card role">
+        <div class="rtop"><span class="ric">🪓</span><span class="ren">CUTTER</span></div>
+        <div class="rnm">断绳人 · 阿断</div>
+        <div class="rsk"><b>每夜 1 次</b><br>每夜 1 次：出牌前弃 2 张手牌，抽 2 张。</div>
+        <div class="rtip">💡 手里全是配不上的牌时，这是唯一的洗牌机会。</div>
+        <div class="cfoot">守夜人</div>
+      </div>
+      <div class="card role">
+        <div class="rtop"><span class="ric">👁</span><span class="ren">STARGAZER</span></div>
+        <div class="rnm">观星人 · 阿星</div>
+        <div class="rsk"><b>每夜 1 次</b><br>每夜潮起前 1 次：看潮汐牌堆顶 2 张，选 1 张作本夜潮汐，另一张放回堆顶。</div>
+        <div class="rtip">💡 把 T=2 的夜推到后面，把雾夜吃掉。</div>
+        <div class="cfoot">守夜人</div>
+      </div>
+</div>
+
+<h2>📋 玩家板（5 张）</h2>
+<div class="grid">
+      <div class="pboard">
+        <div class="pbhead">守夜人 1　<span>NIGHT WATCH</span></div>
+        <div class="pbrow"><span class="pbl">手牌上限</span><span class="pbv">5</span></div>
+        <div class="pbrow"><span class="pbl">守夜人技能</span><span class="pbv">每夜 1 次</span></div>
+        <div class="pbrow"><span class="pbl">本夜是否守灯</span><span class="pbdot"></span></div>
+        <div class="pbrow"><span class="pbl">本夜出牌</span><span class="pbline"></span></div>
+        <div class="pbnotes">低语：________________________________________________________________<br><br>备注：______________________________________________________________</div>
+      </div>      <div class="pboard">
+        <div class="pbhead">守夜人 2　<span>NIGHT WATCH</span></div>
+        <div class="pbrow"><span class="pbl">手牌上限</span><span class="pbv">5</span></div>
+        <div class="pbrow"><span class="pbl">守夜人技能</span><span class="pbv">每夜 1 次</span></div>
+        <div class="pbrow"><span class="pbl">本夜是否守灯</span><span class="pbdot"></span></div>
+        <div class="pbrow"><span class="pbl">本夜出牌</span><span class="pbline"></span></div>
+        <div class="pbnotes">低语：________________________________________________________________<br><br>备注：______________________________________________________________</div>
+      </div>      <div class="pboard">
+        <div class="pbhead">守夜人 3　<span>NIGHT WATCH</span></div>
+        <div class="pbrow"><span class="pbl">手牌上限</span><span class="pbv">5</span></div>
+        <div class="pbrow"><span class="pbl">守夜人技能</span><span class="pbv">每夜 1 次</span></div>
+        <div class="pbrow"><span class="pbl">本夜是否守灯</span><span class="pbdot"></span></div>
+        <div class="pbrow"><span class="pbl">本夜出牌</span><span class="pbline"></span></div>
+        <div class="pbnotes">低语：________________________________________________________________<br><br>备注：______________________________________________________________</div>
+      </div>      <div class="pboard">
+        <div class="pbhead">守夜人 4　<span>NIGHT WATCH</span></div>
+        <div class="pbrow"><span class="pbl">手牌上限</span><span class="pbv">5</span></div>
+        <div class="pbrow"><span class="pbl">守夜人技能</span><span class="pbv">每夜 1 次</span></div>
+        <div class="pbrow"><span class="pbl">本夜是否守灯</span><span class="pbdot"></span></div>
+        <div class="pbrow"><span class="pbl">本夜出牌</span><span class="pbline"></span></div>
+        <div class="pbnotes">低语：________________________________________________________________<br><br>备注：______________________________________________________________</div>
+      </div>      <div class="pboard">
+        <div class="pbhead">守夜人 5　<span>NIGHT WATCH</span></div>
+        <div class="pbrow"><span class="pbl">手牌上限</span><span class="pbv">5</span></div>
+        <div class="pbrow"><span class="pbl">守夜人技能</span><span class="pbv">每夜 1 次</span></div>
+        <div class="pbrow"><span class="pbl">本夜是否守灯</span><span class="pbdot"></span></div>
+        <div class="pbrow"><span class="pbl">本夜出牌</span><span class="pbline"></span></div>
+        <div class="pbnotes">低语：________________________________________________________________<br><br>备注：______________________________________________________________</div>
+      </div>
+</div>
+
+<h2>📄 一页速查</h2>
+<div class="quick">
+  <b>一个夜晚的九步</b>
+  <ol>
+    <li><b>潮起</b>：翻 1 张潮汐卡 → 读出「侵门」与「祟数 T」</li>
+    <li><b>技能</b>：各守夜人可使用本夜技能（观星人在此之前）</li>
+    <li><b>低语</b>：顺时针，每人可选公开 1 张手牌的<strong>搭档名</strong>（必须真实）</li>
+    <li><b>暗出</b>：每人暗扣 1 张；奇数人局本夜轮到的人「守灯」，不出牌</li>
+    <li><b>显形</b>：全部翻开</li>
+    <li><b>合符</b>：同名一左一右 = 成立；力 = 两半之和</li>
+    <li><b>落单</b>：未成立的卡每张 污秽 +1，弃入牌堆底</li>
+    <li><b>潮落</b>：合符数 &lt; T → 侵门结界裂 1 层（无层则 污秽 +2）并翻 1 张祟卡</li>
+    <li><b>补牌</b>：每人补至 5 张</li>
+  </ol>
+  <table>
+    <tr><th>合符力</th><th>可封</th><th>封几层</th><th>附加</th></tr>
+    <tr><td>2</td><td>隙 ≤ 2 的结界</td><td>1 层</td><td>—</td></tr>
+    <tr><td>3</td><td>隙 ≤ 3 的结界</td><td>1 层</td><td>净化 1 点污秽</td></tr>
+    <tr><td>4</td><td>隙 ≤ 4 的结界</td><td>2 层（剩余不足则 1 层）</td><td>净化 1 点污秽</td></tr>
+  </table>
+  <p style="margin:8px 0 0"><b>胜利</b>：夜数结束时所有结界封满。　<b>失败</b>：污秽达 12，或夜数结束时未封满。</p>
+  <p style="margin:4px 0 0"><b>守灯</b>：3 人 / 5 人局每夜必须有一人守灯（轮流）。守灯者不出牌，污秽 −1。</p>
+</div>
+
+<footer>黄泉双生 · YOMI TSUGAI: The Twin Vigil　|　打印道具 · 全部可自行裁切制作</footer>
+
+</body>
+</html>
