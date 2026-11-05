@@ -1153,6 +1153,11 @@ INDEX = '''<!DOCTYPE html>
   </div>
 </div>
 
+<div class="catbar" id="catbar" hidden>
+  <span class="cb-t" id="catbar-t"></span>
+  <button type="button" class="cb-x" id="catbar-x">看全部 {n_games} 款</button>
+</div>
+
 <main class="h-main" id="list">
 {cats_html}
 
@@ -1211,7 +1216,20 @@ INDEX = '''<!DOCTYPE html>
       reset=document.getElementById('reset'),empty=document.getElementById('empty'),
       cards=[].slice.call(document.querySelectorAll('.gcard')),
       cats=[].slice.call(document.querySelectorAll('.cat')),
-      st={{ppl:'',dur:'',ven:'',ab:'',q:''}};
+      st={{ppl:'',dur:'',ven:'',ab:'',q:'',cat:''}};
+
+  // ?cat=icebreaker —— 从菜单/关键词深链进来时只看该分类
+  var catbar=document.getElementById('catbar'), catbarT=document.getElementById('catbar-t');
+  var CATOK={{}};
+  cats.forEach(function(sec){{ CATOK[sec.dataset.cat]=1; }});
+  var catReq=(new URLSearchParams(location.search).get('cat')||'').trim();
+  if(catReq && CATOK[catReq]) st.cat=catReq;
+
+  function syncUrl(){{
+    try{{
+      history.replaceState(null,'',st.cat?('?cat='+encodeURIComponent(st.cat)):location.pathname);
+    }}catch(e){{}}
+  }}
 
   var P={{'u10':[0,10],'10-30':[10,30],'30-60':[30,60],'60p':[60,9999]}};
   var D={{'d15':[0,15],'d30':[15,30],'d60':[30,60],'d120':[60,120],'d120p':[120,9999]}};
@@ -1219,6 +1237,7 @@ INDEX = '''<!DOCTYPE html>
   function ov(a,b,lo,hi){{ return a<=hi && b>=lo; }}
 
   function ok(el){{
+    if(st.cat && el.dataset.cat!==st.cat) return false;
     if(st.ppl){{
       var p=el.dataset.p.split(',').map(Number), r=P[st.ppl];
       if(el.dataset.u==='group'){{
@@ -1254,6 +1273,14 @@ INDEX = '''<!DOCTYPE html>
     }});
     hits.textContent=n;
     empty.classList.toggle('on',n===0);
+    if(st.cat){{
+      var hd=document.querySelector('.cat[data-cat="'+st.cat+'"] .cat-h');
+      catbarT.textContent='只看 '+(hd?hd.textContent.replace(/\\s*\\d+\\s*款\\s*$/,''):st.cat);
+      catbar.hidden=false;
+    }} else {{
+      catbar.hidden=true;
+    }}
+    syncUrl();
     if((st.ven||st.ab)&&!more.classList.contains('on')){{
       more.classList.add('on'); tog.setAttribute('aria-expanded','true');
       tog.textContent='收起筛选 ⌃';
@@ -1292,7 +1319,7 @@ INDEX = '''<!DOCTYPE html>
   clr.addEventListener('click',function(){{ q.value=''; st.q=''; clr.classList.remove('on'); apply(); q.focus(); }});
 
   function clearAll(){{
-    st.ppl=st.dur=st.ven=st.ab=st.q='';
+    st.ppl=st.dur=st.ven=st.ab=st.q=st.cat='';
     q.value=''; clr.classList.remove('on');
     ['f-ppl','f-dur','f-ven','f-ab'].forEach(function(id){{
       var row=document.getElementById(id); if(!row)return;
@@ -1304,10 +1331,14 @@ INDEX = '''<!DOCTYPE html>
   }}
   reset.addEventListener('click',clearAll);
   document.getElementById('relax').addEventListener('click',function(e){{e.preventDefault();clearAll();}});
+  document.getElementById('catbar-x').addEventListener('click',function(){{
+    st.cat=''; apply();
+    document.getElementById('list').scrollIntoView({{behavior:'smooth',block:'start'}});
+  }});
 
   // 快速入口
   var presets={{
-    ice:  {{ppl:'',dur:'d15',ven:'',ab:'',cat:'icebreaker'}},
+    ice:  {{ppl:'',dur:'',ven:'',ab:'',cat:'icebreaker'}},
     small:{{ppl:'10-30',dur:'',ven:'',ab:'',cat:''}},
     long: {{ppl:'',dur:'d60',ven:'',ab:'',cat:''}},
     indoor:{{ppl:'',dur:'',ven:'indoor',ab:'',cat:''}},
@@ -1324,7 +1355,7 @@ INDEX = '''<!DOCTYPE html>
     var p=presets[b.dataset.preset];
     clearAll();
     b.classList.add('on');
-    st.ppl=p.ppl; st.dur=p.dur; st.ven=p.ven; st.ab=p.ab;
+    st.ppl=p.ppl; st.dur=p.dur; st.ven=p.ven; st.ab=p.ab; st.cat=p.cat||'';
     [['f-ppl','ppl'],['f-dur','dur'],['f-ven','ven'],['f-ab','ab']].forEach(function(pair){{
       var row=document.getElementById(pair[0]); if(!row||!st[pair[1]])return;
       row.querySelectorAll('button').forEach(function(x){{
@@ -1521,7 +1552,7 @@ def cmd_index():
                                     ' '.join(g['abilities'])]).lower()
             cards.append(
                 f'''<a class="gcard" href="{g['html']}"
-   data-p="{g['pmin']},{g['pmax']}" data-d="{g['dmin']},{g['dmax']}"
+   data-p="{g['pmin']},{g['pmax']}" data-d="{g['dmin']},{g['dmax']}" data-cat="{cat_id}"
    data-v="{g['vkey']}" data-u="{g['unit']}" data-ab="{html.escape('|'.join(g['abilities']))}"
    data-s="{html.escape(search_blob, quote=True)}"
    style="--cc:{a1}">

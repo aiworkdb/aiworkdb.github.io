@@ -303,3 +303,22 @@
   border-top: 1px solid var(--line);
 }
 .h-foot a { color: var(--ink-2); }
+
+/* ── 分类深链提示条（?cat=icebreaker） ───────────────────────────────── */
+.catbar {
+  max-width: 900px; margin: 0 auto; padding: 11px 18px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: 13px; color: var(--ink-2);
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--line);
+}
+.catbar[hidden] { display: none; }
+.catbar .cb-t { font-weight: 600; color: var(--ink); }
+.catbar .cb-x {
+  margin-left: auto;
+  font: inherit; font-size: 12.5px;
+  padding: 6px 13px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink-2);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.catbar .cb-x:active { background: var(--line-soft); }
