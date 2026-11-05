@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>萤火虫的出嫁：七夜同灯 — 打印道具</title>
+<style>
+:root{
+  --ink:#221f1a; --sub:#6d6155; --line:#d9ccb6; --paper:#fdfaf2;
+  --night:#1e2440; --night2:#2c3559; --fire:#d8f37c; --fire2:#a9d94a;
+  --red:#a83a2c; --gold:#bf8f3c; --cream:#fbf5e6;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; padding:16px; background:#efe9dd; color:var(--ink);
+  font-family:"Songti SC","SimSun","PingFang SC","Microsoft YaHei",system-ui,serif;
+  line-height:1.45; font-size:13px;
+}
+header.hd{
+  background:linear-gradient(135deg,#1e2440 0%,#2c3559 55%,#3a2a2a 100%);
+  color:#f6efdd; border-radius:14px; padding:18px 20px; margin-bottom:14px;
+  border:1px solid #0f1326;
+}
+header.hd h1{margin:0 0 4px; font-size:25px; letter-spacing:2px; color:#eaf7b8;}
+header.hd p{margin:0; font-size:12.5px; color:#c9c2ae; letter-spacing:.6px;}
+header.hd .sub{margin-top:6px; font-size:11.5px; color:#a8a28d;}
+.print-hint{
+  background:#fff7d8; border:2px dashed var(--gold); border-radius:10px;
+  padding:10px 14px; margin:10px 0 16px; font-size:12.5px;
+}
+.print-hint strong{color:#8a5a12;}
+.print-hint ul{margin:6px 0 0; padding-left:20px;}
+.print-hint li{margin:2px 0;}
+.sec{margin:0 0 22px; padding:12px 12px 14px; background:var(--paper);
+  border:1px solid var(--line); border-radius:12px;}
+.sec h2{margin:0 0 3px; font-size:18px; letter-spacing:1px;
+  border-left:6px solid var(--gold); padding-left:9px;}
+.note{margin:0 0 10px; font-size:11.5px; color:var(--sub);}
+
+/* ---------- map ---------- */
+.map{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:10px;}
+.st{border:2px solid #8d7f68; border-radius:10px; padding:7px 6px 6px;
+  position:relative; background:linear-gradient(170deg,#fdf7e6,#f3ead4); min-height:44mm;
+  display:flex; flex-direction:column; align-items:center; text-align:center;}
+.st.dark{background:linear-gradient(170deg,#2b3150,#1e2440); color:#efe8d3; border-color:#141a30;}
+.st.dark .sttip,.st.dark .stfog{color:#c3bda6;}
+.st.mid{background:linear-gradient(170deg,#f0ead8,#e2d8bf);}
+.st .no{position:absolute; left:5px; top:3px; font-size:11px; color:#9c8a6d; font-weight:700;}
+.st.dark .no{color:#8d94b5;}
+.st .ico{font-size:26px; line-height:1.1; margin-top:6px;}
+.st .nm{font-size:14px; font-weight:700; letter-spacing:1px; margin-top:2px;}
+.st .en{font-size:8.5px; letter-spacing:1.2px; color:#8d7f68; text-transform:uppercase;}
+.st.dark .en{color:#8d94b5;}
+.st .fog{margin-top:5px; font-size:12px; font-weight:700; color:#3a3a52;
+  border:1px solid #a99a80; border-radius:20px; padding:0 8px; background:#fffdf6;}
+.st.dark .fog{color:#1e2440; background:#d8f37c; border-color:#a9d94a;}
+.st .mul{font-size:10px; margin-top:3px; color:#7d6f58;}
+.st .mul b{color:var(--red); font-size:12px;}
+.st.dark .mul{color:#b9b39d;}
+.st .tip{font-size:9.5px; color:#7d6f58; margin-top:3px; line-height:1.35;}
+.st .arrow{position:absolute; font-size:13px; color:#a08d6e; z-index:3; font-weight:700;}
+.st .arrow.rt{right:-5px; top:50%; transform:translateY(-50%); background:var(--paper); padding:0 1px;}
+.st .arrow.dn{left:50%; bottom:-6px; transform:translateX(-50%); background:var(--paper); padding:1px 0;}
+.st .arrow.lf{left:-5px; top:50%; transform:translateY(-50%); background:var(--paper); padding:0 1px;}
+.st.goal{background:linear-gradient(170deg,#f4fbe0,#e6f4c6); border-color:#7d9440; justify-content:center;}
+.mapnote{font-size:11px; color:var(--sub); margin:2px 0 8px;}
+.maplegend{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+.lg{border:1px solid var(--line); border-radius:8px; padding:5px 9px; font-size:10.5px; background:#fffdf6;}
+.lg b{color:var(--red);}
+
+/* ---------- oath board ---------- */
+.oath{display:grid; grid-template-columns:repeat(8,1fr); gap:5px; margin-bottom:10px;}
+.og{border:2px solid #8d7f68; border-radius:9px; text-align:center; padding:6px 2px 5px; background:#fffdf6;}
+.og .big{font-size:22px; font-weight:700; color:var(--night); line-height:1;}
+.og .up{font-size:11px; color:#2e7d43; font-weight:700; margin-top:4px;}
+.og .dn{font-size:11px; color:var(--red); font-weight:700;}
+.og .bp{font-size:8.5px; color:#8d7f68; margin-top:3px;}
+.og.hot{border-color:var(--gold); background:#fff8e2;}
+.bar{display:flex; gap:2px; margin:6px 0 4px; flex-wrap:wrap;}
+.bk{width:11mm; height:11mm; border:1px solid #9c8d74; border-radius:4px; background:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:9px; color:#9c8d74;}
+.bk.z{background:#eef6dc;}
+.bk.m8{border-color:#bf8f3c; border-width:2px;}
+.bk.m10{border-color:#c98a3c; border-width:2px;}
+.bk.m12{border-color:var(--red); border-width:2px;}
+
+/* ---------- cards ---------- */
+.grid{display:flex; flex-wrap:wrap; gap:5px;}
+.card{
+  width:42mm; height:58mm; border:1.6px solid #8d7f68; border-radius:7px;
+  background:var(--cream); position:relative; overflow:hidden;
+  break-inside:avoid; page-break-inside:avoid; display:flex;
+  flex-direction:column; align-items:center; justify-content:center;
+}
+.card .bar{position:absolute; top:0; left:0; height:5mm; width:100%; background:var(--night);}
+.card .num{font-size:44px; font-weight:700; line-height:1; margin-top:2mm; letter-spacing:-1px;
+  text-shadow:0 1px 0 rgba(255,255,255,.7);}
+.card .nm{font-size:12px; font-weight:700; letter-spacing:3px; margin-top:2mm;}
+.card .en{font-size:7px; letter-spacing:1.4px; color:#8d7f68; margin-top:1mm; text-transform:uppercase;}
+.card .seal{position:absolute; right:5px; bottom:4px; font-size:8px; color:#a2937a;
+  border:1px solid #c3b49a; border-radius:3px; padding:0 3px;}
+.card .fly{position:absolute; left:5px; bottom:5px; font-size:9px; opacity:.5;}
+.card:before{content:""; position:absolute; left:0; top:5mm; bottom:0; width:2.4mm; background:rgba(0,0,0,.05);}
+.card.v1 .bar{background:#5b6270;} .card.v1 .num{color:#5b6270;}
+.card.v2 .bar{background:#4d7a82;} .card.v2 .num{color:#4d7a82;}
+.card.v3 .bar{background:#587a45;} .card.v3 .num{color:#587a45;}
+.card.v4 .bar{background:#a8802f;} .card.v4 .num{color:#a8802f;}
+.card.v5{background:linear-gradient(175deg,#fff8dd,#f7ecc4); border-color:#a8802f;}
+.card.v5 .bar{background:linear-gradient(90deg,#a83a2c,#bf8f3c);} .card.v5 .num{color:var(--red);}
+
+.pair{width:42mm; height:58mm; border:2px solid #8d7f68; border-radius:8px;
+  background:linear-gradient(170deg,#2b3150,#1e2440); color:#eaf7b8;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  break-inside:avoid; page-break-inside:avoid;}
+.pair .p{font-size:34px; font-weight:700; line-height:1;}
+.pair .t{font-size:10px; letter-spacing:2px; margin-top:4px; color:#c3bda6;}
+.pair .s{font-size:8px; color:#8d94b5; margin-top:3px; letter-spacing:1px;}
+
+.guard{width:58mm; height:38mm; border:1.6px solid #8d7f68; border-radius:8px;
+  background:var(--paper); padding:5px 6px; position:relative;
+  break-inside:avoid; page-break-inside:avoid;}
+.guard .gk{position:absolute; right:5px; top:4px; font-size:7px; color:#a2937a; letter-spacing:1px;}
+.guard .gi{font-size:16px; line-height:1;}
+.guard .gn{font-size:12px; font-weight:700; margin-top:1px; letter-spacing:1px;}
+.guard .gt{font-size:9.5px; color:#453f36; margin-top:3px; line-height:1.4;}
+.guard .go{font-size:8px; color:#a83a2c; margin-top:2px;}
+
+.pawn{width:30mm; height:38mm; border:2px solid #8d7f68; border-radius:8px 8px 15px 15px;
+  background:linear-gradient(170deg,#fdf7e6,#f0e6cf); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; break-inside:avoid;}
+.pawn .pi{font-size:20px;}
+.pawn .pn{font-size:10px; font-weight:700; margin-top:2px; letter-spacing:1px;}
+.pawn .ps{font-size:7px; color:#8d7f68;}
+.pawn.sedan{background:linear-gradient(170deg,#2b3150,#1e2440); color:#eaf7b8; border-color:#141a30;}
+.pawn.sedan .ps{color:#8d94b5;}
+
+.qr{width:88mm; border:1.6px solid #8d7f68; border-radius:9px; padding:7px 9px 8px;
+  background:#fffdf6; font-size:9.5px; break-inside:avoid; page-break-inside:avoid;}
+.qr h3{margin:0 0 4px; font-size:12.5px; letter-spacing:1px; border-bottom:1px solid var(--line); padding-bottom:3px;}
+.qr p{margin:2px 0;}
+.qr .row{display:flex; justify-content:space-between; border-bottom:1px dotted #ddd2bd; padding:1.5px 0;}
+.qr .row b{color:var(--red);}
+.qr .hd{font-size:9px; color:#8d7f68; letter-spacing:1px; margin-top:5px; text-transform:uppercase;}
+
+.sheet{width:92mm; border:1.6px solid #8d7f68; border-radius:9px; padding:7px 8px; background:#fffdf6; font-size:10px;
+  break-inside:avoid; page-break-inside:avoid;}
+.sheet table{border-collapse:collapse; width:100%; margin-top:5px;}
+.sheet th,.sheet td{border:1px solid #cfc1a8; padding:2px 2px; text-align:center; font-size:8.5px; height:6.2mm;}
+.sheet th{background:#f2ead6; font-size:8px;}
+.sheet td.l{text-align:left;}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .print-hint { display: none; }
+    body { background:#fff; padding:0; font-size:12px; }
+    header.hd{border-radius:0; margin-bottom:8px;}
+    .sec { border:none; padding:0 0 6px; margin:0 0 6px; page-break-after: always; break-after: page; }
+    .sec:last-child { page-break-after: auto; break-after: auto; }
+    .card,.pair,.guard,.pawn,.qr,.st{box-shadow:none;}
+}
+@page { size: A4; margin: 7mm; }
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <h1>🪰 萤火虫的出嫁 · 七夜同灯 🏮</h1>
+  <p>FIREFLY BRIDE — SEVEN NIGHTS, ONE LANTERN</p>
+  <div class="sub">4–6 人 · 40–55 分钟 · 10 岁以上 · 全套打印道具（地图 / 灯牌 60 / 同灯牌 6 / 影卫卡 6 / 誓约板 / 惊惶条 / 棋子 / 速查卡 / 记分纸）</div>
+</header>
+
+<div class="print-hint">
+  <strong>⚠️ 打印前必读（4 条）</strong>
+  <ul>
+    <li>一律用 <strong>A4 纸</strong>，边距选 <strong>「无」或「最小」</strong>，缩放选 <strong>100%（不要选「适合页面」）</strong></li>
+    <li>打印对话框里 <strong>务必勾选「背景图形 / Background graphics」</strong>，否则深色地图与卡牌配色会全部丢失</li>
+    <li>灯牌、棋子、影卫卡请用 <strong>200g 以上卡纸</strong>；地图与速查卡用普通纸即可</li>
+    <li>灯牌共 <strong>60 张（1–5 各 12 张）</strong>，裁完建议塑封；牌堆不够用时按规则把弃牌堆洗回</li>
+  </ul>
+</div>
+
+<section class="sec">
+  <h2>一、七夜道地图（印 1 张，普通 A4）</h2>
+  <p class="note">花轿从 ① 渡口出发，每夜前进一站，第 7 夜抵达 ⑦ 萤火虫之森。每站的<b>雾值</b>从当夜所有人的斩获里扣掉；⑦ 站的<b>声望收支翻倍</b>。</p>
+  <div class="map"><div class="st " style="grid-row:1;grid-column:1"><span class="arrow rt">→</span><div class="no">1</div>
+  <div class="ico">⛵</div><div class="nm">渡口</div><div class="en">FERRY</div>
+  <div class="fog">雾 0</div><div class="mul">倍率 <b>×1</b></div>
+  <div class="tip">河风把雾吹散｜开局夜，所有人都还客气</div></div><div class="st mid" style="grid-row:1;grid-column:2"><span class="arrow rt">→</span><div class="no">2</div>
+  <div class="ico">🎋</div><div class="nm">竹薮</div><div class="en">BAMBOO</div>
+  <div class="fog">雾 1</div><div class="mul">倍率 <b>×1</b></div>
+  <div class="tip">竹叶遮去一半月光｜从这一夜起看不清对方</div></div><div class="st " style="grid-row:1;grid-column:3"><span class="arrow rt">→</span><div class="no">3</div>
+  <div class="ico">🪨</div><div class="nm">落石坂</div><div class="en">SCREE</div>
+  <div class="fog">雾 0</div><div class="mul">倍率 <b>×1</b></div>
+  <div class="tip">视野最开阔的一夜｜全桌最容易互相算底牌</div></div><div class="st mid" style="grid-row:1;grid-column:4"><span class="arrow dn">↓</span><div class="no">4</div>
+  <div class="ico">🌉</div><div class="nm">雨桥</div><div class="en">RAIN BRIDGE</div>
+  <div class="fog">雾 1</div><div class="mul">倍率 <b>×1</b></div>
+  <div class="tip">桥窄，只容两人并肩｜同灯人的意义最重</div></div><div class="st dark" style="grid-row:2;grid-column:4"><span class="arrow lf">←</span><div class="no">5</div>
+  <div class="ico">🌫️</div><div class="nm">无灯岭</div><div class="en">LAMPLESS RIDGE</div>
+  <div class="fog">雾 2</div><div class="mul">倍率 <b>×1</b></div>
+  <div class="tip">全程最暗｜全场誓言被迫压低的一夜</div></div><div class="st mid" style="grid-row:2;grid-column:3"><span class="arrow lf">←</span><div class="no">6</div>
+  <div class="ico">⛩️</div><div class="nm">旧神社</div><div class="en">OLD SHRINE</div>
+  <div class="fog">雾 1</div><div class="mul">倍率 <b>×1</b></div>
+  <div class="tip">石灯已灭，只剩反光｜老手开始留牌</div></div><div class="st " style="grid-row:2;grid-column:2"><span class="arrow lf">←</span><div class="no">7</div>
+  <div class="ico">🪰</div><div class="nm">萤火虫之森</div><div class="en">FIREFLY WOOD</div>
+  <div class="fog">雾 0</div><div class="mul">倍率 <b>×2</b></div>
+  <div class="tip">万千萤火照路，也照见人心｜所有声望收支翻倍</div></div>
+<div class="st goal" style="grid-row:2;grid-column:1">
+  <div class="ico">🏠</div><div class="nm">明石家</div><div class="en">THE GROOM'S HOUSE</div>
+  <div class="fog" style="background:#eaf7b8;border-color:#a9d94a">出 嫁</div>
+  <div class="tip">七夜走完，礼成。<br>声望最高者，是这一路上最被信过的人。</div></div></div>
+  <div class="mapnote">↑ 路线是一条折返的山道：① → ② → ③ → ④ 沿上排向右，④ 之后向下折进 ⑤，再沿下排向左回到 ⑦，最后抵达 🏠 明石家。<b>深色格（⑤ 无灯岭）是全程唯一雾 2 之夜。</b></div>
+  <div class="maplegend">
+    <div class="lg">雾值合计 <b>5</b> 点 ／ 7 夜</div>
+    <div class="lg">雾 0：①②⑦（3 夜）</div>
+    <div class="lg">雾 1：②④⑥（3 夜）</div>
+    <div class="lg">雾 2：⑤（1 夜）</div>
+    <div class="lg">满贯斩获 <b>10</b>（明5＋暗5－雾0）</div>
+    <div class="lg">理论最低斩获 <b>0</b>（明1＋暗1－雾2）</div>
+    <div class="lg">终夜倍率 <b>×2</b>（单夜最大 ±20 声望）</div>
+  </div>
+</section>
+
+<section class="sec">
+  <h2>二、誓约板（印 1 张，放大到 A4 满页更佳）</h2>
+  <p class="note">立誓时把玩家棋子压在对应数字上 —— <b>一个数字一夜只能被一个人占</b>。下方「盈亏」是报这个数需要的最低把握：高于它就该报，低于它就该降。</p>
+  <div class="oath"><div class="og"><div class="big">2</div><div class="up">+1</div><div class="dn">−1</div><div class="bp">盈亏 50%</div></div><div class="og"><div class="big">3</div><div class="up">+2</div><div class="dn">−1</div><div class="bp">盈亏 33%</div></div><div class="og hot"><div class="big">4</div><div class="up">+3</div><div class="dn">−1</div><div class="bp">盈亏 25%</div></div><div class="og"><div class="big">5</div><div class="up">+4</div><div class="dn">−2</div><div class="bp">盈亏 33%</div></div><div class="og"><div class="big">6</div><div class="up">+5</div><div class="dn">−3</div><div class="bp">盈亏 38%</div></div><div class="og"><div class="big">7</div><div class="up">+6</div><div class="dn">−4</div><div class="bp">盈亏 40%</div></div><div class="og"><div class="big">8</div><div class="up">+7</div><div class="dn">−5</div><div class="bp">盈亏 42%</div></div><div class="og"><div class="big">9</div><div class="up">+8</div><div class="dn">−6</div><div class="bp">盈亏 43%</div></div></div>
+  <p class="note" style="margin-top:2px;">🟡 金色格 = <b>4 号位</b>：全作盈亏点最低（25%），老手在雾 0 的夜里会拼命抢这个数。</p>
+
+  <h2 style="margin-top:14px;">三、惊惶条（印 1 张，与誓约板同页）</h2>
+  <p class="note">每有 1 人食言，标记前进 1 格。<b>上限 = 人数 × 2</b>（4 人 8 格／5 人 10 格／6 人 12 格，格子上已用金色与红色描边标出）。到达上限：<b>全员 −4 声望，萤火之礼作废</b>。</p>
+  <div class="bar"><div class="bk z">1</div><div class="bk">2</div><div class="bk">3</div><div class="bk">4</div><div class="bk">5</div><div class="bk">6</div><div class="bk">7</div><div class="bk m8">8</div><div class="bk">9</div><div class="bk m10">10</div><div class="bk">11</div><div class="bk m12">12</div></div>
+  <p class="note" style="margin-top:2px;">🟩 绿格 = 起点 0　🟨 金框 = 8 格（4 人上限）　🟧 橙框 = 10 格（5 人上限）　🟥 红框 = 12 格（6 人上限）</p>
+</section>
+
+<section class="sec">
+  <h2>四、灯牌 · 60 张（1–5 各 12 张，卡纸）</h2>
+  <p class="note">每张灯牌一生只能用一次：打出即进弃牌堆，递出即归对方。牌堆抽完就把弃牌堆洗回来。裁切建议留 1mm 白边，不必严丝合缝。</p>
+  <div class="grid"><div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v1"><div class="bar"></div><div class="num">1</div>
+  <div class="nm">微火</div><div class="en">MICRO FLAME</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v2"><div class="bar"></div><div class="num">2</div>
+  <div class="nm">短烛</div><div class="en">SHORT CANDLE</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v3"><div class="bar"></div><div class="num">3</div>
+  <div class="nm">常灯</div><div class="en">STEADY LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v4"><div class="bar"></div><div class="num">4</div>
+  <div class="nm">明灯</div><div class="en">BRIGHT LAMP</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+<div class="card v5"><div class="bar"></div><div class="num">5</div>
+  <div class="nm">满月</div><div class="en">FULL MOON</div>
+  <div class="fly">🪰</div><div class="seal">灯</div></div>
+</div>
+</section>
+
+<section class="sec">
+  <h2>五、同灯牌 · 6 张（🅐🅑🅒 各 2 张，卡纸）</h2>
+  <p class="note">洗混后每人抽 1 张，抽到同字母的两人本局互为<b>同灯人</b>。4 人局只用 🅐🅑；5 人局多出的一位为「独灯者」；6 人局全套使用。</p>
+  <div class="grid"><div class="pair"><div class="p">🅐</div><div class="t">同 灯 人</div><div class="s">ONE LANTERN · 2 PLAYERS</div></div>
+<div class="pair"><div class="p">🅐</div><div class="t">同 灯 人</div><div class="s">ONE LANTERN · 2 PLAYERS</div></div>
+<div class="pair"><div class="p">🅑</div><div class="t">同 灯 人</div><div class="s">ONE LANTERN · 2 PLAYERS</div></div>
+<div class="pair"><div class="p">🅑</div><div class="t">同 灯 人</div><div class="s">ONE LANTERN · 2 PLAYERS</div></div>
+<div class="pair"><div class="p">🅒</div><div class="t">同 灯 人</div><div class="s">ONE LANTERN · 2 PLAYERS</div></div>
+<div class="pair"><div class="p">🅒</div><div class="t">同 灯 人</div><div class="s">ONE LANTERN · 2 PLAYERS</div></div>
+</div>
+  <p class="note" style="margin-top:8px;">没有同灯牌也能玩：直接按座位两两配对（1-2、3-4、5-6），同灯牌只是让「谁跟谁」这件事看起来像是命定的。</p>
+</section>
+
+<section class="sec">
+  <h2>六、影卫卡 · 6 张（变体用，卡纸）</h2>
+  <p class="note">第二局起每人发 1 张，<b>全局只能用一次</b>，用完把卡翻面。新手局建议整包不用；若这桌有人特别会读人，请把 🐈 黑猫收起来。</p>
+  <div class="grid"><div class="guard"><div class="gk">GUARD</div>
+<div class="gi">🌙</div><div class="gn">明石 · 最强的影</div>
+<div class="gt">立誓时可无视唯一性：报一个已被别人占用的数字。</div><div class="go">全局一次</div></div><div class="guard"><div class="gk">GUARD</div>
+<div class="gi">🎐</div><div class="gn">小铃 · 新娘本人</div>
+<div class="gt">本夜若食言，扣分视为 0（惊惶照涨）。</div><div class="go">全局一次</div></div><div class="guard"><div class="gk">GUARD</div>
+<div class="gi">🏮</div><div class="gn">提灯守 · 走在最前</div>
+<div class="gt">本夜你抢在提灯者之前立誓。</div><div class="go">全局一次</div></div><div class="guard"><div class="gk">GUARD</div>
+<div class="gi">🏹</div><div class="gn">弓手 · 远距一击</div>
+<div class="gt">本夜你的斩获 +2（在雾值之后计算）。</div><div class="go">全局一次</div></div><div class="guard"><div class="gk">GUARD</div>
+<div class="gi">🌿</div><div class="gn">药师 · 认得草味</div>
+<div class="gt">本夜你无视本驿雾值。</div><div class="go">全局一次</div></div><div class="guard"><div class="gk">GUARD</div>
+<div class="gi">🐈</div><div class="gn">黑猫 · 化猫之眼</div>
+<div class="gt">立誓前，你可以偷看同灯人给你的那张暗牌。</div><div class="go">全局一次</div></div></div>
+</section>
+
+<section class="sec">
+  <h2>七、棋子 · 7 枚（卡纸，沿轮廓剪下后对折粘合）</h2>
+  <p class="note">6 枚影卫棋子 + 1 枚花轿。剪下后沿底边折一条 5mm 的边，粘成三角底座就能立住；也可以直接平放当标记用。</p>
+  <div class="grid"><div class="pawn"><div class="pi">🕯️</div>
+<div class="pn">阿令</div><div class="ps">影 卫 1</div></div><div class="pawn"><div class="pi">🏮</div>
+<div class="pn">阿澪</div><div class="ps">影 卫 2</div></div><div class="pawn"><div class="pi">🏹</div>
+<div class="pn">阿昼</div><div class="ps">影 卫 3</div></div><div class="pawn"><div class="pi">🌿</div>
+<div class="pn">阿衡</div><div class="ps">影 卫 4</div></div><div class="pawn"><div class="pi">🎐</div>
+<div class="pn">阿九</div><div class="ps">影 卫 5</div></div><div class="pawn"><div class="pi">🐈</div>
+<div class="pn">阿雪</div><div class="ps">影 卫 6</div></div><div class="pawn sedan"><div class="pi">🚪</div><div class="pn">花 轿</div><div class="ps">SEDAN · 1 枚</div></div></div>
+</section>
+
+<section class="sec">
+  <h2>八、速查卡 · 2 张（印 2 份，桌角各放一张）</h2>
+  <p class="note">第一局照着这张走就行。所有公式、雾值、盈亏点都在上面。</p>
+  <div class="grid">
+<div class="qr">
+  <h3>速查卡 A · 流程与结算</h3>
+  <div class="hd">每夜六步</div>
+  <p>① 亮灯（明牌公开）② 递灯（暗牌扣着给同灯人）③ 立誓（2–9，不重复）④ 翻灯 ⑤ 结算 ⑥ 推进</p>
+  <div class="hd">结算</div>
+  <p>斩获 = 明牌 + 暗牌 − 本驿雾值（最低 0）</p>
+  <div class="row"><span>守誓（斩获 ≥ 誓言）</span><b>+（誓言 − 1）</b></div>
+  <div class="row"><span>一斩不差（斩获 = 誓言）</span><b>额外 +1</b></div>
+  <div class="row"><span>食言（斩获 &lt; 誓言）</span><b>−（誓言 − 3）</b></div>
+  <div class="row"><span>共火（同灯人守誓）</span><b>+1</b></div>
+  <div class="row"><span>独灯补偿（无同灯人）</span><b>+1</b></div>
+  <div class="hd">惊惶 / 终局</div>
+  <p>每个食言 惊惶 +1；上限 = 人数 × 2。满了：全员 −4 且萤火之礼作废。</p>
+  <p>第 7 夜所有声望收支 ×2（惊惶不翻倍）。守誓最多者 +5（并列各 +2）。</p>
+  <div class="hd">雾值</div>
+  <p>① 0　② 1　③ 0　④ 1　⑤ 2　⑥ 1　⑦ 0（⑦ 倍率 ×2）</p>
+  <div class="hd">报几最划算（需要多少把握）</div>
+  <p>2 → 50%　3 → 33%　<b>4 → 25%</b>　5 → 33%　<b>6 → 38%</b>　7 → 40%　8 → 42%　9 → 43%</p>
+  <div class="hd">递什么</div>
+  <p>1 = 刀　2 = 刺　3 = 人情　4 = 真心　5 = 托付</p>
+</div>
+<div class="qr">
+  <h3>速查卡 B · 流程与结算</h3>
+  <div class="hd">每夜六步</div>
+  <p>① 亮灯（明牌公开）② 递灯（暗牌扣着给同灯人）③ 立誓（2–9，不重复）④ 翻灯 ⑤ 结算 ⑥ 推进</p>
+  <div class="hd">结算</div>
+  <p>斩获 = 明牌 + 暗牌 − 本驿雾值（最低 0）</p>
+  <div class="row"><span>守誓（斩获 ≥ 誓言）</span><b>+（誓言 − 1）</b></div>
+  <div class="row"><span>一斩不差（斩获 = 誓言）</span><b>额外 +1</b></div>
+  <div class="row"><span>食言（斩获 &lt; 誓言）</span><b>−（誓言 − 3）</b></div>
+  <div class="row"><span>共火（同灯人守誓）</span><b>+1</b></div>
+  <div class="row"><span>独灯补偿（无同灯人）</span><b>+1</b></div>
+  <div class="hd">惊惶 / 终局</div>
+  <p>每个食言 惊惶 +1；上限 = 人数 × 2。满了：全员 −4 且萤火之礼作废。</p>
+  <p>第 7 夜所有声望收支 ×2（惊惶不翻倍）。守誓最多者 +5（并列各 +2）。</p>
+  <div class="hd">雾值</div>
+  <p>① 0　② 1　③ 0　④ 1　⑤ 2　⑥ 1　⑦ 0（⑦ 倍率 ×2）</p>
+  <div class="hd">报几最划算（需要多少把握）</div>
+  <p>2 → 50%　3 → 33%　<b>4 → 25%</b>　5 → 33%　<b>6 → 38%</b>　7 → 40%　8 → 42%　9 → 43%</p>
+  <div class="hd">递什么</div>
+  <p>1 = 刀　2 = 刺　3 = 人情　4 = 真心　5 = 托付</p>
+</div></div>
+</section>
+
+<section class="sec">
+  <h2>九、记分纸 · 4 张（普通纸，每人 1 张）</h2>
+  <p class="note">每一夜把明牌、暗牌、雾值、斩获、誓言都写下来 —— 终局时回头看，你会发现胜负其实在第三夜就定了。</p>
+  <div class="grid">
+<div class="sheet">
+  <div style="font-size:12px;font-weight:700;letter-spacing:1px;">记分纸 · 玩家 1</div>
+  <div style="font-size:9px;color:#8d7f68;margin-top:2px;">同灯人：____________　　开局座位：第 ____ 位</div>
+  <table>
+    <tr><th style="width:8%">夜</th><th>明</th><th>暗</th><th>雾</th><th>斩获</th><th>誓言</th><th style="width:13%">结果</th><th style="width:15%">本夜</th><th>累计</th></tr>
+    <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">萤火之礼</th><td colspan="2"></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">守誓次数 ／ 最终声望</th><td colspan="2"></td></tr>
+  </table>
+</div>
+<div class="sheet">
+  <div style="font-size:12px;font-weight:700;letter-spacing:1px;">记分纸 · 玩家 2</div>
+  <div style="font-size:9px;color:#8d7f68;margin-top:2px;">同灯人：____________　　开局座位：第 ____ 位</div>
+  <table>
+    <tr><th style="width:8%">夜</th><th>明</th><th>暗</th><th>雾</th><th>斩获</th><th>誓言</th><th style="width:13%">结果</th><th style="width:15%">本夜</th><th>累计</th></tr>
+    <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">萤火之礼</th><td colspan="2"></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">守誓次数 ／ 最终声望</th><td colspan="2"></td></tr>
+  </table>
+</div>
+<div class="sheet">
+  <div style="font-size:12px;font-weight:700;letter-spacing:1px;">记分纸 · 玩家 3</div>
+  <div style="font-size:9px;color:#8d7f68;margin-top:2px;">同灯人：____________　　开局座位：第 ____ 位</div>
+  <table>
+    <tr><th style="width:8%">夜</th><th>明</th><th>暗</th><th>雾</th><th>斩获</th><th>誓言</th><th style="width:13%">结果</th><th style="width:15%">本夜</th><th>累计</th></tr>
+    <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">萤火之礼</th><td colspan="2"></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">守誓次数 ／ 最终声望</th><td colspan="2"></td></tr>
+  </table>
+</div>
+<div class="sheet">
+  <div style="font-size:12px;font-weight:700;letter-spacing:1px;">记分纸 · 玩家 4</div>
+  <div style="font-size:9px;color:#8d7f68;margin-top:2px;">同灯人：____________　　开局座位：第 ____ 位</div>
+  <table>
+    <tr><th style="width:8%">夜</th><th>明</th><th>暗</th><th>雾</th><th>斩获</th><th>誓言</th><th style="width:13%">结果</th><th style="width:15%">本夜</th><th>累计</th></tr>
+    <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">萤火之礼</th><td colspan="2"></td></tr>
+    <tr><th colspan="7" style="text-align:right;padding-right:6px;">守誓次数 ／ 最终声望</th><td colspan="2"></td></tr>
+  </table>
+</div></div>
+</section>
+
+</body></html>

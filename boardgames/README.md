@@ -150,6 +150,7 @@ boardgames/
 | [绳索：最后一班](category/party/strand-last-run/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单 |
 | [利滚利：魔力银行](category/strategy/compound-mana-bank/README.md) | 策略 | 2-5人 | 45-60分钟 | 中等偏难 |
 | [黄泉双生：东西村守夜](category/cooperative/yomi-tsugai/README.md) | 合作 | 3-5人 | 45-70分钟 | 中等偏难 |
+| [萤火虫的出嫁：七夜同灯](category/party/firefly-bride-seven-nights/README.md) | 派对 | 4-6人 | 40-55分钟 | 中等 |
 
 ## 添加新桌游
 
