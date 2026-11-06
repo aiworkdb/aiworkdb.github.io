@@ -1,0 +1,486 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>墙外调查：红莲弓矢 · 打印道具</title>
+<style>
+    :root{
+        --ink:#241f1c; --ink2:#5a534d; --paper:#fbf8f3; --line:#d9d1c4;
+        --h5:#a8342a; --h4:#2f5d7c; --h3:#6f6a5c; --h2:#4a6b3f; --h1:#8a6b3a;
+        --gas:#8fa6b8;
+    }
+    *{box-sizing:border-box; margin:0; padding:0;}
+    body{
+        font-family:"Songti SC","Noto Serif CJK SC","Source Han Serif SC",Georgia,serif;
+        background:#e8e3da; color:var(--ink); padding:18px 0;
+    }
+    .page{
+        width:210mm; min-height:297mm; background:var(--paper);
+        margin:0 auto 16px; padding:10mm 9mm; position:relative;
+        box-shadow:0 2px 12px rgba(0,0,0,.12);
+    }
+    h2.sec{
+        font-size:14px; letter-spacing:.18em; margin:0 0 3mm;
+        padding-bottom:2mm; border-bottom:1px solid var(--line);
+        display:flex; justify-content:space-between; align-items:baseline;
+    }
+    h2.sec small{font-size:8.5px; letter-spacing:.1em; color:var(--ink2); font-weight:400;}
+    .print-hint{
+        width:210mm; margin:0 auto 14px; background:#fff8e1; border:1px solid #e6c96b;
+        border-left:4px solid #c99a1f; padding:10px 14px; font-size:12.5px; line-height:1.75;
+        border-radius:3px;
+    }
+    .print-hint strong{color:#8a6100;}
+    .print-hint ul{margin:6px 0 0 18px;}
+    .print-hint li{margin:2px 0;}
+
+    /* ============ 轨迹板 ============ */
+    .board{
+        border:2px solid var(--ink); padding:7mm 8mm; background:
+        repeating-linear-gradient(0deg,rgba(0,0,0,.012) 0 1px,transparent 1px 6px), var(--paper);
+    }
+    .board h1{font-size:22px; letter-spacing:.34em; text-align:center; margin-bottom:2mm;}
+    .board .sub{
+        text-align:center; font-size:8.5px; letter-spacing:.26em; color:var(--ink2);
+        margin-bottom:7mm; text-transform:uppercase;
+    }
+    .bands{display:flex; flex-direction:column; gap:2mm; margin-bottom:7mm;}
+    .band{display:flex; align-items:center; gap:3mm;}
+    .band .tag{
+        width:32mm; font-size:10px; letter-spacing:.05em; padding:1.6mm 2mm;
+        color:#fff; text-align:center; border-radius:2px; flex:none;
+    }
+    .band .val{font-size:9px; color:var(--ink2); letter-spacing:.05em; flex:none;}
+    .band .rule{flex:1; border-bottom:1px dashed var(--line);}
+    .band .note2{font-size:8px; color:#9a9287; letter-spacing:.02em; flex:none;}
+    .track-wrap{margin:5mm 0 8mm;}
+    .track-label{font-size:9px; letter-spacing:.14em; color:var(--ink2); margin-bottom:1.8mm;}
+    .track{display:grid; grid-template-columns:repeat(13,1fr);}
+    .track div{
+        height:15mm; border:1px solid var(--line); border-right:none;
+        display:flex; align-items:center; justify-content:center;
+        font-size:12px; font-weight:700; color:var(--ink2); background:#fff;
+    }
+    .track div:last-child{border-right:1px solid var(--line);}
+    .track div.zero{background:#ece5d8;}
+    .track div.hot{background:#f7e4df; color:var(--h5);}
+    .slots{display:grid; grid-template-columns:repeat(3,1fr); gap:3mm; margin:2mm 0 6mm;}
+    .slots .slot{
+        border:1px dashed #b9b0a2; border-radius:3px; height:30mm;
+        display:flex; align-items:center; justify-content:center;
+        font-size:9px; letter-spacing:.2em; color:#b0a799; background:#fff;
+    }
+    .legend{font-size:8.5px; color:var(--ink2); line-height:2; border-top:1px solid var(--line); padding-top:3mm;}
+    .legend b{color:var(--ink);}
+
+    /* ============ 卡牌 ============ */
+    .grid{display:grid; gap:2.4mm;}
+    .grid.c4{grid-template-columns:repeat(4,1fr);}
+    .grid.c3{grid-template-columns:repeat(3,1fr);}
+
+    .card{
+        border:1px solid #c8bfb0; border-radius:2.5px; background:#fff;
+        height:48mm; position:relative; overflow:hidden;
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        padding-top:3mm;
+    }
+    .card .bar{position:absolute; top:0; left:0; width:100%; height:4mm;}
+    .card .h{font-size:30px; font-weight:700; line-height:1; letter-spacing:-1px;}
+    .card .t{font-size:10.5px; font-weight:700; letter-spacing:.2em; margin-top:1.6mm; font-style:normal;}
+    .card .s{font-size:9.5px; margin-top:1.6mm; letter-spacing:.1em; color:var(--ink2);}
+    .card .en{position:absolute; bottom:2.2mm; font-size:6.2px; letter-spacing:.14em; color:#b9b0a2;}
+    .card.h5 .bar{background:var(--h5);} .card.h5 .h{color:var(--h5);}
+    .card.h4 .bar{background:var(--h4);} .card.h4 .h{color:var(--h4);}
+    .card.h3 .bar{background:var(--h3);} .card.h3 .h{color:var(--h3);}
+    .card.h2 .bar{background:var(--h2);} .card.h2 .h{color:var(--h2);}
+    .card.h1 .bar{background:var(--h1);} .card.h1 .h{color:var(--h1);}
+    .card.h5{background:linear-gradient(178deg,#fff4f2 0%,#fff 60%);}
+    .card.h1{background:linear-gradient(178deg,#fdf8ee 0%,#fff 60%);}
+
+    .card.gas .bar{background:linear-gradient(90deg,#8fa6b8,#c8d7e0);}
+    .card.gas .ico2{font-size:22px; line-height:1;}
+    .card.gas .t{margin-top:1.4mm;}
+    .card.gas .s{margin-top:1.2mm;}
+    .card.gas .s2{font-size:8px; color:#6f8698; letter-spacing:.08em; margin-top:1mm;}
+
+    .card.titan{
+        height:62mm; justify-content:flex-start; padding-top:7mm; border-width:1.4px;
+    }
+    .card.titan .bar{height:4.6mm;}
+    .card.titan .nm{font-size:12.5px; font-weight:700; letter-spacing:.12em; margin-top:2mm;}
+    .card.titan .ico{font-size:19px; position:absolute; top:7.5mm; right:3mm; opacity:.85;}
+    .card.titan .hr{margin:3.4mm 0 1.2mm; font-size:8.5px; letter-spacing:.18em; color:var(--ink2);}
+    .card.titan .hv{font-size:26px; font-weight:700; line-height:1; letter-spacing:-.5px;}
+    .card.titan .bw{margin-top:2.8mm; font-size:9.5px; letter-spacing:.08em;}
+    .card.titan .bw b{font-size:14px;}
+    .card.t3 .bar{background:#7a8b6f;} .card.t3 .hv{color:#586a4d;}
+    .card.t5 .bar{background:#6b7f8b;} .card.t5 .hv{color:#4b5f6d;}
+    .card.t7 .bar{background:#8b5f52;} .card.t7 .hv{color:#714438;}
+    .card.t10 .bar{background:#8a3f2c;} .card.t10 .hv{color:#6e2e1d;}
+    .card.tk .bar{background:linear-gradient(90deg,#4a4f5a,#93989f);} .card.tk .hv{color:#3a3f48;}
+    .card.tx .bar{background:linear-gradient(90deg,#1c1c1c,#5c3b2b);} .card.tx .hv{color:#2a241f;}
+    .card.tk,.card.tx{background:linear-gradient(178deg,#f7f4ee,#fff 62%);}
+
+    /* ============ 棋子 ============ */
+    .pawns{display:grid; grid-template-columns:repeat(3,1fr); gap:6mm; justify-items:center; margin:2mm 0 4mm;}
+    .pawn{
+        width:40mm; height:40mm; border-radius:50%;
+        border:2.5px solid var(--ink); display:flex; flex-direction:column;
+        align-items:center; justify-content:center; background:#fff; position:relative;
+    }
+    .pawn .pn{font-size:14px; font-weight:700; letter-spacing:.16em;}
+    .pawn .pe{font-size:6.2px; letter-spacing:.2em; color:var(--ink2); margin-top:1mm;}
+    .pawn .pdot{position:absolute; top:4mm; width:5.5mm; height:5.5mm; border-radius:50%;}
+    .pawn.p1{border-color:#a8342a;} .pawn.p1 .pdot{background:#a8342a;}
+    .pawn.p2{border-color:#2f5d7c;} .pawn.p2 .pdot{background:#2f5d7c;}
+    .pawn.p3{border-color:#4a6b3f;} .pawn.p3 .pdot{background:#4a6b3f;}
+    .pawn.p4{border-color:#8a6b3a;} .pawn.p4 .pdot{background:#8a6b3a;}
+    .pawn.p5{border-color:#6b4a7c;} .pawn.p5 .pdot{background:#6b4a7c;}
+    .pawn.p6{border-color:#3f3f3f;} .pawn.p6 .pdot{background:#3f3f3f;}
+    .cut{font-size:8px; color:#b3a99a; text-align:center; margin-top:1mm;}
+
+    /* ============ 速查 / 计分 ============ */
+    .qr{border:1.5px solid var(--ink); padding:4.5mm 5mm; background:#fff; height:100%;}
+    .qr h3{font-size:11.5px; letter-spacing:.2em; margin-bottom:2.6mm; text-align:center;}
+    .qr table{width:100%; border-collapse:collapse; font-size:8.6px;}
+    .qr td{padding:1.5mm 1mm; border-bottom:1px dotted var(--line); vertical-align:top; line-height:1.5;}
+    .qr td:first-child{width:22mm; color:var(--ink2); letter-spacing:.06em;}
+    .qr .tip{margin-top:2.6mm; font-size:8.4px; line-height:1.95; color:var(--ink2);}
+    .qr .tip b{color:var(--h5);}
+
+    .score{border:1px solid var(--line); padding:4mm; background:#fff;}
+    .score h3{font-size:10.5px; letter-spacing:.16em; margin-bottom:3mm;}
+    .score table{width:100%; border-collapse:collapse; font-size:8.8px;}
+    .score th,.score td{border:1px solid var(--line); padding:2.2mm 1.2mm; text-align:center;}
+    .score th{background:#f1ece2; font-weight:700; letter-spacing:.08em;}
+    .score td.lbl{text-align:left; letter-spacing:.06em; color:var(--ink2);}
+
+    .note{font-size:8.6px; color:var(--ink2); line-height:1.8; margin-top:2.6mm;}
+
+    @media print {
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        body{background:#fff; padding:0;}
+        .page{margin:0; box-shadow:none; width:auto; min-height:auto; padding:0; page-break-after:always;}
+        .page:last-child{page-break-after:auto;}
+        .print-hint{display:none;}
+        .card,.qr,.board,.score,.pawn{box-shadow:none;}
+        @page{size:A4; margin:7mm;}
+    }
+</style>
+</head>
+<body>
+
+<div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+        <li>使用 <strong>A4 纸张</strong>打印，页边距设置为<strong>最小</strong>（或「无边距」）</li>
+        <li>在打印对话框中，务必<strong>勾选「背景图形」/「显示背景」</strong>选项，否则卡片色带与地图底色会丢失</li>
+        <li>卡牌与棋子建议使用 <strong>200g 以上卡纸</strong>打印，耐用且不易透光</li>
+        <li>打印后沿边框裁剪，兵士卡建议塑封或套入 44×67mm 卡套</li>
+        <li>轨迹板（第 1 页）用普通 A4 纸即可，可贴在硬纸板上增加质感</li>
+        <li>全册共 <strong>9 页</strong>：轨迹板 1 页 · 兵士卡 3 页 · 瓦斯卡 1 页 · 巨人卡 2 页 · 棋子与速查 1 页 · 计分纸 1 页</li>
+    </ul>
+</div>
+
+<!-- ================= 第 1 页：轨迹板 ================= -->
+<div class="page">
+    <h2 class="sec">轨迹板 · DIVE ARC BOARD <small>第 1 页 / 共 9 页</small></h2>
+
+    <div class="board">
+        <h1>调 查 兵 团</h1>
+        <div class="sub">SCOUT BEYOND · CRIMSON BOW</div>
+
+        <div class="bands">
+            <div class="band"><span class="tag" style="background:#a8342a;">🏠 屋顶 H5</span><span class="val">斩击 +3</span><span class="rule"></span><span class="note2">最高起点 · 一条弧线只能用 1 张</span></div>
+            <div class="band"><span class="tag" style="background:#2f5d7c;">🕰️ 钟楼 H4</span><span class="val">斩击 +2</span><span class="rule"></span><span class="note2">性价比之王 · 最常见的开场</span></div>
+            <div class="band"><span class="tag" style="background:#6f6a5c;">🧱 城墙 H3</span><span class="val">斩击 +2</span><span class="rule"></span><span class="note2">第二、三张主力</span></div>
+            <div class="band"><span class="tag" style="background:#4a6b3f;">🏘️ 街巷 H2</span><span class="val">斩击 +1</span><span class="rule"></span><span class="note2">精确凑数用</span></div>
+            <div class="band"><span class="tag" style="background:#8a6b3a;">🌍 地面 H1</span><span class="val">斩击 +1</span><span class="rule"></span><span class="note2">终结点 · 之后只能收弓或瓦斯</span></div>
+        </div>
+
+        <div class="track-wrap">
+            <div class="track-label">累 计 斩 击 · CUMULATIVE SLASH　（把你的棋子放在当前格）</div>
+            <div class="track">
+                <div class="zero">0</div><div>1</div><div>2</div><div>3</div><div>4</div><div class="hot">5</div><div class="hot">6</div><div class="hot">7</div><div class="hot">8</div><div>9</div><div>10</div><div>11</div><div>12</div>
+            </div>
+        </div>
+
+        <div class="track-label">巨 人 区 · TITAN ZONE　（人数 + 1 格；斩杀后立即补 1 张）</div>
+        <div class="slots">
+            <div class="slot">①　TITAN</div>
+            <div class="slot">②　TITAN</div>
+            <div class="slot">③　TITAN</div>
+        </div>
+
+        <div class="legend">
+            <b>回合流程</b>：① 出击（出 1 张兵士卡 ／ 打 1 张瓦斯 ／ 收弓）→ ② 斩杀判定 → ③ 抽 1 张<br>
+            <b>出牌规则</b>：新牌高度 <b>≤</b> 弧线顶端；弧线为空时任意。瓦斯把顶端重置为 6。<br>
+            <b>斩杀规则</b>：累计 ≥ 某巨人硬度 → <b>必须</b>斩一只（自选）→ 得分、清空弧线、补 1 张巨人。<br>
+            <b>轮末</b>：本轮无人斩杀 → 放「告急」标记；已有标记 → 全员 −1 并移除。<br>
+            <b>结束</b>：20 只巨人全部斩杀。
+        </div>
+    </div>
+
+    <p class="note">💡 4-5 人局时，在「巨人区」下方用铅笔补画 1-2 个格子即可。</p>
+</div>
+
+<!-- ================= 第 2 页：屋顶 12 + 钟楼 8 ================= -->
+<div class="page">
+    <h2 class="sec">兵士卡 · SOLDIER CARDS（1/3）<small>屋顶 12 张 · 钟楼 8 张　第 2 页 / 共 9 页</small></h2>
+    <div class="grid c4">
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h5"><span class="bar"></span><b class="h">5</b><i class="t">屋 顶</i><span class="s">斩击 +3</span><span class="en">ROOF · H5</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+    </div>
+    <p class="note">✂️ 每张 42 × 48 mm。本页 20 张（屋顶 12 · 钟楼 8）。</p>
+</div>
+
+<!-- ================= 第 3 页：钟楼 4 + 城墙 12 + 街巷 4 ================= -->
+<div class="page">
+    <h2 class="sec">兵士卡 · SOLDIER CARDS（2/3）<small>钟楼 4 张 · 城墙 12 张 · 街巷 4 张　第 3 页 / 共 9 页</small></h2>
+    <div class="grid c4">
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h4"><span class="bar"></span><b class="h">4</b><i class="t">钟 楼</i><span class="s">斩击 +2</span><span class="en">CLOCKTOWER · H4</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h3"><span class="bar"></span><b class="h">3</b><i class="t">城 墙</i><span class="s">斩击 +2</span><span class="en">WALL · H3</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+    </div>
+    <p class="note">✂️ 每张 42 × 48 mm。本页 20 张（钟楼 4 · 城墙 12 · 街巷 4）。</p>
+</div>
+
+<!-- ================= 第 4 页：街巷 8 + 地面 12 ================= -->
+<div class="page">
+    <h2 class="sec">兵士卡 · SOLDIER CARDS（3/3）<small>街巷 8 张 · 地面 12 张　第 4 页 / 共 9 页</small></h2>
+    <div class="grid c4">
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h2"><span class="bar"></span><b class="h">2</b><i class="t">街 巷</i><span class="s">斩击 +1</span><span class="en">ALLEY · H2</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+        <div class="card h1"><span class="bar"></span><b class="h">1</b><i class="t">地 面</i><span class="s">斩击 +1</span><span class="en">GROUND · H1</span></div>
+    </div>
+    <p class="note">✂️ 每张 42 × 48 mm。本页 20 张（街巷 8 · 地面 12）。至此兵士卡 60 张齐。</p>
+</div>
+
+<!-- ================= 第 5 页：瓦斯 15 ================= -->
+<div class="page">
+    <h2 class="sec">瓦斯卡 · GAS CARDS<small>共 15 张（每人 3 张）　第 5 页 / 共 9 页</small></h2>
+    <div class="grid c4">
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+        <div class="card gas"><span class="bar"></span><span class="ico2">💨</span><i class="t">瓦 斯</i><span class="s">斩击 +2</span><span class="s2">顶端 → 6</span><span class="en">GAS · ULTRAHARD</span></div>
+    </div>
+    <p class="note">✂️ 每张 42 × 48 mm。每人发 3 张，正面朝上摆在自己面前，用掉后翻面（背面朝上）。</p>
+</div>
+
+<!-- ================= 第 6 页：巨人 3m / 5m / 7m ================= -->
+<div class="page">
+    <h2 class="sec">巨人卡 · TITAN CARDS（1/2）<small>3 米级 5 · 5 米级 4 · 7 米级 3　第 6 页 / 共 9 页</small></h2>
+    <div class="grid c3">
+        <div class="card titan t3"><span class="bar"></span><span class="ico">👣</span><span class="nm">3 米 级</span><span class="hr">硬 度</span><span class="hv">4</span><span class="bw">赏金 <b>2</b> 分</span><span class="en">TITAN · CLASS 3M</span></div>
+        <div class="card titan t3"><span class="bar"></span><span class="ico">👣</span><span class="nm">3 米 级</span><span class="hr">硬 度</span><span class="hv">4</span><span class="bw">赏金 <b>2</b> 分</span><span class="en">TITAN · CLASS 3M</span></div>
+        <div class="card titan t3"><span class="bar"></span><span class="ico">👣</span><span class="nm">3 米 级</span><span class="hr">硬 度</span><span class="hv">4</span><span class="bw">赏金 <b>2</b> 分</span><span class="en">TITAN · CLASS 3M</span></div>
+        <div class="card titan t3"><span class="bar"></span><span class="ico">👣</span><span class="nm">3 米 级</span><span class="hr">硬 度</span><span class="hv">4</span><span class="bw">赏金 <b>2</b> 分</span><span class="en">TITAN · CLASS 3M</span></div>
+        <div class="card titan t3"><span class="bar"></span><span class="ico">👣</span><span class="nm">3 米 级</span><span class="hr">硬 度</span><span class="hv">4</span><span class="bw">赏金 <b>2</b> 分</span><span class="en">TITAN · CLASS 3M</span></div>
+
+        <div class="card titan t5"><span class="bar"></span><span class="ico">👤</span><span class="nm">5 米 级</span><span class="hr">硬 度</span><span class="hv">5</span><span class="bw">赏金 <b>3</b> 分</span><span class="en">TITAN · CLASS 5M</span></div>
+        <div class="card titan t5"><span class="bar"></span><span class="ico">👤</span><span class="nm">5 米 级</span><span class="hr">硬 度</span><span class="hv">5</span><span class="bw">赏金 <b>3</b> 分</span><span class="en">TITAN · CLASS 5M</span></div>
+        <div class="card titan t5"><span class="bar"></span><span class="ico">👤</span><span class="nm">5 米 级</span><span class="hr">硬 度</span><span class="hv">5</span><span class="bw">赏金 <b>3</b> 分</span><span class="en">TITAN · CLASS 5M</span></div>
+        <div class="card titan t5"><span class="bar"></span><span class="ico">👤</span><span class="nm">5 米 级</span><span class="hr">硬 度</span><span class="hv">5</span><span class="bw">赏金 <b>3</b> 分</span><span class="en">TITAN · CLASS 5M</span></div>
+
+        <div class="card titan t7"><span class="bar"></span><span class="ico">🧟</span><span class="nm">7 米 级</span><span class="hr">硬 度</span><span class="hv">6</span><span class="bw">赏金 <b>4</b> 分</span><span class="en">TITAN · CLASS 7M</span></div>
+        <div class="card titan t7"><span class="bar"></span><span class="ico">🧟</span><span class="nm">7 米 级</span><span class="hr">硬 度</span><span class="hv">6</span><span class="bw">赏金 <b>4</b> 分</span><span class="en">TITAN · CLASS 7M</span></div>
+        <div class="card titan t7"><span class="bar"></span><span class="ico">🧟</span><span class="nm">7 米 级</span><span class="hr">硬 度</span><span class="hv">6</span><span class="bw">赏金 <b>4</b> 分</span><span class="en">TITAN · CLASS 7M</span></div>
+    </div>
+    <p class="note">✂️ 每张 58 × 62 mm。本页 12 张（3 米级 5 · 5 米级 4 · 7 米级 3）。</p>
+</div>
+
+<!-- ================= 第 7 页：巨人 7m×1 + 10m + 铠 + 超大型 ================= -->
+<div class="page">
+    <h2 class="sec">巨人卡 · TITAN CARDS（2/2）<small>7 米级 1 · 10 米级 3 · 铠 2 · 超大型 2　第 7 页 / 共 9 页</small></h2>
+    <div class="grid c3">
+        <div class="card titan t7"><span class="bar"></span><span class="ico">🧟</span><span class="nm">7 米 级</span><span class="hr">硬 度</span><span class="hv">6</span><span class="bw">赏金 <b>4</b> 分</span><span class="en">TITAN · CLASS 7M</span></div>
+        <div class="card titan t10"><span class="bar"></span><span class="ico">👹</span><span class="nm">10 米 级</span><span class="hr">硬 度</span><span class="hv">7</span><span class="bw">赏金 <b>6</b> 分</span><span class="en">TITAN · CLASS 10M</span></div>
+        <div class="card titan t10"><span class="bar"></span><span class="ico">👹</span><span class="nm">10 米 级</span><span class="hr">硬 度</span><span class="hv">7</span><span class="bw">赏金 <b>6</b> 分</span><span class="en">TITAN · CLASS 10M</span></div>
+        <div class="card titan t10"><span class="bar"></span><span class="ico">👹</span><span class="nm">10 米 级</span><span class="hr">硬 度</span><span class="hv">7</span><span class="bw">赏金 <b>6</b> 分</span><span class="en">TITAN · CLASS 10M</span></div>
+        <div class="card titan tk"><span class="bar"></span><span class="ico">🛡️</span><span class="nm">铠 之 巨 人</span><span class="hr">硬 度</span><span class="hv">8</span><span class="bw">赏金 <b>8</b> 分</span><span class="en">ARMORED TITAN</span></div>
+        <div class="card titan tk"><span class="bar"></span><span class="ico">🛡️</span><span class="nm">铠 之 巨 人</span><span class="hr">硬 度</span><span class="hv">8</span><span class="bw">赏金 <b>8</b> 分</span><span class="en">ARMORED TITAN</span></div>
+        <div class="card titan tx"><span class="bar"></span><span class="ico">💀</span><span class="nm">超 大 型</span><span class="hr">硬 度</span><span class="hv">9</span><span class="bw">赏金 <b>11</b> 分</span><span class="en">COLOSSAL TITAN</span></div>
+        <div class="card titan tx"><span class="bar"></span><span class="ico">💀</span><span class="nm">超 大 型</span><span class="hr">硬 度</span><span class="hv">9</span><span class="bw">赏金 <b>11</b> 分</span><span class="en">COLOSSAL TITAN</span></div>
+    </div>
+    <p class="note">✂️ 每张 58 × 62 mm。本页 8 张。与第 6 页合计 20 张。</p>
+</div>
+
+<!-- ================= 第 8 页：棋子 + 速查 + 计分纸 ================= -->
+<div class="page">
+    <h2 class="sec">调查兵团棋子 · PAWNS<small>6 枚 · 直径 40mm　第 8 页 / 共 9 页</small></h2>
+    <div class="pawns">
+        <div class="pawn p1"><span class="pdot"></span><span class="pn">艾 伦</span><span class="pe">EREN</span></div>
+        <div class="pawn p2"><span class="pdot"></span><span class="pn">三 笠</span><span class="pe">MIKASA</span></div>
+        <div class="pawn p3"><span class="pdot"></span><span class="pn">阿 尔 敏</span><span class="pe">ARMIN</span></div>
+        <div class="pawn p4"><span class="pdot"></span><span class="pn">利 威 尔</span><span class="pe">LEVI</span></div>
+        <div class="pawn p5"><span class="pdot"></span><span class="pn">韩 吉</span><span class="pe">HANJI</span></div>
+        <div class="pawn p6"><span class="pdot"></span><span class="pn">让</span><span class="pe">JEAN</span></div>
+    </div>
+    <p class="cut">✂️ 沿圆形裁开，背面贴硬纸板做成圆片；也可直接用 25mm 硬币代替</p>
+
+    <h2 class="sec" style="margin-top:6mm;">速查卡 · REFERENCE<small>建议每人 1 张，剪下后放在手边</small></h2>
+    <div class="grid" style="grid-template-columns:repeat(2,1fr); gap:3mm;">
+        <div class="qr">
+            <h3>回 合 流 程</h3>
+            <table>
+                <tr><td>① 出击</td><td>出 1 张兵士卡（高度 ≤ 顶端）／打 1 张瓦斯（+2 斩，顶端→6）／收弓（弧线全弃）</td></tr>
+                <tr><td>② 斩杀</td><td>累计 ≥ 某巨人硬度 → <b>必须</b>斩一只（自选）→ 得分、清空弧线、补 1 张巨人</td></tr>
+                <tr><td>③ 补给</td><td>抽 1 张（手牌上限 7，超出自行弃牌）</td></tr>
+                <tr><td>轮末</td><td>本轮无人斩杀 → 放告急标记；已有标记 → 全员 −1 并移除</td></tr>
+                <tr><td>结束</td><td>20 只巨人全部斩杀</td></tr>
+            </table>
+            <div class="tip">
+                <b>★</b> 弧线只能往下走，斩击只会越来越小<br>
+                <b>★</b> 小兵没清完，别攒长弧线（会被截胡）<br>
+                <b>★</b> 瓦斯是救命绳，不是加速器
+            </div>
+        </div>
+        <div class="qr">
+            <h3>数 值 速 查</h3>
+            <table>
+                <tr><td>高度带</td><td>屋顶 5/+3　钟楼 4/+2　城墙 3/+2　街巷 2/+1　地面 1/+1</td></tr>
+                <tr><td>巨人表</td><td>3m 4/2　5m 5/3　7m 6/4<br>10m 7/6　铠 8/8　超大型 9/11</td></tr>
+                <tr><td>单弧上限</td><td>最多 5 张牌 = 9 斩（3+2+2+1+1）</td></tr>
+                <tr><td>牌库</td><td>60 张兵士卡 · 总斩击 108 · 平均 1.8 斩/张</td></tr>
+                <tr><td>巨人总量</td><td>20 张 · 总赏金 94 分 · 总硬度 128</td></tr>
+                <tr><td>桌面巨人数</td><td>人数 + 1（2人→3，3人→4，4人→5，5人→6）</td></tr>
+            </table>
+            <div class="tip">
+                <b>★</b> 4 人局实测：人均 17.8 分 · 5 只巨人 · 16.5 轮<br>
+                <b>★</b> 斩大巨人的效率是斩小巨人的 1.8 倍<br>
+                <b>★</b> 弧线一清空，多出来的斩击全部作废
+            </div>
+        </div>
+    </div>
+
+    <p class="note" style="margin-top:4mm; text-align:center; letter-spacing:.18em; color:#b3a99a;">
+        SCOUT BEYOND · CRIMSON BOW 　|　 原创桌游 · 题材致敬《进击的巨人》
+    </p>
+</div>
+
+<!-- ================= 第 9 页：计分纸 + 开局检查 ================= -->
+<div class="page">
+    <h2 class="sec">计 分 纸 · SCORE SHEET<small>一页两份，可裁开使用　第 9 页 / 共 9 页</small></h2>
+
+    <div class="score">
+        <h3>墙外调查：红莲弓矢 —— 第 ____ 局　　日期 ____ / ____</h3>
+        <table>
+            <tr>
+                <th style="width:32mm;">项目</th>
+                <th>玩家 1</th><th>玩家 2</th><th>玩家 3</th><th>玩家 4</th><th>玩家 5</th>
+            </tr>
+            <tr><td class="lbl">角色</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">斩杀数量</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">巨人赏金合计</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">城墙告急扣分</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">剩余手牌</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl" style="height:9mm;">最终得分</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl" style="height:9mm;">排名</td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+        <p class="note">得分 = 巨人赏金合计 − 城墙告急扣分。平手时依次比较：斩杀数量多者胜 → 手牌少者胜。</p>
+    </div>
+
+    <p class="cut" style="margin:4mm 0;">✂️ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+
+    <div class="score">
+        <h3>墙外调查：红莲弓矢 —— 第 ____ 局　　日期 ____ / ____</h3>
+        <table>
+            <tr>
+                <th style="width:32mm;">项目</th>
+                <th>玩家 1</th><th>玩家 2</th><th>玩家 3</th><th>玩家 4</th><th>玩家 5</th>
+            </tr>
+            <tr><td class="lbl">角色</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">斩杀数量</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">巨人赏金合计</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">城墙告急扣分</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl">剩余手牌</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl" style="height:9mm;">最终得分</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td class="lbl" style="height:9mm;">排名</td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+        <p class="note">得分 = 巨人赏金合计 − 城墙告急扣分。平手时依次比较：斩杀数量多者胜 → 手牌少者胜。</p>
+    </div>
+
+    <h2 class="sec" style="margin-top:6mm;">开 局 检 查 表 · SETUP CHECK<small>每局开始前逐项打勾</small></h2>
+    <div class="qr">
+        <table>
+            <tr><td>☐ 牌堆</td><td>60 张兵士卡洗混（正面朝下）· 20 张巨人卡洗混 · 弃牌堆放右侧</td></tr>
+            <tr><td>☐ 手牌</td><td>每人 6 张起始手牌（保密）· 手牌上限 7 张</td></tr>
+            <tr><td>☐ 瓦斯</td><td>每人 3 张，正面朝上摆在自己面前（翻面 = 已使用）</td></tr>
+            <tr><td>☐ 巨人区</td><td>翻开 <b>人数 + 1</b> 张：2人 3 / 3人 4 / 4人 5 / 5人 6</td></tr>
+            <tr><td>☐ 轨迹板</td><td>放桌子中央，每位玩家的棋子都在刻度 0</td></tr>
+            <tr><td>☐ 告急标记</td><td>城墙板上不放任何标记（第 1 轮结束后会放 1 个，正常）</td></tr>
+            <tr><td>☐ 起始玩家</td><td>拿「调查兵团徽章」，按顺时针进行</td></tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
