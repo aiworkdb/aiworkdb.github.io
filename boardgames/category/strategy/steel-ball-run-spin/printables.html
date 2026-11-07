@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飙马野郎：横贯大陆的旋转 · 打印道具</title>
+<style>
+:root{
+  --ink:#2b2118;
+  --ink2:#5a4632;
+  --paper:#f6efe0;
+  --paper2:#efe3cc;
+  --rust:#8c2f1f;
+  --brass:#b8892f;
+  --brass2:#e0c47a;
+  --steel:#3a5a6b;
+  --straight:#e9dfc6;
+  --corner:#d9b26a;
+  --rock:#a3927c;
+  --ford:#8fb4c2;
+  --town:#c47a4a;
+  --line:#c6b492;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;padding:24px 12px 60px;
+  font-family:"Noto Serif SC","Songti SC","Source Han Serif SC",Georgia,serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 12% 8%, #fbf6ea 0%, transparent 45%),
+    radial-gradient(circle at 88% 92%, #f0e5cd 0%, transparent 50%),
+    #e8dcc2;
+}
+.sheet{max-width:1000px;margin:0 auto;}
+h1,h2,h3{font-family:"Noto Serif SC","Songti SC",Georgia,serif;margin:0;}
+
+/* ---------- print hint ---------- */
+.print-hint{
+  border:2px dashed var(--rust);
+  background:#fffaf0;
+  padding:14px 20px;
+  border-radius:10px;
+  margin:0 0 22px;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--ink);
+}
+.print-hint strong{color:var(--rust);}
+.print-hint ul{margin:6px 0 0 18px;padding:0;}
+.print-hint li{margin:2px 0;}
+
+/* ---------- page ---------- */
+.page{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:6px;
+  box-shadow:0 6px 22px rgba(60,40,20,.16);
+  padding:12mm 12mm 10mm;
+  margin:0 0 26px;
+  position:relative;
+  overflow:hidden;
+}
+.page::before{
+  content:"";
+  position:absolute;inset:5mm;
+  border:1px solid rgba(140,47,31,.18);
+  border-radius:3px;
+  pointer-events:none;
+}
+.page-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  border-bottom:2px solid var(--rust);
+  padding-bottom:5px;margin-bottom:10px;
+  position:relative;z-index:2;
+}
+.page-head h2{font-size:16px;letter-spacing:.06em;color:var(--rust);}
+.page-head span{font-size:10px;color:var(--ink2);letter-spacing:.14em;text-transform:uppercase;}
+.page-body{position:relative;z-index:2;}
+
+/* ---------- cover ---------- */
+.cover{text-align:center;padding-top:8mm;}
+.cover .jp{font-size:34px;letter-spacing:.12em;color:var(--rust);font-weight:700;}
+.cover .en{font-size:11px;letter-spacing:.34em;color:var(--ink2);margin-top:8px;text-transform:uppercase;}
+.cover .rule{width:70%;height:1px;background:linear-gradient(90deg,transparent,var(--brass),transparent);margin:16px auto;}
+.cover .sub{font-size:13px;color:var(--ink2);line-height:2;}
+.cover .ball{
+  width:76px;height:76px;border-radius:50%;
+  margin:18px auto;
+  background:radial-gradient(circle at 32% 28%, #f3e6c8, #b8892f 58%, #6d4c14 100%);
+  box-shadow:inset -6px -8px 14px rgba(0,0,0,.32), 0 4px 10px rgba(0,0,0,.18);
+  position:relative;
+}
+.cover .ball::after{
+  content:"";position:absolute;inset:20%;border:2px dashed rgba(255,255,255,.45);border-radius:50%;
+}
+.cover .meta{
+  display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;font-size:12px;
+}
+.cover .meta div{
+  border:1px solid var(--line);background:#fffdf6;border-radius:999px;
+  padding:4px 14px;color:var(--ink2);
+}
+
+/* ---------- map ---------- */
+.map-legend{
+  display:flex;flex-wrap:wrap;gap:8px 16px;
+  font-size:11px;color:var(--ink2);margin:0 0 10px;
+}
+.map-legend b{color:var(--ink);}
+.leg{margin-bottom:6px;}
+.leg-label{
+  font-size:10.5px;letter-spacing:.08em;color:var(--rust);
+  display:flex;align-items:center;gap:8px;margin:0 0 3px;
+}
+.leg-label i{
+  flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);font-style:normal;
+}
+.track{
+  display:grid;grid-template-columns:repeat(10,1fr);gap:3px;
+}
+.cell{
+  position:relative;
+  border:1px solid rgba(43,33,24,.35);
+  border-radius:3px;
+  min-height:30px;
+  padding:2px 3px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  font-size:9px;
+  color:#1f1811;
+}
+.cell .no{font-weight:700;font-size:9px;opacity:.8;line-height:1;}
+.cell .ic{font-size:15px;line-height:1;text-align:center;}
+.cell .tx{font-size:7.5px;text-align:center;opacity:.85;letter-spacing:.05em;}
+.cell.s{background:var(--straight);}
+.cell.c{background:var(--corner);}
+.cell.r{background:var(--rock);}
+.cell.f{background:var(--ford);}
+.cell.t{background:var(--town);}
+.cell.e{background:linear-gradient(135deg,#8c2f1f,#c25b3a);color:#fff8ec;}
+.cell.e .no{opacity:.95;}
+.cell .relic{
+  position:absolute;top:2px;right:2px;
+  font-size:8px;color:#fff;background:var(--rust);
+  border-radius:50%;width:11px;height:11px;line-height:11px;text-align:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.3);
+}
+.cp-row{
+  display:flex;justify-content:flex-end;align-items:center;gap:6px;
+  font-size:8.5px;color:var(--rust);letter-spacing:.1em;
+  margin:2px 0 8px;
+}
+.cp-row b{
+  border:1px solid var(--rust);border-radius:2px;padding:1px 6px;background:#fdf6e8;
+}
+
+/* ---------- cards ---------- */
+.grid-cards{display:grid;gap:4mm;}
+.drive-grid{grid-template-columns:repeat(4,1fr);}
+.relic-grid{grid-template-columns:repeat(3,1fr);}
+.card{
+  border-radius:5px;
+  border:1.2px solid #2b2118;
+  background:#fffdf5;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  position:relative;
+  box-shadow:inset 0 0 0 2.2px #fffdf5, inset 0 0 0 3.2px rgba(184,137,47,.55);
+}
+.card .cap{
+  padding:2px 5px;
+  font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  color:#fff8ec;background:var(--ink);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.card .cap em{font-style:normal;opacity:.72;font-size:7px;letter-spacing:.12em;}
+.card .body{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:3px;gap:2px;
+  position:relative;
+  background:
+    radial-gradient(circle at 50% 44%, #fffdf5 0%, #fbf4e3 55%, #f2e6cb 100%);
+}
+.card .body::before{
+  content:"";position:absolute;inset:6% 12%;
+  border:1px solid rgba(184,137,47,.30);border-radius:50%/40%;
+  pointer-events:none;
+}
+.card .wm{
+  position:absolute;font-size:64px;line-height:1;opacity:.09;
+  filter:grayscale(1);pointer-events:none;user-select:none;
+}
+.card .foot{
+  border-top:1px dashed var(--line);
+  padding:2.5px 5px;font-size:7.6px;color:var(--ink2);text-align:center;line-height:1.4;
+  background:#fdf8ec;
+}
+
+/* drive card */
+.drive{height:52mm;}
+.drive .num{
+  font-size:34px;font-weight:700;line-height:1;color:var(--rust);
+  font-family:Georgia,serif;position:relative;z-index:2;
+  text-shadow:0 1px 0 #fff;
+}
+.drive .pips{display:flex;gap:3px;margin-top:2px;position:relative;z-index:2;}
+.drive .pips i{
+  width:6px;height:6px;border-radius:50%;background:var(--rust);display:block;
+  box-shadow:inset -1px -1px 1px rgba(0,0,0,.25);
+}
+.drive .steps{font-size:9px;letter-spacing:.1em;color:var(--ink2);position:relative;z-index:2;}
+.drive .warn{
+  font-size:7.5px;color:#fff;background:var(--rust);padding:1px 7px;border-radius:999px;
+  letter-spacing:.06em;position:relative;z-index:2;
+}
+.drive.v1 .cap{background:#5a4632;}
+.drive.v2 .cap{background:#3a5a6b;}
+.drive.v3 .cap{background:#3f6b3a;}
+.drive.v4 .cap{background:#9a6a1e;}
+.drive.v5 .cap{background:#8c2f1f;}
+
+/* relic card */
+.relic{height:58mm;}
+.relic .body{gap:2px;}
+.relic .big{font-size:40px;line-height:1.15;position:relative;z-index:2;}
+.relic .nm{font-size:10.5px;letter-spacing:.16em;position:relative;z-index:2;color:var(--ink);}
+.relic .sc{
+  font-size:9px;background:var(--brass);color:#fff;
+  padding:1px 9px;border-radius:999px;letter-spacing:.08em;
+  position:relative;z-index:2;box-shadow:inset 0 -1px 0 rgba(0,0,0,.2);
+}
+.relic.eye .cap{background:#3a5a6b;}
+.relic.heart .cap{background:#8c2f1f;}
+.relic.spine .cap{background:#6b5a3a;}
+.relic.skull .cap{background:#3f3a34;}
+
+/* tokens */
+.tok-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4mm;justify-items:center;}
+.seal{
+  width:26mm;height:26mm;
+  border-radius:50%;
+  border:1.6px solid #4a3418;
+  background:radial-gradient(circle at 34% 30%, #f6e9c6, #c9a34d 56%, #7a5a1c 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:700;color:#42300f;
+  font-family:"Noto Serif SC","Songti SC",serif;
+  box-shadow:inset -2px -3px 7px rgba(0,0,0,.30), 0 1px 2px rgba(0,0,0,.15);
+  position:relative;letter-spacing:.05em;
+}
+.seal::before{
+  content:"";position:absolute;inset:14%;border:1px dashed rgba(66,48,15,.42);border-radius:50%;
+}
+.seal::after{
+  content:"";position:absolute;width:58%;height:58%;left:21%;top:21%;
+  border:1px solid rgba(66,48,15,.30);border-radius:50%;
+  clip-path:polygon(50% 0,60% 38%,100% 50%,60% 62%,50% 100%,40% 62%,0 50%,40% 38%);
+}
+.rider-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4mm;justify-items:center;}
+.rider{
+  width:28mm;height:28mm;border-radius:50%;
+  border:1.8px solid #2b2118;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:17px;color:#fff8ec;
+  box-shadow:inset -3px -4px 8px rgba(0,0,0,.34), 0 1px 3px rgba(0,0,0,.18);
+  position:relative;
+}
+.rider::after{
+  content:"";position:absolute;inset:11%;border:1px solid rgba(255,248,236,.42);border-radius:50%;
+}
+.rider span{font-size:7px;letter-spacing:.14em;margin-top:1px;opacity:.9;font-family:sans-serif;}
+.r1{background:radial-gradient(circle at 34% 28%,#c8553d,#7a2114);}
+.r2{background:radial-gradient(circle at 34% 28%,#4a7d95,#1f3f4e);}
+.r3{background:radial-gradient(circle at 34% 28%,#7fa05a,#3b5426);}
+.r4{background:radial-gradient(circle at 34% 28%,#c9a24a,#7a5a1c);}
+.r5{background:radial-gradient(circle at 34% 28%,#8a6b9a,#412f4d);}
+
+/* spin strip */
+.dial{
+  display:flex;align-items:center;gap:0;margin:0 0 4mm;
+  border:1.2px solid #2b2118;border-radius:4px;overflow:hidden;background:#fffdf5;
+}
+.dial .who{
+  padding:3mm 3mm;background:var(--ink);color:#fff8ec;
+  font-size:9px;letter-spacing:.1em;writing-mode:horizontal-tb;
+  min-width:22mm;text-align:center;
+}
+.dial .slots{display:flex;flex:1;}
+.dial .slot{
+  flex:1;text-align:center;font-size:10px;padding:2.5mm 0;
+  border-left:1px solid var(--line);
+  font-family:Georgia,serif;color:var(--ink);
+}
+.dial .slot:nth-child(1),.dial .slot:nth-child(2){background:#f6efe0;}
+.dial .slot:nth-child(3),.dial .slot:nth-child(4),.dial .slot:nth-child(5){background:#f2e6c9;}
+.dial .slot:nth-child(6),.dial .slot:nth-child(7){background:#ecd9a8;}
+.dial .slot:nth-child(8),.dial .slot:nth-child(9){background:#e2c07a;}
+.dial .slot.max{background:#8c2f1f;color:#fff8ec;font-weight:700;}
+
+/* score sheet */
+.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm;}
+.scorecard{
+  border:1.2px solid #2b2118;border-radius:4px;background:#fffdf5;padding:3mm;
+}
+.scorecard h4{
+  font-size:9.5px;letter-spacing:.1em;margin:0 0 2mm;color:var(--rust);
+  border-bottom:1px solid var(--line);padding-bottom:1mm;
+  display:flex;justify-content:space-between;font-weight:700;
+}
+.scorecard h4 em{font-style:normal;color:var(--ink2);font-size:7.5px;letter-spacing:.06em;}
+table.sc{width:100%;border-collapse:collapse;font-size:8px;}
+table.sc th,table.sc td{
+  border:1px solid var(--line);padding:1.6mm 1mm;text-align:center;color:var(--ink);
+}
+table.sc th{background:var(--paper2);font-weight:600;font-size:7.5px;}
+table.sc td.blank{height:6mm;}
+
+/* cheat */
+.cheat{
+  border:2px solid var(--rust);border-radius:5px;background:#fffdf5;
+  padding:3.5mm;font-size:8.6px;line-height:1.55;
+}
+.cheat h4{
+  font-size:11px;color:var(--rust);margin:0 0 2mm;letter-spacing:.1em;
+  border-bottom:1px solid var(--line);padding-bottom:1mm;
+}
+.cheat .k{color:var(--rust);font-weight:700;}
+.cheat ol,.cheat ul{margin:1.5mm 0 1.5mm 4mm;padding:0;}
+.cheat li{margin:.6mm 0;}
+.cheat .hr{height:1px;background:var(--line);margin:2mm 0;}
+
+/* checklist */
+.check{font-size:8.5px;line-height:1.9;}
+.check li{list-style:none;position:relative;padding-left:6mm;}
+.check li::before{
+  content:"";position:absolute;left:0;top:1mm;
+  width:3mm;height:3mm;border:1px solid var(--ink2);border-radius:1px;background:#fff;
+}
+
+/* footer */
+.pfoot{
+  margin-top:8px;font-size:7.5px;color:#8a7358;text-align:center;letter-spacing:.12em;
+}
+
+/* ================= PRINT ================= */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+@media print{
+  @page{ size:A4 portrait; margin:8mm; }
+  @page landscape{ size:A4 landscape; margin:8mm; }
+  html,body{background:#fff;}
+  body{padding:0;margin:0;}
+  .sheet{max-width:none;}
+  .no-print{display:none !important;}
+  .print-hint{
+      display: none;
+  }
+  .page{
+    box-shadow:none;border:none;border-radius:0;
+    margin:0;padding:0;
+    width:194mm;min-height:281mm;
+    page-break-after:always;
+    break-after:page;
+    background:var(--paper);
+    padding:6mm 6mm 4mm;
+  }
+  .page:last-child{page-break-after:auto;break-after:auto;}
+  .page.landscape{
+    page:landscape;
+    width:281mm;min-height:194mm;
+  }
+  .page::before{inset:3mm;}
+  .grid-cards{gap:3mm;}
+  .drive{height:47mm;}
+  .relic{height:53mm;}
+  .tok-grid{gap:3mm;}
+  .rider-grid{gap:3mm;}
+  .dial .slot{padding:1.8mm 0;font-size:9px;}
+  .dial .who{padding:1.8mm 2mm;}
+  .dial{margin-bottom:2.5mm;}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<!-- ============ 打印提示（屏幕上显示，打印时隐藏） ============ -->
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <strong>A4 纸张</strong>打印，边距设为<strong>最小</strong>（或「无边距」）。第 2 页赛道地图会自动切换为<strong>横向 A4</strong>。</li>
+    <li>在打印对话框中，务必<strong>勾选「背景图形」/「打印背景颜色和图像」</strong>，否则赛道与卡牌会变成白纸。</li>
+    <li>卡牌与棋子建议使用 <strong>200g 卡纸</strong>打印，剪下后过塑更耐用。</li>
+    <li>共 <strong>6 页</strong>：① 封面 ② 赛道地图 ③ 驱动卡 ×20 ④ 遗骨卡 ×12 ⑤ 旋印 ×20 + 棋子 ×5 + 回转轨 ×5 ⑥ 速查卡 ×2 + 记分纸。</li>
+    <li>建议缩放设为 <strong>100%（实际大小）</strong>，不要选「适合页面」，否则卡牌会缩小到对不上格。</li>
+  </ul>
+</div>
+
+<!-- ============ P1 封面 ============ -->
+<section class="page">
+  <div class="page-head">
+    <h2>飙马野郎：横贯大陆的旋转</h2>
+    <span>Print Kit · P1/6</span>
+  </div>
+  <div class="page-body cover">
+    <div class="jp">飙马野郎</div>
+    <div class="en">Steel Ball Run · Continental Spin</div>
+    <div class="rule"></div>
+    <div class="ball"></div>
+    <div class="sub">
+      1890 年，圣迭戈到纽约，60 格，18 拍。<br>
+      跑得快，还是跑得准？你只能选一样。
+    </div>
+    <div class="meta">
+      <div>2-5 人</div><div>60-90 分钟</div><div>12 岁以上</div><div>策略 · 竞速 · 精确落点</div>
+    </div>
+    <div style="margin-top:16mm;font-size:10px;color:var(--ink2);line-height:2;text-align:left;max-width:130mm;margin-left:auto;margin-right:auto;">
+      <div style="border-top:1px solid var(--line);padding-top:3mm;">
+        <b style="color:var(--rust);">本套打印件包含</b><br>
+        · 赛道地图 1 张（60 格 / 6 赛段 / 12 个遗骨位）<br>
+        · 驱动卡 1 套 20 张（1-5 各 4 张；几人就印几套）<br>
+        · 圣者遗骨卡 12 张<br>
+        · 旋印 20 枚（每人 4 枚）<br>
+        · 骑手棋子 5 枚<br>
+        · 回转轨 5 条（0-9）<br>
+        · 速查卡 2 张 + 记分纸 2 张
+      </div>
+    </div>
+    <div class="pfoot">完整规则见同目录 README.md</div>
+  </div>
+</section>
+
+<!-- ============ P2 赛道地图（横向） ============ -->
+<section class="page landscape">
+  <div class="page-head">
+    <h2>赛道地图 · 圣迭戈 → 纽约（60 格）</h2>
+    <span>Track Map · P2/6 · A4 Landscape</span>
+  </div>
+  <div class="page-body">
+    <div class="map-legend">
+      <span><b>🛣 直道</b> 无事</span>
+      <span><b>↩ 弯道</b> 打出 4 或 5 时，每个弯道额外 −2</span>
+      <span><b>⛰ 岩地</b> 额外 −1</span>
+      <span><b>🌊 河滩</b> 经过 +1 回转（每拍 1 次）</span>
+      <span><b>🏘 城镇</b> 停下 +1 回转</span>
+      <span><b>◈ 遗骨位</b> 恰好停下才翻开</span>
+      <span><b>🏁 终点</b> 第 60 格</span>
+    </div>
+
+    <div class="leg">
+      <div class="leg-label">赛段 1 · 圣迭戈 → 沙漠边缘 <i></i> 格 1-10</div>
+      <div class="track">
+        <div class="cell s"><span class="no">1</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell s"><span class="no">2</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell c"><span class="no">3</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell s"><span class="no">4</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell f"><span class="no">5</span><span class="ic">🌊</span><span class="tx">河滩</span></div>
+        <div class="cell s"><span class="no">6</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell s"><span class="no">7</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell t"><span class="no">8</span><span class="ic">🏘</span><span class="tx">城镇</span></div>
+        <div class="cell s"><span class="no">9</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell s"><span class="no">10</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+      </div>
+      <div class="cp-row">赛段终点 <b>CP1 · 第 10 格</b></div>
+    </div>
+
+    <div class="leg">
+      <div class="leg-label">赛段 2 · 亚利桑那 · 赤岩 <i></i> 格 11-20</div>
+      <div class="track">
+        <div class="cell s"><span class="no">11</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell r"><span class="no">12</span><span class="ic">⛰</span><span class="tx">岩地</span></div>
+        <div class="cell s"><span class="no">13</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell c"><span class="no">14</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell s"><span class="no">15</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell r"><span class="no">16</span><span class="ic">⛰</span><span class="tx">岩地</span></div>
+        <div class="cell f"><span class="no">17</span><span class="ic">🌊</span><span class="tx">河滩</span></div>
+        <div class="cell s"><span class="no">18</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell s"><span class="no">19</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell c"><span class="no">20</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+      </div>
+      <div class="cp-row">赛段终点 <b>CP2 · 第 20 格</b></div>
+    </div>
+
+    <div class="leg">
+      <div class="leg-label">赛段 3 · 落基山 · 雪脊 <i></i> 格 21-30</div>
+      <div class="track">
+        <div class="cell c"><span class="no">21</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell r"><span class="no">22</span><span class="ic">⛰</span><span class="tx">岩地</span></div>
+        <div class="cell s"><span class="no">23</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell c"><span class="no">24</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell f"><span class="no">25</span><span class="ic">🌊</span><span class="tx">河滩</span></div>
+        <div class="cell s"><span class="no">26</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell r"><span class="no">27</span><span class="ic">⛰</span><span class="tx">岩地</span></div>
+        <div class="cell c"><span class="no">28</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell s"><span class="no">29</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell s"><span class="no">30</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+      </div>
+      <div class="cp-row">赛段终点 <b>CP3 · 第 30 格</b></div>
+    </div>
+
+    <div class="leg">
+      <div class="leg-label">赛段 4 · 大平原 · 疾风 <i></i> 格 31-40</div>
+      <div class="track">
+        <div class="cell s"><span class="no">31</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell s"><span class="no">32</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell c"><span class="no">33</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell s"><span class="no">34</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell t"><span class="no">35</span><span class="ic">🏘</span><span class="tx">城镇</span></div>
+        <div class="cell s"><span class="no">36</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell c"><span class="no">37</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell s"><span class="no">38</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell f"><span class="no">39</span><span class="ic">🌊</span><span class="tx">河滩</span></div>
+        <div class="cell s"><span class="no">40</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+      </div>
+      <div class="cp-row">赛段终点 <b>CP4 · 第 40 格</b></div>
+    </div>
+
+    <div class="leg">
+      <div class="leg-label">赛段 5 · 密西西比 · 河滩 <i></i> 格 41-50</div>
+      <div class="track">
+        <div class="cell s"><span class="no">41</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell f"><span class="no">42</span><span class="ic">🌊</span><span class="tx">河滩</span></div>
+        <div class="cell c"><span class="no">43</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell s"><span class="no">44</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell r"><span class="no">45</span><span class="ic">⛰</span><span class="tx">岩地</span></div>
+        <div class="cell s"><span class="no">46</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell c"><span class="no">47</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell t"><span class="no">48</span><span class="ic">🏘</span><span class="tx">城镇</span></div>
+        <div class="cell s"><span class="no">49</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell c"><span class="no">50</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+      </div>
+      <div class="cp-row">赛段终点 <b>CP5 · 第 50 格</b></div>
+    </div>
+
+    <div class="leg">
+      <div class="leg-label">赛段 6 · 纽约 · 终章 <i></i> 格 51-60</div>
+      <div class="track">
+        <div class="cell s"><span class="no">51</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell r"><span class="no">52</span><span class="ic">⛰</span><span class="tx">岩地</span></div>
+        <div class="cell s"><span class="no">53</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell f"><span class="no">54</span><span class="ic">🌊</span><span class="tx">河滩</span></div>
+        <div class="cell s"><span class="no">55</span><span class="ic">🛣</span><span class="tx">直道</span></div>
+        <div class="cell c"><span class="no">56</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell s"><span class="no">57</span><span class="relic">◈</span><span class="ic">🛣</span><span class="tx">遗骨</span></div>
+        <div class="cell t"><span class="no">58</span><span class="ic">🏘</span><span class="tx">城镇</span></div>
+        <div class="cell c"><span class="no">59</span><span class="ic">↩</span><span class="tx">弯道</span></div>
+        <div class="cell e"><span class="no">60</span><span class="ic">🏁</span><span class="tx">纽约</span></div>
+      </div>
+      <div class="cp-row">赛段终点 <b>CP6 / 终点 · 第 60 格</b></div>
+    </div>
+    <div class="pfoot">统计：直道 30 + 终点 1 ｜ 弯道 13 ｜ 岩地 6 ｜ 河滩 6 ｜ 城镇 4 ｜ 遗骨位 12（全部位于直道）</div>
+  </div>
+</section>
+
+<!-- ============ P3 驱动卡 ============ -->
+<section class="page">
+  <div class="page-head">
+    <h2>驱动卡 · 1 套 20 张</h2>
+    <span>Drive Cards · P3/6</span>
+  </div>
+  <div class="page-body">
+    <div class="map-legend" style="margin-bottom:3mm;">
+      <span><b>用法</b> 这套牌 <b>每位玩家各一套</b>（几人玩就印几份）。洗匀抽 5 张，每拍打 1 张、补 1 张。</span>
+    </div>
+    <div class="grid-cards drive-grid" id="driveGrid"></div>
+    <div class="pfoot">弯道惩罚：打出 4 或 5 时，每经过 1 个弯道额外 −2 点移动力</div>
+  </div>
+</section>
+
+<!-- ============ P4 遗骨卡 ============ -->
+<section class="page">
+  <div class="page-head">
+    <h2>圣者遗骨卡 · 12 张</h2>
+    <span>Saint's Corpse · P4/6</span>
+  </div>
+  <div class="page-body">
+    <div class="map-legend" style="margin-bottom:3mm;">
+      <span>开局<b>背面朝上</b>随机放到 12 个 ◈ 格上。玩家<b>恰好停下</b>才翻开结算。</span>
+    </div>
+    <div class="grid-cards relic-grid" id="relicGrid"></div>
+    <div class="pfoot">遗骨总分 = 3×2 + 3×2 + 3×3 + 3×1 = 24 分</div>
+  </div>
+</section>
+
+<!-- ============ P5 旋印 / 棋子 / 回转轨 ============ -->
+<section class="page">
+  <div class="page-head">
+    <h2>旋印 20 枚 · 骑手棋子 5 枚 · 回转轨 5 条</h2>
+    <span>Tokens &amp; Dials · P5/6</span>
+  </div>
+  <div class="page-body">
+    <div class="map-legend" style="margin-bottom:3mm;">
+      <span><b>旋印</b> 每人 4 枚。放在身后 1-3 格；对手踩中 −2 移动力（可花 2 回转破印）。</span>
+    </div>
+    <div class="tok-grid" id="sealGrid"></div>
+
+    <div style="height:5mm"></div>
+    <div class="map-legend" style="margin-bottom:3mm;">
+      <span><b>骑手棋子</b> 每人 1 枚，放在当前格的格号上。</span>
+    </div>
+    <div class="rider-grid" id="riderGrid"></div>
+
+    <div style="height:6mm"></div>
+    <div class="map-legend" style="margin-bottom:3mm;">
+      <span><b>回转轨</b> 每人 1 条（0-9）。用回形针或小骰子指向当前点数。</span>
+    </div>
+    <div id="dialWrap"></div>
+    <div class="pfoot">回转上限 9 ｜ 加速 1 点 = 1 格（每拍最多花 2 点）｜ 破印 2 点</div>
+  </div>
+</section>
+
+<!-- ============ P6 速查卡 + 记分纸 + 开局检查 ============ -->
+<section class="page">
+  <div class="page-head">
+    <h2>速查卡 · 记分纸 · 开局检查表</h2>
+    <span>Reference &amp; Score · P6/6</span>
+  </div>
+  <div class="page-body">
+    <div class="sheet-grid">
+      <div class="cheat">
+        <h4>一拍六步</h4>
+        <ol>
+          <li><span class="k">排序</span>：位置靠后的玩家先行动</li>
+          <li><span class="k">出牌</span>：明置 1 张，得等量移动力</li>
+          <li><span class="k">加速</span>：最多花 2 回转，+2 移动力</li>
+          <li><span class="k">布印</span>：最多 1 枚，放身后 1-3 格</li>
+          <li><span class="k">移动</span>：走满为止，逐格结算</li>
+          <li><span class="k">停点</span>：城镇 +1 旋 / 遗骨翻开</li>
+          <li><span class="k">补牌</span>：抽 1 张</li>
+        </ol>
+        <div class="hr"></div>
+        <b class="k">逐格结算顺序</b>：地形 → 旋印 → 遗骨
+      </div>
+
+      <div class="cheat">
+        <h4>地形与计分</h4>
+        <b class="k">地形</b>
+        <ul>
+          <li>🛣 直道 — 无事</li>
+          <li>↩ 弯道 — 打 4/5 时每个额外 −2</li>
+          <li>⛰ 岩地 — 额外 −1（停在此格不扣）</li>
+          <li>🌊 河滩 — 经过 +1 回转（每拍 1 次）</li>
+          <li>🏘 城镇 — 停下 +1 回转</li>
+        </ul>
+        <div class="hr"></div>
+        <b class="k">赛段（每 3 拍）</b>：按<b>本段距离</b> 5/3/2/1/0<br>
+        <b class="k">终局</b>：按<b>总格号</b> 10/6/3/1/0<br>
+        <b class="k">遗骨</b>：👁2 🫀2 🦴3 💀1
+      </div>
+
+      <div class="scorecard">
+        <h4>记分纸 <em>玩家：__________</em></h4>
+        <table class="sc">
+          <tr><th>赛段</th><th>段初格</th><th>段末格</th><th>本段距离</th><th>名次</th><th>名次分</th></tr>
+          <tr><td>1</td><td>0</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>2</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>3</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>4</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>5</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>6</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><th colspan="5">赛段名次分小计</th><td class="blank"></td></tr>
+        </table>
+        <table class="sc" style="margin-top:2mm;">
+          <tr><th>遗骨</th><th>👁</th><th>🫀</th><th>🦴</th><th>💀</th><th>合计</th></tr>
+          <tr><td>件数</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>得分</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><th colspan="5">终局分</th><td class="blank"></td></tr>
+          <tr><th colspan="5">总分</th><td class="blank"></td></tr>
+        </table>
+      </div>
+
+      <div class="scorecard">
+        <h4>开局检查表 <em>Setup Checklist</em></h4>
+        <ul class="check" style="margin:0;padding:0;">
+          <li>赛道地图已铺平，60 格全部可见</li>
+          <li>12 张遗骨卡<b>背面朝上</b>放在 12 个 ◈ 格</li>
+          <li>每人 1 枚棋子，全部在起点（格 0）</li>
+          <li>每人 1 条回转轨，指向 0</li>
+          <li>每人 4 枚旋印</li>
+          <li>每人 20 张驱动卡，洗匀后抽 5 张</li>
+          <li>每人牌堆剩 15 张，背面朝下</li>
+          <li>每人 1 张记分纸 + 笔</li>
+          <li>已翻牌决定起始玩家（最小牌先动）</li>
+          <li>所有人已确认：<b>牌必须走满，不能少走</b></li>
+        </ul>
+        <div class="hr"></div>
+        <div style="font-size:7.6px;color:var(--ink2);line-height:1.6;">
+          <b style="color:var(--rust)">最易错三条</b><br>
+          ① 赛段名次看「本段距离」，不是总位置<br>
+          ② 弯道惩罚是<b>每个弯道各算一次</b><br>
+          ③ 城镇与遗骨<b>只有停下</b>才触发，路过不算
+        </div>
+      </div>
+    </div>
+    <div class="pfoot">飙马野郎：横贯大陆的旋转 · 打印件到此结束 · 完整规则见 README.md</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ---- 驱动卡 20 张：1-5 各 4 张 ---- */
+(function(){
+  var tips = {
+    1:'微调专用。踩遗骨的最后一格',
+    2:'安全的两步。弯道无惩罚',
+    3:'标准速度。全场默认选择',
+    4:'直道好用；穿过弯道要付 2',
+    5:'爆冲。弯道前打它是浪费'
+  };
+  var steps = {1:'走 1 格',2:'走 2 格',3:'走 3 格',4:'走 4 格',5:'走 5 格'};
+  var html = '';
+  for (var v=1; v<=5; v++){
+    for (var k=0; k<4; k++){
+      var pips = '';
+      for (var p=0; p<v; p++) pips += '<i></i>';
+      var warn = v>=4 ? '<span class="warn">弯道 −2</span>' : '';
+      html +=
+        '<div class="card drive v'+v+'">'+
+          '<div class="cap"><span>驱动卡</span><em>'+v+'-'+(k+1)+'</em></div>'+
+          '<div class="body">'+
+            '<div class="num">'+v+'</div>'+
+            '<div class="pips">'+pips+'</div>'+
+            '<div class="steps">'+steps[v]+'</div>'+
+            warn+
+          '</div>'+
+          '<div class="foot">'+tips[v]+'</div>'+
+        '</div>';
+    }
+  }
+  document.getElementById('driveGrid').innerHTML = html;
+})();
+
+/* ---- 遗骨卡 12 张 ---- */
+(function(){
+  var data = [
+    ['eye','👁','眼球','2','立刻回转 +2','eye',3,'视界：看得比所有人远'],
+    ['heart','🫀','心脏','2','立刻前进 3 格','heart',3,'不触发地形，是最纯粹的三格'],
+    ['spine','🦴','脊椎','3','无附加效果','spine',3,'纯分。落在好位置就是白捡'],
+    ['skull','💀','头骨','1','弃牌堆取回 1 张','skull',3,'终局救命：把那张 5 拿回来']
+  ];
+  var html = '';
+  var n = 0;
+  data.forEach(function(d){
+    for (var i=0;i<d[6];i++){
+      n++;
+      html +=
+        '<div class="card relic '+d[5]+'">'+
+          '<div class="cap"><span>圣者遗骨</span><em>'+('0'+n).slice(-2)+' / 12</em></div>'+
+          '<div class="body">'+
+            '<div class="wm">'+d[1]+'</div>'+
+            '<div class="big">'+d[1]+'</div>'+
+            '<div class="nm">'+d[2]+'</div>'+
+            '<div class="sc">'+d[3]+' 分</div>'+
+          '</div>'+
+          '<div class="foot">'+d[4]+'</div>'+
+        '</div>';
+    }
+  });
+  document.getElementById('relicGrid').innerHTML = html;
+})();
+
+/* ---- 旋印 20 枚 / 棋子 5 枚 / 回转轨 5 条 ---- */
+(function(){
+  var s='';
+  for (var i=0;i<20;i++) s += '<div class="seal">旋</div>';
+  document.getElementById('sealGrid').innerHTML = s;
+
+  var names=['红骑手','蓝骑手','绿骑手','金骑手','紫骑手'];
+  var r='';
+  for (var j=0;j<5;j++){
+    r += '<div class="rider r'+(j+1)+'">🏇<span>'+names[j]+'</span></div>';
+  }
+  document.getElementById('riderGrid').innerHTML = r;
+
+  var d='';
+  for (var k=0;k<5;k++){
+    d += '<div class="dial"><div class="who">'+names[k]+'</div><div class="slots">';
+    for (var n=0;n<=9;n++){
+      d += '<div class="slot'+(n===9?' max':'')+'">'+n+'</div>';
+    }
+    d += '</div></div>';
+  }
+  document.getElementById('dialWrap').innerHTML = d;
+})();
+</script>
+</body>
+</html>

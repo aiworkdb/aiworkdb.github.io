@@ -152,6 +152,7 @@ boardgames/
 | [黄泉双生：东西村守夜](category/cooperative/yomi-tsugai/README.md) | 合作 | 3-5人 | 45-70分钟 | 中等偏难 |
 | [萤火虫的出嫁：七夜同灯](category/party/firefly-bride-seven-nights/README.md) | 派对 | 4-6人 | 40-55分钟 | 中等 |
 | [墙外调查：红莲弓矢](category/card/scout-beyond-crimson-bow/README.md) | 卡牌 | 2-5人 | 45-70分钟 | 中等 |
+| [飙马野郎：横贯大陆的旋转](category/strategy/steel-ball-run-spin/README.md) | 策略 | 2-5人 | 60-90分钟 | 中等 |
 
 ## 添加新桌游
 
