@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>时之笛：七年间奏 —— 打印物料</title>
+<style>
+:root{
+  --ink:#16241d;
+  --ink2:#4a5b52;
+  --paper:#f7f2e4;
+  --deep:#0e2b22;
+  --green:#1f4d3a;
+  --gold:#c9a24c;
+  --gold2:#e6cd8d;
+  --blue:#27546f;
+  --rust:#a4442c;
+  --line:#c8b98f;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  color:var(--ink);
+  background:#2a2f2b;
+  padding:18px 0 60px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{width:210mm;margin:0 auto;}
+
+/* ===== 打印提示 ===== */
+.print-hint{
+  background:linear-gradient(135deg,#fff8e6,#f3e6c4);
+  border:1px solid var(--gold);
+  border-left:6px solid var(--rust);
+  border-radius:6px;
+  padding:14px 18px;
+  margin:0 0 16px;
+  font-size:12.5px;
+  line-height:1.75;
+  color:#3b2f18;
+}
+.print-hint strong{color:var(--rust);}
+.print-hint ul{margin:6px 0 0 18px;}
+.print-hint li{margin:2px 0;}
+.print-hint .ttl{font-size:14px;font-weight:700;letter-spacing:.04em;}
+
+/* ===== 页面 ===== */
+.page{
+  position:relative;
+  width:210mm;
+  height:297mm;
+  background:var(--paper);
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(201,162,76,.10), transparent 42%),
+    radial-gradient(circle at 82% 88%, rgba(31,77,58,.10), transparent 46%);
+  margin:0 auto 18px;
+  padding:12mm 12mm 10mm;
+  box-shadow:0 10px 34px rgba(0,0,0,.45);
+  overflow:hidden;
+}
+.page::before{
+  content:"";
+  position:absolute;
+  inset:5mm;
+  border:1px solid rgba(31,77,58,.28);
+  border-radius:2mm;
+  pointer-events:none;
+}
+.page-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  border-bottom:1.5px solid var(--green);
+  padding-bottom:4px;
+  margin-bottom:5mm;
+}
+.page-head h2{
+  font-family:"Songti SC","SimSun",serif;
+  font-size:15.5px;
+  letter-spacing:.16em;
+  color:var(--green);
+}
+.page-head span{
+  font-size:9px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--ink2);
+}
+.page-body{position:relative;z-index:2;}
+
+/* ===== 封面 ===== */
+.cover{
+  height:245mm;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+}
+.cover .kicker{
+  font-size:9.5px;letter-spacing:.42em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:7mm;
+}
+.cover h1{
+  font-family:"Songti SC","SimSun",serif;
+  font-size:46px;letter-spacing:.10em;color:var(--deep);
+  line-height:1.28;
+}
+.cover h1 em{font-style:normal;color:var(--gold);}
+.cover .en{
+  margin-top:4mm;font-size:10.5px;letter-spacing:.30em;
+  color:var(--ink2);text-transform:uppercase;
+}
+.cover .rule{
+  width:58mm;height:1px;background:var(--gold);
+  margin:8mm auto;position:relative;
+}
+.cover .rule::before,.cover .rule::after{
+  content:"";position:absolute;top:-2.5px;width:5px;height:5px;
+  background:var(--gold);transform:rotate(45deg);
+}
+.cover .rule::before{left:-8px;}
+.cover .rule::after{right:-8px;}
+.cover .lead{
+  font-size:12px;line-height:2.05;color:var(--ink2);
+  max-width:126mm;margin:0 auto;
+}
+.cover .lead b{color:var(--green);}
+.cover .badges{display:flex;justify-content:center;gap:5mm;margin-top:8mm;}
+.cover .badge{
+  border:1px solid var(--line);border-radius:2mm;
+  padding:2.6mm 5mm;background:rgba(255,255,255,.55);min-width:26mm;
+}
+.cover .badge b{display:block;font-size:15px;color:var(--deep);letter-spacing:.02em;}
+.cover .badge i{font-style:normal;font-size:8px;letter-spacing:.18em;color:var(--ink2);}
+
+.manifest{
+  margin-top:11mm;width:100%;
+  border-top:1px dashed var(--line);
+  padding-top:5mm;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2mm 7mm;text-align:left;font-size:10px;color:var(--ink2);
+}
+.manifest div{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding-bottom:1.2mm;}
+.manifest span:last-child{color:var(--deep);font-weight:700;}
+.cover .sig{
+  margin-top:9mm;font-family:"Songti SC",serif;
+  font-size:10px;letter-spacing:.24em;color:var(--gold);
+}
+
+/* ===== 地图 ===== */
+.map-shell{
+  position:relative;width:100%;height:102mm;
+  background:linear-gradient(160deg,#123026,#0b1f19 60%,#123026);
+  border-radius:3mm;border:1.5px solid var(--gold);
+  padding:4mm;overflow:hidden;
+}
+.map-grid{
+  position:relative;display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  gap:4mm;height:100%;
+}
+.map-lines{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
+.node{
+  position:relative;z-index:2;border-radius:2.5mm;
+  background:rgba(247,242,228,.95);
+  border:1px solid rgba(201,162,76,.6);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.65), 0 2px 6px rgba(0,0,0,.3);
+  padding:1.8mm 2mm;
+  display:flex;flex-direction:column;justify-content:center;gap:.6mm;
+  min-height:0;
+}
+.node .nn{display:flex;align-items:center;gap:1.2mm;}
+.node .nn .ico{font-size:12px;line-height:1;}
+.node .nn .nm{font-family:"Songti SC",serif;font-size:10.5px;font-weight:700;color:var(--deep);letter-spacing:.03em;}
+.node .tags{display:flex;flex-wrap:wrap;gap:.7mm;}
+.node .tag{font-size:7px;padding:.3mm 1.1mm;border-radius:1mm;background:rgba(31,77,58,.12);color:var(--green);}
+.node .tag.b{background:rgba(39,84,111,.14);color:var(--blue);}
+.node .tag.r{background:rgba(164,68,44,.14);color:var(--rust);}
+.node .pins{display:flex;gap:.9mm;align-items:center;}
+.node .pl{font-size:6.8px;color:#5c6660;margin-left:1mm;letter-spacing:.04em;}
+.node .pin{width:3mm;height:3mm;border-radius:50%;background:#5c6660;border:1px solid #2f3733;box-shadow:inset 0 -1px 0 rgba(0,0,0,.35);}
+.node.center{background:rgba(255,250,236,.99);border-color:var(--gold);}
+.node.ganon{background:rgba(36,20,20,.94);border-color:rgba(164,68,44,.85);}
+.node.ganon .nm{color:#f0d9c0;}
+.node.ganon .tag{background:rgba(255,255,255,.12);color:#f0d9c0;}
+.era-band{display:flex;justify-content:space-between;margin-bottom:2mm;font-size:8.6px;letter-spacing:.18em;color:var(--ink2);}
+.era-band .l{color:var(--green);}
+.era-band .r{color:var(--blue);}
+.map-legend{margin-top:2.5mm;display:flex;flex-wrap:wrap;gap:5mm;font-size:8.4px;color:var(--ink2);}
+.map-legend b{color:var(--deep);}
+
+table.loc{width:100%;border-collapse:collapse;font-size:8.2px;margin-top:4mm;}
+table.loc th{
+  background:rgba(31,77,58,.1);color:var(--green);
+  font-weight:700;letter-spacing:.06em;
+  border:1px solid rgba(31,77,58,.22);padding:1.1mm 1.4mm;text-align:left;
+}
+table.loc td{border:1px solid rgba(31,77,58,.16);padding:1mm 1.4mm;color:var(--ink);}
+table.loc tr:nth-child(even) td{background:rgba(255,255,255,.45);}
+
+/* ===== 卡片 ===== */
+.card{
+  width:58mm;height:75mm;border-radius:2.2mm;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  background:var(--paper);border:1px solid rgba(22,36,29,.35);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),
+             inset 0 0 0 3px rgba(22,36,29,.09),
+             0 1px 4px rgba(0,0,0,.16);
+  page-break-inside:avoid;break-inside:avoid;
+}
+.card .watermark{position:absolute;right:-5mm;bottom:-6mm;font-size:36mm;opacity:.055;line-height:1;pointer-events:none;}
+.card .top{
+  padding:2mm 2.4mm 1.3mm;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(22,36,29,.2);
+}
+.card .top .t{font-family:"Songti SC",serif;font-size:9.6px;font-weight:700;letter-spacing:.04em;color:var(--deep);}
+.card .top .k{font-size:6.4px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);}
+.card .ico-row{text-align:center;font-size:11mm;line-height:1;padding:1.4mm 0 .8mm;}
+.card .title{text-align:center;font-family:"Songti SC",serif;font-size:11.4px;font-weight:700;letter-spacing:.04em;color:var(--deep);padding:0 1.6mm;}
+.card .sub{text-align:center;font-size:6.6px;letter-spacing:.14em;color:var(--ink2);margin-top:.4mm;}
+.card .body{flex:1;padding:2mm 2.6mm;font-size:7.8px;line-height:1.6;color:var(--ink);display:flex;flex-direction:column;justify-content:flex-start;}
+.card .body p{margin-bottom:1mm;}
+.card .body .em{color:var(--rust);font-weight:700;}
+.card .body .ok{color:var(--green);font-weight:700;}
+.card .foot{
+  border-top:1px solid rgba(22,36,29,.2);padding:1.1mm 2.4mm;
+  font-size:6.4px;letter-spacing:.1em;color:var(--ink2);
+  display:flex;justify-content:space-between;
+}
+.card.dk{background:linear-gradient(160deg,#1b3a2d,#0e2b22 70%);border-color:var(--gold);}
+.card.dk .top{border-bottom-color:rgba(201,162,76,.45);}
+.card.dk .top .t,.card.dk .title{color:var(--gold2);}
+.card.dk .top .k,.card.dk .sub,.card.dk .foot{color:rgba(230,205,141,.72);}
+.card.dk .body{color:#e8e0cc;}
+.card.dk .body .em{color:#f2a184;}
+.card.dk .body .ok{color:#a8d8bf;}
+.card.dk .foot{border-top-color:rgba(201,162,76,.45);}
+.card.dk .watermark{opacity:.09;}
+.card.bl{background:linear-gradient(160deg,#e9f0f4,#dbe7ee);border-color:rgba(39,84,111,.5);}
+.card.bl .top .t,.card.bl .title{color:var(--blue);}
+.card.rd{background:linear-gradient(160deg,#f6e6df,#eed6cc);border-color:rgba(164,68,44,.5);}
+.card.rd .top .t,.card.rd .title{color:var(--rust);}
+
+/* 三列牌阵 */
+.deck{display:grid;grid-template-columns:repeat(3,58mm);gap:4mm;justify-content:center;}
+
+/* ===== 代币 ===== */
+.token-row{display:flex;flex-wrap:wrap;gap:2mm;margin-bottom:3mm;}
+.tk{
+  width:15mm;height:15mm;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:1px solid rgba(0,0,0,.28);
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45), 0 1px 3px rgba(0,0,0,.2);
+}
+.tk .e{font-size:6.6mm;line-height:1;}
+.tk .n{font-size:5px;margin-top:.2mm;color:rgba(0,0,0,.6);letter-spacing:.06em;}
+.tk.pin{background:radial-gradient(circle at 35% 30%,#8b9691,#4d5651 70%,#313935);color:#fff;}
+.tk.pin .n{color:rgba(255,255,255,.82);}
+.tk.stone{background:radial-gradient(circle at 35% 30%,#cfd8d2,#93a49b 70%,#6d7c74);}
+.tk.sand{background:radial-gradient(circle at 35% 30%,#f3e2b8,#d8c49a 70%,#b9a173);}
+.tk.fire{background:radial-gradient(circle at 35% 30%,#f2b48c,#c9603c 60%,#8d3a22);color:#fff;}
+.tk.fire .n{color:rgba(255,255,255,.88);}
+.tk.medal{background:radial-gradient(circle at 35% 30%,#f6e6b8,#d3b163 65%,#a8863c);}
+.tk.gem{width:11mm;height:11mm;border-radius:1.6mm;transform:rotate(45deg);margin:2mm 3mm;}
+.tk.gem .e{transform:rotate(-45deg);}
+.tk.gem.g1{background:linear-gradient(140deg,#9fd8b0,#3f8a5c);}
+.tk.gem.g2{background:linear-gradient(140deg,#f0a9a0,#a83a2c);}
+.tk.gem.g3{background:linear-gradient(140deg,#a9c8ee,#2f5f96);}
+.tk.sword{width:17mm;height:17mm;border-radius:2.4mm;background:linear-gradient(150deg,#f4eeda,#cfc4a4);}
+.tk.dark{background:radial-gradient(circle at 35% 30%,#6d5a7a,#3a2c46 65%,#221a2a);color:#fff;}
+.tk.dark .n{color:rgba(255,255,255,.82);}
+.sec-title{
+  font-family:"Songti SC",serif;font-size:10.5px;letter-spacing:.14em;
+  color:var(--green);border-left:3px solid var(--gold);
+  padding-left:2.5mm;margin:0 0 2.6mm;
+}
+.sec-title small{font-family:inherit;font-size:7.8px;letter-spacing:.06em;color:var(--ink2);margin-left:2mm;}
+.hr{height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px);margin:2.6mm 0;}
+
+/* ===== 棋子立牌 ===== */
+.standee-row{display:flex;gap:4mm;justify-content:center;}
+.standee{
+  width:32mm;height:48mm;border-radius:1.8mm 1.8mm 0 0;
+  border:1px solid rgba(22,36,29,.4);border-bottom:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(170deg,#fbf7ea,#e9e0c6);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.65);
+  page-break-inside:avoid;
+}
+.standee .big{font-size:14mm;line-height:1;}
+.standee .nm{font-family:"Songti SC",serif;font-size:10px;font-weight:700;margin-top:2mm;color:var(--deep);}
+.standee .rl{font-size:6px;letter-spacing:.1em;color:var(--ink2);margin-top:.4mm;}
+.standee .fold{font-size:5.6px;color:var(--ink2);border-top:1px dashed var(--line);width:70%;text-align:center;padding-top:1mm;margin-top:2.6mm;}
+
+/* ===== 腐化轨 ===== */
+.track{display:flex;gap:1.2mm;}
+.track .cell{
+  flex:1;height:15mm;border:1px solid var(--line);border-radius:1.2mm;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Songti SC",serif;font-size:12.5px;color:var(--ink2);
+  background:linear-gradient(180deg,#fdf9ef,#efe7d2);
+}
+.track .cell.c0{background:linear-gradient(180deg,#dff0e4,#b9d9c6);color:#1f4d3a;}
+.track .cell.hot{background:linear-gradient(180deg,#f2c9b8,#d98e6f);color:#6b2413;border-color:#b8623f;}
+.track .cell.dead{background:linear-gradient(180deg,#5a2720,#2a120e);color:#f3d9cb;border-color:#7a2f22;}
+.track-lbl{display:flex;justify-content:space-between;font-size:7.4px;letter-spacing:.14em;color:var(--ink2);margin-top:1.2mm;}
+
+/* ===== 速查卡 ===== */
+.qr{width:58mm;height:75mm;padding:2.4mm;font-size:7px;line-height:1.5;}
+.qr h4{
+  font-family:"Songti SC",serif;font-size:8.4px;letter-spacing:.08em;color:var(--green);
+  margin:1.4mm 0 .6mm;border-bottom:1px dotted var(--line);padding-bottom:.4mm;
+}
+.qr h4:first-child{margin-top:0;}
+.qr ul{list-style:none;}
+.qr li{margin-bottom:.4mm;}
+.qr b{color:var(--deep);}
+.qr .red{color:var(--rust);font-weight:700;}
+
+.note{
+  font-size:8.6px;line-height:1.7;color:var(--ink2);
+  border-left:2px solid var(--gold);padding-left:3mm;margin-top:3.5mm;
+}
+.footline{
+  position:absolute;bottom:4mm;left:12mm;right:12mm;
+  display:flex;justify-content:space-between;
+  font-size:7.2px;letter-spacing:.18em;color:var(--ink2);
+  border-top:1px solid rgba(31,77,58,.2);padding-top:1.6mm;z-index:2;
+}
+
+/* ===== 打印 ===== */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    @page{ size:A4 portrait; margin:8mm; }
+    body{background:#fff;padding:0;}
+    .wrap{width:auto;}
+    .print-hint{
+        display: none;
+    }
+    .page{
+        width:auto;
+        height:281mm;
+        margin:0;
+        box-shadow:none;
+        page-break-after:always;
+        break-after:page;
+        padding:6mm 6mm 5mm;
+    }
+    .page:last-child{page-break-after:auto;break-after:auto;}
+    .page::before{inset:2mm;}
+    .footline{left:6mm;right:6mm;bottom:2mm;}
+    .cover{height:255mm;}
+    .map-shell{height:104mm;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="print-hint">
+    <div class="ttl">⚠️ 重要打印提示</div>
+    <ul>
+      <li>使用 <strong>A4 纸张</strong>打印，页边距设置为<strong>最小 / 无</strong>。</li>
+      <li>在打印对话框中，务必<strong>勾选「背景图形 / Background graphics」</strong>，否则地图与卡牌会丢失底色。</li>
+      <li>卡牌、棋子、代币建议使用 <strong>200g 以上卡纸</strong>打印，裁剪后可塑封以延长寿命。</li>
+      <li>缩放比例请选择 <strong>100%（实际大小）</strong>，不要选「适合页面」，否则卡牌会缩到打不出来。</li>
+      <li>共 <strong>8 页</strong>：封面物料 / 地图 / 代币 / 道具与曲谱 / 曲谱与事件 / 事件与角色 / 角色棋子与腐化轨 / 速查卡。</li>
+    </ul>
+  </div>
+
+  <!-- ============ P1 封面 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>时之笛：七年间奏</h2>
+      <span>Print Kit · 01 / 08</span>
+    </div>
+    <div class="page-body cover">
+      <div class="kicker">Ocarina of Time · Seven-Year Refrain</div>
+      <h1>时之笛<em>：</em><br>七年间奏</h1>
+      <div class="en">A Cooperative Board Game for 2–5 Players</div>
+      <div class="rule"></div>
+      <p class="lead">
+        海拉鲁被同一支曲子切成两面。<br>
+        七年前的森林还在，七年后的森林只剩地牢的入口。<br>
+        <b>你在过去种下的每一个因果，都会在未来长成一把锁，或者一把钥匙。</b><br>
+        八天，两段一天，六座地牢，十八枚钉，二十二把沙。
+      </p>
+      <div class="badges">
+        <div class="badge"><b>2–5</b><i>PLAYERS</i></div>
+        <div class="badge"><b>60–80</b><i>MINUTES</i></div>
+        <div class="badge"><b>12+</b><i>AGE</i></div>
+      </div>
+      <div class="manifest">
+        <div><span>双面地图</span><span>1</span></div>
+        <div><span>角色卡</span><span>5</span></div>
+        <div><span>玩家棋子</span><span>5</span></div>
+        <div><span>封印钉</span><span>18</span></div>
+        <div><span>因果石</span><span>6</span></div>
+        <div><span>时之沙</span><span>24</span></div>
+        <div><span>火印</span><span>12</span></div>
+        <div><span>爪牙棋子</span><span>4</span></div>
+        <div><span>贤者徽章</span><span>6</span></div>
+        <div><span>精灵石</span><span>3</span></div>
+        <div><span>大师之剑</span><span>1</span></div>
+        <div><span>道具卡</span><span>6</span></div>
+        <div><span>曲谱卡</span><span>6</span></div>
+        <div><span>事件卡</span><span>12</span></div>
+        <div><span>速查卡</span><span>6</span></div>
+      </div>
+      <div class="sig">过去是笔账 · 未来是还款日</div>
+    </div>
+    <div class="footline"><span>OCARINA OF TIME · SEVEN-YEAR REFRAIN</span><span>P.01</span></div>
+  </section>
+
+  <!-- ============ P2 地图 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>海拉鲁 · 双面地图</h2>
+      <span>Board · 02 / 08</span>
+    </div>
+    <div class="page-body">
+      <div class="era-band">
+        <span class="l">🟢 少年时代 · 七年前（采沙 / 立石 / 取精灵石）</span>
+        <span class="r">🔵 青年时代 · 七年后（拔钉 / 铸剑 / 进塔）</span>
+      </div>
+      <div class="map-shell">
+        <div class="map-grid">
+          <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <g stroke="#e6cd8d" stroke-width="1" opacity="0.85" stroke-linecap="round">
+              <line x1="16.7" y1="16.7" x2="50" y2="16.7"/>
+              <line x1="50" y1="16.7" x2="83.3" y2="16.7"/>
+              <line x1="83.3" y1="16.7" x2="83.3" y2="50"/>
+              <line x1="83.3" y1="50" x2="83.3" y2="83.3"/>
+              <line x1="83.3" y1="83.3" x2="50" y2="83.3"/>
+              <line x1="50" y1="83.3" x2="16.7" y2="83.3"/>
+              <line x1="16.7" y1="83.3" x2="16.7" y2="50"/>
+              <line x1="16.7" y1="50" x2="16.7" y2="16.7"/>
+              <line x1="50" y1="50" x2="50" y2="16.7"/>
+              <line x1="50" y1="50" x2="50" y2="83.3"/>
+              <line x1="50" y1="50" x2="16.7" y2="83.3" stroke-dasharray="3 2"/>
+            </g>
+          </svg>
+
+          <div class="node">
+            <div class="nn"><span class="ico">🌲</span><span class="nm">科奇里森林</span></div>
+            <div class="tags"><span class="tag">森之神殿</span><span class="tag">💎 绿宝石</span><span class="tag b">🏺 泉</span></div>
+            <div class="pins"><i class="pin"></i><i class="pin"></i><i class="pin"></i><span class="pl">3 枚 · 需求 3</span></div>
+          </div>
+          <div class="node">
+            <div class="nn"><span class="ico">🌾</span><span class="nm">海拉鲁平原</span></div>
+            <div class="tags"><span class="tag">十字路口</span><span class="tag">无地牢</span></div>
+            <div class="pins"></div>
+          </div>
+          <div class="node">
+            <div class="nn"><span class="ico">🌋</span><span class="nm">死亡火山</span></div>
+            <div class="tags"><span class="tag">火之神殿</span><span class="tag">💎 红宝石</span><span class="tag r">🔨 锤</span></div>
+            <div class="pins"><i class="pin"></i><i class="pin"></i><i class="pin"></i><span class="pl">3 枚 · 需求 3</span></div>
+          </div>
+
+          <div class="node">
+            <div class="nn"><span class="ico">🍃</span><span class="nm">迷失森林</span></div>
+            <div class="tags"><span class="tag">无地牢</span><span class="tag b">🏹 弓</span></div>
+            <div class="pins"></div>
+          </div>
+          <div class="node center">
+            <div class="nn"><span class="ico">🕰</span><span class="nm">时之神殿</span></div>
+            <div class="tags"><span class="tag">光之神殿</span><span class="tag r">🗡 大师之剑</span><span class="tag">时间锚点</span></div>
+            <div class="pins"><i class="pin"></i><i class="pin"></i><i class="pin"></i><span class="pl">3 枚 · 需求 3</span></div>
+          </div>
+          <div class="node">
+            <div class="nn"><span class="ico">🏜</span><span class="nm">格鲁德沙漠</span></div>
+            <div class="tags"><span class="tag">魂之神殿</span><span class="tag b">🧤 手套</span><span class="tag b">🏺 泉</span></div>
+            <div class="pins"><i class="pin"></i><i class="pin"></i><i class="pin"></i><span class="pl">3 枚 · 需求 3</span></div>
+          </div>
+
+          <div class="node">
+            <div class="nn"><span class="ico">🏘</span><span class="nm">卡卡利科村</span></div>
+            <div class="tags"><span class="tag">影之神殿</span><span class="tag r">🪞 镜</span></div>
+            <div class="pins"><i class="pin"></i><i class="pin"></i><i class="pin"></i><span class="pl">3 枚 · 需求 3</span></div>
+          </div>
+          <div class="node">
+            <div class="nn"><span class="ico">💧</span><span class="nm">赫比亚湖</span></div>
+            <div class="tags"><span class="tag">水之神殿</span><span class="tag">💎 蓝宝石</span><span class="tag b">🏺 泉</span></div>
+            <div class="pins"><i class="pin"></i><i class="pin"></i><i class="pin"></i><span class="pl">3 枚 · 需求 3</span></div>
+          </div>
+          <div class="node ganon">
+            <div class="nn"><span class="ico">🏰</span><span class="nm">加侬塔</span></div>
+            <div class="tags"><span class="tag">终局 · 6 徽章</span><span class="tag">2 AP 封印</span></div>
+            <div class="pins"></div>
+          </div>
+        </div>
+      </div>
+      <div class="map-legend">
+        <span><b>移动</b>：沿实线走 1 格 = 1 行动点</span>
+        <span><b>虚线</b>：神殿—村庄斜道，同样算 1 格</span>
+        <span><b>灰点</b>：封印钉槽（初始 3 枚）</span>
+        <span><b>🏺</b>：精灵泉，可采 3 次，每次 +2 沙</span>
+      </div>
+
+      <table class="loc">
+        <thead>
+          <tr><th style="width:22mm;">地点</th><th style="width:20mm;">地牢</th><th style="width:44mm;">道具 / 关键物（时代）</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>🌲 科奇里森林</td><td>森之神殿</td><td>💚 绿宝石（过去）· 🏺 精灵泉</td><td>过去是树屋与孩子，未来树被砍光，只剩地牢入口</td></tr>
+          <tr><td>🌾 海拉鲁平原</td><td>—</td><td>—</td><td>全图枢纽，去任何地方都要经过它</td></tr>
+          <tr><td>🌋 死亡火山</td><td>火之神殿</td><td>❤️ 红宝石（过去）· 🔨 哥隆锤（过去）</td><td>熔岩过去还在深处，未来火山口喷了七年</td></tr>
+          <tr><td>🍃 迷失森林</td><td>—</td><td>🏹 妖精之弓（未来）</td><td>过去会迷路，未来变成圣域草地</td></tr>
+          <tr><td>🕰 时之神殿</td><td>光之神殿</td><td>🗡 大师之剑（未来，需 3 宝石 + 3 沙）</td><td>唯一在两个时代都完好的建筑，时间锚点</td></tr>
+          <tr><td>🏜 格鲁德沙漠</td><td>魂之神殿</td><td>🧤 银手套（未来）· 🏺 精灵泉</td><td>过去是盗贼营地，未来沙里埋着巨像</td></tr>
+          <tr><td>🏘 卡卡利科村</td><td>影之神殿</td><td>🪞 真实之镜（过去）</td><td>过去市集喧闹，未来井里爬出东西</td></tr>
+          <tr><td>💧 赫比亚湖</td><td>水之神殿</td><td>💙 蓝宝石（过去）· 🪝 钩索（过去）· 🏺 泉</td><td>过去湖水满，未来湖底干了露出神殿</td></tr>
+          <tr><td>🏰 加侬塔</td><td>终局</td><td>—</td><td>过去还不存在；未来黑塔直插云层</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <b>双面怎么用？</b>地图只有一张，但每次行动前先声明自己在哪个时代：<b>🟢 少年段</b>只能采沙、取精灵石、立因果石、取「过去类」道具；<b>🔵 青年段</b>只能拔钉、取「未来类」道具、铸剑、进塔。卡牌与代币两个时代共用同一套，不需要两组。
+      </div>
+
+      <table class="loc dist">
+        <thead>
+          <tr>
+            <th style="width:26mm;">距离（步）</th>
+            <th>森林</th><th>平原</th><th>火山</th><th>沙漠</th><th>加侬塔</th><th>湖畔</th><th>村庄</th><th>迷失</th><th>神殿</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🌲 森林</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>3</td><td>2</td><td>1</td><td>2</td></tr>
+          <tr><td>🌾 平原</td><td>1</td><td>0</td><td>1</td><td>2</td><td>3</td><td>2</td><td>2</td><td>2</td><td>1</td></tr>
+          <tr><td>🌋 火山</td><td>2</td><td>1</td><td>0</td><td>1</td><td>2</td><td>3</td><td>3</td><td>3</td><td>2</td></tr>
+          <tr><td>🏜 沙漠</td><td>3</td><td>2</td><td>1</td><td>0</td><td>1</td><td>2</td><td>4</td><td>4</td><td>3</td></tr>
+          <tr><td>🏰 加侬塔</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td><td>1</td><td>3</td><td>3</td><td>2</td></tr>
+          <tr><td>💧 湖畔</td><td>3</td><td>2</td><td>3</td><td>2</td><td>1</td><td>0</td><td>2</td><td>4</td><td>1</td></tr>
+          <tr><td>🏘 村庄</td><td>2</td><td>2</td><td>3</td><td>4</td><td>3</td><td>2</td><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>🍃 迷失</td><td>1</td><td>2</td><td>3</td><td>4</td><td>3</td><td>4</td><td>1</td><td>0</td><td>3</td></tr>
+          <tr><td>🕰 神殿</td><td>2</td><td>1</td><td>2</td><td>3</td><td>2</td><td>1</td><td>1</td><td>3</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:8px;color:var(--ink2);margin-top:1.6mm;line-height:1.65;">
+        平均任意两点距离 <b>2.4 步</b> —— 一段 2 个行动点，只够"去一个地方并做一件事"。这就是「埃波娜之歌」和希克存在的理由。
+      </div>
+    </div>
+    <div class="footline"><span>HYRULE · DUAL-ERA BOARD</span><span>P.02</span></div>
+  </section>
+
+  <!-- ============ P3 代币 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>地牢 · 封印钉 · 代币</h2>
+      <span>Tokens · 03 / 08</span>
+    </div>
+    <div class="page-body">
+
+      <div class="sec-title">封印钉 🔱 <small>共 18 枚 · 每座地牢 3 枚</small></div>
+      <div class="token-row">
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+        <div class="tk pin"><span class="e">🔱</span><span class="n">钉</span></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">因果石 🪨 <small>6 枚 · 每座地牢限 1 枚 · 需求 −2</small></div>
+      <div class="token-row">
+        <div class="tk stone"><span class="e">🪨</span><span class="n">因果</span></div>
+        <div class="tk stone"><span class="e">🪨</span><span class="n">因果</span></div>
+        <div class="tk stone"><span class="e">🪨</span><span class="n">因果</span></div>
+        <div class="tk stone"><span class="e">🪨</span><span class="n">因果</span></div>
+        <div class="tk stone"><span class="e">🪨</span><span class="n">因果</span></div>
+        <div class="tk stone"><span class="e">🪨</span><span class="n">因果</span></div>
+      </div>
+
+      <div class="sec-title">火印 🔥 <small>12 枚 · 每座地牢上限 2 枚</small></div>
+      <div class="token-row">
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+        <div class="tk fire"><span class="e">🔥</span><span class="n">火印</span></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">时之沙 🏺 <small>起始 4 枚 + 泉水 18 枚（共备 24 枚）</small></div>
+      <div class="token-row">
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+        <div class="tk sand"><span class="e">🏺</span><span class="n">沙 ×2</span></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">贤者徽章 🏅 <small>6 枚 · 集齐才能进加侬塔</small></div>
+      <div class="token-row">
+        <div class="tk medal"><span class="e">🌲</span><span class="n">森</span></div>
+        <div class="tk medal"><span class="e">🔥</span><span class="n">火</span></div>
+        <div class="tk medal"><span class="e">💧</span><span class="n">水</span></div>
+        <div class="tk medal"><span class="e">🌑</span><span class="n">影</span></div>
+        <div class="tk medal"><span class="e">🏜</span><span class="n">魂</span></div>
+        <div class="tk medal"><span class="e">✨</span><span class="n">光</span></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">精灵石 💎 与 大师之剑 🗡 <small>三颗精灵石全部在「过去」取得</small></div>
+      <div class="token-row" style="align-items:center;">
+        <div class="tk gem g1"><span class="e">💚</span></div>
+        <div class="tk gem g2"><span class="e">❤️</span></div>
+        <div class="tk gem g3"><span class="e">💙</span></div>
+        <div style="width:3mm;"></div>
+        <div class="tk sword"><span class="e" style="font-size:11mm;">🗡</span><span class="n">MASTER</span></div>
+        <div style="font-size:8px;line-height:1.7;color:var(--ink2);max-width:84mm;">
+          <b>绿</b>森林（过去）　<b>红</b>火山（过去）　<b>蓝</b>湖畔（过去）<br>
+          三颗齐 + 3 沙 + 时之神殿 1 行动点 → 铸成大师之剑（全队共享）
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">爪牙 👹 <small>数量 = 玩家数 − 1（2 人 1 只 / 3 人 2 只 / 4 人 3 只 / 5 人 4 只）</small></div>
+      <div class="token-row" style="align-items:center;">
+        <div class="tk dark"><span class="e">👹</span><span class="n">爪牙</span></div>
+        <div class="tk dark"><span class="e">👹</span><span class="n">爪牙</span></div>
+        <div class="tk dark"><span class="e">👹</span><span class="n">爪牙</span></div>
+        <div class="tk dark"><span class="e">👹</span><span class="n">爪牙</span></div>
+        <div style="font-size:8px;line-height:1.7;color:var(--ink2);max-width:96mm;">
+          爪牙<b>只在少年段行动</b>：停在未净化地牢 → 放 1 枚火印 → 移到相邻格；否则朝钉最多的地牢走 1 格。它们<b>不参与战斗</b>，只会种祸。
+        </div>
+      </div>
+
+    </div>
+    <div class="footline"><span>TOKENS · 18 PINS / 6 STONES / 12 FIRES / 24 SANDS</span><span>P.03</span></div>
+  </section>
+
+  <!-- ============ P4 道具卡 + 曲谱 1-3 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>道具卡 · 曲谱卡（上）</h2>
+      <span>Items &amp; Songs · 04 / 08</span>
+    </div>
+    <div class="page-body">
+      <div class="sec-title">道具卡 🎒 <small>6 张 · 取到后全队共享，不需要交接</small></div>
+      <div class="deck">
+
+        <div class="card">
+          <div class="watermark">🏹</div>
+          <div class="top"><span class="t">道具卡</span><span class="k">ITEM</span></div>
+          <div class="ico-row">🏹</div>
+          <div class="title">妖精之弓</div>
+          <div class="sub">FAIRY BOW</div>
+          <div class="body">
+            <p>开启：<span class="ok">森之神殿</span></p>
+            <p>取得：<b>迷失森林</b> · 🔵 青年段 · 1 行动点</p>
+            <p>没有它，森之神殿的封印钉一枚也拔不动。</p>
+          </div>
+          <div class="foot"><span>ITEM 01</span><span>森</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🔨</div>
+          <div class="top"><span class="t">道具卡</span><span class="k">ITEM</span></div>
+          <div class="ico-row">🔨</div>
+          <div class="title">哥隆锤</div>
+          <div class="sub">GORON HAMMER</div>
+          <div class="body">
+            <p>开启：<span class="ok">火之神殿</span></p>
+            <p>取得：<b>死亡火山</b> · 🟢 少年段 · 1 行动点</p>
+            <p>过去借来的锤子，砸开七年后的锁。</p>
+          </div>
+          <div class="foot"><span>ITEM 02</span><span>火</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🧤</div>
+          <div class="top"><span class="t">道具卡</span><span class="k">ITEM</span></div>
+          <div class="ico-row">🧤</div>
+          <div class="title">银手套</div>
+          <div class="sub">SILVER GAUNTLETS</div>
+          <div class="body">
+            <p>开启：<span class="ok">魂之神殿</span></p>
+            <p>取得：<b>格鲁德沙漠</b> · 🔵 青年段 · 1 行动点</p>
+            <p>举起沙里的巨像，才能走进魂之神殿。</p>
+          </div>
+          <div class="foot"><span>ITEM 03</span><span>魂</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🪝</div>
+          <div class="top"><span class="t">道具卡</span><span class="k">ITEM</span></div>
+          <div class="ico-row">🪝</div>
+          <div class="title">佐拉钩索</div>
+          <div class="sub">ZORA HOOKSHOT</div>
+          <div class="body">
+            <p>开启：<span class="ok">水之神殿</span></p>
+            <p>取得：<b>赫比亚湖</b> · 🟢 少年段 · 1 行动点</p>
+            <p>湖水退去后，钩索是唯一能下到湖底的东西。</p>
+          </div>
+          <div class="foot"><span>ITEM 04</span><span>水</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🪞</div>
+          <div class="top"><span class="t">道具卡</span><span class="k">ITEM</span></div>
+          <div class="ico-row">🪞</div>
+          <div class="title">真实之镜</div>
+          <div class="sub">LENS OF TRUTH</div>
+          <div class="body">
+            <p>开启：<span class="ok">影之神殿</span></p>
+            <p>取得：<b>卡卡利科村</b> · 🟢 少年段 · 1 行动点</p>
+            <p>影之神殿里的东西大半是假的，除了恐惧。</p>
+          </div>
+          <div class="foot"><span>ITEM 05</span><span>影</span></div>
+        </div>
+
+        <div class="card dk">
+          <div class="watermark">🗡</div>
+          <div class="top"><span class="t">道具卡</span><span class="k">ITEM</span></div>
+          <div class="ico-row">🗡</div>
+          <div class="title">大师之剑</div>
+          <div class="sub">MASTER SWORD</div>
+          <div class="body">
+            <p>开启：<span class="ok">光之神殿</span> 与 <span class="ok">加侬塔</span></p>
+            <p>铸成：<b>时之神殿</b> · 🔵 青年段 · <b>1 行动点 + 3 沙</b></p>
+            <p>前置：<span class="em">集齐三颗精灵石</span>（全部在过去）</p>
+            <p>铸成后全队共享。</p>
+          </div>
+          <div class="foot"><span>ITEM 06</span><span>光</span></div>
+        </div>
+
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">曲谱卡 🎵 <small>1-3 张 · 公开摊开，人人可奏 · 演奏不消耗行动点</small></div>
+      <div class="deck">
+
+        <div class="card dk">
+          <div class="watermark">🕰</div>
+          <div class="top"><span class="t">曲谱卡</span><span class="k">SONG · 2 沙</span></div>
+          <div class="ico-row">🕰</div>
+          <div class="title">时之歌</div>
+          <div class="sub">SONG OF TIME</div>
+          <div class="body">
+            <p><b>花费 2 沙。</b>本轮黄昏时，腐化轨<b>不推进</b>。</p>
+            <p>4-5 人局（每夜 +3）的救命符。留到最后两夜再吹。</p>
+            <p><span class="em">每日只能生效一次。</span></p>
+          </div>
+          <div class="foot"><span>SONG 01</span><span>0 AP</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🌿</div>
+          <div class="top"><span class="t">曲谱卡</span><span class="k">SONG · 1 沙</span></div>
+          <div class="ico-row">🌿</div>
+          <div class="title">萨莉亚之歌</div>
+          <div class="sub">SARIA'S SONG</div>
+          <div class="body">
+            <p><b>花费 1 沙。</b>与任意一名同伴<b>交换所在位置</b>。</p>
+            <p>不需要同格，也不需要相邻。全作唯一的长距离位移。</p>
+          </div>
+          <div class="foot"><span>SONG 02</span><span>0 AP</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🐴</div>
+          <div class="top"><span class="t">曲谱卡</span><span class="k">SONG · 1 沙</span></div>
+          <div class="ico-row">🐴</div>
+          <div class="title">埃波娜之歌</div>
+          <div class="sub">EPONA'S SONG</div>
+          <div class="body">
+            <p><b>花费 1 沙。</b>本段你<b>额外获得 2 格移动</b>，不占行动点。</p>
+            <p>折合"2 行动点 = 1 沙"，是全作性价比最高的位移。</p>
+          </div>
+          <div class="foot"><span>SONG 03</span><span>0 AP</span></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="footline"><span>ITEMS 01–06 · SONGS 01–03</span><span>P.04</span></div>
+  </section>
+
+  <!-- ============ P5 曲谱 4-6 + 事件 1-6 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>曲谱卡（下）· 事件卡（上）</h2>
+      <span>Songs &amp; Events · 05 / 08</span>
+    </div>
+    <div class="page-body">
+      <div class="sec-title">曲谱卡 🎵 <small>4-6 张</small></div>
+      <div class="deck">
+
+        <div class="card">
+          <div class="watermark">☀</div>
+          <div class="top"><span class="t">曲谱卡</span><span class="k">SONG · 1 沙</span></div>
+          <div class="ico-row">☀</div>
+          <div class="title">太阳之歌</div>
+          <div class="sub">SUN'S SONG</div>
+          <div class="body">
+            <p><b>花费 1 沙。</b>移除任意 <b>1 枚火印</b>。</p>
+            <p>不能选已净化的地牢。等于"用 1 沙换 1 枚钉"。</p>
+          </div>
+          <div class="foot"><span>SONG 04</span><span>0 AP</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🌪</div>
+          <div class="top"><span class="t">曲谱卡</span><span class="k">SONG · 2 沙</span></div>
+          <div class="ico-row">🌪</div>
+          <div class="title">风暴之歌</div>
+          <div class="sub">SONG OF STORMS</div>
+          <div class="body">
+            <p><b>花费 2 沙。</b>本段你在同一座地牢可以<b>一次拔 2 枚钉</b>，仍只花 1 行动点。</p>
+            <p><span class="em">每段只能生效一次。</span></p>
+          </div>
+          <div class="foot"><span>SONG 05</span><span>0 AP</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🔥</div>
+          <div class="top"><span class="t">曲谱卡</span><span class="k">SONG · 1 沙</span></div>
+          <div class="ico-row">🔥</div>
+          <div class="title">波尔塞罗之歌</div>
+          <div class="sub">BOLERO OF FIRE</div>
+          <div class="body">
+            <p><b>花费 1 沙。</b>立刻移动到<b>任意一座你已有道具的地牢</b>。</p>
+            <p>终局从神殿赶回加侬塔时，这是唯一的救命曲。</p>
+          </div>
+          <div class="foot"><span>SONG 06</span><span>0 AP</span></div>
+        </div>
+
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">时代事件卡 🃏 <small>1-6 张 · 每日黎明翻 1 张，当日两个时代都生效</small></div>
+      <div class="deck">
+
+        <div class="card">
+          <div class="watermark">🌅</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 01</span></div>
+          <div class="ico-row">🌅</div>
+          <div class="title">时之黎明</div>
+          <div class="sub">DAWN OF TIME</div>
+          <div class="body"><p>本日<b>少年段</b>，每名玩家 <b>+1 行动点</b>。</p></div>
+          <div class="foot"><span>今日 · 少年段</span><span>+1 AP</span></div>
+        </div>
+
+        <div class="card rd">
+          <div class="watermark">🌑</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 02</span></div>
+          <div class="ico-row">🌑</div>
+          <div class="title">加侬的阴影</div>
+          <div class="sub">SHADOW OF GANON</div>
+          <div class="body"><p>腐化轨立即 <b class="em">+1</b>。</p><p>不占黄昏的推进额度，是额外的。</p></div>
+          <div class="foot"><span>立即</span><span>腐化 +1</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🌿</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 03</span></div>
+          <div class="ico-row">🌿</div>
+          <div class="title">森林的低语</div>
+          <div class="sub">WHISPER OF THE WOODS</div>
+          <div class="body"><p>立刻在<b>任意一座未净化地牢</b><span class="ok">免费</span>立 1 枚因果石（不花沙、不花行动点）。</p><p>若该地牢已拔掉 2 钉，可能<b>当场净化</b>。</p></div>
+          <div class="foot"><span>立即</span><span>免费立石</span></div>
+        </div>
+
+        <div class="card rd">
+          <div class="watermark">🌋</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 04</span></div>
+          <div class="ico-row">🌋</div>
+          <div class="title">火山喷发</div>
+          <div class="sub">ERUPTION</div>
+          <div class="body"><p>死亡火山及其<b>所有相邻地点</b>（平原、沙漠）各放 1 枚火印，不超过上限。</p></div>
+          <div class="foot"><span>立即</span><span>火印 ×3</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">💧</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 05</span></div>
+          <div class="ico-row">💧</div>
+          <div class="title">湖水退去</div>
+          <div class="sub">THE LAKE DRAINS</div>
+          <div class="body"><p>水之神殿 <b>−1 钉</b>（若尚未净化）。</p><p>七年后湖水干了，神殿自己露出了一半。</p></div>
+          <div class="foot"><span>立即</span><span>水 −1 钉</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🌪</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 06</span></div>
+          <div class="ico-row">🌪</div>
+          <div class="title">沙暴</div>
+          <div class="sub">SANDSTORM</div>
+          <div class="body"><p>本日<b class="em">不能演奏任何曲子</b>。</p><p>时之歌、太阳之歌、风暴之歌全部失效。</p></div>
+          <div class="foot"><span>今日 · 禁曲</span><span>NO SONGS</span></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="footline"><span>SONGS 04–06 · EVENTS 01–06</span><span>P.05</span></div>
+  </section>
+
+  <!-- ============ P6 事件 7-12 + 角色 1-3 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>事件卡（下）· 角色卡（上）</h2>
+      <span>Events &amp; Characters · 06 / 08</span>
+    </div>
+    <div class="page-body">
+      <div class="sec-title">时代事件卡 🃏 <small>7-12 张</small></div>
+      <div class="deck">
+
+        <div class="card">
+          <div class="watermark">🐴</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 07</span></div>
+          <div class="ico-row">🐴</div>
+          <div class="title">埃波娜的疾驰</div>
+          <div class="sub">GALLOP</div>
+          <div class="body"><p>本日<b>每个时段</b>，每名玩家可<b>免费移动 1 格</b>，不花行动点。</p></div>
+          <div class="foot"><span>今日 · 两段</span><span>FREE MOVE</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🎶</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 08</span></div>
+          <div class="ico-row">🎶</div>
+          <div class="title">时之旋律回响</div>
+          <div class="sub">ECHO OF TIME</div>
+          <div class="body"><p>本日结束时，腐化轨 <b class="ok">−1</b>。</p><p>和黄昏的推进同时结算，最低到 0。</p></div>
+          <div class="foot"><span>日末</span><span>腐化 −1</span></div>
+        </div>
+
+        <div class="card rd">
+          <div class="watermark">👹</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 09</span></div>
+          <div class="ico-row">👹</div>
+          <div class="title">爪牙集结</div>
+          <div class="sub">MINIONS RALLY</div>
+          <div class="body"><p>所有爪牙<b>立即</b>向最近的未净化地牢移动 1 格。</p><p>先结算本卡，再进入少年段。</p></div>
+          <div class="foot"><span>立即</span><span>爪牙移动</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">✨</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 10</span></div>
+          <div class="ico-row">✨</div>
+          <div class="title">精灵的馈赠</div>
+          <div class="sub">FAIRY'S GIFT</div>
+          <div class="body"><p>立刻 <b class="ok">+2 时之沙</b> 入公共池。</p><p>这是唯一不花行动点的沙来源。</p></div>
+          <div class="foot"><span>立即</span><span>沙 +2</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🕯</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 11</span></div>
+          <div class="ico-row">🕯</div>
+          <div class="title">村庄的灯火</div>
+          <div class="sub">LAMPLIGHT</div>
+          <div class="body"><p>本日<b>青年段</b>，若同一地牢格上有 <b>2 名或以上玩家</b>，该格拔钉可<b>额外拔 1 枚</b>。</p></div>
+          <div class="foot"><span>今日 · 青年段</span><span>+1 钉</span></div>
+        </div>
+
+        <div class="card rd">
+          <div class="watermark">🏜</div>
+          <div class="top"><span class="t">事件卡</span><span class="k">EVENT 12</span></div>
+          <div class="ico-row">🏜</div>
+          <div class="title">沙漠的试炼</div>
+          <div class="sub">TRIAL OF THE SANDS</div>
+          <div class="body"><p>魂之神殿 <b class="em">+1 火印</b>（不超过上限）。</p><p>若已净化则本卡无效——净化是最好的防守。</p></div>
+          <div class="foot"><span>立即</span><span>魂 +1 火印</span></div>
+        </div>
+
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">角色卡 🎭 <small>1-3 张 · 每人 1 张 · 角色能力优先于事件卡</small></div>
+      <div class="deck">
+
+        <div class="card dk">
+          <div class="watermark">🗡</div>
+          <div class="top"><span class="t">角色卡</span><span class="k">HERO</span></div>
+          <div class="ico-row">🟩</div>
+          <div class="title">林克 · 时之勇者</div>
+          <div class="sub">THE HERO OF TIME</div>
+          <div class="body">
+            <p><b>沉稳一击：</b>青年段，若你<b>本段没有移动过</b>，拔钉时可<b>额外拔 1 枚</b>。每段限 1 次。</p>
+            <p><span class="ok">适合：专门蹲守一座地牢的人。</span></p>
+          </div>
+          <div class="foot"><span>CHARACTER 01</span><span>攻击型</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🧚</div>
+          <div class="top"><span class="t">角色卡</span><span class="k">FAIRY</span></div>
+          <div class="ico-row">🧚</div>
+          <div class="title">娜薇 · 妖精向导</div>
+          <div class="sub">NAVI THE GUIDE</div>
+          <div class="body">
+            <p><b>预警：</b>黎明翻卡后，你可以<b>弃 1 沙</b>取消本日事件卡。</p>
+            <p><span class="em">沙是你的，效果是全队的。</span></p>
+            <p><span class="ok">适合：最怕「沙暴」和「加侬的阴影」的人。</span></p>
+          </div>
+          <div class="foot"><span>CHARACTER 02</span><span>控制型</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🌿</div>
+          <div class="top"><span class="t">角色卡</span><span class="k">SAGE</span></div>
+          <div class="ico-row">🌿</div>
+          <div class="title">萨莉亚 · 森之贤者</div>
+          <div class="sub">SAGE OF FOREST</div>
+          <div class="body">
+            <p><b>森之馈赠：</b>少年段你在有地牢的格上立因果石时<b>不消耗时之沙</b>，仍花 1 行动点。</p>
+            <p><span class="ok">等于一局白送 6 沙，接近总沙量的三分之一。</span></p>
+          </div>
+          <div class="foot"><span>CHARACTER 03</span><span>经济型</span></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="footline"><span>EVENTS 07–12 · CHARACTERS 01–03</span><span>P.06</span></div>
+  </section>
+
+  <!-- ============ P7 角色 4-5 + 棋子 + 腐化轨 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>角色卡（下）· 棋子 · 腐化轨</h2>
+      <span>Characters &amp; Track · 07 / 08</span>
+    </div>
+    <div class="page-body">
+      <div class="sec-title">角色卡 🎭 <small>4-5 张</small></div>
+      <div class="deck">
+
+        <div class="card">
+          <div class="watermark">🥷</div>
+          <div class="top"><span class="t">角色卡</span><span class="k">SHADOW</span></div>
+          <div class="ico-row">🥷</div>
+          <div class="title">希克 · 希卡之影</div>
+          <div class="sub">SHEIK OF SHEIKAH</div>
+          <div class="body">
+            <p><b>影步：</b>每个时段<b>第一次移动不消耗行动点</b>。</p>
+            <p>一天最多省 2 点，两段各一次。</p>
+            <p><span class="ok">适合：跑腿、取道具、来回穿梭的人。</span></p>
+          </div>
+          <div class="foot"><span>CHARACTER 04</span><span>机动型</span></div>
+        </div>
+
+        <div class="card">
+          <div class="watermark">🐴</div>
+          <div class="top"><span class="t">角色卡</span><span class="k">RANCH</span></div>
+          <div class="ico-row">🐴</div>
+          <div class="title">玛隆 · 牧场少女</div>
+          <div class="sub">MALON OF LON LON</div>
+          <div class="body">
+            <p><b>牧场之友：</b>你演奏埃波娜之歌<b>不花沙</b>，并可指定<b>一名同伴同时生效</b>。</p>
+            <p><span class="ok">两人局的神卡：一次奏曲，两人各 +2 格。</span></p>
+          </div>
+          <div class="foot"><span>CHARACTER 05</span><span>支援型</span></div>
+        </div>
+
+        <div class="card" style="background:transparent;border:1px dashed var(--line);box-shadow:none;">
+          <div class="body" style="display:flex;flex-direction:column;justify-content:center;gap:2mm;text-align:center;">
+            <div style="font-family:'Songti SC',serif;font-size:12px;color:var(--green);letter-spacing:.1em;">五个角色</div>
+            <div style="font-size:7.6px;line-height:1.75;color:var(--ink2);">
+              2 人局任选 2 张，3 人局任选 3 张，依此类推。<br>
+              角色能力<b>优先于</b>事件卡结算。<br>
+              两人局推荐：<b>林克 + 萨莉亚</b>（一攻一省）。<br>
+              四人局推荐：<b>全员</b>，天然的"过去两人 / 未来两人"分工。
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">玩家棋子 <small>5 个 · 沿线剪下 · 底部折 6mm 当底座</small></div>
+      <div class="standee-row">
+
+        <div class="standee">
+          <div class="big">🟩</div>
+          <div class="nm">林克</div>
+          <div class="rl">HERO OF TIME</div>
+          <div class="fold">折起</div>
+        </div>
+
+        <div class="standee">
+          <div class="big">🧚</div>
+          <div class="nm">娜薇</div>
+          <div class="rl">FAIRY GUIDE</div>
+          <div class="fold">折起</div>
+        </div>
+
+        <div class="standee">
+          <div class="big">🌿</div>
+          <div class="nm">萨莉亚</div>
+          <div class="rl">SAGE OF FOREST</div>
+          <div class="fold">折起</div>
+        </div>
+
+        <div class="standee">
+          <div class="big">🥷</div>
+          <div class="nm">希克</div>
+          <div class="rl">SHEIKAH SHADOW</div>
+          <div class="fold">折起</div>
+        </div>
+
+        <div class="standee">
+          <div class="big">🐴</div>
+          <div class="nm">玛隆</div>
+          <div class="rl">LON LON RANCH</div>
+          <div class="fold">折起</div>
+        </div>
+
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="sec-title">腐化轨 📉 <small>0 → 9 · 到达 9 格全队立即失败</small></div>
+      <div class="track">
+        <div class="cell c0">0</div>
+        <div class="cell">1</div>
+        <div class="cell">2</div>
+        <div class="cell">3</div>
+        <div class="cell">4</div>
+        <div class="cell">5</div>
+        <div class="cell hot">6</div>
+        <div class="cell hot">7</div>
+        <div class="cell hot">8</div>
+        <div class="cell dead">9</div>
+      </div>
+      <div class="track-lbl"><span>START</span><span>DANGER ZONE</span><span>GAME OVER</span></div>
+
+      <div class="note">
+        <b>推进</b>：每夜黄昏 +2（4-5 人局 +3）　｜　<b>削减</b>：净化一座地牢 −2；「太阳之歌」只移火印不加腐化；「时之歌」当轮不推进。<br>
+        <b>算一下</b>：8 夜 × 2 = 16 点推进，上限只有 9 —— 你们至少要在中途净化 <b>4 座</b>地牢才活得到第 8 夜。4-5 人局（+3）更狠：第 6 夜之前必须封印。
+      </div>
+    </div>
+    <div class="footline"><span>CHARACTERS 04–05 · PAWNS · TRACK 0–9</span><span>P.07</span></div>
+  </section>
+
+  <!-- ============ P8 速查卡 ============ -->
+  <section class="page">
+    <div class="page-head">
+      <h2>玩家速查卡</h2>
+      <span>Reference · 08 / 08</span>
+    </div>
+    <div class="page-body">
+      <div class="sec-title">📋 6 张 <small>每人一张 · 5 人局可把第 1 张复印一份</small></div>
+      <div class="deck">
+
+        <div class="card qr">
+          <h4>一日流程</h4>
+          <ul>
+            <li>① 黎明：翻 1 张事件卡</li>
+            <li>② <b>少年段</b>：每人 AP 行动</li>
+            <li>③ 爪牙：放火印 / 移动 1 格</li>
+            <li>④ <b>青年段</b>：每人 AP 行动</li>
+            <li>⑤ 黄昏：腐化 +2（4 人以上 +3）</li>
+          </ul>
+          <h4>行动点</h4>
+          <ul>
+            <li>2 人局：每段 <b>3</b> 点</li>
+            <li>3-5 人局：每段 <b>2</b> 点</li>
+            <li class="red">用完不存，每段清零</li>
+          </ul>
+          <h4>爪牙数量</h4>
+          <ul>
+            <li>2人1只 / 3人2只 / 4人3只 / 5人4只</li>
+          </ul>
+        </div>
+
+        <div class="card qr">
+          <h4>少年段能做</h4>
+          <ul>
+            <li>🚶 移动 1 格（1 AP）</li>
+            <li>🏺 采沙 +2（1 AP，每泉限 3 次）</li>
+            <li>🪨 立因果石（1 AP + 1 沙，−2 钉，每牢 1 枚）</li>
+            <li>💎 取精灵石（1 AP，森林/火山/湖畔）</li>
+            <li>🎒 取「过去类」道具（1 AP）</li>
+            <li>⚔ 驱赶爪牙（1 AP + 1 沙，推到相邻格）</li>
+            <li>🎵 奏曲（0 AP，花沙）</li>
+          </ul>
+          <h4>青年段能做</h4>
+          <ul>
+            <li>🚶 移动 1 格（1 AP）</li>
+            <li>🔱 拔钉（1 AP，需该牢道具）</li>
+            <li>🎒 取「未来类」道具（1 AP）</li>
+            <li>🗡 铸大师之剑（1 AP + 3 沙，需 3 宝石）</li>
+            <li>🎵 奏曲（0 AP，花沙）</li>
+            <li>🏰 进加侬塔封印（2 AP，需 6 徽章 + 剑）</li>
+          </ul>
+        </div>
+
+        <div class="card qr">
+          <h4>钉数公式</h4>
+          <ul>
+            <li><b>需求 = max(1, 3 + 火印 − 2×因果石)</b></li>
+            <li>裸地牢：3 钉</li>
+            <li>只立石：<b>1 钉</b></li>
+            <li>只被啃 1 次：4 钉</li>
+            <li>立石 + 2 火印：3 钉</li>
+          </ul>
+          <h4>因果石（本作核心）</h4>
+          <ul>
+            <li>少年段 · 站在有地牢的格</li>
+            <li>1 行动点 + 1 沙，需求 <b>−2</b></li>
+            <li class="red">= 用过去 1 点买未来 2 点</li>
+            <li>已拔 2 钉时立石 → <b>当场净化</b></li>
+          </ul>
+          <h4>火印</h4>
+          <ul>
+            <li>爪牙在未净化地牢放，每牢 ≤2</li>
+            <li>已净化的地牢<b>免疫</b>火印</li>
+            <li class="red">先净化，再防守</li>
+          </ul>
+        </div>
+
+        <div class="card qr">
+          <h4>沙的账</h4>
+          <ul>
+            <li>总沙 = 4 + 3泉×3次×2 = <b>22</b></li>
+            <li>立石 1 / 铸剑 3 / 奏曲 1-2 / 赶爪牙 1</li>
+            <li class="red">永远留 2 沙给时之歌</li>
+          </ul>
+          <h4>六首曲子</h4>
+          <ul>
+            <li>🕰 时之歌 2 沙：本夜腐化不推进</li>
+            <li>🌿 萨莉亚 1 沙：与同伴换位置</li>
+            <li>🐴 埃波娜 1 沙：本段 +2 格移动</li>
+            <li>☀ 太阳 1 沙：移除 1 枚火印</li>
+            <li>🌪 风暴 2 沙：本段一次拔 2 钉</li>
+            <li>🔥 波尔塞罗 1 沙：瞬移到有道具的地牢</li>
+          </ul>
+          <h4>曲不花行动点</h4>
+          <ul>
+            <li class="red">沙与 AP 是两本独立的账</li>
+          </ul>
+        </div>
+
+        <div class="card qr">
+          <h4>六座地牢与钥匙</h4>
+          <ul>
+            <li>森 · 森林 → 🏹 弓（迷失·未来）</li>
+            <li>火 · 火山 → 🔨 锤（火山·过去）</li>
+            <li>魂 · 沙漠 → 🧤 手套（沙漠·未来）</li>
+            <li>水 · 湖畔 → 🪝 钩索（湖畔·过去）</li>
+            <li>影 · 村庄 → 🪞 镜（村庄·过去）</li>
+            <li>光 · 神殿 → 🗡 剑（神殿·未来）</li>
+          </ul>
+          <h4>三颗精灵石（全在过去）</h4>
+          <ul>
+            <li>💚 森林 ｜ ❤️ 火山 ｜ 💙 湖畔</li>
+            <li>齐 + 3 沙 + 神殿 → 大师之剑</li>
+          </ul>
+          <h4>最长的链</h4>
+          <ul>
+            <li class="red">森林 → 火山 → 湖畔 → 神殿</li>
+          </ul>
+        </div>
+
+        <div class="card qr">
+          <h4>胜利</h4>
+          <ul>
+            <li>6 枚徽章（六牢全净）+ 大师之剑</li>
+            <li>+ 有人在加侬塔花 2 行动点封印</li>
+          </ul>
+          <h4>失败</h4>
+          <ul>
+            <li class="red">腐化轨到 9</li>
+            <li class="red">第 8 日黄昏结束仍未封印</li>
+          </ul>
+          <h4>开局三件事</h4>
+          <ul>
+            <li>① 第一天把沙换成石头，别急着拔钉</li>
+            <li>② 3-4 日内凑齐精灵石铸剑</li>
+            <li>③ 找一个"拔到一半"的地牢立石捡漏</li>
+          </ul>
+          <h4>终局三件事</h4>
+          <ul>
+            <li>① 第 6 日就往湖畔/沙漠靠</li>
+            <li>② 时之歌留最后一夜</li>
+            <li>③ 差 1 钉时用太阳之歌更便宜</li>
+          </ul>
+          <h4>一句话</h4>
+          <ul><li class="red">过去是笔账，未来是还款日。</li></ul>
+        </div>
+
+      </div>
+
+      <div class="note">
+        <b>最容易搞错的三件事</b>：① 少年段不能拔钉，钉只存在于未来；② 爪牙不打架，它只放火印和移动；③ 道具不用交接，取到即全队共享。
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6mm;margin-top:5mm;">
+        <div>
+          <div class="sec-title" style="font-size:9.5px;">🕐 首局教学：15 分钟上手</div>
+          <table class="loc" style="margin-top:0;">
+            <tbody>
+              <tr><td style="width:14mm;color:var(--green);font-weight:700;">0–3′</td><td>讲<b>一句话</b>：过去立石，未来拔钉，八天集六徽章。</td></tr>
+              <tr><td style="color:var(--green);font-weight:700;">3–6′</td><td>只讲<b>三个数</b>：18 钉、22 沙、腐化 0→9。</td></tr>
+              <tr><td style="color:var(--green);font-weight:700;">6–9′</td><td>摆好地图，指一遍<b>六座地牢与六把钥匙</b>的时代。</td></tr>
+              <tr><td style="color:var(--green);font-weight:700;">9–12′</td><td>试玩<b>第 1 日</b>：只做"采沙 / 立石 / 取宝石"。</td></tr>
+              <tr><td style="color:var(--green);font-weight:700;">12–15′</td><td>补讲<b>爪牙与火印</b>，然后正式开局。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="sec-title" style="font-size:9.5px;">📦 收纳清单（一袋一套）</div>
+          <table class="loc" style="margin-top:0;">
+            <tbody>
+              <tr><td style="width:26mm;">地图板</td><td>1 张（可折叠）</td></tr>
+              <tr><td>钉 / 石 / 火印</td><td>18 + 6 + 12，分三个小袋</td></tr>
+              <tr><td>沙 / 徽章</td><td>24 + 6，共用一个大袋</td></tr>
+              <tr><td>卡牌</td><td>道具 6 / 曲谱 6 / 事件 12 / 角色 5 / 速查 6</td></tr>
+              <tr><td>棋子</td><td>玩家 5 + 爪牙 4 + 精灵石 3 + 剑 1</td></tr>
+              <tr><td>其他</td><td>天数标记 1 · 腐化标记 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="footline"><span>REFERENCE · 6 CARDS</span><span>P.08</span></div>
+  </section>
+
+</div>
+</body>
+</html>
