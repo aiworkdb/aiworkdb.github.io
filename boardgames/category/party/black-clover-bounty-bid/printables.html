@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>黑色五叶草：讨伐竞标 —— 打印物料</title>
+<style>
+:root{
+  --ink:#12141a; --ink2:#3a3f49; --paper:#f2eee2; --bone:#faf7ee;
+  --clover:#3fae5a; --clover2:#6fd487; --gold:#c9973f; --gold2:#e8c274;
+  --blood:#a8322a; --steel:#5c6570; --line:#262a31;
+  --fire:#c0392b; --aqua:#2b6cb0; --wind:#2f8a63; --dark:#4a3b6b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#181b20;color:var(--ink);
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;}
+body{padding:16px 0 60px;-webkit-font-smoothing:antialiased;}
+.wrap{width:210mm;margin:0 auto;}
+
+.print-hint{background:var(--bone);border-left:6px solid var(--clover);border-radius:4px;
+  padding:12px 16px;margin:0 0 14px;font-size:12.5px;line-height:1.85;color:#2b2f33;}
+.print-hint b{color:var(--blood);}
+.print-hint ul{margin:6px 0 0 18px;}
+.print-hint li{margin:2px 0;}
+.print-hint code{background:#e7e1d1;padding:1px 4px;border-radius:3px;font-size:11px;}
+
+.page{position:relative;width:210mm;height:297mm;background:var(--paper);
+  margin:0 auto 16px;padding:8mm 11mm 6mm;overflow:hidden;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);page-break-after:always;}
+.page::before{content:"";position:absolute;inset:3.5mm;border:1px solid rgba(18,20,26,.13);
+  border-radius:2mm;pointer-events:none;}
+.ph{position:relative;display:flex;align-items:baseline;justify-content:space-between;
+  border-bottom:1.6px solid var(--ink);padding-bottom:2px;margin-bottom:3.2mm;}
+.ph h2{font-size:12.5px;letter-spacing:.2em;font-weight:800;}
+.ph span{font-size:7.4px;letter-spacing:.26em;color:var(--steel);text-transform:uppercase;}
+
+/* ---------- 封面 ---------- */
+.cover{background:radial-gradient(circle at 50% 34%,#1d2320,#08090b 76%);
+  color:#e9e4d5;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:0;}
+.cover::before{border-color:rgba(150,200,160,.18);inset:6mm;}
+.sigil{font-size:54px;line-height:1;color:var(--clover2);
+  filter:drop-shadow(0 0 24px rgba(111,212,135,.55));margin-bottom:8mm;}
+.cover h1{font-size:46px;letter-spacing:.1em;font-weight:900;line-height:1.28;
+  text-shadow:0 0 26px rgba(63,174,90,.35);}
+.cover h1 em{font-style:normal;color:var(--gold2);}
+.cover .en{margin-top:3.5mm;font-size:8.6px;letter-spacing:.44em;color:#7e8f84;text-transform:uppercase;}
+.cover .rule{width:54mm;height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent);
+  margin:7mm 0;}
+.cover .lead{font-size:10.5px;line-height:2.05;color:#a3b0a7;max-width:120mm;}
+.cover .lead b{color:var(--clover2);}
+.cover .meta{margin-top:8mm;font-size:8.2px;letter-spacing:.22em;color:#69766d;}
+.cover .strip{position:absolute;left:0;right:0;bottom:0;height:15mm;
+  background:repeating-linear-gradient(135deg,#111417 0 6px,#171b1f 6px 12px);
+  border-top:1px solid rgba(63,174,90,.35);display:flex;align-items:center;
+  justify-content:center;font-size:6.8px;letter-spacing:.3em;color:#61706a;}
+.cover .corner{position:absolute;font-size:6.6px;letter-spacing:.24em;color:#46524b;}
+.cover .corner.l{left:13mm;top:13mm;}
+.cover .corner.r{right:13mm;top:13mm;}
+
+/* ---------- 速查 ---------- */
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:4mm;font-size:8.2px;line-height:1.7;}
+.rbox{background:var(--bone);border:1px solid #d8d1bd;border-radius:1.6mm;padding:3mm 3.4mm;}
+.rbox h3{font-size:9.4px;letter-spacing:.1em;margin-bottom:1.8mm;color:var(--ink);
+  border-bottom:1px dashed #cfc7b2;padding-bottom:1.2mm;}
+.rbox ol,.rbox ul{margin-left:4.2mm;}
+.rbox li{margin:.7mm 0;}
+.rbox b{color:var(--blood);}
+.rbox .k{color:var(--clover);font-weight:800;}
+.formula{background:#14181c;color:#dfe8dc;border-radius:1.6mm;padding:2.6mm 3.4mm;
+  font-size:9.6px;letter-spacing:.06em;text-align:center;margin:2.4mm 0;
+  border:1px solid #2c343a;}
+.formula em{font-style:normal;color:var(--gold2);font-weight:800;}
+table.rt{width:100%;border-collapse:collapse;font-size:7.6px;margin-top:1.4mm;}
+table.rt th,table.rt td{border:1px solid #cfc7b2;padding:1mm 1.4mm;text-align:center;}
+table.rt th{background:#e6dfcc;font-weight:800;}
+.tri{display:flex;gap:2mm;margin-top:2mm;}
+.tri div{flex:1;text-align:center;border:1px solid #cfc7b2;border-radius:1.2mm;
+  padding:1.6mm .6mm;background:#f6f2e6;font-size:7.4px;line-height:1.5;}
+.tri div b{display:block;font-size:10px;color:var(--blood);}
+
+/* ---------- 玩家板 ---------- */
+.boards{display:grid;grid-template-columns:repeat(2,88mm);gap:5mm 6mm;justify-content:center;}
+.board{position:relative;width:88mm;height:78mm;border-radius:2mm;overflow:hidden;
+  background:linear-gradient(160deg,#fbf8ef,#ece6d4);border:1.4px solid #b9b2a0;
+  box-shadow:inset 0 0 0 1px #fff, 0 1px 4px rgba(0,0,0,.12);padding:2.6mm 3mm;}
+.board .bt{display:flex;align-items:center;gap:1.6mm;border-bottom:1.6px solid var(--ink);
+  padding-bottom:1.2mm;}
+.board .bt .ic{font-size:14px;line-height:1;}
+.board .bt .nm{font-size:10px;font-weight:900;letter-spacing:.1em;}
+.board .bt .en{font-size:4.6px;letter-spacing:.2em;color:var(--steel);text-transform:uppercase;}
+.board .lab{font-size:5.6px;letter-spacing:.16em;color:var(--steel);margin:1.6mm 0 1mm;}
+.slots{display:grid;grid-template-columns:repeat(9,1fr);gap:.7mm;}
+.slot{aspect-ratio:1/1;border:1px solid #b3ab97;border-radius:.8mm;background:#fffdf7;
+  display:flex;align-items:center;justify-content:center;font-size:7.4px;
+  color:#9a937f;font-weight:700;}
+.antislot{margin-top:1.4mm;border:1.2px dashed #8e8674;border-radius:1mm;
+  padding:1.2mm 2mm;font-size:6.2px;letter-spacing:.1em;color:#6f6a5c;display:flex;
+  justify-content:space-between;}
+.loot{display:grid;grid-template-columns:repeat(6,1fr);gap:.8mm;margin-top:1mm;}
+.loot i{display:block;height:16mm;border:1px dashed #c3bba6;border-radius:.8mm;background:#f7f3e8;}
+.motto{margin-top:1.6mm;text-align:center;font-size:5px;letter-spacing:.16em;color:#9a937f;
+  border-top:1px dotted #c9c2ae;padding-top:1mm;}
+.rounds{display:grid;grid-template-columns:repeat(9,1fr);gap:.7mm;margin-top:1mm;}
+.rounds b{display:block;border:1px solid #b3ab97;border-radius:.6mm;background:#fffdf7;
+  text-align:center;font-size:5.4px;padding:.9mm 0;color:#8d866f;font-weight:700;}
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:1mm;margin-top:1.6mm;}
+.tips span{font-size:4.9px;line-height:1.5;color:#5a5550;background:#efead9;
+  border-left:1.4px solid #b9b2a0;padding:.9mm 1mm;border-radius:.6mm;}
+
+/* ---------- 魔物牌 ---------- */
+.grid-m{display:grid;grid-template-columns:repeat(3,50mm);gap:3mm 5mm;justify-content:center;}
+.mon{position:relative;width:50mm;height:64mm;border-radius:1.8mm;overflow:hidden;
+  border:1px solid #2a2e35;display:flex;flex-direction:column;
+  background:linear-gradient(168deg,#1a1f24,#0c0e11 72%);color:#e7e2d4;padding:1.8mm 2.2mm;}
+.mon .glow{position:absolute;inset:0;opacity:.9;}
+.mon.fire .glow{background:radial-gradient(circle at 50% 34%,rgba(192,57,43,.28),transparent 68%);}
+.mon.aqua .glow{background:radial-gradient(circle at 50% 34%,rgba(43,108,176,.30),transparent 68%);}
+.mon.wind .glow{background:radial-gradient(circle at 50% 34%,rgba(47,138,99,.28),transparent 68%);}
+.mon.dark .glow{background:radial-gradient(circle at 50% 34%,rgba(74,59,107,.38),transparent 68%);}
+.mon .hd{position:relative;display:flex;justify-content:space-between;align-items:center;
+  font-size:5.2px;letter-spacing:.16em;text-transform:uppercase;color:#8b968f;}
+.mon .hd .el{font-weight:800;letter-spacing:.12em;}
+.mon.fire .hd .el{color:#e8705f;} .mon.aqua .hd .el{color:#6fa8e0;}
+.mon.wind .hd .el{color:#6fd4a0;} .mon.dark .hd .el{color:#a894d4;}
+.mon .por{position:relative;flex:1;margin:1.2mm 0 .8mm;border:1px dashed rgba(200,210,200,.15);
+  border-radius:1.2mm;display:flex;align-items:center;justify-content:center;}
+.mon .por::before,.mon .por::after{content:"";position:absolute;width:2.6mm;height:2.6mm;
+  border:1px solid rgba(200,210,200,.2);}
+.mon .por::before{left:1.2mm;top:1.2mm;border-right:0;border-bottom:0;}
+.mon .por::after{right:1.2mm;bottom:1.2mm;border-left:0;border-top:0;}
+.mon .fig{font-size:58px;line-height:1;filter:saturate(.85) contrast(1.05);
+  text-shadow:0 8px 22px rgba(0,0,0,.75);position:relative;z-index:1;}
+.mon .wm{position:absolute;font-size:78px;opacity:.05;line-height:1;filter:grayscale(1);}
+.mon .hd span{position:relative;z-index:1;}
+.mon .nm{position:relative;text-align:center;font-size:10.5px;font-weight:800;letter-spacing:.1em;}
+.mon .en{position:relative;text-align:center;font-size:4.8px;letter-spacing:.2em;
+  color:#7c8a82;text-transform:uppercase;margin-top:.3mm;}
+.mon .fl{position:relative;text-align:center;font-size:5px;color:#6d7a72;margin-top:.6mm;}
+.mon .ft{position:relative;display:flex;align-items:center;justify-content:space-between;
+  margin-top:1.2mm;border-top:1px solid rgba(200,210,200,.16);padding-top:1mm;}
+.mon .st{font-size:8.2px;letter-spacing:.08em;line-height:1;}
+.mon .st .f{color:var(--gold2);}
+.mon .st .e{color:#3c4348;}
+.mon .sc{font-size:13px;font-weight:900;color:#f4efe3;line-height:.9;}
+.mon .sc small{font-size:4.6px;letter-spacing:.14em;color:#8c978f;display:block;font-weight:400;margin-top:.5mm;}
+
+/* ---------- 战力牌 ---------- */
+.grid-p{display:grid;grid-template-columns:repeat(6,28mm);gap:2.4mm 3mm;justify-content:center;}
+.pw{position:relative;width:28mm;height:46mm;border-radius:1.4mm;overflow:hidden;
+  background:linear-gradient(172deg,#fdfbf4,#ece6d4);border:1px solid #b9b2a0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 0 1px #fff;}
+.pw .bar{position:absolute;left:0;right:0;top:0;height:2.6mm;}
+.pw .org{position:absolute;left:0;right:0;bottom:0;height:4.4mm;display:flex;align-items:center;
+  justify-content:center;font-size:4.4px;letter-spacing:.14em;color:#4a5057;
+  border-top:1px solid rgba(0,0,0,.12);}
+.pw .wm{position:absolute;font-size:26px;opacity:.09;line-height:1;filter:grayscale(1);}
+.pw .num{position:relative;font-size:30px;font-weight:900;line-height:.9;color:#12161a;}
+.pw .pips{position:relative;display:flex;gap:.7mm;margin-top:1.4mm;}
+.pw .pips i{width:1.5mm;height:1.5mm;border-radius:50%;background:#22272c;}
+.pw .pips i.off{background:#d9d2c0;}
+
+/* ---------- 反魔法 ---------- */
+.anti{position:relative;width:28mm;height:46mm;border-radius:1.4mm;overflow:hidden;
+  background:radial-gradient(circle at 50% 40%,#1e2429,#07080a 78%);
+  border:1.2px solid #3a444c;color:#e9e4d5;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;}
+.anti .sw{font-size:19px;line-height:1;filter:drop-shadow(0 0 6px rgba(255,255,255,.65));}
+.anti .nm{font-size:6.4px;font-weight:900;letter-spacing:.06em;margin-top:1mm;}
+.anti .en{font-size:3.6px;letter-spacing:.16em;color:#8c978f;margin-top:.3mm;}
+.anti .tx{font-size:3.8px;color:#7e8a83;margin-top:1mm;line-height:1.4;}
+.anti::after{content:"";position:absolute;inset:1.2mm;border:1px solid rgba(233,228,213,.16);
+  border-radius:.8mm;}
+
+/* ---------- 标记 ---------- */
+.grid-t{display:grid;grid-template-columns:repeat(4,30mm);gap:5mm 6mm;justify-content:center;}
+.tok{width:30mm;height:30mm;border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;background:radial-gradient(circle at 40% 34%,#3a3f45,#15181b 76%);
+  border:1.4px solid #4d545c;color:#d8d3c6;position:relative;}
+.tok .sk{font-size:13px;line-height:1;}
+.tok .tx{font-size:5px;letter-spacing:.12em;margin-top:.8mm;color:#c9a86a;}
+.tok .tx2{font-size:4px;letter-spacing:.1em;color:#7e8a83;margin-top:.3mm;}
+.tok::after{content:"";position:absolute;inset:2mm;border:1px dashed rgba(216,211,198,.18);border-radius:50%;}
+
+/* ---------- 计分纸 ---------- */
+.sheet{background:var(--bone);border:1px solid #cfc7b2;border-radius:2mm;padding:4mm;}
+table.sc{width:100%;border-collapse:collapse;font-size:7.6px;}
+table.sc th,table.sc td{border:1px solid #b9b2a0;padding:2.2mm 1.6mm;text-align:center;}
+table.sc th{background:#e6dfcc;font-weight:800;letter-spacing:.08em;}
+table.sc td.l{text-align:left;padding-left:2.4mm;}
+.sheet .note{font-size:7px;color:#6f6a5c;margin-top:2.4mm;line-height:1.6;}
+
+@page{size:A4;margin:0;}
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  html,body{background:#fff;}
+  body{padding:0;}
+  .print-hint{display:none;}
+  .page{margin:0;box-shadow:none;}
+}
+@media screen and (max-width:860px){
+  .wrap{width:auto;padding:0 8px;}
+  .page{transform:scale(.46);transform-origin:top center;margin-bottom:-150mm;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <b>A4 纸张</b>打印，页边距设置为<b>「无」或「最小」</b>（页面已内置 8-11mm 内边距）</li>
+    <li>在打印对话框中，务必<b>勾选「背景图形 / Background graphics」</b>，否则所有深色卡面都会变成白纸</li>
+    <li>卡牌与玩家板建议使用 <b>200g 以上卡纸</b>；战力牌会被反复摸，普通纸三次就起毛</li>
+    <li>缩放请选择 <b>「100% / 实际大小」</b>，不要选「适应页面」，否则卡牌尺寸会缩水，切不开</li>
+    <li>全部 <b>9 页</b>：P1 封面 ｜ P2 速查 ｜ P3 玩家板 ｜ P4-6 魔物牌 32 张 ｜ P7-8 战力牌 54 张 + 反魔法 6 张 ｜ P9 标记 + 计分纸</li>
+    <li>只开 4 人局？<b>战力牌只需印前 4 套</b>（P7 上半 + P8 上半），省一半纸</li>
+  </ul>
+</div>
+
+<section class="page cover">
+  <div class="corner l">CLOVER KINGDOM · BOUNTY BOARD</div>
+  <div class="corner r">PRINT &amp; PLAY · 9 PAGES</div>
+  <div class="sigil">☘</div>
+  <h1>黑色五叶草<br><em>讨伐竞标</em></h1>
+  <div class="en">BLACK CLOVER &nbsp;/&nbsp; BOUNTY BID</div>
+  <div class="rule"></div>
+  <div class="lead">
+    九张讨伐令，九支骑士团，<br>
+    而每个人手里只有<b>一套 1-9</b>。<br><br>
+    同时亮牌 —— <b>唯一最高</b>的人拿走魔物，<br>
+    而<b>并列最高</b>的人，连牌都烧掉。
+  </div>
+  <div class="meta">3-6 PLAYERS &nbsp;·&nbsp; 30-45 MIN &nbsp;·&nbsp; AGE 10+</div>
+  <div class="strip">BLACK CLOVER: BOUNTY BID &nbsp;·&nbsp; FAN-MADE PRINT &amp; PLAY &nbsp;·&nbsp; NON-COMMERCIAL</div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>规则速查 · 一页看懂</h2><span>Quick Reference</span></div>
+  <div class="formula">门槛 <em>R</em> = 竞标堆中<em>最高星级</em> + 竞标堆<em>张数</em> − 1</div>
+  <div class="rules">
+    <div class="rbox">
+      <h3>① 每轮 5 步</h3>
+      <ol>
+        <li><b>翻魔物</b>：从牌库顶翻 1 张，放入竞标堆</li>
+        <li><b>算门槛</b>：用上面的公式，大声报出来</li>
+        <li><b>喊话 30 秒</b>：随便说，可以撒谎，不算违规</li>
+        <li><b>同时暗出</b>：每人扣 1 张（数字或反魔法）</li>
+        <li><b>同时翻开</b>：按顺序结算</li>
+      </ol>
+    </div>
+    <div class="rbox">
+      <h3>② 结算顺序</h3>
+      <ol>
+        <li><b>先看反魔法</b>：唯一者 → 通吃；2 人以上 → 全废，各扣 2 分</li>
+        <li><b>再看数字</b>：只有 ≥R 的人够格，够格者中<b>唯一最高</b>者通吃</li>
+        <li><b>并列最高</b> → 全部出局，由<b>次高者捡漏</b>（可连锁）</li>
+        <li><b>无人夺标</b> → 堆滞留，盖 1 张 ☠️，门槛自动 +1</li>
+        <li><b>堆达 5 张</b> → 溃散，整堆弃置，每人 −1</li>
+      </ol>
+    </div>
+    <div class="rbox">
+      <h3>③ 终局计分</h3>
+      <ul>
+        <li><b>魔物分</b>：★ 几就是几分</li>
+        <li><b>成套分</b>：同属性 2 张 +3 / 3 张 +7 / 4 张 +12</li>
+        <li><b>反魔法余牌</b>：留下没用 +1</li>
+        <li><b>罚分</b>：反魔法撞车 −2／溃散 −1</li>
+      </ul>
+      <div style="margin-top:1.6mm;font-size:7.4px;color:#6f6a5c;">
+        最高分 → <b style="color:#3fae5a">新任魔法帝</b>。平手比魔物张数，再比属性种类。
+      </div>
+    </div>
+    <div class="rbox">
+      <h3>④ 桌子怎么摆</h3>
+      <ul>
+        <li>魔物牌库在<b>上方</b>，竞标堆在<b>正中央</b></li>
+        <li>手牌<b>背面朝上</b>，数量公开、内容保密</li>
+        <li><b>用过的牌正面朝上</b>摊在自己面前（规则要求，不许藏）</li>
+        <li>☠️ 放在牌库旁，谁滞留就盖一张</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rbox" style="margin-top:4mm;">
+    <h3>⑤ 门槛对照表（贴在手边）</h3>
+    <table class="rt">
+      <tr><th>竞标堆组成</th><th>最高星级</th><th>张数</th><th>门槛 R</th><th>谁能出手</th><th>堆值</th></tr>
+      <tr><td>单张 ★1</td><td>1</td><td>1</td><td>1</td><td>1-9（全员）</td><td>1 分</td></tr>
+      <tr><td>单张 ★3</td><td>3</td><td>1</td><td>3</td><td>3-9</td><td>3 分</td></tr>
+      <tr><td>单张 ★5</td><td>5</td><td>1</td><td>5</td><td>5-9</td><td>5 分</td></tr>
+      <tr><td>★5 + ★2</td><td>5</td><td>2</td><td>6</td><td>6-9</td><td>7 分</td></tr>
+      <tr><td>★5 + ★3 + ★2</td><td>5</td><td>3</td><td>7</td><td>7-9</td><td>10 分</td></tr>
+      <tr><td>★5 + ★5 + ★3 + ★2</td><td>5</td><td>4</td><td>8</td><td>8-9</td><td>15 分</td></tr>
+      <tr><td>任意五张堆</td><td>—</td><td>5</td><td>9</td><td><b>只有 9</b></td><td>—（本轮后溃散）</td></tr>
+    </table>
+  </div>
+
+  <div class="tri">
+    <div><b>22%</b>4 人局撞车率<br>（每 5 轮撞 1 次，正常）</div>
+    <div><b>2.2 张</b>冠军平均拿下的魔物数<br>（不是拿得多，是拿得对）</div>
+    <div><b>45 点</b>每人一局的战力总量<br>（其中 43 点会打水漂）</div>
+    <div><b>0.5 次</b>反魔法成功次数/局<br>（白打 3.5 次）</div>
+  </div>
+
+  <div class="rbox" style="margin-top:4mm;">
+    <h3>⑥ 终局算分示例（照这个格式算，不会错）</h3>
+    <table class="rt">
+      <tr><th>玩家</th><th>战利品</th><th>魔物分</th><th>成套分</th><th>反魔法</th><th>罚分</th><th>总分</th></tr>
+      <tr><td>尤诺</td><td>水3、炎3、水4</td><td>3+3+4 = 10</td><td>水 ×2 → +3</td><td>未用 +1</td><td>0</td><td><b>14</b></td></tr>
+      <tr><td>玛格纳</td><td>风1、风4</td><td>1+4 = 5</td><td>风 ×2 → +3</td><td>已用 0</td><td>0</td><td><b>8</b></td></tr>
+      <tr><td>阿斯塔</td><td>炎2、影2、水2</td><td>2+2+2 = 6</td><td>三种属性各 1 张 → 0</td><td>未用 +1</td><td>0</td><td><b>7</b></td></tr>
+      <tr><td>诺艾尔</td><td>影5</td><td>5</td><td>0</td><td>未用 +1</td><td>0</td><td><b>6</b></td></tr>
+    </table>
+    <div style="margin-top:1.6mm;font-size:7.2px;color:#6f6a5c;line-height:1.65;">
+      ★ 注意阿斯塔：<b>拿了 3 张（全场最多），却只有 7 分</b>。因为三张 ★2 属性全不同 —— 一分套装都没有。<br>
+      本作不奖励「拿得多」，只奖励「<b>拿得对</b>」。
+    </div>
+  </div>
+
+  <div class="rbox" style="margin-top:4mm;">
+    <h3>⑦ 三种打法 · 模拟实测（4 人混桌 1200 局）</h3>
+    <table class="rt">
+      <tr><th>流派</th><th>打法</th><th>场均分</th><th>胜率</th><th>一句话点评</th></tr>
+      <tr><td>🎲 敢赌派</td><td>中盘就敢亮反魔法</td><td><b>7.7</b></td><td><b>37.8%</b></td><td>数据上最强 —— 因为别人都在等</td></tr>
+      <tr><td>🗡️ 猛攻派</td><td>每轮都想赢，出手偏大</td><td>6.0</td><td>26.4%</td><td>前期猛，后期手里没牌</td></tr>
+      <tr><td>🛡️ 稳健派</td><td>保大牌，只捡小堆</td><td>5.1</td><td>18.4%</td><td><b>最差</b>：省牌 = 不拿分</td></tr>
+      <tr><td>⚖️ 均衡派</td><td>按期望值算，不冒险</td><td>4.4</td><td>17.5%</td><td>太理性反而不赢，因为不敢赌</td></tr>
+    </table>
+    <div style="margin-top:1.6mm;font-size:7.2px;color:#6f6a5c;">
+      结论很稳定：<b>过度保守是本作最大的陷阱</b>。攒着 8 和 9 到最后一轮还没打出去，等于白送对手 4 分。
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>玩家板 · 六支骑士团</h2><span>Player Boards</span></div>
+  <div class="boards">
+    <div class="board">
+      <div class="bt">
+        <div class="ic">🐂</div>
+        <div><div class="nm">黑之暴牛</div><div class="en">BLACK BULLS</div></div>
+      </div>
+      <div class="lab">魔 力 槽 · 打 过 的 牌 就 在 这 里 划 掉</div>
+      <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div><div class="slot">4</div><div class="slot">5</div><div class="slot">6</div><div class="slot">7</div><div class="slot">8</div><div class="slot">9</div></div>
+      <div class="antislot"><span>⚔️ 反魔法（用掉=划掉）</span><span>□ 未用 +1 分</span></div>
+      <div class="lab">战 利 品 区 · 赢 到 的 魔 物 放 这 里（最 多 9 张）</div>
+      <div class="loot"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="lab">回 合 进 度 · 每 结 束 一 轮 划 一 格</div>
+      <div class="rounds"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></div>
+      <div class="tips">
+        <span>前 3 轮别出 7 以上</span>
+        <span>盯住别人的已用牌</span>
+        <span>反魔法别留到第 9 轮</span>
+      </div>
+      <div class="motto">✦ 不 是 天 生 被 选 中 的 人 ， 也 能 成 为 魔 法 帝 ✦</div>
+    </div>
+    <div class="board">
+      <div class="bt">
+        <div class="ic">🦅</div>
+        <div><div class="nm">金色黎明</div><div class="en">GOLDEN DAWN</div></div>
+      </div>
+      <div class="lab">魔 力 槽 · 打 过 的 牌 就 在 这 里 划 掉</div>
+      <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div><div class="slot">4</div><div class="slot">5</div><div class="slot">6</div><div class="slot">7</div><div class="slot">8</div><div class="slot">9</div></div>
+      <div class="antislot"><span>⚔️ 反魔法（用掉=划掉）</span><span>□ 未用 +1 分</span></div>
+      <div class="lab">战 利 品 区 · 赢 到 的 魔 物 放 这 里（最 多 9 张）</div>
+      <div class="loot"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="lab">回 合 进 度 · 每 结 束 一 轮 划 一 格</div>
+      <div class="rounds"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></div>
+      <div class="tips">
+        <span>前 3 轮别出 7 以上</span>
+        <span>盯住别人的已用牌</span>
+        <span>反魔法别留到第 9 轮</span>
+      </div>
+      <div class="motto">✦ 不 是 天 生 被 选 中 的 人 ， 也 能 成 为 魔 法 帝 ✦</div>
+    </div>
+    <div class="board">
+      <div class="bt">
+        <div class="ic">🕊️</div>
+        <div><div class="nm">银色大鹫</div><div class="en">SILVER EAGLES</div></div>
+      </div>
+      <div class="lab">魔 力 槽 · 打 过 的 牌 就 在 这 里 划 掉</div>
+      <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div><div class="slot">4</div><div class="slot">5</div><div class="slot">6</div><div class="slot">7</div><div class="slot">8</div><div class="slot">9</div></div>
+      <div class="antislot"><span>⚔️ 反魔法（用掉=划掉）</span><span>□ 未用 +1 分</span></div>
+      <div class="lab">战 利 品 区 · 赢 到 的 魔 物 放 这 里（最 多 9 张）</div>
+      <div class="loot"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="lab">回 合 进 度 · 每 结 束 一 轮 划 一 格</div>
+      <div class="rounds"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></div>
+      <div class="tips">
+        <span>前 3 轮别出 7 以上</span>
+        <span>盯住别人的已用牌</span>
+        <span>反魔法别留到第 9 轮</span>
+      </div>
+      <div class="motto">✦ 不 是 天 生 被 选 中 的 人 ， 也 能 成 为 魔 法 帝 ✦</div>
+    </div>
+    <div class="board">
+      <div class="bt">
+        <div class="ic">🦁</div>
+        <div><div class="nm">红莲狮子王</div><div class="en">CRIMSON LIONS</div></div>
+      </div>
+      <div class="lab">魔 力 槽 · 打 过 的 牌 就 在 这 里 划 掉</div>
+      <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div><div class="slot">4</div><div class="slot">5</div><div class="slot">6</div><div class="slot">7</div><div class="slot">8</div><div class="slot">9</div></div>
+      <div class="antislot"><span>⚔️ 反魔法（用掉=划掉）</span><span>□ 未用 +1 分</span></div>
+      <div class="lab">战 利 品 区 · 赢 到 的 魔 物 放 这 里（最 多 9 张）</div>
+      <div class="loot"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="lab">回 合 进 度 · 每 结 束 一 轮 划 一 格</div>
+      <div class="rounds"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></div>
+      <div class="tips">
+        <span>前 3 轮别出 7 以上</span>
+        <span>盯住别人的已用牌</span>
+        <span>反魔法别留到第 9 轮</span>
+      </div>
+      <div class="motto">✦ 不 是 天 生 被 选 中 的 人 ， 也 能 成 为 魔 法 帝 ✦</div>
+    </div>
+    <div class="board">
+      <div class="bt">
+        <div class="ic">🦗</div>
+        <div><div class="nm">翠绿螳螂</div><div class="en">GREEN MANTIS</div></div>
+      </div>
+      <div class="lab">魔 力 槽 · 打 过 的 牌 就 在 这 里 划 掉</div>
+      <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div><div class="slot">4</div><div class="slot">5</div><div class="slot">6</div><div class="slot">7</div><div class="slot">8</div><div class="slot">9</div></div>
+      <div class="antislot"><span>⚔️ 反魔法（用掉=划掉）</span><span>□ 未用 +1 分</span></div>
+      <div class="lab">战 利 品 区 · 赢 到 的 魔 物 放 这 里（最 多 9 张）</div>
+      <div class="loot"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="lab">回 合 进 度 · 每 结 束 一 轮 划 一 格</div>
+      <div class="rounds"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></div>
+      <div class="tips">
+        <span>前 3 轮别出 7 以上</span>
+        <span>盯住别人的已用牌</span>
+        <span>反魔法别留到第 9 轮</span>
+      </div>
+      <div class="motto">✦ 不 是 天 生 被 选 中 的 人 ， 也 能 成 为 魔 法 帝 ✦</div>
+    </div>
+    <div class="board">
+      <div class="bt">
+        <div class="ic">🦌</div>
+        <div><div class="nm">水色幻鹿</div><div class="en">AQUA DEER</div></div>
+      </div>
+      <div class="lab">魔 力 槽 · 打 过 的 牌 就 在 这 里 划 掉</div>
+      <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div><div class="slot">4</div><div class="slot">5</div><div class="slot">6</div><div class="slot">7</div><div class="slot">8</div><div class="slot">9</div></div>
+      <div class="antislot"><span>⚔️ 反魔法（用掉=划掉）</span><span>□ 未用 +1 分</span></div>
+      <div class="lab">战 利 品 区 · 赢 到 的 魔 物 放 这 里（最 多 9 张）</div>
+      <div class="loot"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="lab">回 合 进 度 · 每 结 束 一 轮 划 一 格</div>
+      <div class="rounds"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b></div>
+      <div class="tips">
+        <span>前 3 轮别出 7 以上</span>
+        <span>盯住别人的已用牌</span>
+        <span>反魔法别留到第 9 轮</span>
+      </div>
+      <div class="motto">✦ 不 是 天 生 被 选 中 的 人 ， 也 能 成 为 魔 法 帝 ✦</div>
+    </div></div>
+  <div style="margin-top:6mm;font-size:7.4px;line-height:1.8;color:#5c6570;text-align:center;">
+    玩法：开局把 1-9 战力牌放在「魔力槽」上方；每打出一张，就在对应数字上画一道斜线。<br>
+    已用牌必须<b>正面朝上</b>摊开 —— 这是全场唯一的公开信息，也是本作全部策略的来源。
+  </div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>魔物牌 · 第一组</h2><span>Monsters 01-12</span></div>
+  <div class="grid-m">
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.01</span></div>
+      <div class="por"><div class="wm">🐭</div><div class="fig">🐭</div></div>
+      <div class="nm">火鼠</div>
+      <div class="en">FIRE RAT</div>
+      <div class="fl">草垛里的火星</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.02</span></div>
+      <div class="por"><div class="wm">🦎</div><div class="fig">🦎</div></div>
+      <div class="nm">火星蜥</div>
+      <div class="en">SPARK LIZARD</div>
+      <div class="fl">咬一口就自燃</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.03</span></div>
+      <div class="por"><div class="wm">🐺</div><div class="fig">🐺</div></div>
+      <div class="nm">熔岩犬</div>
+      <div class="en">MAGMA HOUND</div>
+      <div class="fl">跑过的地面会裂</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.04</span></div>
+      <div class="por"><div class="wm">🐦‍⬛</div><div class="fig">🐦‍⬛</div></div>
+      <div class="nm">灰烬鸦</div>
+      <div class="en">ASH CROW</div>
+      <div class="fl">羽落成灰</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.05</span></div>
+      <div class="por"><div class="wm">🛡️</div><div class="fig">🛡️</div></div>
+      <div class="nm">炎狱骑士</div>
+      <div class="en">INFERNO KNIGHT</div>
+      <div class="fl">铠甲里没有身体</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.06</span></div>
+      <div class="por"><div class="wm">🗿</div><div class="fig">🗿</div></div>
+      <div class="nm">红莲巨人</div>
+      <div class="en">CRIMSON GIANT</div>
+      <div class="fl">一步一片焦土</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.07</span></div>
+      <div class="por"><div class="wm">🐉</div><div class="fig">🐉</div></div>
+      <div class="nm">狱炎龙</div>
+      <div class="en">HELLFLAME DRAGON</div>
+      <div class="fl">呼吸即是火刑</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★</span><span class="e">☆</span></div>
+        <div class="sc">4<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon fire">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🔥 炎</span><span>No.08</span></div>
+      <div class="por"><div class="wm">👑</div><div class="fig">👑</div></div>
+      <div class="nm">大炎狱王</div>
+      <div class="en">ARCHFIEND OF FLAME</div>
+      <div class="fl">王座由岩浆浇成</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★★</span><span class="e"></span></div>
+        <div class="sc">5<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.09</span></div>
+      <div class="por"><div class="wm">🧜‍♀️</div><div class="fig">🧜‍♀️</div></div>
+      <div class="nm">水妖</div>
+      <div class="en">WATER SPRITE</div>
+      <div class="fl">歌声能淹死人</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.10</span></div>
+      <div class="por"><div class="wm">🐟</div><div class="fig">🐟</div></div>
+      <div class="nm">冰针鱼</div>
+      <div class="en">ICE NEEDLE</div>
+      <div class="fl">鳞片是刀</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.11</span></div>
+      <div class="por"><div class="wm">🦈</div><div class="fig">🦈</div></div>
+      <div class="nm">霜牙狼</div>
+      <div class="en">FROST FANG</div>
+      <div class="fl">咬合处结冰</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.12</span></div>
+      <div class="por"><div class="wm">🦀</div><div class="fig">🦀</div></div>
+      <div class="nm">潮汐蟹</div>
+      <div class="en">TIDE CRAB</div>
+      <div class="fl">壳比城墙硬</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div></div>
+  <div style="margin-top:3mm;font-size:6.8px;color:#5c6570;text-align:center;">
+    ★ = 讨伐难度 = 分值。四属性（炎 / 水 / 风 / 影）各 8 张，洗混后背面朝上作为牌库。
+  </div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>魔物牌 · 第二组</h2><span>Monsters 13-24</span></div>
+  <div class="grid-m">
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.13</span></div>
+      <div class="por"><div class="wm">🧙‍♀️</div><div class="fig">🧙‍♀️</div></div>
+      <div class="nm">冰晶魔女</div>
+      <div class="en">GLACIER WITCH</div>
+      <div class="fl">把时间冻在冰里</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.14</span></div>
+      <div class="por"><div class="wm">🐙</div><div class="fig">🐙</div></div>
+      <div class="nm">深海触手</div>
+      <div class="en">ABYSS TENTACLE</div>
+      <div class="fl">从码头底下伸上来</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.15</span></div>
+      <div class="por"><div class="wm">🐍</div><div class="fig">🐍</div></div>
+      <div class="nm">冰河巨蛇</div>
+      <div class="en">GLACIAL SERPENT</div>
+      <div class="fl">身长三里</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★</span><span class="e">☆</span></div>
+        <div class="sc">4<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon aqua">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">💧 水</span><span>No.16</span></div>
+      <div class="por"><div class="wm">🔱</div><div class="fig">🔱</div></div>
+      <div class="nm">深海王座</div>
+      <div class="en">THRONE OF THE DEEP</div>
+      <div class="fl">整片海都是它的</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★★</span><span class="e"></span></div>
+        <div class="sc">5<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.17</span></div>
+      <div class="por"><div class="wm">🐦</div><div class="fig">🐦</div></div>
+      <div class="nm">疾风雀</div>
+      <div class="en">GALE SPARROW</div>
+      <div class="fl">眨眼就换了棵树</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.18</span></div>
+      <div class="por"><div class="wm">🦡</div><div class="fig">🦡</div></div>
+      <div class="nm">风切鼬</div>
+      <div class="en">WIND WEASEL</div>
+      <div class="fl">切开空气的声音</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.19</span></div>
+      <div class="por"><div class="wm">🦅</div><div class="fig">🦅</div></div>
+      <div class="nm">岚翼鹰</div>
+      <div class="en">STORMWING EAGLE</div>
+      <div class="fl">翼展遮住太阳</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.20</span></div>
+      <div class="por"><div class="wm">🌪️</div><div class="fig">🌪️</div></div>
+      <div class="nm">沙尘旋</div>
+      <div class="en">DUST VORTEX</div>
+      <div class="fl">会自己走路的风</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.21</span></div>
+      <div class="por"><div class="wm">🦁</div><div class="fig">🦁</div></div>
+      <div class="nm">暴风狮鹫</div>
+      <div class="en">TEMPEST GRIFFIN</div>
+      <div class="fl">羽毛比铁硬</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.22</span></div>
+      <div class="por"><div class="wm">🐋</div><div class="fig">🐋</div></div>
+      <div class="nm">天空鲸</div>
+      <div class="en">SKY WHALE</div>
+      <div class="fl">在云里游</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.23</span></div>
+      <div class="por"><div class="wm">🌀</div><div class="fig">🌀</div></div>
+      <div class="nm">大旋风精</div>
+      <div class="en">GREAT SYLPH</div>
+      <div class="fl">整片平原在转</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★</span><span class="e">☆</span></div>
+        <div class="sc">4<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon wind">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌪️ 风</span><span>No.24</span></div>
+      <div class="por"><div class="wm">⛈️</div><div class="fig">⛈️</div></div>
+      <div class="nm">岚之王</div>
+      <div class="en">KING OF STORMS</div>
+      <div class="fl">雷雨是它的呼吸</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★★</span><span class="e"></span></div>
+        <div class="sc">5<small>Bounty</small></div>
+      </div>
+    </div></div>
+  <div style="margin-top:3mm;font-size:6.8px;color:#5c6570;text-align:center;">
+    成套奖励：同属性 2 张 +3 ／ 3 张 +7 ／ 4 张 +12（每属性只算一次，取最高档）
+  </div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>魔物牌 · 第三组</h2><span>Monsters 25-32</span></div>
+  <div class="grid-m">
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.25</span></div>
+      <div class="por"><div class="wm">🐁</div><div class="fig">🐁</div></div>
+      <div class="nm">暗影鼠</div>
+      <div class="en">SHADE RAT</div>
+      <div class="fl">从影子缝隙里钻出</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.26</span></div>
+      <div class="por"><div class="wm">🦇</div><div class="fig">🦇</div></div>
+      <div class="nm">夜行蝠</div>
+      <div class="en">NIGHT BAT</div>
+      <div class="fl">听不见的声音</div>
+      <div class="ft">
+        <div class="st"><span class="f">★</span><span class="e">☆☆☆☆</span></div>
+        <div class="sc">1<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.27</span></div>
+      <div class="por"><div class="wm">🐕</div><div class="fig">🐕</div></div>
+      <div class="nm">影犬</div>
+      <div class="en">SHADOW HOUND</div>
+      <div class="fl">追着你的影子跑</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.28</span></div>
+      <div class="por"><div class="wm">🌫️</div><div class="fig">🌫️</div></div>
+      <div class="nm">黑雾</div>
+      <div class="en">BLACK MIST</div>
+      <div class="fl">吸进去就出不来</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★</span><span class="e">☆☆☆</span></div>
+        <div class="sc">2<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.29</span></div>
+      <div class="por"><div class="wm">🗡️</div><div class="fig">🗡️</div></div>
+      <div class="nm">影缝骑士</div>
+      <div class="en">SHADOW-STITCH KNIGHT</div>
+      <div class="fl">把影子缝成铠甲</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.30</span></div>
+      <div class="por"><div class="wm">👁️</div><div class="fig">👁️</div></div>
+      <div class="nm">深渊眼</div>
+      <div class="en">ABYSS EYE</div>
+      <div class="fl">被看见就会被记住</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★</span><span class="e">☆☆</span></div>
+        <div class="sc">3<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.31</span></div>
+      <div class="por"><div class="wm">🖐️</div><div class="fig">🖐️</div></div>
+      <div class="nm">虚无巨手</div>
+      <div class="en">VOID HAND</div>
+      <div class="fl">五指遮天</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★</span><span class="e">☆</span></div>
+        <div class="sc">4<small>Bounty</small></div>
+      </div>
+    </div>
+    <div class="mon dark">
+      <div class="glow"></div>
+      <div class="hd"><span class="el">🌑 影</span><span>No.32</span></div>
+      <div class="por"><div class="wm">💀</div><div class="fig">💀</div></div>
+      <div class="nm">虚無王</div>
+      <div class="en">THE VOID KING</div>
+      <div class="fl">名字本身是诅咒</div>
+      <div class="ft">
+        <div class="st"><span class="f">★★★★★</span><span class="e"></span></div>
+        <div class="sc">5<small>Bounty</small></div>
+      </div>
+    </div></div>
+  <div style="margin-top:3mm;font-size:6.8px;color:#5c6570;text-align:center;">
+    成套奖励：同属性 2 张 +3 ／ 3 张 +7 ／ 4 张 +12（每属性只算一次，取最高档）
+  </div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>战力牌 · 第 1-3 套</h2><span>Power Deck 1-3</span></div>
+  <div class="grid-p">
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">1</div>
+      <div class="pips"><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">2</div>
+      <div class="pips"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">3</div>
+      <div class="pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">4</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">5</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">6</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">7</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">8</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#c0392b"></div>
+      <div class="wm">🐂</div>
+      <div class="num">9</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="org" style="background:#c0392b22;color:#1b1b1f">黑之暴牛</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">1</div>
+      <div class="pips"><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">2</div>
+      <div class="pips"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">3</div>
+      <div class="pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">4</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">5</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">6</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">7</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">8</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#d4a13a"></div>
+      <div class="wm">🦅</div>
+      <div class="num">9</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="org" style="background:#d4a13a22;color:#8a6a1e">金色黎明</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">1</div>
+      <div class="pips"><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">2</div>
+      <div class="pips"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">3</div>
+      <div class="pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">4</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">5</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">6</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">7</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">8</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#8fa3b0"></div>
+      <div class="wm">🕊️</div>
+      <div class="num">9</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="org" style="background:#8fa3b022;color:#37505f">银色大鹫</div>
+    </div>
+    <div class="anti">
+      <svg viewBox="0 0 24 24" width="9mm" height="9mm" aria-hidden="true">
+        <path d="M12 1 L13.8 4 V13 L12 15 L10.2 13 V4 Z" fill="#e9e4d5"/>
+        <rect x="6.6" y="14.4" width="10.8" height="1.5" rx=".75" fill="#c9973f"/>
+        <rect x="11.2" y="15.9" width="1.6" height="6.4" rx=".6" fill="#8d8878"/>
+        <circle cx="12" cy="22.6" r="1.1" fill="#c9973f"/>
+      </svg>
+      <div class="nm">反魔法</div>
+      <div class="en">ANTI-MAGIC</div>
+      <div class="tx">唯一者通吃<br>多人全废 −2</div>
+    </div>
+    <div class="anti">
+      <svg viewBox="0 0 24 24" width="9mm" height="9mm" aria-hidden="true">
+        <path d="M12 1 L13.8 4 V13 L12 15 L10.2 13 V4 Z" fill="#e9e4d5"/>
+        <rect x="6.6" y="14.4" width="10.8" height="1.5" rx=".75" fill="#c9973f"/>
+        <rect x="11.2" y="15.9" width="1.6" height="6.4" rx=".6" fill="#8d8878"/>
+        <circle cx="12" cy="22.6" r="1.1" fill="#c9973f"/>
+      </svg>
+      <div class="nm">反魔法</div>
+      <div class="en">ANTI-MAGIC</div>
+      <div class="tx">唯一者通吃<br>多人全废 −2</div>
+    </div>
+    <div class="anti">
+      <svg viewBox="0 0 24 24" width="9mm" height="9mm" aria-hidden="true">
+        <path d="M12 1 L13.8 4 V13 L12 15 L10.2 13 V4 Z" fill="#e9e4d5"/>
+        <rect x="6.6" y="14.4" width="10.8" height="1.5" rx=".75" fill="#c9973f"/>
+        <rect x="11.2" y="15.9" width="1.6" height="6.4" rx=".6" fill="#8d8878"/>
+        <circle cx="12" cy="22.6" r="1.1" fill="#c9973f"/>
+      </svg>
+      <div class="nm">反魔法</div>
+      <div class="en">ANTI-MAGIC</div>
+      <div class="tx">唯一者通吃<br>多人全废 −2</div>
+    </div></div>
+  <div style="margin-top:3.4mm;font-size:6.8px;color:#5c6570;text-align:center;line-height:1.7;">
+    每套 9 张（1-9），一套给一位玩家。<b>配色不同，但数字完全相同</b> —— 这是公平性的保证。
+  </div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>战力牌 · 第 4-6 套 + 反魔法</h2><span>Power Deck 4-6 &amp; Anti-Magic</span></div>
+  <div class="grid-p">
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">1</div>
+      <div class="pips"><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">2</div>
+      <div class="pips"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">3</div>
+      <div class="pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">4</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">5</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">6</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">7</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">8</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#e8543f"></div>
+      <div class="wm">🦁</div>
+      <div class="num">9</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="org" style="background:#e8543f22;color:#7d1f1a">红莲狮子王</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">1</div>
+      <div class="pips"><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">2</div>
+      <div class="pips"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">3</div>
+      <div class="pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">4</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">5</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">6</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">7</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">8</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3fae5a"></div>
+      <div class="wm">🦗</div>
+      <div class="num">9</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="org" style="background:#3fae5a22;color:#1f4a30">翠绿螳螂</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">1</div>
+      <div class="pips"><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">2</div>
+      <div class="pips"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">3</div>
+      <div class="pips"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">4</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">5</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">6</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">7</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">8</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="pw">
+      <div class="bar" style="background:#3f9ec4"></div>
+      <div class="wm">🦌</div>
+      <div class="num">9</div>
+      <div class="pips"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="org" style="background:#3f9ec422;color:#1b3f55">水色幻鹿</div>
+    </div>
+    <div class="anti">
+      <svg viewBox="0 0 24 24" width="9mm" height="9mm" aria-hidden="true">
+        <path d="M12 1 L13.8 4 V13 L12 15 L10.2 13 V4 Z" fill="#e9e4d5"/>
+        <rect x="6.6" y="14.4" width="10.8" height="1.5" rx=".75" fill="#c9973f"/>
+        <rect x="11.2" y="15.9" width="1.6" height="6.4" rx=".6" fill="#8d8878"/>
+        <circle cx="12" cy="22.6" r="1.1" fill="#c9973f"/>
+      </svg>
+      <div class="nm">反魔法</div>
+      <div class="en">ANTI-MAGIC</div>
+      <div class="tx">唯一者通吃<br>多人全废 −2</div>
+    </div>
+    <div class="anti">
+      <svg viewBox="0 0 24 24" width="9mm" height="9mm" aria-hidden="true">
+        <path d="M12 1 L13.8 4 V13 L12 15 L10.2 13 V4 Z" fill="#e9e4d5"/>
+        <rect x="6.6" y="14.4" width="10.8" height="1.5" rx=".75" fill="#c9973f"/>
+        <rect x="11.2" y="15.9" width="1.6" height="6.4" rx=".6" fill="#8d8878"/>
+        <circle cx="12" cy="22.6" r="1.1" fill="#c9973f"/>
+      </svg>
+      <div class="nm">反魔法</div>
+      <div class="en">ANTI-MAGIC</div>
+      <div class="tx">唯一者通吃<br>多人全废 −2</div>
+    </div>
+    <div class="anti">
+      <svg viewBox="0 0 24 24" width="9mm" height="9mm" aria-hidden="true">
+        <path d="M12 1 L13.8 4 V13 L12 15 L10.2 13 V4 Z" fill="#e9e4d5"/>
+        <rect x="6.6" y="14.4" width="10.8" height="1.5" rx=".75" fill="#c9973f"/>
+        <rect x="11.2" y="15.9" width="1.6" height="6.4" rx=".6" fill="#8d8878"/>
+        <circle cx="12" cy="22.6" r="1.1" fill="#c9973f"/>
+      </svg>
+      <div class="nm">反魔法</div>
+      <div class="en">ANTI-MAGIC</div>
+      <div class="tx">唯一者通吃<br>多人全废 −2</div>
+    </div></div>
+  <div style="margin-top:3.4mm;font-size:6.8px;color:#5c6570;text-align:center;line-height:1.7;">
+    反魔法牌每局每人 1 张：<b>唯一亮出</b>即可无视门槛直接夺标；<b>2 人以上同时亮出</b>则全部失效，各扣 2 分。
+  </div>
+</section>
+
+<section class="page">
+  <div class="ph"><h2>狂化标记 + 计分纸</h2><span>Tokens &amp; Score Sheet</span></div>
+  <div class="grid-t">
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div>
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div>
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div>
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div>
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div>
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div>
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div>
+    <div class="tok"><div class="sk">☠️</div><div class="tx">门 槛 +1</div><div class="tx2">RAMPAGE</div></div></div>
+  <div style="margin-top:4mm;font-size:7.2px;color:#5c6570;text-align:center;line-height:1.7;">
+    ☠️ 用法：本轮<b>无人夺标</b>时，在竞标堆上盖 1 张。每盖 1 张，门槛自动 +1（因为张数 +1）。<br>
+    建议用 200g 卡纸打印后对折粘贴，或用硬币 / 豆子代替。
+  </div>
+
+  <div class="ph" style="margin-top:7mm;"><h2>计分纸</h2><span>Score Sheet</span></div>
+  <div class="sheet">
+    <table class="sc">
+      <tr>
+        <th style="width:16%">轮次</th>
+        <th>玩家 1</th><th>玩家 2</th><th>玩家 3</th>
+        <th>玩家 4</th><th>玩家 5</th><th>玩家 6</th>
+      </tr>
+      <tr><td class="l">第 1 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 2 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 3 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 4 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 5 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 6 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 7 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 8 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="l">第 9 轮</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th class="l">魔物分（★ 相加）</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th class="l">成套分（2/3/4 张）</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th class="l">反魔法未用 +1</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th class="l">罚分（−2 / −1）</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th class="l">总分</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+    <div class="note">
+      计分建议公开。分数一旦公开，「谁在领先」就变成公共信息 —— 落后者会主动挑事，这正是本作的高潮所在。<br>
+      平手判定：① 魔物<b>张数</b>多者胜 → ② 属性<b>种类</b>多者胜 → ③ 共享胜利。
+    </div>
+  </div>
+</section>
+</div>
+</body>
+</html>
