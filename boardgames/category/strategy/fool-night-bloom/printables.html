@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>愚者之夜：转花契约 — 打印道具</title>
+<style>
+  :root{
+    --ink:#25303a; --sub:#6b7a86; --line:#cfd8de;
+    --paper:#f7f4ee; --card:#ffffff;
+    --a:#1f6f6a;   /* 下町 */
+    --b:#a9713a;   /* 花街 */
+    --c:#4a5a8c;   /* 钟楼 */
+    --warn:#b04a34;
+    --gold:#8a6a1f;
+    --mem:#7a4a72;
+    --tool:#3d7a52;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:26px 22px 60px; background:var(--paper); color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans CJK SC",sans-serif;
+    line-height:1.55;
+  }
+  h1{font-size:25px;margin:0 0 4px;letter-spacing:1px;}
+  h2{font-size:18px;margin:0 0 14px;padding-left:11px;border-left:5px solid var(--a);}
+  h3{font-size:13px;margin:0 0 6px;color:var(--sub);font-weight:600;letter-spacing:.5px;}
+  .sub{color:var(--sub);font-size:13px;margin:0 0 20px;}
+  .page{margin-bottom:34px;}
+
+  .print-hint{
+    background:#fff9e8;border:2px solid #dfba55;border-radius:10px;
+    padding:14px 18px;margin-bottom:26px;font-size:13.5px;
+  }
+  .print-hint strong{color:#8a5a00;}
+  .print-hint ul{margin:8px 0 0;padding-left:22px;}
+  .print-hint li{margin:3px 0;}
+  hr.sep{border:0;border-top:1px dashed var(--line);margin:26px 0;}
+
+  /* ================= 地图 ================= */
+  .map{
+    border:3px solid var(--ink);border-radius:12px;overflow:hidden;background:#fff;
+    padding:0;
+  }
+  .cloud{
+    background:linear-gradient(180deg,#d9dee2,#eef1f3);text-align:center;
+    font-size:12px;color:#7d8b95;letter-spacing:6px;padding:9px 0;border-bottom:2px solid var(--line);
+  }
+  .zone{padding:10px 12px 12px;border-bottom:2px dashed var(--line);}
+  .zone:last-child{border-bottom:none;}
+  .zone-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .zone-head .zt{font-size:15px;font-weight:800;letter-spacing:1px;}
+  .zone-head .meta{font-size:11.5px;color:#fff;border-radius:20px;padding:2px 10px;}
+  .zone-head .note{font-size:11.5px;color:var(--sub);margin-left:auto;}
+  .plots{display:flex;gap:8px;}
+  .plot{
+    flex:1;border:2px solid var(--line);border-radius:9px;background:#fdfefe;
+    padding:9px 6px;text-align:center;position:relative;
+  }
+  .plot .tag{position:absolute;top:3px;left:5px;font-size:10px;color:var(--sub);font-weight:700;}
+  .plot .ic{font-size:24px;line-height:1.1;margin-top:6px;}
+  .plot .nm{font-size:12px;font-weight:700;margin-top:2px;}
+  .plot .cp{font-size:10px;color:var(--sub);margin-top:3px;}
+
+  .zone-a .zone-head .zt{color:var(--a);} .zone-a .zone-head .meta{background:var(--a);}
+  .zone-a .plot{border-color:#b9d8d6;background:#f3faf9;}
+  .zone-b .zone-head .zt{color:var(--b);} .zone-b .zone-head .meta{background:var(--b);}
+  .zone-b .plot{border-color:#e3cfb6;background:#fdf8f2;}
+  .zone-c .zone-head .zt{color:var(--c);} .zone-c .zone-head .meta{background:var(--c);}
+  .zone-c .plot{border-color:#c4cbe0;background:#f6f7fc;}
+
+  /* 氧气池轨 */
+  .pool{margin-top:14px;border:2px solid var(--a);border-radius:10px;padding:10px 12px;background:#fff;}
+  .pool .ph{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;margin-bottom:8px;}
+  .pool .ph b{font-size:14px;}
+  .track{display:flex;gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .track span{
+    flex:1;text-align:center;font-size:10px;padding:5px 0;border-right:1px solid var(--line);
+    background:#fff;color:var(--sub);
+  }
+  .track span:last-child{border-right:none;}
+  .track span.hi{background:#e8f4f2;color:var(--a);font-weight:700;}
+  .track span.lo{background:#fbeeea;color:var(--warn);font-weight:700;}
+
+  /* ================= 卡牌通用 ================= */
+  .grid{display:flex;flex-wrap:wrap;gap:7px;}
+  .card{
+    width:60mm;height:84mm;border-radius:7px;border:2px solid #d8dee3;background:var(--card);
+    padding:7px 8px;display:flex;flex-direction:column;position:relative;overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.07);
+  }
+  .card .head{display:flex;align-items:baseline;justify-content:space-between;gap:4px;}
+  .card .name{font-size:12.5px;font-weight:800;letter-spacing:.3px;line-height:1.25;}
+  .card .price{
+    font-size:11px;font-weight:800;border-radius:14px;padding:1px 7px;background:#f2f5f7;color:#40525f;
+    white-space:nowrap;
+  }
+  .card .icon{font-size:26px;text-align:center;margin:5px 0 3px;line-height:1;}
+  .card .type{
+    font-size:9.5px;letter-spacing:1px;text-align:center;color:#fff;border-radius:4px;
+    padding:1px 0;margin-bottom:5px;opacity:.9;
+  }
+  .card .text{font-size:10.5px;line-height:1.45;flex:1;color:#37424c;}
+  .card .foot{font-size:8.5px;color:#93a1ab;text-align:right;margin-top:3px;letter-spacing:.5px;}
+  .card .strip{height:5px;margin:-7px -8px 7px;}
+
+  /* 工具卡 */
+  .card.tool .strip{background:var(--tool);}
+  .card.tool .type{background:var(--tool);}
+  .card.tool .name{color:#2c5b3d;}
+
+  /* 陷阱卡 */
+  .card.trap .strip{background:var(--warn);}
+  .card.trap .type{background:var(--warn);}
+  .card.trap .name{color:#8f3a26;}
+  .card.trap{background:#fffaf8;}
+
+  /* 记忆卡 */
+  .card.mem .strip{background:var(--mem);}
+  .card.mem .type{background:var(--mem);}
+  .card.mem .name{color:#5e3557;}
+  .card.mem{background:#fdf7fc;}
+  .card.mem .pts{
+    font-size:19px;font-weight:900;color:var(--mem);text-align:center;line-height:1;
+    margin:2px 0 4px;
+  }
+
+  /* 月份牌 */
+  .card.month{width:52mm;height:74mm;background:#fff;border-color:#b9c4cc;}
+  .card.month .mon{font-size:11px;letter-spacing:2px;color:var(--sub);}
+  .card.month .big{font-size:30px;font-weight:900;line-height:1;color:#2b3a46;text-align:center;margin:3px 0;}
+  .card.month .row{display:flex;justify-content:space-between;font-size:10.5px;padding:2px 0;border-top:1px dotted #d9e0e5;}
+  .card.month .row b{font-size:12px;}
+  .card.month .ev{font-size:10px;color:var(--warn);margin-top:5px;line-height:1.4;min-height:26px;}
+
+  /* 催花令 */
+  .card.order{width:44mm;height:60mm;justify-content:center;align-items:center;text-align:center;
+    background:linear-gradient(160deg,#fff,#f4f9f8);border-color:#b5d3cf;}
+  .card.order .on{font-size:40px;font-weight:900;color:var(--a);line-height:1;}
+  .card.order .ol{font-size:9.5px;color:var(--sub);letter-spacing:1px;margin-top:2px;}
+  .card.order .od{font-size:9.5px;color:#4c5f66;margin-top:6px;line-height:1.4;}
+
+  /* 玩家板 / 人形轨 */
+  .board{
+    width:88mm;border:2px solid var(--line);border-radius:10px;background:#fff;padding:9px 10px;
+  }
+  .board .bh{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+  .board .bname{font-size:12px;font-weight:800;}
+  .board .brow{font-size:10px;color:var(--sub);margin-bottom:5px;}
+  .hp{display:flex;flex-wrap:wrap;gap:2px;}
+  .hp i{
+    width:6.6mm;height:6.6mm;border:1px solid #c9d6da;border-radius:3px;display:block;
+    font-size:7px;text-align:center;line-height:6.4mm;color:#a9b8be;font-style:normal;
+    background:#fafcfc;
+  }
+  .hp i.b1{background:#eaf4f2;border-color:#a9ccc7;color:#6f9b95;}
+  .hp i.b2{background:#fbeceb;border-color:#e0b0a8;color:#b5766b;}
+
+  /* 棋子 */
+  .pieces{display:flex;gap:10px;flex-wrap:wrap;}
+  .piece{
+    width:23mm;height:23mm;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.18);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;
+  }
+  .piece .pi{font-size:13px;line-height:1;}
+  .piece .pn{font-size:8px;margin-top:2px;letter-spacing:.5px;}
+  .flower{
+    width:23mm;height:23mm;border-radius:50%;background:#fff;
+    border:3px dashed var(--mem);display:flex;align-items:center;justify-content:center;
+    font-size:15px;color:var(--mem);flex-direction:column;
+  }
+  .flower span{font-size:7.5px;margin-top:1px;}
+
+  /* 速查卡 */
+  .cheat{
+    width:88mm;border:2px solid #b9c4cc;border-radius:9px;background:#fff;padding:9px 10px;
+    font-size:9.5px;line-height:1.6;
+  }
+  .cheat .ct{font-size:11px;font-weight:800;margin-bottom:5px;color:#2b3a46;letter-spacing:.5px;}
+  .cheat ol{margin:0;padding-left:16px;}
+  .cheat li{margin:1px 0;}
+  .cheat .zones{margin-top:5px;padding-top:5px;border-top:1px dotted #d9e0e5;color:#4c5f66;}
+  .cheat .score{margin-top:5px;padding-top:5px;border-top:1px dotted #d9e0e5;color:var(--a);font-weight:700;}
+
+  .cap{font-size:10.5px;color:var(--sub);margin:6px 0 10px;}
+
+  /* ================= 打印 ================= */
+  @media print{
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body{background:#fff;padding:0;font-size:11pt;}
+    .print-hint{display:none;}
+    .page{page-break-after:always;margin:0 0 0;}
+    .page:last-child{page-break-after:auto;}
+    .card,.plot,.board,.cheat,.piece,.flower{box-shadow:none;}
+    @page{size:A4;margin:8mm;}
+  }
+</style>
+</head>
+<body>
+
+<h1>愚者之夜：转花契约 · 打印道具</h1>
+<p class="sub">Fool Night: Bloom Contract — 3-5 人 / 50-75 分钟 / 策略<br>
+建议用 <b>200g 以上卡纸</b> 打印卡牌与棋子，地图用 250g 或贴硬纸板。</p>
+
+<div class="print-hint">
+  <strong>⚠️ 重要打印提示：</strong>
+  <ul>
+    <li>使用 <b>A4 纸张</b> 打印，页面设置选择 <b>最小边距 / 无边距</b></li>
+    <li>在打印对话框中，务必 <b>勾选「背景图形」（Background graphics）</b>，否则所有配色与色块都会丢失</li>
+    <li>缩放必须保持 <b>100%（实际大小）</b>，不要选「适应页面」，否则卡牌尺寸会失准、裁切对不齐</li>
+    <li>卡牌与棋子建议用 <b>卡纸</b> 打印；可双面打印后贴背，或单面打印后对折粘合</li>
+    <li>地图（第 1 页）建议单独打印 1 张，可用胶带拼接或直接 A3 放大</li>
+    <li>裁切后建议 <b>塑封或过胶</b>，尤其是催花令（每人每月都要摸）</li>
+  </ul>
+</div>
+
+<!-- ==================== 1. 地图 ==================== -->
+<div class="page">
+  <h2>一、花街地图</h2>
+  <p class="cap">A4 横向打印效果最佳。每格容量 2 人；灵花占 1 个容量。</p>
+
+  <div class="map">
+    <div class="cloud">☁ ☁ ☁ 　云 层 之 下 · 永 昼 街 区 　☁ ☁ ☁</div>
+
+    <div class="zone zone-c">
+      <div class="zone-head">
+        <span class="zt">🗼 钟楼 · 观测台</span>
+        <span class="meta">C 区</span>
+        <span class="note">售价 +1　｜　抽记忆卡需 −1 🫀</span>
+      </div>
+      <div class="plots">
+        <div class="plot"><span class="tag">C1</span><div class="ic">🔭</div><div class="nm">观测台</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">C2</span><div class="ic">🕰</div><div class="nm">停摆钟面</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">C3</span><div class="ic">📡</div><div class="nm">广播塔</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">C4</span><div class="ic">🌫</div><div class="nm">云雾回廊</div><div class="cp">容量 2</div></div>
+      </div>
+    </div>
+
+    <div class="zone zone-b">
+      <div class="zone-head">
+        <span class="zt">🏙 花街 · 市集</span>
+        <span class="meta">B 区</span>
+        <span class="note">售价 ±0　｜　回合末 3 补助买 1 张工具卡</span>
+      </div>
+      <div class="plots">
+        <div class="plot"><span class="tag">B1</span><div class="ic">🏮</div><div class="nm">灯笼巷</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">B2</span><div class="ic">🧺</div><div class="nm">旧货摊</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">B3</span><div class="ic">💊</div><div class="nm">黑药房</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">B4</span><div class="ic">📻</div><div class="nm">收音机铺</div><div class="cp">容量 2</div></div>
+      </div>
+    </div>
+
+    <div class="zone zone-a">
+      <div class="zone-head">
+        <span class="zt">🏚 下町 · 蓄水池</span>
+        <span class="meta">A 区</span>
+        <span class="note">售价 −1　｜　免疫缺气惩罚</span>
+      </div>
+      <div class="plots">
+        <div class="plot"><span class="tag">A1</span><div class="ic">💧</div><div class="nm">蓄水池</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">A2</span><div class="ic">🛁</div><div class="nm">公共浴室</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">A3</span><div class="ic">🪣</div><div class="nm">打水台阶</div><div class="cp">容量 2</div></div>
+        <div class="plot"><span class="tag">A4</span><div class="ic">🌿</div><div class="nm">枯枝花台</div><div class="cp">容量 2</div></div>
+      </div>
+    </div>
+
+    <div class="zone" style="padding-top:12px;">
+      <div class="pool">
+        <div class="ph"><span>💨 <b>氧气池</b>（起始 18 / 上限 30）</span><span>城市需求 D = 人数 + 2</span></div>
+        <div class="track">
+          <span class="lo">0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span>
+          <span class="hi">12</span><span>14</span><span>16</span><span class="hi">18</span><span>20</span>
+          <span class="hi">22</span><span>24</span><span>26</span><span class="hi">28</span><span class="hi">30</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 2. 月份牌 ==================== -->
+<div class="page">
+  <h2>二、月份牌（12 张）</h2>
+  <p class="cap">按 1 → 12 顺序摆放，每月翻开 1 张。开局时在「需求」处填上 <b>人数 + 2</b>。</p>
+  <div class="grid">
+
+    <div class="card month"><div class="strip" style="background:#3f5a6a;"></div>
+      <div class="mon">政策第 1 月</div><div class="big">5</div>
+      <div class="row"><span>收购单价</span><b>5 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">—</div><div class="foot">FNB · 01</div></div>
+
+    <div class="card month"><div class="strip" style="background:#3f5a6a;"></div>
+      <div class="mon">政策第 2 月</div><div class="big">5</div>
+      <div class="row"><span>收购单价</span><b>5 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">—</div><div class="foot">FNB · 02</div></div>
+
+    <div class="card month"><div class="strip" style="background:#7a6a2a;"></div>
+      <div class="mon">政策第 3 月</div><div class="big">5</div>
+      <div class="row"><span>收购单价</span><b>5 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">🗳 市政选举<br>本月收购单价 <b>+1</b></div><div class="foot">FNB · 03</div></div>
+
+    <div class="card month"><div class="strip" style="background:#3f5a6a;"></div>
+      <div class="mon">政策第 4 月</div><div class="big">4</div>
+      <div class="row"><span>收购单价</span><b>4 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">—</div><div class="foot">FNB · 04</div></div>
+
+    <div class="card month"><div class="strip" style="background:#5a4a7a;"></div>
+      <div class="mon">政策第 5 月</div><div class="big">4</div>
+      <div class="row"><span>收购单价</span><b>4 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 4</b></div>
+      <div class="ev">☁️ 云层加厚<br>本月需求 <b>+2</b></div><div class="foot">FNB · 05</div></div>
+
+    <div class="card month"><div class="strip" style="background:#3f5a6a;"></div>
+      <div class="mon">政策第 6 月</div><div class="big">4</div>
+      <div class="row"><span>收购单价</span><b>4 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">—</div><div class="foot">FNB · 06</div></div>
+
+    <div class="card month"><div class="strip" style="background:#2a6a5a;"></div>
+      <div class="mon">政策第 7 月</div><div class="big">4</div>
+      <div class="row"><span>收购单价</span><b>4 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">💊 抑制剂到货<br>可付 2 补助换 <b>+1 🫀</b></div><div class="foot">FNB · 07</div></div>
+
+    <div class="card month"><div class="strip" style="background:#3f5a6a;"></div>
+      <div class="mon">政策第 8 月</div><div class="big">3</div>
+      <div class="row"><span>收购单价</span><b>3 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">—</div><div class="foot">FNB · 08</div></div>
+
+    <div class="card month"><div class="strip" style="background:#2a6a5a;"></div>
+      <div class="mon">政策第 9 月</div><div class="big">3</div>
+      <div class="row"><span>收购单价</span><b>3 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 0</b></div>
+      <div class="ev">📦 援助物资<br>需求 <b>−2</b>，氧气池 <b>+3</b></div><div class="foot">FNB · 09</div></div>
+
+    <div class="card month"><div class="strip" style="background:#3f5a6a;"></div>
+      <div class="mon">政策第 10 月</div><div class="big">3</div>
+      <div class="row"><span>收购单价</span><b>3 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">—</div><div class="foot">FNB · 10</div></div>
+
+    <div class="card month"><div class="strip" style="background:#8a5a2a;"></div>
+      <div class="mon">政策第 11 月</div><div class="big">2</div>
+      <div class="row"><span>收购单价</span><b>2 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">🏛 预算听证<br>本月售价修正 <b>翻倍</b></div><div class="foot">FNB · 11</div></div>
+
+    <div class="card month"><div class="strip" style="background:#7a3a2a;"></div>
+      <div class="mon">政策第 12 月</div><div class="big">2</div>
+      <div class="row"><span>收购单价</span><b>2 补助</b></div>
+      <div class="row"><span>城市需求</span><b>人数 + 2</b></div>
+      <div class="ev">🕯 熄灯日<br>收购额度 <b>减半</b>（向下取整）</div><div class="foot">FNB · 12</div></div>
+
+  </div>
+</div>
+
+<!-- ==================== 3. 催花令 ==================== -->
+<div class="page">
+  <h2>三、催花令（每人一套 4 张 · 3 人局 12 张 / 4 人局 16 张 / 5 人局 20 张）</h2>
+  <p class="cap">同时暗出、同时翻开。每套 0/1/2/3 各 1 张，建议按玩家用不同颜色的背面区分（可在背面写名字）。</p>
+  <div class="grid">
+
+    <div class="card order"><div class="on">0</div><div class="ol">催 花 令</div>
+      <div class="od">不产氧<br>放置 1 枚空转标记<br><b>累计 2 枚 → 强制催花</b></div></div>
+
+    <div class="card order"><div class="on">1</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −1　💨 产氧 1<br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">2</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −2　💨 产氧 2<br>清空空转标记</div></div>
+
+    <div class="card order" style="border-color:#e0b0a8;background:linear-gradient(160deg,#fff,#fdf0ee);">
+      <div class="on" style="color:var(--warn);">3</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −3　💨 产氧 3<br><b style="color:var(--warn);">结算后抽 1 张陷阱卡</b><br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">0</div><div class="ol">催 花 令</div>
+      <div class="od">不产氧<br>放置 1 枚空转标记<br><b>累计 2 枚 → 强制催花</b></div></div>
+
+    <div class="card order"><div class="on">1</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −1　💨 产氧 1<br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">2</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −2　💨 产氧 2<br>清空空转标记</div></div>
+
+    <div class="card order" style="border-color:#e0b0a8;background:linear-gradient(160deg,#fff,#fdf0ee);">
+      <div class="on" style="color:var(--warn);">3</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −3　💨 产氧 3<br><b style="color:var(--warn);">结算后抽 1 张陷阱卡</b><br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">0</div><div class="ol">催 花 令</div>
+      <div class="od">不产氧<br>放置 1 枚空转标记<br><b>累计 2 枚 → 强制催花</b></div></div>
+
+    <div class="card order"><div class="on">1</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −1　💨 产氧 1<br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">2</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −2　💨 产氧 2<br>清空空转标记</div></div>
+
+    <div class="card order" style="border-color:#e0b0a8;background:linear-gradient(160deg,#fff,#fdf0ee);">
+      <div class="on" style="color:var(--warn);">3</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −3　💨 产氧 3<br><b style="color:var(--warn);">结算后抽 1 张陷阱卡</b><br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">0</div><div class="ol">催 花 令</div>
+      <div class="od">不产氧<br>放置 1 枚空转标记<br><b>累计 2 枚 → 强制催花</b></div></div>
+
+    <div class="card order"><div class="on">1</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −1　💨 产氧 1<br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">2</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −2　💨 产氧 2<br>清空空转标记</div></div>
+
+    <div class="card order" style="border-color:#e0b0a8;background:linear-gradient(160deg,#fff,#fdf0ee);">
+      <div class="on" style="color:var(--warn);">3</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −3　💨 产氧 3<br><b style="color:var(--warn);">结算后抽 1 张陷阱卡</b><br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">0</div><div class="ol">催 花 令</div>
+      <div class="od">不产氧<br>放置 1 枚空转标记<br><b>累计 2 枚 → 强制催花</b></div></div>
+
+    <div class="card order"><div class="on">1</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −1　💨 产氧 1<br>清空空转标记</div></div>
+
+    <div class="card order"><div class="on">2</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −2　💨 产氧 2<br>清空空转标记</div></div>
+
+    <div class="card order" style="border-color:#e0b0a8;background:linear-gradient(160deg,#fff,#fdf0ee);">
+      <div class="on" style="color:var(--warn);">3</div><div class="ol">催 花 令</div>
+      <div class="od">🫀 −3　💨 产氧 3<br><b style="color:var(--warn);">结算后抽 1 张陷阱卡</b><br>清空空转标记</div></div>
+
+  </div>
+</div>
+
+<!-- ==================== 4. 工具卡 ==================== -->
+<div class="page">
+  <h2>四、工具卡（24 张 · 12 种 × 2 张）</h2>
+  <p class="cap">仅在花街（B 区）回合末购买。手牌上限 3 张，开花时全部弃掉、不得分。</p>
+  <div class="grid">
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🌱 温室罩</span><span class="price">7</span></div>
+      <div class="icon">🌱</div><div class="type">永 久 · 增 产</div>
+      <div class="text">你每次催花的产氧量 <b>+1</b>（不额外消耗人形）。<br>增加的氧气既计入销售额度，也计入城市供给。</div>
+      <div class="foot">TOOL · A</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🌱 温室罩</span><span class="price">7</span></div>
+      <div class="icon">🌱</div><div class="type">永 久 · 增 产</div>
+      <div class="text">你每次催花的产氧量 <b>+1</b>（不额外消耗人形）。<br>增加的氧气既计入销售额度，也计入城市供给。</div>
+      <div class="foot">TOOL · A</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🛢 氧气罐</span><span class="price">3</span></div>
+      <div class="icon">🛢</div><div class="type">一 次 性 · 公 共</div>
+      <div class="text">立即让氧气池 <b>+4</b>（上限 30）。<br>可在自己的任何阶段打出。</div>
+      <div class="foot">TOOL · B</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🛢 氧气罐</span><span class="price">3</span></div>
+      <div class="icon">🛢</div><div class="type">一 次 性 · 公 共</div>
+      <div class="text">立即让氧气池 <b>+4</b>（上限 30）。<br>可在自己的任何阶段打出。</div>
+      <div class="foot">TOOL · B</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">⚖️ 契约律师</span><span class="price">5</span></div>
+      <div class="icon">⚖️</div><div class="type">永 久 · 顺 序</div>
+      <div class="text">你的收购结算顺序 <b>+1 优先级</b>（相当于催花点数视为 +1 用于排序，但不增加产氧）。<br>与「限购令」冲突时，本卡优先。</div>
+      <div class="foot">TOOL · C</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">⚖️ 契约律师</span><span class="price">5</span></div>
+      <div class="icon">⚖️</div><div class="type">永 久 · 顺 序</div>
+      <div class="text">你的收购结算顺序 <b>+1 优先级</b>（相当于催花点数视为 +1 用于排序，但不增加产氧）。<br>与「限购令」冲突时，本卡优先。</div>
+      <div class="foot">TOOL · C</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🕶 黑市中间人</span><span class="price">6</span></div>
+      <div class="icon">🕶</div><div class="type">永 久 · 绕 额 度</div>
+      <div class="text">每回合可将 <b>1 单位</b>产氧按「当月单价 +3」私下卖出，<b>不占用收购额度</b>。<br>额度被别人吃光时仍能拿到钱。</div>
+      <div class="foot">TOOL · D</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🕶 黑市中间人</span><span class="price">6</span></div>
+      <div class="icon">🕶</div><div class="type">永 久 · 绕 额 度</div>
+      <div class="text">每回合可将 <b>1 单位</b>产氧按「当月单价 +3」私下卖出，<b>不占用收购额度</b>。<br>额度被别人吃光时仍能拿到钱。</div>
+      <div class="foot">TOOL · D</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🏦 家庭信托</span><span class="price">8</span></div>
+      <div class="icon">🏦</div><div class="type">永 久 · 纯 分</div>
+      <div class="text">终局结算时额外获得 <b>+8 分</b>。<br>不占手牌上限以外的任何资源，但价格最贵。</div>
+      <div class="foot">TOOL · E</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🏦 家庭信托</span><span class="price">8</span></div>
+      <div class="icon">🏦</div><div class="type">永 久 · 纯 分</div>
+      <div class="text">终局结算时额外获得 <b>+8 分</b>。<br>不占手牌上限以外的任何资源，但价格最贵。</div>
+      <div class="foot">TOOL · E</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">📷 记忆相机</span><span class="price">4</span></div>
+      <div class="icon">📷</div><div class="type">一 次 性 · 抽 卡</div>
+      <div class="text">立即抽 1 张记忆卡（<b>不扣人形</b>）。<br>比在钟楼抽卡便宜 1 点人形。</div>
+      <div class="foot">TOOL · F</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">📷 记忆相机</span><span class="price">4</span></div>
+      <div class="icon">📷</div><div class="type">一 次 性 · 抽 卡</div>
+      <div class="text">立即抽 1 张记忆卡（<b>不扣人形</b>）。<br>比在钟楼抽卡便宜 1 点人形。</div>
+      <div class="foot">TOOL · F</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">💉 抑制剂</span><span class="price">5</span></div>
+      <div class="icon">💉</div><div class="type">一 次 性 · 回 血</div>
+      <div class="text">立即 <b>+3 人形</b>（不超过 24）。<br>等于多买三个月命，性价比最高的一张。</div>
+      <div class="foot">TOOL · G</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">💉 抑制剂</span><span class="price">5</span></div>
+      <div class="icon">💉</div><div class="type">一 次 性 · 回 血</div>
+      <div class="text">立即 <b>+3 人形</b>（不超过 24）。<br>等于多买三个月命，性价比最高的一张。</div>
+      <div class="foot">TOOL · G</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🧪 缓释剂</span><span class="price">6</span></div>
+      <div class="icon">🧪</div><div class="type">一 次 性 · 延 期</div>
+      <div class="text">宣告某一个月，你<b>跳过当月自然流逝</b>（不扣那 1 点人形）。<br>可保存到关键月份再使用。</div>
+      <div class="foot">TOOL · H</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🧪 缓释剂</span><span class="price">6</span></div>
+      <div class="icon">🧪</div><div class="type">一 次 性 · 延 期</div>
+      <div class="text">宣告某一个月，你<b>跳过当月自然流逝</b>（不扣那 1 点人形）。<br>可保存到关键月份再使用。</div>
+      <div class="foot">TOOL · H</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">📋 政府人脉</span><span class="price">5</span></div>
+      <div class="icon">📋</div><div class="type">永 久 · 情 报</div>
+      <div class="text">每月播报阶段，可<b>提前查看下个月</b>的月份牌（单价、需求、事件）。<br>规划型玩家的核心卡。</div>
+      <div class="foot">TOOL · I</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">📋 政府人脉</span><span class="price">5</span></div>
+      <div class="icon">📋</div><div class="type">永 久 · 情 报</div>
+      <div class="text">每月播报阶段，可<b>提前查看下个月</b>的月份牌（单价、需求、事件）。<br>规划型玩家的核心卡。</div>
+      <div class="foot">TOOL · I</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🏗 花圃改建</span><span class="price">4</span></div>
+      <div class="icon">🏗</div><div class="type">永 久 · 扩 容</div>
+      <div class="text">你所在花圃的容量 <b>+1</b>（仅对你有效，别人仍按 2 人计）。<br>可防止被挤出去。</div>
+      <div class="foot">TOOL · J</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🏗 花圃改建</span><span class="price">4</span></div>
+      <div class="icon">🏗</div><div class="type">永 久 · 扩 容</div>
+      <div class="text">你所在花圃的容量 <b>+1</b>（仅对你有效，别人仍按 2 人计）。<br>可防止被挤出去。</div>
+      <div class="foot">TOOL · J</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">💳 氧气债</span><span class="price">1</span></div>
+      <div class="icon">💳</div><div class="type">一 次 性 · 高 利 贷</div>
+      <div class="text">立即获得 <b>10 补助</b>。<br>终局结算时 <b>−9 分</b>。<br>只在你确定能翻盘时买。</div>
+      <div class="foot">TOOL · K</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">💳 氧气债</span><span class="price">1</span></div>
+      <div class="icon">💳</div><div class="type">一 次 性 · 高 利 贷</div>
+      <div class="text">立即获得 <b>10 补助</b>。<br>终局结算时 <b>−9 分</b>。<br>只在你确定能翻盘时买。</div>
+      <div class="foot">TOOL · K</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🌸 灵花种子</span><span class="price">6</span></div>
+      <div class="icon">🌸</div><div class="type">永 久 · 死 后 收 益</div>
+      <div class="text">你的灵花产氧由 1/回合 提升为 <b>2/回合</b>。<br>开花前买了没用，是典型的「速死流」核心。</div>
+      <div class="foot">TOOL · L</div></div>
+
+    <div class="card tool"><div class="strip"></div>
+      <div class="head"><span class="name">🌸 灵花种子</span><span class="price">6</span></div>
+      <div class="icon">🌸</div><div class="type">永 久 · 死 后 收 益</div>
+      <div class="text">你的灵花产氧由 1/回合 提升为 <b>2/回合</b>。<br>开花前买了没用，是典型的「速死流」核心。</div>
+      <div class="foot">TOOL · L</div></div>
+
+  </div>
+</div>
+
+<!-- ==================== 5. 陷阱卡 ==================== -->
+<div class="page">
+  <h2>五、陷阱卡（12 张 · 6 种 × 2 张）</h2>
+  <p class="cap">催花令为 <b>3</b> 的玩家，收购结算后各抽 1 张，立即结算并弃掉（不进弃牌堆循环）。</p>
+  <div class="grid">
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🕵️ 监察厅抽查</span><span class="price">陷阱</span></div>
+      <div class="icon">🕵️</div><div class="type">立 即 结 算</div>
+      <div class="text"><b>本回合收入减半</b>（向下取整）。<br><br>催 3 点卖 3 单位拿 18 → 只剩 9。<br>「催得越狠，查得越紧。」</div>
+      <div class="foot">TRAP · 01</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🕵️ 监察厅抽查</span><span class="price">陷阱</span></div>
+      <div class="icon">🕵️</div><div class="type">立 即 结 算</div>
+      <div class="text"><b>本回合收入减半</b>（向下取整）。<br><br>催 3 点卖 3 单位拿 18 → 只剩 9。<br>「催得越狠，查得越紧。」</div>
+      <div class="foot">TRAP · 01</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">💨 管道泄漏</span><span class="price">陷阱</span></div>
+      <div class="icon">💨</div><div class="type">立 即 结 算</div>
+      <div class="text">氧气池 <b>−3</b>（最低 0）。<br><br>全城受害，是最容易让人记仇的一张。<br>下町驻扎者不受影响。</div>
+      <div class="foot">TRAP · 02</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">💨 管道泄漏</span><span class="price">陷阱</span></div>
+      <div class="icon">💨</div><div class="type">立 即 结 算</div>
+      <div class="text">氧气池 <b>−3</b>（最低 0）。<br><br>全城受害，是最容易让人记仇的一张。<br>下町驻扎者不受影响。</div>
+      <div class="foot">TRAP · 02</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🦠 枯萎病</span><span class="price">陷阱</span></div>
+      <div class="icon">🦠</div><div class="type">立 即 结 算</div>
+      <div class="text">若你已有灵花，<b>花龄 −1</b>（终局分 −1）；<br>若尚未开花，本卡无效。<br><br>速死流的专属噩梦。</div>
+      <div class="foot">TRAP · 03</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🦠 枯萎病</span><span class="price">陷阱</span></div>
+      <div class="icon">🦠</div><div class="type">立 即 结 算</div>
+      <div class="text">若你已有灵花，<b>花龄 −1</b>（终局分 −1）；<br>若尚未开花，本卡无效。<br><br>速死流的专属噩梦。</div>
+      <div class="foot">TRAP · 03</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🔒 强制调岗</span><span class="price">陷阱</span></div>
+      <div class="icon">🔒</div><div class="type">下 月 生 效</div>
+      <div class="text">下回合你 <b>不能移居</b>，必须留在当前花圃。<br><br>在钟楼被锁两回合 = 白掉 2 点人形。</div>
+      <div class="foot">TRAP · 04</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🔒 强制调岗</span><span class="price">陷阱</span></div>
+      <div class="icon">🔒</div><div class="type">下 月 生 效</div>
+      <div class="text">下回合你 <b>不能移居</b>，必须留在当前花圃。<br><br>在钟楼被锁两回合 = 白掉 2 点人形。</div>
+      <div class="foot">TRAP · 04</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🕳 黑市收购</span><span class="price">陷阱</span></div>
+      <div class="icon">🕳</div><div class="type">立 即 结 算</div>
+      <div class="text">立即 <b>+4 补助</b>，同时氧气池 <b>−2</b>。<br><br>其实是好事——只是全桌都会盯着你。</div>
+      <div class="foot">TRAP · 05</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🕳 黑市收购</span><span class="price">陷阱</span></div>
+      <div class="icon">🕳</div><div class="type">立 即 结 算</div>
+      <div class="text">立即 <b>+4 补助</b>，同时氧气池 <b>−2</b>。<br><br>其实是好事——只是全桌都会盯着你。</div>
+      <div class="foot">TRAP · 05</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🚨 名额核查</span><span class="price">陷阱</span></div>
+      <div class="icon">🚨</div><div class="type">立 即 结 算</div>
+      <div class="text">你立即 <b>−2 人形</b>。<br><br>人形 ≤4 时催 3 点 = 直接开花。<br>催之前先算清楚。</div>
+      <div class="foot">TRAP · 06</div></div>
+
+    <div class="card trap"><div class="strip"></div>
+      <div class="head"><span class="name">🚨 名额核查</span><span class="price">陷阱</span></div>
+      <div class="icon">🚨</div><div class="type">立 即 结 算</div>
+      <div class="text">你立即 <b>−2 人形</b>。<br><br>人形 ≤4 时催 3 点 = 直接开花。<br>催之前先算清楚。</div>
+      <div class="foot">TRAP · 06</div></div>
+
+  </div>
+</div>
+
+<!-- ==================== 6. 记忆卡 ==================== -->
+<div class="page">
+  <h2>六、记忆卡 / 宝藏卡（16 张）</h2>
+  <p class="cap">钟楼抽卡（−1 人形）／开花时抽 2 选 1 ／记忆相机。面朝下保留，<b>终局</b>才翻开计分。</p>
+  <div class="grid">
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">📮 未寄出的信</span><span class="price">2分</span></div>
+      <div class="icon">📮</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">2</div>
+      <div class="text">信封上没有地址，只有你的名字。<br>「等我不在了再打开。」</div>
+      <div class="foot">MEM · 01</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🎒 孩子的旧书包</span><span class="price">2分</span></div>
+      <div class="icon">🎒</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">2</div>
+      <div class="text">肩带磨得发白，拉链换过三次。<br>里面的铅笔还剩半截。</div>
+      <div class="foot">MEM · 02</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🍜 最后一碗面</span><span class="price">1分</span></div>
+      <div class="icon">🍜</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">1</div>
+      <div class="text">汤已经凉了，你还是把它喝完了。<br>那是你最后一次尝到咸味。</div>
+      <div class="foot">MEM · 03</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">📻 父亲的收音机</span><span class="price">3分</span></div>
+      <div class="icon">📻</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">3</div>
+      <div class="text">还能响。只能收到一个频道，<br>每天晚上八点播天气——永远是「多云」。</div>
+      <div class="foot">MEM · 04</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🏠 房产证复印件</span><span class="price">2分</span></div>
+      <div class="icon">🏠</div><div class="type">记 忆 · 条 件 分</div>
+      <div class="pts">2</div>
+      <div class="text"><b>若你终局补助 ≥ 40，本卡改为 5 分。</b><br><br>你把它留给他们，比你自己留着有用。</div>
+      <div class="foot">MEM · 05</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🎂 生日蛋糕订单</span><span class="price">1分</span></div>
+      <div class="icon">🎂</div><div class="type">记 忆 · 条 件 分</div>
+      <div class="pts">1</div>
+      <div class="text"><b>若你在前 4 个月开花，本卡改为 4 分。</b><br><br>下单日期在三个月后，你没等到。</div>
+      <div class="foot">MEM · 06</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">📞 未接来电 27 通</span><span class="price">3分</span></div>
+      <div class="icon">📞</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">3</div>
+      <div class="text">全是同一个号码。<br>你一直以为还有时间回拨。</div>
+      <div class="foot">MEM · 07</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">💍 没戴上的戒指</span><span class="price">1分</span></div>
+      <div class="icon">💍</div><div class="type">记 忆 · 条 件 分</div>
+      <div class="pts">1</div>
+      <div class="text"><b>若你终局未开花，本卡改为 4 分。</b><br><br>活到最后的人，才有资格说「下次」。</div>
+      <div class="foot">MEM · 08</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🪴 阳台上的枯枝</span><span class="price">2分</span></div>
+      <div class="icon">🪴</div><div class="type">记 忆 · 条 件 分</div>
+      <div class="pts">2</div>
+      <div class="text"><b>若你已开花，本卡改为 4 分。</b><br><br>它死得比你早，但你们变成了同一种东西。</div>
+      <div class="foot">MEM · 09</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">✉️ 政府致谢函</span><span class="price">3分</span></div>
+      <div class="icon">✉️</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">3</div>
+      <div class="text">「感谢您为这座城市作出的贡献。」<br>落款是一个盖章，没有签名。</div>
+      <div class="foot">MEM · 10</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🌸 一片干枯的花瓣</span><span class="price">1分</span></div>
+      <div class="icon">🌸</div><div class="type">记 忆 · 立 即 结 算</div>
+      <div class="pts">1</div>
+      <div class="text">抽到本卡时，<b>立即 +1 人形</b>（不超过 24）。<br>本卡终局仍计 1 分。</div>
+      <div class="foot">MEM · 11</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">📮 未寄出的信</span><span class="price">2分</span></div>
+      <div class="icon">📮</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">2</div>
+      <div class="text">信封上没有地址，只有你的名字。<br>「等我不在了再打开。」</div>
+      <div class="foot">MEM · 12</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🎒 孩子的旧书包</span><span class="price">2分</span></div>
+      <div class="icon">🎒</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">2</div>
+      <div class="text">肩带磨得发白，拉链换过三次。<br>里面的铅笔还剩半截。</div>
+      <div class="foot">MEM · 13</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">📻 父亲的收音机</span><span class="price">3分</span></div>
+      <div class="icon">📻</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">3</div>
+      <div class="text">还能响。只能收到一个频道，<br>每天晚上八点播天气——永远是「多云」。</div>
+      <div class="foot">MEM · 14</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">📞 未接来电 27 通</span><span class="price">3分</span></div>
+      <div class="icon">📞</div><div class="type">记 忆 · 终 局 计 分</div>
+      <div class="pts">3</div>
+      <div class="text">全是同一个号码。<br>你一直以为还有时间回拨。</div>
+      <div class="foot">MEM · 15</div></div>
+
+    <div class="card mem"><div class="strip"></div>
+      <div class="head"><span class="name">🌿 阳台上的枯枝</span><span class="price">2分</span></div>
+      <div class="icon">🌿</div><div class="type">记 忆 · 条 件 分</div>
+      <div class="pts">2</div>
+      <div class="text"><b>若你已开花，本卡改为 4 分。</b><br><br>它死得比你早，但你们变成了同一种东西。</div>
+      <div class="foot">MEM · 16</div></div>
+
+  </div>
+</div>
+
+<!-- ==================== 7. 玩家板 / 人形轨 ==================== -->
+<div class="page">
+  <h2>七、玩家板 · 人形轨（每人 1 张）</h2>
+  <p class="cap">24 格人形轨。可用铅笔划掉，或用小夹子夹在当前位置。左侧 5 张分别为 5 名玩家预设色。</p>
+  <div class="grid" style="gap:12px;">
+
+    <div class="board">
+      <div class="bh"><span style="font-size:16px;">🟥</span><span class="bname">转花者 一</span></div>
+      <div class="brow">🫀 人形 24 ｜ 💰 补助 ｜ 💌 记忆卡</div>
+      <div class="hp">
+        <i class="b1">1</i><i class="b1">2</i><i class="b1">3</i><i class="b1">4</i><i class="b1">5</i><i class="b1">6</i><i class="b1">7</i><i class="b1">8</i>
+        <i class="b1">9</i><i class="b1">10</i><i class="b1">11</i><i class="b1">12</i><i class="b1">13</i><i class="b1">14</i><i class="b1">15</i><i class="b1">16</i>
+        <i class="b2">17</i><i class="b2">18</i><i class="b2">19</i><i class="b2">20</i><i class="b2">21</i><i class="b2">22</i><i class="b2">23</i><i class="b2">24</i>
+      </div>
+      <div style="font-size:9px;color:#8d9aa3;margin-top:5px;">绿色区＝安全区 ｜ 红色区＝危险区（剩余 ≤8 时务必谨慎催花）</div>
+    </div>
+
+    <div class="board">
+      <div class="bh"><span style="font-size:16px;">🟦</span><span class="bname">转花者 二</span></div>
+      <div class="brow">🫀 人形 24 ｜ 💰 补助 ｜ 💌 记忆卡</div>
+      <div class="hp">
+        <i class="b1">1</i><i class="b1">2</i><i class="b1">3</i><i class="b1">4</i><i class="b1">5</i><i class="b1">6</i><i class="b1">7</i><i class="b1">8</i>
+        <i class="b1">9</i><i class="b1">10</i><i class="b1">11</i><i class="b1">12</i><i class="b1">13</i><i class="b1">14</i><i class="b1">15</i><i class="b1">16</i>
+        <i class="b2">17</i><i class="b2">18</i><i class="b2">19</i><i class="b2">20</i><i class="b2">21</i><i class="b2">22</i><i class="b2">23</i><i class="b2">24</i>
+      </div>
+      <div style="font-size:9px;color:#8d9aa3;margin-top:5px;">绿色区＝安全区 ｜ 红色区＝危险区（剩余 ≤8 时务必谨慎催花）</div>
+    </div>
+
+    <div class="board">
+      <div class="bh"><span style="font-size:16px;">🟩</span><span class="bname">转花者 三</span></div>
+      <div class="brow">🫀 人形 24 ｜ 💰 补助 ｜ 💌 记忆卡</div>
+      <div class="hp">
+        <i class="b1">1</i><i class="b1">2</i><i class="b1">3</i><i class="b1">4</i><i class="b1">5</i><i class="b1">6</i><i class="b1">7</i><i class="b1">8</i>
+        <i class="b1">9</i><i class="b1">10</i><i class="b1">11</i><i class="b1">12</i><i class="b1">13</i><i class="b1">14</i><i class="b1">15</i><i class="b1">16</i>
+        <i class="b2">17</i><i class="b2">18</i><i class="b2">19</i><i class="b2">20</i><i class="b2">21</i><i class="b2">22</i><i class="b2">23</i><i class="b2">24</i>
+      </div>
+      <div style="font-size:9px;color:#8d9aa3;margin-top:5px;">绿色区＝安全区 ｜ 红色区＝危险区（剩余 ≤8 时务必谨慎催花）</div>
+    </div>
+
+    <div class="board">
+      <div class="bh"><span style="font-size:16px;">🟨</span><span class="bname">转花者 四</span></div>
+      <div class="brow">🫀 人形 24 ｜ 💰 补助 ｜ 💌 记忆卡</div>
+      <div class="hp">
+        <i class="b1">1</i><i class="b1">2</i><i class="b1">3</i><i class="b1">4</i><i class="b1">5</i><i class="b1">6</i><i class="b1">7</i><i class="b1">8</i>
+        <i class="b1">9</i><i class="b1">10</i><i class="b1">11</i><i class="b1">12</i><i class="b1">13</i><i class="b1">14</i><i class="b1">15</i><i class="b1">16</i>
+        <i class="b2">17</i><i class="b2">18</i><i class="b2">19</i><i class="b2">20</i><i class="b2">21</i><i class="b2">22</i><i class="b2">23</i><i class="b2">24</i>
+      </div>
+      <div style="font-size:9px;color:#8d9aa3;margin-top:5px;">绿色区＝安全区 ｜ 红色区＝危险区（剩余 ≤8 时务必谨慎催花）</div>
+    </div>
+
+    <div class="board">
+      <div class="bh"><span style="font-size:16px;">🟪</span><span class="bname">转花者 五</span></div>
+      <div class="brow">🫀 人形 24 ｜ 💰 补助 ｜ 💌 记忆卡</div>
+      <div class="hp">
+        <i class="b1">1</i><i class="b1">2</i><i class="b1">3</i><i class="b1">4</i><i class="b1">5</i><i class="b1">6</i><i class="b1">7</i><i class="b1">8</i>
+        <i class="b1">9</i><i class="b1">10</i><i class="b1">11</i><i class="b1">12</i><i class="b1">13</i><i class="b1">14</i><i class="b1">15</i><i class="b1">16</i>
+        <i class="b2">17</i><i class="b2">18</i><i class="b2">19</i><i class="b2">20</i><i class="b2">21</i><i class="b2">22</i><i class="b2">23</i><i class="b2">24</i>
+      </div>
+      <div style="font-size:9px;color:#8d9aa3;margin-top:5px;">绿色区＝安全区 ｜ 红色区＝危险区（剩余 ≤8 时务必谨慎催花）</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== 8. 棋子 ==================== -->
+<div class="page">
+  <h2>八、玩家棋子与灵花标记</h2>
+  <p class="cap">棋子建议放大 120% 打印后剪圆，内衬硬纸板；灵花标记用虚线边，开花时替换棋子放在花圃上。</p>
+
+  <h3>转花者棋子（5 个）</h3>
+  <div class="pieces">
+    <div class="piece" style="background:#b8524a;"><span class="pi">🫀</span><span class="pn">转花者 一</span></div>
+    <div class="piece" style="background:#3f6f9c;"><span class="pi">🫀</span><span class="pn">转花者 二</span></div>
+    <div class="piece" style="background:#3f8a63;"><span class="pi">🫀</span><span class="pn">转花者 三</span></div>
+    <div class="piece" style="background:#b08a2e;"><span class="pi">🫀</span><span class="pn">转花者 四</span></div>
+    <div class="piece" style="background:#7a5a94;"><span class="pi">🫀</span><span class="pn">转花者 五</span></div>
+  </div>
+
+  <hr class="sep">
+
+  <h3>灵花标记（5 个 · 开花后替换棋子）</h3>
+  <div class="pieces">
+    <div class="flower">🌸<span>灵花 一</span></div>
+    <div class="flower">🌸<span>灵花 二</span></div>
+    <div class="flower">🌸<span>灵花 三</span></div>
+    <div class="flower">🌸<span>灵花 四</span></div>
+    <div class="flower">🌸<span>灵花 五</span></div>
+  </div>
+
+  <hr class="sep">
+
+  <h3>空转标记（每人 2 枚 · 剪下备用）</h3>
+  <div class="pieces">
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+    <div class="piece" style="background:#8d9aa3;width:17mm;height:17mm;"><span class="pi" style="font-size:11px;">空转</span></div>
+  </div>
+
+  <hr class="sep">
+
+  <h3>补助金币（可选 · 60 枚面值 1）</h3>
+  <div class="pieces">
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+    <div class="piece" style="background:#b08a2e;width:15mm;height:15mm;"><span class="pi" style="font-size:11px;">1¥</span></div>
+  </div>
+  <p class="cap" style="margin-top:8px;">💡 也可以用硬币、豆子、扑克牌计数卡片代替，不影响游戏。</p>
+</div>
+
+<!-- ==================== 9. 速查卡 ==================== -->
+<div class="page">
+  <h2>九、规则速查卡（每人 1 张）</h2>
+  <p class="cap">沿虚线剪开，每人一张放在手边，游戏过程中随时查。</p>
+  <div class="grid" style="gap:10px;">
+
+    <div class="cheat">
+      <div class="ct">📖 愚者之夜 · 每月 8 阶段</div>
+      <ol>
+        <li><b>播报</b>：翻月份牌 → 单价 p / 需求 D / 事件</li>
+        <li><b>移居</b>：上月起于「收入最高者」→ 放棋到花圃（每格 2 人）</li>
+        <li><b>催花</b>：同时暗出 0/1/2/3 → 牌面即人形消耗与产氧</li>
+        <li><b>收购</b>：额度 = D；按点数降序卖 min(h, 额度)</li>
+        <li><b>呼吸</b>：Σ产氧 ≥ D → 池 +盈余；&lt; D → 扣池，池空则缺口/2 全体 −1🫀</li>
+        <li><b>副业</b>：花街 3¥买卡 ｜ 钟楼 抽卡但 −1🫀</li>
+        <li><b>陷阱</b>：本月催 3 点者各抽 1 张</li>
+        <li><b>开花</b>：人形 ≤0 → 抽 2 选 1 记忆卡，棋子换灵花</li>
+      </ol>
+      <div class="zones">区修正：下町 −1（免缺气）｜花街 ±0（买卡）｜钟楼 +1（抽卡 −1🫀）</div>
+      <div class="score">终局 = 补助 + 记忆卡 + ⌊(12−开花月)/2⌋（≤5）<br>未开花 = 花龄 0 分 ｜ 并列时开花更早者胜</div>
+    </div>
+
+    <div class="cheat">
+      <div class="ct">📖 愚者之夜 · 每月 8 阶段</div>
+      <ol>
+        <li><b>播报</b>：翻月份牌 → 单价 p / 需求 D / 事件</li>
+        <li><b>移居</b>：上月起于「收入最高者」→ 放棋到花圃（每格 2 人）</li>
+        <li><b>催花</b>：同时暗出 0/1/2/3 → 牌面即人形消耗与产氧</li>
+        <li><b>收购</b>：额度 = D；按点数降序卖 min(h, 额度)</li>
+        <li><b>呼吸</b>：Σ产氧 ≥ D → 池 +盈余；&lt; D → 扣池，池空则缺口/2 全体 −1🫀</li>
+        <li><b>副业</b>：花街 3¥买卡 ｜ 钟楼 抽卡但 −1🫀</li>
+        <li><b>陷阱</b>：本月催 3 点者各抽 1 张</li>
+        <li><b>开花</b>：人形 ≤0 → 抽 2 选 1 记忆卡，棋子换灵花</li>
+      </ol>
+      <div class="zones">区修正：下町 −1（免缺气）｜花街 ±0（买卡）｜钟楼 +1（抽卡 −1🫀）</div>
+      <div class="score">终局 = 补助 + 记忆卡 + ⌊(12−开花月)/2⌋（≤5）<br>未开花 = 花龄 0 分 ｜ 并列时开花更早者胜</div>
+    </div>
+
+    <div class="cheat">
+      <div class="ct">📖 愚者之夜 · 每月 8 阶段</div>
+      <ol>
+        <li><b>播报</b>：翻月份牌 → 单价 p / 需求 D / 事件</li>
+        <li><b>移居</b>：上月起于「收入最高者」→ 放棋到花圃（每格 2 人）</li>
+        <li><b>催花</b>：同时暗出 0/1/2/3 → 牌面即人形消耗与产氧</li>
+        <li><b>收购</b>：额度 = D；按点数降序卖 min(h, 额度)</li>
+        <li><b>呼吸</b>：Σ产氧 ≥ D → 池 +盈余；&lt; D → 扣池，池空则缺口/2 全体 −1🫀</li>
+        <li><b>副业</b>：花街 3¥买卡 ｜ 钟楼 抽卡但 −1🫀</li>
+        <li><b>陷阱</b>：本月催 3 点者各抽 1 张</li>
+        <li><b>开花</b>：人形 ≤0 → 抽 2 选 1 记忆卡，棋子换灵花</li>
+      </ol>
+      <div class="zones">区修正：下町 −1（免缺气）｜花街 ±0（买卡）｜钟楼 +1（抽卡 −1🫀）</div>
+      <div class="score">终局 = 补助 + 记忆卡 + ⌊(12−开花月)/2⌋（≤5）<br>未开花 = 花龄 0 分 ｜ 并列时开花更早者胜</div>
+    </div>
+
+    <div class="cheat">
+      <div class="ct">📖 愚者之夜 · 每月 8 阶段</div>
+      <ol>
+        <li><b>播报</b>：翻月份牌 → 单价 p / 需求 D / 事件</li>
+        <li><b>移居</b>：上月起于「收入最高者」→ 放棋到花圃（每格 2 人）</li>
+        <li><b>催花</b>：同时暗出 0/1/2/3 → 牌面即人形消耗与产氧</li>
+        <li><b>收购</b>：额度 = D；按点数降序卖 min(h, 额度)</li>
+        <li><b>呼吸</b>：Σ产氧 ≥ D → 池 +盈余；&lt; D → 扣池，池空则缺口/2 全体 −1🫀</li>
+        <li><b>副业</b>：花街 3¥买卡 ｜ 钟楼 抽卡但 −1🫀</li>
+        <li><b>陷阱</b>：本月催 3 点者各抽 1 张</li>
+        <li><b>开花</b>：人形 ≤0 → 抽 2 选 1 记忆卡，棋子换灵花</li>
+      </ol>
+      <div class="zones">区修正：下町 −1（免缺气）｜花街 ±0（买卡）｜钟楼 +1（抽卡 −1🫀）</div>
+      <div class="score">终局 = 补助 + 记忆卡 + ⌊(12−开花月)/2⌋（≤5）<br>未开花 = 花龄 0 分 ｜ 并列时开花更早者胜</div>
+    </div>
+
+    <div class="cheat">
+      <div class="ct">📖 愚者之夜 · 每月 8 阶段</div>
+      <ol>
+        <li><b>播报</b>：翻月份牌 → 单价 p / 需求 D / 事件</li>
+        <li><b>移居</b>：上月起于「收入最高者」→ 放棋到花圃（每格 2 人）</li>
+        <li><b>催花</b>：同时暗出 0/1/2/3 → 牌面即人形消耗与产氧</li>
+        <li><b>收购</b>：额度 = D；按点数降序卖 min(h, 额度)</li>
+        <li><b>呼吸</b>：Σ产氧 ≥ D → 池 +盈余；&lt; D → 扣池，池空则缺口/2 全体 −1🫀</li>
+        <li><b>副业</b>：花街 3¥买卡 ｜ 钟楼 抽卡但 −1🫀</li>
+        <li><b>陷阱</b>：本月催 3 点者各抽 1 张</li>
+        <li><b>开花</b>：人形 ≤0 → 抽 2 选 1 记忆卡，棋子换灵花</li>
+      </ol>
+      <div class="zones">区修正：下町 −1（免缺气）｜花街 ±0（买卡）｜钟楼 +1（抽卡 −1🫀）</div>
+      <div class="score">终局 = 补助 + 记忆卡 + ⌊(12−开花月)/2⌋（≤5）<br>未开花 = 花龄 0 分 ｜ 并列时开花更早者胜</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="page">
+  <h2>十、开局设置一览（贴在桌上）</h2>
+  <div class="cheat" style="width:100%;font-size:10.5px;">
+    <div class="ct">🎬 开局 7 步</div>
+    <ol>
+      <li>摊开地图，确认 12 个花圃、每格容量 2</li>
+      <li>氧气池拨到 <b>18</b>（上限 30）</li>
+      <li>每人领人形轨，拨到 <b>24</b></li>
+      <li>每人领一套催花令（0/1/2/3）</li>
+      <li>月份牌按 1→12 排好；工具卡洗混抽 3 张明置为市集；记忆卡、陷阱卡各自洗混</li>
+      <li>在每张月份牌上填 <b>需求 D = 人数 + 2</b></li>
+      <li>最近一次抬头看过天的人做起始玩家，顺时针进行</li>
+    </ol>
+    <div class="zones" style="margin-top:8px;">
+      <b>人形预算速算</b>：24 − 12（自然流逝）= <b>12 点</b>，这就是你整局能催花的总量。<br>
+      催得越快，开花越早：<b>1 点/月 → 第 12 月</b>｜<b>2 点/月 → 第 8 月</b>｜<b>3 点/月 → 第 6 月</b>
+    </div>
+    <div class="score">单价曲线：5 → 5 → 5 → 4 → 4 → 4 → 4 → 3 → 3 → 3 → 2 → 2<br>
+    早期一个月 ≈ 后期两个半月的收入。别为了等高价而拖延。</div>
+  </div>
+</div>
+
+</body>
+</html>
