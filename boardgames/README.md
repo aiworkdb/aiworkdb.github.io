@@ -156,6 +156,7 @@ boardgames/
 | [时之笛：七年间奏](category/cooperative/ocarina-seven-year-refrain/README.md) | 合作 | 2-5人 | 60-80分钟 | 中等偏难 |
 | [生化危机：浣熊市一夜](category/card/raccoon-city-one-night/README.md) | 卡牌 | 2-4人 | 30-45分钟 | 中等 |
 | [黑色五叶草：讨伐竞标](category/party/black-clover-bounty-bid/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单 |
+| [青春猪头少年：不被看见的夏天](category/cooperative/rascal-unseen-summer/README.md) | 合作 | 2-4人 | 60-80分钟 | 中等偏难 |
 
 ## 添加新桌游
 
