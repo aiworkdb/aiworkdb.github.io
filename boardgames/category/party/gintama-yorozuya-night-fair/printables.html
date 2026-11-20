@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>银魂：夜祭万事屋 · 打印道具</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e9e2d0;font-family:"Noto Serif SC","Songti SC","Source Han Serif SC",Georgia,serif;color:#20242e}
+.page{position:relative;width:210mm;height:297mm;padding:8mm 8mm 6mm;background:#fdf8ee;overflow:hidden;margin:0 auto 6mm;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.page:last-child{margin-bottom:0}
+.phead{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.2pt solid #1d2b45;padding-bottom:1.6mm;margin-bottom:3mm}
+.phead h2{font-size:13pt;letter-spacing:.18em;color:#1d2b45}
+.phead .tag{font-size:8pt;letter-spacing:.12em;color:#8a6a3b}
+.seal{display:inline-block;background:#b23a2f;color:#fff;font-size:8pt;padding:.6mm 2mm;border-radius:1mm;letter-spacing:.2em;transform:rotate(-2deg)}
+
+/* ---------- 封面 ---------- */
+.cover{display:flex;flex-direction:column;height:297mm;background:radial-gradient(circle at 50% 18%,#26364f 0%,#141c2a 62%,#0e141d 100%);color:#f6ecd8;padding:0}
+.cover-in{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.4mm solid #b23a2f;outline:.8mm solid #a98545;outline-offset:2mm;margin:10mm}
+.lantern{font-size:44pt;filter:drop-shadow(0 0 12px rgba(255,196,110,.55));line-height:1}
+.cv-sub{font-size:9pt;letter-spacing:.42em;color:#d9b471;margin-top:6mm}
+.cv-title{font-size:40pt;letter-spacing:.14em;font-weight:700;margin-top:3mm;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.cv-en{font-size:9pt;letter-spacing:.28em;color:#b9c6d6;margin-top:4mm}
+.cv-line{width:60mm;height:.6mm;background:linear-gradient(90deg,transparent,#a98545,transparent);margin:7mm 0}
+.cv-desc{font-size:11pt;line-height:2;text-align:center;color:#e8dcc4;max-width:132mm}
+.cv-meta{margin-top:9mm;display:flex;gap:9mm;font-size:8.5pt;color:#cbb98f;letter-spacing:.1em}
+.cv-meta b{display:block;font-size:15pt;color:#f1d9a8;margin-top:1mm;letter-spacing:0}
+.cv-foot{font-size:7.5pt;color:#7f8ea3;letter-spacing:.2em;margin-top:9mm}
+
+/* ---------- 打印提示 ---------- */
+.print-hint{background:#fff4d6;border-left:1.6mm solid #b23a2f;padding:2.6mm 3mm;font-size:8pt;line-height:1.65;color:#5a4324;margin-bottom:3mm}
+.print-hint strong{color:#b23a2f}
+.print-hint ul{margin:.8mm 0 0 4.5mm}
+.print-hint li{margin-bottom:.4mm}
+
+/* ---------- 地图 ---------- */
+.map-title{text-align:center;font-size:15pt;letter-spacing:.4em;color:#1d2b45;margin:1mm 0 3mm}
+.wall{border:1.2pt solid #1d2b45;background:linear-gradient(180deg,#26364f,#1d2b45);border-radius:1.5mm;padding:3mm;margin-bottom:3mm}
+.wall-h{display:flex;justify-content:space-between;align-items:baseline;color:#f1d9a8;font-size:9pt;letter-spacing:.2em;margin-bottom:2mm}
+.wall-h span:last-child{font-size:7pt;color:#9db0c6;letter-spacing:.1em}
+.slots{display:grid;grid-template-columns:repeat(6,1fr);gap:2.4mm}
+.slot{height:39mm;border:1pt dashed #7f92aa;border-radius:1.2mm;background:rgba(255,255,255,.045);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:2mm 0;color:#9db0c6;font-size:8pt}
+.slot .no{width:6mm;height:6mm;border-radius:50%;border:.7pt solid #a98545;color:#e3c383;display:flex;align-items:center;justify-content:center;font-size:8pt}
+.slot .ph{font-size:7pt;letter-spacing:.1em;color:#6f8199}
+.blocks{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+.blk{border:1.1pt solid #1d2b45;border-radius:1.4mm;padding:2.6mm 3mm;background:#fffdf7;position:relative;overflow:hidden}
+.blk:after{content:"";position:absolute;right:-8mm;top:-8mm;width:26mm;height:26mm;border-radius:50%;opacity:.07;background:currentColor}
+.blk-h{display:flex;align-items:center;gap:2mm;font-size:11pt;font-weight:700;letter-spacing:.16em}
+.blk-h .em{font-size:13pt}
+.blk-fl{font-size:7.5pt;color:#7a6a52;margin:1mm 0 2mm;letter-spacing:.06em}
+.blk-rows{font-size:7.5pt;line-height:1.7;color:#3d4653}
+.tick{display:inline-block;width:4.4mm;height:4.4mm;border:.6pt solid #6b6152;border-radius:.6mm;margin-right:1.2mm;vertical-align:-.6mm}
+.blk-note{margin-top:1.6mm;font-size:7pt;color:#8a6a3b;border-top:.5pt dotted #c3b394;padding-top:1.2mm}
+.tracks{display:grid;grid-template-columns:1fr 1.7fr;gap:3mm;margin-top:3mm}
+.trk{border:.9pt solid #1d2b45;border-radius:1.2mm;padding:2.4mm 3mm;background:#fffdf7}
+.trk-h{font-size:8.5pt;letter-spacing:.16em;color:#1d2b45;margin-bottom:1.6mm}
+.dots{display:flex;gap:1.6mm;flex-wrap:wrap}
+.dot{width:5.6mm;height:5.6mm;border:.6pt solid #b23a2f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#b23a2f}
+.dot.gold{border-color:#a98545;color:#8a6a3b}
+.hours{display:flex;gap:1.6mm;flex-wrap:wrap;font-size:8pt;color:#1d2b45}
+.hour{border:.6pt solid #1d2b45;border-radius:.8mm;padding:.8mm 2mm;letter-spacing:.1em}
+.map-legend{margin-top:2.6mm;font-size:7.2pt;color:#5c5346;line-height:1.7;border-top:.6pt solid #d8cbb2;padding-top:1.8mm}
+.mini{width:100%;border-collapse:collapse;font-size:7.4pt;margin-top:1mm}
+.mini th{background:#1d2b45;color:#f1d9a8;padding:1.5mm 2mm;text-align:left;font-weight:400;letter-spacing:.1em;font-size:7.2pt}
+.mini td{border-bottom:.4pt solid #d8cbb2;padding:1.4mm 2mm;color:#3a3a3a}
+.mini tr:nth-child(even) td{background:#faf4e6}
+.mini .ok{color:#1f7a4d;font-weight:700}
+.mini .mid{color:#a9741a;font-weight:700}
+.mini .bad{color:#b23a2f;font-weight:700}
+
+/* ---------- 委托卡 ---------- */
+.grid-jobs{display:grid;grid-template-columns:repeat(4,45mm);gap:3mm;justify-content:center}
+.job{width:45mm;height:63mm;border:.9pt solid #cbbd9e;border-radius:1.6mm;background:linear-gradient(170deg,#fffdf6 0%,#f7efdd 100%);padding:2.2mm 2.4mm;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.job .blkbar{position:absolute;left:0;top:0;width:100%;height:2.2mm;background:var(--bc)}
+.job .jtop{display:flex;justify-content:space-between;align-items:center;margin-top:1.6mm;font-size:7pt;color:#7a6a52;letter-spacing:.08em}
+.job .jblock{display:flex;align-items:center;gap:.8mm}
+.job .jid{font-family:Georgia,serif;color:#a99574;font-size:6.5pt}
+.job .jname{font-size:11.5pt;font-weight:700;letter-spacing:.04em;line-height:1.25;margin-top:1.4mm;color:#1b2330;min-height:9mm}
+.job .jdem{display:flex;align-items:flex-end;gap:1.6mm;margin-top:auto}
+.job .jnum{font-family:Georgia,serif;font-size:26pt;font-weight:700;color:var(--bc);line-height:.85}
+.job .junit{font-size:6.5pt;color:#7a6a52;letter-spacing:.14em;margin-bottom:1mm}
+.job .jpay{margin-left:auto;text-align:right;font-size:8.5pt;color:#8a6a3b}
+.job .jpay b{display:block;font-family:Georgia,serif;font-size:12pt;color:#8a6a3b}
+.job .jblurb{font-size:6.6pt;color:#6d6558;line-height:1.5;border-top:.5pt dotted #cbbd9e;padding-top:1.2mm;margin-top:1.4mm;height:9mm;overflow:hidden}
+
+/* ---------- 麻烦卡 ---------- */
+.grid-twists{display:grid;grid-template-columns:repeat(4,45mm);gap:2.6mm;justify-content:center}
+.twist{width:45mm;height:58mm;border:.9pt solid #6d3b55;border-radius:1.6mm;background:linear-gradient(165deg,#3a2136 0%,#261626 100%);color:#f3e6ee;padding:2.4mm;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.twist .tw-em{position:absolute;right:-1mm;top:8mm;font-size:34pt;opacity:.16}
+.twist .tw-id{font-family:Georgia,serif;font-size:6.5pt;color:#c1a0b4;letter-spacing:.1em}
+.twist .tw-name{font-size:10.5pt;font-weight:700;letter-spacing:.06em;margin-top:1mm;line-height:1.35;position:relative;z-index:2}
+.twist .tw-txt{font-size:7.2pt;line-height:1.7;color:#f0e2ec;margin-top:auto;position:relative;z-index:2;border-top:.5pt dotted rgba(255,255,255,.3);padding-top:1.8mm}
+.twist .tw-tag{font-size:6pt;letter-spacing:.2em;color:#c9a86a;margin-top:1.4mm}
+
+/* ---------- 吹牛令 ---------- */
+.boasts{display:grid;grid-template-columns:repeat(6,26mm);gap:3mm;justify-content:center;margin-top:2mm}
+.boast{width:26mm;height:26mm;border-radius:50%;border:1.2pt solid #a98545;background:radial-gradient(circle at 35% 30%,#b23a2f,#7d241c);color:#ffeec5;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:7pt;letter-spacing:.06em;text-align:center;line-height:1.35}
+.boast b{font-size:9pt;display:block;margin-bottom:.6mm}
+.boast .v{font-family:Georgia,serif;font-size:7.5pt;color:#ffd88f}
+
+/* ---------- 人手牌 ---------- */
+.grid-hands{display:grid;grid-template-columns:repeat(6,30mm);gap:2.5mm;justify-content:center}
+.hsets{margin-bottom:2.6mm}
+.hset-lab{font-size:7pt;color:#8a6a3b;letter-spacing:.16em;margin-bottom:1.2mm;border-left:1.2mm solid #b23a2f;padding-left:1.8mm}
+.hand{width:30mm;height:38mm;border-radius:1.4mm;border:.7pt solid rgba(0,0,0,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;color:#fff}
+.hand .hnum{font-family:Georgia,serif;font-size:22pt;font-weight:700;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.hand .hem{font-size:11pt;margin-top:.8mm}
+.hand .hname{font-size:6.2pt;letter-spacing:.06em;opacity:.92;margin-top:.4mm}
+.hand .hset{position:absolute;top:1mm;left:1.6mm;font-size:5.6pt;opacity:.65;letter-spacing:.08em}
+.hand .hcor{position:absolute;bottom:1mm;right:1.6mm;font-family:Georgia,serif;font-size:7pt;opacity:.55}
+.h1{background:linear-gradient(160deg,#f0e6cf,#d9c9a6);color:#4a3d2a}
+.h2{background:linear-gradient(160deg,#cfe0d6,#9dbdab);color:#22392f}
+.h3{background:linear-gradient(160deg,#cfd9e8,#9db0c9);color:#1e2b3d}
+.h4{background:linear-gradient(160deg,#b9c6d8,#7d90a8);color:#121b26}
+.h5{background:linear-gradient(160deg,#c9564a,#8e2b23)}
+.h6{background:linear-gradient(160deg,#2f3d54,#141c29)}
+
+/* ---------- 玩家板 ---------- */
+.grid-boards{display:grid;grid-template-columns:repeat(2,88mm);gap:5mm 4mm;justify-content:center;align-content:center}
+.board{width:88mm;height:86mm;border:1.1pt solid #1d2b45;border-radius:1.6mm;background:#fffdf7;padding:2.6mm 3mm;display:flex;flex-direction:column}
+.bd-h{display:flex;justify-content:space-between;align-items:center;border-bottom:.8pt solid #1d2b45;padding-bottom:1.2mm}
+.bd-h .t{font-size:10pt;letter-spacing:.14em;color:#1d2b45;font-weight:700}
+.bd-h .s{font-size:6.5pt;color:#8a6a3b;letter-spacing:.1em}
+.bd-row{display:flex;align-items:center;gap:1.4mm;margin-top:1.6mm;font-size:7pt;color:#3d4653}
+.bd-row .lab{width:17mm;letter-spacing:.08em;color:#1d2b45}
+.cells{display:flex;gap:.8mm;flex-wrap:wrap}
+.cell{width:4.4mm;height:4.4mm;border:.5pt solid #8a7b62;border-radius:.5mm;font-size:5.2pt;color:#8a7b62;display:flex;align-items:center;justify-content:center}
+.cell.w{width:7.5mm}
+.bd-blocks{display:grid;grid-template-columns:1fr 1fr;gap:1mm 3mm;margin-top:1.2mm;font-size:6.6pt;color:#3d4653}
+.bd-blk{display:flex;align-items:center;gap:1mm}
+.bd-notes{flex:1;margin-top:2mm;border-top:.4pt dotted #c3b394;padding-top:1.4mm;font-size:5.8pt;color:#b3a893;background:repeating-linear-gradient(180deg,transparent 0,transparent 5mm,#f0e7d3 5mm,#f0e7d3 5.15mm)}
+.bd-hours{display:grid;grid-template-columns:repeat(6,1fr);gap:1.4mm;margin-top:2.6mm;font-size:6.4pt;color:#8a6a3b;text-align:center}
+.bd-hours .hb{border-bottom:.5pt solid #8a7b62;height:6mm}
+.bd-foot{margin-top:auto;display:flex;justify-content:space-between;font-size:6.4pt;color:#8a6a3b;border-top:.5pt dotted #c3b394;padding-top:1.2mm}
+.bd-foot .sc{border:.5pt solid #8a7b62;border-radius:.6mm;width:22mm;height:6mm}
+
+/* ---------- 标记 ---------- */
+.marks{display:grid;grid-template-columns:repeat(6,1fr);gap:2.4mm;justify-content:center}
+.mk{height:16mm;border:.7pt solid #8a7b62;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:6.4pt;color:#3d4653;background:#fffdf7}
+.mk.bad{border-color:#b23a2f;color:#b23a2f;background:#fdf1ec}
+.mk.money{border-color:#a98545;color:#8a6a3b;background:#fdf7e4}
+.mk.coin{width:14mm;height:14mm;font-family:Georgia,serif;font-size:8pt}
+.sec-t{font-size:9pt;letter-spacing:.2em;color:#1d2b45;margin:3mm 0 2mm;border-left:1.4mm solid #b23a2f;padding-left:2mm}
+
+/* ---------- 速查 ---------- */
+.grid-ref{display:grid;grid-template-columns:repeat(2,90mm);gap:4mm;justify-content:center}
+.wide{grid-column:span 2;width:auto}
+.ref{width:90mm;border:.9pt solid #1d2b45;border-radius:1.4mm;background:#fffdf7;padding:3.4mm 3.4mm;font-size:7.9pt;line-height:1.85;color:#333}
+.ref h4{font-size:9.4pt;letter-spacing:.14em;color:#b23a2f;margin-bottom:1.8mm}
+.ref table{width:100%;border-collapse:collapse;font-size:7.3pt;margin:1.6mm 0}
+.ref td,.ref th{border:.4pt solid #cbbd9e;padding:1.2mm 1.4mm;text-align:left}
+.ref th{background:#f2e8d3;color:#5a4324;font-weight:700}
+.ref .k{color:#1d2b45;font-weight:700}
+.ref .fine{font-size:6.9pt;color:#7a6a52;line-height:1.8}
+
+@page{size:A4;margin:0}
+@media print{
+  body{background:#fff}
+  .page{margin:0;box-shadow:none;break-after:page;page-break-after:always}
+  .page:last-child{break-after:auto;page-break-after:auto}
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .print-hint{display:none !important}
+}
+</style>
+</head>
+<body>
+<section class="page cover">
+<div class="cover-in">
+<div class="lantern">🏮</div>
+<div class="cv-sub">一夜六时辰 · 三十六张委托</div>
+<div class="cv-title">银魂：夜祭万事屋</div>
+<div class="cv-en">GINTAMA · YOROZUYA NIGHT FAIR</div>
+<div class="cv-line"></div>
+<div class="cv-desc">十二个人，四十二点力气，一夜六次分完。<br>你知道自己的底牌，但不知道别人往哪儿挤。</div>
+<div class="cv-meta">
+<div>PLAYERS<b>3-6</b></div><div>TIME<b>30-45'</b></div><div>AGE<b>10+</b></div><div>CARDS<b>209</b></div>
+</div>
+<div class="cv-foot">打印前请先读第 2 页的打印说明</div>
+</div>
+</section><section class="page ">
+<div class="phead"><h2>打印与物料</h2><span class="tag">打印说明</span></div>
+<div class="print-hint">
+<strong>⚠ 重要打印提示：</strong>
+<ul>
+<li>纸张选 <strong>A4</strong>，边距设为<strong>最小</strong>（或选“无边距”），不要勾选“适合页面”/“缩放”</li>
+<li>在打印对话框中务必勾选 <strong>“背景图形” / Background graphics</strong>，否则卡牌底色全部丢失</li>
+<li>卡牌与棋子建议用 <strong>200g 以上卡纸</strong>；平面图与速查卡用普通 A4 即可</li>
+<li>每页都是一个完整的 A4 面，已按实际尺寸排好；如果出现“每页变成两页”，请检查边距是否为 0</li>
+<li>切割建议：先用直尺 + 刀背划线，再用刀切；卡牌塑封后手感更接近正式桌游</li>
+</ul></div>
+<div class="sec-t">打印清单</div>
+<table style="width:100%;border-collapse:collapse;font-size:8pt">
+<thead><tr style="background:#1d2b45;color:#f1d9a8"><th style="padding:1.6mm;text-align:left">物料</th><th style="padding:1.6mm;text-align:left">数量</th><th style="padding:1.6mm;text-align:left">纸张</th><th style="padding:1.6mm;text-align:left">位置</th></tr></thead>
+<tbody><tr><td>委托卡</td><td>36</td><td>卡纸</td><td>第 4-6 页（45×63mm，每页 16 张）</td></tr><tr><td>人手牌</td><td>72</td><td>卡纸</td><td>第 7-8 页（30×42mm，每页 36 张）</td></tr><tr><td>麻烦卡</td><td>12</td><td>卡纸</td><td>第 9 页上半</td></tr><tr><td>吹牛令</td><td>12</td><td>卡纸/硬纸</td><td>第 9 页下半（剪成圆片）</td></tr><tr><td>玩家板</td><td>6</td><td>卡纸</td><td>第 10 页（88×78mm）</td></tr><tr><td>两 / 麻烦 / 棋子</td><td>40+18+6</td><td>卡纸</td><td>第 11 页</td></tr><tr><td>地图与速查</td><td>1+6</td><td>普通 A4</td><td>第 3 页与第 12 页</td></tr></tbody></table>
+<div class="sec-t">一分钟认识这个游戏</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm;font-size:8pt;line-height:1.8;color:#333">
+<div style="border:.8pt solid #cbbd9e;border-radius:1.2mm;padding:3mm;background:#fffdf7">
+<b style="color:#b23a2f">1. 你只有 12 个人</b><br>
+每人一套人手牌（1-6 各 2 张），合计 <b>42 点</b>。六个时辰，每个时辰派 <b>2 个人</b> 去接 <b>1 张</b> 委托。牌出完就没了，不补牌。
+</div>
+<div style="border:.8pt solid #cbbd9e;border-radius:1.2mm;padding:3mm;background:#fffdf7">
+<b style="color:#b23a2f">2. 两个人的点数要“正好”</b><br>
+合计 <b>=需求</b> → 完美（全款 + 2⭐）；超 1-2 点 → 勉强（半款 + 1⭐）；超 3 点以上 → 翻车；不够 → 踩空。
+</div>
+<div style="border:.8pt solid #cbbd9e;border-radius:1.2mm;padding:3mm;background:#fffdf7">
+<b style="color:#b23a2f">3. 别人也想要这张单</b><br>
+同一张委托上有多人 → 全部摊牌：不超需求且<b>最接近</b>的人赢；合计相同比<b>主力牌</b>（最大单张）；连牌型都一样 → 平分。
+</div>
+<div style="border:.8pt solid #cbbd9e;border-radius:1.2mm;padding:3mm;background:#fffdf7">
+<b style="color:#b23a2f">4. 敢吠就赚一笔</b><br>
+派工时压上一枚<b>吹牛令</b>并喊“这单我包了”：完美交付 <b>+3 两</b>，否则 <b>-1 两</b>。没用完的一枚终局值 1 分。
+</div>
+</div>
+<div class="map-legend" style="margin-top:3mm">
+<b>终局计分</b>：两 ×1 + 好评 ×2 + 未用吹牛令 ×1 + 街区连锁（3 单 +3 / 4 单 +5）- 欠账 ×3。分高者胜。
+</div>
+<div class="sec-t" style="margin-top:4mm">没有卡纸怎么办（替代方案）</div>
+<table class="mini">
+<tr><th style="width:34mm">缺什么</th><th>怎么替</th></tr>
+<tr><td>委托卡</td><td>用一张 A4 写上 7 行（需求 3-9），每行拄 6 个小纸条；或直接把本页第 4-6 页缩印为 A5</td></tr>
+<tr><td>人手牌 72 张</td><td>用扑克牌代替：A=1、2-6 按点数，每个点数各 2 张（4 种花色任选其二）</td></tr>
+<tr><td>两 筹码</td><td>豆子、硬币、纸片都行，只要全桌同意 1 个 = 1 两</td></tr>
+<tr><td>吹牛令</td><td>2 枚硬币/人，押上去就是“这单我包了”</td></tr>
+<tr><td>麻烦卡</td><td>掷 1 颗骰子：1-6 对应 T1-T6，7-12 重掷（效果照第 9 页）</td></tr>
+</table>
+<div class="sec-t" style="margin-top:4mm">第一局教学顺序（10 分钟）</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;font-size:7.4pt;line-height:1.75;color:#3a3a3a">
+<div style="border-left:1.4mm solid #b23a2f;padding-left:2.4mm"><b>1、说一句话（2 分钟）</b><br>“你只有 12 个人，每轮派 2 个去接 1 单，点数加起来要正好。”</div>
+<div style="border-left:1.4mm solid #b7791f;padding-left:2.4mm"><b>2、演一轮（3 分钟）</b><br>只翻 3 张委托、不翻麻烦卡，3 人同时派工，把完美/勉强/踩空各演一次。</div>
+<div style="border-left:1.4mm solid #1f7a4d;padding-left:2.4mm"><b>3、开局（5 分钟）</b><br>洗牌重开，正式 6 个时辰。第一局建议不用吹牛令，先熟练计算。</div>
+</div>
+
+</section><section class="page ">
+<div class="phead"><h2>一、地图与委托墙</h2><span class="tag">第 3 页 / 共 12 页</span></div>
+
+<div class="map-title">吉 原 夜 祭 · 委 托 墙</div>
+<div class="wall">
+  <div class="wall-h"><span>◆ 本轮委托（每轮翻人数+1 张，最多 6 张）</span><span>左 → 右 依次摊牌结算</span></div>
+  <div class="slots"><div class="slot"><div class="no">1</div><div class="ph">委托位</div></div><div class="slot"><div class="no">2</div><div class="ph">委托位</div></div><div class="slot"><div class="no">3</div><div class="ph">委托位</div></div><div class="slot"><div class="no">4</div><div class="ph">委托位</div></div><div class="slot"><div class="no">5</div><div class="ph">委托位</div></div><div class="slot"><div class="no">6</div><div class="ph">委托位</div></div></div>
+</div>
+<div class="blocks"><div class="blk" style="color:#c0392b">
+<div class="blk-h"><span class="em">🏮</span><span style="color:#1d2b45">花街</span></div>
+<div class="blk-fl">灯笼最亮、客人最多的一条街</div>
+<div><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+<div class="blk-rows" style="margin-top:1.4mm"><div>共 9 张委托：小单 3 张、中单 4 张</div><div>大单 2 张（需求 9）</div><div>人情基数：最容易凑连锁</div></div>
+<div class="blk-note">人情 3 单 +3 / 4 单 +5</div></div><div class="blk" style="color:#8e44ad">
+<div class="blk-h"><span class="em">🏯</span><span style="color:#1d2b45">游郭</span></div>
+<div class="blk-fl">高楼、赎身、偷偷摸摸的活</div>
+<div><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+<div class="blk-rows" style="margin-top:1.4mm"><div>共 9 张：中单（5-7）密集</div><div>适合稳稳吃分</div><div>需求 9 只有 1 张</div></div>
+<div class="blk-note">人情 3 单 +3 / 4 单 +5</div></div><div class="blk" style="color:#2c3e50">
+<div class="blk-h"><span class="em">🗡</span><span style="color:#1d2b45">百华驻地</span></div>
+<div class="blk-fl">屋顶、刀、女忍者的规矩</div>
+<div><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+<div class="blk-rows" style="margin-top:1.4mm"><div>共 9 张：大单（8-9）共 4 张</div><div>硬碰硬的地方</div><div>平分率最高的街区</div></div>
+<div class="blk-note">人情 3 单 +3 / 4 单 +5</div></div><div class="blk" style="color:#b7791f">
+<div class="blk-h"><span class="em">🎲</span><span style="color:#1d2b45">天人赌坊</span></div>
+<div class="blk-fl">假骰、账本、惹不起的天人</div>
+<div><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+<div class="blk-rows" style="margin-top:1.4mm"><div>共 9 张：低报酬高需求</div><div>最容易翻车的一条街</div><div>但报酬 6 两的旁门最多</div></div>
+<div class="blk-note">人情 3 单 +3 / 4 单 +5</div></div></div>
+<div class="tracks">
+  <div class="trk"><div class="trk-h">★ 好评轨（0-15）</div><div class="dots"><span class="dot">1</span><span class="dot">2</span><span class="dot">3</span><span class="dot">4</span><span class="dot">5</span><span class="dot">6</span><span class="dot">7</span><span class="dot">8</span><span class="dot">9</span><span class="dot">10</span><span class="dot">11</span><span class="dot">12</span><span class="dot">13</span><span class="dot">14</span><span class="dot">15</span></div>
+  <div style="font-size:6.6pt;color:#8a6a3b;margin-top:1.4mm">完美 +2 · 勉强 +1 · 终局 ×2 分</div></div>
+  <div class="trk"><div class="trk-h">⏱ 六个时辰 · 天亮收摊</div>
+  <div class="hours"><span class="hour">酉</span><span class="hour">戌</span><span class="hour">亥</span><span class="hour">子</span><span class="hour">丑</span><span class="hour">寅</span></div>
+  <div style="display:flex;gap:6mm;margin-top:2mm;align-items:center">
+    <div><div class="trk-h" style="margin-bottom:1mm">💢 麻烦轨（满 3 土下座：付 3 两）</div><div class="dots"><span class="dot" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="dot" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="dot" style="border-color:#6d3b55;color:#6d3b55">✕</span></div></div>
+    <div style="font-size:6.6pt;color:#8a6a3b;line-height:1.7">翻车 +1 · 全员超需求 +1<br>付不出 3 两 → 欠账，终局 -3</div>
+  </div></div>
+</div>
+<div class="sec-t">结算示例（同一张「需求 7 · 报酬 4 両」的委托，四种结局）</div>
+<table class="mini">
+<tr><th style="width:26mm">你出的两张</th><th style="width:20mm">合计</th><th style="width:34mm">判定</th><th>你拿到什么</th></tr>
+<tr><td>4 + 3</td><td>7</td><td><span class="ok">完美交付</span></td><td>4 両 + <b>2 好评</b>（终局 8 分）</td></tr>
+<tr><td>5 + 4</td><td>9</td><td><span class="mid">勉强交付</span>（超 2）</td><td>2 両 + 1 好评（终局 4 分）</td></tr>
+<tr><td>6 + 4</td><td>10</td><td><span class="bad">翻车</span>（超 3）</td><td>0 両，且 +1 麻烦</td></tr>
+<tr><td>2 + 3</td><td>5</td><td><span class="bad">踩空</span>（不足 2）</td><td>0 両，白干（不记麻烦）</td></tr>
+<tr><td>两人都出 4 + 3</td><td>7 / 7</td><td>撞单 · 连主力牌都相同</td><td>各拿 2 両 + 1 好评（平分）</td></tr>
+</table>
+<div class="map-legend">
+<b>放置顺序</b>：① 翻委托 → ② 翻麻烦卡 → ③ 同时暗放 2 张人手牌（同一张委托）→ ④ 从①开始摊牌结算 → ⑤ 押注结算 → ⑥ 土下座与交接起始玩家。<br>
+<b>记住</b>：没人接的委托直接移出游戏；接了但全部超需求的委托作废，参与者各 +1 麻烦。
+</div>
+
+</section><section class="page ">
+<div class="phead"><h2>二、委托卡（一：需求 3-6）</h2><span class="tag">第 4 页</span></div>
+<div class="grid-jobs"><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F1</span></div>
+<div class="jname">送信</div>
+<div class="jblurb">送到就行，别拆开看</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">3</div></div><div class="jpay">报酬<b>2</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F2</span></div>
+<div class="jname">搬酒坛</div>
+<div class="jblurb">二十坛，洒一坛扣钱</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">4</div></div><div class="jpay">报酬<b>2</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F3</span></div>
+<div class="jname">镇住醉客</div>
+<div class="jblurb">别打脸，打脸要赔</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">5</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F4</span></div>
+<div class="jname">找丢失的发簪</div>
+<div class="jblurb">花魁的，找不到别回来</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">5</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F5</span></div>
+<div class="jname">找回走失的艺者</div>
+<div class="jblurb">八成在赌坊</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">6</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F6</span></div>
+<div class="jname">挡下浪人讨债</div>
+<div class="jblurb">他们带刀，你们带嘴</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">7</div></div><div class="jpay">报酬<b>4</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F7</span></div>
+<div class="jname">火场救人</div>
+<div class="jblurb">灯笼烧起来了</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">8</div></div><div class="jpay">报酬<b>5</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F8</span></div>
+<div class="jname">阻止吉原大火</div>
+<div class="jblurb">一夜之间，全街看着你</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">9</div></div><div class="jpay">报酬<b>6</b>两</div></div>
+</div><div class="job" style="--bc:#c0392b">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏮 花街</span><span class="jid">F9</span></div>
+<div class="jname">护住整条花街</div>
+<div class="jblurb">花魁游街，闲杂人退散</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">9</div></div><div class="jpay">报酬<b>6</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y1</span></div>
+<div class="jname">修灯笼</div>
+<div class="jblurb">明天还要挂，今晚必须亮</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">3</div></div><div class="jpay">报酬<b>2</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y2</span></div>
+<div class="jname">看摊</div>
+<div class="jblurb">站到天亮，别让人白拿</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">4</div></div><div class="jpay">报酬<b>2</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y3</span></div>
+<div class="jname">修屋顶</div>
+<div class="jblurb">漏雨了，客人会骂</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">5</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y4</span></div>
+<div class="jname">追回钱袋</div>
+<div class="jblurb">小偷跑得比想象快</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">6</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y5</span></div>
+<div class="jname">找回被拐的学徒</div>
+<div class="jblurb">他才十一岁</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">6</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y6</span></div>
+<div class="jname">替人顶罪一晚</div>
+<div class="jblurb">蹲一夜，出来还是好汉</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">7</div></div><div class="jpay">报酬<b>4</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y7</span></div>
+<div class="jname">护送商队出吉原</div>
+<div class="jblurb">出城门那一段最险</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">7</div></div><div class="jpay">报酬<b>4</b>两</div></div>
+</div></div>
+</section><section class="page ">
+<div class="phead"><h2>二、委托卡（二：需求 6-9）</h2><span class="tag">第 5 页</span></div>
+<div class="grid-jobs"><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y8</span></div>
+<div class="jname">潜入游郭找人</div>
+<div class="jblurb">不能惊动任何人</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">8</div></div><div class="jpay">报酬<b>5</b>两</div></div>
+</div><div class="job" style="--bc:#8e44ad">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🏯 游郭</span><span class="jid">Y9</span></div>
+<div class="jname">一夜还清万事屋的债</div>
+<div class="jblurb">登势婆婆说，今天必须还</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">9</div></div><div class="jpay">报酬<b>6</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H1</span></div>
+<div class="jname">赶野狗</div>
+<div class="jblurb">三条，抢了厨房的鱼</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">3</div></div><div class="jpay">报酬<b>2</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H2</span></div>
+<div class="jname">夜里送药</div>
+<div class="jblurb">走屋顶，别走巷子</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">4</div></div><div class="jpay">报酬<b>2</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H3</span></div>
+<div class="jname">替百华送刀</div>
+<div class="jblurb">刀比人重要，记住顺序</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">5</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H4</span></div>
+<div class="jname">制服发狂的力士</div>
+<div class="jblurb">他喝了三坛</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">6</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H5</span></div>
+<div class="jname">救下要跳楼的人</div>
+<div class="jblurb">先说话，别先动手</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">7</div></div><div class="jpay">报酬<b>4</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H6</span></div>
+<div class="jname">拦下失控的机关人偶</div>
+<div class="jblurb">谁把它上了发条？</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">8</div></div><div class="jpay">报酬<b>5</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H7</span></div>
+<div class="jname">单挑天人武士</div>
+<div class="jblurb">他先拔的刀</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">8</div></div><div class="jpay">报酬<b>5</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H8</span></div>
+<div class="jname">直面夜王凤仙</div>
+<div class="jblurb">吉原的天花板</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">9</div></div><div class="jpay">报酬<b>6</b>两</div></div>
+</div><div class="job" style="--bc:#2c3e50">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🗡 百华</span><span class="jid">H9</span></div>
+<div class="jname">拦住暴走的夜兔</div>
+<div class="jblurb">是自己的同伴</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">9</div></div><div class="jpay">报酬<b>6</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G1</span></div>
+<div class="jname">赌坊把风</div>
+<div class="jblurb">看见真选组就吹口哨</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">4</div></div><div class="jpay">报酬<b>2</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G2</span></div>
+<div class="jname">镇住赌徒</div>
+<div class="jblurb">输光了的人最不讲理</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">5</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G3</span></div>
+<div class="jname">拆除赌坊的假骰</div>
+<div class="jblurb">被看见就完了</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">6</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G4</span></div>
+<div class="jname">赶走闹事天人</div>
+<div class="jblurb">他们有四只手</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">6</div></div><div class="jpay">报酬<b>3</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G5</span></div>
+<div class="jname">挡下春雨的催债</div>
+<div class="jblurb">走私船的账，别问</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">7</div></div><div class="jpay">报酬<b>4</b>两</div></div>
+</div></div>
+</section><section class="page ">
+<div class="phead"><h2>二、委托卡（三：大单收尾）</h2><span class="tag">第 6 页</span></div>
+<div class="grid-jobs"><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G6</span></div>
+<div class="jname">护住赌坊的账本</div>
+<div class="jblurb">写着半条街的秘密</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">7</div></div><div class="jpay">报酬<b>4</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G7</span></div>
+<div class="jname">制服夜兔打手</div>
+<div class="jblurb">打手是雇来的</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">8</div></div><div class="jpay">报酬<b>5</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G8</span></div>
+<div class="jname">抢回被扣的货</div>
+<div class="jblurb">货在仓库，人在门口</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">8</div></div><div class="jpay">报酬<b>5</b>两</div></div>
+</div><div class="job" style="--bc:#b7791f">
+<div class="blkbar"></div>
+<div class="jtop"><span class="jblock">🎲 天人赌坊</span><span class="jid">G9</span></div>
+<div class="jname">打倒春雨干部</div>
+<div class="jblurb">打完之后，吉原安静三天</div>
+<div class="jdem"><div><div class="junit">需求</div><div class="jnum">9</div></div><div class="jpay">报酬<b>6</b>两</div></div>
+</div></div><div class="map-legend" style="margin-top:4mm">委托卡共 36 张：<b>3 点 ×3、 4 点 ×4、 5 点 ×5、 6 点 ×6、 7 点 ×6、 8 点 ×6、 9 点 ×6</b>。四个街区各 9 张，两面一样的卡背也可以（本作不用卡背）。</div>
+</section><section class="page ">
+<div class="phead"><h2>五、人手牌（甲-丙 三套，36 张）</h2><span class="tag">第 7 页</span></div>
+<div class="hsets"><div class="hset-lab">甲 套（12 张 / 42 点）</div><div class="grid-hands"><div class="hand h1"><span class="hset">甲套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h1"><span class="hset">甲套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h2"><span class="hset">甲套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h2"><span class="hset">甲套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h3"><span class="hset">甲套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h3"><span class="hset">甲套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h4"><span class="hset">甲套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h4"><span class="hset">甲套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h5"><span class="hset">甲套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h5"><span class="hset">甲套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h6"><span class="hset">甲套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div><div class="hand h6"><span class="hset">甲套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div></div></div><div class="hsets"><div class="hset-lab">乙 套（12 张 / 42 点）</div><div class="grid-hands"><div class="hand h1"><span class="hset">乙套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h1"><span class="hset">乙套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h2"><span class="hset">乙套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h2"><span class="hset">乙套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h3"><span class="hset">乙套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h3"><span class="hset">乙套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h4"><span class="hset">乙套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h4"><span class="hset">乙套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h5"><span class="hset">乙套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h5"><span class="hset">乙套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h6"><span class="hset">乙套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div><div class="hand h6"><span class="hset">乙套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div></div></div><div class="hsets"><div class="hset-lab">丙 套（12 张 / 42 点）</div><div class="grid-hands"><div class="hand h1"><span class="hset">丙套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h1"><span class="hset">丙套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h2"><span class="hset">丙套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h2"><span class="hset">丙套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h3"><span class="hset">丙套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h3"><span class="hset">丙套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h4"><span class="hset">丙套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h4"><span class="hset">丙套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h5"><span class="hset">丙套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h5"><span class="hset">丙套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h6"><span class="hset">丙套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div><div class="hand h6"><span class="hset">丙套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div></div></div><div class="map-legend" style="margin-top:3mm">下一页：丁 / 戊 / 己 三套。</div>
+</section><section class="page ">
+<div class="phead"><h2>五、人手牌（丁-己 三套，36 张）</h2><span class="tag">第 8 页</span></div>
+<div class="hsets"><div class="hset-lab">丁 套（12 张 / 42 点）</div><div class="grid-hands"><div class="hand h1"><span class="hset">丁套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h1"><span class="hset">丁套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h2"><span class="hset">丁套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h2"><span class="hset">丁套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h3"><span class="hset">丁套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h3"><span class="hset">丁套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h4"><span class="hset">丁套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h4"><span class="hset">丁套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h5"><span class="hset">丁套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h5"><span class="hset">丁套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h6"><span class="hset">丁套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div><div class="hand h6"><span class="hset">丁套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div></div></div><div class="hsets"><div class="hset-lab">戊 套（12 张 / 42 点）</div><div class="grid-hands"><div class="hand h1"><span class="hset">戊套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h1"><span class="hset">戊套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h2"><span class="hset">戊套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h2"><span class="hset">戊套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h3"><span class="hset">戊套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h3"><span class="hset">戊套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h4"><span class="hset">戊套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h4"><span class="hset">戊套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h5"><span class="hset">戊套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h5"><span class="hset">戊套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h6"><span class="hset">戊套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div><div class="hand h6"><span class="hset">戊套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div></div></div><div class="hsets"><div class="hset-lab">己 套（12 张 / 42 点）</div><div class="grid-hands"><div class="hand h1"><span class="hset">己套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h1"><span class="hset">己套</span>
+<span class="hnum">1</span><span class="hem">🐈</span>
+<span class="hname">小猫</span><span class="hcor">1</span></div><div class="hand h2"><span class="hset">己套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h2"><span class="hset">己套</span>
+<span class="hnum">2</span><span class="hem">🧒</span>
+<span class="hname">跑腿小鬼</span><span class="hcor">2</span></div><div class="hand h3"><span class="hset">己套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h3"><span class="hset">己套</span>
+<span class="hnum">3</span><span class="hem">🔧</span>
+<span class="hname">修理匠</span><span class="hcor">3</span></div><div class="hand h4"><span class="hset">己套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h4"><span class="hset">己套</span>
+<span class="hnum">4</span><span class="hem">🗡</span>
+<span class="hname">百华</span><span class="hcor">4</span></div><div class="hand h5"><span class="hset">己套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h5"><span class="hset">己套</span>
+<span class="hnum">5</span><span class="hem">🌙</span>
+<span class="hname">夜兔</span><span class="hcor">5</span></div><div class="hand h6"><span class="hset">己套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div><div class="hand h6"><span class="hset">己套</span>
+<span class="hnum">6</span><span class="hem">⚡</span>
+<span class="hname">白夜叉</span><span class="hcor">6</span></div></div></div><div class="map-legend" style="margin-top:3mm">每人一套：1-6 各 2 张，合计 12 张、<b>42 点</b>。两页合起来才是六人的完整人手牌。切刷后按套分堆，每人一堆。</div>
+</section><section class="page ">
+<div class="phead"><h2>四、麻烦卡与吹牛令</h2><span class="tag">第 9 页</span></div>
+
+<div class="sec-t">麻烦卡 × 12（每回合翻 1 张，当轮生效）</div>
+<div class="grid-twists"><div class="twist"><div class="tw-em">🏮</div><div class="tw-id">T1</div>
+<div class="tw-name">灯笼全灭</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮所有委托报酬减半（向上取整）</div></div><div class="twist"><div class="tw-em">👑</div><div class="tw-id">T2</div>
+<div class="tw-name">将军微服</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮每次完美交付额外 +2 两</div></div><div class="twist"><div class="tw-em">🎇</div><div class="tw-id">T3</div>
+<div class="tw-name">花火大会</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮获得的好评翻倍</div></div><div class="twist"><div class="tw-em">🐕</div><div class="tw-id">T4</div>
+<div class="tw-name">定春散步</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮所有委托需求 +1（最高 9）</div></div><div class="twist"><div class="tw-em">👓</div><div class="tw-id">T5</div>
+<div class="tw-name">新八的眼镜</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮每人只能出 1 张人手牌</div></div><div class="twist"><div class="tw-em">🚓</div><div class="tw-id">T6</div>
+<div class="tw-name">天人查封</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮报酬最高的委托作废</div></div><div class="twist"><div class="tw-em">🗡</div><div class="tw-id">T7</div>
+<div class="tw-name">总悟的火箭炮</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮摊牌改为最接近需求者胜</div></div><div class="twist"><div class="tw-em">🍚</div><div class="tw-id">T8</div>
+<div class="tw-name">神乐吃穷万事屋</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮不许看店</div></div><div class="twist"><div class="tw-em">🧨</div><div class="tw-id">T9</div>
+<div class="tw-name">桂的擤夷</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮结算后向左传 1 张牌</div></div><div class="twist"><div class="tw-em">🎭</div><div class="tw-id">T10</div>
+<div class="tw-name">阿妙的黑暗料理</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">摊牌前全桌一起喊“难吃”</div></div><div class="twist"><div class="tw-em">🐍</div><div class="tw-id">T11</div>
+<div class="tw-name">猿飞的跟踪</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮开始前可看左手边 1 张牌</div></div><div class="twist"><div class="tw-em">🌙</div><div class="tw-id">T12</div>
+<div class="tw-name">夜王出巡</div><div class="tw-tag">麻 烦 卡</div>
+<div class="tw-txt">本轮由分数最低者先手</div></div></div>
+<div class="sec-t" style="margin-top:5mm">吹牛令 × 12（每人 2 枚）</div>
+<div class="boasts"><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div><div class="boast"><b>吹牛令</b>这单<br>我包了<span class="v">+3 / -1</span></div></div>
+<div class="map-legend" style="margin-top:3mm">
+吹牛令用法：派工时压在自己的棋子旁，同时喊“这单我包了！”。本轮完美交付 → <b>+3 两</b>；否则 → <b>-1 两</b>。一个时辰最多押 1 枚，未用的终局 ×1 分。
+</div>
+
+</section><section class="page ">
+<div class="phead"><h2>六、玩家板（× 6）</h2><span class="tag">第 10 页</span></div>
+<div class="grid-boards"><div class="board">
+<div class="bd-h"><span class="t">银时 · 万事屋</span><span class="s">银魂 夜祭</span></div>
+<div class="bd-row"><span class="lab">★ 好评</span><div class="cells"><span class="cell">0</span><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span><span class="cell">7</span><span class="cell">8</span><span class="cell">9</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span></div></div>
+<div class="bd-row"><span class="lab">💢 麻烦</span><div class="cells"><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span></div>
+<span style="font-size:6pt;color:#8a6a3b">满 3 → 付 3 两清空</span></div>
+<div class="bd-row"><span class="lab">💰 吹牛令</span><div class="cells">
+<span class="cell w">○</span><span class="cell w">○</span></div>
+<span style="font-size:6pt;color:#8a6a3b">完美 +3 两 / 否则 -1 两</span></div>
+<div class="bd-blocks"><div class="bd-blk">🏮 花街 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🏯 游郭 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🗡 百华 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🎲 赌坊 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div></div>
+<div class="bd-hours"><div>酉<div class="hb"></div></div><div>戌<div class="hb"></div></div><div>亥<div class="hb"></div></div><div>子<div class="hb"></div></div><div>丑<div class="hb"></div></div><div>寅<div class="hb"></div></div></div>
+<div class="bd-notes">记：别人出过的 6 点 / 弃牌堆 / 谁已经押过注</div>
+<div class="bd-foot"><span>💰 两：________</span><span>委托数：______</span><span class="sc"></span></div>
+</div><div class="board">
+<div class="bd-h"><span class="t">新八 · 万事屋</span><span class="s">银魂 夜祭</span></div>
+<div class="bd-row"><span class="lab">★ 好评</span><div class="cells"><span class="cell">0</span><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span><span class="cell">7</span><span class="cell">8</span><span class="cell">9</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span></div></div>
+<div class="bd-row"><span class="lab">💢 麻烦</span><div class="cells"><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span></div>
+<span style="font-size:6pt;color:#8a6a3b">满 3 → 付 3 两清空</span></div>
+<div class="bd-row"><span class="lab">💰 吹牛令</span><div class="cells">
+<span class="cell w">○</span><span class="cell w">○</span></div>
+<span style="font-size:6pt;color:#8a6a3b">完美 +3 两 / 否则 -1 两</span></div>
+<div class="bd-blocks"><div class="bd-blk">🏮 花街 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🏯 游郭 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🗡 百华 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🎲 赌坊 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div></div>
+<div class="bd-hours"><div>酉<div class="hb"></div></div><div>戌<div class="hb"></div></div><div>亥<div class="hb"></div></div><div>子<div class="hb"></div></div><div>丑<div class="hb"></div></div><div>寅<div class="hb"></div></div></div>
+<div class="bd-notes">记：别人出过的 6 点 / 弃牌堆 / 谁已经押过注</div>
+<div class="bd-foot"><span>💰 两：________</span><span>委托数：______</span><span class="sc"></span></div>
+</div><div class="board">
+<div class="bd-h"><span class="t">神乐 · 万事屋</span><span class="s">银魂 夜祭</span></div>
+<div class="bd-row"><span class="lab">★ 好评</span><div class="cells"><span class="cell">0</span><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span><span class="cell">7</span><span class="cell">8</span><span class="cell">9</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span></div></div>
+<div class="bd-row"><span class="lab">💢 麻烦</span><div class="cells"><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span></div>
+<span style="font-size:6pt;color:#8a6a3b">满 3 → 付 3 两清空</span></div>
+<div class="bd-row"><span class="lab">💰 吹牛令</span><div class="cells">
+<span class="cell w">○</span><span class="cell w">○</span></div>
+<span style="font-size:6pt;color:#8a6a3b">完美 +3 两 / 否则 -1 两</span></div>
+<div class="bd-blocks"><div class="bd-blk">🏮 花街 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🏯 游郭 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🗡 百华 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🎲 赌坊 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div></div>
+<div class="bd-hours"><div>酉<div class="hb"></div></div><div>戌<div class="hb"></div></div><div>亥<div class="hb"></div></div><div>子<div class="hb"></div></div><div>丑<div class="hb"></div></div><div>寅<div class="hb"></div></div></div>
+<div class="bd-notes">记：别人出过的 6 点 / 弃牌堆 / 谁已经押过注</div>
+<div class="bd-foot"><span>💰 两：________</span><span>委托数：______</span><span class="sc"></span></div>
+</div><div class="board">
+<div class="bd-h"><span class="t">月咏 · 万事屋</span><span class="s">银魂 夜祭</span></div>
+<div class="bd-row"><span class="lab">★ 好评</span><div class="cells"><span class="cell">0</span><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span><span class="cell">7</span><span class="cell">8</span><span class="cell">9</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span></div></div>
+<div class="bd-row"><span class="lab">💢 麻烦</span><div class="cells"><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span></div>
+<span style="font-size:6pt;color:#8a6a3b">满 3 → 付 3 两清空</span></div>
+<div class="bd-row"><span class="lab">💰 吹牛令</span><div class="cells">
+<span class="cell w">○</span><span class="cell w">○</span></div>
+<span style="font-size:6pt;color:#8a6a3b">完美 +3 两 / 否则 -1 两</span></div>
+<div class="bd-blocks"><div class="bd-blk">🏮 花街 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🏯 游郭 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🗡 百华 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🎲 赌坊 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div></div>
+<div class="bd-hours"><div>酉<div class="hb"></div></div><div>戌<div class="hb"></div></div><div>亥<div class="hb"></div></div><div>子<div class="hb"></div></div><div>丑<div class="hb"></div></div><div>寅<div class="hb"></div></div></div>
+<div class="bd-notes">记：别人出过的 6 点 / 弃牌堆 / 谁已经押过注</div>
+<div class="bd-foot"><span>💰 两：________</span><span>委托数：______</span><span class="sc"></span></div>
+</div><div class="board">
+<div class="bd-h"><span class="t">露鹏 · 万事屋</span><span class="s">银魂 夜祭</span></div>
+<div class="bd-row"><span class="lab">★ 好评</span><div class="cells"><span class="cell">0</span><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span><span class="cell">7</span><span class="cell">8</span><span class="cell">9</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span></div></div>
+<div class="bd-row"><span class="lab">💢 麻烦</span><div class="cells"><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span></div>
+<span style="font-size:6pt;color:#8a6a3b">满 3 → 付 3 两清空</span></div>
+<div class="bd-row"><span class="lab">💰 吹牛令</span><div class="cells">
+<span class="cell w">○</span><span class="cell w">○</span></div>
+<span style="font-size:6pt;color:#8a6a3b">完美 +3 两 / 否则 -1 两</span></div>
+<div class="bd-blocks"><div class="bd-blk">🏮 花街 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🏯 游郭 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🗡 百华 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🎲 赌坊 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div></div>
+<div class="bd-hours"><div>酉<div class="hb"></div></div><div>戌<div class="hb"></div></div><div>亥<div class="hb"></div></div><div>子<div class="hb"></div></div><div>丑<div class="hb"></div></div><div>寅<div class="hb"></div></div></div>
+<div class="bd-notes">记：别人出过的 6 点 / 弃牌堆 / 谁已经押过注</div>
+<div class="bd-foot"><span>💰 两：________</span><span>委托数：______</span><span class="sc"></span></div>
+</div><div class="board">
+<div class="bd-h"><span class="t">长谷川 · 万事屋</span><span class="s">银魂 夜祭</span></div>
+<div class="bd-row"><span class="lab">★ 好评</span><div class="cells"><span class="cell">0</span><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span><span class="cell">7</span><span class="cell">8</span><span class="cell">9</span><span class="cell">10</span><span class="cell">11</span><span class="cell">12</span><span class="cell">13</span><span class="cell">14</span><span class="cell">15</span></div></div>
+<div class="bd-row"><span class="lab">💢 麻烦</span><div class="cells"><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span><span class="cell" style="border-color:#6d3b55;color:#6d3b55">✕</span></div>
+<span style="font-size:6pt;color:#8a6a3b">满 3 → 付 3 两清空</span></div>
+<div class="bd-row"><span class="lab">💰 吹牛令</span><div class="cells">
+<span class="cell w">○</span><span class="cell w">○</span></div>
+<span style="font-size:6pt;color:#8a6a3b">完美 +3 两 / 否则 -1 两</span></div>
+<div class="bd-blocks"><div class="bd-blk">🏮 花街 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🏯 游郭 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🗡 百华 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div><div class="bd-blk">🎲 赌坊 <span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span><span class="tick" style="width:3.4mm;height:3.4mm"></span></div></div>
+<div class="bd-hours"><div>酉<div class="hb"></div></div><div>戌<div class="hb"></div></div><div>亥<div class="hb"></div></div><div>子<div class="hb"></div></div><div>丑<div class="hb"></div></div><div>寅<div class="hb"></div></div></div>
+<div class="bd-notes">记：别人出过的 6 点 / 弃牌堆 / 谁已经押过注</div>
+<div class="bd-foot"><span>💰 两：________</span><span>委托数：______</span><span class="sc"></span></div>
+</div></div><div class="map-legend" style="margin-top:3mm">玩家板用法：好评轨每 1 格 = 1 好评（超过 15 用麻烦标记代替，1 个 = 5）；下方四行是街区人情，每完成 1 单打 1 个勾，满 3 个 +3 分，满 4 个 +5 分。</div>
+</section><section class="page ">
+<div class="phead"><h2>七、标记与棋子</h2><span class="tag">第 11 页</span></div>
+
+<div class="sec-t">麻烦标记 × 18（每人 3 个）</div>
+<div class="marks"><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div><div class="mk bad"><div style="font-size:11pt">💢</div>麻烦</div></div>
+<div class="sec-t" style="margin-top:4mm">两 · 筹码（面额 1 两 × 24、面额 5 两 × 8）</div>
+<div class="marks"><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">1两</div><div class="mk money coin">5两</div><div class="mk money coin">5两</div><div class="mk money coin">5两</div><div class="mk money coin">5两</div><div class="mk money coin">5两</div><div class="mk money coin">5两</div><div class="mk money coin">5两</div><div class="mk money coin">5两</div></div>
+<div class="sec-t" style="margin-top:4mm">玩家棋子 × 6</div>
+<div class="marks"><div class="mk" style="border:1.1pt solid #8e2b23;color:#8e2b23"><div style="font-size:13pt">👨</div>银时</div><div class="mk" style="border:1.1pt solid #2f6f9e;color:#2f6f9e"><div style="font-size:13pt">👓</div>新八</div><div class="mk" style="border:1.1pt solid #c0392b;color:#c0392b"><div style="font-size:13pt">👧</div>神乐</div><div class="mk" style="border:1.1pt solid #7d3c98;color:#7d3c98"><div style="font-size:13pt">🗡</div>月咏</div><div class="mk" style="border:1.1pt solid #b7791f;color:#b7791f"><div style="font-size:13pt">🐱</div>阿妙</div><div class="mk" style="border:1.1pt solid #1d2b45;color:#1d2b45"><div style="font-size:13pt">👮</div>长谷川</div></div>
+<div class="map-legend" style="margin-top:3mm">
+棋子用法：派工时把棋子压在自己选中的委托上，表示“这单有人了”。没有棋子的委托就是没人接。<br>
+建议：麻烦标记与两筹码用不同颜色卡纸印刷，不然一桌子人分不清哪个是钱、哪个是麻烦。
+</div>
+
+</section><section class="page ">
+<div class="phead"><h2>八、速查卡（× 6）</h2><span class="tag">第 12 页</span></div>
+<div class="grid-ref"><div class="ref">
+<h4>一个时辰的五个阶段</h4>
+<b class="k">① 开市</b>：翻 人数+1 张委托 + 1 张麻烦卡<br>
+<b class="k">② 派工</b>：同时暗出 2 张，放同一张委托（或看店 +1 两）<br>
+<b class="k">③ 摊牌</b>：从①号位开始逐张结算<br>
+<b class="k">④ 押注</b>：吹牛令成功 +3 两 / 失败 -1 两<br>
+<b class="k">⑤ 收市</b>：麻烦满 3 土下座；交接起始玩家
+</div>
+<div class="ref">
+<h4>结算表（背这一张就够）</h4>
+<table>
+<tr><th>合计 vs 需求</th><th>判定</th><th>收入</th><th>好评</th></tr>
+<tr><td>= 需求</td><td>✅ 完美</td><td>全款</td><td>+2</td></tr>
+<tr><td>需求+1 ~ +2</td><td>🟡 勉强</td><td>半款向上</td><td>+1</td></tr>
+<tr><td>≥ 需求+3</td><td>❌ 翻车</td><td>0</td><td>+1麻烦</td></tr>
+<tr><td>&lt; 需求</td><td>❌ 踩空</td><td>0</td><td>—</td></tr>
+</table>
+<span class="fine">撞单：不超需求且最接近 → 比主力牌 → 完全相同平分（各半款+1⭐）<br>
+全员超需求：委托作废，参与者各 +1 麻烦</span>
+</div>
+<div class="ref">
+<h4>42 点恒等式</h4>
+<span class="fine">每人 12 张：1,1,2,2,3,3,4,4,5,5,6,6 = <b>42 点</b><br>
+6 轮 × 2 张 → 平均 <b>7 点/轮</b><br>
+需求 7 = 平均线；需求 9 必须 3+6 或 4+5</span>
+<table>
+<tr><th>需求</th><th>可用组合</th></tr>
+<tr><td>3-4</td><td>1+2 / 1+3 / 2+2</td></tr>
+<tr><td>5-6</td><td>1+4 / 2+3 / 2+4 / 3+3</td></tr>
+<tr><td>7</td><td>1+6 / 2+5 / 3+4</td></tr>
+<tr><td>8</td><td>2+6 / 3+5 / 4+4</td></tr>
+<tr><td>9</td><td>3+6 / 4+5</td></tr>
+</table>
+</div>
+<div class="ref">
+<h4>终局计分</h4>
+<table>
+<tr><td>💰 两</td><td>× 1</td></tr>
+<tr><td>⭐ 好评</td><td>× 2</td></tr>
+<tr><td>💰 未用吹牛令</td><td>× 1</td></tr>
+<tr><td>🏮 街区 3 单</td><td>+3</td></tr>
+<tr><td>🏮 街区 4 单+</td><td>+5</td></tr>
+<tr><td>📉 欠账</td><td>-3</td></tr>
+</table>
+<span class="fine">同分：两多 → 好评多 → 完成单数多</span>
+</div>
+<div class="ref">
+<h4>三个不该犯的错</h4>
+<span class="fine">① 把 6+5 丢在需求 9 以外的单上（溢出不退钱）<br>
+② 前 3 轮就把大牌出光（后 3 轮只能看着）<br>
+③ 每次都押注（4 人局命中率只有 25%）</span>
+<h4 style="margin-top:2mm">三个立刻能用的</h4>
+<span class="fine">① 第 1 轮只出 1 和 2，清废牌<br>
+② 数别人的 6（全桌只有 6 张）<br>
+③ 第 3 轮起，盯着自己已有 2 单的街区</span>
+</div>
+<div class="ref">
+<h4>单人挑战（自己打自己）</h4>
+<table>
+<tr><th>总分</th><th>评价</th></tr>
+<tr><td>55+</td><td>白夜叉本人</td></tr>
+<tr><td>45-54</td><td>万事屋老板</td></tr>
+<tr><td>35-44</td><td>能吃饱</td></tr>
+<tr><td>25-34</td><td>需要新八记账</td></tr>
+<tr><td>&lt; 25</td><td>建议改行卖团子</td></tr>
+</table>
+<span class="fine">规则：翻 5 张委托，出 2 张，记分，6 轮后看总分。</span>
+</div>
+<div class="ref wide">
+<h4>常见判例速答（争议时看这一栏）</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 5mm;font-size:7.2pt;line-height:1.95;color:#444">
+<div>• 不能只出 1 张；2 张必须同一张委托<br>
+• 看店 = +1 两，不参与任何委托<br>
+• 超 1-2 点 = 勉强；超 3 点+ = 翻车<br>
+• 不够需求 = 踩空，不记麻烦</div>
+<div>• 全员超需求 = 委托作废，各 +1 麻烦<br>
+• 平分算勉强 → 押注失败 -1 两<br>
+• 麻烦满 3 付 3 两；付不出 -3 分<br>
+• 剩下的牌不计分、不换钱</div>
+</div>
+<span class="fine">一句话：<b>溢出的点数不退钱，撞车的点数不翻倍，剩下的牌不变钱。</b></span>
+</div></div>
+</section>
+</body>
+</html>

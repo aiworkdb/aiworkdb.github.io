@@ -159,6 +159,7 @@ boardgames/
 | [青春猪头少年：不被看见的夏天](category/cooperative/rascal-unseen-summer/README.md) | 合作 | 2-4人 | 60-80分钟 | 中等偏难 |
 | [愚者之夜：转花契约](category/strategy/fool-night-bloom/README.md) | 策略 | 3-5人 | 50-75分钟 | 中等偏难 |
 | [斗破苍穹：异火燎原](category/card/flame-ascension/README.md) | 卡牌 | 2-4人 | 45-60分钟 | 中等 |
+| [银魂：夜祭万事屋](category/party/gintama-yorozuya-night-fair/README.md) | 派对 | 3-6人 | 30-45分钟 | 简单偏中 |
 
 ## 添加新桌游
 
