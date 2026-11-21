@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>章鱼噗：再来一次 · 打印道具 (TAKOPI: ONE MORE TIME)</title>
+<style>
+  :root{
+    --ink:#2b2333; --paper:#fffdf8;
+    --takopi:#7fb5e8; --takopi-d:#3f74a8;
+    --dark:#5a4a72; --dark-d:#3a2f4d;
+    --happy:#e8b23f; --happy-d:#b57f1d;
+    --pink:#f2a8c4; --pink-d:#c96a94;
+    --green:#7ec98f; --green-d:#4a8f5c;
+    --red:#e07070; --red-d:#a84040;
+    --night:#4a3d66;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:"Segoe UI","Microsoft YaHei",sans-serif; background:#dcd6cc; color:var(--ink); }
+  .page{ width:210mm; min-height:297mm; background:var(--paper); margin:8mm auto; padding:10mm; box-shadow:0 3px 14px rgba(0,0,0,.25); page-break-after:always; position:relative; }
+  .page-title{ font-size:20pt; font-weight:800; letter-spacing:2px; border-left:6px solid var(--takopi-d); padding-left:10px; margin-bottom:4mm; }
+  .page-sub{ font-size:9pt; color:#777; margin-bottom:5mm; }
+  .print-hint{ background:#fff6d6; border:2px dashed var(--happy-d); border-radius:8px; padding:5mm 6mm; font-size:10pt; margin-bottom:5mm; }
+  .print-hint ul{ margin:2mm 0 0 6mm; }
+  .footer-note{ position:absolute; bottom:6mm; left:10mm; right:10mm; font-size:8pt; color:#999; text-align:center; }
+
+  /* ---------- cover ---------- */
+  .cover{ height:297mm; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;
+    background:linear-gradient(160deg,#1e2a4a 0%, #3a2f4d 55%, #4a3d66 100%); color:#fff; }
+  .cover .tentacle{ font-size:64pt; margin-bottom:6mm; }
+  .cover h1{ font-size:34pt; letter-spacing:6px; margin-bottom:4mm; text-shadow:0 3px 0 rgba(0,0,0,.35); }
+  .cover .en{ font-size:13pt; letter-spacing:5px; color:#9fc6ea; margin-bottom:10mm; }
+  .cover .tag{ font-size:11pt; color:#e8e0f0; line-height:2; max-width:150mm; }
+  .cover .boxline{ margin-top:12mm; font-size:10pt; color:#b9d4ec; border:1px solid #6b7fae; border-radius:10px; padding:5mm 10mm; }
+
+  /* ---------- map ---------- */
+  .map{ border:3px solid var(--dark-d); border-radius:12px; background:linear-gradient(150deg,#f4f0e6,#e9e2d2); padding:4mm; }
+  .map-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:3mm; }
+  .region{ border-radius:8px; padding:3mm; min-height:38mm; color:#fff; display:flex; flex-direction:column; gap:1.5mm; }
+  .region h4{ font-size:12pt; } .region .r-icon{ font-size:17pt; } .region p{ font-size:7.5pt; line-height:1.5; opacity:.95; }
+  .region.r-school{ background:linear-gradient(150deg,#6e7fae,#4a5a8e); }
+  .region.r-street{ background:linear-gradient(150deg,#d08a4a,#a86426); }
+  .region.r-home{ background:linear-gradient(150deg,#c96a94,#a04a70); }
+  .region.r-park{ background:linear-gradient(150deg,#5aa86e,#3e7e50); }
+  .region.r-river{ background:linear-gradient(150deg,#5a8fb5,#3a6a92); }
+  .region.r-corner{ background:linear-gradient(150deg,#8a8a96,#66666f); }
+  .r-seed{ font-size:7pt; background:rgba(0,0,0,.28); border-radius:4px; padding:1mm 2mm; }
+  .tracks{ display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:4mm; margin-top:4mm; }
+  .track-box{ border:2px solid var(--dark-d); border-radius:8px; padding:3mm; background:#fff; }
+  .track-box h5{ font-size:9.5pt; margin-bottom:2mm; }
+  .track-cells{ display:flex; gap:1mm; flex-wrap:wrap; }
+  .tcell{ width:7mm; height:7mm; border:1px solid #aaa; border-radius:3px; font-size:6.5pt; display:flex; align-items:center; justify-content:center; color:#666; background:#f6f6f6; }
+  .tcell.t-dark{ background:linear-gradient(160deg,#5a4a72,#3a2f4d); color:#fff; border-color:#2a2140; font-weight:700; }
+  .tcell.t-happy{ background:linear-gradient(160deg,#f5d78a,#e0a83a); color:#5a3d00; border-color:#b57f1d; font-weight:700; }
+  .tcell.t-end{ background:#b03a3a; color:#fff; border-color:#7a2020; font-weight:800; }
+  .track-note{ font-size:7pt; color:#888; margin-top:1.5mm; }
+  .sched{ margin-top:4mm; border:2px solid var(--dark-d); border-radius:8px; padding:3mm; background:#fff; }
+  .sched .cells{ display:flex; gap:2mm; }
+  .s-day{ flex:1; border:1px solid #bbb; border-radius:6px; padding:1.5mm; text-align:center; font-size:8pt; background:#f2ecf7; }
+  .s-day b{ display:block; font-size:7.5pt; color:#5a4a72; }
+  .s-day.d6{ background:#f7e2e2; border-color:var(--red-d); }
+
+  /* ---------- cards ---------- */
+  .card-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:2.5mm; }
+  .card-grid.c4{ grid-template-columns:repeat(4,1fr); }
+  .card{ width:100%; aspect-ratio:62/86; border-radius:6mm; padding:3mm; color:#fff; display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:inset 0 0 0 1.6px rgba(255,255,255,.55); position:relative; }
+  .card .c-type{ font-size:6.5pt; letter-spacing:2px; opacity:.85; }
+  .card .c-icon{ font-size:20pt; text-align:center; margin:1.5mm 0; }
+  .card .c-name{ font-size:10pt; font-weight:800; text-align:center; line-height:1.25; }
+  .card .c-text{ font-size:6.8pt; line-height:1.5; margin-top:auto; background:rgba(0,0,0,.24); border-radius:3mm; padding:2mm; }
+  .card .c-foot{ font-size:6pt; text-align:center; opacity:.8; margin-top:1mm; }
+  .ev{ background:linear-gradient(160deg,#5a4a72,#3a2f4d); }
+  .ev.good{ background:linear-gradient(160deg,#5a9a7a,#3a7055); }
+  .ev.final{ background:linear-gradient(160deg,#a03a3a,#6a1f1f); }
+  .res{ background:linear-gradient(160deg,#f5f0e2,#e8dfc8); color:var(--ink); }
+  .res .c-text{ background:rgba(255,255,255,.65); color:#5a5340; }
+  .res.f-yu{ box-shadow:inset 0 0 0 2px #d07030; } .res.f-yu .c-icon{ color:#d07030; }
+  .res.f-kin{ box-shadow:inset 0 0 0 2px #c96a94; } .res.f-kin .c-icon{ color:#c96a94; }
+  .res.f-dream{ box-shadow:inset 0 0 0 2px #5a8fb5; } .res.f-dream .c-icon{ color:#5a8fb5; }
+  .res.f-ease{ box-shadow:inset 0 0 0 2px #5aa86e; } .res.f-ease .c-icon{ color:#5aa86e; }
+  .tool{ background:linear-gradient(160deg,#4a7ab5,#2f5488); }
+  .seed{ background:linear-gradient(160deg,#3a2f4d,#221a33); }
+  .mem{ background:linear-gradient(160deg,#e8b23f,#c98a20); color:#4a3200; }
+  .mem .c-text{ background:rgba(255,255,255,.55); color:#5a4200; }
+  .mem.m1{ background:linear-gradient(160deg,#a8c8a0,#7aa872); color:#263d20; }
+  .mem.m2{ background:linear-gradient(160deg,#e8b23f,#c98a20); }
+  .mem.m3{ background:linear-gradient(160deg,#8ab0e8,#5a7ab8); color:#1d2c4a; }
+  .mem.m3 .c-text{ background:rgba(255,255,255,.6); color:#2a3c60; }
+
+  /* ---------- roles ---------- */
+  .role-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:4mm; }
+  .role{ border-radius:8px; padding:4mm; color:#fff; min-height:52mm; }
+  .role h4{ font-size:13pt; } .role .r-role-icon{ font-size:22pt; }
+  .role p{ font-size:8pt; line-height:1.6; margin-top:2mm; background:rgba(0,0,0,.25); border-radius:3mm; padding:2.5mm; }
+  .role .r-ap{ font-size:7pt; margin-top:2mm; opacity:.9; }
+  .role.ro1{ background:linear-gradient(150deg,#5a9ab5,#3a6a92); }
+  .role.ro2{ background:linear-gradient(150deg,#c97a5a,#96502f); }
+  .role.ro3{ background:linear-gradient(150deg,#c96a94,#8e4468); }
+  .role.ro4{ background:linear-gradient(150deg,#7aa85a,#527a38); }
+  .role.ro5{ background:linear-gradient(150deg,#8a7ab5,#5f4f8e); }
+
+  /* ---------- tokens ---------- */
+  .token-grid{ display:flex; flex-wrap:wrap; gap:3mm; }
+  .token{ width:22mm; height:22mm; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-size:7pt; text-align:center; box-shadow:inset 0 0 0 2px rgba(255,255,255,.5); }
+  .token b{ font-size:12pt; } .token.tk-dark{ background:radial-gradient(circle,#5a4a72,#2c2440); } .token.tk-happy{ background:radial-gradient(circle,#f0cc6e,#c98a20); color:#5a3d00; }
+  .token.tk-energy{ background:radial-gradient(circle,#6ad0c8,#2f9a92); color:#0c3a37; } .token.tk-seed{ background:radial-gradient(circle,#4a3d66,#241d38); }
+  .token.tk-shizuka{ background:radial-gradient(circle,#f2a8c4,#c96a94); color:#5a1830; } .token.tk-start{ background:radial-gradient(circle,#d8d2c2,#a89f88); color:#3a3428; }
+  .pawn-grid{ display:flex; gap:3mm; flex-wrap:wrap; }
+  .pawn{ width:16mm; height:26mm; border-radius:8mm 8mm 3mm 3mm; display:flex; align-items:flex-start; justify-content:center; padding-top:3mm; color:#fff; font-size:9pt; font-weight:800; }
+  .pawn.p1{ background:linear-gradient(#7fb5e8,#3f74a8);} .pawn.p2{ background:linear-gradient(#e8a07f,#a85a3a);} .pawn.p3{ background:linear-gradient(#f2a8c4,#c96a94);}
+  .pawn.p4{ background:linear-gradient(#a8d88f,#5a8f3a);} .pawn.p5{ background:linear-gradient(#b0a0e0,#6a5aa8);}
+
+  /* ---------- quick ref ---------- */
+  .qr{ border:2px solid var(--dark-d); border-radius:8px; overflow:hidden; }
+  .qr table{ width:100%; border-collapse:collapse; font-size:8.5pt; }
+  .qr th{ background:var(--night); color:#fff; padding:2mm; text-align:left; font-size:9pt; }
+  .qr td{ border-top:1px solid #ccc; padding:2mm; vertical-align:top; }
+  .qr tr td:first-child{ width:22mm; font-weight:800; color:var(--takopi-d); background:#eef4fa; }
+
+  @media print{
+    *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+    body{ background:#fff; }
+    .page{ margin:0; box-shadow:none; width:auto; min-height:auto; padding:6mm; }
+    .print-hint{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ P1 封面 ═══════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="tentacle">🐙</div>
+    <h1>章鱼噗：再来一次</h1>
+    <div class="en">TAKOPI · ONE MORE TIME</div>
+    <div class="tag">
+      一款 2-5 人合作桌游 · 45-70 分钟 · 12 岁以上<br>
+      六天时间线 · 黑暗轨 · 幸福多样性交付 · 悔改回溯<br><br>
+      <b>📦 共 8 个打印板块：地图 / 事件×18 / 碎片×28 / 道具×12 / 种×12 / 记忆×12 / 角色板×5 / 标记页</b>
+    </div>
+    <div class="boxline">「一遍一遍重来，直到那个人幸福为止。」<br>致敬《章鱼噗的原罪》（2026-11-27 动画开播）</div>
+  </div>
+  <div class="footer-note">第 1 / 9 页 · 本仓库第 133 款桌游 · boardgames/category/cooperative/takopi-one-more-time</div>
+</div>
+
+<!-- ═══════════ P2 打印说明 + 地图 ═══════════ -->
+<div class="page">
+  <div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+      <li>使用 A4 纸打印，打印设置请选择<strong>最小边距</strong>，并务必<strong>勾选「背景图形」</strong>，否则所有底色将不打印</li>
+      <li><strong>地图板与角色板</strong>建议卡纸打印；<strong>卡牌</strong>建议卡纸或塑封（碎片卡摸洗频繁）</li>
+      <li>无彩色打印机时：碎片卡可用扑克 4 花色替代（红=🍜友情 / 黑=🏠亲情 / 方=⭐梦想 / 梅=🌸安心），其余板块黑白打印仍可辨认图标</li>
+      <li>打印 2 份标记页（黑暗标记容易滚丢）；标记可改用硬币/豆子</li>
+    </ul>
+  </div>
+  <div class="page-title">🗺 光来町地图板</div>
+  <div class="page-sub">6 区域 + 黑暗轨 / 幸福轨 / 能量池 / 日程环 —— 地图板建议单独打印并塑封</div>
+  <div class="map">
+    <div class="map-grid">
+      <div class="region r-school">
+        <div class="r-icon">🏫</div><h4>光来小学校</h4>
+        <p>碎片：🍜 友情。静香第 2、6 天在此。</p>
+        <div class="r-seed">风险：🗯 谣言（种≥2 重叠封锁 · 种=3 沦陷败北）</div>
+      </div>
+      <div class="region r-park">
+        <div class="r-icon">🌳</div><h4>中央公园</h4>
+        <p>碎片：🌸 安心。所有人开局在此。搜集 +1 张。</p>
+        <div class="r-seed">风险：🕳 阴影（被种时公园搜集不再+1）</div>
+      </div>
+      <div class="region r-street">
+        <div class="r-icon">🛍</div><h4>商店街</h4>
+        <p>碎片：🍜 友情。弃 2 张碎片 → 换 1 ⏳（每人每回合限 1 次）。</p>
+        <div class="r-seed">风险：📝 缺席（被种时不能换能量）</div>
+      </div>
+      <div class="region r-home">
+        <div class="r-icon">🏢</div><h4>静香家公寓</h4>
+        <p>碎片：🏠 亲情。<b>搜集可自选颜色</b>（全图唯一）。</p>
+        <div class="r-seed">风险：🚪 孤立（被种时不可搜集，优先净化）</div>
+      </div>
+      <div class="region r-river">
+        <div class="r-icon">🌉</div><h4>河堤</h4>
+        <p>碎片：⭐ 梦想。搜集前需花 1AP「鼓起勇气」。</p>
+        <div class="r-seed">风险：🌙 夜哭（被种时需 2AP）</div>
+      </div>
+      <div class="region r-corner">
+        <div class="r-icon">💬</div><h4>闲聊角（安全区）</h4>
+        <p>换色：弃 3 张碎片 → 换 1 张自选色（1AP，每回合限 1 次）。</p>
+        <div class="r-seed">无事件会在此放种</div>
+      </div>
+    </div>
+    <div class="tracks">
+      <div class="track-box">
+        <h5>⏱ 黑暗轨（12 = 全员失败）</h5>
+        <div class="track-cells">
+          <div class="tcell t-dark">2</div><div class="tcell t-dark">3</div><div class="tcell t-dark">4</div><div class="tcell t-dark">5</div><div class="tcell t-dark">6</div><div class="tcell t-dark">7</div><div class="tcell t-dark">8</div><div class="tcell t-dark">9</div><div class="tcell t-dark">10</div><div class="tcell t-dark">11</div><div class="tcell t-end">12</div>
+        </div>
+        <div class="track-note">起始 2 · 每天黄昏 +1 · 事件与悔改另计 · 悔改一次 +2</div>
+      </div>
+      <div class="track-box">
+        <h5>⭐ 幸福轨（第 6 天黄昏 ≥10 胜）</h5>
+        <div class="track-cells">
+          <div class="tcell t-happy">0</div><div class="tcell t-happy">1</div><div class="tcell t-happy">2</div><div class="tcell t-happy">3</div><div class="tcell t-happy">4</div><div class="tcell t-happy">5</div><div class="tcell t-happy">6</div><div class="tcell t-happy">7</div><div class="tcell t-happy">8</div><div class="tcell t-happy">9</div><div class="tcell t-happy">10</div>
+        </div>
+        <div class="track-note">同一天内同色碎片第 2 枚起不计分（多样幸福）</div>
+      </div>
+      <div class="track-box">
+        <h5>⏳ 穿越能量池（共 6 枚）</h5>
+        <div class="track-cells">
+          <div class="tcell">⏳</div><div class="tcell">⏳</div><div class="tcell">⏳</div><div class="tcell">⏳</div><div class="tcell">⏳</div><div class="tcell">⏳</div>
+        </div>
+        <div class="track-note">商店街 2 碎片=1⏳ · 悔改 3⏳（怀表 2⏳）· 限额 3 次</div>
+      </div>
+    </div>
+    <div class="sched">
+      <h5>📅 静香日程环（拂晓移动，交付必须在她的当前位置）</h5>
+      <div class="cells">
+        <div class="s-day"><b>第 1 天</b>🌳 公园</div>
+        <div class="s-day"><b>第 2 天</b>🏫 学校</div>
+        <div class="s-day"><b>第 3 天</b>🛍 商店街</div>
+        <div class="s-day"><b>第 4 天</b>🌉 河堤</div>
+        <div class="s-day"><b>第 5 天</b>🏢 公寓</div>
+        <div class="s-day d6"><b>第 6 天</b>🏫 学校<br>悲剧日</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">第 2 / 9 页 · 地图板（打印时勾选背景图形）</div>
+</div>
+
+<!-- ═══════════ P3 事件卡 ×18 ═══════════ -->
+<div class="page">
+  <div class="page-title">🎴 事件卡 ×18</div>
+  <div class="page-sub">洗混成事件库，每天拂晓翻 1 张结算。绿色为机会卡，红色为固定第 6 天事件。</div>
+  <div class="card-grid">
+    <div class="card ev"><div class="c-type">事件 · 恶化</div><div class="c-icon">☁️</div><div class="c-name">乌云低垂</div><div class="c-text">黑暗 +1。今天的黄昏再加 1（合计 +2）。</div><div class="c-foot">TAKOPI · 01</div></div>
+    <div class="card ev"><div class="c-type">事件 · 放种</div><div class="c-icon">📱</div><div class="c-name">群聊围攻</div><div class="c-text">🏫 学校放 1 枚 🗯 谣言种（学校不可交付）。</div><div class="c-foot">TAKOPI · 02</div></div>
+    <div class="card ev"><div class="c-type">事件 · 恶化</div><div class="c-icon">🌧</div><div class="c-name">放学暴雨</div><div class="c-text">今天所有移动花费 2AP（道具传送带不受影响）。</div><div class="c-foot">TAKOPI · 03</div></div>
+    <div class="card ev"><div class="c-type">事件 · 掠夺</div><div class="c-icon">🎒</div><div class="c-name">走失的书包</div><div class="c-text">每名玩家弃 1 张碎片（无碎片则跳过）。</div><div class="c-foot">TAKOPI · 04</div></div>
+    <div class="card ev"><div class="c-type">事件 · 放种</div><div class="c-icon">🕳</div><div class="c-name">河堤阴影</div><div class="c-text">🌉 河堤放 2 枚 🌙 夜哭种。检查是否沦陷（种=3 即败）。</div><div class="c-foot">TAKOPI · 05</div></div>
+    <div class="card ev"><div class="c-type">事件 · 恶化</div><div class="c-icon">🌙</div><div class="c-name">夜哭</div><div class="c-text">黑暗 +2。静香当前位置若有种，额外放 1 枚同种。</div><div class="c-foot">TAKOPI · 06</div></div>
+    <div class="card ev good"><div class="c-type">事件 · 机会</div><div class="c-icon">🍬</div><div class="c-name">商店街优惠</div><div class="c-text">每名玩家从碎片库翻 1 张加入手牌。</div><div class="c-foot">TAKOPI · 07</div></div>
+    <div class="card ev good"><div class="c-type">事件 · 机会</div><div class="c-icon">📸</div><div class="c-name">目击者</div><div class="c-text">今天首个完成净化的玩家，额外抽 2 张记忆卡（二选一）。</div><div class="c-foot">TAKOPI · 08</div></div>
+    <div class="card ev"><div class="c-type">事件 · 放种</div><div class="c-icon">🚨</div><div class="c-name">保健室危机</div><div class="c-text">黑暗 +1；🏢 公寓放 1 枚 🚪 孤立种。</div><div class="c-foot">TAKOPI · 09</div></div>
+    <div class="card ev good"><div class="c-type">事件 · 机会</div><div class="c-icon">🎈</div><div class="c-name">放飞心愿</div><div class="c-text">幸福立即 +1（当天算入多样性：视为今天交了 1 枚任意色）。</div><div class="c-foot">TAKOPI · 10</div></div>
+    <div class="card ev"><div class="c-type">事件 · 恶化</div><div class="c-icon">🧊</div><div class="c-name">冷眼相待</div><div class="c-text">今天所有交付全部受同色限制加倍：当天每色仅第 1 枚计分。</div><div class="c-foot">TAKOPI · 11</div></div>
+    <div class="card ev"><div class="c-type">事件 · 放种</div><div class="c-icon">🐈‍⬛</div><div class="c-name">黑猫横道</div><div class="c-text">从种库翻 1 张，放其对应区域。</div><div class="c-foot">TAKOPI · 12</div></div>
+    <div class="card ev"><div class="c-type">事件 · 放种</div><div class="c-icon">📝</div><div class="c-name">小测风波</div><div class="c-text">🏫 学校放 1 枚 📝 缺席种（商店街不能换能量）。</div><div class="c-foot">TAKOPI · 13</div></div>
+    <div class="card ev"><div class="c-type">事件 · 放种</div><div class="c-icon">🏡</div><div class="c-name">家门紧闭</div><div class="c-text">🏢 公寓放 1 枚 🚪 孤立种（公寓不可搜集）。</div><div class="c-foot">TAKOPI · 14</div></div>
+    <div class="card ev good"><div class="c-type">事件 · 机会</div><div class="c-icon">🌸</div><div class="c-name">春风来信</div><div class="c-text">今天每次净化后黑暗额外 -1。</div><div class="c-foot">TAKOPI · 15</div></div>
+    <div class="card ev"><div class="c-type">事件 · 掠夺</div><div class="c-icon">💬</div><div class="c-name">无声的目光</div><div class="c-text">黑暗 +1；每名玩家弃 1 张手牌。</div><div class="c-foot">TAKOPI · 16</div></div>
+    <div class="card ev good"><div class="c-type">事件 · 机会</div><div class="c-icon">🎵</div><div class="c-name">天台的歌</div><div class="c-text">今天在 🏫 学校的净化全部免费（0AP）。</div><div class="c-foot">TAKOPI · 17</div></div>
+    <div class="card ev final"><div class="c-type">事件 · 固定</div><div class="c-icon">⏰</div><div class="c-name">悲剧日前夜</div><div class="c-text">黑暗 +2。若提前翻出：压住，改为第 6 天拂晓结算（替换当天新卡）。</div><div class="c-foot">TAKOPI · 18</div></div>
+  </div>
+  <div class="footer-note">第 3 / 9 页 · 事件卡 18 张（卡纸打印 · 裁剪 · 塑封）</div>
+</div>
+
+<!-- ═══════════ P4 幸福碎片 ×28 ═══════════ -->
+<div class="page">
+  <div class="page-title">🍡 幸福碎片卡 ×28</div>
+  <div class="page-sub">🍜 友情 ×7 · 🏠 亲情 ×7 · ⭐ 梦想 ×7 · 🌸 安心 ×7。交付静香 +1 幸福；同色多样性规则生效。建议塑封。</div>
+  <div class="card-grid">
+    <div class="card res f-yu"><div class="c-type">幸福碎片 · 友情</div><div class="c-icon">🍜</div><div class="c-name">便当的味道</div><div class="c-text">交付 +1 ⭐（当天已交过 🍜 则不计分，可作能量）</div><div class="c-foot">友情 1/7</div></div>
+    <div class="card res f-yu"><div class="c-type">幸福碎片 · 友情</div><div class="c-icon">🍜</div><div class="c-name">分一半的炒面</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🍜 不计分）</div><div class="c-foot">友情 2/7</div></div>
+    <div class="card res f-yu"><div class="c-type">幸福碎片 · 友情</div><div class="c-icon">🍜</div><div class="c-name">课桌里的纸条</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🍜 不计分）</div><div class="c-foot">友情 3/7</div></div>
+    <div class="card res f-yu"><div class="c-type">幸福碎片 · 友情</div><div class="c-icon">🍜</div><div class="c-name">一起回家</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🍜 不计分）</div><div class="c-foot">友情 4/7</div></div>
+    <div class="card res f-yu"><div class="c-type">幸福碎片 · 友情</div><div class="c-icon">🍜</div><div class="c-name">运动会的应援</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🍜 不计分）</div><div class="c-foot">友情 5/7</div></div>
+    <div class="card res f-yu"><div class="c-type">幸福碎片 · 友情</div><div class="c-icon">🍜</div><div class="c-name">午休的笑声</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🍜 不计分）</div><div class="c-foot">友情 6/7</div></div>
+    <div class="card res f-yu"><div class="c-type">幸福碎片 · 友情</div><div class="c-icon">🍜</div><div class="c-name">放学后的糖果</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🍜 不计分）</div><div class="c-foot">友情 7/7</div></div>
+    <div class="card res f-kin"><div class="c-type">幸福碎片 · 亲情</div><div class="c-icon">🏠</div><div class="c-name">温热的晚饭</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🏠 不计分）</div><div class="c-foot">亲情 1/7</div></div>
+    <div class="card res f-kin"><div class="c-type">幸福碎片 · 亲情</div><div class="c-icon">🏠</div><div class="c-name">晾好的校服</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🏠 不计分）</div><div class="c-foot">亲情 2/7</div></div>
+    <div class="card res f-kin"><div class="c-type">幸福碎片 · 亲情</div><div class="c-icon">🏠</div><div class="c-name">门口的雨伞</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🏠 不计分）</div><div class="c-foot">亲情 3/7</div></div>
+    <div class="card res f-kin"><div class="c-type">幸福碎片 · 亲情</div><div class="c-icon">🏠</div><div class="c-name">留门的一盏灯</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🏠 不计分）</div><div class="c-foot">亲情 4/7</div></div>
+    <div class="card res f-kin"><div class="c-type">幸福碎片 · 亲情</div><div class="c-icon">🏠</div><div class="c-name">热牛奶</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🏠 不计分）</div><div class="c-foot">亲情 5/7</div></div>
+    <div class="card res f-kin"><div class="c-type">幸福碎片 · 亲情</div><div class="c-icon">🏠</div><div class="c-name">写给妈妈的信</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🏠 不计分）</div><div class="c-foot">亲情 6/7</div></div>
+    <div class="card res f-kin"><div class="c-type">幸福碎片 · 亲情</div><div class="c-icon">🏠</div><div class="c-name">全家福照片</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🏠 不计分）</div><div class="c-foot">亲情 7/7</div></div>
+  </div>
+  <div class="footer-note">第 4 / 9 页 · 碎片卡上半（友情 7 + 亲情 7）</div>
+</div>
+<div class="page">
+  <div class="page-title">🍡 幸福碎片卡 ×28（续）</div>
+  <div class="page-sub">⭐ 梦想 ×7 · 🌸 安心 ×7 —— 河堤产梦想（贵但稀有），公园产安心（最稳）</div>
+  <div class="card-grid">
+    <div class="card res f-dream"><div class="c-type">幸福碎片 · 梦想</div><div class="c-icon">⭐</div><div class="c-name">流星的约定</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 ⭐ 不计分）</div><div class="c-foot">梦想 1/7</div></div>
+    <div class="card res f-dream"><div class="c-type">幸福碎片 · 梦想</div><div class="c-icon">⭐</div><div class="c-name">长大以后的志愿表</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 ⭐ 不计分）</div><div class="c-foot">梦想 2/7</div></div>
+    <div class="card res f-dream"><div class="c-type">幸福碎片 · 梦想</div><div class="c-icon">⭐</div><div class="c-name">画满星星的笔记本</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 ⭐ 不计分）</div><div class="c-foot">梦想 3/7</div></div>
+    <div class="card res f-dream"><div class="c-type">幸福碎片 · 梦想</div><div class="c-icon">⭐</div><div class="c-name">天台看到的日出</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 ⭐ 不计分）</div><div class="c-foot">梦想 4/7</div></div>
+    <div class="card res f-dream"><div class="c-type">幸福碎片 · 梦想</div><div class="c-icon">⭐</div><div class="c-name">未寄出的明信片</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 ⭐ 不计分）</div><div class="c-foot">梦想 5/7</div></div>
+    <div class="card res f-dream"><div class="c-type">幸福碎片 · 梦想</div><div class="c-icon">⭐</div><div class="c-name">毕业旅行车票</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 ⭐ 不计分）</div><div class="c-foot">梦想 6/7</div></div>
+    <div class="card res f-dream"><div class="c-type">幸福碎片 · 梦想</div><div class="c-icon">⭐</div><div class="c-name">吹向未来的风</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 ⭐ 不计分）</div><div class="c-foot">梦想 7/7</div></div>
+    <div class="card res f-ease"><div class="c-type">幸福碎片 · 安心</div><div class="c-icon">🌸</div><div class="c-name">公园的长椅</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🌸 不计分）</div><div class="c-foot">安心 1/7</div></div>
+    <div class="card res f-ease"><div class="c-type">幸福碎片 · 安心</div><div class="c-icon">🌸</div><div class="c-name">小猫的呼噜声</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🌸 不计分）</div><div class="c-foot">安心 2/7</div></div>
+    <div class="card res f-ease"><div class="c-type">幸福碎片 · 安心</div><div class="c-icon">🌸</div><div class="c-name">午后的阳光</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🌸 不计分）</div><div class="c-foot">安心 3/7</div></div>
+    <div class="card res f-ease"><div class="c-type">幸福碎片 · 安心</div><div class="c-icon">🌸</div><div class="c-name">一根冰棍的下午</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🌸 不计分）</div><div class="c-foot">安心 4/7</div></div>
+    <div class="card res f-ease"><div class="c-type">幸福碎片 · 安心</div><div class="c-icon">🌸</div><div class="c-name">新书包的气味</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🌸 不计分）</div><div class="c-foot">安心 5/7</div></div>
+    <div class="card res f-ease"><div class="c-type">幸福碎片 · 安心</div><div class="c-icon">🌸</div><div class="c-name">谁的晚安</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🌸 不计分）</div><div class="c-foot">安心 6/7</div></div>
+    <div class="card res f-ease"><div class="c-type">幸福碎片 · 安心</div><div class="c-icon">🌸</div><div class="c-name">章鱼噗的笔头</div><div class="c-text">交付 +1 ⭐（同日第 2 枚 🌸 不计分）</div><div class="c-foot">安心 7/7</div></div>
+  </div>
+  <div class="footer-note">第 5 / 9 页 · 碎片卡下半（梦想 7 + 安心 7）</div>
+</div>
+
+<!-- ═══════════ P6 未来道具 ×12 ═══════════ -->
+<div class="page">
+  <div class="page-title">🛠 未来道具卡 ×12（6 种 ×2）</div>
+  <div class="page-sub">首次净化某区域的玩家抽 1 张；每人每回合限用 1 张，用完弃置。</div>
+  <div class="card-grid">
+    <div class="card tool"><div class="c-type">未来道具 · 道具 1</div><div class="c-icon">💪</div><div class="c-name">伸缩手臂</div><div class="c-text">本回合内不移动即可与相邻区域交互（搜集 / 交付 / 净化均可用）。</div><div class="c-foot">HAPPINESS LINKER 1/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 2</div><div class="c-icon">💨</div><div class="c-name">幸福喷雾</div><div class="c-text">花 1AP：单人净化 1 枚黑暗之种（无需协作）。</div><div class="c-foot">HAPPINESS LINKER 2/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 3</div><div class="c-icon">📷</div><div class="c-name">偷拍相机</div><div class="c-text">宣告悔改时打出：改为抽事件库顶 5 张选 1（而非 3 张）。</div><div class="c-foot">HAPPINESS LINKER 3/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 4</div><div class="c-icon">📺</div><div class="c-name">幸福播放器</div><div class="c-text">今天你交付的所有碎片无视同色多样性限制。</div><div class="c-foot">HAPPINESS LINKER 4/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 5</div><div class="c-icon">🛍</div><div class="c-name">幸福传送带</div><div class="c-text">打出后本次移动 0AP，可一次性穿过任意数量的相邻区域。</div><div class="c-foot">HAPPINESS LINKER 5/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 6</div><div class="c-icon">⏱</div><div class="c-name">时间怀表</div><div class="c-text">宣告悔改时打出：本次悔改只需 2 ⏳（黑暗 +2 照付）。</div><div class="c-foot">HAPPINESS LINKER 6/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 1</div><div class="c-icon">💪</div><div class="c-name">伸缩手臂</div><div class="c-text">本回合内不移动即可与相邻区域交互（搜集 / 交付 / 净化均可用）。</div><div class="c-foot">HAPPINESS LINKER 1/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 2</div><div class="c-icon">💨</div><div class="c-name">幸福喷雾</div><div class="c-text">花 1AP：单人净化 1 枚黑暗之种（无需协作）。</div><div class="c-foot">HAPPINESS LINKER 2/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 3</div><div class="c-icon">📷</div><div class="c-name">偷拍相机</div><div class="c-text">宣告悔改时打出：改为抽事件库顶 5 张选 1（而非 3 张）。</div><div class="c-foot">HAPPINESS LINKER 3/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 4</div><div class="c-icon">📺</div><div class="c-name">幸福播放器</div><div class="c-text">今天你交付的所有碎片无视同色多样性限制。</div><div class="c-foot">HAPPINESS LINKER 4/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 5</div><div class="c-icon">🛍</div><div class="c-name">幸福传送带</div><div class="c-text">打出后本次移动 0AP，可一次性穿过任意数量的相邻区域。</div><div class="c-foot">HAPPINESS LINKER 5/2</div></div>
+    <div class="card tool"><div class="c-type">未来道具 · 道具 6</div><div class="c-icon">⏱</div><div class="c-name">时间怀表</div><div class="c-text">宣告悔改时打出：本次悔改只需 2 ⏳（黑暗 +2 照付）。</div><div class="c-foot">HAPPINESS LINKER 6/2</div></div>
+  </div>
+  <div class="footer-note">第 6 / 9 页 · 未来道具卡 12 张（工具卡）</div>
+</div>
+
+<!-- ═══════════ P7 黑暗之种 ×12 ═══════════ -->
+<div class="page">
+  <div class="page-title">🕳 黑暗之种卡 ×12（6 种 ×2）</div>
+  <div class="page-sub">事件触发时翻出放置；净化需 2 人同区各 1AP（或章鱼噗 / 喷雾单人 2AP）。同区 3 枚 = 沦陷败北。</div>
+  <div class="card-grid">
+    <div class="card seed"><div class="c-type">黑暗之种 · 学校</div><div class="c-icon">🗯</div><div class="c-name">谣言</div><div class="c-text">放置区：🏫 学校。效果：学校不可交付。</div><div class="c-foot">SEED 1/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 公寓</div><div class="c-icon">🚪</div><div class="c-name">孤立</div><div class="c-text">放置区：🏢 公寓。效果：公寓不可搜集。</div><div class="c-foot">SEED 2/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 河堤</div><div class="c-icon">🌙</div><div class="c-name">夜哭</div><div class="c-text">放置区：🌉 河堤。效果：河堤搜集需 2AP。</div><div class="c-foot">SEED 3/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 商店街</div><div class="c-icon">📝</div><div class="c-name">缺席</div><div class="c-text">放置区：🛍 商店街。效果：不能换能量。</div><div class="c-foot">SEED 4/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 公园</div><div class="c-icon">🕳</div><div class="c-name">阴影</div><div class="c-text">放置区：🌳 公园。效果：公园搜集不再 +1 张。</div><div class="c-foot">SEED 5/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 任意</div><div class="c-icon">🤐</div><div class="c-name">沉默</div><div class="c-text">放置区：事件指定区域。放置时在场玩家各弃 1 张手牌。</div><div class="c-foot">SEED 6/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 学校</div><div class="c-icon">🗯</div><div class="c-name">谣言</div><div class="c-text">放置区：🏫 学校。效果：学校不可交付。</div><div class="c-foot">SEED 1/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 公寓</div><div class="c-icon">🚪</div><div class="c-name">孤立</div><div class="c-text">放置区：🏢 公寓。效果：公寓不可搜集。</div><div class="c-foot">SEED 2/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 河堤</div><div class="c-icon">🌙</div><div class="c-name">夜哭</div><div class="c-text">放置区：🌉 河堤。效果：河堤搜集需 2AP。</div><div class="c-foot">SEED 3/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 商店街</div><div class="c-icon">📝</div><div class="c-name">缺席</div><div class="c-text">放置区：🛍 商店街。效果：不能换能量。</div><div class="c-foot">SEED 4/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 公园</div><div class="c-icon">🕳</div><div class="c-name">阴影</div><div class="c-text">放置区：🌳 公园。效果：公园搜集不再 +1 张。</div><div class="c-foot">SEED 5/6 · 净化后弃置</div></div>
+    <div class="card seed"><div class="c-type">黑暗之种 · 任意</div><div class="c-icon">🤐</div><div class="c-name">沉默</div><div class="c-text">放置区：事件指定区域。放置时在场玩家各弃 1 张手牌。</div><div class="c-foot">SEED 6/6 · 净化后弃置</div></div>
+  </div>
+  <div class="footer-note">第 7 / 9 页 · 黑暗之种 12 张（陷阱卡）</div>
+</div>
+
+<!-- ═══════════ P8 珍贵记忆 ×12 ═══════════ -->
+<div class="page">
+  <div class="page-title">💎 珍贵记忆卡 ×12</div>
+  <div class="page-sub">净化后抽 1 张；协作净化（2 人）改二选一；悔改成功后也抽 1 张。打出：1AP → 幸福 +N。</div>
+  <div class="card-grid">
+    <div class="card mem m1"><div class="c-type">珍贵记忆 · ★</div><div class="c-icon">🌱</div><div class="c-name">小小的勇敢</div><div class="c-text">打出 1AP：幸福 +1。</div><div class="c-foot">MEMORY 1 分 1/4</div></div>
+    <div class="card mem m1"><div class="c-type">珍贵记忆 · ★</div><div class="c-icon">🌱</div><div class="c-name">替她举手的那一天</div><div class="c-text">打出 1AP：幸福 +1。</div><div class="c-foot">MEMORY 1 分 2/4</div></div>
+    <div class="card mem m1"><div class="c-type">珍贵记忆 · ★</div><div class="c-icon">🌱</div><div class="c-name">一起放学的傍晚</div><div class="c-text">打出 1AP：幸福 +1。</div><div class="c-foot">MEMORY 1 分 3/4</div></div>
+    <div class="card mem m1"><div class="c-type">珍贵记忆 · ★</div><div class="c-icon">🌱</div><div class="c-name">递出的创可贴</div><div class="c-text">打出 1AP：幸福 +1。</div><div class="c-foot">MEMORY 1 分 4/4</div></div>
+    <div class="card mem m2"><div class="c-type">珍贵记忆 · ★★</div><div class="c-icon">🤝</div><div class="c-name">透明的约定</div><div class="c-text">打出 1AP：幸福 +2。</div><div class="c-foot">MEMORY 2 分 1/4</div></div>
+    <div class="card mem m2"><div class="c-type">珍贵记忆 · ★★</div><div class="c-icon">🤝</div><div class="c-name">章鱼噗的翅膀</div><div class="c-text">打出 1AP：幸福 +2。</div><div class="c-foot">MEMORY 2 分 2/4</div></div>
+    <div class="card mem m2"><div class="c-type">珍贵记忆 · ★★</div><div class="c-icon">🤝</div><div class="c-name">没有说出口的谢谢</div><div class="c-text">打出 1AP：幸福 +2。</div><div class="c-foot">MEMORY 2 分 3/4</div></div>
+    <div class="card mem m2"><div class="c-type">珍贵记忆 · ★★</div><div class="c-icon">🤝</div><div class="c-name">并肩看过的烟火</div><div class="c-text">打出 1AP：幸福 +2。</div><div class="c-foot">MEMORY 2 分 4/4</div></div>
+    <div class="card mem m3"><div class="c-type">珍贵记忆 · ★★★</div><div class="c-icon">🌈</div><div class="c-name">未来的证明</div><div class="c-text">打出 1AP：幸福 +3。</div><div class="c-foot">MEMORY 3 分 1/4</div></div>
+    <div class="card mem m3"><div class="c-type">珍贵记忆 · ★★★</div><div class="c-icon">🌈</div><div class="c-name">她笑了的那一秒</div><div class="c-text">打出 1AP：幸福 +3。</div><div class="c-foot">MEMORY 3 分 2/4</div></div>
+    <div class="card mem m3"><div class="c-type">珍贵记忆 · ★★★</div><div class="c-icon">🌈</div><div class="c-name">不再重来的早晨</div><div class="c-text">打出 1AP：幸福 +3。</div><div class="c-foot">MEMORY 3 分 3/4</div></div>
+    <div class="card mem m3"><div class="c-type">珍贵记忆 · ★★★</div><div class="c-icon">🌈</div><div class="c-name">光来町的春天</div><div class="c-text">打出 1AP：幸福 +3。</div><div class="c-foot">MEMORY 3 分 4/4</div></div>
+  </div>
+  <div class="footer-note">第 8 / 9 页 · 珍贵记忆 12 张（宝藏卡）</div>
+</div>
+
+<!-- ═══════════ P9 角色板 + 棋子 + 标记 + 速查 ═══════════ -->
+<div class="page">
+  <div class="page-title">👤 角色板 ×5 · 棋子 · 标记</div>
+  <div class="page-sub">角色板按人数抽取；棋子每人 1 枚；静香 / 种 / ⏳ / 起始标记各取所需（建议再打一份标记页备用）。</div>
+  <div class="role-grid">
+    <div class="role ro1"><div class="r-role-icon">🐙</div><h4>章鱼噗（净化专家）</h4><p><b>单人净化</b>：可 2AP 单人净化任意区域 1 枚种（无需协作、无需道具）。</p><p style="margin-top:1.5mm"><b>捡宝</b>：每局限 1 次打出记忆卡不花 AP。</p><div class="r-ap">定位：清障核心 · 优先驻守学校</div></div>
+    <div class="role ro2"><div class="r-role-icon">🏃</div><h4>小亚（跑者）</h4><p><b>轻步</b>：每回合第一次移动免费（0AP）。</p><p style="margin-top:1.5mm"><b>随行</b>：移动时可免费携带 1 枚碎片同行（不占额外行动）。</p><div class="r-ap">定位：运输线 · 追着静香送碎片</div></div>
+    <div class="role ro3"><div class="r-role-icon">🎒</div><h4>明里（补给员）</h4><p><b>满兜</b>：每回合限 1 次，搜集时额外翻 1 张碎片。</p><p style="margin-top:1.5mm"><b>分享</b>：每回合限 1 次，把自己 1 张碎片当面递给同区域同伴（不花 AP）。</p><div class="r-ap">定位：资源引擎 · 公寓蹲点自选色</div></div>
+    <div class="role ro4"><div class="r-role-icon">📣</div><h4>达也（发声者）</h4><p><b>传声</b>：每回合限 1 次，在自己所在区域直接交付碎片给静香（若静香与相邻区域，视为在她身边）。</p><p style="margin-top:1.5mm"><b>打气</b>：净化完成后立即抽 1 张碎片卡。</p><div class="r-ap">定位：远程交付 + 能量专岗</div></div>
+    <div class="role ro5"><div class="r-role-icon">🔭</div><h4>波普（观察者 · 未来机器）</h4><p><b>预知</b>：每回合开始偷看事件库顶 1 张（看完放回）。</p><p style="margin-top:1.5mm"><b>校准</b>：每回合限 1 次，使用道具卡不占本回合道具限额。</p><div class="r-ap">定位：情报 + 道具引擎</div></div>
+  </div>
+  <div style="margin-top:5mm">
+    <div class="pawn-grid">
+      <div class="pawn p1">🐙</div><div class="pawn p2">🏃</div><div class="pawn p3">🎒</div><div class="pawn p4">📣</div><div class="pawn p5">🔭</div><div class="pawn" style="background:linear-gradient(#f2a8c4,#c96a94)">👧</div>
+    </div>
+    <div style="font-size:8pt;color:#888;margin-top:1.5mm">玩家棋子 ×5 + 静香标记 ×1（👧 粉色）—— 裁下后沿底边折 5mm 即可站立</div>
+  </div>
+  <div style="margin-top:4mm">
+    <div class="token-grid">
+      <div class="token tk-dark"><b>⬛</b>黑暗<br>×12</div>
+      <div class="token tk-happy"><b>⭐</b>幸福<br>×10</div>
+      <div class="token tk-energy"><b>⏳</b>能量<br>×6</div>
+      <div class="token tk-seed"><b>🕳</b>之种<br>×12</div>
+      <div class="token tk-shizuka"><b>📅</b>日程<br>×1</div>
+      <div class="token tk-start"><b>🏮</b>起始<br>×1</div>
+    </div>
+  </div>
+  <div class="qr" style="margin-top:5mm">
+    <table>
+      <tr><th colspan="2">📄 一页速查（速查卡 ×2 裁下发给玩家）</th></tr>
+      <tr><td>拂晓</td><td>日历 +1 → 静香走日程环 → 翻 1 张事件卡结算</td></tr>
+      <tr><td>白昼</td><td>每人 3AP：移动1 / 搜集1 / 交付1AP·枚（同色当日第2枚不计） / 协作净化各1 · 单人2 / 记忆卡1 / 换色1 / 换⏳0（商店街） / 道具1（限1张）</td></tr>
+      <tr><td>黄昏</td><td>黑暗 +1（第 6 天不加）→ 黑暗 12 或单区种 3 → 全员失败</td></tr>
+      <tr><td>悔改</td><td>任何时候·限 3 次：弃 3⏳ → 黑暗 +2 → 抽事件顶 3 选 1 替换下一天 → 移除静香区 1 种 → 抽记忆卡</td></tr>
+      <tr><td>终局</td><td>第 6 天黄昏后：幸福 ≥10 且 黑暗 ≤11 且 无单区种 3 → 全员胜利</td></tr>
+    </table>
+  </div>
+  <div class="footer-note">第 9 / 9 页 · 角色板 / 棋子 / 标记 / 速查 · 建议标记页多打一份</div>
+</div>
+
+</body>
+</html>
