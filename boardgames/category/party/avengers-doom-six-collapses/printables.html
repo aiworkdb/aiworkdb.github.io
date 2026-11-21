@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复仇者联盟：毁灭日 · 六道崩塌 · 打印道具</title>
+<style>
+:root{
+  --ink:#201d26; --paper:#fffdf7;
+  --doom:#1f4d3a; --doom-l:#3f9e73; --doom-d:#12301f;
+  --gold:#c9a227; --gold-d:#8a6d10;
+  --violet:#4a2f6b; --violet-d:#2c1b42;
+  --muted:#8a8480;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:"Noto Sans SC","Microsoft YaHei","Segoe UI",sans-serif; background:#cfcac0; color:var(--ink); -webkit-font-smoothing:antialiased; }
+.page{ width:210mm; height:297mm; background:var(--paper); margin:0 auto; padding:9mm 10mm 11mm;
+  page-break-after:always; break-after:page; position:relative; overflow:hidden; }
+.page:last-child{ page-break-after:auto; }
+.page-title{ font-size:17pt; font-weight:800; letter-spacing:1.5px; border-left:7px solid var(--doom);
+  padding-left:9px; margin-bottom:2mm; color:var(--doom-d); }
+.page-sub{ font-size:8.2pt; color:#7d7671; line-height:1.6; margin-bottom:4mm; padding-left:16px; }
+.footer-note{ position:absolute; bottom:4.5mm; left:10mm; right:10mm; font-size:7.2pt; color:#b6b0a8; text-align:center; letter-spacing:.5px; }
+.sub-h{ font-size:10pt; font-weight:800; color:var(--doom-d); margin:5mm 0 2.5mm; padding-bottom:1mm; border-bottom:2px solid rgba(31,77,58,.18); }
+
+/* ---------- cover ---------- */
+.cover{ background:radial-gradient(circle at 50% 32%,#2c6a4c 0%,#1a4230 42%,#0d1f18 78%,#070f0c 100%);
+  color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.cover:before{ content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(115deg,rgba(201,162,39,.07) 0 2px,transparent 2px 22px); }
+.cv-badge{ position:relative; font-size:6.4pt; letter-spacing:3pt; color:#8fc9ab; border:1px solid rgba(143,201,171,.5);
+  padding:1.6mm 5mm; border-radius:20px; margin-bottom:10mm; }
+.cv-icon{ position:relative; font-size:52pt; line-height:1; margin-bottom:3mm; }
+.cover h1{ position:relative; font-size:40pt; letter-spacing:12px; font-weight:900; text-indent:12px;
+  text-shadow:0 3px 0 #0a1712, 0 10px 26px rgba(0,0,0,.6); margin-bottom:3mm; }
+.cv-en{ position:relative; font-size:9.2pt; letter-spacing:3pt; color:var(--gold); margin-bottom:7mm; }
+.cv-line{ position:relative; width:52mm; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin-bottom:8mm; }
+.cv-tag{ position:relative; font-size:10pt; line-height:2.05; color:#dbe8e1; max-width:132mm; }
+.cv-tag b{ color:#fff; }
+.cv-meta{ position:relative; display:flex; margin-top:11mm; }
+.cv-meta span{ font-size:8.4pt; color:#cfe3d9; padding:2mm 5mm; border-left:1px solid rgba(255,255,255,.22); }
+.cv-meta span:first-child{ border-left:none; }
+.cv-call{ position:relative; margin-top:9mm; font-size:9pt; color:#9fd3b6; border:1px dashed rgba(159,211,182,.55);
+  border-radius:8px; padding:2.6mm 8mm; }
+.cv-hint{ position:absolute; bottom:14mm; font-size:7.4pt; color:#7ba18f; letter-spacing:.6px; }
+
+/* ---------- hint ---------- */
+.print-hint{ background:#fff7de; border:2px dashed var(--gold-d); border-radius:8px; padding:4mm 5mm; font-size:8.8pt; line-height:1.72; color:#5a4a1a; }
+.print-hint ul{ margin:2mm 0 0 6mm; }
+.print-hint li{ margin-bottom:.8mm; }
+.list-tb{ width:100%; border-collapse:collapse; font-size:8.4pt; }
+.list-tb th{ background:var(--doom); color:#fff; padding:2mm 2.5mm; text-align:left; font-weight:700; }
+.list-tb td{ border-bottom:1px solid #e2ddd2; padding:1.8mm 2.5mm; }
+.list-tb tr:nth-child(even) td{ background:#faf7ef; }
+.setup-ol{ font-size:8.8pt; line-height:1.8; margin-left:6mm; }
+.warn-box{ margin-top:5mm; background:#fdf0f0; border-left:6px solid #b4362f; border-radius:6px; padding:3.5mm 4.5mm; font-size:8.6pt; line-height:1.72; }
+.warn-box ol{ margin:1.5mm 0 0 5mm; }
+.warn-box li{ margin-bottom:.8mm; }
+
+/* ---------- map ---------- */
+.map{ border:3px solid var(--doom-d); border-radius:12px; padding:4mm; background:linear-gradient(150deg,#f6f2e6,#ebe4d4); }
+.worlds{ display:grid; grid-template-columns:repeat(3,1fr); gap:3mm; }
+.world{ border-radius:9px; padding:3mm; color:#fff; min-height:46mm; display:flex; flex-direction:column;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35); }
+.w-head{ display:flex; align-items:center; gap:1.6mm; }
+.w-icon{ font-size:14pt; }
+.w-name{ font-size:11pt; font-weight:800; }
+.w-desc{ font-size:7pt; opacity:.88; margin-top:.8mm; }
+.w-sig{ font-size:6.8pt; margin-top:1.6mm; background:rgba(0,0,0,.3); border-radius:4px; padding:1.2mm 2mm; }
+.w-slot{ margin-top:auto; height:20mm; border:2px dashed rgba(255,255,255,.55); border-radius:6px; display:flex;
+  align-items:center; justify-content:center; font-size:7.2pt; letter-spacing:3px; opacity:.8; }
+.track{ border:2px solid var(--doom-d); border-radius:8px; padding:2.6mm; background:#fff; margin-top:3.5mm; }
+.track-h{ font-size:7.6pt; margin-bottom:2mm; color:#4a453f; line-height:1.4; }
+.track-h b{ color:#8a1f1f; }
+.track-cells{ display:flex; gap:1.5mm; }
+.dcell{ flex:1; height:12mm; border:1px solid #b9b3a6; border-radius:4px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; font-size:10pt; font-weight:800; color:#5c564c; background:#f4f1e8; }
+.dcell.d-start{ background:#e8e4d6; }
+.dcell.d-danger{ background:linear-gradient(160deg,#5d1f1f,#2c0c0c); color:#f0c8c8; border-color:#3c1010; }
+.dcell small{ font-size:5.2pt; font-weight:400; opacity:.85; }
+.scell{ flex:1; height:7.6mm; border:1px solid #cdc7b9; border-radius:3px; display:flex; align-items:center;
+  justify-content:center; font-size:6.4pt; color:#6e675c; background:#faf8f2; }
+.scell.s-mark{ background:#eef3ee; border-color:var(--doom); font-weight:800; color:var(--doom-d); }
+.map-tips{ margin-top:3.5mm; display:grid; gap:1.5mm; font-size:8.2pt; }
+.map-tips div{ background:#fff; border-left:4px solid var(--doom-l); border-radius:5px; padding:2mm 3mm; }
+
+/* ---------- cards ---------- */
+.grid-hero{ display:grid; grid-template-columns:repeat(4,42mm); gap:2.4mm; justify-content:center; }
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:3mm; }
+.grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:2.6mm; }
+.card{ border-radius:4.5mm; color:#fff; display:flex; flex-direction:column; overflow:hidden; position:relative;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5); }
+.grid-hero .card{ width:42mm; aspect-ratio:62/86; padding:2.6mm; }
+.grid-3 .card{ width:100%; aspect-ratio:62/86; }
+.grid-4 .card{ width:100%; aspect-ratio:62/86; padding:2.4mm; }
+.c-type{ font-size:5.6pt; letter-spacing:1.4pt; opacity:.85; }
+.c-icon{ font-size:17pt; text-align:center; margin:1mm 0; }
+.c-name{ font-size:9pt; font-weight:800; text-align:center; line-height:1.25; }
+.c-foot{ font-size:5.2pt; text-align:center; opacity:.75; letter-spacing:.2px; }
+
+.c-art{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:46pt; opacity:.075;
+  z-index:0; pointer-events:none; line-height:1; }
+.card > *:not(.c-art){ position:relative; z-index:1; }/* hero */
+.grid-hero .card{ justify-content:space-between; }
+.hero .c-icon{ font-size:15pt; margin:0; }
+.hero .c-name{ font-size:8pt; }
+.c-pow{ display:flex; align-items:baseline; justify-content:center; gap:.8mm;
+  background:rgba(0,0,0,.26); border-radius:3mm; padding:1.3mm 0; font-size:7pt; }
+.c-num{ font-size:11pt; font-weight:900; }
+.hero .c-foot{ margin-top:1.6mm; }
+
+/* collision */
+.coll{ background:linear-gradient(160deg,#fdfbf3,#eee8d8); color:var(--ink); padding:0; justify-content:space-between; }
+.c-site{ font-size:6.4pt; font-weight:800; color:#fff; padding:1.5mm 2.6mm; display:flex; justify-content:space-between; align-items:center; }
+.c-sid{ font-size:6pt; opacity:.8; letter-spacing:.5px; }
+.coll .c-title{ font-size:10.4pt; font-weight:900; text-align:center; padding:4mm 3mm 0; line-height:1.3; color:#1f1c17; }
+.c-needs{ display:flex; flex-direction:column; align-items:center; gap:1.5mm; }
+.nlbl{ font-size:5.8pt; color:#8a7f6a; letter-spacing:2.4px; }
+.chips{ display:flex; gap:1.6mm; }
+.chip{ font-size:7.8pt; font-weight:700; border:1.6px solid; border-radius:20px; padding:1mm 2.6mm; background:#fff; }
+.c-threat{ display:flex; flex-direction:column; align-items:center; gap:1.5mm; }
+.tnum{ width:13.5mm; height:13.5mm; border-radius:50%; border:2.2px solid #8a3020; background:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:15pt; font-weight:900; color:#7d2a1a; line-height:1; }
+.tlbl{ font-size:6.2pt; color:#7a7060; line-height:1.45; text-align:center; }
+.tlbl b{ color:#4a4232; }
+.coll .c-flav{ font-size:6.6pt; line-height:1.6; color:#6b6154; padding:2mm 3.4mm; font-style:italic; }
+.c-sig{ font-size:5.8pt; text-align:center; background:rgba(31,77,58,.1); color:#1f4d3a; padding:1.4mm; border-top:1px dashed #c9c0ab; }
+
+/* event / relic */
+.ev{ background:linear-gradient(160deg,#4a2f6b,#28183e); justify-content:space-between; }
+.ev .c-icon{ font-size:17pt; }
+.ev .c-name{ font-size:8.8pt; }
+.ev .c-text{ font-size:6.6pt; line-height:1.6; background:rgba(0,0,0,.28); border-radius:3mm; padding:2mm; }
+.rl{ background:linear-gradient(160deg,#c9a227,#8a6d10); color:#2a2000; justify-content:space-between; }
+.rl .c-type{ color:#3d2f00; opacity:.8; }
+.rl .c-icon{ font-size:17pt; }
+.rl .c-name{ font-size:8.8pt; color:#241b00; }
+.rl .c-text{ font-size:6.6pt; line-height:1.6; background:rgba(255,255,255,.55); border-radius:3mm; padding:2mm; color:#3a2d00; }
+.rl .c-foot{ color:#4a3a00; opacity:.85; }
+
+/* ---------- panels ---------- */
+.panel{ margin-top:4mm; background:#fff; border:2px solid var(--doom); border-radius:8px; padding:3.4mm 4mm; }
+.panel h4{ font-size:9.6pt; color:var(--doom-d); margin-bottom:2.2mm; }
+.panel-note{ font-size:7.6pt; color:#5f594f; line-height:1.6; margin-top:2mm; }
+.mini-tb{ width:100%; border-collapse:collapse; font-size:8pt; }
+.mini-tb th{ background:var(--doom); color:#fff; padding:1.6mm 2mm; text-align:left; font-size:8pt; font-weight:700; }
+.mini-tb td{ border-bottom:1px solid #e6e1d5; padding:1.5mm 2mm; line-height:1.5; }
+.mini-tb tbody tr:nth-child(even) td{ background:#faf8f1; }
+.mini-tb td:first-child{ font-weight:700; color:#3c3830; }
+.sub-panel{ margin-top:3.5mm; padding-top:3mm; border-top:2px solid rgba(31,77,58,.18); }
+.panel-2col{ display:grid; grid-template-columns:1fr 1fr; gap:2.4mm 5mm; font-size:7.8pt; line-height:1.62; color:#4a453d; }
+.panel-2col b{ color:var(--doom-d); }
+
+/* final card */
+.fin-row{ display:grid; grid-template-columns:58mm 1fr; gap:5mm; align-items:start; }
+.card.fin{ width:100%; aspect-ratio:62/86; background:linear-gradient(160deg,#7d2a1a,#2c0c0c); padding:2.8mm;
+  box-shadow:inset 0 0 0 2px var(--gold); }
+.fin .c-icon{ font-size:22pt; }
+.fin .c-name{ font-size:10pt; color:#ffe9a8; }
+.fin .c-text{ font-size:6.4pt; line-height:1.65; margin-top:auto; background:rgba(0,0,0,.32); border-radius:3mm; padding:2mm; }
+.fin .c-foot{ color:#ffd27a; opacity:.9; margin-top:1.5mm; }
+.final-note h4{ font-size:10pt; color:var(--doom-d); margin-bottom:2.4mm; }
+.final-note p{ font-size:8.2pt; line-height:1.78; margin-bottom:2mm; color:#3c3830; }
+
+/* ---------- tokens ---------- */
+.pawns{ display:grid; grid-template-columns:repeat(3,1fr); gap:3.5mm; }
+.pawn{ border-radius:10mm 10mm 3mm 3mm; padding:5mm 3mm 3.6mm; color:#fff; text-align:center; position:relative;
+  border-bottom:2px dashed rgba(255,255,255,.6); }
+.p-code{ display:block; font-size:16pt; font-weight:900; letter-spacing:-.5px; }
+.p-nm{ display:block; font-size:7.4pt; margin-top:1mm; opacity:.92; }
+.p-no{ position:absolute; top:2mm; right:3mm; font-size:6pt; opacity:.7; }
+.row-mk{ display:flex; gap:4mm; align-items:center; }
+.mk{ width:17mm; height:17mm; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:5.8pt; box-shadow:inset 0 0 0 1.6px rgba(255,255,255,.55); }
+.dmk{ width:20mm; height:20mm; border-radius:50%; background:radial-gradient(circle at 34% 28%,#5d1f1f,#1a0606);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; color:#f0c8c8;
+  box-shadow:inset 0 0 0 2px var(--gold); margin-left:6mm; }
+.dmk b{ font-size:12pt; } .dmk small{ font-size:5.2pt; letter-spacing:1px; }
+.screens{ display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+.screen{ display:grid; grid-template-columns:1fr; border:1.5px dashed #b9b3a6; border-radius:6px; overflow:hidden; }
+.scr-face{ background:#f4f1e6; padding:4mm; text-align:center; color:#4a453d; height:24mm; display:flex;
+  flex-direction:column; justify-content:center; }
+.scr-face b{ display:block; font-size:10pt; color:var(--doom-d); margin-bottom:1.4mm; }
+.scr-face span{ font-size:7.4pt; }
+.scr-fold{ background:repeating-linear-gradient(90deg,#e4dfd2 0 3px,transparent 3px 7px); height:4mm;
+  display:flex; align-items:center; justify-content:center; font-size:5.6pt; color:#8a8377; }
+.scr-back{ background:#eef3ee; height:20mm; }
+table.sheet{ width:100%; border-collapse:collapse; font-size:7.6pt; }
+table.sheet th{ background:var(--doom); color:#fff; padding:1.6mm 1.4mm; font-weight:700; text-align:center; }
+table.sheet td{ border:1px solid #ddd7c9; padding:1.1mm; height:8.4mm; }
+table.sheet td:first-child{ text-align:center; font-weight:700; background:#f7f4ea; width:14mm; }
+table.sheet tr.s-final td{ background:#fdf4e4; }
+table.sheet tr.s-total td{ background:#eef3ee; font-weight:800; height:9.5mm; }
+table.sheet tr.s-doom td{ background:#fbeeee; height:9.5mm; }
+
+/* ---------- quick ref ---------- */
+.qr-wrap{ display:grid; gap:3.4mm; }
+.qr-block{ border:2.4px solid var(--doom-d); border-radius:9px; padding:3.4mm 4mm; background:#fff; }
+.qr-block h4{ font-size:10.4pt; color:var(--doom-d); margin-bottom:2.2mm; }
+.qr-ol{ font-size:8.2pt; line-height:1.72; margin-left:5mm; margin-bottom:2.2mm; }
+.qr-tb{ width:100%; border-collapse:collapse; font-size:7.8pt; }
+.qr-tb td{ border-top:1px solid #e4dfd3; padding:1.5mm 2mm; line-height:1.55; vertical-align:top; }
+.qr-tb td:first-child{ width:15mm; font-weight:800; color:#fff; background:var(--doom); text-align:center; }
+.qr-warn{ margin-top:2.2mm; background:#fdf6e3; border-left:4px solid var(--gold-d); border-radius:4px;
+  padding:1.8mm 3mm; font-size:7.6pt; color:#5a4a1a; }
+.qr-case{ margin-top:3.4mm; }
+
+@page{ size:A4; margin:0; }
+@media print{
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  body{ background:#fff; }
+  .page{ margin:0; box-shadow:none; }
+  .print-hint{ display:none; }
+}
+</style>
+</head>
+<body>
+<section class="page cover">
+  <div class="cv-badge">ORIGINAL BOARD GAME · MARVEL-INSPIRED</div>
+  <div class="cv-icon">💀</div>
+  <h1>六道崩塌</h1>
+  <div class="cv-en">AVENGERS: DOOMSDAY — SIX COLLAPSES</div>
+  <div class="cv-line"></div>
+  <div class="cv-tag">
+    多元宇宙正在对撞。六个世界被拖进同一条时间线。<br>
+    同一个宇宙里，只能有一个「你」站上战场。<br>
+    <b>而你能指挥的，只有自己手里的十二张牌。</b>
+  </div>
+  <div class="cv-meta">
+    <span>3-6 人</span><span>30-45 分钟</span><span>12 岁以上</span><span>难度：中等</span>
+  </div>
+  <div class="cv-call">打印后即可开玩 · 无需额外配件</div>
+  <div class="cv-hint">建议 200g 卡纸打印 · 打印时务必勾选「背景图形」</div>
+</section>
+<section class="page">
+  <div class="page-title">打印说明与组件清单</div>
+  <div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+      <li>使用 <b>A4 纸张</b>打印，页面边距设为<b>最小（无）</b></li>
+      <li>在打印对话框中，务必<b>勾选「背景图形」/「Background graphics」</b>，否则所有颜色会消失</li>
+      <li>卡牌与棋子建议使用 <b>200g 以上卡纸</b>，普通 A4 纸太软、摸两局就烂</li>
+      <li>缩放请选 <b>100%（实际大小）</b>，不要勾选「适应页面」，否则卡片尺寸会变形</li>
+      <li>打印后沿卡片边框裁切；建议塑封或套卡套，英雄卡会被反复摸 6 轮</li>
+    </ul>
+  </div>
+  <div class="sub-h">本文件包含的组件</div>
+  <table class="list-tb">
+    <thead><tr><th>组件</th><th>数量</th><th>页码</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>游戏地图（游戏垫）</td><td>1 张</td><td>P3</td><td>六道碰撞点 + Doom 轨道 + 分数轨道</td></tr>
+      <tr><td>英雄卡</td><td>72 张</td><td>P4-P8</td><td>4 类型 × 18 张，战力 1×7 / 2×6 / 3×5</td></tr>
+      <tr><td>碰撞卡</td><td>18 张</td><td>P9-P11</td><td>P11 额外含 1 张决战卡</td></tr>
+      <tr><td>干涉卡</td><td>12 张</td><td>P12</td><td>新手局可整叠不用</td></tr>
+      <tr><td>神器卡</td><td>12 张</td><td>P13</td><td>开局每人抽 2 张</td></tr>
+      <tr><td>棋子与标记、记分纸</td><td>6 棋子 / 7 标记</td><td>P14</td><td>含 2 个玩家挡板（本页打印 3 份）</td></tr>
+      <tr><td>速查卡</td><td>2 份</td><td>P15</td><td>裁成 A5 放桌边</td></tr>
+    </tbody>
+  </table>
+  <div class="sub-h">开局 90 秒布置</div>
+  <ol class="setup-ol">
+    <li>洗 72 张英雄卡，<b>每人 12 张</b>，扣在挡板后。剩余放回盒中，本局不用。</li>
+    <li>洗 12 张神器卡，<b>每人抽 2 张</b>，明置。</li>
+    <li>洗 18 张碰撞卡，<b>抽 5 张</b>排成第 1-5 轮，决战卡放最后。其余放回盒中。</li>
+    <li>干涉卡洗混放一侧；Doom 标记放 0 格；分数标记全放 0。</li>
+    <li>最近看过漫威电影的人当"世界之声"，负责翻卡报数。</li>
+  </ol>
+  <div class="warn-box">
+    <b>三个最容易讲错的地方：</b>
+    <ol>
+      <li><b>同类型只算最高值</b>——第二张同类型牌对团队战力贡献为 0，它只决定"谁算数"。</li>
+      <li><b>并列 = 双输</b>——两人打平都算占位，但该类型只按最高值算一次，守住时各 +1（不是各 +2）。</li>
+      <li><b>12 张牌要用 6 轮</b>——不补牌。前 3 轮别把 3 战力全打光。</li>
+    </ol>
+  </div>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 打印说明</div>
+</section>
+<section class="page">
+  <div class="page-title">游戏地图 · 六道碰撞点</div>
+  <div class="page-sub">六个世界并排摆开；每轮碰撞卡指向其中一个，把暗牌扣在该世界的"放牌区"。下方是 Doom 轨道与分数轨道。</div>
+  <div class="map">
+    <div class="worlds"><div class="world" style="background:linear-gradient(150deg,#2f9573,#14513a)">
+    <div class="w-head"><span class="w-icon">🌍</span><span class="w-name">地球-616</span></div>
+    <div class="w-desc">主宇宙 · 纽约</div>
+    <div class="w-sig">签名 🏹 战术 · 守住时占位者 +1</div>
+    <div class="w-slot">放 牌 区</div>
+  </div>
+<div class="world" style="background:linear-gradient(150deg,#2f76b0,#16385a)">
+    <div class="w-head"><span class="w-icon">🌐</span><span class="w-name">地球-838</span></div>
+    <div class="w-desc">光照会总部</div>
+    <div class="w-sig">签名 🧠 科技 · 守住时占位者 +1</div>
+    <div class="w-slot">放 牌 区</div>
+  </div>
+<div class="world" style="background:linear-gradient(150deg,#7150a8,#33204f)">
+    <div class="w-head"><span class="w-icon">🌑</span><span class="w-name">拉托维尼亚</span></div>
+    <div class="w-desc">毁灭博士的王座</div>
+    <div class="w-sig">签名 🔮 魔法 · 守住时占位者 +1</div>
+    <div class="w-slot">放 牌 区</div>
+  </div>
+<div class="world" style="background:linear-gradient(150deg,#5f6b78,#2a3238)">
+    <div class="w-head"><span class="w-icon">🧊</span><span class="w-name">虚空之外</span></div>
+    <div class="w-desc">时间尽头 · 万物湮灭</div>
+    <div class="w-sig">签名 💪 力量 · 守住时占位者 +1</div>
+    <div class="w-slot">放 牌 区</div>
+  </div>
+<div class="world" style="background:linear-gradient(150deg,#a8762f,#5c3c14)">
+    <div class="w-head"><span class="w-icon">🪐</span><span class="w-name">战界</span></div>
+    <div class="w-desc">拼合大陆 · 角斗场</div>
+    <div class="w-sig">签名 🧠 科技 · 守住时占位者 +1</div>
+    <div class="w-slot">放 牌 区</div>
+  </div>
+<div class="world" style="background:linear-gradient(150deg,#4f8f3f,#22491b)">
+    <div class="w-head"><span class="w-icon">🌿</span><span class="w-name">克拉科</span></div>
+    <div class="w-desc">变种人庇护所</div>
+    <div class="w-sig">签名 🔮 魔法 · 守住时占位者 +1</div>
+    <div class="w-slot">放 牌 区</div>
+  </div></div>
+    <div class="track doom-track">
+      <div class="track-h">💀 DOOM 轨道 · 崩塌时前进 1（缺门则 2）｜达到 <b>4</b> → 毁灭博士获胜，<b>全员失败</b></div>
+      <div class="track-cells"><div class="dcell d-start">0</div><div class="dcell">1</div><div class="dcell">2</div><div class="dcell">3</div><div class="dcell d-danger">4<small>危</small></div><div class="dcell d-danger">5<small>危</small></div><div class="dcell d-danger">6<small>危</small></div></div>
+    </div>
+    <div class="track score-track">
+      <div class="track-h">分数轨道 · 每人 1 枚标记从 0 出发（分数为负时，在纸边记负号）</div>
+      <div class="track-cells"><div class="scell s-mark">0</div><div class="scell">1</div><div class="scell">2</div><div class="scell">3</div><div class="scell">4</div><div class="scell s-mark">5</div><div class="scell">6</div><div class="scell">7</div><div class="scell">8</div><div class="scell">9</div><div class="scell s-mark">10</div><div class="scell">11</div><div class="scell">12</div><div class="scell">13</div><div class="scell">14</div><div class="scell s-mark">15</div><div class="scell">16</div><div class="scell">17</div><div class="scell">18</div><div class="scell">19</div><div class="scell s-mark">20</div><div class="scell">21</div><div class="scell">22</div><div class="scell">23</div><div class="scell">24</div></div>
+    </div>
+  </div>
+  <div class="map-tips">
+    <div><b>阈值 = 玩家人数 + 威胁值</b>　3 人 4-7｜4 人 5-8｜5 人 6-9｜6 人 7-10　｜　<b>缺一门 → 阈值 +3</b></div>
+    <div><b>P ≤ 12 恒定</b>——四个类型各取最高值，人再多也封顶；这也是"全员挤一门必崩"的原因。</div>
+  </div>
+  <div class="panel">
+    <h4>六道碰撞点速查</h4>
+    <table class="mini-tb">
+      <thead><tr><th>世界</th><th>签名类型</th><th>该点三张卡的威胁值</th><th>地形特点</th></tr></thead>
+      <tbody>
+        <tr><td>🌍 地球-616</td><td>🏹 战术</td><td>1 / 1 / 2</td><td>最易守的世界，开局常落在这里</td></tr>
+        <tr><td>🌐 地球-838</td><td>🧠 科技</td><td>1 / 2 / 3</td><td>中段难度，科技牌消耗最快</td></tr>
+        <tr><td>🌑 拉托维尼亚</td><td>🔮 魔法</td><td>2 / 2 / 3</td><td>平均最温和，魔法牌在这里被抢得最凶</td></tr>
+        <tr><td>🧊 虚空之外</td><td>💪 力量</td><td>3 / 3 / 4</td><td>「无光之海」是全牌库最难的一张</td></tr>
+        <tr><td>🪐 战界</td><td>🧠 科技</td><td>2 / 3 / 4</td><td>「断壁上的王旗」威胁 4</td></tr>
+        <tr><td>🌿 克拉科</td><td>🔮 魔法</td><td>2 / 3 / 4</td><td>「哨兵机群来袭」威胁 4</td></tr>
+      </tbody>
+    </table>
+    <div class="panel-note">签名类型与需求类型<b>永远不重合</b>——场地加成是白送的机会，不是额外的负担。</div>
+  </div>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 游戏垫</div>
+</section>
+<section class="page">
+  <div class="page-title">英雄卡（1/5）</div>
+  <div class="page-sub">72 张 = 4 类型 × 18 张（战力 1×7 / 2×6 / 3×5）。同类型只取最高战力——重复的牌正是"抢位置"的弹药。</div>
+  <div class="grid-hero"><div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">浩克</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">雷神索尔</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">金刚狼</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">女武神</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">石头人</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">战神阿瑞斯</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">浩克</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">雷神索尔</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">金刚狼</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">女武神</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">石头人</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">战神阿瑞斯</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">浩克</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">雷神索尔</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">金刚狼</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">女武神</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div></div>
+  
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 英雄卡</div>
+</section>
+<section class="page">
+  <div class="page-title">英雄卡（2/5）</div>
+  <div class="page-sub">72 张 = 4 类型 × 18 张（战力 1×7 / 2×6 / 3×5）。同类型只取最高战力——重复的牌正是"抢位置"的弹药。</div>
+  <div class="grid-hero"><div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">石头人</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#c0522f,#7d2a1a)">
+  <div class="c-type">力量 HERO</div>
+  <div class="c-icon">💪</div>
+  <div class="c-name">战神阿瑞斯</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">钢铁侠</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">蚁人</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">黑豹</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">战争机器</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">神奇先生</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">幻视</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">钢铁侠</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">蚁人</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">黑豹</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">战争机器</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">神奇先生</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">幻视</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">钢铁侠</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">蚁人</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div></div>
+  
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 英雄卡</div>
+</section>
+<section class="page">
+  <div class="page-title">英雄卡（3/5）</div>
+  <div class="page-sub">72 张 = 4 类型 × 18 张（战力 1×7 / 2×6 / 3×5）。同类型只取最高战力——重复的牌正是"抢位置"的弹药。</div>
+  <div class="grid-hero"><div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">黑豹</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">战争机器</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">神奇先生</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f76b0,#1a3f63)">
+  <div class="c-type">科技 HERO</div>
+  <div class="c-icon">🧠</div>
+  <div class="c-name">幻视</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">奇异博士</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">绯红女巫</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">洛基</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">女巫议会</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">墨菲斯托</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">阿戈摩托</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">奇异博士</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">绯红女巫</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">洛基</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">女巫议会</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">墨菲斯托</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">阿戈摩托</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div></div>
+  
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 英雄卡</div>
+</section>
+<section class="page">
+  <div class="page-title">英雄卡（4/5）</div>
+  <div class="page-sub">72 张 = 4 类型 × 18 张（战力 1×7 / 2×6 / 3×5）。同类型只取最高战力——重复的牌正是"抢位置"的弹药。</div>
+  <div class="grid-hero"><div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">奇异博士</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">绯红女巫</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">洛基</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">女巫议会</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">墨菲斯托</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#7150a8,#3c2760)">
+  <div class="c-type">魔法 HERO</div>
+  <div class="c-icon">🔮</div>
+  <div class="c-name">阿戈摩托</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">美国队长</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">鹰眼</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">黑寡妇</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">猎鹰</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">冬兵</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">尚气</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">美国队长</div>
+  <div class="c-pow">⚡<span class="c-num">1</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">鹰眼</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">黑寡妇</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">猎鹰</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div></div>
+  
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 英雄卡</div>
+</section>
+<section class="page">
+  <div class="page-title">英雄卡（5/5）</div>
+  <div class="page-sub">72 张 = 4 类型 × 18 张（战力 1×7 / 2×6 / 3×5）。同类型只取最高战力——重复的牌正是"抢位置"的弹药。</div>
+  <div class="grid-hero"><div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">冬兵</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">尚气</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">美国队长</div>
+  <div class="c-pow">⚡⚡<span class="c-num">2</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">鹰眼</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">黑寡妇</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">猎鹰</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">冬兵</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div>
+<div class="card hero" style="background:linear-gradient(160deg,#2f9573,#175a40)">
+  <div class="c-type">战术 HERO</div>
+  <div class="c-icon">🏹</div>
+  <div class="c-name">尚气</div>
+  <div class="c-pow">⚡⚡⚡<span class="c-num">3</span></div>
+  <div class="c-foot">同类型只取最高战力</div>
+</div></div>
+  <div class="panel">
+    <h4>英雄卡使用要点</h4>
+    <div class="panel-2col">
+      <div><b>12 张 = 6 轮 × 2 张</b><br>全局不补牌。前 3 轮把 3 战力全打光，第 5 轮就会没牌可用。</div>
+      <div><b>同类型第 2 张 = 浪费</b><br>同类型只取最高值，第 2 张对团队战力贡献为 0，它只决定"谁算数"。</div>
+      <div><b>4 类型 = 4 条腿</b><br>开局数一下自己哪一门最薄（少于 2 张），那一门先打掉，别指望留到最后。</div>
+      <div><b>两张同类型何时值得？</b><br>只有当你确定没人跟你抢、想"锁死"这一门时才值得——那是在买独占权。</div>
+    </div>
+  <div class="sub-panel">
+    <h4>打印核对表（剪卡前先数一遍）</h4>
+    <table class="mini-tb">
+      <thead><tr><th>类型</th><th>战力 1</th><th>战力 2</th><th>战力 3</th><th>该类型合计</th></tr></thead>
+      <tbody>
+        <tr><td>力量</td><td>7 张</td><td>6 张</td><td>5 张</td><td>18 张</td></tr>
+        <tr><td>科技</td><td>7 张</td><td>6 张</td><td>5 张</td><td>18 张</td></tr>
+        <tr><td>魔法</td><td>7 张</td><td>6 张</td><td>5 张</td><td>18 张</td></tr>
+        <tr><td>战术</td><td>7 张</td><td>6 张</td><td>5 张</td><td>18 张</td></tr>
+        <tr><td><b>合计</b></td><td><b>28 张</b></td><td><b>24 张</b></td><td><b>20 张</b></td><td><b>72 张</b></td></tr>
+      </tbody>
+    </table>
+    <div class="panel-note">全牌库总战力 =（7×1 + 6×2 + 5×3）× 4 = <b>136</b>。想自己加牌？只要保持 7 / 6 / 5 这个分布，任何一套牌都能玩。</div>
+  </div>
+  </div>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 英雄卡</div>
+</section>
+<section class="page">
+  <div class="page-title">碰撞卡（1/3）</div>
+  <div class="page-sub">共 18 张。每局抽 5 张对应第 1-5 轮，其余放回盒中——每局的世界顺序都不同。</div>
+  <div class="grid-3"><div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#2f9573,#14513a)">🌍 地球-616<span class="c-sid">#01</span></div>
+  <div class="c-title">纽约天际线失守</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span></span></div>
+  <div class="c-threat"><span class="tnum">1</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 1</b></span></div>
+  <div class="c-flav">“天空裂了第二道口子，正对着斯塔克大厦。”</div>
+  <div class="c-sig">签名加成 🏹 战术 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#2f9573,#14513a)">🌍 地球-616<span class="c-sid">#02</span></div>
+  <div class="c-title">斯塔克大厦的撤离</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span></span></div>
+  <div class="c-threat"><span class="tnum">1</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 1</b></span></div>
+  <div class="c-flav">“三千人挤在电梯井里，等一个不会来的救援。”</div>
+  <div class="c-sig">签名加成 🏹 战术 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#2f9573,#14513a)">🌍 地球-616<span class="c-sid">#03</span></div>
+  <div class="c-title">中央公园裂隙</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span></span></div>
+  <div class="c-threat"><span class="tnum">2</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 2</b></span></div>
+  <div class="c-flav">“草地裂成两半，另一半是三十年前的中央公园。”</div>
+  <div class="c-sig">签名加成 🏹 战术 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#2f76b0,#16385a)">🌐 地球-838<span class="c-sid">#04</span></div>
+  <div class="c-title">光照会圆桌破裂</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">1</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 1</b></span></div>
+  <div class="c-flav">“六把椅子，五个人，剩下那把刚刚被现实抹掉。”</div>
+  <div class="c-sig">签名加成 🧠 科技 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#2f76b0,#16385a)">🌐 地球-838<span class="c-sid">#05</span></div>
+  <div class="c-title">记忆清除令</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span></span></div>
+  <div class="c-threat"><span class="tnum">2</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 2</b></span></div>
+  <div class="c-flav">“"为了所有人好。"——这句话他们已经说过一次了。”</div>
+  <div class="c-sig">签名加成 🧠 科技 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#2f76b0,#16385a)">🌐 地球-838<span class="c-sid">#06</span></div>
+  <div class="c-title">法阵上的叛徒</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span></span></div>
+  <div class="c-threat"><span class="tnum">3</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 3</b></span></div>
+  <div class="c-flav">“阵眼处的血是新鲜的，但没人承认自己割了手。”</div>
+  <div class="c-sig">签名加成 🧠 科技 · 守住时该门占位者 +1</div>
+</div></div>
+  <div class="panel">
+    <h4>阈值速查（阈值 = 玩家人数 + 威胁值）</h4>
+    <table class="mini-tb">
+      <thead><tr><th>人数</th><th>威胁 1</th><th>威胁 2</th><th>威胁 3</th><th>威胁 4</th><th>缺一门</th></tr></thead>
+      <tbody>
+        <tr><td>3 人</td><td>4</td><td>5</td><td>6</td><td>7</td><td>+3</td></tr>
+        <tr><td>4 人</td><td>5</td><td>6</td><td>7</td><td>8</td><td>+3</td></tr>
+        <tr><td>5 人</td><td>6</td><td>7</td><td>8</td><td>9</td><td>+3</td></tr>
+        <tr><td>6 人</td><td>7</td><td>8</td><td>9</td><td>10</td><td>+3</td></tr>
+      </tbody>
+    </table>
+    <div class="panel-note">需求的两个类型若有一门全场无人出牌，即"缺门"：阈值 +3（两门都缺 +6）。</div>
+  </div>
+  
+  
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 碰撞卡</div>
+</section>
+<section class="page">
+  <div class="page-title">碰撞卡（2/3）</div>
+  <div class="page-sub">共 18 张。每局抽 5 张对应第 1-5 轮，其余放回盒中——每局的世界顺序都不同。</div>
+  <div class="grid-3"><div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#7150a8,#33204f)">🌑 拉托维尼亚<span class="c-sid">#07</span></div>
+  <div class="c-title">王座下的铁链</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span></span></div>
+  <div class="c-threat"><span class="tnum">2</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 2</b></span></div>
+  <div class="c-flav">“地窖里锁着的不是囚犯，是失败版本的英雄。”</div>
+  <div class="c-sig">签名加成 🔮 魔法 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#7150a8,#33204f)">🌑 拉托维尼亚<span class="c-sid">#08</span></div>
+  <div class="c-title">拉托维尼亚的钟声</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">3</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 3</b></span></div>
+  <div class="c-flav">“钟敲十三下，全城的铁器同时转向王宫。”</div>
+  <div class="c-sig">签名加成 🔮 魔法 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#7150a8,#33204f)">🌑 拉托维尼亚<span class="c-sid">#09</span></div>
+  <div class="c-title">女巫议会的献祭</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">2</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 2</b></span></div>
+  <div class="c-flav">“她们说这不是献祭，是"提前排练"。”</div>
+  <div class="c-sig">签名加成 🔮 魔法 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#5f6b78,#2a3238)">🧊 虚空之外<span class="c-sid">#10</span></div>
+  <div class="c-title">时间尽头的门</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">3</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 3</b></span></div>
+  <div class="c-flav">“门后面什么都没有，但门一直在敲门。”</div>
+  <div class="c-sig">签名加成 💪 力量 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#5f6b78,#2a3238)">🧊 虚空之外<span class="c-sid">#11</span></div>
+  <div class="c-title">虚空吞噬者</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">3</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 3</b></span></div>
+  <div class="c-flav">“它以"记忆"为食，先吃掉的是你的名字。”</div>
+  <div class="c-sig">签名加成 💪 力量 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#5f6b78,#2a3238)">🧊 虚空之外<span class="c-sid">#12</span></div>
+  <div class="c-title">无光之海</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span></span></div>
+  <div class="c-threat"><span class="tnum">4</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 4</b></span></div>
+  <div class="c-flav">“这里的物理常数已经过期，只剩意志还起作用。”</div>
+  <div class="c-sig">签名加成 💪 力量 · 守住时该门占位者 +1</div>
+</div></div>
+  
+  <div class="panel">
+    <h4>P 怎么算？三个例子</h4>
+    <table class="mini-tb">
+      <thead><tr><th>桌面情况</th><th>计算</th><th>P</th></tr></thead>
+      <tbody>
+        <tr><td>💪 小雷 3、🧠 阿May 3、🔮 老陈 3</td><td>3 + 3 + 3</td><td><b>9</b></td></tr>
+        <tr><td>💪 小雷 3；🏹 小雷 2 与 阿May 2 并列</td><td>3 + 2（并列只算一次）</td><td><b>5</b></td></tr>
+        <tr><td>💪 小雷 1 与 阿燊 1 并列；🧠 阿May 3</td><td>1 + 3</td><td><b>4</b></td></tr>
+      </tbody>
+    </table>
+    <div class="panel-note"><b>P 的上限恒为 12</b>（四个类型 × 最高值 3），与人数无关。这就是"全员挤一门必崩"的数学原因。</div>
+  </div>
+  
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 碰撞卡</div>
+</section>
+<section class="page">
+  <div class="page-title">碰撞卡（3/3）</div>
+  <div class="page-sub">共 18 张。每局抽 5 张对应第 1-5 轮，其余放回盒中——每局的世界顺序都不同。</div>
+  <div class="grid-3"><div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#a8762f,#5c3c14)">🪐 战界<span class="c-sid">#13</span></div>
+  <div class="c-title">拼合大陆的裂缝</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span></span></div>
+  <div class="c-threat"><span class="tnum">2</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 2</b></span></div>
+  <div class="c-flav">“三个世界的边界被缝在一起，缝线正在渗血。”</div>
+  <div class="c-sig">签名加成 🧠 科技 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#a8762f,#5c3c14)">🪐 战界<span class="c-sid">#14</span></div>
+  <div class="c-title">角斗场开幕</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">3</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 3</b></span></div>
+  <div class="c-flav">“观众席上坐满了各个宇宙的死人。”</div>
+  <div class="c-sig">签名加成 🧠 科技 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#a8762f,#5c3c14)">🪐 战界<span class="c-sid">#15</span></div>
+  <div class="c-title">断壁上的王旗</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#7150a8;color:#7150a8">🔮 魔法</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">4</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 4</b></span></div>
+  <div class="c-flav">“旗帜是绿的，但图案是每个人心里最怕的那样东西。”</div>
+  <div class="c-sig">签名加成 🧠 科技 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#4f8f3f,#22491b)">🌿 克拉科<span class="c-sid">#16</span></div>
+  <div class="c-title">变种人圣火的熄灭</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">2</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 2</b></span></div>
+  <div class="c-flav">“火灭的那一刻，岛上所有复活过的孩子同时忘了自己死过。”</div>
+  <div class="c-sig">签名加成 🔮 魔法 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#4f8f3f,#22491b)">🌿 克拉科<span class="c-sid">#17</span></div>
+  <div class="c-title">复活仪式被打断</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span><span class="chip" style="border-color:#2f9573;color:#2f9573">🏹 战术</span></span></div>
+  <div class="c-threat"><span class="tnum">3</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 3</b></span></div>
+  <div class="c-flav">“五个孵化舱，四个空着，第五个在敲玻璃。”</div>
+  <div class="c-sig">签名加成 🔮 魔法 · 守住时该门占位者 +1</div>
+</div>
+<div class="card coll">
+  <div class="c-site" style="background:linear-gradient(150deg,#4f8f3f,#22491b)">🌿 克拉科<span class="c-sid">#18</span></div>
+  <div class="c-title">哨兵机群来袭</div>
+  <div class="c-needs"><span class="nlbl">需 求 门 类</span><span class="chips"><span class="chip" style="border-color:#c0522f;color:#c0522f">💪 力量</span><span class="chip" style="border-color:#2f76b0;color:#2f76b0">🧠 科技</span></span></div>
+  <div class="c-threat"><span class="tnum">4</span><span class="tlbl">威胁值 · <b>阈值 = 人数 + 4</b></span></div>
+  <div class="c-flav">“它们不杀人，只确认你是不是"标准人类"。”</div>
+  <div class="c-sig">签名加成 🔮 魔法 · 守住时该门占位者 +1</div>
+</div></div>
+  
+  
+  <div class="panel fin-panel">
+    <div class="fin-row">
+      <div class="card fin">
+        <div class="c-type">决战 · 第 6 轮专用</div>
+        <div class="c-icon">💀</div>
+        <div class="c-name">毁灭日：最后的世界</div>
+        <div class="c-text">
+          <b>需求类型：</b>当前分数最低者指定 1 个<br>
+          <b>阈值：</b>玩家人数 + 1<br>
+          <b>得分：</b>本轮全部 ×2<br>
+          <b>不翻干涉卡 · 不计场地加成</b>
+        </div>
+        <div class="c-foot">低门槛 · 双倍分 · 唯一的翻盘窗口</div>
+      </div>
+      <div class="final-note">
+        <h4>第 6 轮为什么特殊？</h4>
+        <p>第 5 轮通常已经把所有人的高战力牌榨干了。如果决战还是高阈值，这一轮必然崩塌、变成垃圾时间。</p>
+        <p>所以决战卡是 <b>低阈值（人数 + 1）+ 双倍得分</b>：它把五轮攒下的最后两张牌，变成唯一值得梭哈的一手。</p>
+        <p>指定权交给 <b>分数最低的人</b>，是给落后者的武器——也是给领先者的警告。</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 碰撞卡</div>
+</section>
+<section class="page">
+  <div class="page-title">干涉卡（12 张）</div>
+  <div class="page-sub">每轮开局翻 1 张，当轮有效。新手局建议先去掉整叠；第二局放 6 张（时间线撕裂 / 女巫季 / 瓦坎达支援 / 钢铁侠的遗产 / 黑豹的号令 / 湮灭余波）。</div>
+  <div class="grid-4"><div class="card ev">
+  <div class="c-type">干涉 · 强制</div>
+  <div class="c-icon">🌪️</div>
+  <div class="c-name">时间线撕裂</div>
+  <div class="c-text">本轮每人<b>必须出满 2 张</b>，不能只出 1 张。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 增益</div>
+  <div class="c-icon">🧙</div>
+  <div class="c-name">女巫季</div>
+  <div class="c-text">本轮所有 🔮魔法 牌战力 <b>+1</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 增益</div>
+  <div class="c-icon">🛡️</div>
+  <div class="c-name">瓦坎达支援</div>
+  <div class="c-text">本轮所有战力 1 的牌视为战力 <b>2</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 加压</div>
+  <div class="c-icon">👁️</div>
+  <div class="c-name">毁灭博士的凝视</div>
+  <div class="c-text">本轮阈值 <b>+2</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 变数</div>
+  <div class="c-icon">🌀</div>
+  <div class="c-name">洛基的幻术</div>
+  <div class="c-text">揭晓后每人可收回 1 张自己打出的牌，<b>不参与结算</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 放大</div>
+  <div class="c-icon">⚡</div>
+  <div class="c-name">雷神之锤</div>
+  <div class="c-text">本轮全场战力最高的<b>单张牌</b>战力 ×2。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 加分</div>
+  <div class="c-icon">🤖</div>
+  <div class="c-name">钢铁侠的遗产</div>
+  <div class="c-text">本轮 🧠科技 占位者额外 <b>+1 分</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 加分</div>
+  <div class="c-icon">🐾</div>
+  <div class="c-name">黑豹的号令</div>
+  <div class="c-text">本轮若守住，所有占位者额外 <b>+1 分</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 变数</div>
+  <div class="c-icon">🕸️</div>
+  <div class="c-name">多元宇宙回响</div>
+  <div class="c-text">本轮并列占位者<b>均按全额</b>计入（不折半）。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 加压</div>
+  <div class="c-icon">🧊</div>
+  <div class="c-name">虚空吞噬</div>
+  <div class="c-text">本轮战力 1 的牌视为 <b>0</b>，不能占位。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 加压</div>
+  <div class="c-icon">🎯</div>
+  <div class="c-name">X 战警入局</div>
+  <div class="c-text">本轮 🏹战术 成为<b>第三个需求类型</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div>
+<div class="card ev">
+  <div class="c-type">干涉 · 惩罚</div>
+  <div class="c-icon">💀</div>
+  <div class="c-name">湮灭余波</div>
+  <div class="c-text">本轮若崩塌，Doom 额外 <b>+1</b>。</div>
+  <div class="c-foot">当轮有效 · 结算后弃掉</div>
+</div></div>
+  <div class="panel">
+    <h4>干涉卡的三种玩法</h4>
+    <div class="panel-2col">
+      <div><b>第一次玩</b><br>整叠拿出不用。先让大家熟悉「占位 / P / 缺门」这三件事，规则越少越好。</div>
+      <div><b>第二局</b><br>只放 6 张：时间线撕裂、女巫季、瓦坎达支援、钢铁侠的遗产、黑豹的号令、湮灭余波。</div>
+      <div><b>老手局</b><br>全 12 张，每轮必翻。注意「X 战警入局」会把需求变成三门——牌要留余量。</div>
+      <div><b>只用一次</b><br>干涉卡只在当前轮次生效，结算后立刻进弃牌堆，不会回到牌堆。</div>
+    </div>
+  </div>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 干涉卡</div>
+</section>
+<section class="page">
+  <div class="page-title">神器卡（12 张）</div>
+  <div class="page-sub">开局每人抽 2 张，明置。暗置牌之前声明使用（现实宝石在结算前、灵魂宝石在暗置后）。每回合每人最多用 1 张。</div>
+  <div class="grid-4"><div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🟢</div>
+  <div class="c-name">时间宝石</div>
+  <div class="c-text">本轮你可出 <b>3 张</b>牌（突破 2 张上限）。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🟣</div>
+  <div class="c-name">力量宝石</div>
+  <div class="c-text">本轮你的 1 张牌战力 <b>+2</b>。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🔵</div>
+  <div class="c-name">空间宝石</div>
+  <div class="c-text">本轮结算时，你可把 1 张牌<b>视为任意类型</b>。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🔴</div>
+  <div class="c-name">现实宝石</div>
+  <div class="c-text">抵消本轮 <b>1 张干涉卡</b>的效果（结算前使用）。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🟠</div>
+  <div class="c-name">灵魂宝石</div>
+  <div class="c-text">本轮你暗置后，可<b>查看 1 名玩家</b>的暗牌（看完不能改）。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🟡</div>
+  <div class="c-name">心灵宝石</div>
+  <div class="c-text">本轮你的战力按 <b>+1</b> 计入占位比较（团队战力仍按原值）。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🛡️</div>
+  <div class="c-name">美国队长之盾</div>
+  <div class="c-text">抵消 <b>1 次「−1 分」</b>。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🔨</div>
+  <div class="c-name">雷神之锤</div>
+  <div class="c-text">本轮你战力最高的 1 张牌 <b>×2</b>。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🐜</div>
+  <div class="c-name">皮姆粒子</div>
+  <div class="c-text">本轮你可打出 1 张<b>万能牌</b>：战力 3，类型自选。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🧿</div>
+  <div class="c-name">阿戈摩托之眼</div>
+  <div class="c-text">本轮若崩塌，你<b>不承担</b> −1 分。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🗡️</div>
+  <div class="c-name">十环</div>
+  <div class="c-text">本轮你每占位 1 个类型，额外 <b>+2 分</b>。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div>
+<div class="card rl">
+  <div class="c-type">神器 · 一次性</div>
+  <div class="c-icon">🧬</div>
+  <div class="c-name">变种基因</div>
+  <div class="c-text">本轮干涉卡对你的负面效果<b>无效</b>。</div>
+  <div class="c-foot">暗置前声明 · 每回合限 1 张</div>
+</div></div>
+  <div class="panel">
+    <h4>神器卡的三个使用技巧</h4>
+    <div class="panel-2col">
+      <div><b>神器是公开信息</b><br>开局明置，所有人都知道你还有什么——它更像"威慑"，而不是"惊喜"。</div>
+      <div><b>十环是爆发牌</b><br>独占两门（+4）再叠十环（+4）= 一轮 8 分，全场最大的单轮收益。</div>
+      <div><b>阿戈摩托之眼留给第 5 轮</b><br>第 5 轮是最容易崩塌的一轮，免掉 −1 分的期望值最高。</div>
+      <div><b>现实宝石专治加压卡</b><br>对着「毁灭博士的凝视（阈值 +2）」「虚空吞噬」用，等于救下整轮。</div>
+    </div>
+  </div>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 神器卡</div>
+</section>
+<section class="page">
+  <div class="page-title">棋子 · 标记 · 记分纸</div>
+  <div class="page-sub">沿虚线裁开。棋子可折成三角立牌，也可直接用同色纽扣或骰子代替（一张纸 6 个，正好一套）。</div>
+  <div class="sub-h">指挥官棋子（6 个）</div>
+  <div class="pawns"><div class="pawn" style="background:linear-gradient(180deg,#2f76b0,#2f76b0bb)">
+    <span class="p-code">616</span><span class="p-nm">地球-616</span><span class="p-no">P1</span>
+  </div><div class="pawn" style="background:linear-gradient(180deg,#b4362f,#b4362fbb)">
+    <span class="p-code">838</span><span class="p-nm">地球-838</span><span class="p-no">P2</span>
+  </div><div class="pawn" style="background:linear-gradient(180deg,#2f9573,#2f9573bb)">
+    <span class="p-code">10005</span><span class="p-nm">地球-10005</span><span class="p-no">P3</span>
+  </div><div class="pawn" style="background:linear-gradient(180deg,#7150a8,#7150a8bb)">
+    <span class="p-code">TRN</span><span class="p-nm">地球-TRN</span><span class="p-no">P4</span>
+  </div><div class="pawn" style="background:linear-gradient(180deg,#c07a22,#c07a22bb)">
+    <span class="p-code">928</span><span class="p-nm">地球-928</span><span class="p-no">P5</span>
+  </div><div class="pawn" style="background:linear-gradient(180deg,#3a3a44,#3a3a44bb)">
+    <span class="p-code">1610</span><span class="p-nm">地球-1610</span><span class="p-no">P6</span>
+  </div></div>
+  <div class="sub-h">分数标记（6 个）与毁灭博士标记（1 个）</div>
+  <div class="row-mk"><div class="mk" style="background:radial-gradient(circle at 35% 30%,#2f76b0,#2f76b0aa)"><small>分数</small></div><div class="mk" style="background:radial-gradient(circle at 35% 30%,#b4362f,#b4362faa)"><small>分数</small></div><div class="mk" style="background:radial-gradient(circle at 35% 30%,#2f9573,#2f9573aa)"><small>分数</small></div><div class="mk" style="background:radial-gradient(circle at 35% 30%,#7150a8,#7150a8aa)"><small>分数</small></div><div class="mk" style="background:radial-gradient(circle at 35% 30%,#c07a22,#c07a22aa)"><small>分数</small></div><div class="mk" style="background:radial-gradient(circle at 35% 30%,#3a3a44,#3a3a44aa)"><small>分数</small></div><div class="dmk"><b>💀</b><small>DOOM</small></div></div>
+  <div class="sub-h">玩家挡板（2 个 · 本页打印 3 份 = 6 个）</div>
+  <div class="screens"><div class="screen">
+    <div class="scr-face"><b>玩家挡板</b><span>你的英雄牌扣在这里</span></div>
+    <div class="scr-fold">折</div>
+    <div class="scr-face scr-back"><b>回合提示</b><span>占位 → P → 缺门 → 守住 / 崩塌</span></div>
+  </div><div class="screen">
+    <div class="scr-face"><b>玩家挡板</b><span>你的英雄牌扣在这里</span></div>
+    <div class="scr-fold">折</div>
+    <div class="scr-face scr-back"><b>回合提示</b><span>占位 → P → 缺门 → 守住 / 崩塌</span></div>
+  </div></div>
+  <div class="sub-h">记分纸（一局一张）</div>
+  <table class="sheet">
+    <thead><tr><th>轮次</th><th>碰撞点</th><th>阈值</th><th>P</th><th>守住 / 崩塌</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th><th>P6</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="s-final"><td>6 决战</td><td>需求：____</td><td>人数+1</td><td></td><td>得分×2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="s-total"><td colspan="5">最终总分</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr class="s-doom"><td colspan="5">Doom 标记（≥4 则毁灭博士胜，全员输）</td><td colspan="6"></td></tr>
+    </tbody>
+  </table>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 棋子与记分纸</div>
+</section>
+<section class="page">
+  <div class="page-title">速查卡（裁开后每桌一张）</div>
+  <div class="page-sub">沿中线裁开，两半各一张。建议打印 2 份，一桌两张。</div>
+  <div class="qr-wrap"><div class="qr-block">
+  <h4>⚡ 一页速查 · 每轮 5 步</h4>
+  <ol class="qr-ol">
+    <li><b>翻卡</b> — 阈值 = 玩家人数 + 威胁值（再按干涉卡调整）</li>
+    <li><b>讨论</b> — 最多 60 秒，可以撒谎</li>
+    <li><b>暗置</b> — 同时扣 1-2 张（或 0 张待命）</li>
+    <li><b>揭晓</b> — 按类型分组</li>
+    <li><b>结算</b> — 占位 → P → 缺门 → 守住 / 崩塌</li>
+  </ol>
+  <table class="qr-tb">
+    <tr><td>占位</td><td>每类型战力最高者；并列则都算占位，但只按最高值算一次</td></tr>
+    <tr><td>P</td><td>所有被占位类型的最高值之和 · <b>上限恒为 12</b></td></tr>
+    <tr><td>缺门</td><td>需求类型无人出牌 → 阈值 +3 / 门</td></tr>
+    <tr><td>守住</td><td>P ≥ 阈值：独占一门 +2｜并列各 +1｜双持需求两门 +1｜四门全占 每人 +1｜签名类型占位者 +1</td></tr>
+    <tr><td>崩塌</td><td>出牌者各 −1，Doom +1（缺门则 +2）</td></tr>
+    <tr><td>结束</td><td>6 轮后结算；Doom ≥ 4 → 毁灭博士胜（全员输）</td></tr>
+  </table>
+  <div class="qr-warn">⚠️ 出牌 ≠ 得分。出了牌但没占到任何类型，只有"复仇者集结"那 1 分。</div>
+</div><div class="qr-block">
+  <h4>⚡ 一页速查 · 每轮 5 步</h4>
+  <ol class="qr-ol">
+    <li><b>翻卡</b> — 阈值 = 玩家人数 + 威胁值（再按干涉卡调整）</li>
+    <li><b>讨论</b> — 最多 60 秒，可以撒谎</li>
+    <li><b>暗置</b> — 同时扣 1-2 张（或 0 张待命）</li>
+    <li><b>揭晓</b> — 按类型分组</li>
+    <li><b>结算</b> — 占位 → P → 缺门 → 守住 / 崩塌</li>
+  </ol>
+  <table class="qr-tb">
+    <tr><td>占位</td><td>每类型战力最高者；并列则都算占位，但只按最高值算一次</td></tr>
+    <tr><td>P</td><td>所有被占位类型的最高值之和 · <b>上限恒为 12</b></td></tr>
+    <tr><td>缺门</td><td>需求类型无人出牌 → 阈值 +3 / 门</td></tr>
+    <tr><td>守住</td><td>P ≥ 阈值：独占一门 +2｜并列各 +1｜双持需求两门 +1｜四门全占 每人 +1｜签名类型占位者 +1</td></tr>
+    <tr><td>崩塌</td><td>出牌者各 −1，Doom +1（缺门则 +2）</td></tr>
+    <tr><td>结束</td><td>6 轮后结算；Doom ≥ 4 → 毁灭博士胜（全员输）</td></tr>
+  </table>
+  <div class="qr-warn">⚠️ 出牌 ≠ 得分。出了牌但没占到任何类型，只有"复仇者集结"那 1 分。</div>
+</div></div>
+  <div class="panel qr-case">
+    <h4>五个最容易吵起来的判例</h4>
+    <table class="mini-tb">
+      <tbody>
+        <tr><td>两人同类型打平</td><td>都算占位，但该类型<b>只按最高值算一次</b>；守住时各 +1（不是各 +2）</td></tr>
+        <tr><td>我出 0 张</td><td>「待命」：不得分也不扣分。阈值明显守不住时，待命比出牌好</td></tr>
+        <tr><td>需求门全场没人出</td><td>「缺门」：该门战力为 0，且阈值 +3（两门都缺 +6）</td></tr>
+        <tr><td>双持奖励怎么判</td><td>只有<b>同一人独占</b>两个需求类型才 +1；并列占位不算</td></tr>
+        <tr><td>第 6 轮谁指定需求</td><td>分数最低者；并列最低时，由其中手牌多的人指定</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer-note">复仇者联盟：毁灭日 · 六道崩塌 — 速查卡</div>
+</section>
+</body>
+</html>
