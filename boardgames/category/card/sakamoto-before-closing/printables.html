@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>坂本日常：打烊之前 — 打印道具</title>
+<style>
+  :root{
+    --ink:#20242a; --paper:#fdfaf2; --line:#e2d7c1;
+    --green:#1e7a5a; --red:#b93a2c; --gold:#b8860b;
+    --fat:#c47a1e; --slim:#2f6f9f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:#e9e3d6; color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{display:flex; flex-direction:column; align-items:center; gap:10mm; padding:8mm 0;}
+  .page{
+    width:210mm; height:297mm; padding:7mm 11mm 5mm;
+    background:var(--paper); position:relative; overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    display:flex; flex-direction:column;
+  }
+  .grid3,.grid4{align-content:flex-start;}
+  .phead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    border-bottom:2px solid var(--green); padding-bottom:2mm; margin-bottom:3mm;
+  }
+  .phead .t{font-size:13pt; font-weight:800; letter-spacing:2px; color:var(--green);}
+  .phead .s{font-size:7.5pt; color:#8b7f6a; letter-spacing:1px;}
+  .print-hint{
+    max-width:190mm; margin:0 auto 6mm; background:#fff8e1; border:2px solid #f0c14b;
+    border-radius:8px; padding:12px 18px; font-size:12.5px; line-height:1.75;
+  }
+  .print-hint ul{margin:6px 0 0; padding-left:20px;}
+  /* ---------- 卡牌通用 ---------- */
+  .grid3{display:flex; flex-wrap:wrap; gap:2.4mm;}
+  .card{
+    width:58mm; height:63mm; border-radius:5px; position:relative;
+    background:linear-gradient(178deg,#fffdf7 0%,#fbf4e6 62%,#f5ecd9 100%);
+    border:1.4px solid var(--c,#9a8f78); display:flex; flex-direction:column;
+    padding:2.2mm 2.4mm 0; overflow:hidden;
+    box-shadow:inset 0 0 0 1.2px rgba(255,255,255,.85), 0 0 0 .4px rgba(0,0,0,.05);
+  }
+  .card .tag{
+    font-size:6.2pt; letter-spacing:1px; color:#fff; background:var(--c);
+    border-radius:2px; padding:.6mm 1.6mm; align-self:flex-start;
+  }
+  .card .big{font-size:19pt; line-height:1; margin:1.4mm 0 .6mm;}
+  .card .nm{font-size:9pt; font-weight:800; letter-spacing:.4px;}
+  .card .flavor{font-size:6.4pt; color:#8b7f6a; line-height:1.45; margin-top:.8mm;}
+  .card .pay{
+    margin-top:auto; display:flex; align-items:center; justify-content:space-between;
+    border-top:1px dashed var(--line); padding:1.2mm 0 1.4mm;
+  }
+  .card .pay b{font-size:11pt; color:var(--c);}
+  .card .pay span{font-size:6pt; color:#9c9078; letter-spacing:.5px;}
+  .card .wm{
+    position:absolute; right:-4mm; bottom:5mm; font-size:34pt; opacity:.06;
+    pointer-events:none;
+  }
+  /* ---------- 杀手牌 ---------- */
+  .killer{--c:#b93a2c;}
+  .killer .row{display:flex; align-items:flex-end; gap:2mm; margin-top:1mm;}
+  .killer .st{font-size:26pt; font-weight:900; line-height:.95; color:var(--red);}
+  .killer .stl{font-size:6pt; color:#9c9078; letter-spacing:1px; padding-bottom:1.6mm;}
+  .killer .bt{
+    margin-left:auto; background:#fdeceb; border:1px solid #e7c0bb; color:#8a2a1e;
+    border-radius:3px; padding:.8mm 1.6mm; font-size:7pt; font-weight:800;
+  }
+  /* ---------- 招式牌 ---------- */
+  .grid4{display:flex; flex-wrap:wrap; gap:2.4mm;}
+  .mcard{
+    width:42mm; height:56mm; border-radius:5px; position:relative; overflow:hidden;
+    background:radial-gradient(circle at 50% 34%,#fffdf7 0%,#f7efdd 72%,#efe4ce 100%);
+    border:1.4px solid var(--c,#9a8f78); display:flex; flex-direction:column;
+    align-items:center; padding:2mm; 
+  }
+  .mcard .su{font-size:12pt;}
+  .mcard .val{font-size:30pt; font-weight:900; line-height:1; color:var(--c); margin-top:.6mm;}
+  .mcard .sn{font-size:7pt; letter-spacing:2px; color:#8b7f6a; margin-top:.4mm;}
+  .mcard .corner{
+    position:absolute; top:1.4mm; left:1.8mm; font-size:8pt; font-weight:900; color:var(--c); opacity:.55;
+  }
+  .mcard .corner2{
+    position:absolute; bottom:1.4mm; right:1.8mm; font-size:8pt; font-weight:900; color:var(--c);
+    opacity:.55; transform:rotate(180deg);
+  }
+  /* ---------- 货架板 ---------- */
+  .board{
+    border:2.5px solid var(--green); border-radius:8px; padding:4mm; background:#fffdf6;
+    flex:0 0 auto; display:flex; flex-direction:column;
+  }
+  .btitle{text-align:center; font-size:15pt; font-weight:900; letter-spacing:6px; color:var(--green);}
+  .bsub{text-align:center; font-size:7.5pt; color:#8b7f6a; letter-spacing:2px; margin-top:.6mm;}
+  .slots{display:flex; gap:2.4mm; margin:3mm 0;}
+  .slot{
+    flex:1; height:74mm; border:2px dashed #c9bda3; border-radius:5px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#fffdf8,#f8f1e2); font-size:7pt; color:#a99b80; gap:1mm;
+  }
+  .slot .n{font-size:13pt; font-weight:900; color:#cdbfa4;}
+  .days{display:flex; gap:1.4mm; margin-top:1mm;}
+  .day{
+    flex:1; height:9mm; border:1.4px solid #c9bda3; border-radius:3px;
+    display:flex; align-items:center; justify-content:center; font-size:7.5pt; font-weight:700; color:#8b7f6a;
+  }
+  .day i{font-style:normal; font-size:6pt; opacity:.65; margin-left:1mm;}
+  .dgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:2mm; margin-top:2mm;}
+  .dcell{
+    border:1.2px solid #d8ccb4; border-radius:4px; padding:1.6mm 2mm; font-size:6.6pt; line-height:1.5;
+    background:#fffbef;
+  }
+  .dcell b{color:var(--green); font-size:7pt; display:block; margin-bottom:.4mm; letter-spacing:.5px;}
+  /* ---------- 玩家板 ---------- */
+  .pb{
+    width:88mm; height:74mm; border:2px solid #b9a982; border-radius:6px;
+    background:linear-gradient(180deg,#fffdf7,#f8f0de); padding:3mm; display:flex; flex-direction:column;
+  }
+  .pb .pbt{font-size:8.5pt; font-weight:800; letter-spacing:1px; color:#7a6a4c;}
+  .track{display:flex; margin-top:1.6mm; border:1.2px solid #cdbfa2; border-radius:3px; overflow:hidden;}
+  .tk{
+    flex:1; height:7mm; display:flex; align-items:center; justify-content:center;
+    font-size:6.2pt; font-weight:700; color:#8b7f6a; border-right:1px solid #e2d7c1;
+    background:#fffdf6;
+  }
+  .tk:last-child{border-right:none;}
+  .tk:nth-child(5n){background:#fdf3df;}
+  .pb .hintline{
+    margin-top:1.6mm; font-size:6.2pt; color:#9c9078; line-height:1.55;
+    border-top:1px dashed #d8ccb4; padding-top:1.2mm;
+  }
+  .pb .statbox{
+    margin-top:1.6mm; display:flex; gap:1.6mm;
+  }
+  .pb .statbox div{
+    flex:1; border:1.2px dashed #cdbfa2; border-radius:3px; height:12mm;
+    display:flex; align-items:flex-end; justify-content:center; padding-bottom:1mm;
+    font-size:5.8pt; color:#a99b80;
+  }
+  /* ---------- 状态牌 ---------- */
+  .stcard{
+    width:52mm; height:72mm; border-radius:6px; border:2px solid var(--c);
+    background:linear-gradient(178deg,#fffdf7,#f6eedb); display:flex; flex-direction:column;
+    align-items:center; padding:3mm 2.4mm; position:relative; overflow:hidden;
+  }
+  .stcard .hd{font-size:11pt; font-weight:900; letter-spacing:3px; color:var(--c);}
+  .stcard .em{font-size:30pt; line-height:1.1; margin:1.4mm 0;}
+  .stcard .ls{width:100%; font-size:6.4pt; line-height:1.6; color:#5d5442;}
+  .stcard .ls b{color:var(--c);}
+  .stcard .flip{
+    position:absolute; bottom:2mm; font-size:5.6pt; color:#b0a48c; letter-spacing:1px;
+  }
+  .fat{--c:var(--fat);} .slim{--c:var(--slim);}
+  /* ---------- 封面 ---------- */
+  .cover{flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;}
+  .cover .kk{font-size:9pt; letter-spacing:8px; color:var(--green);}
+  .cover h1{font-size:32pt; margin:4mm 0 1mm; letter-spacing:4px;}
+  .cover h2{font-size:11pt; font-weight:400; color:#8b7f6a; letter-spacing:3px; margin:0 0 6mm;}
+  .cover .rule{width:60mm; height:2px; background:var(--green); margin:0 auto 6mm;}
+  .cover .desc{font-size:9pt; line-height:2; color:#5d5442; max-width:130mm;}
+  .cover .meta{margin-top:8mm; display:flex; gap:4mm; font-size:8pt; color:#7a6a4c;}
+  .cover .meta div{border:1.2px solid #cdbfa2; border-radius:4px; padding:1.6mm 3.4mm;}
+  .cover .foot{position:absolute; bottom:10mm; font-size:7pt; color:#b0a48c; letter-spacing:2px;}
+  table.qr{border-collapse:collapse; font-size:7.4pt; width:100%;}
+  table.qr th,table.qr td{border:1px solid #d8ccb4; padding:1.2mm 2mm; text-align:left;}
+  table.qr th{background:#f2ead8; color:#6b5f47;}
+  .note{font-size:7.4pt; color:#7a6a4c; line-height:1.7;}
+  .note b{color:var(--red);}
+  .dice{display:flex; flex-wrap:wrap; gap:2.4mm;}
+  .die{
+    width:15mm; height:15mm; border:2px solid #b9a982; border-radius:3.2mm;
+    display:flex; align-items:center; justify-content:center; font-size:11pt; font-weight:900; color:#7a6a4c;
+    background:linear-gradient(180deg,#fffdf7,#f4ebd8);
+  }
+  .pawn{
+    width:22mm; height:22mm; border-radius:50%; border:2.6px solid var(--c);
+    background:radial-gradient(circle at 36% 30%,#fff,var(--bg,#eee));
+    display:flex; align-items:center; justify-content:center; font-size:14pt;
+  }
+  .pawnrow{display:flex; gap:4mm; flex-wrap:wrap;}
+  .pawnlbl{text-align:center; font-size:6.4pt; color:#8b7f6a; margin-top:1mm;}
+  @page { size:A4; margin:0; }
+  @media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    body{background:#fff;}
+    .sheet{padding:0; gap:0;}
+    .page{box-shadow:none; margin:0; page-break-after:always; break-after:page;}
+    .page:last-child{page-break-after:auto;}
+    .print-hint { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+      <li>使用 <strong>A4 纸张</strong>打印，缩放选「实际大小 / 100%」，边距设为<strong>最小（无）</strong>。</li>
+      <li>打印对话框中务必<strong>勾选「背景图形」</strong>（Chrome：更多设置 → 背景图形），否则卡面颜色与色块会丢失。</li>
+      <li>卡牌与棋子建议用 <strong>160g 以上卡纸</strong>；玩家板与货架板可用普通 A4 或 200g 白卡。</li>
+      <li>状态牌每面一张，<strong>正反粘合</strong>后再裁，或直接摊开两张、用「翻面换牌」代替。</li>
+      <li>共 13 页：封面 1 · 货架板 1 · 玩家板 1 · 状态牌 1 · 客牌 4 · 杀手牌 2 · 招式牌 3。</li>
+    </ul>
+  </div>
+  <div class="sheet">
+  <div class="page ">
+    <div class="cover">
+      <div class="kk">SAKAMOTO DAYS</div>
+      <h1>坂本日常：打烊之前</h1>
+      <h2>BEFORE CLOSING</h2>
+      <div class="rule"></div>
+      <div class="desc">
+        这家便利店只有一条规矩：<b>客人进门，生意照做；刀子进门，别让他碰坏货架。</b><br>
+        八天，十六把刀，两个你——一个在收银台后面笑，一个在货架之间动手。<br>
+        营业额是你的面子，赏金是你的里子。
+      </div>
+      <div class="meta">
+        <div>2-4 人</div><div>45-60 分钟</div><div>12 岁以上</div><div>卡牌 · 中等</div>
+      </div>
+      <div class="foot">打印道具 · 共 13 页 · 建议 160g 卡纸</div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">货架板</div><div class="s">SHELF BOARD · 打印 1 张，建议 A4 卡纸</div></div>
+    <div class="board">
+      <div class="btitle">坂 本 商 店</div>
+      <div class="bsub">货 架 · 五 格 · 客 人 与 刀 子 共 用</div>
+      <div class="slots">
+      <div class="slot"><div class="n">1</div><div>货架格 1</div></div>
+      <div class="slot"><div class="n">2</div><div>货架格 2</div></div>
+      <div class="slot"><div class="n">3</div><div>货架格 3</div></div>
+      <div class="slot"><div class="n">4</div><div>货架格 4</div></div>
+      <div class="slot"><div class="n">5</div><div>货架格 5</div></div>
+      </div>
+      <div class="pbt" style="font-size:8pt;font-weight:800;color:#7a6a4c;letter-spacing:1px">营业日（第 8 天打烊后结算）</div>
+      <div class="days">
+      <div class="day">1<i>天</i></div>
+      <div class="day">2<i>天</i></div>
+      <div class="day">3<i>天</i></div>
+      <div class="day">4<i>天</i></div>
+      <div class="day">5<i>天</i></div>
+      <div class="day">6<i>天</i></div>
+      <div class="day">7<i>天</i></div>
+      <div class="day">8<i>天</i></div>
+      </div>
+      <div class="dgrid">
+        <div class="dcell"><b>① 开店</b>货架补满「人数+1」格，先补客牌；再按当日数量翻杀手牌，体力骰拨到卡面数字。</div>
+        <div class="dcell"><b>② 营业</b>两轮。第一轮由起始玩家起顺时针各 1 行动点；第二轮逆时针各 1 行动点。</div>
+        <div class="dcell"><b>③ 打烊</b>货架上剩下的每张杀手体力 +1；到 12 立刻动手（袭击营业额最高者）后离场。</div>
+        <div class="dcell"><b>④ 换日</b>起始玩家标记左移一位。第 8 天打烊后计分：营业额 + 赏金。</div>
+      </div>
+      <div style="margin-top:2.4mm" class="note">
+        <b>当日杀手张数</b>　2 人局 1·1·1·1·1·1·2·2　｜　4 人局 1·1·2·2·2·2·3·3　｜　3 人局 9 天：1·1·2·2·2·2·2·3·3
+      </div>
+    </div>
+    <div style="margin-top:3mm;display:flex;gap:3mm">
+      <table class="qr" style="flex:1.15">
+        <tr><th colspan="3">形 态 对 照</th></tr>
+        <tr><th style="width:26%"></th><th>🍚 饱食态</th><th>🗡 空腹态</th></tr>
+        <tr><td>接待客牌</td><td>收益 <b>+1</b></td><td>收益 <b>−1</b>（最低 1）</td></tr>
+        <tr><td>接待杀手</td><td>不能打，挨刀 体力−3</td><td>出 1-3 张，点数≥体力</td></tr>
+        <tr><td>同系连击</td><td>—</td><td>2 张以上同系 <b>+2</b></td></tr>
+        <tr><td>被爆刀</td><td>体力 <b>−3</b></td><td>体力 <b>+1</b></td></tr>
+      </table>
+      <table class="qr" style="flex:1">
+        <tr><th colspan="2">每 天 四 步</th></tr>
+        <tr><td style="width:22%">① 开店</td><td>补满货架 → 按日历翻杀手 → 放体力骰</td></tr>
+        <tr><td>② 营业</td><td>两轮：第一轮顺时针、第二轮逆时针，各 1 AP</td></tr>
+        <tr><td>③ 打烊</td><td>剩余杀手体力 +1；到 12 爆刀打最有钱的</td></tr>
+        <tr><td>④ 换日</td><td>起始玩家左移；第 8 天打烊后计分</td></tr>
+      </table>
+    </div>
+    <table class="qr" style="margin-top:3mm">
+      <tr><th colspan="4">结 算 速 查</th></tr>
+      <tr><td style="width:20%"><b>击倒杀手</b></td><td style="width:30%">点数 ≥ 当前体力 → 拿赏金（= 体力），牌全部弃掉</td>
+          <td style="width:20%"><b>打不过</b></td><td>失去 (体力 − 点数) 营业额；刀留下、体力不变</td></tr>
+      <tr><td><b>饱食碰刀</b></td><td>不能打，直接失去 (体力 − 3) 营业额，无赏金</td>
+          <td><b>爆刀</b></td><td>体力到 12 → 袭击营业额最高者：饱食 −9 / 空腹 −13</td></tr>
+      <tr><td><b>终局计分</b></td><td colspan="3">总分 = 累计营业额 + 累计赏金　　平局：手牌多者胜　　抽牌堆空了就洗回弃牌堆</td></tr>
+    </table>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">玩家板 ×4</div><div class="s">PLAYER BOARDS · 每人 1 张</div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:2.4mm">
+    <div class="pb">
+      <div class="pbt">店 主 甲</div>
+      <div class="track"><div class="tk">0</div><div class="tk">2</div><div class="tk">4</div><div class="tk">6</div><div class="tk">8</div><div class="tk">10</div><div class="tk">12</div><div class="tk">14</div><div class="tk">16</div><div class="tk">18</div><div class="tk">20</div><div class="tk">22</div><div class="tk">24</div><div class="tk">26</div><div class="tk">28</div><div class="tk">30</div><div class="tk">32</div><div class="tk">34</div><div class="tk">36</div><div class="tk">38</div><div class="tk">40</div></div>
+      <div class="statbox"><div>赏金（累计）</div><div>状态牌放这里</div><div>手牌上限 6</div></div>
+      <div class="hintline">
+        营业额轨：棋子从 0 出发，每 2 分走一格。<br>
+        被刀砍到时从「营业额」里扣，扣到 0 为止（不会变负）。<br>
+        赏金不扣、不共享，只在终局计分。
+      </div>
+    </div>
+    <div class="pb">
+      <div class="pbt">店 主 乙</div>
+      <div class="track"><div class="tk">0</div><div class="tk">2</div><div class="tk">4</div><div class="tk">6</div><div class="tk">8</div><div class="tk">10</div><div class="tk">12</div><div class="tk">14</div><div class="tk">16</div><div class="tk">18</div><div class="tk">20</div><div class="tk">22</div><div class="tk">24</div><div class="tk">26</div><div class="tk">28</div><div class="tk">30</div><div class="tk">32</div><div class="tk">34</div><div class="tk">36</div><div class="tk">38</div><div class="tk">40</div></div>
+      <div class="statbox"><div>赏金（累计）</div><div>状态牌放这里</div><div>手牌上限 6</div></div>
+      <div class="hintline">
+        营业额轨：棋子从 0 出发，每 2 分走一格。<br>
+        被刀砍到时从「营业额」里扣，扣到 0 为止（不会变负）。<br>
+        赏金不扣、不共享，只在终局计分。
+      </div>
+    </div>
+    <div class="pb">
+      <div class="pbt">店 主 丙</div>
+      <div class="track"><div class="tk">0</div><div class="tk">2</div><div class="tk">4</div><div class="tk">6</div><div class="tk">8</div><div class="tk">10</div><div class="tk">12</div><div class="tk">14</div><div class="tk">16</div><div class="tk">18</div><div class="tk">20</div><div class="tk">22</div><div class="tk">24</div><div class="tk">26</div><div class="tk">28</div><div class="tk">30</div><div class="tk">32</div><div class="tk">34</div><div class="tk">36</div><div class="tk">38</div><div class="tk">40</div></div>
+      <div class="statbox"><div>赏金（累计）</div><div>状态牌放这里</div><div>手牌上限 6</div></div>
+      <div class="hintline">
+        营业额轨：棋子从 0 出发，每 2 分走一格。<br>
+        被刀砍到时从「营业额」里扣，扣到 0 为止（不会变负）。<br>
+        赏金不扣、不共享，只在终局计分。
+      </div>
+    </div>
+    <div class="pb">
+      <div class="pbt">店 主 丁</div>
+      <div class="track"><div class="tk">0</div><div class="tk">2</div><div class="tk">4</div><div class="tk">6</div><div class="tk">8</div><div class="tk">10</div><div class="tk">12</div><div class="tk">14</div><div class="tk">16</div><div class="tk">18</div><div class="tk">20</div><div class="tk">22</div><div class="tk">24</div><div class="tk">26</div><div class="tk">28</div><div class="tk">30</div><div class="tk">32</div><div class="tk">34</div><div class="tk">36</div><div class="tk">38</div><div class="tk">40</div></div>
+      <div class="statbox"><div>赏金（累计）</div><div>状态牌放这里</div><div>手牌上限 6</div></div>
+      <div class="hintline">
+        营业额轨：棋子从 0 出发，每 2 分走一格。<br>
+        被刀砍到时从「营业额」里扣，扣到 0 为止（不会变负）。<br>
+        赏金不扣、不共享，只在终局计分。
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">状态牌 · 骰子 · 棋子</div><div class="s">STATUS / DICE / PAWNS</div></div>
+    <div style="display:flex;gap:3mm;justify-content:center">    <div class="stcard fat">
+      <div class="hd">饱 食 态</div>
+      <div class="em">🍚</div>
+      <div class="ls">
+        · 接待客牌 <b>收益 +1</b><br>
+        · <b>不能</b>主动接待杀手（取走＝直接挨刀，失去「体力−3」营业额）<br>
+        · 挨刀伤害 <b>−3</b>（肉厚）<br>
+        · 想动手？先花 1 行动点翻面
+      </div>
+      <div class="flip">背面 → 空腹态</div>
+    </div>
+    <div class="stcard slim">
+      <div class="hd">空 腹 态</div>
+      <div class="em">🗡</div>
+      <div class="ls">
+        · 接待客牌 <b>收益 −1</b>（最低 1，脸太吓人）<br>
+        · 可出 <b>1-3 张</b>招式牌击倒杀手<br>
+        · 同系 ≥2 张，总点数 <b>+2</b><br>
+        · 挨刀伤害 <b>+1</b>（没有缓冲）
+      </div>
+      <div class="flip">背面 → 饱食态</div>
+    </div></div>
+    <div style="margin-top:5mm" class="pbt">体力骰（裁下折成方块，或直接用现成 12 面骰）</div>
+    <div class="dice" style="margin-top:2mm">
+      <div class="die">1</div>
+      <div class="die">2</div>
+      <div class="die">3</div>
+      <div class="die">4</div>
+      <div class="die">5</div>
+      <div class="die">6</div>
+      <div class="die">7</div>
+      <div class="die">8</div>
+      <div class="die">9</div>
+      <div class="die">10</div>
+      <div class="die">11</div>
+      <div class="die">12</div>
+    </div>
+    <div style="margin-top:5mm" class="pbt">店主棋子（裁圆片，贴在硬币上更压手）</div>
+    <div class="pawnrow" style="margin-top:2mm">
+      <div><div class="pawn" style="--c:#b93a2c;--bg:#f8ded9">🍙</div><div class="pawnlbl">店主甲</div></div>
+      <div><div class="pawn" style="--c:#2f6f9f;--bg:#dbeaf5">🍙</div><div class="pawnlbl">店主乙</div></div>
+      <div><div class="pawn" style="--c:#1e7a5a;--bg:#d9f0e6">🍙</div><div class="pawnlbl">店主丙</div></div>
+      <div><div class="pawn" style="--c:#8a6d1f;--bg:#f6ecc9">🍙</div><div class="pawnlbl">店主丁</div></div>
+    </div>
+    <div class="note" style="margin-top:4mm">
+      <b>状态牌怎么用：</b>每面各印一张，正反粘在同一张卡纸上（或直接摊两张，翻面＝换一张）。<br>
+      <b>体力骰怎么用：</b>每张杀手牌上放一颗，显示「当前体力」。打烊时 +1，被击倒时收走。
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">客牌 1-12</div><div class="s">CUSTOMERS · 共 48 张 · 58×63mm</div></div>
+    <div class="grid3">
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🍙</div>
+      <div class="nm">饭团</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🍙</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🥛</div>
+      <div class="nm">牛奶</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🥛</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🍬</div>
+      <div class="nm">口香糖</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🍬</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🔋</div>
+      <div class="nm">电池</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🔋</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🩹</div>
+      <div class="nm">创可贴</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🩹</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">☂️</div>
+      <div class="nm">雨伞</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">☂️</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🍦</div>
+      <div class="nm">冰淇淋</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🍦</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">📰</div>
+      <div class="nm">报纸</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">📰</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">☕</div>
+      <div class="nm">罐装咖啡</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">☕</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🍜</div>
+      <div class="nm">泡面</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🍜</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🔥</div>
+      <div class="nm">打火机</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🔥</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🧻</div>
+      <div class="nm">纸巾</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🧻</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">客牌 13-24</div><div class="s">CUSTOMERS · 共 48 张 · 58×63mm</div></div>
+    <div class="grid3">
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🐟</div>
+      <div class="nm">猫粮</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🐟</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🛍️</div>
+      <div class="nm">购物袋</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🛍️</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 1 件</div>
+      <div class="big">🥢</div>
+      <div class="nm">一次性筷子</div>
+      <div class="flavor">街坊，随手买一件就走。</div>
+      <div class="wm">🥢</div>
+      <div class="pay"><b>1</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🍱</div>
+      <div class="nm">便当+茶</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🍱</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🍺</div>
+      <div class="nm">啤酒+花生</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🍺</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🧴</div>
+      <div class="nm">洗衣液+柔顺剂</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🧴</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🍞</div>
+      <div class="nm">面包+果酱</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🍞</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🔦</div>
+      <div class="nm">电池+手电</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🔦</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🪥</div>
+      <div class="nm">牙膏+牙刷</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🪥</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🥚</div>
+      <div class="nm">鸡蛋+葱花</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🥚</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🥤</div>
+      <div class="nm">汽水+薯片</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🥤</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">💊</div>
+      <div class="nm">感冒药+退热贴</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">💊</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">客牌 25-36</div><div class="s">CUSTOMERS · 共 48 张 · 58×63mm</div></div>
+    <div class="grid3">
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">✂️</div>
+      <div class="nm">胶带+剪刀</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">✂️</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🧂</div>
+      <div class="nm">酱油+味精</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🧂</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">📖</div>
+      <div class="nm">漫画+零食</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">📖</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🕯️</div>
+      <div class="nm">蜡烛+火柴</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🕯️</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🩴</div>
+      <div class="nm">拖鞋+毛巾</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🩴</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🍨</div>
+      <div class="nm">冰淇淋两份</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🍨</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🍱</div>
+      <div class="nm">便当两份</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🍱</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🍩</div>
+      <div class="nm">咖啡+甜甜圈</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🍩</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">😷</div>
+      <div class="nm">口罩+消毒液</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">😷</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">🐈</div>
+      <div class="nm">猫砂+罐头</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">🐈</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#1e7a5a">
+      <div class="tag">街坊 · 买 2 件</div>
+      <div class="big">✉️</div>
+      <div class="nm">贺卡+信封</div>
+      <div class="flavor">街坊，拎两样东西，心情不错。</div>
+      <div class="wm">✉️</div>
+      <div class="pay"><b>2</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">🌷</div>
+      <div class="nm">花店老板娘</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">🌷</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">客牌 37-48</div><div class="s">CUSTOMERS · 共 48 张 · 58×63mm</div></div>
+    <div class="grid3">
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">📰</div>
+      <div class="nm">送报的老爷子</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">📰</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">🎓</div>
+      <div class="nm">夜班大学生</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">🎓</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">✏️</div>
+      <div class="nm">赶稿的漫画家</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">✏️</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">🎒</div>
+      <div class="nm">放学的小学生</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">🎒</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">👵</div>
+      <div class="nm">楼上的独居奶奶</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">👵</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">🔧</div>
+      <div class="nm">修车铺师傅</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">🔧</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">👮</div>
+      <div class="nm">巡警小林</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">👮</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">🍜</div>
+      <div class="nm">拉面店老板</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">🍜</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">📦</div>
+      <div class="nm">跑单的快递员</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">📦</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">💉</div>
+      <div class="nm">医院的护士姐姐</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">💉</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">🎹</div>
+      <div class="nm">琴行调音师</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">🎹</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    <div class="card" style="--c:#b8860b">
+      <div class="tag">熟客 · 收益 4 + 抽 1</div>
+      <div class="big">🐈‍⬛</div>
+      <div class="nm">蹭空调的流浪猫</div>
+      <div class="flavor">熟客。进门先聊两句，再顺手抽一张招式牌。</div>
+      <div class="wm">🐈‍⬛</div>
+      <div class="pay"><b>4</b><span>营业额</span></div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">杀手牌 1-12</div><div class="s">DISGUISED GUESTS · 共 20 张</div></div>
+    <div class="grid3">
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">黑西装新人</div>
+      <div class="row"><div class="st">3</div><div class="stl">体力</div>
+        <div class="bt">赏金 3</div></div>
+      <div class="flavor">组织最底层，连刀都拿反了</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">赏金猎人</div>
+      <div class="row"><div class="st">3</div><div class="stl">体力</div>
+        <div class="bt">赏金 3</div></div>
+      <div class="flavor">只为钱来，打不过就跑</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">街头混混</div>
+      <div class="row"><div class="st">3</div><div class="stl">体力</div>
+        <div class="bt">赏金 3</div></div>
+      <div class="flavor">以为这是一家普通便利店</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">被雇来的打手</div>
+      <div class="row"><div class="st">3</div><div class="stl">体力</div>
+        <div class="bt">赏金 3</div></div>
+      <div class="flavor">收了定金，硬着头皮上</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">组织外围成员</div>
+      <div class="row"><div class="st">4</div><div class="stl">体力</div>
+        <div class="bt">赏金 4</div></div>
+      <div class="flavor">负责踩点，顺手想立功</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">推销员</div>
+      <div class="row"><div class="st">4</div><div class="stl">体力</div>
+        <div class="bt">赏金 4</div></div>
+      <div class="flavor">皮包里没有样品，只有刀</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">戴墨镜的男人</div>
+      <div class="row"><div class="st">4</div><div class="stl">体力</div>
+        <div class="bt">赏金 4</div></div>
+      <div class="flavor">进门先看摄像头</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">持刀青年</div>
+      <div class="row"><div class="st">4</div><div class="stl">体力</div>
+        <div class="bt">赏金 4</div></div>
+      <div class="flavor">眼神比刀还冷</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">组织正式成员</div>
+      <div class="row"><div class="st">5</div><div class="stl">体力</div>
+        <div class="bt">赏金 5</div></div>
+      <div class="flavor">训练有素，进门先关门</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">双刀客</div>
+      <div class="row"><div class="st">5</div><div class="stl">体力</div>
+        <div class="bt">赏金 5</div></div>
+      <div class="flavor">左手刀，右手也是刀</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">屋顶的狙击手</div>
+      <div class="row"><div class="st">5</div><div class="stl">体力</div>
+        <div class="bt">赏金 5</div></div>
+      <div class="flavor">红点落在收银台上</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">外卖员</div>
+      <div class="row"><div class="st">5</div><div class="stl">体力</div>
+        <div class="bt">赏金 5</div></div>
+      <div class="flavor">这单没有餐，只有杀意</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">杀手牌 13-20</div><div class="s">DISGUISED GUESTS · 共 20 张</div></div>
+    <div class="grid3">
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">特A级杀手</div>
+      <div class="row"><div class="st">6</div><div class="stl">体力</div>
+        <div class="bt">赏金 6</div></div>
+      <div class="flavor">组织里排得上号的人</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">南云</div>
+      <div class="row"><div class="st">6</div><div class="stl">体力</div>
+        <div class="bt">赏金 6</div></div>
+      <div class="flavor">笑着进门，笑着出手</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">大佛</div>
+      <div class="row"><div class="st">6</div><div class="stl">体力</div>
+        <div class="bt">赏金 6</div></div>
+      <div class="flavor">一个人挡住整扇门</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">狮尾</div>
+      <div class="row"><div class="st">8</div><div class="stl">体力</div>
+        <div class="bt">赏金 8</div></div>
+      <div class="flavor">ORDER 成员，出手不留余地</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">乐</div>
+      <div class="row"><div class="st">8</div><div class="stl">体力</div>
+        <div class="bt">赏金 8</div></div>
+      <div class="flavor">他把这当成一场游戏</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">ORDER 成员</div>
+      <div class="row"><div class="st">8</div><div class="stl">体力</div>
+        <div class="bt">赏金 8</div></div>
+      <div class="flavor">接到命令，不谈理由</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">X（史拉）</div>
+      <div class="row"><div class="st">9</div><div class="stl">体力</div>
+        <div class="bt">赏金 9</div></div>
+      <div class="flavor">他记得坂本的每一个习惯</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    <div class="card killer">
+      <div class="tag">伪装客 · 杀手</div>
+      <div class="nm">组织的王牌</div>
+      <div class="row"><div class="st">9</div><div class="stl">体力</div>
+        <div class="bt">赏金 9</div></div>
+      <div class="flavor">这条街不该有活口</div>
+      <div class="pay"><span style="font-size:6pt;color:#9c9078">体力 = 赏金 · 打烊后 +1</span><span>12 爆刀</span></div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">招式牌 1-16</div><div class="s">MOVES · 共 40 张 · 42×56mm</div></div>
+    <div class="grid4">
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">1</div>
+      <div class="su">✊</div>
+      <div class="val">1</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">1</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">2</div>
+      <div class="su">✊</div>
+      <div class="val">2</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">2</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">2</div>
+      <div class="su">✊</div>
+      <div class="val">2</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">2</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">3</div>
+      <div class="su">✊</div>
+      <div class="val">3</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">3</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">4</div>
+      <div class="su">✊</div>
+      <div class="val">4</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">4</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">4</div>
+      <div class="su">✊</div>
+      <div class="val">4</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">4</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">5</div>
+      <div class="su">✊</div>
+      <div class="val">5</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">5</div>
+      <div class="su">✊</div>
+      <div class="val">5</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">6</div>
+      <div class="su">✊</div>
+      <div class="val">6</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">6</div>
+    </div>
+    <div class="mcard" style="--c:#b93a2c">
+      <div class="corner">6</div>
+      <div class="su">✊</div>
+      <div class="val">6</div>
+      <div class="sn">拳·体术</div>
+      <div class="corner2">6</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">1</div>
+      <div class="su">🔪</div>
+      <div class="val">1</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">1</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">2</div>
+      <div class="su">🔪</div>
+      <div class="val">2</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">2</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">2</div>
+      <div class="su">🔪</div>
+      <div class="val">2</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">2</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">3</div>
+      <div class="su">🔪</div>
+      <div class="val">3</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">3</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">4</div>
+      <div class="su">🔪</div>
+      <div class="val">4</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">4</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">4</div>
+      <div class="su">🔪</div>
+      <div class="val">4</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">4</div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">招式牌 17-32</div><div class="s">MOVES · 共 40 张 · 42×56mm</div></div>
+    <div class="grid4">
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">5</div>
+      <div class="su">🔪</div>
+      <div class="val">5</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">5</div>
+      <div class="su">🔪</div>
+      <div class="val">5</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">6</div>
+      <div class="su">🔪</div>
+      <div class="val">6</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">6</div>
+    </div>
+    <div class="mcard" style="--c:#2f6f9f">
+      <div class="corner">6</div>
+      <div class="su">🔪</div>
+      <div class="val">6</div>
+      <div class="sn">刃·居合</div>
+      <div class="corner2">6</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">1</div>
+      <div class="su">🎯</div>
+      <div class="val">1</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">1</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">2</div>
+      <div class="su">🎯</div>
+      <div class="val">2</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">2</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">2</div>
+      <div class="su">🎯</div>
+      <div class="val">2</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">2</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">3</div>
+      <div class="su">🎯</div>
+      <div class="val">3</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">3</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">4</div>
+      <div class="su">🎯</div>
+      <div class="val">4</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">4</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">4</div>
+      <div class="su">🎯</div>
+      <div class="val">4</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">4</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">5</div>
+      <div class="su">🎯</div>
+      <div class="val">5</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">5</div>
+      <div class="su">🎯</div>
+      <div class="val">5</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">6</div>
+      <div class="su">🎯</div>
+      <div class="val">6</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">6</div>
+    </div>
+    <div class="mcard" style="--c:#1e7a5a">
+      <div class="corner">6</div>
+      <div class="su">🎯</div>
+      <div class="val">6</div>
+      <div class="sn">投·暗器</div>
+      <div class="corner2">6</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">1</div>
+      <div class="su">🧰</div>
+      <div class="val">1</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">1</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">2</div>
+      <div class="su">🧰</div>
+      <div class="val">2</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">2</div>
+    </div>
+    </div>
+  </div>
+  <div class="page ">
+  <div class="phead"><div class="t">招式牌 33-40</div><div class="s">MOVES · 共 40 张 · 42×56mm</div></div>
+    <div class="grid4">
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">2</div>
+      <div class="su">🧰</div>
+      <div class="val">2</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">2</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">3</div>
+      <div class="su">🧰</div>
+      <div class="val">3</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">3</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">4</div>
+      <div class="su">🧰</div>
+      <div class="val">4</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">4</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">4</div>
+      <div class="su">🧰</div>
+      <div class="val">4</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">4</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">5</div>
+      <div class="su">🧰</div>
+      <div class="val">5</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">5</div>
+      <div class="su">🧰</div>
+      <div class="val">5</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">5</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">6</div>
+      <div class="su">🧰</div>
+      <div class="val">6</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">6</div>
+    </div>
+    <div class="mcard" style="--c:#8a6d1f">
+      <div class="corner">6</div>
+      <div class="su">🧰</div>
+      <div class="val">6</div>
+      <div class="sn">器·道具</div>
+      <div class="corner2">6</div>
+    </div>
+    </div>
+  </div>
+  </div>
+</body>
+</html>
