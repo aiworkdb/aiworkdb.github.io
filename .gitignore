@@ -88,3 +88,44 @@ teambuilding/_*.py
 teambuilding/wechat/
 teambuilding/wiki/
 teambuilding/generated/
+
+# scripts/ 下的一次性产物（数值验算、模拟、巡检、补丁、中间输出），不入库
+# 已入库的发布脚本不受影响；如需新增长期脚本，用 git add -f 强制添加
+scripts/_*
+scripts/out*
+scripts/sweep*
+scripts/sim_*
+scripts/check_*
+scripts/gen_*
+scripts/seed*
+scripts/seedlog*
+scripts/patch*
+scripts/dbg_*
+scripts/sbr_*
+scripts/scan_topic_gaps*
+scripts/inspect_*
+scripts/anal_*
+scripts/verify_*
+scripts/update_*
+scripts/fix_*
+scripts/gap_*
+scripts/dup_check_*
+scripts/count_slots_*
+scripts/flow_slots_*
+scripts/slot_usage_*
+scripts/landing_gap_*
+scripts/add_*_20*
+scripts/append_auto_memory_*
+scripts/audit_*
+scripts/cram_*
+scripts/bc_png*/
+scripts/bc_v*.pdf
+scripts/*.json
+scripts/*_sim.txt
+scripts/dist.py
+scripts/final.py
+scripts/bc_render.py
+scripts/diag_*
+
+# 根目录遗留的一次性生成脚本（成品已落在 boardgames/ 里）
+/gen_bc_printables.py
