@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信任挑款指南 · 6 款分成 3 组 - 团建 &amp; 培训游戏库</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6; color: #ecc8da;
+        background: linear-gradient(135deg, #170a11 0%, #12080d 55%, #1d0c15 100%);
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px; margin: 0 auto; background: #2f1623;
+        border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        overflow: hidden; border: 1px solid #611f41;
+    }
+    .header {
+        background: linear-gradient(135deg, #8c2158 0%, #bf2f79 45%, #e865a8 100%);
+        color: #170a11; padding: 40px; text-align: center;
+    }
+    .header h1 { font-size: 2.1em; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(255,255,255,0.25); }
+    .header .subtitle { font-size: 1.05em; opacity: 0.95; }
+    .header .tag {
+        display: inline-block; margin-top: 14px; padding: 6px 18px;
+        background: rgba(0,0,0,0.22); border-radius: 20px; font-size: 0.9em; border: 1px solid #e865a8;
+    }
+    .info-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; padding: 30px; background: #140a0f;
+    }
+    .info-card {
+        background: #2f1623; padding: 20px; border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4); text-align: center; border: 1px solid #611f41;
+    }
+    .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .info-card .label { font-size: 0.9em; color: #b07a96; }
+    .info-card .value { font-size: 1.05em; font-weight: bold; color: #ecc8da; }
+    .section { padding: 30px 40px; }
+    .section h2 {
+        color: #dd6aa5; border-left: 5px solid #8c2158; padding-left: 15px;
+        margin-bottom: 20px; font-size: 1.55em;
+    }
+    .section h3 { color: #bf2f79; margin: 22px 0 10px; font-size: 1.18em; }
+    .section p, .section li { color: #ecc8da; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 25px; }
+    .data-table {
+        width: 100%; border-collapse: collapse; margin-top: 15px;
+        background: #140a0f; border-radius: 10px; overflow: hidden;
+    }
+    .data-table th { background: #8c2158; color: #170a11; padding: 12px; text-align: left; font-size: 0.95em; }
+    .data-table td { padding: 10px 12px; border-top: 1px solid #611f41; color: #ecc8da; font-size: 0.92em; }
+    .data-table tr:nth-child(even) { background: #2f1623; }
+    .data-table .cat { white-space: nowrap; color: #b07a96; font-size: 0.9em; }
+    .group-card {
+        background: #2f1623; border: 1px solid #611f41; border-radius: 12px;
+        padding: 22px 24px; margin-top: 18px;
+    }
+    .group-card h3 { margin-top: 0; font-size: 1.2em; color: #dd6aa5; }
+    .group-lead { font-size: 0.96em; color: #ecc8da; margin-bottom: 14px; }
+    .when-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .when-box, .avoid-box { border-radius: 10px; padding: 14px 16px; font-size: 0.92em; }
+    .when-box { background: #402533; border: 1px solid #611f41; }
+    .avoid-box { background: #3a2a1c; border: 1px solid #7a5330; }
+    .when-box b { color: #dd6aa5; }
+    .avoid-box b { color: #ddb188; }
+    .pick {
+        display: inline-block; margin-bottom: 14px; padding: 8px 16px; border-radius: 20px;
+        background: #8c2158; color: #170a11; font-size: 0.92em; font-weight: 600;
+    }
+    blockquote {
+        background: #3b1e2d; border-left: 4px solid #dd6aa5; border-radius: 8px;
+        padding: 14px 18px; margin: 14px 0; color: #ecc8da; font-size: 0.95em;
+    }
+    a { color: #dd6aa5; }
+    .footer {
+        background: #140a0f; color: #b07a96; text-align: center; padding: 25px;
+        font-size: 0.9em; border-top: 1px solid #611f41;
+    }
+    .footer a { color: #dd6aa5; }
+    .back-link {
+        display: inline-block; margin: 8px 6px 0; padding: 8px 20px;
+        background: #8c2158; color: #170a11; text-decoration: none; border-radius: 20px; font-size: 0.9em;
+    }
+    .back-link:hover { background: #dd6aa5; }
+    .pick-master {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        padding: 13px 40px; background: #2f1623; border-left: 5px solid #8c2158;
+        border-bottom: 1px solid #611f41; font-size: 0.92em; color: #ecc8da;
+    }
+    .pick-master .pm-no {
+        background: #8c2158; color: #170a11; border-radius: 14px;
+        padding: 3px 12px; font-weight: 700; font-size: 0.95em; white-space: nowrap;
+    }
+    .pick-master .pm-dim { font-weight: 700; color: #e865a8; }
+    .pick-master .pm-note { flex: 1 1 340px; opacity: 0.82; line-height: 1.55; }
+    .pick-master .pm-link {
+        white-space: nowrap; color: #e865a8; text-decoration: none;
+        border: 1px solid #8c2158; border-radius: 16px; padding: 4px 14px;
+        font-size: 0.92em;
+    }
+    .pick-master .pm-link:hover { background: #611f41; }
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🔐 信任挑款指南</h1>
+        <div class="subtitle">6 款信任建立 —— 按「托付出去的是什么」分成 3 组</div>
+        <div class="tag">6 款 · 3 组 · 每组给了首选与「什么时候别选它」</div>
+    </div>
+
+    <div class="pick-master">
+        <span class="pm-no">第 7 / 7 套</span>
+        <span class="pm-dim">本页切的是「托付内容」</span>
+        <span class="pm-note">问的是「这一局，到底把什么交到了对方手上」—— 另外 6 套问的是别的维度：套到沟通上会把「说清楚了」当成「敢托付了」，说清楚和敢交出去是两件事。</span>
+        <a class="pm-link" href="pick.html">🧭 七套切法总表</a>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">🎲</div><div class="label">覆盖范围</div><div class="value">6 款（🔐 信任建立）</div></div>
+        <div class="info-card"><div class="icon">🧭</div><div class="label">分组口径</div><div class="value">按「托付出去的是什么」分 3 组</div></div>
+        <div class="info-card"><div class="icon">🪢</div><div class="label">接住是强制的吗</div><div class="value">规则保证 2 款 / 可选择不接 4 款</div></div>
+        <div class="info-card"><div class="icon">⏱️</div><div class="label">时长跨度</div><div class="value">20 min ～ 90 min</div></div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 30 秒挑款：你现在想要什么</h2>
+        <p>不用读完全页。找到你此刻的麻烦，直接拿最后那款；想再看同类，点组名跳下去。</p>
+        <table class="data-table">
+            <tr><th>你现在的麻烦</th><th>去哪一组</th><th>直接拿这款</th></tr>
+            <tr><td>要一次「敢把后背交出去」的强记忆点，时间只有 20–40 分钟</td><td><a href="#g-body">🫱 交出身体与安全</a></td><td><a href="games/trust/trust-fall.html">信任背摔</a> <span style="color:#b07a96;">（8–20 人 / 20–40 min）</span></td></tr>
+            <tr><td>想练「怎么说清对方看不见的东西」，可室内可户外</td><td><a href="#g-body">🫱 交出身体与安全</a></td><td><a href="games/trust/blind-walk.html">盲行</a> <span style="color:#b07a96;">（任意偶数 / 20–35 min）</span></td></tr>
+            <tr><td>团队表面客气、没人说真话</td><td><a href="#g-truth">💬 交出会受伤的自己</a></td><td><a href="games/trust/spy-family-trust.html">间谍过家家 · 真心之家</a> <span style="color:#b07a96;">（6–16 人 / 60–90 min）</span></td></tr>
+            <tr><td>团队刚被冤枉过，出问题第一反应是怀疑人</td><td><a href="#g-truth">💬 交出会受伤的自己</a></td><td><a href="games/trust/chef-undercover.html">信任厨房 · 隐患与澄清</a> <span style="color:#b07a96;">（6–16 人 / 50–75 min）</span></td></tr>
+            <tr><td>能力强的人不愿回头带人，交接总断档</td><td><a href="#g-outcome">🤝 交出一件事的成败</a></td><td><a href="games/trust/baxian-crossing-sea.html">八仙渡海 · 回渡与结缆</a> <span style="color:#b07a96;">（8–24 人 / 60–90 min）</span></td></tr>
+            <tr><td>信息只能靠人传、看不到源头，而验证要自己付代价</td><td><a href="#g-outcome">🤝 交出一件事的成败</a></td><td><a href="games/trust/three-monkeys-defuse.html">三猿拆弹 · 无声引信</a> <span style="color:#b07a96;">（8–24 人 / 55–80 min）</span></td></tr>
+        </table>
+        <blockquote>三组是按<strong>「托付出去的是什么」</strong>切的，不是按「感不感动」切的。同样是信任游戏，「把身体交出去」和「把真话交出去」练的完全不是一回事 —— 前者练的是敢不敢，后者练的是说出口之后会不会被接住。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🚧 「信任」不等于「敢把后背交出去」：6 款里只有 2 款在玩身体托付</h2>
+        <p>大部分人听到「信任游戏」想到的是背摔和盲行。但这两款恰恰是<strong>最不留沉淀</strong>的两款 —— 20–40 分钟，摔完就完了，第二天上班什么都没变。而且它们有一个结构性差异：<strong>在这 2 款里，「接住」是规则保证的</strong>（不接住会出事，没人敢不接）；<strong>后面 4 款里，对方可以选择不接住</strong>，不接也不会出事，只是信任就没了 —— 那才是工作里真正的信任。</p>
+        <table class="data-table">
+            <tr><th></th><th>🫱 交出身体与安全</th><th>💬 交出会受伤的自己</th><th>🤝 交出一件事的成败</th></tr>
+            <tr><td><b>托付出去的是什么</b></td><td>此刻的身体安全 / 看不见时的方向</td><td>一段真话、一个会被怀疑的身份</td><td>领先者的优势、一个看不到源头的判断</td></tr>
+            <tr><td><b>接住是强制的吗</b></td><td>是（不接住会出事）</td><td>不是（可以选择不接）</td><td>不是（可以选择不接）</td></tr>
+            <tr><td><b>教练要盯什么</b></td><td>安全措施与谁在回避</td><td>谁的话被接住了、谁的话落空了</td><td>托付时说没说清「我指望你拿它做什么」</td></tr>
+            <tr><td><b>复盘问什么</b></td><td>交出去那一刻你在想什么</td><td>说出口之前你犹豫了多久</td><td>你要求验证时，是谁付的代价</td></tr>
+            <tr><td><b>产出是什么</b></td><td>一次共同记忆（不产出规矩）</td><td>一条「怎么说都不会被追责」的约定</td><td>一份交接写法 / 一句「验证不是怀疑」</td></tr>
+            <tr><td><b>最容易翻车在哪</b></td><td>玩完就散，没有复盘</td><td>真话说一半，反而更隔阂</td><td>被读成「谁提出问题谁负责」</td></tr>
+        </table>
+        <p style="margin-top:18px;">把三组横过来看，真正在递增的轴是<strong>「托付的东西有多收不回」</strong>：<strong>身体（摔到一半收不回来）→ 真话（说出口就收不回）→ 结果（交出去就管不了了）</strong>。挑款时该问的是「我想要他们交出什么」，而不是「哪个游戏更感人」。</p>
+        <table class="data-table">
+            <tr><th>托付出去的是什么</th><th>组</th><th>组内首选</th><th>组内最短一款</th></tr>
+            <tr><td><a href="#g-body">🫱 交出身体与安全</a></td><td>2 款</td><td>信任背摔（8–20 人 / 20–40 min）</td><td>盲行 20–35 min</td></tr>
+            <tr><td><a href="#g-truth">💬 交出会受伤的自己</a></td><td>2 款</td><td>间谍过家家 · 真心之家（6–16 人 / 60–90 min）</td><td>信任厨房 50–75 min</td></tr>
+            <tr><td><a href="#g-outcome">🤝 交出一件事的成败</a></td><td>2 款</td><td>八仙渡海 · 回渡与结缆（8–24 人 / 60–90 min）</td><td>三猿拆弹 55–80 min</td></tr>
+        </table>
+        <blockquote>⚠️ 时间不够时的取舍：<strong>只有 🫱 那组能在 40 分钟内做完</strong>（背摔 20–40 / 盲行 20–35 min）。想要「心理安全感」层面的东西，两款都要 50–90 分钟，压缩时间等于让真话说一半 —— 那比不说更伤。</blockquote>
+        <blockquote>再提醒一句：<strong>这 6 款只是带「信任」标签的 10 款里的 6 款</strong>。另外 4 款（黄金结界 / 盲人方阵 / 谣言工厂 / 红黑游戏）落在别的分类里 —— 见下方「🔐 信任不只是这 6 款」。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🧭 三组分别是什么</h2>
+        <div class="group-card" id="g-body">
+            <h3>🫱 交出身体与安全（2 款）</h3>
+            <div class="group-lead">这两款是全库唯一「把身体安全交出去」的一档：信任背摔把后背交给队友，盲行把眼睛和方向感交给牵引者。它们快、情绪强、几乎零准备，但也最容易玩完就散 —— 价值全在复盘那 15 分钟。注意：在这两款里「接住」是规则保证的，不接住会出事，所以它们练的是「敢不敢交」，不是「交出去之后对方接不接得住」。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>需要一次有强记忆点的开场 / 团队第一次见面 / 时间只有 20–40 分钟 / 后面还要接更深的活动，先用它把身体打开</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别把它当「心理安全感训练」——它不产出任何工作场景里的规矩；背摔对安全要求高（软地面或安全垫 + 足够接人的人数），盲行必须偶数配对；两款都要留出复盘时间，否则只剩「好玩」。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/trust/trust-fall.html" style="color:#170a11;text-decoration:underline;">信任背摔</a>（8–20 人 / 20–40 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>托付出去的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/trust/trust-fall.html">信任背摔</a></td><td class="cat">信任 · 身体托付</td><td>8–20 人</td><td>20–40 min</td><td>此刻的身体安全</td><td>站上去、闭眼、向后倒。核心目标是「交出控制权的感受」；强度来自不可撤回 —— 摔到一半收不回来。必须配安全垫与足够接人的人数，室内外皆可。</td></tr>
+                <tr><td><a href="games/trust/blind-walk.html">盲行</a></td><td class="cat">信任 · 交出方向</td><td>任意偶数</td><td>20–35 min</td><td>看不见时的方向判断</td><td>蒙眼者只能靠牵引者的手和一句话做判断，牵引者同时体验「肩负责任」。可室内可户外，也是领导力觉醒工作坊里「敢不敢把方向交给别人」的第一层。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-truth">
+            <h3>💬 交出会受伤的自己（2 款）</h3>
+            <div class="group-lead">这两款里没有人是被规则逼着接住的 —— 你说出秘密或坦白隐患，对方可以选择不接，而且不接也不会出事，只是信任就没了。间谍过家家把「藏住秘密才算赢」翻转成「秘密被安全接住才算赢」；信任厨房里冤枉一次好人信任直接 −3，隐患可以随时主动坦白、团队选择接纳则信任 +2。这是 6 款里唯一真正碰「心理安全感」的一组。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>团队表面客气、没人说真话 / 刚被冤枉过、出问题第一反应是怀疑人 / 想把「心理安全感」从口号变成一句具体的约定</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别在信任本来就薄、第二天还要一起开会的团队里直接上 —— 这两款要的是真话，而真话收不回；两款都要 50–90 分钟、围坐一桌的小场；没有兜底时教练要先声明「不接住也不用解释」。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/trust/spy-family-trust.html" style="color:#170a11;text-decoration:underline;">间谍过家家 · 真心之家</a>（6–16 人 / 60–90 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>托付出去的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/trust/spy-family-trust.html">间谍过家家 · 真心之家</a></td><td class="cat">信任 · 自我暴露</td><td>6–16 人</td><td>60–90 min</td><td>一段会被接住或落空的真话</td><td>每 5–8 人组成一个「临时家庭」，把「藏住秘密才算赢」翻转成「秘密被安全接住才算赢」；每轮微复盘每人一句话说「本轮我印象最深的一个瞬间」，把「接住」变成可观测的动作。</td></tr>
+                <tr><td><a href="games/trust/chef-undercover.html">信任厨房 · 隐患与澄清</a></td><td class="cat">信任 · 怀疑与澄清</td><td>6–16 人</td><td>50–75 min</td><td>一个可能被怀疑的身份</td><td>把「靠猜疑揪出卧底」翻转成「用什么方式找出问题，决定了团队还剩多少信任」：冤枉好人信任 −3，主动坦白隐患并被接纳 +2。三个真实困境会被摊开 —— 怀疑的成本被低估、澄清的机会没人敢用、被冤枉过的人之后就不再说话了。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-outcome">
+            <h3>🤝 交出一件事的成败（2 款）</h3>
+            <div class="group-lead">这两款托付的是「结果」：八仙渡海里先上岸的人必须掉头回来接人，给资源时必须说清「我指望你拿它做什么」并等对方复述才生效，全员渡海值取最小值；三猿拆弹里操作手永远看不到手册原文，只能选择信，或者付代价重传 —— 而要求验证这件事，本身就在记账。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>能力强的人不愿回头带人 / 交接总断档 / 信息只能靠人传、看不到中间发生了什么 / 想练「托付时把话说清楚」</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别拿它当破冰后的气氛游戏 —— 两款都有明确失败条件且会真的让人挫败；都要 55–90 分钟、8 人以上；三猿拆弹的「验证由提出者付代价」在追责文化重的团队里会被读成「谁提出问题谁负责」，教练要先讲清这条规则是设计不是惩罚。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/trust/baxian-crossing-sea.html" style="color:#170a11;text-decoration:underline;">八仙渡海 · 回渡与结缆</a>（8–24 人 / 60–90 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>托付出去的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/trust/baxian-crossing-sea.html">八仙渡海 · 回渡与结缆</a></td><td class="cat">信任 · 托付与回渡</td><td>8–24 人</td><td>60–90 min</td><td>领先者的优势要不要交出去</td><td>领先不是特权是义务 —— 先抵达终点的人必须掉头往回走接最后一名，全员渡海值取最小值；给资源必须说清「我指望你拿它做什么」并等对方复述才生效。每轮用一句话说出「这轮信任为什么变了」。</td></tr>
+                <tr><td><a href="games/trust/three-monkeys-defuse.html">三猿拆弹 · 无声引信</a></td><td class="cat">信任 · 不可验证的信任</td><td>8–24 人</td><td>55–80 min</td><td>一个看不到源头、只能选择信的判断</td><td>读册师看得见手册却不能说话、聋师听不见、盲师看不见，指令沿人链传到末端的操作手；操作手永远看不到手册原文，可以要求重传，但引信继续烧、代价由提出验证的人付。传递者可标「我没把握」，练的是不可验证时还信不信与示弱的成本。</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔐 信任不只是这 6 款</h2>
+        <p>全库带<strong>「信任」标签</strong>的游戏共 <strong>10 款</strong>，除了本页这 6 款，还有 4 款落在别的分类里 —— 它们各自都有明确的信任训练目标，按分类挑会漏掉它们：</p>
+        <table class="data-table">
+            <tr><th>分类</th><th>游戏</th><th>它练的那一环</th></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/huntrix-honmoon.html">黄金结界</a></td><td>心理安全感与能量认可 —— 适合场景写明「心理安全感建设 / 信任凝聚团建」</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/blind-polygon.html">盲人方阵</a></td><td>看不见时敢不敢照做 —— 目的标签直接挂着「信任建立」</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/rumor-factory.html">谣言工厂</a></td><td>传错之后还信不信 —— 场景标签写明「信任建设」</td></tr>
+            <tr><td class="cat">👑 领导力</td><td><a href="games/leadership/red-black-game.html">红黑游戏</a></td><td>有限沟通渠道下的信任建立 —— 核心目标含「信任建立」</td></tr>
+        </table>
+        <blockquote>这 4 款之所以带「信任」标签却不归在信任分类下，是因为它们<strong>更主要的训练目标在别处</strong>（凝聚 / 沟通 / 博弈）—— 信任只是它们跑起来时必须存在的那个前提。反过来说：<strong>如果你要的是「有人愿意把真话说出来」或者「事情交出去接得住」，本页这 6 款才是主角</strong>；那 4 款更多是让你看见「没有信任时事情会坏在哪一环」。另：<a href="comm.html">沟通挑款指南</a> 里还有盲行的另一面（它同时带沟通标签），<a href="lead.html">领导力挑款指南</a> 里有红黑游戏的另一面。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 四个最容易挑错的地方</h2>
+        <table class="data-table">
+            <tr><th>坑</th><th>为什么</th></tr>
+            <tr><td><b>以为信任游戏就是背摔和盲行</b></td><td>这两款最不留沉淀（20–40 min，摔完就完了）。而且它们的「接住」是规则保证的 —— 不接住会出事，所以练的只是「敢不敢交」。真正影响日常工作的是后 4 款：能不能说真话、事情交出去接不接得住。</td></tr>
+            <tr><td><b>用 30 分钟想解决「没人说真话」</b></td><td>💬那组两款都要 50–90 分钟且要围坐小场。压缩时间等于让真话说一半 —— 那比不说更隔阂。时间确实只有 30 分钟时，老老实实做 🫱那组，别硬上。</td></tr>
+            <tr><td><b>在信任本来就薄的团队里上「怀疑 / 卧底」机制</b></td><td>信任厨房的「冤枉一次信任 −3」会真的伤到人，而「被冤枉过的人之后就不再说话了」正是它要暴露的问题 —— 但在薄冰团队上它会变成事故。先做 🫱那组，或等信任有基础了再来。</td></tr>
+            <tr><td><b>按分类找信任会漏 4 款</b></td><td>带「信任」标签的共 10 款，其中 4 款落在协作（黄金结界）、沟通（盲人方阵 / 谣言工厂）、领导力（红黑游戏）分类下。</td></tr>
+        </table>
+        <blockquote>信任类最大的坑不是不好玩，是<strong>「玩得很感动，第二天什么都没变」</strong>。先想清楚你要他们交出的是身体、真话还是结果，再回去挑 —— 按游戏名字挑是最容易出错的方式。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔗 相关的入口</h2>
+        <ul>
+            <li><a href="pick.html">🧭 挑款总入口 · 七套切法对照</a> —— 本页是其中第 7 套：切「托付内容」，另外 6 套问的是别的维度</li>
+            <li><a href="index.html">全部 85 款游戏（按 8 个分类）</a> —— 🔐信任分类下已有「托付出去的是什么」二级筛选行</li>
+            <li><a href="README.md">README 索引表</a> —— 纯文本版，这 6 款已按三组排好</li>
+            <li><a href="flows/workshop/leadership-awakening.html">领导力觉醒工作坊</a> —— 盲行在这套里是第一层（「敢不敢把方向交给别人」）</li>
+            <li><a href="flows/conflict/01-workshop.html">冲突调解工作坊</a> —— 信任已经被消耗之后，先修复再谈协作</li>
+            <li><a href="toolbox/safety.html">安全与管理</a> —— 🫱那组必读：背摔的安全边界写在第一章</li>
+            <li><a href="toolbox/generator.html">团建方案生成器（全库版）</a> —— 选「🔐 信任建立」后可按这 3 组再收一层</li>
+            <li><a href="play/tools/plan-generator/">T1 快速版生成器</a> —— 现场临时只要几个游戏，30 秒出一组</li>
+            <li><a href="guide.html">教练使用指南</a> —— 第一次带信任类团建先读 5 分钟</li>
+            <li><a href="toolbox/debrief.html">复盘引导框架</a> —— 🫱那两款的价值几乎全在复盘那 15 分钟</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>
+            <a href="index.html" class="back-link">← 回到游戏库</a>
+            <a href="README.md" class="back-link">README 索引</a>
+            <a href="toolbox/generator.html" class="back-link">方案生成器</a>
+        </div>
+        <div style="margin-top:14px;">团建 &amp; 培训游戏库 · 信任二级索引 · 6 款 / 3 组</div>
+    </div>
+</div>
+</body>
+</html>

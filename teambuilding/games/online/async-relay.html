@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>异步接力 · 交接不断线（线上团建版） - 团建游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #dce6f5;
+            background: linear-gradient(135deg, #070c18 0%, #101d33 55%, #1b2c4a 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0b1424;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            overflow: hidden;
+            border: 1px solid #26547c;
+        }
+        .header {
+            background: linear-gradient(135deg, #26547c 0%, #3b82f6 45%, #60a5fa 100%);
+            color: #f2f7ff;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+        }
+        .header .subtitle { font-size: 1.2em; opacity: 0.95; }
+        .header .tag {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 6px 18px;
+            background: rgba(0,0,0,0.35);
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid #60a5fa;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #060b16;
+        }
+        .info-card {
+            background: #0b1424;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            text-align: center;
+            border: 1px solid #26547c;
+        }
+        .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+        .info-card .label { font-size: 0.9em; color: #8ba3c4; }
+        .info-card .value { font-size: 1.1em; font-weight: bold; color: #eef5ff; }
+        .section { padding: 30px 40px; }
+        .section h2 {
+            color: #60a5fa;
+            border-left: 5px solid #26547c;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+        .section h3 { color: #b9d4f5; margin: 18px 0 10px; font-size: 1.2em; }
+        .section p, .section li { color: #d6e2f2; margin-bottom: 10px; }
+        .section ul, .section ol { padding-left: 25px; }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .feature-card {
+            background: #16233d;
+            border-radius: 12px;
+            padding: 22px;
+            border: 1px solid #26547c;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .feature-card h4 { color: #60a5fa; margin-bottom: 10px; font-size: 1.15em; }
+        .feature-card p { font-size: 0.95em; color: #c6d5ea; }
+        .data-table, .role-table, .variant-table, .difficulty-table, .replay-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #060b16;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .data-table th, .role-table th, .variant-table th, .difficulty-table th {
+            background: #26547c;
+            color: #f2f7ff;
+            padding: 12px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+        .data-table td, .role-table td, .variant-table td, .difficulty-table td {
+            padding: 10px 12px;
+            border-top: 1px solid #26547c;
+            color: #d6e2f2;
+            font-size: 0.92em;
+        }
+        .data-table tr:nth-child(even), .role-table tr:nth-child(even),
+        .variant-table tr:nth-child(even), .difficulty-table tr:nth-child(even) {
+            background: #0b1424;
+        }
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .step {
+            background: #16233d;
+            border-radius: 10px;
+            padding: 18px;
+            border-left: 4px solid #60a5fa;
+        }
+        .step .num {
+            display: inline-block;
+            width: 28px; height: 28px;
+            background: #4f46e5;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .step h4 { color: #b9d4f5; font-size: 1.05em; margin-bottom: 6px; }
+        .step p { font-size: 0.9em; color: #c6d5ea; }
+        .replay-table th { background: #3b82f6; color: #fff; padding: 12px; text-align: left; }
+        .replay-table td { padding: 10px 12px; border-top: 1px solid #26547c; color: #d6e2f2; font-size: 0.92em; }
+        .highlight-box {
+            background: linear-gradient(135deg, #16233d, #1e2f4e);
+            border: 1px solid #60a5fa;
+            border-radius: 12px;
+            padding: 22px;
+            margin: 20px 0;
+        }
+        .highlight-box h4 { color: #60a5fa; margin-bottom: 10px; }
+        .highlight-box p { color: #e8f0fb; font-size: 0.95em; }
+        .soul-box {
+            background: linear-gradient(135deg, #0e2242, #16325c);
+            border: 1px solid #7dd3fc;
+            border-radius: 12px;
+            padding: 22px;
+            margin: 20px 0;
+        }
+        .soul-box h4 { color: #7dd3fc; margin-bottom: 10px; font-size: 1.1em; }
+        .soul-box p { color: #e3f2ff; font-size: 0.95em; }
+        .warn-box {
+            background: #16233d;
+            border: 1px solid #a5d8ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .warn-box h4 { color: #a5d8ff; margin-bottom: 10px; }
+        .warn-box li { color: #d8e5f7; font-size: 0.93em; }
+        .flow-box {
+            background: #16233d;
+            border: 1px dashed #3b82f6;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #e8f0fb;
+            line-height: 2;
+        }
+        .footer {
+            background: #060b16;
+            color: #8ba3c4;
+            text-align: center;
+            padding: 25px;
+            font-size: 0.9em;
+            border-top: 1px solid #26547c;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: #26547c;
+            color: #eef5ff;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .back-link:hover { background: #60a5fa; color: #0b1424; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>💻 异步接力 · 交接不断线</h1>
+        <div class="subtitle">Async Relay — 全库唯一一款异步线上团建：你上线的时候，我不在线。交接便签写得清不清楚，决定了下一棒是「接着干」还是「重做」</div>
+        <div class="tag">三栏便签 · 只读写不问 · 回看税 · 重做计数</div>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">👥</div><div class="label">人数</div><div class="value">6-24 人</div></div>
+        <div class="info-card"><div class="icon">⏱️</div><div class="label">时长</div><div class="value">45-60 分钟</div></div>
+        <div class="info-card"><div class="icon">📍</div><div class="label">场地</div><div class="value">线上（会议 + 共享文档）</div></div>
+        <div class="info-card"><div class="icon">🎯</div><div class="label">分类</div><div class="value">线上团建</div></div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 团建价值</h2>
+        <p>远程协作真正的难点，不是<strong>「大家不在一起」</strong>，而是<strong>「你上线时我不在线」</strong>。</p>
+        <p>同步协作里，一句"这个什么意思？"三秒就有答案；异步协作里，同样一句话要等一整个时区。于是大多数人选择了更省事的做法——<strong>不看便签，自己重做一遍</strong>。</p>
+        <p>本作把这件事做成三条硬规则：① 下线前必须写<strong>三栏便签</strong>；② 上线后<strong>只能读便签</strong>，不能问已下线的人（哪怕他就在群里）；③ 看不懂可以追问，但要付<strong>回看税</strong>，而且<strong>下一棒才回答</strong>。</p>
+        <div class="soul-box">
+            <h4>🔎 差异化定位</h4>
+            <p>线上分类其余 5 款——<strong>我从没…</strong>（破冰暴露）、<strong>线上宾果</strong>（轻量互动）、<strong>你画我猜</strong>（表达与理解）、<strong>团队竞答</strong>（知识协同）、<strong>虚拟密室</strong>（同步解谜）——全部是<strong>同步实时</strong>的：所有人同时在线，问题当场就能澄清。<br>
+            <strong>本款是线上分类里唯一一款异步游戏</strong>，专攻跨时区 / 混合办公的<strong>交接质量</strong>；也是全库<strong>唯一把「重做次数」做成核心扣分项</strong>的一款。<br>
+            它刻意剥夺了"当场问一句"这个选项，逼团队把"<strong>我停在哪里</strong>"写清楚——这是远程团队最缺、也最少被专门练习的一项能力。</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧩 核心机制</h2>
+        <div class="card-grid">
+            <div class="feature-card">
+                <h4>🔗 1. 共享「接力值」（0-12）⭐</h4>
+                <p>全组<strong>唯一计分</strong>，起始 <strong>4</strong>（4 代表"还愿意看便签"，不是真交接），目标 ≥ 10，归零则<strong>「接力断线」</strong>全体失败。每次变动都要<strong>当场说明理由</strong>。</p>
+            </div>
+            <div class="feature-card">
+                <h4>📝 2. 三栏便签（本作灵魂）⭐</h4>
+                <p>① <strong>我做了什么</strong> ② <strong>我停在哪里</strong>（没做完的是 __） ③ <strong>下一步建议你先做</strong>（因为 __）。三栏写全 +1，缺任意一栏 −1。</p>
+            </div>
+            <div class="feature-card">
+                <h4>🤐 3. 只读写，不许问（最硬的一条）⭐</h4>
+                <p>上线后有 <strong>90 秒读签窗口</strong>，期间<strong>群内静默</strong>；<strong>已下线的人不得回答任何问题</strong>——哪怕他就在群里、就在会议里。违反一次 −1。</p>
+            </div>
+            <div class="feature-card">
+                <h4>💸 4. 回看税（追问的成本）⭐</h4>
+                <p>读不懂可以发<strong>一条追问</strong>：接力值 <strong>−1</strong>（成本由<strong>提问的人</strong>付），且<strong>下一棒才回答</strong>——提问的人必须<strong>带着这个不确定性继续做</strong>。</p>
+            </div>
+            <div class="feature-card">
+                <h4>🔁 5. 重做计数（本作特有）</h4>
+                <p>后一棒<strong>推翻并重写</strong>前一棒已完成的部分，每次 <strong>−2</strong>，并在便签区标一个 🔁。远程团队最贵的成本不是沟通时间，是<strong>返工</strong>。</p>
+            </div>
+            <div class="feature-card">
+                <h4>🔍 6. 交付物验收（最后一棒）</h4>
+                <p>验收人<strong>只看交付物、不看过程</strong>，必须说出「<strong>这解决了我的什么</strong>」。说得出 +2；说不出 −2，且退回最后一棒重写便签。</p>
+            </div>
+        </div>
+
+        <h3>三栏便签（缺一栏即扣值）</h3>
+        <table class="data-table">
+            <tr><th>栏位</th><th>句式</th><th>缺了会怎样</th></tr>
+            <tr><td>① <strong>我做了什么</strong></td><td>我完成了 __，改动在第 __ 段</td><td>下一棒不知道现状是什么</td></tr>
+            <tr><td>② <strong>我停在哪里</strong></td><td>我停在 __，<strong>没做完的是</strong> __</td><td>下一棒以为做完了，或找不到断点</td></tr>
+            <tr><td>③ <strong>下一步建议你先做</strong></td><td>建议你先 __，因为 __</td><td>下一棒自己猜，大概率猜错方向</td></tr>
+        </table>
+
+        <h3>接力值变动表</h3>
+        <table class="data-table">
+            <tr><th>情形</th><th>变化</th></tr>
+            <tr><td>三栏便签写全</td><td><strong>+1</strong>（每棒上限 +1）</td></tr>
+            <tr><td>便签缺任意一栏</td><td><strong>−1</strong></td></tr>
+            <tr><td>后一棒照便签直接接上、无返工</td><td><strong>+1</strong></td></tr>
+            <tr><td><strong>重做</strong>前一棒已完成的部分</td><td><strong>−2</strong>（标 🔁）</td></tr>
+            <tr><td>使用追问（回看税）</td><td><strong>−1</strong></td></tr>
+            <tr><td>追问被回答并写进下一张便签</td><td><strong>+1</strong>（本棒封顶 +1）</td></tr>
+            <tr><td>读签窗口内有人违规回答</td><td><strong>−1</strong></td></tr>
+            <tr><td>验收人说出"这解决了我的什么"</td><td><strong>+2</strong></td></tr>
+            <tr><td>验收人说不出</td><td><strong>−2</strong>，退回重写便签</td></tr>
+        </table>
+
+        <div class="highlight-box">
+            <h4>⚠️ 教练红线：「不许问已下线的人」是本作的全部</h4>
+            <p>这一条一旦破例，本作立刻退化成普通同步协作，教育意义归零。教练要<strong>主动挡住</strong>那些"我补充一下"的发言——哪怕发言者是好意。</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎭 角色分工（6 种）</h2>
+        <table class="role-table">
+            <tr><th>角色</th><th>组织映射</th><th>职责</th><th>观察点（教练重点看）</th></tr>
+            <tr><td>🧭 <strong>发起人</strong></td><td>项目负责人 / 需求方</td><td>写第一张三栏便签，<strong>定义"完成是什么"</strong></td><td>有没有说清验收标准，还是只丢了个题目</td></tr>
+            <tr><td>✍️ <strong>接力手 A / B / C</strong></td><td>一线成员（分布在不同时区）</td><td>读签 → 做事 → 写下线便签</td><td>是照着便签接上，还是推翻重来</td></tr>
+            <tr><td>🔍 <strong>验收人</strong></td><td>客户 / 需求方 / 接手方</td><td><strong>只看交付物，不看过程</strong></td><td>是认真验收还是走过场；说不说得出"这解决了我的什么"</td></tr>
+            <tr><td>🗂️ <strong>便签官</strong></td><td>PMO / 观察员</td><td><strong>只整理便签时间线，不许参与内容</strong></td><td>团队是否允许"被否决的意见"被留下来</td></tr>
+            <tr><td>⏱️ <strong>计时官</strong></td><td>会议主持 / 运营</td><td>管时间盒，到点即喊停</td><td>时间盒被超时时，团队是加时还是砍内容</td></tr>
+        </table>
+        <div class="highlight-box">
+            <h4>⚠️ 关键规则</h4>
+            <p>棒组为 <strong>4-6 人</strong>时：发起人 + 接力手 2-3 人 + 验收人，便签官与计时官由教练或其中一人兼任。每一棒<strong>必须换人</strong>，不允许同一人连做两棒。</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎲 游戏流程</h2>
+        <h3>准备（8 分钟）</h3>
+        <ol>
+            <li>分组（4-6 人一个棒组；超过 12 人分 2-3 组并行，各自开独立文档）</li>
+            <li>建<strong>一份共享文档</strong>（腾讯文档 / 飞书 / 语雀 / Notion），群里开一个<strong>便签区</strong></li>
+            <li>约定一个<strong>真实任务</strong>——需要 4-6 棒才能完成的交付物（如"下季度团建方案初稿"、"新人上手指南 1.0"、"我们团队的异步协作公约"）</li>
+            <li>白板画 0-12 接力值刻度（起始 4）</li>
+            <li>约定时间盒：<strong>读签 90 秒 + 做事 6 分钟 + 写下线便签 90 秒</strong></li>
+        </ol>
+
+        <h3>每棒流程（3 步，共 5-6 棒）</h3>
+        <div class="flow-steps">
+            <div class="step"><span class="num">1</span><h4>读签（90 秒）</h4><p>上线者读上一张三栏便签，<strong>群内静默</strong>，不许问</p></div>
+            <div class="step"><span class="num">2</span><h4>做事（6 分钟）</h4><p>在共享文档里推进；需要追问则发一条（付回看税），然后继续做</p></div>
+            <div class="step"><span class="num">3</span><h4>写下线便签（90 秒）</h4><p>三栏写完，@ 下一棒，然后<strong>闭麦 / 退会</strong></p></div>
+        </div>
+        <div class="flow-box">
+            <strong>最后一棒</strong>：验收人上线，<strong>只看交付物</strong>，说"这解决了我的什么" ｜ <strong>每棒之间</strong>：已下线者闭麦且不得在群内发言
+        </div>
+
+        <h3>胜利条件（须<strong>同时</strong>满足三条）</h3>
+        <table class="data-table">
+            <tr><th>条件</th><th>阈值</th></tr>
+            <tr><td>✅ 接力值</td><td>≥ 10</td></tr>
+            <tr><td>✅ 交付物</td><td>通过验收人验收（说得出"这解决了我的什么"）</td></tr>
+            <tr><td>✅ 重做次数</td><td>≤ 1</td></tr>
+        </table>
+        <p>接力值 ≤ 0 → <strong>「接力断线」</strong>，全体失败，直接复盘。</p>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 双重特殊失败（各触发不同复盘方向）</h2>
+        <div class="card-grid">
+            <div class="feature-card">
+                <h4>🧱 失败 A：「各自为战」</h4>
+                <p><strong>触发</strong>：接力值 ≥ 10，但验收人指出交付物存在 <strong>≥ 2 处前后矛盾 / 无法拼接</strong>。</p>
+                <p><strong>现象</strong>：每一棒都很努力、便签也都写了，但合起来<strong>不是一份东西</strong>——三段的口径、粒度、前提各不相同。</p>
+                <p><strong>复盘方向</strong>：我们团队最近一次"每个人都做了、但拼不起来"的事情是什么？是谁负责保证它是<strong>一份</strong>而不是三份？</p>
+            </div>
+            <div class="feature-card">
+                <h4>🔁 失败 B：「原地打转」</h4>
+                <p><strong>触发</strong>：重做 ≥ 3 次，或追问 ≥ 4 次。</p>
+                <p><strong>现象</strong>：每一棒都在推翻上一棒。不是不干活，是同一件事被干了三遍。</p>
+                <p><strong>复盘方向</strong>：便签里最缺的是哪一栏？<strong>"我停在哪里"</strong>这一栏，我们平时写了吗？</p>
+            </div>
+        </div>
+        <div class="highlight-box">
+            <h4>🎯 教练提示</h4>
+            <p>两种失败都<strong>不计胜</strong>，但都是极好的复盘素材。尤其是「各自为战」——远程团队最贵的成本从来不是沟通时间，是<strong>返工</strong>。</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔍 4F 复盘框架（20 分钟）</h2>
+        <table class="replay-table">
+            <tr><th>阶段</th><th>引导问题</th></tr>
+            <tr><td><strong>Facts 事实</strong></td><td>全局几棒？重做了几次（🔁 几个）？用了几次追问？三栏便签有几次缺栏？验收人说得出那句话吗？</td></tr>
+            <tr><td><strong>Feelings 感受</strong></td><td>读签的 90 秒里，最想做的是什么？<br>发现上一棒方向不对时，是照着接还是推翻？那一瞬间你在想什么？</td></tr>
+            <tr><td><strong>Findings 发现</strong></td><td>哪一张便签最有用？它比别的便签多写了什么？<br>重做发生在第几棒？是便签的问题，还是任务本身没定义清"完成是什么"？</td></tr>
+            <tr><td><strong>Future 行动</strong></td><td>回到岗位，<strong>我们团队的交接便签能不能统一成这三栏</strong>？<br>下一次跨时区交接，我打算把"我停在哪里"写成几句话？</td></tr>
+        </table>
+        <div class="soul-box">
+            <h4>💡 落点：异步协作不是"各自找时间干活"，是「把断点写清楚」</h4>
+            <p>复盘时把写得最好的一张便签和最差的一张并排贴出来——差别几乎总在<strong>第 ② 栏（我停在哪里）</strong>。</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🌀 变体玩法（7 种）</h2>
+        <table class="variant-table">
+            <tr><th>变体</th><th>适用</th><th>改法</th></tr>
+            <tr><td>1. 真时区版</td><td>有 1-2 天窗口的团队</td><td>真的隔夜接力（每棒间隔 12-24 小时），最真实</td></tr>
+            <tr><td>2. 无追问版</td><td>想逼便签一次写清</td><td>取消回看税与追问权，看不懂只能靠便签</td></tr>
+            <tr><td>3. 跨部门版</td><td>想暴露术语差异</td><td>每棒由不同部门的人接，禁用本部门黑话</td></tr>
+            <tr><td>4. 静默读签</td><td>想压住"顺口问一句"</td><td>读签窗口全程禁言（含私聊），违规扣接力值</td></tr>
+            <tr><td>5. 倒序验收</td><td>想检验便签自洽性</td><td>验收人先看结论、再看过程，检验便签能否独立支撑结论</td></tr>
+            <tr><td>6. 单文档版</td><td>想杜绝"另起一份"</td><td>禁止新建文档，所有痕迹必须在同一份文档 + 便签区内</td></tr>
+            <tr><td>7. 新人接最后一棒</td><td>想检验便签对"零背景的人"够不够</td><td>最后一棒换成完全不了解背景的人，看他能不能接上</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>📊 三档难度</h2>
+        <table class="difficulty-table">
+            <tr><th>档位</th><th>棒数</th><th>接力值起始</th><th>追问</th><th>重做</th><th>适用</th></tr>
+            <tr><td>🟢 简单</td><td>4</td><td>6</td><td>允许随时追问、不扣值</td><td>−1</td><td>第一次做异步协作训练</td></tr>
+            <tr><td>🟡 标准</td><td>5</td><td>4</td><td>追问 −1，且下一棒才回答</td><td>−2</td><td>默认</td></tr>
+            <tr><td>🔴 困难</td><td>6</td><td>3</td><td>追问 −2 + 每棒限时 4 分钟 + <strong>全程禁语音</strong></td><td>−2</td><td>跨时区团队 / 远程成熟度高的团队</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>📦 物料与工具清单（纯线上，零实体物料）</h2>
+        <table class="data-table">
+            <tr><th>类别</th><th>工具</th><th>用途</th></tr>
+            <tr><td>共享文档</td><td>腾讯文档 / 飞书文档 / 语雀 / Notion</td><td>交付物本体 + 便签区</td></tr>
+            <tr><td>会议工具</td><td>腾讯会议 / 飞书 / Zoom / 钉钉</td><td>读签窗口与验收环节</td></tr>
+            <tr><td>计时</td><td>手机计时器 / 会议自带计时</td><td>90 秒 + 6 分钟 + 90 秒时间盒</td></tr>
+            <tr><td>接力值刻度</td><td>共享白板（Miro / 飞书白板）或文档首行</td><td>画 0-12，每棒更新</td></tr>
+            <tr><td>任务卡</td><td>会议公告 / 群公告</td><td>写清"完成是什么"与验收标准</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🧭 教练注意事项</h2>
+        <div class="warn-box">
+            <h4>⚠️ 五条硬规则</h4>
+            <ol>
+                <li><strong>"不许问已下线的人"必须真的执行</strong>——这一条一旦破例，本作立刻退化成普通同步协作，全部教育意义归零。教练要主动挡住那些"我补充一下"的发言。</li>
+                <li><strong>三栏便签缺一不可</strong>，尤其第 ② 栏"我停在哪里"；写不出来就不许下线，教练不要代笔、不要提示。</li>
+                <li><strong>回看税由提问的人付</strong>——这是刻意的，让"便签没写清"的成本显形，而不是让下一棒默默兜底。</li>
+                <li><strong>验收人真的只看交付物</strong>——给他看过程记录，这一棒就白做了。他必须能说出"这解决了我的什么"。</li>
+                <li><strong>不要评判谁写得好</strong>——教练只验收"重做次数 / 追问次数 / 三栏完整率 / 验收通过与否"，不做个人能力评价。</li>
+            </ol>
+        </div>
+    </div>
+
+                    <div class="section">
+                        <h2>💻 线上挑款：这一款远程靠什么成立</h2>
+                        <p>💻线上 8 款按「远程这一局怎么玩」分成 4 组，它属于 <strong>⏳ 不用同时在线（1 款）</strong>：</p>
+                        <div class="highlight">
+                            <p>全库唯一一款**异步**线上游戏 —— 你上线的时候别人可以下线。上一棒把三栏便签写清楚就下线，下一棒上线只读不许问，哪怕他就在群里也不能问，追问要付「回看税」。</p>
+                        </div>
+                        <p><strong>远程要准备什么：</strong>共享文档 + 群聊便签区（唯一的异步，45–60 min）</p>
+                        <ul style="margin-left: 20px;">
+                            <li><a href="../../online.html#g-async">线上挑款指南 · ⏳ 不用同时在线这一组</a> —— 同组另外 0 款，附「什么情况下选它 / 什么时候别选它 / 拿不准就先拿」</li>
+                            <li><a href="../../online.html">挑款指南首页（30 秒决策表）</a> —— 按你现在的麻烦直接对组，不用先读完 8 张卡</li>
+                        </ul>
+                        <p>想换一种线上玩法？4 组之间的边界，以及「四个最容易挑错的地方」，都写在挑款页里。</p>
+                    </div>
+
+                    <div class="section">
+        <h2>🧩 这套游戏被哪些流程用过</h2>
+<p>下面 3 套现成流程方案用到了它——点进去就能看到它排在时间轴的哪一步、前后怎么接。</p>
+<table>
+<thead><tr><th>流程方案</th><th>用在哪一步</th><th>为什么用它</th></tr></thead>
+<tbody>
+<tr><td><a href="../../flows/online/01-schedule.html">线上团建模板</a></td><td>核心活动 I（可选，替换「每组私聊传话」）</td><td>线上团建最容易停在"一起玩"；这一款把远程协作里最缺的"断点写清楚"变成可点数的三栏便签</td></tr>
+<tr><td><a href="../../flows/cross-region/01-workshop.html">跨地域团队融合工作坊</a></td><td>可选：交接协议起草之前（精简至 25 min，只跑 3 棒）</td><td>三栏便签（做了什么 / 我停在哪里 / 下一步建议）就是交接协议的现成格式；先跑一遍，写条款时团队自然知道第四要素「什么算完成」该怎么写</td></tr>
+<tr><td><a href="../../flows/hybrid/01-schedule.html">混合办公半日团建流程</a></td><td>变体：24h 异步段</td><td>线上/线下各占一段时间时用它完成协作主体，产物在次日同步段展示</td></tr>
+</tbody></table>
+<p><strong>想整套照搬？</strong>上面任一套都有完整时间轴，本页只是其中的一个环节。</p>
+    </div>
+
+<div class="section">
+        <h2>🧭 教练资源（闭环导航）</h2>
+<ul>
+<li><a href="../../toolbox/debrief.html">复盘引导框架</a> —— 4F 模型的完整话术与追问链，游戏结束后照着问</li>
+<li><a href="../../toolbox/facilitation.html">带场话术库</a> —— 开场 / 观察 / 干预 / 收尾的标准句式</li>
+<li><a href="../../toolbox/checklist.html">行前清单</a> —— 线上场次成败在准备：平台测试、备用方案与远程物资清单</li>
+</ul>
+    </div>
+
+<div class="footer">
+        <p>💻 异步接力 · 交接不断线（线上团建版） | 分类：线上团建</p>
+        <p style="margin-top:8px;">同分类：<a href="never-have-i-ever.html" style="color:#a5d8ff;">我从没…</a> · <a href="online-bingo.html" style="color:#a5d8ff;">线上宾果</a> · <a href="online-pictionary.html" style="color:#a5d8ff;">你画我猜</a> · <a href="team-quiz.html" style="color:#a5d8ff;">团队竞答</a> · <a href="virtual-escape.html" style="color:#a5d8ff;">虚拟密室</a> ｜ 复盘框架：<a href="../../toolbox/debrief.html" style="color:#a5d8ff;">toolbox/debrief.md</a> ｜ Markdown 版：<a href="async-relay.md" style="color:#a5d8ff;">async-relay.md</a></p>
+        <a href="../../index.html" class="back-link">← 返回游戏库总索引</a>
+    </div>
+</div>
+</body>
+</html>

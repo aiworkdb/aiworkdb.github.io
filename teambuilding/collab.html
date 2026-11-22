@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>协作类挑款指南 · 39 款分成 6 组 - 团建 & 培训游戏库</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6; color: #cfe2d1;
+        background: linear-gradient(135deg, #071809 0%, #0a1f0d 55%, #103018 100%);
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px; margin: 0 auto; background: #0d210f;
+        border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        overflow: hidden; border: 1px solid #2b6431;
+    }
+    .header {
+        background: linear-gradient(135deg, #3b9c46 0%, #54b65f 45%, #7cde88 100%);
+        color: #f2fbf3; padding: 40px; text-align: center;
+    }
+    .header h1 { font-size: 2.1em; margin-bottom: 10px; text-shadow: 2px 2px 6px rgba(0,0,0,0.5); }
+    .header .subtitle { font-size: 1.05em; opacity: 0.96; }
+    .header .tag {
+        display: inline-block; margin-top: 14px; padding: 6px 18px;
+        background: rgba(0,0,0,0.32); border-radius: 20px; font-size: 0.9em; border: 1px solid #7cde88;
+    }
+    .info-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; padding: 30px; background: #061308;
+    }
+    .info-card {
+        background: #0d210f; padding: 20px; border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4); text-align: center; border: 1px solid #2b6431;
+    }
+    .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .info-card .label { font-size: 0.9em; color: #96b699; }
+    .info-card .value { font-size: 1.05em; font-weight: bold; color: #cfe2d1; }
+    .section { padding: 30px 40px; }
+    .section h2 {
+        color: #7cde88; border-left: 5px solid #3b9c46; padding-left: 15px;
+        margin-bottom: 20px; font-size: 1.55em;
+    }
+    .section h3 { color: #54b65f; margin: 22px 0 10px; font-size: 1.18em; }
+    .section p, .section li { color: #cfe2d1; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 25px; }
+    .data-table {
+        width: 100%; border-collapse: collapse; margin-top: 15px;
+        background: #061308; border-radius: 10px; overflow: hidden;
+    }
+    .data-table th { background: #3b9c46; color: #f2fbf3; padding: 12px; text-align: left; font-size: 0.95em; }
+    .data-table td { padding: 10px 12px; border-top: 1px solid #2b6431; color: #cfe2d1; font-size: 0.92em; }
+    .data-table tr:nth-child(even) { background: #0d210f; }
+    .group-card {
+        background: #0d210f; border: 1px solid #2b6431; border-radius: 12px;
+        padding: 22px 24px; margin-top: 18px;
+    }
+    .group-card h3 { margin-top: 0; font-size: 1.2em; color: #7cde88; }
+    .group-lead { font-size: 0.96em; color: #cfe2d1; margin-bottom: 14px; }
+    .when-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .when-box, .avoid-box { border-radius: 10px; padding: 14px 16px; font-size: 0.92em; }
+    .when-box { background: #19341c; border: 1px solid #2b6431; }
+    .avoid-box { background: #2a1410; border: 1px solid #7a3a2a; }
+    .when-box b { color: #7cde88; }
+    .avoid-box b { color: #e8917a; }
+    .pick {
+        display: inline-block; margin-bottom: 14px; padding: 8px 16px; border-radius: 20px;
+        background: #3b9c46; color: #0b1a0c; font-size: 0.92em; font-weight: 600;
+    }
+    .flow-box {
+        background: #19341c; border: 1px dashed #54b65f; border-radius: 12px;
+        padding: 20px; margin-top: 15px; font-size: 0.95em; color: #cfe2d1;
+    }
+    .flow-box pre { white-space: pre-wrap; margin: 0; font-family: inherit; color: inherit; line-height: 1.9; }
+    blockquote {
+        background: #19341c; border-left: 4px solid #7cde88; border-radius: 8px;
+        padding: 14px 18px; margin: 14px 0; color: #cfe2d1; font-size: 0.95em;
+    }
+    a { color: #7cde88; }
+    .footer {
+        background: #061308; color: #96b699; text-align: center; padding: 25px;
+        font-size: 0.9em; border-top: 1px solid #2b6431;
+    }
+    .footer a { color: #7cde88; }
+    .back-link {
+        display: inline-block; margin: 8px 6px 0; padding: 8px 20px;
+        background: #3b9c46; color: #0b1a0c; text-decoration: none; border-radius: 20px; font-size: 0.9em;
+    }
+    .back-link:hover { background: #7cde88; }
+    .pick-master {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        padding: 13px 40px; background: #0d210f; border-left: 5px solid #3b9c46;
+        border-bottom: 1px solid #2b6431; font-size: 0.92em; color: #cfe2d1;
+    }
+    .pick-master .pm-no {
+        background: #3b9c46; color: #f2fbf3; border-radius: 14px;
+        padding: 3px 12px; font-weight: 700; font-size: 0.95em; white-space: nowrap;
+    }
+    .pick-master .pm-dim { font-weight: 700; color: #7cde88; }
+    .pick-master .pm-note { flex: 1 1 340px; opacity: 0.82; line-height: 1.55; }
+    .pick-master .pm-link {
+        white-space: nowrap; color: #7cde88; text-decoration: none;
+        border: 1px solid #3b9c46; border-radius: 16px; padding: 4px 14px;
+        font-size: 0.92em;
+    }
+    .pick-master .pm-link:hover { background: #2b6431; }
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🤝 协作类挑款指南</h1>
+        <div class="subtitle">39 款协作游戏太多，等于没有目录——按「你想解决什么」拆成 6 组</div>
+        <div class="tag">39 款 · 6 组 · 每组给了首选与「什么时候别选它」</div>
+    </div>
+
+    <div class="pick-master">
+        <span class="pm-no">第 1 / 7 套</span>
+        <span class="pm-dim">本页切的是「动作」</span>
+        <span class="pm-note">问的是「这群人凑在一起，是谁的哪一步没对上」—— 另外 6 套问的是别的维度：套到别处就会把「信息传不准」判成「配合不熟」，于是加练配合，传话那关照样过不去。</span>
+        <a class="pm-link" href="pick.html">🧭 七套切法总表</a>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">🎲</div><div class="label">协作类总数</div><div class="value">39 款（占全库 46%）</div></div>
+        <div class="info-card"><div class="icon">🧭</div><div class="label">分组口径</div><div class="value">按「练哪种协作」分 6 组</div></div>
+        <div class="info-card"><div class="icon">⚡</div><div class="label">最快的一款</div><div class="value">齐眉棍 20–30 min</div></div>
+        <div class="info-card"><div class="icon">👥</div><div class="label">人数跨度</div><div class="value">2 人 ～ 20 人</div></div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 30 秒挑款：你现在是哪一种麻烦</h2>
+        <p>不用读完全页。找到你现在的处境，直接拿最后那款；想再看同类，点组名跳下去。</p>
+        <table class="data-table">
+            <tr><th>你现在的麻烦</th><th>去哪一组</th><th>直接拿这款</th></tr>
+            <tr><td>要开场，只有 20–45 分钟，手上没道具</td><td><a href="#g-physical">🪢 身体默契 · 一动就知道</a></td><td><a href="games/collaboration/human-knot.html">人结</a> <span style="color:#96b699;">（8-20人 / 30-45 min）</span></td></tr>
+            <tr><td>每个人都很忙，整体却不往前走</td><td><a href="#g-pipeline">🍳 瓶颈与流水线 · 卡在哪一工位</a></td><td><a href="games/collaboration/crazy-kitchen.html">疯狂厨房（改造版）</a> <span style="color:#96b699;">（4-8人 / 30-45 min）</span></td></tr>
+            <tr><td>资源 / 预算不够分，谁都想先保自己那份</td><td><a href="#g-resource">🧭 资源与取舍 · 不够分的时候怎么办</a></td><td><a href="games/collaboration/island-survival.html">岛屿求生（改造版）</a> <span style="color:#96b699;">（4-16人 / 45-75 min）</span></td></tr>
+            <tr><td>刚出过「我以为你知道」这类事</td><td><a href="#g-info">🔦 信息不对称 · 谁手里有那块拼图</a></td><td><a href="games/collaboration/data-detective.html">数据侦探社（改造版）</a> <span style="color:#96b699;">（2-5人 / 45-70 min）</span></td></tr>
+            <tr><td>职能差得远，各干各的，谁也接不上谁</td><td><a href="#g-role">🎭 角色互补 · 不一样才需要配合</a></td><td><a href="games/collaboration/magic-academy.html">魔法学院（改造版）</a> <span style="color:#96b699;">（4-8人 / 45-60 min）</span></td></tr>
+            <tr><td>各部门都把自己做到最好，公司整体却变差</td><td><a href="#g-whole">🏗️ 共享总账 · 一荣俱荣的那本看不见的账</a></td><td><a href="games/collaboration/future-city-builder.html">未来城市建造师（改造版）</a> <span style="color:#96b699;">（6-12人 / 60-90 min）</span></td></tr>
+        </table>
+        <blockquote>六组是按<strong>「这个游戏到底在练哪种协作」</strong>切的，不是按题材切的。同样都是太空 / 地下城 / 古装皮，练的东西可能完全不同——皮相相同的两款往往分在不同组。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🧭 六组分别是什么</h2>
+        <div class="group-card" id="g-physical">
+            <h3>🪢 身体默契 · 一动就知道（5 款）</h3>
+            <div class="group-lead">不用讲道理，身体会先把问题暴露出来——全组被「卡住」的那一下，就是协作最真实的样子。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>开场或破冰后的第一个协作环节 / 只有 20–45 分钟 / 没道具没桌子 / 队伍还互相不认识。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>想复盘「资源怎么分」「信息怎么传」这类组织问题时别选：它照出来的是身体同步，迁移不到流程上。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/collaboration/human-knot.html" style="color:#0b1a0c;text-decoration:underline;">人结</a>（8-20人 / 30-45 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/collaboration/human-knot.html">人结</a></td><td>8-20人</td><td>30-45 min</td><td>在"解不开"中体验真实协作，复盘价值极高。</td></tr>
+                <tr><td><a href="games/collaboration/eyebrow-stick.html">齐眉棍</a></td><td>8-20人</td><td>20-30 min</td><td>"每个人都对，但结果错了"的经典协作困境。</td></tr>
+                <tr><td><a href="games/collaboration/ball-relay.html">珠行万里</a></td><td>8-30人</td><td>20-30 min</td><td>一个环节失误全体重来，体验责任共担。</td></tr>
+                <tr><td><a href="games/collaboration/wind-fire-wheel.html">风火轮</a></td><td>8-15人/组</td><td>30-40 min</td><td>报纸履带接力，在"一定会坏"中体验一起修。</td></tr>
+                <tr><td><a href="games/collaboration/body-letters.html">人体拼字</a></td><td>6-20人/组</td><td>20-30 min</td><td>用身体拼出团队目标，热身破冰两用。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-pipeline">
+            <h3>🍳 瓶颈与流水线 · 卡在哪一工位（6 款）</h3>
+            <div class="group-lead">交付是一串环节，不是一堆人。任一工位堵住全队都堵——而堵点往往不是最弱的那一个。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>「每个人都很忙，整体却不前进」/ 刚做完一轮交付想复盘流程 / 要讲局部最优害全局。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>少于 4 人（凑不出多个工位），或真正的问题是「人不愿意开口」——那是沟通类，不是这一类。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/collaboration/crazy-kitchen.html" style="color:#0b1a0c;text-decoration:underline;">疯狂厨房（改造版）</a>（4-8人 / 30-45 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/collaboration/crazy-kitchen.html">疯狂厨房（改造版）</a></td><td>4-8人</td><td>30-45 min</td><td>时间压力下的流水线协作，体验瓶颈工位。</td></tr>
+                <tr><td><a href="games/collaboration/team-chef.html">协作大厨（改造版）</a></td><td>4-8人</td><td>30-45 min</td><td>分工流水线协作烹饪，体验瓶颈工位与默契配合。</td></tr>
+                <tr><td><a href="games/collaboration/monster-chef.html">怪物厨师（改造版）</a></td><td>3-6人</td><td>50-70 min</td><td>地下城协作烹饪，角色分工与共享资源管理的轻松题材。</td></tr>
+                <tr><td><a href="games/collaboration/star-rail-legends.html">星穹列车（改造版）</a></td><td>2-5人</td><td>45-70 min</td><td>跨团队接力交付与里程碑对齐，多站协同不脱节、资源在途调度的银河接力题材。</td></tr>
+                <tr><td><a href="games/collaboration/lychee-express.html">长安荔枝（改造版）</a></td><td>4-8人</td><td>60-90 min</td><td>荔枝三日味变的极限 deadline 下分段接力转运，专攻保鲜实验（基建复利）、交接信息损耗与民力（组织成本）红线的项目管理题材。</td></tr>
+                <tr><td><a href="games/collaboration/steam-revolution.html">蒸汽革命 · 效能引擎（改造版）</a></td><td>4-8人</td><td>60-90 min</td><td>多车间共建端到端交付流水线（矿山→工厂→铁路→城市），专攻平台基建复利、赚快钱 vs 投效能冲突与热力指数运营的工程效能题材。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-resource">
+            <h3>🧭 资源与取舍 · 不够分的时候怎么办（9 款）</h3>
+            <div class="group-lead">总量是固定的，给这边就没那边。真正的分歧不在「怎么分」，在「先保哪一个」。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>要练取舍 / 长期主义 vs 救火 / 跨部门抢资源 / 预算被砍之后的优先级共识。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>团队还互相不熟（没信任时取舍会变成吵架），或只想做一场轻松的活动。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/collaboration/island-survival.html" style="color:#0b1a0c;text-decoration:underline;">岛屿求生（改造版）</a>（4-16人 / 45-75 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/collaboration/island-survival.html">岛屿求生（改造版）</a></td><td>4-16人</td><td>45-75 min</td><td>资源有限下的团队协作决策桌游改造。</td></tr>
+                <tr><td><a href="games/collaboration/space-miners.html">星际矿工（改造版）</a></td><td>5-8人</td><td>45-60 min</td><td>资源竞争与团队协作平衡的桌游改造。</td></tr>
+                <tr><td><a href="games/collaboration/abyss-dive.html">深海探险（改造版）</a></td><td>3-6人</td><td>50-70 min</td><td>共享氧气与角色分工的深海协作，压力管理绝佳题材。</td></tr>
+                <tr><td><a href="games/collaboration/doomsday-vault.html">末日种子库（改造版）</a></td><td>3-6人</td><td>60-75 min</td><td>共享系统管理与远征采集的资源协作，危机取舍绝佳题材。</td></tr>
+                <tr><td><a href="games/collaboration/kaiju-defenders.html">怪兽守护者（改造版）</a></td><td>8-20人</td><td>60-75 min</td><td>小队跨部门协作守护城市，危机决策与资源优化。</td></tr>
+                <tr><td><a href="games/collaboration/destined-one.html">天命人（改造版）</a></td><td>4-6人</td><td>60-90 min</td><td>黑神话协作探险，角色互补与共享资源管理的危机题材。</td></tr>
+                <tr><td><a href="games/collaboration/space-diner-escape.html">银河小馆（改造版）</a></td><td>3-5人</td><td>45-75 min</td><td>前场交付与后场稳定的双线作战，共享预算零和分配与稳定性前移题材。</td></tr>
+                <tr><td><a href="games/collaboration/star-pioneers.html">星际拓荒者（改造版）</a></td><td>3-5人</td><td>45-70 min</td><td>未知星球揭雾拓荒，有限跑道下的目标聚焦与"消耗vs投资"的从0到1题材。</td></tr>
+                <tr><td><a href="games/collaboration/mars-colony.html">火星殖民计划（改造版）</a></td><td>4-8人</td><td>60-90 min</td><td>多家公司组队共建同一基地，长期主义 vs 救火、资源在途调度、异地异步协同的红色星球题材。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-info">
+            <h3>🔦 信息不对称 · 谁手里有那块拼图（7 款）</h3>
+            <div class="group-lead">真相分散在每个人手里，谁的都不全。不互通就一定做不成——而「我以为对方知道」是最贵的错觉。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>跨职能团队 / 出过「我以为你处理了」这类事 / 要讲信息孤岛与主动同步。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>彼此不信任时别选：信息会被当成筹码藏着，复盘会跑偏到人际关系上。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/collaboration/data-detective.html" style="color:#0b1a0c;text-decoration:underline;">数据侦探社（改造版）</a>（2-5人 / 45-70 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/collaboration/virus-outbreak.html">病毒危机（改造版）</a></td><td>4-12人</td><td>45-60 min</td><td>团队协作应对危机，锻炼沟通决策和领导力。</td></tr>
+                <tr><td><a href="games/collaboration/secret-mission.html">绝密行动（改造版）</a></td><td>4-8人</td><td>45-60 min</td><td>隐秘协作完成任务，信息隔离下的团队信任与配合。</td></tr>
+                <tr><td><a href="games/collaboration/gene-therapy.html">基因疗法攻坚（改造版）</a></td><td>5-10人</td><td>60-75 min</td><td>病毒时钟下的科研协作，信息共享与风险决策的研发团建。</td></tr>
+                <tr><td><a href="games/collaboration/ghost-castle.html">幽灵古堡（改造版）</a></td><td>3-5人</td><td>45-75 min</td><td>古堡逃脱协作求生，信息共享与同伴救援的危机题材。</td></tr>
+                <tr><td><a href="games/collaboration/stellar-medics.html">星际医疗队（改造版）</a></td><td>3-5人</td><td>45-70 min</td><td>星途号生死救援，优先级分诊与风险前移（治未病）的危机管控题材。</td></tr>
+                <tr><td><a href="games/collaboration/expedition-33.html">远征33号（改造版）</a></td><td>2-4人</td><td>45-75 min</td><td>绘母抹除倒计时下的集体命运，资源分配与破防集火的目标共识题材。</td></tr>
+                <tr><td><a href="games/collaboration/data-detective.html">数据侦探社（改造版）</a></td><td>2-5人</td><td>45-70 min</td><td>跨职能信息整合与证据驱动决策，在倒计时下把散落的真相拼成全局的推理题材。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-role">
+            <h3>🎭 角色互补 · 不一样才需要配合（8 款）</h3>
+            <div class="group-lead">每人能力不同、视角不同，谁都没法单独完成。练的是「认别人的账」和「把后背交给专才」。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>职能差异大的团队（研发 / 销售 / 运营）/ 要练传帮带 / 想讲「能者多劳」是怎么拖垮团队的。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>少于 3 人（角色凑不齐），或只想做一场所有人同质参与的活动。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/collaboration/magic-academy.html" style="color:#0b1a0c;text-decoration:underline;">魔法学院（改造版）</a>（4-8人 / 45-60 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/collaboration/magic-academy.html">魔法学院（改造版）</a></td><td>4-8人</td><td>45-60 min</td><td>角色分工合作通关的桌游改造，适合深度协作体验。</td></tr>
+                <tr><td><a href="games/collaboration/frieren-journey.html">芙莉莲的旅程（改造版）</a></td><td>2-4人</td><td>60-90 min</td><td>慢旅途中共享时间与抉择，角色互补与目标共识的协作题材。</td></tr>
+                <tr><td><a href="games/collaboration/wukong-quest.html">大圣西游（改造版）</a></td><td>4-6人</td><td>60-90 min</td><td>西游师徒角色互补，共享里程与信念的取经协作题材。</td></tr>
+                <tr><td><a href="games/collaboration/demon-slayer-train.html">鬼杀队：无限列车（改造版）</a></td><td>3-5人</td><td>45-75 min</td><td>列车攻坚协作，角色互补与相互扶持的危机突破题材。</td></tr>
+                <tr><td><a href="games/collaboration/mythic-rift.html">神话裂隙（改造版）</a></td><td>3-5人</td><td>60-90 min</td><td>多神话联军封印协作，角色互补与心智韧性的危机题材。</td></tr>
+                <tr><td><a href="games/collaboration/jujutsu-united.html">咒术回战：术师联携（改造版）</a></td><td>3-5人</td><td>45-75 min</td><td>咒术回战协作防御，角色互补与共享资源的风险治理题材。</td></tr>
+                <tr><td><a href="games/collaboration/stellar-lighthouse.html">星际灯塔守护者（改造版）</a></td><td>3-5人</td><td>45-70 min</td><td>能量续航与故障累积的长期守护，技术债预警与引导掉队者的守护题材。</td></tr>
+                <tr><td><a href="games/collaboration/solo-hunter-squad.html">猎人小队（改造版）</a></td><td>3-5人</td><td>45-75 min</td><td>把"我独自升级"改写成团队协同升级，经验共享与传帮带的能力建设题材。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-whole">
+            <h3>🏗️ 共享总账 · 一荣俱荣的那本看不见的账（4 款）</h3>
+            <div class="group-lead">各小组都在忙自己的活，头顶却挂着一本全队共享的账（健康度 / 繁荣指数 / 结界能量 / 经验沉淀）。它掉下去，没人能单独赢。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>要讲部门墙 / 局部最优害全局 / 组织健康度 / 长期主义；其中未来城市建造师、丝绸之路支持 6–12 人分多组同时开局。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>只有一个小组（这一类的张力全来自组与组之间），或时间少于 45 分钟。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/collaboration/future-city-builder.html" style="color:#0b1a0c;text-decoration:underline;">未来城市建造师（改造版）</a>（6-12人 / 60-90 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/collaboration/loop-dungeon.html">轮回地下城（改造版）</a></td><td>3-5人</td><td>45-60 min</td><td>时间轮回+Roguelike地牢，复盘沉淀与渐进式能力建设的迭代题材。</td></tr>
+                <tr><td><a href="games/collaboration/huntrix-honmoon.html">黄金结界（改造版）</a></td><td>3-5人</td><td>45-75 min</td><td>守护团队的信任与心理安全，能量守恒与"把内部裂痕摆上台面"的文化题材。</td></tr>
+                <tr><td><a href="games/collaboration/future-city-builder.html">未来城市建造师（改造版）</a></td><td>6-12人</td><td>60-90 min</td><td>多部门共建同一座城市、共享组织健康度，专攻架构布局协同效应与局部最优伤害全局的规划题材。</td></tr>
+                <tr><td><a href="games/collaboration/silk-road.html">丝绸之路（改造版）</a></td><td>4-8人</td><td>60-90 min</td><td>多商队共建贸易网络、共享丝路繁荣指数，专攻供应链协同、路线对齐、资源共享降本与风险共担的商路题材。</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 三个最容易挑错的地方</h2>
+        <table class="data-table">
+            <tr><th>坑</th><th>为什么</th></tr>
+            <tr><td><b>想练「说清楚 / 问明白」别在协作里找</b></td><td>协作 39 款里只有「🔦 信息不对称」这组跟沟通沾边，其余练的是配合。真要练表达，去 💬 沟通表达（8 款）。</td></tr>
+            <tr><td><b>人数少于 4 人时，两类开不起来</b></td><td>🍳 瓶颈与流水线（要多个工位）和 🏗️ 共享总账（要多个小组）都靠「组」产生张力，人少了只能从 🪢 / 🧭 / 🔦 / 🎭 四组里挑。</td></tr>
+            <tr><td><b>赶时间先看前两组</b></td><td>🪢 身体默契（20–45 min）和 🍳 瓶颈与流水线（30–90 min）里有多款 45 分钟以内的；🧭 / 🎭 / 🏗️ 三组最短也要 45 min。</td></tr>
+        </table>
+        <blockquote>协作是全库最大的分类（39/85，46%），但它同时也是最容易被误用的一个：很多人想解决的其实是「沟通」或「信任」，却在协作里翻了半天。先确认你要的是<strong>「一起把事做成」</strong>，再回来挑。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔗 相关的入口</h2>
+        <ul>
+            <li><a href="pick.html">🧭 挑款总入口 · 七套切法对照</a> —— 本页是其中第 1 套：切「动作」，另外 6 套问的是别的维度</li>
+            <li><a href="index.html">全部 85 款游戏（按 8 个分类）</a> —— 首页也能直接按人数 / 时长筛，选「🤝 协作」后会出现同样的 6 个子类按钮</li>
+            <li><a href="README.md">README 索引表</a> —— 纯文本版，协作一节已按这 6 组排好</li>
+            <li><a href="toolbox/generator.html">团建方案生成器（全库版）</a> —— 有整块时间、想要一整套流程时用；切到「🎲 拼一组单个游戏」+ 目的选「🤝 团队协作」，可以直接按下面这 6 组挑</li>
+            <li><a href="play/tools/plan-generator/">T1 快速版生成器</a> —— 现场临时只要几个游戏，30 秒出一组</li>
+            <li><a href="guide.html">教练使用指南</a> —— 第一次带团先读 5 分钟</li>
+            <li><a href="toolbox/debrief.html">复盘引导框架</a> —— 协作类游戏的复盘最容易退化成「大家都很努力」</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>
+            <a href="index.html" class="back-link">← 回到游戏库</a>
+            <a href="README.md" class="back-link">README 索引</a>
+            <a href="toolbox/generator.html" class="back-link">方案生成器</a>
+        </div>
+        <div style="margin-top:14px;">团建 & 培训游戏库 · 协作类二级索引 · 39 款 / 6 组</div>
+    </div>
+</div>
+</body>
+</html>

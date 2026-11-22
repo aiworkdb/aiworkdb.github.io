@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沟通挑款指南 · 8 款分成 4 组 - 团建 &amp; 培训游戏库</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6; color: #e9ecc8;
+        background: linear-gradient(135deg, #14170a 0%, #101208 55%, #191d0c 100%);
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px; margin: 0 auto; background: #2a2f16;
+        border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        overflow: hidden; border: 1px solid #55611f;
+    }
+    .header {
+        background: linear-gradient(135deg, #758c21 0%, #a3bf2f 45%, #d0e865 100%);
+        color: #14170a; padding: 40px; text-align: center;
+    }
+    .header h1 { font-size: 2.1em; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(255,255,255,0.25); }
+    .header .subtitle { font-size: 1.05em; opacity: 0.95; }
+    .header .tag {
+        display: inline-block; margin-top: 14px; padding: 6px 18px;
+        background: rgba(0,0,0,0.22); border-radius: 20px; font-size: 0.9em; border: 1px solid #d0e865;
+    }
+    .info-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; padding: 30px; background: #12140a;
+    }
+    .info-card {
+        background: #2a2f16; padding: 20px; border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4); text-align: center; border: 1px solid #55611f;
+    }
+    .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .info-card .label { font-size: 0.9em; color: #a8b07a; }
+    .info-card .value { font-size: 1.05em; font-weight: bold; color: #e9ecc8; }
+    .section { padding: 30px 40px; }
+    .section h2 {
+        color: #c9dd6a; border-left: 5px solid #758c21; padding-left: 15px;
+        margin-bottom: 20px; font-size: 1.55em;
+    }
+    .section h3 { color: #a3bf2f; margin: 22px 0 10px; font-size: 1.18em; }
+    .section p, .section li { color: #e9ecc8; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 25px; }
+    .data-table {
+        width: 100%; border-collapse: collapse; margin-top: 15px;
+        background: #12140a; border-radius: 10px; overflow: hidden;
+    }
+    .data-table th { background: #758c21; color: #14170a; padding: 12px; text-align: left; font-size: 0.95em; }
+    .data-table td { padding: 10px 12px; border-top: 1px solid #55611f; color: #e9ecc8; font-size: 0.92em; }
+    .data-table tr:nth-child(even) { background: #2a2f16; }
+    .data-table .cat { white-space: nowrap; color: #a8b07a; font-size: 0.9em; }
+    .group-card {
+        background: #2a2f16; border: 1px solid #55611f; border-radius: 12px;
+        padding: 22px 24px; margin-top: 18px;
+    }
+    .group-card h3 { margin-top: 0; font-size: 1.2em; color: #c9dd6a; }
+    .group-lead { font-size: 0.96em; color: #e9ecc8; margin-bottom: 14px; }
+    .when-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .when-box, .avoid-box { border-radius: 10px; padding: 14px 16px; font-size: 0.92em; }
+    .when-box { background: #3a4025; border: 1px solid #55611f; }
+    .avoid-box { background: #3a2a1c; border: 1px solid #7a5330; }
+    .when-box b { color: #c9dd6a; }
+    .avoid-box b { color: #ddb188; }
+    .pick {
+        display: inline-block; margin-bottom: 14px; padding: 8px 16px; border-radius: 20px;
+        background: #758c21; color: #14170a; font-size: 0.92em; font-weight: 600;
+    }
+    blockquote {
+        background: #363b1e; border-left: 4px solid #c9dd6a; border-radius: 8px;
+        padding: 14px 18px; margin: 14px 0; color: #e9ecc8; font-size: 0.95em;
+    }
+    a { color: #c9dd6a; }
+    .footer {
+        background: #12140a; color: #a8b07a; text-align: center; padding: 25px;
+        font-size: 0.9em; border-top: 1px solid #55611f;
+    }
+    .footer a { color: #c9dd6a; }
+    .back-link {
+        display: inline-block; margin: 8px 6px 0; padding: 8px 20px;
+        background: #758c21; color: #14170a; text-decoration: none; border-radius: 20px; font-size: 0.9em;
+    }
+    .back-link:hover { background: #c9dd6a; }
+    .pick-master {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        padding: 13px 40px; background: #2a2f16; border-left: 5px solid #758c21;
+        border-bottom: 1px solid #55611f; font-size: 0.92em; color: #e9ecc8;
+    }
+    .pick-master .pm-no {
+        background: #758c21; color: #14170a; border-radius: 14px;
+        padding: 3px 12px; font-weight: 700; font-size: 0.95em; white-space: nowrap;
+    }
+    .pick-master .pm-dim { font-weight: 700; color: #d0e865; }
+    .pick-master .pm-note { flex: 1 1 340px; opacity: 0.82; line-height: 1.55; }
+    .pick-master .pm-link {
+        white-space: nowrap; color: #d0e865; text-decoration: none;
+        border: 1px solid #758c21; border-radius: 16px; padding: 4px 14px;
+        font-size: 0.92em;
+    }
+    .pick-master .pm-link:hover { background: #55611f; }
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>💬 沟通挑款指南</h1>
+        <div class="subtitle">8 款沟通表达 —— 按「这一局，沟通坏在哪一环」分成 4 组</div>
+        <div class="tag">8 款 · 4 组 · 每组给了首选与「什么时候别选它」</div>
+    </div>
+
+    <div class="pick-master">
+        <span class="pm-no">第 3 / 7 套</span>
+        <span class="pm-dim">本页切的是「通道」</span>
+        <span class="pm-note">问的是「这一局里，信息坏在说、传、凑、还是谈不拢」—— 另外 6 套问的是别的维度：套到信任上，会把传话游戏判成「彼此不敢托付」，其实那只是通道被堵住了。</span>
+        <a class="pm-link" href="pick.html">🧭 七套切法总表</a>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">🎲</div><div class="label">覆盖范围</div><div class="value">8 款（💬 沟通表达）</div></div>
+        <div class="info-card"><div class="icon">🧭</div><div class="label">分组口径</div><div class="value">按「沟通坏在哪一环」分 4 组</div></div>
+        <div class="info-card"><div class="icon">🚧</div><div class="label">靠堵通道制造体感</div><div class="value">4 款（不许看 / 不许问 / 只说一遍 / 不许擦）</div></div>
+        <div class="info-card"><div class="icon">👥</div><div class="label">人数跨度</div><div class="value">2 人一组 ～ 30 人</div></div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 30 秒挑款：你现在想要什么</h2>
+        <p>不用读完全页。找到你此刻的麻烦，直接拿最后那款；想再看同类，点组名跳下去。</p>
+        <table class="data-table">
+            <tr><th>你现在的麻烦</th><th>去哪一组</th><th>直接拿这款</th></tr>
+            <tr><td>「我明明说清楚了」，对方做的完全不是那么回事</td><td><a href="#g-express">🗣️ 说的人说不清</a></td><td><a href="games/communication/draw-guess.html">你说我画</a> <span style="color:#a8b07a;">（2 人/组 / 20–30 min）</span></td></tr>
+            <tr><td>需求、目标、验收标准总是对不齐，谁都觉得自己说过了</td><td><a href="#g-express">🗣️ 说的人说不清</a></td><td><a href="games/communication/blind-polygon.html">盲人方阵</a> <span style="color:#a8b07a;">（8–24 人 / 30–45 min）</span></td></tr>
+            <tr><td>跨层级通知一传就走样，先要一点笑声把场子打开</td><td><a href="#g-relay">🔁 传的人传不准</a></td><td><a href="games/communication/telephone-game.html">传话游戏</a> <span style="color:#a8b07a;">（8–30 人 / 15–25 min）</span></td></tr>
+            <tr><td>想真的改出一条沟通规矩，不只是笑完就算</td><td><a href="#g-relay">🔁 传的人传不准</a></td><td><a href="games/communication/rumor-factory.html">谣言工厂</a> <span style="color:#a8b07a;">（6–16 人 / 30–45 min）</span></td></tr>
+            <tr><td>各做各的，开完会才发现信息根本没对齐</td><td><a href="#g-pool">🧩 信息凑不齐</a></td><td><a href="games/communication/drawing-relay.html">画图接龙</a> <span style="color:#a8b07a;">（4–8 人/组 / 20–30 min）</span></td></tr>
+            <tr><td>想亲眼看「信息孤岛」是怎么形成的</td><td><a href="#g-pool">🧩 信息凑不齐</a></td><td><a href="games/communication/animal-detective.html">动物城大侦探</a> <span style="color:#a8b07a;">（4–12 人 / 30–45 min）</span></td></tr>
+            <tr><td>跨部门各说各话，或者刚吵过一架需要复盘</td><td><a href="#g-clash">⚖️ 有分歧说不拢</a></td><td><a href="games/communication/courtroom-debate.html">法庭风云 · 换位陈词</a> <span style="color:#a8b07a;">（4–12 人 / 45–75 min）</span></td></tr>
+            <tr><td>团队互相怀疑，但事情还得靠交换信息往下推</td><td><a href="#g-clash">⚖️ 有分歧说不拢</a></td><td><a href="games/communication/time-agents.html">时间特工</a> <span style="color:#a8b07a;">（6–12 人 / 30–45 min）</span></td></tr>
+        </table>
+        <blockquote>四组是按<strong>「沟通坏在哪一环」</strong>切的，不是按「好不好玩」切的。同样是沟通游戏，「说的人看不见对方的反应」和「一句话传过十个人」暴露出来的问题完全不同 —— 前者要补的是确认动作，后者要补的是传递规范。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🚧 「沟通」不等于「练说话」：8 款里 4 款先堵一条通道</h2>
+        <p>大部分沟通类游戏的做法不是教你把话说漂亮，而是<strong>先把一条通道堵死，再看团队自己会不会发明出一个办法</strong>：盲人方阵不许看、你说我画不许问、传话游戏只许说一遍、画图接龙不许擦。法庭风云反着来 —— 不先准确复述对方，就没有资格反驳。只有 <strong>🗣️ 说的人说不清</strong> 那 2 款真的在练「说的人怎么说」。</p>
+        <table class="data-table">
+            <tr><th></th><th>🗣️ 说的人说不清</th><th>🔁 传的人传不准</th><th>🧩 信息凑不齐</th><th>⚖️ 有分歧说不拢</th></tr>
+            <tr><td><b>这一局堵住的是什么</b></td><td>说的人看不见对方的反应</td><td>只能说一遍，不许追问</td><td>不许擦、不许只用自己的那份</td><td>不先复述就不许反驳</td></tr>
+            <tr><td><b>教练要盯什么</b></td><td>谁在当信息中转站</td><td>第几棒开始走样</td><td>谁在囤信息、谁在补位</td><td>有没有人在等对方说完</td></tr>
+            <tr><td><b>复盘问什么</b></td><td>我们少了哪一步确认</td><td>链条上哪一环可以加一次确认</td><td>谁手里那块一直没拿出来</td><td>被准确复述是什么感觉</td></tr>
+            <tr><td><b>产出是什么</b></td><td>一句「先对齐什么叫完成」</td><td>一条具体的传递规矩</td><td>一份「谁有什么」的清单</td><td>一个被听见过的分歧</td></tr>
+            <tr><td><b>最容易翻车在哪</b></td><td>蒙眼偷看 / 描述者偷瞄画板</td><td>笑声盖过复盘，玩完就散</td><td>变成比谁画得好</td><td>从争事实滑向争人格</td></tr>
+        </table>
+        <p style="margin-top:18px;">把四组横过来看，真正在递增的轴是<strong>「团队要交出多少自己」</strong>：<strong>把话说清楚 → 承担传递责任 → 把自己的信息拿出来 → 在分歧里让对方说完</strong>。挑款时该问的是「我怀疑坏在哪一环」，而不是「哪个游戏听起来更好玩」。</p>
+        <table class="data-table">
+            <tr><th>沟通坏在哪一环</th><th>组</th><th>组内首选</th></tr>
+            <tr><td><a href="#g-express">🗣️ 说的人说不清</a></td><td>2 款</td><td>盲人方阵（8–24 人 / 30–45 min）</td></tr>
+            <tr><td><a href="#g-relay">🔁 传的人传不准</a></td><td>2 款</td><td>传话游戏（8–30 人 / 15–25 min）</td></tr>
+            <tr><td><a href="#g-pool">🧩 信息凑不齐</a></td><td>2 款</td><td>画图接龙（4–8 人/组 / 20–30 min）</td></tr>
+            <tr><td><a href="#g-clash">⚖️ 有分歧说不拢</a></td><td>2 款</td><td>法庭风云 · 换位陈词（4–12 人 / 45–75 min）</td></tr>
+        </table>
+        <blockquote>再提醒一句：<strong>这 8 款只是带「沟通表达」标签的 20 款里的 8 款</strong>。另外 12 款（协作 2 + 破冰 6 + 信任 1 + 线上 3）也各自有明确的沟通训练目标，只是它们的分类在别处 —— 见下方「💬 沟通不只是这 8 款」。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🧭 四组分别是什么</h2>
+        <div class="group-card" id="g-express">
+            <h3>🗣️ 说的人说不清（2 款）</h3>
+            <div class="group-lead">这两款把「说的人看不见对方理解到哪了」做成硬规则 —— 一个全员蒙眼，一个描述者不许看画板。总觉得自己「已经说过了」的人，会在这一组里亲眼看到自己漏掉了什么。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>会后出现「我以为你说的是…」/ 需求文档写三遍还是对不齐 / 团队里总有一个人觉得「我都说过了」</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别拿它练「说话技巧」——这两款练的是「说的人必须自己想办法确认对方收到了」；盲人方阵要 8 人以上才成形，你说我画必须两两成对，人数为奇数时要先安排一个人轮空。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/communication/blind-polygon.html" style="color:#14170a;text-decoration:underline;">盲人方阵</a>（8–24 人 / 30–45 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>这一局堵住的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/communication/blind-polygon.html">盲人方阵</a></td><td class="cat">沟通 · 空间指令</td><td>8–24 人</td><td>30–45 min</td><td>全程蒙眼，不许用手摸形状</td><td>全员蒙眼用一根绳摆出正方形；说的人看不见对方听懂没有，只能靠喊。真正暴露的是「谁在当中转站」和「有没有人提出先量一下」。</td></tr>
+                <tr><td><a href="games/communication/draw-guess.html">你说我画</a></td><td class="cat">沟通 · 单向描述</td><td>2 人/组</td><td>20–30 min</td><td>第一轮画图者不许提问，描述者不许看画板</td><td>描述者不能说关键词、不能看对方画到哪；第二轮放开提问后再画一次，两轮对比就是「我以为我说清楚了」的全部证据。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-relay">
+            <h3>🔁 传的人传不准（2 款）</h3>
+            <div class="group-lead">这两款都是「一句话传一圈，最后一个人念出来」，差别在规则松紧：传话游戏只能说一遍、不许追问，靠笑声就把失真摊开；谣言工厂允许接收方问一个问题和用一次求助卡，练的是传递规范本身 —— 它每轮都算「信息保留率」，团队目标是三轮之后保留率真的提升。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>跨层级的通知一传就走样 / 想给团队立一条具体的沟通规矩 / 时间只有 15–25 分钟，还要能复盘</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别挑错方向 —— 要笑声和破冰感选传话游戏（15–25 min），要真的改一条规矩选谣言工厂（30–45 min）；传话游戏每组人少于 5 个传两轮就到头，链条太短根本看不出失真。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/communication/telephone-game.html" style="color:#14170a;text-decoration:underline;">传话游戏</a>（8–30 人 / 15–25 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>这一局堵住的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/communication/telephone-game.html">传话游戏</a></td><td class="cat">沟通 · 链条失真</td><td>8–30 人</td><td>15–25 min</td><td>只能说一遍，听的人不许追问、不许打手势</td><td>一句难传的话传过 5–10 个人；只能说一遍、不许追问，最后一个人念出听到的版本。价值全在笑声之后那句「我们少了哪一步确认」。</td></tr>
+                <tr><td><a href="games/communication/rumor-factory.html">谣言工厂</a></td><td class="cat">沟通 · 传递规范</td><td>6–16 人</td><td>30–45 min</td><td>只能说一遍，但可消耗一次求助卡要求重复</td><td>10 条职场化的原始信息（含时间、金额、交付清单），每轮算「信息保留率」，团队目标是三轮后保留率提升。玩完能改出一条具体的沟通规矩。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-pool">
+            <h3>🧩 信息凑不齐（2 款）</h3>
+            <div class="group-lead">这两款里没有任何一个人掌握完整信息 —— 画图接龙每人只画 10 秒、只能往上加不能擦；动物城大侦探每组手里只有自己那堆线索卡，关键行动还要求全组同意。练的是「愿不愿意把自己那一块拿出来」。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>团队各做各的、开完会才发现信息没对齐 / 想看谁在囤信息 / 需要一次分组就能观察到的「信息孤岛」</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别指望它改善表达 —— 这两款的瓶颈是「拿不拿出来」，不是「说得好不好」；画图接龙在 4 人以下接不起来，动物城大侦探要分两组对拼，人少了讨论不起来。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/communication/drawing-relay.html" style="color:#14170a;text-decoration:underline;">画图接龙</a>（4–8 人/组 / 20–30 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>这一局堵住的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/communication/drawing-relay.html">画图接龙</a></td><td class="cat">沟通 · 接力共创</td><td>4–8 人/组</td><td>20–30 min</td><td>每人只画 10 秒，且不许擦掉别人画的</td><td>一幅画经 4–8 只手接力完成，只能往上加不能改。练的是「接住别人的半成品时，你是在补还是在覆盖」。</td></tr>
+                <tr><td><a href="games/communication/animal-detective.html">动物城大侦探</a></td><td class="cat">沟通 · 信息共享</td><td>4–12 人</td><td>30–45 min</td><td>线索分散在各组手里，关键行动必须全组同意</td><td>去掉真凶阵营，两组比谁先破案；教练巡回记录「信息孤岛」。练的是把各自那一块拿出来，而不是各自推理。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-clash">
+            <h3>⚖️ 有分歧说不拢（2 款）</h3>
+            <div class="group-lead">这是全库唯一一组「沟通里带冲突」的 —— 法庭风云要求先准确复述对方才准反驳，同一案件打两轮、控辩强制互换；时间特工里藏着破坏者，团队必须在怀疑中继续交换信息。两款都要求团队已经有基本的表达基础。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>跨部门各说各话 / 刚吵过一次需要复盘 / 想练「不同意也能把话说完」</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别拿来当第一场沟通破冰 —— 法庭风云 45–75 分钟且心理压力不小，时间特工的「找内鬼」在信任本来就薄的团队里会真的伤到人；两款都建议 6 人以上，人少玩不出阵营张力。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/communication/courtroom-debate.html" style="color:#14170a;text-decoration:underline;">法庭风云 · 换位陈词</a>（4–12 人 / 45–75 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>这一局堵住的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/communication/courtroom-debate.html">法庭风云 · 换位陈词</a></td><td class="cat">沟通 · 冲突与复述</td><td>4–12 人</td><td>45–75 min</td><td>不先准确复述对方观点，就没有资格反驳</td><td>同一案件打两轮、控辩强制互换；共享证据池里每张牌双方都必须引用。共识指数 ≤0 即「庭审失序」，强制复盘这场讨论是怎么开成吵架的。</td></tr>
+                <tr><td><a href="games/communication/time-agents.html">时间特工</a></td><td class="cat">沟通 · 怀疑与信任</td><td>6–12 人</td><td>30–45 min</td><td>有人身份是保密的，你不知道谁在说实话</td><td>守护者修时间线、破坏者暗中破坏，每轮 90 秒自由讨论 + 30 秒投票。练的是「在怀疑里还得继续交换信息」——信任本来就薄的团队慎用。</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>💬 沟通不只是这 8 款</h2>
+        <p>全库带<strong>「沟通表达」标签</strong>的游戏共 <strong>20 款</strong>，除了本页这 8 款，还有 12 款落在别的分类里 —— 它们各自的沟通训练目标都很明确，按分类挑会漏掉它们：</p>
+        <table class="data-table">
+            <tr><th>分类</th><th>游戏</th><th>它练的那一环</th></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/crazy-kitchen.html">疯狂厨房</a></td><td>压力下的沟通 —— 出餐节奏越紧，指令越容易变成互相埋怨</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/human-knot.html">人结</a></td><td>非语言沟通 —— 手不能松开，只能靠动作和少量提示解开盘根错节</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/name-chain.html">名字接龙</a></td><td>开口说话这一层 —— 只要求把名字接上，是暴露度最低的一档</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/human-bingo.html">人类宾果</a></td><td>主动搭话 —— 为了找到符合条件的人，必须跟不熟的同事开口</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/two-truths-one-lie.html">两真一假</a></td><td>自我披露 —— 真假混着讲，练的是「愿意让人知道一点关于我的事」</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/explorer-journal.html">探险家日记</a></td><td>讲自己的经历 —— 比两真一假更深一层，需要 30–45 分钟</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/line-master.html">台词之王</a></td><td>即兴表达 —— 抽场景卡 + 角色卡 + 情绪卡当场表演，练临场组织语言</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/celestial-gala.html">天庭年会</a></td><td>职场语境下的表达 —— 用派对卡牌把「不好直说的话」说出来</td></tr>
+            <tr><td class="cat">🔐 信任建立</td><td><a href="games/trust/blind-walk.html">盲行</a></td><td>非语言指令 —— 看不见的人只能靠牵引者的手和一句话做判断</td></tr>
+            <tr><td class="cat">💻 线上团建</td><td><a href="games/online/online-pictionary.html">画图猜词</a></td><td>非语言沟通的线上版 —— 描述者不能说话写字，只有线条和 2 分钟</td></tr>
+            <tr><td class="cat">💻 线上团建</td><td><a href="games/online/never-have-i-ever.html">我从未（线上版）</a></td><td>远程开口 —— 用一句「我从未…」让人自己举手，暴露度可控</td></tr>
+            <tr><td class="cat">💻 线上团建</td><td><a href="games/online/team-quiz.html">知识竞答</a></td><td>远程达成一致 —— 组内要先聊出答案再抢答，练的是快速对齐</td></tr>
+        </table>
+        <blockquote>这 12 款之所以标了「沟通表达」却不归在沟通分类下，是因为它们各自还有<strong>更主要的训练目标</strong>（协作 / 破冰 / 信任 / 线上）—— 沟通只是它们的一个用法。其中<strong>破冰那 6 款练的多半只是「开口说话」这一层</strong>，与本页 8 款的「通道被限制之后怎么办」不是一回事：如果你要的是「把沟通问题摊开来复盘」，看上面 8 款；如果要的是「让这群人先开口」，它们才是主角。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 四个最容易挑错的地方</h2>
+        <table class="data-table">
+            <tr><th>坑</th><th>为什么</th></tr>
+            <tr><td><b>以为「沟通」就是练说话</b></td><td>8 款里只有 🗣️那 2 款真的在练「说的人怎么说」，其余 6 款练的是通道被限制之后怎么办、信息怎么凑、分歧怎么谈。按「提升表达能力」的需求挑，大概率挑错。</td></tr>
+            <tr><td><b>拿 15 分钟的传话游戏当正式沟通训练</b></td><td>它玩完只剩笑声和几个共同点，不产生任何规矩。要真的改一条传递规范，得用 30–45 分钟的谣言工厂（有求助卡、有信息保留率）。</td></tr>
+            <tr><td><b>把法庭风云当第一场破冰</b></td><td>45–75 分钟、要公开站队、要先复述对方再反驳。第一次见面的团队做这个会直接冷掉，它要求的恰恰是「已经熟到能互相反驳」。</td></tr>
+            <tr><td><b>按分类找沟通会漏 12 款</b></td><td>带「沟通表达」标签的共 20 款，其中 12 款分别落在协作（疯狂厨房 / 人结）、破冰（名字接龙 / 人类宾果 / 两真一假 / 探险家日记 / 台词之王 / 天庭年会）、信任（盲行）、线上（画图猜词 / 我从未 / 知识竞答）分类下。</td></tr>
+        </table>
+        <blockquote>沟通类游戏最大的坑不是不好玩，是<strong>「挑了一款练的不是你想补的那一环」</strong>。先判断你怀疑坏在说 / 传 / 凑 / 吵哪一步，再回去挑 —— 按游戏名字挑是最容易出错的方式。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔗 相关的入口</h2>
+        <ul>
+            <li><a href="pick.html">🧭 挑款总入口 · 七套切法对照</a> —— 本页是其中第 3 套：切「通道」，另外 6 套问的是别的维度</li>
+            <li><a href="index.html">全部 85 款游戏（按 8 个分类）</a> —— 💬沟通分类下已有「沟通坏在哪一环」二级筛选行</li>
+            <li><a href="lead.html">领导力挑款指南</a> —— 沉默领袖 / 七巧板 同时也带 👑领导力标签，按「带人卡在哪一层」再切一刀</li>
+            <li><a href="trust.html">信任挑款指南</a> —— 本页跨分类名单里的盲行，正是 🔐信任「托付身体」那一组的主角</li>
+            <li><a href="README.md">README 索引表</a> —— 纯文本版，这 8 款已按四组排好</li>
+            <li><a href="flows/conflict/01-workshop.html">冲突调解工作坊</a> —— 法庭风云 / 你说我画 / 谣言工厂 三款在这一套里是主力</li>
+            <li><a href="flows/cross-dept/01-schedule.html">跨部门协作流程</a> —— 要解决「业务和技术各说各话」时的现成时间轴</li>
+            <li><a href="toolbox/generator.html">团建方案生成器（全库版）</a> —— 有整块时间、想要一整套流程时用</li>
+            <li><a href="play/tools/plan-generator/">T1 快速版生成器</a> —— 现场临时只要几个游戏，30 秒出一组</li>
+            <li><a href="guide.html">教练使用指南</a> —— 第一次带沟通类团建先读 5 分钟</li>
+            <li><a href="toolbox/debrief.html">复盘引导框架</a> —— 🗣️和 🔁那两组大半价值在复盘那 15 分钟</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>
+            <a href="index.html" class="back-link">← 回到游戏库</a>
+            <a href="README.md" class="back-link">README 索引</a>
+            <a href="toolbox/generator.html" class="back-link">方案生成器</a>
+        </div>
+        <div style="margin-top:14px;">团建 &amp; 培训游戏库 · 沟通二级索引 · 8 款 / 4 组</div>
+    </div>
+</div>
+</body>
+</html>

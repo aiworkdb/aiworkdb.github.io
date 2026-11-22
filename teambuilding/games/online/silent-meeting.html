@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无声会议 · 匿名轮与实名轮 - 团建游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e8eaf0;
+            background: linear-gradient(135deg, #0b1c08 0%, #122f0e 55%, #183f12 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #122310;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            overflow: hidden;
+            border: 1px solid #2b7420;
+        }
+        .header {
+            background: linear-gradient(135deg, #196e0c 0%, #2faf08 45%, #a2f977 100%);
+            color: #fffdf5;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.4em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+        }
+        .header .subtitle { font-size: 1.2em; opacity: 0.95; }
+        .header .tag {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 6px 18px;
+            background: rgba(0,0,0,0.35);
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid #a2f977;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #0e240a;
+        }
+        .info-card {
+            background: #122310;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            text-align: center;
+            border: 1px solid #2b7420;
+        }
+        .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+        .info-card .label { font-size: 0.9em; color: #a8b4c8; }
+        .info-card .value { font-size: 1.1em; font-weight: bold; color: #e8eaf0; }
+        .section { padding: 30px 40px; }
+        .section h2 {
+            color: #a2f977;
+            border-left: 5px solid #2faf08;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+        .section h3 { color: #97d97d; margin: 18px 0 10px; font-size: 1.2em; }
+        .section p, .section li { color: #d6dbe6; margin-bottom: 10px; }
+        .section ul, .section ol { padding-left: 25px; }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .feature-card {
+            background: #1a3116;
+            border-radius: 12px;
+            padding: 22px;
+            border: 1px solid #2b7420;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .feature-card h4 {
+            color: #a2f977;
+            margin-bottom: 10px;
+            font-size: 1.15em;
+        }
+        .feature-card p { font-size: 0.95em; color: #d6dbe6; }
+        .data-table, .role-table, .variant-table, .difficulty-table, .replay-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #0e240a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .data-table th, .role-table th, .variant-table th, .difficulty-table th {
+            background: #196e0c;
+            color: #fffdf5;
+            padding: 12px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+        .data-table td, .role-table td, .variant-table td, .difficulty-table td {
+            padding: 10px 12px;
+            border-top: 1px solid #2b7420;
+            color: #d6dbe6;
+            font-size: 0.92em;
+        }
+        .data-table tr:nth-child(even), .role-table tr:nth-child(even),
+        .variant-table tr:nth-child(even), .difficulty-table tr:nth-child(even) {
+            background: #122310;
+        }
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .step {
+            background: #1a3116;
+            border-radius: 10px;
+            padding: 18px;
+            border-left: 4px solid #a2f977;
+        }
+        .step .num {
+            display: inline-block;
+            width: 28px; height: 28px;
+            background: #2faf08;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .step h4 { color: #97d97d; font-size: 1.05em; margin-bottom: 6px; }
+        .step p { font-size: 0.9em; color: #d6dbe6; }
+        .replay-table th { background: #2faf08; color: #fff; padding: 12px; text-align: left; }
+        .replay-table td { padding: 10px 12px; border-top: 1px solid #2b7420; color: #d6dbe6; font-size: 0.92em; }
+        .highlight-box {
+            background: linear-gradient(135deg, #1a3116, #20461b);
+            border: 1px solid #a2f977;
+            border-radius: 12px;
+            padding: 22px;
+            margin: 20px 0;
+        }
+        .highlight-box h4 { color: #a2f977; margin-bottom: 10px; }
+        .highlight-box p { color: #d6dbe6; font-size: 0.95em; }
+        .soul-box {
+            background: linear-gradient(135deg, #2a1f10, #3d2d14);
+            border: 1px solid #a2f977;
+            border-radius: 12px;
+            padding: 22px;
+            margin: 20px 0;
+        }
+        .soul-box h4 { color: #a2f977; margin-bottom: 10px; font-size: 1.1em; }
+        .soul-box p { color: #f0e6d2; font-size: 0.95em; }
+        .warn-box {
+            background: #2a1a1a;
+            border: 1px solid #a55b4a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .warn-box h4 { color: #e08a6f; margin-bottom: 10px; }
+        .warn-box li { color: #d6c4c0; font-size: 0.93em; }
+        .footer {
+            background: #0e240a;
+            color: #a8b4c8;
+            text-align: center;
+            padding: 25px;
+            font-size: 0.9em;
+            border-top: 1px solid #2b7420;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: #2faf08;
+            color: #fffdf5;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .back-link:hover { background: #a2f977; color: #122310; }
+        a { color: #a2f977; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💻 无声会议 · 匿名轮与实名轮</h1>
+            <div class="subtitle">线上团建版 · 全库唯一把「谁在说话」做成可点数资源的一款</div>
+            <div class="tag">💻 线上团建</div>
+        </div>
+        <div class="info-grid">
+            <div class="info-card"><div class="icon">👥</div><div class="label">人数</div><div class="value">6–20 人</div></div>
+            <div class="info-card"><div class="icon">⏱️</div><div class="label">时长</div><div class="value">40–55 min</div></div>
+            <div class="info-card"><div class="icon">💻</div><div class="label">场地</div><div class="value">线上（白板 + 匿名区）</div></div>
+            <div class="info-card"><div class="icon">🏷️</div><div class="label">分类</div><div class="value">线上团建</div></div>
+            <div class="info-card"><div class="icon">🎚️</div><div class="label">难度</div><div class="value">中等 / 困难</div></div>
+        </div>
+
+        <div class="section">
+            <h2>📌 定位与核心矛盾</h2>
+            <div class="highlight-box">
+                <h4>核心矛盾</h4>
+                <p>线上会议里 3 个人说了 80% 的话，剩下的人从头到尾没出声——而这在现场会议里几乎不会发生，因为你<strong>看得见</strong>他不说话。摄像头一关，沉默就变成隐形的。</p>
+            </div>
+            <p>本作把这件事做成三条硬规则：① 开口要<strong>投发言筹码</strong>（每人 3 枚，用完就没了）；② 开口必须凑齐<strong>三句发言单</strong>；③ 同一批建议先跑一轮<strong>匿名</strong>、再跑一轮<strong>实名</strong>，把两轮的结论摊在一起比。</p>
+        </div>
+
+        <div class="section">
+            <h2>🎯 团建价值</h2>
+            <p>远程会议最常被抱怨的一句话是「这个会拉我干嘛」——但它极少被当成<strong>一个可以改的问题</strong>，通常被当成"线上会议就这样"。</p>
+            <p>现场会议里，谁没说话是一眼可见的事实；线上会议里，没说话的人<strong>和没来的人长得一模一样</strong>：一个黑屏的方格。于是发言自然向口才更好、职级更高、网络更顺的人集中，而团队会误以为"大家没意见"。</p>
+            <h3>🔎 差异化定位</h3>
+            <p>线上分类其余 6 款——<strong>线上宾果</strong>（轻量破冰）、<strong>我从未</strong>（暴露共同点）、<strong>画图猜词</strong>（表达与理解）、<strong>知识竞答</strong>（知识协同）、<strong>虚拟逃脱</strong>（同步解谜）、<strong>异步接力</strong>（跨时区交接）——关心的都是"事怎么往下走"。</p>
+            <p><strong>本款关心的是"话是谁在说"。</strong>它是线上分类里唯一一款：把发言权做成<strong>可点数资源</strong>；用<strong>同一批建议、两种署名状态</strong>测出这个团队的会议到底按什么决策；并把「零发言人数」写进胜利条件。</p>
+            <p>它刻意让团队看见一个平时看不见的东西：<strong>同一句话，署上名字之后，分量会变。</strong></p>
+        </div>
+
+        <div class="section">
+            <h2>🧩 核心机制</h2>
+
+            <h3>1. 共享「共识值」（0-12）⭐</h3>
+            <p>全组<strong>唯一计分</strong>。起始 <strong>6</strong>（6 代表"会开得下去"，不是真好），目标 <strong>≥ 10</strong>，归零则<strong>「会白开了」</strong>全体失败，直接进复盘。每次变动都必须<strong>当场说明理由</strong>。</p>
+
+            <h3>2. 发言配额（每人 3 枚筹码）⭐</h3>
+            <ul>
+                <li>每人在共享文档里有自己的一行：<strong>🎟️ 🎟️ 🎟️ + 姓名</strong>。</li>
+                <li><strong>开口之前</strong>必须划掉一枚，并当场写下三句发言单。<strong>筹码用完当日不再发言</strong>，可以写字、可以投表情，不能开麦。</li>
+                <li>发言从"想说就说"变成"<strong>这是一笔有限的预算</strong>"。线上会议里最稀缺的不是时间，是<strong>均衡</strong>。</li>
+            </ul>
+
+            <h3>3. 三句发言单（缺一不许开麦）⭐</h3>
+            <table class="data-table">
+                <thead><tr><th>句</th><th>句式</th><th>缺了会怎样</th></tr></thead>
+                <tbody>
+                    <tr><td>① <strong>我的判断</strong></td><td>我认为应该 __</td><td>别人不知道你到底主张什么</td></tr>
+                    <tr><td>② <strong>我的依据</strong></td><td>因为我看到 __</td><td>变成纯立场，无法被检验</td></tr>
+                    <tr><td>③ <strong>我希望谁回应</strong></td><td>我想听 __ 说一句</td><td>说完就散，责任落不到人身上</td></tr>
+                </tbody>
+            </table>
+            <p>三句写全 → 划掉一枚筹码，开麦；<strong>缺第 ③ 句 → 教练当场打断</strong>，该次不计消耗但不许继续说。</p>
+
+            <div class="soul-box">
+                <h4>4. 匿名轮（本作灵魂）⭐</h4>
+                <p><strong>第一轮 12 分钟</strong>：全员<strong>闭麦 + 关摄像头</strong>，只许在匿名便签区写建议。</p>
+                <p>每人发到一种颜色，<strong>只有匿名官知道颜色对应谁</strong>。便签上不许署名、不许写只有自己部门才懂的黑话。期间<strong>禁止讨论、禁止追问</strong>——这一轮的全部价值在于<strong>让内容先于身份出现</strong>。写完后全组无记名投 3 票，票数当场公开。</p>
+            </div>
+
+            <h3>5. 实名轮（第二轮）</h3>
+            <ul>
+                <li><strong>第二轮 15 分钟</strong>：开麦，逐条讨论<strong>第一轮产生的同一批建议</strong>，重新投票。</li>
+                <li>讨论规则照常：投筹码、凑三句、不许打断。</li>
+                <li>教练把两轮的票数并排写在白板上——<strong>这就是本作要拿出来的证据</strong>。</li>
+            </ul>
+
+            <h3>6. 翻转计数（本作特有）</h3>
+            <p><strong>翻转</strong>＝匿名轮进了前 3、实名轮却掉出前 3 的建议。每条翻转，共识值 <strong>−2</strong>，并在白板上标一个 🔄。<strong>翻转 ≥ 3 条 → 直接触发特殊失败「按人投票」</strong>，不再计胜。</p>
+            <p>设计意图：翻转说明这条建议在<strong>内容没变</strong>的情况下被重新评判了——变的只有"现在知道是谁说的"。</p>
+
+            <h3>7. 让麦（把话递出去）</h3>
+            <p>任何人可以说一句「我想先听 __ 的」，把发言权让给<strong>本轮还没说过话的人</strong>：每次 <strong>+1</strong>（本轮上限 +3）。被让的人<strong>仍然要投自己的筹码</strong>——让麦让的是顺序，不是预算。</p>
+
+            <h3>8. 共识值变动表</h3>
+            <table class="data-table">
+                <thead><tr><th>情形</th><th>变化</th></tr></thead>
+                <tbody>
+                    <tr><td>匿名轮产出 ≥ 人数 × 1.5 条建议</td><td><strong>+2</strong></td></tr>
+                    <tr><td>匿名轮有人开麦 / 自称身份</td><td><strong>−2</strong>（每次，最严重）</td></tr>
+                    <tr><td>实名轮每条被采纳建议都说清"采纳理由"</td><td><strong>+1</strong>（上限 +3）</td></tr>
+                    <tr><td>有人主动让麦给还没说过话的人</td><td><strong>+1</strong>（本轮上限 +3）</td></tr>
+                    <tr><td>打断 / 抢麦</td><td><strong>−1</strong>（每次）</td></tr>
+                    <tr><td><strong>翻转</strong>：匿名被采纳、实名被否</td><td><strong>−2</strong>（每条，≥3 条即失败）</td></tr>
+                    <tr><td>结束时<strong>零发言人数 = 0</strong></td><td><strong>+2</strong></td></tr>
+                    <tr><td>结束时零发言人数 ≥ 3</td><td><strong>−3</strong></td></tr>
+                    <tr><td>说话最多的 2 人占比 ≤ 35%</td><td><strong>+2</strong></td></tr>
+                    <tr><td>说话最多的 2 人占比 &gt; 50%</td><td><strong>−3</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🎭 角色分工（5 种）</h2>
+            <table class="role-table">
+                <thead><tr><th>角色</th><th>组织映射</th><th>职责</th><th>观察点（教练重点看）</th></tr></thead>
+                <tbody>
+                    <tr><td>🧭 <strong>议题主</strong></td><td>团队负责人 / 需求方</td><td>提出<strong>一个真实的待决议题</strong>，并写清"这次要决定什么"</td><td>是把议题写成选择题，还是丢一个开放话题让大家随便聊</td></tr>
+                    <tr><td>🎙️ <strong>发言者</strong></td><td>全体成员</td><td>投筹码 → 凑三句 → 开麦</td><td>是在说观点，还是在说情绪；第 ③ 句指名的是同级还是特定的人</td></tr>
+                    <tr><td>🗂️ <strong>记录员</strong></td><td>PMO / 观察员</td><td><strong>只记正字与翻转，全程不许发言</strong></td><td>团队能不能容忍一个人只记录不参与</td></tr>
+                    <tr><td>⏱️ <strong>计时官</strong></td><td>会议主持 / 运营</td><td>管静默期与每轮时间盒，到点即喊停</td><td>超时时团队是加时还是砍内容</td></tr>
+                    <tr><td>🕵️ <strong>匿名官</strong></td><td>教练兼任</td><td>掌管匿名区，<strong>唯一知道颜色对应谁的人</strong></td><td>守不守得住匿名——守不住，本作立刻失效</td></tr>
+                </tbody>
+            </table>
+            <p><strong>6-8 人小团队</strong>：议题主 + 全员发言，记录员 / 计时官由教练一人兼任，匿名官必须仍由教练担任（不能交给组内任何人）。</p>
+        </div>
+
+        <div class="section">
+            <h2>🎲 游戏流程</h2>
+            <h3>准备（8 分钟）</h3>
+            <ol>
+                <li>提出一个<strong>真实的待决议题</strong>——必须是选择题，例如「下季度团建预算砍 30%，是砍场地还是砍天数？」「新人上手文档由谁维护，是轮值还是固定 Owner？」</li>
+                <li>建<strong>在线白板</strong>（Miro / 飞书白板 / 腾讯文档），划出三块：<strong>匿名便签区</strong> / <strong>发言筹码区</strong> / <strong>共识值刻度（0-12）</strong></li>
+                <li>发颜色：<strong>每人一种，只有教练知道谁是谁</strong>；白板上只显示颜色名（🔴 🟢 🔵 …）</li>
+                <li>每人发 3 枚筹码（在筹码区自己那行画 🎟️🎟️🎟️）</li>
+                <li>约定时间盒：<strong>匿名轮 12 分钟 + 实名轮 15 分钟</strong></li>
+            </ol>
+
+            <div class="flow-steps">
+                <div class="step"><span class="num">1</span><h4>第一轮 · 匿名轮（12 min）</h4><p>全员闭麦 + 关摄像头，只许在匿名区写建议（每人至少 2 条）；禁止讨论与追问，疑问写进"疑问墙"留到第二轮；无记名投票 3 票，票数当场公开。</p></div>
+                <div class="step"><span class="num">2</span><h4>第二轮 · 实名轮（15 min）</h4><p>开麦，逐条讨论第一轮那批建议并重新投票；每次发言划一枚筹码 + 三句发言单（缺第 ③ 句当场打断）。</p></div>
+                <div class="step"><span class="num">3</span><h4>并排对照</h4><p>教练把两轮票数并排抄在白板上，<strong>标出所有 🔄</strong>——翻转是本作唯一的核心证据，不展示等于白做。</p></div>
+            </div>
+
+            <h3>胜利条件（须同时满足三条）</h3>
+            <table class="data-table">
+                <thead><tr><th>条件</th><th>阈值</th></tr></thead>
+                <tbody>
+                    <tr><td>✅ 共识值</td><td>≥ 10</td></tr>
+                    <tr><td>✅ 翻转数</td><td>≤ 1</td></tr>
+                    <tr><td>✅ 零发言人数</td><td>= 0</td></tr>
+                </tbody>
+            </table>
+            <p>共识值 ≤ 0 或 翻转 ≥ 3 → <strong>「会白开了」</strong> / <strong>「按人投票」</strong>，全体失败，直接复盘。</p>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ 双重特殊失败（各触发不同复盘方向）</h2>
+            <div class="warn-box">
+                <h4>🎭 失败 A：「按人投票」</h4>
+                <ul>
+                    <li><strong>触发</strong>：翻转 <strong>≥ 3 条</strong>。</li>
+                    <li><strong>现象</strong>：匿名时排第一的建议，一旦知道是谁提的就被推翻了。<strong>内容一点没变，变的是署名。</strong></li>
+                    <li><strong>复盘方向</strong>：我们团队最近一次"方案本身没问题、但因为是谁提的所以没过"是什么时候？如果所有建议都匿名，我们上次会的结论会不一样吗？</li>
+                </ul>
+            </div>
+            <div class="warn-box">
+                <h4>🪑 失败 B：「配额富余」</h4>
+                <ul>
+                    <li><strong>触发</strong>：结束时 <strong>≥ 1/3 的人还剩 ≥ 2 枚筹码</strong>没用掉。</li>
+                    <li><strong>现象</strong>：规则已经把机会让出来了，还是没人说。这比失败 A 更常见，也更难改——因为它说明问题不在"被抢麦"，而在"开口本身有成本"。</li>
+                    <li><strong>复盘方向</strong>：剩下的那两枚筹码，是"没机会说"还是"说了也没用"？上一次团队里有人说了、但什么都没改变，是什么时候？</li>
+                </ul>
+            </div>
+            <p>两种失败<strong>都不计胜</strong>，但都是极好的复盘素材。尤其失败 B——它揭示的不是会议技巧问题，是<strong>心理安全感</strong>问题。</p>
+        </div>
+
+        <div class="section">
+            <h2>🔍 4F 复盘框架（18 分钟）</h2>
+            <table class="replay-table">
+                <thead><tr><th>阶段</th><th>引导问题</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Facts 事实</strong></td><td>匿名轮出了几条建议？实名轮翻转了几条（🔄 几个）？说话最多的 2 人占了多少？有几个人全程零发言？</td></tr>
+                    <tr><td><strong>Feelings 感受</strong></td><td>匿名那 12 分钟里，你写得比平时多还是少？<br>看到自己的建议被翻转时，第一反应是什么？</td></tr>
+                    <tr><td><strong>Findings 发现</strong></td><td>翻转的那几条，内容变了吗？如果没变，那变的是什么？<br>实名轮里说话最多的那个人，匿名轮里写得多吗？</td></tr>
+                    <tr><td><strong>Future 行动</strong></td><td>回到岗位，<strong>我们团队的例会能不能固定先跑 3 分钟匿名书写</strong>？<br>下一次开会，我打算把自己那枚筹码先用在第几句上？</td></tr>
+                </tbody>
+            </table>
+            <div class="highlight-box">
+                <h4>落点</h4>
+                <p>线上会议缺的从来不是"让大家发言"的号召，是<strong>让发言变得有限且可分配</strong>的规则。复盘时把匿名轮和实名轮的两张票数表并排贴出来——<strong>差别就是这次团建的全部结论</strong>。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🌀 变体玩法（7 种）</h2>
+            <table class="variant-table">
+                <thead><tr><th>变体</th><th>适用</th><th>改法</th></tr></thead>
+                <tbody>
+                    <tr><td>1. 全匿名版</td><td>想把压力降到最低</td><td>取消实名轮，全程匿名（适合首次带、心理安全感偏低的团队）</td></tr>
+                    <tr><td>2. 反序版</td><td>想先测实名基线</td><td>先跑实名、再跑匿名，对比方向相反，结论同样有效</td></tr>
+                    <tr><td>3. 一票否决版</td><td>决策型团队</td><td>议题主实名轮结束前可一票否决，但必须当场说出否决理由</td></tr>
+                    <tr><td>4. 黑话禁令</td><td>想暴露术语壁垒</td><td>匿名轮禁用本部门缩写与黑话，出现一次该条作废</td></tr>
+                    <tr><td>5. 静默实名</td><td>想练"憋住不说"</td><td>实名轮只允许被教练点名的人开麦，其余人只许在文档里写</td></tr>
+                    <tr><td>6. 反向配额</td><td>想逼出沉默者</td><td>先给每人 3 枚，但<strong>必须先让 3 名零发言者用完</strong>才能自由发言</td></tr>
+                    <tr><td>7. 议题主闭麦</td><td>想测职级影响</td><td>议题主（通常是负责人）全程不准发言，只在最后说结论</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📊 三档难度</h2>
+            <table class="difficulty-table">
+                <thead><tr><th>档位</th><th>筹码</th><th>匿名轮</th><th>翻转扣分</th><th>适用</th></tr></thead>
+                <tbody>
+                    <tr><td>🟢 简单</td><td>5 枚</td><td>允许开麦提问</td><td>−1</td><td>第一次做会议复盘训练</td></tr>
+                    <tr><td>🟡 标准</td><td>3 枚</td><td>全程闭麦，禁讨论</td><td>−2</td><td>默认</td></tr>
+                    <tr><td>🔴 困难</td><td>2 枚</td><td>全程闭麦 + <strong>禁表情/禁点赞</strong></td><td>−3，且翻转 ≥2 即失败</td><td>会上基本不说话的团队 / 远程成熟度高的团队</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📦 物料与工具清单（纯线上，零实体物料）</h2>
+            <table class="data-table">
+                <thead><tr><th>类别</th><th>工具</th><th>用途</th></tr></thead>
+                <tbody>
+                    <tr><td>在线白板</td><td>Miro / 飞书白板 / 腾讯文档</td><td>匿名便签区 + 筹码区 + 共识值刻度</td></tr>
+                    <tr><td>会议工具</td><td>腾讯会议 / 飞书 / Zoom / 钉钉</td><td>闭麦、分组、投票</td></tr>
+                    <tr><td>匿名发色</td><td>白板便签颜色或分组编号</td><td>每人一种，<strong>映射表只有教练持有</strong></td></tr>
+                    <tr><td>计时</td><td>手机计时器 / 会议自带计时</td><td>12 分钟 + 15 分钟时间盒</td></tr>
+                    <tr><td>投票</td><td>会议自带投票 / 接龙回复</td><td>两轮各投 3 票，票数须当场公开</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🧭 教练注意事项</h2>
+            <ol>
+                <li><strong>匿名官必须由教练本人担任</strong>——交给组内任何人，匿名轮都可能在 30 秒内被"我不小心说漏嘴"击穿。</li>
+                <li><strong>匿名轮期间不许任何人开麦</strong>，包括"我补充一句""这个是不是指…"。破一次，本作立刻退化为普通讨论会。</li>
+                <li><strong>第 ③ 句"我希望谁回应"必须当场打断式把关</strong>——它最容易被跳过，也最能决定这次会能不能落地。</li>
+                <li><strong>两轮票数必须并排展示</strong>，且翻转要逐条标 🔄。翻转是本作唯一的核心证据，不展示等于白做。</li>
+                <li><strong>不要评判谁说得多</strong>——教练只验收"共识值 / 翻转数 / 零发言人数"；失败 B 出现时尤其要克制，那是安全感问题不是态度问题。</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>💻 线上挑款：这一款远程靠什么成立</h2>
+            <p>💻线上 8 款按「远程这一局怎么玩」分成 4 组，它属于 <strong>🧾 要一份文档承载（2 款）</strong>：</p>
+            <div class="highlight">
+                <p>这两款玩完会留下一样东西：一张发言筹码表、一张能量值分栏表、一条条匿名求助券。线下会议里「谁在说话」「谁快撑不住了」转眼就散，远程把它写进文档就留住了 —— 这是 8 款里唯一在治「远程看不见人」的。</p>
+            </div>
+            <p><strong>远程要准备什么：</strong>共享文档（每人一行发言筹码）+ 匿名便签区</p>
+            <ul style="margin-left: 20px;">
+                <li><a href="../../online.html#g-doc">线上挑款指南 · 🧾 要一份文档承载这一组</a> —— 同组另外 1 款，附「什么情况下选它 / 什么时候别选它 / 拿不准就先拿」</li>
+                <li><a href="../../online.html">挑款指南首页（30 秒决策表）</a> —— 按你现在的麻烦直接对组，不用先读完 8 张卡</li>
+            </ul>
+            <p>想换一种线上玩法？4 组之间的边界，以及「四个最容易挑错的地方」，都写在挑款页里。</p>
+        </div>
+
+        <div class="section">
+            <h2>🧩 这套游戏被哪些流程用过</h2>
+            <p>下面 2 套现成流程方案用到了它——点进去就能看到它排在时间轴的哪一步、前后怎么接。</p>
+            <table class="data-table">
+                <thead><tr><th>流程方案</th><th>用在哪一步</th><th>为什么用它</th></tr></thead>
+                <tbody>
+                    <tr><td><a href="../../flows/hybrid/01-schedule.html">混合办公半日团建流程</a></td><td>中段：线上线下同场议题（精简至 30 min，只跑一轮匿名 + 一轮实名）</td><td>这套流程的核心主张就是「线上线下同权同场，量化谁在说话」——本作的筹码与翻转计数正好是那套量化口径的游戏版</td></tr>
+                    <tr><td><a href="../../flows/online/01-schedule.html">线上团建模板</a></td><td>核心活动 II（01:25–01:55）替换原「自由讨论」</td><td>线上团建最容易滑成"主持人说、大家听"；用发言配额把话分下去，再靠匿名/实名两轮把"按人投票"摆到台面上</td></tr>
+                </tbody>
+            </table>
+            <p><strong>想整套照搬？</strong>上面任一套都有完整时间轴，本页只是其中的一个环节。</p>
+        </div>
+
+        <div class="section">
+            <h2>🧭 教练资源（闭环导航）</h2>
+            <ul>
+                <li><a href="../../toolbox/debrief.html">复盘引导框架</a> —— 4F 模型的完整话术与追问链，游戏结束后照着问</li>
+                <li><a href="../../toolbox/facilitation.html">带场话术库</a> —— 开场 / 观察 / 干预 / 收尾的标准句式</li>
+                <li><a href="../../toolbox/checklist.html">行前清单</a> —— 线上场次成败在准备：平台测试、备用方案与远程物资清单</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>💻 无声会议 · 匿名轮与实名轮（线上团建版） | 分类：线上团建</p>
+            <a class="back-link" href="../../index.html">← 返回团建游戏总览</a>
+        </div>
+    </div>
+</body>
+</html>

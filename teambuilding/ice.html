@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>破冰挑款指南 · 8 款分成 4 组 - 团建 & 培训游戏库</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6; color: #cde0e4;
+        background: linear-gradient(135deg, #091116 0%, #0b141a 55%, #10222b 100%);
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px; margin: 0 auto; background: #121f26;
+        border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        overflow: hidden; border: 1px solid #2f515b;
+    }
+    .header {
+        background: linear-gradient(135deg, #1e7a80 0%, #2ea5ad 45%, #5ddce5 100%);
+        color: #0a151a; padding: 40px; text-align: center;
+    }
+    .header h1 { font-size: 2.1em; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(255,255,255,0.25); }
+    .header .subtitle { font-size: 1.05em; opacity: 0.95; }
+    .header .tag {
+        display: inline-block; margin-top: 14px; padding: 6px 18px;
+        background: rgba(0,0,0,0.22); border-radius: 20px; font-size: 0.9em; border: 1px solid #5ddce5;
+    }
+    .info-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; padding: 30px; background: #050a0d;
+    }
+    .info-card {
+        background: #121f26; padding: 20px; border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4); text-align: center; border: 1px solid #2f515b;
+    }
+    .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .info-card .label { font-size: 0.9em; color: #85a5ad; }
+    .info-card .value { font-size: 1.05em; font-weight: bold; color: #cde0e4; }
+    .section { padding: 30px 40px; }
+    .section h2 {
+        color: #5ddce5; border-left: 5px solid #1e7a80; padding-left: 15px;
+        margin-bottom: 20px; font-size: 1.55em;
+    }
+    .section h3 { color: #2ea5ad; margin: 22px 0 10px; font-size: 1.18em; }
+    .section p, .section li { color: #cde0e4; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 25px; }
+    .data-table {
+        width: 100%; border-collapse: collapse; margin-top: 15px;
+        background: #050a0d; border-radius: 10px; overflow: hidden;
+    }
+    .data-table th { background: #1e7a80; color: #0a151a; padding: 12px; text-align: left; font-size: 0.95em; }
+    .data-table td { padding: 10px 12px; border-top: 1px solid #2f515b; color: #cde0e4; font-size: 0.92em; }
+    .data-table tr:nth-child(even) { background: #121f26; }
+    .data-table .cat { white-space: nowrap; color: #85a5ad; font-size: 0.9em; }
+    .group-card {
+        background: #121f26; border: 1px solid #2f515b; border-radius: 12px;
+        padding: 22px 24px; margin-top: 18px;
+    }
+    .group-card h3 { margin-top: 0; font-size: 1.2em; color: #5ddce5; }
+    .group-lead { font-size: 0.96em; color: #cde0e4; margin-bottom: 14px; }
+    .when-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .when-box, .avoid-box { border-radius: 10px; padding: 14px 16px; font-size: 0.92em; }
+    .when-box { background: #172c36; border: 1px solid #2f515b; }
+    .avoid-box { background: #301b18; border: 1px solid #7b3c32; }
+    .when-box b { color: #5ddce5; }
+    .avoid-box b { color: #e29983; }
+    .pick {
+        display: inline-block; margin-bottom: 14px; padding: 8px 16px; border-radius: 20px;
+        background: #1e7a80; color: #0a151a; font-size: 0.92em; font-weight: 600;
+    }
+    blockquote {
+        background: #1a2f37; border-left: 4px solid #5ddce5; border-radius: 8px;
+        padding: 14px 18px; margin: 14px 0; color: #cde0e4; font-size: 0.95em;
+    }
+    a { color: #5ddce5; }
+    .footer {
+        background: #050a0d; color: #85a5ad; text-align: center; padding: 25px;
+        font-size: 0.9em; border-top: 1px solid #2f515b;
+    }
+    .footer a { color: #5ddce5; }
+    .back-link {
+        display: inline-block; margin: 8px 6px 0; padding: 8px 20px;
+        background: #1e7a80; color: #0a151a; text-decoration: none; border-radius: 20px; font-size: 0.9em;
+    }
+    .back-link:hover { background: #5ddce5; }
+    .pick-master {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        padding: 13px 40px; background: #121f26; border-left: 5px solid #1e7a80;
+        border-bottom: 1px solid #2f515b; font-size: 0.92em; color: #cde0e4;
+    }
+    .pick-master .pm-no {
+        background: #1e7a80; color: #0a151a; border-radius: 14px;
+        padding: 3px 12px; font-weight: 700; font-size: 0.95em; white-space: nowrap;
+    }
+    .pick-master .pm-dim { font-weight: 700; color: #5ddce5; }
+    .pick-master .pm-note { flex: 1 1 340px; opacity: 0.82; line-height: 1.55; }
+    .pick-master .pm-link {
+        white-space: nowrap; color: #5ddce5; text-decoration: none;
+        border: 1px solid #1e7a80; border-radius: 16px; padding: 4px 14px;
+        font-size: 0.92em;
+    }
+    .pick-master .pm-link:hover { background: #2f515b; }
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🧊 破冰挑款指南</h1>
+        <div class="subtitle">8 款破冰 —— 按「破冰之后，团队手里剩下什么」分成 4 组</div>
+        <div class="tag">8 款 · 4 组 · 每组给了首选与「什么时候别选它」</div>
+    </div>
+
+    <div class="pick-master">
+        <span class="pm-no">第 4 / 7 套</span>
+        <span class="pm-dim">本页切的是「存量」</span>
+        <span class="pm-note">问的是「这一场结束，团队手里还剩下什么」—— 另外 6 套问的是别的维度：套到协作上会以为「热闹过就等于配合过」，第二天的活还是没人接。</span>
+        <a class="pm-link" href="pick.html">🧭 七套切法总表</a>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">🎲</div><div class="label">覆盖范围</div><div class="value">8 款（🧊 破冰热场）</div></div>
+        <div class="info-card"><div class="icon">🧭</div><div class="label">分组口径</div><div class="value">按「破冰之后剩下什么」分 4 组</div></div>
+        <div class="info-card"><div class="icon">⚡</div><div class="label">最快的一款</div><div class="value">名字接龙 5–10 min</div></div>
+        <div class="info-card"><div class="icon">👥</div><div class="label">人数跨度</div><div class="value">任意人数 ～ 50 人</div></div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 30 秒挑款：你现在想要什么</h2>
+        <p>不用读完全页。找到你此刻的麻烦，直接拿最后那款；想再看同类，点组名跳下去。</p>
+        <table class="data-table">
+            <tr><th>你现在的麻烦</th><th>去哪一组</th><th>直接拿这款</th></tr>
+            <tr><td>全场都是生面孔，先把名字和脸对上</td><td><a href="#g-name">🪪 只认名字</a></td><td><a href="games/icebreaker/name-chain.html">名字接龙</a> <span style="color:#85a5ad;">（任意 / 5-10 min）</span></td></tr>
+            <tr><td>想让大家动起来，别一直坐着听</td><td><a href="#g-name">🪪 只认名字</a></td><td><a href="games/icebreaker/human-bingo.html">人类宾果</a> <span style="color:#85a5ad;">（任意 / 5-15 min）</span></td></tr>
+            <tr><td>上一场太闷，需要先笑一场</td><td><a href="#g-hype">🎭 只图热闹</a></td><td><a href="games/icebreaker/celestial-gala.html">天庭年会（改造版）</a> <span style="color:#85a5ad;">（4-8人/组 / 20-35 min）</span></td></tr>
+            <tr><td>想让大家开始讲自己的事</td><td><a href="#g-know">💬 谈自己的事</a></td><td><a href="games/icebreaker/two-truths-one-lie.html">两真一假</a> <span style="color:#85a5ad;">（5-30人 / 10-20 min）</span></td></tr>
+            <tr><td>破冰完就要分组干活</td><td><a href="#g-team">🍳 带协作</a></td><td><a href="games/icebreaker/blind-box-myth.html">盲盒神话（改造版）</a> <span style="color:#85a5ad;">（4-8人/组 / 30-40 min）</span></td></tr>
+        </table>
+        <blockquote>四组是按<strong>「破冰之后，团队手里剩下什么」</strong>切的，不是按玩法或题材切的。同样是「让气氛热起来」，只图热闹和谈自己的事完全是两回事 —— 一个玩的是公共素材，一个要你先开口交底。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔀 破冰不等于「认识彼此」：四档暴露度</h2>
+        <p>「破冰」这个词只说了<strong>开始</strong>，没说<strong>结束时要留下什么</strong>。四组里真正在「让人认识」的只有两组，另两组分别只留下笑声和一支能干活的小队。</p>
+        <table class="data-table">
+            <tr><th></th><th>🪪 只认名字</th><th>🎭 只图热闹</th><th>💬 谈自己的事</th><th>🍳 带协作</th></tr>
+            <tr><td><b>产出的是什么</b></td><td>名字和人脸对上了</td><td>一屋子笑声</td><td>彼此知道对方一件私事</td><td>一支能配合的小队</td></tr>
+            <tr><td><b>要不要讲自己的事</b></td><td>不要</td><td>不要</td><td><b>要（真话）</b></td><td>不要，但要说需求</td></tr>
+            <tr><td><b>风险在哪</b></td><td>几乎没有</td><td>几乎没有</td><td>高：说出口收不回来</td><td>中：道具没备好就冷场</td></tr>
+            <tr><td><b>成功长什么样</b></td><td>开场能叫出大部分人的名字</td><td>没人低头看手机</td><td>有人开始讲真事</td><td>下一场分组不用重新磨合</td></tr>
+            <tr><td><b>失败长什么样</b></td><td>还是记不住名字</td><td>笑完还是陌生</td><td>冷场，有人开始自我保护</td><td>变成一场卡牌比赛</td></tr>
+        </table>
+        <p style="margin-top:18px;">把四组横过来看，暴露度是唯一那条真正递增的轴：<strong>零 → 零 → 高 → 中</strong>。挑款时问的应该是「我这半小时要拿到什么」，而不是「哪个游戏看起来更好玩」。</p>
+        <table class="data-table">
+            <tr><th>破冰之后剩下什么</th><th>组</th><th>组内首选</th></tr>
+            <tr><td><a href="#g-name">🪪 只认名字</a></td><td>2 款</td><td>名字接龙（任意 / 5-10 min）</td></tr>
+            <tr><td><a href="#g-hype">🎭 只图热闹</a></td><td>2 款</td><td>天庭年会（改造版）（4-8人/组 / 20-35 min）</td></tr>
+            <tr><td><a href="#g-know">💬 谈自己的事</a></td><td>2 款</td><td>两真一假（5-30人 / 10-20 min）</td></tr>
+            <tr><td><a href="#g-team">🍳 带协作</a></td><td>2 款</td><td>盲盒神话（改造版）（4-8人/组 / 30-40 min）</td></tr>
+        </table>
+        <blockquote>再提醒一句：<strong>这 8 款只是带「破冰」场景标签的 11 款里的 8 款</strong>。另外 6 款（沟通类的画图接龙 / 传话游戏 / 时间特工，协作类的人体拼字 / 疯狂厨房 / 怪物厨师）也标了「破冰」，只是它们的分类在别处 —— 见下方「🧊 破冰不只是这 8 款」。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🧭 四组分别是什么</h2>
+        <div class="group-card" id="g-name">
+            <h3>🪪 只认名字（2 款）</h3>
+            <div class="group-lead">破冰最省事的一种：不要求任何人讲自己的事，只要求你把名字和人脸对上。代价最小、见效最快，也是唯一能在 10 分钟内跑完的一档。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>新人刚进来 / 人多到两两聊不开 / 时间只剩十分钟 / 团队气氛已经不错，只是还不够熟。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别指望靠它建立深层了解——玩完之后大家还是不知道对方是做什么的；已经互相认识的老团队玩它等于白花时间。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/icebreaker/name-chain.html" style="color:#0a151a;text-decoration:underline;">名字接龙</a>（任意 / 5-10 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>形式</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/icebreaker/name-chain.html">名字接龙</a></td><td class="cat">🧊 破冰热场</td><td>室内/户外 · 智力</td><td>任意</td><td>5-10 min</td><td>超快热身，记住所有人的名字，能量瞬间拉满。</td></tr>
+                <tr><td><a href="games/icebreaker/human-bingo.html">人类宾果</a></td><td class="cat">🧊 破冰热场</td><td>室内 · 智力</td><td>任意</td><td>5-15 min</td><td>零道具、任意人数、即拿即用。最经典的破冰游戏。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-hype">
+            <h3>🎭 只图热闹（2 款）</h3>
+            <div class="group-lead">这两款都不需要你讲自己的事——玩的是现成的卡牌素材（场景卡、职场人设），热闹是唯一目标。适合气氛太闷、需要先把人逗松的场合。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>会前气氛太沉 / 刚做完一个紧张的环节需要泄压 / 跨部门第一次见面还没熟到能互聊私事 / 年会、聚餐的娱乐环节。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>想借它加深了解就别选——玩完还是「同事」；台词之王 30–50 分钟，人多时又吵又拖，散场得比预期晚。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/icebreaker/celestial-gala.html" style="color:#0a151a;text-decoration:underline;">天庭年会（改造版）</a>（4-8人/组 / 20-35 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>形式</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/icebreaker/celestial-gala.html">天庭年会（改造版）</a></td><td class="cat">🧊 破冰热场</td><td>室内 · 派对+趣味</td><td>4-8人/组</td><td>20-35 min</td><td>职场主题派对游戏改造，在欢笑中破冰、释放压力、观察团队社交模式。</td></tr>
+                <tr><td><a href="games/icebreaker/line-master.html">台词之王（改造版）</a></td><td class="cat">🧊 破冰热场</td><td>室内 · 表演+即兴</td><td>6-20人</td><td>30-50 min</td><td>抽场景卡+角色卡+情绪卡即兴表演的聚会游戏改造，笑声不断、破冰够快。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-know">
+            <h3>💬 谈自己的事（2 款）</h3>
+            <div class="group-lead">这两款都要你先开口讲自己的事——这是所有破冰里暴露度最高的一档，风险和收益都在这里：说开了就真的认识，没说开就是冷场。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>团队已经混过脸但还不够熟 / 培训需要一点心理安全垫 / 半天以上的团建，破冰之后还有深度环节要接。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别在领导在场、上下级混编、或者刚吵过架的场合用——真话一旦说出口收不回来；两真一假讲究的是「老员工先自曝一条假的，新人才敢开口」，顺序反了就不灵。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/icebreaker/two-truths-one-lie.html" style="color:#0a151a;text-decoration:underline;">两真一假</a>（5-30人 / 10-20 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>形式</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/icebreaker/two-truths-one-lie.html">两真一假</a></td><td class="cat">🧊 破冰热场</td><td>室内 · 智力</td><td>5-30人</td><td>10-20 min</td><td>深度了解彼此、笑声多，适合培训开场。</td></tr>
+                <tr><td><a href="games/icebreaker/explorer-journal.html">探险家手记（改造版）</a></td><td class="cat">🧊 破冰热场</td><td>室内 · 分享+故事</td><td>6-16人</td><td>30-45 min</td><td>旅行主题卡牌游戏改造，在分享经历中加深团队了解。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-team">
+            <h3>🍳 带协作（2 款）</h3>
+            <div class="group-lead">这两款其实是小组协作游戏，只是长着破冰的外壳——玩完顺手就多了一支已经配合过的小队，不必再单独做一次破冰。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>破冰之后紧接着要分组做正事 / 想一次解决「破冰」和「看看大家能不能配合」两件事 / 半天团建要先试探团队结构。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别拿它当纯粹的破冰——盲盒神话 30–40 分钟已经很满；人少到凑不出 4–8 人一组也开不起来。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/icebreaker/blind-box-myth.html" style="color:#0a151a;text-decoration:underline;">盲盒神话（改造版）</a>（4-8人/组 / 30-40 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>形式</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/icebreaker/blind-box-myth.html">盲盒神话（改造版）</a></td><td class="cat">🧊 破冰热场</td><td>室内 · 卡牌+交易</td><td>4-8人/组</td><td>30-40 min</td><td>卡牌交易游戏团建改造版，体验分享与共赢思维。</td></tr>
+                <tr><td><a href="games/icebreaker/food-challenge.html">美食挑战赛（改造版）</a></td><td class="cat">🧊 破冰热场</td><td>室内 · 卡牌+趣味</td><td>4-7人/组</td><td>30-40 min</td><td>厨房竞赛游戏改造，在欢笑中体验分工与接纳不完美。</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧊 破冰不只是这 8 款</h2>
+        <p>全库带「破冰」场景标签的游戏共 <strong>11 款</strong>：本页 8 款里只有 <strong>5 款</strong>带这个标签（名字接龙 / 人类宾果 / 两真一假三款只标了「团建/培训」），另有 <strong>6 款</strong>落在别的分类里 —— 按分类挑会漏掉它们：</p>
+        <table class="data-table">
+            <tr><th>分类</th><th>游戏</th><th>人数</th><th>时长</th></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/drawing-relay.html">画图接龙</a></td><td>4-8人/组</td><td>20-30 min</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/telephone-game.html">传话游戏</a></td><td>8-30人</td><td>15-25 min</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/time-agents.html">时间特工（改造版）</a></td><td>6-12人</td><td>30-45 min</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/body-letters.html">人体拼字</a></td><td>6-20人/组</td><td>20-30 min</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/crazy-kitchen.html">疯狂厨房（改造版）</a></td><td>4-8人</td><td>30-45 min</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/monster-chef.html">怪物厨师（改造版）</a></td><td>3-6人</td><td>50-70 min</td></tr>
+        </table>
+        <blockquote>这 6 款之所以标「破冰」却不归在破冰分类，是因为它们各自还有<strong>更主要的训练目标</strong>（沟通 / 协作 / 信任）—— 破冰只是它们的一个用法。如果你要的是「纯破冰」，看上面 8 款；如果要的是「顺便练点别的」，它们才是主角。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 四个最容易挑错的地方</h2>
+        <table class="data-table">
+            <tr><th>坑</th><th>为什么</th></tr>
+            <tr><td><b>把「热闹」当成「认识」</b></td><td>🎭那 2 款（天庭年会、台词之王）玩完大家笑了，但仍然不知道对方是做什么的。想加深了解必须去💬「谈自己的事」那一组。</td></tr>
+            <tr><td><b>大团队挑错了</b></td><td>8 款里有 3 款是 4–8 人/组的小组制（盲盒神话、美食挑战赛、天庭年会）——全场 40 人时等于开 5 局。真正能撑住全场的只有🪪「名字接龙」和「人类宾果」两款。</td></tr>
+            <tr><td><b>暴露度选错比选错游戏更糟</b></td><td>领导在场、上下级混编、刚吵过架的场合选💬会冷场；反过来，全新团队上来只玩🎭，热完还是一盘散沙。</td></tr>
+            <tr><td><b>按分类找破冰会漏 6 款</b></td><td>带「破冰」标签的共 11 款，其中 6 款（画图接龙 / 传话游戏 / 时间特工 / 人体拼字 / 疯狂厨房 / 怪物厨师）分别在沟通与协作分类下。</td></tr>
+        </table>
+        <blockquote>这 8 款只占全库 9%，却是每场团建的<strong>第一分钟</strong>。先确认你要的是「名字 / 笑声 / 私事 / 配合」里的哪一个，再回去挑 —— 按玩法名字挑是最容易出错的方式。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔗 相关的入口</h2>
+        <ul>
+            <li><a href="pick.html">🧭 挑款总入口 · 七套切法对照</a> —— 本页是其中第 4 套：切「存量」，另外 6 套问的是别的维度</li>
+            <li><a href="index.html">全部 85 款游戏（按 8 个分类）</a> —— 🧊破冰分类下已有「破冰要什么」二级筛选行</li>
+            <li><a href="README.md">README 索引表</a> —— 纯文本版，这 8 款已按四组排好</li>
+            <li><a href="flows/onboarding/01-schedule.html">新员工融入团建流程</a> —— 新人场的破冰就是这 8 款里的选择题</li>
+            <li><a href="toolbox/generator.html">团建方案生成器（全库版）</a> —— 有整块时间、想要一整套流程时用</li>
+            <li><a href="play/tools/plan-generator/">T1 快速版生成器</a> —— 现场临时只要几个游戏，30 秒出一组</li>
+            <li><a href="guide.html">教练使用指南</a> —— 第一次带团先读 5 分钟</li>
+            <li><a href="toolbox/debrief.html">复盘引导框架</a> —— 💬那 2 款的价值大半在复盘那 15–30 分钟</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>
+            <a href="index.html" class="back-link">← 回到游戏库</a>
+            <a href="README.md" class="back-link">README 索引</a>
+            <a href="toolbox/generator.html" class="back-link">方案生成器</a>
+        </div>
+        <div style="margin-top:14px;">团建 & 培训游戏库 · 破冰二级索引 · 8 款 / 4 组</div>
+    </div>
+</div>
+</body>
+</html>

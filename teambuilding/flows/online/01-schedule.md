@@ -11,6 +11,8 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/online/01-schedule.html"
 
 ![封面](images/cover.png)
 
+| 时间 | 环节 | 时长 | 目的 |
+|------|------|------|------|
 | 00:00–00:15 | 线上开场 + 破冰 | 15 min | 打破屏幕隔阂、建立存在感 |
 | 00:15–00:45 | 破冰游戏（线上版） | 30 min | 笑声破冰、记住彼此 |
 | 00:45–01:15 | 核心活动 I | 30 min | 沟通表达 / 信任建立 |
@@ -38,6 +40,8 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/online/01-schedule.html"
 
 #### 开场白话术模板
 
+| 活动 | 线上怎么玩 | 时长 |
+|------|-----------|------|
 | [名字接龙](https://ai.aitboy.cn/teambuilding/games/icebreaker/name-chain.html) | 用「轮流说话」代替「排队拍肩」 | 5 min |
 | [人类宾果](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html) | **屏幕共享宾果卡**，所有人一起玩 | 10 min |
 | 「背景大揭秘」 | 每人展示虚拟背景并解释 30 秒 | 10 min |
@@ -56,6 +60,9 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/online/01-schedule.html"
 | 展示 | 回到主会议室，每组展示「变形版」 | 10 min |
 | 复盘 | 快速 4F（只做 Facts + Feelings） | 3 min |
 
+**方案 B：[画图猜词（你说我画）线上版](https://ai.aitboy.cn/teambuilding/games/online/online-pictionary.html)** ⭐ 推荐——一人画、一人猜，全程只用一块共享白板
+| 步骤 | 操作 | 时长 |
+|------|------|------|
 | 工具准备 | 每人打开 [AWW App](https://awwapp.com) 或 Figma 白板 | 5 min |
 | 分组 | 分 2 人/组（用分组讨论功能） | 2 min |
 | 游戏 | 共享白板链接，一人描述一人画 | 15 min |
@@ -98,12 +105,38 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/online/01-schedule.html"
 ### 第四阶段：课间休息（01:15–01:25）
 
 #### 教练操作
-- [ ] 宣布休息时，给出**明确指令**：
+- [ ] 宣布休息时，给出**明确指令**：「01:25 回来，回来第一件事是打开摄像头——下半场要动手」
+- [ ] 趁休息把下半场要用的白板 / 题库链接贴进聊天框，别现场找
 
+---
+
+### 第五阶段：核心活动 II（01:25–01:55）
+
+**目标**：线上最容易变成「各打各的字」，这一段必须逼出分工——有人找、有人写、有人讲。
+
+#### 推荐游戏（任选一）
+
+**方案 A：线上采购 & 路演** ⭐ 推荐（把「搜、写、讲」拆给三个人）
+| 步骤 | 线上操作 | 时长 |
+|------|----------|------|
 | 分组 | 3–4 人/组，用分组讨论功能 | 2 min |
 | 采购 | 在线搜索（每人用自己的手机/电脑） | 10 min |
 | 创作 | 在线白板贴图 + 加文字说明 | 10 min |
 | 路演 | 每组派 1 人共享屏幕，PPT 式路演 | 8 min |
+
+**方案 B：[团队知识竞答](https://ai.aitboy.cn/teambuilding/games/online/team-quiz.html)**（30 min，3 轮 × 8 题）——不想做「采购 + 路演」、又要全员都能开口时用它
+| 步骤 | 线上操作 | 时长 |
+|------|----------|------|
+| 规则 & 分队 | 用 Kahoot / 腾讯问卷分组，念一遍计分规则 | 2 min |
+| 三轮答题 | 每轮 8 题，答完立刻报分（排行榜自带） | 24 min |
+| 结算 & 一句复盘 | 念前三名，问一句「哪道题全组都错了，为什么」 | 4 min |
+
+**方案 C：[虚拟逃脱](https://ai.aitboy.cn/teambuilding/games/online/virtual-escape.html)**（30 min，只留 3 关）——需要「一起解一个谜」而不是「一起做一份东西」时选它
+| 步骤 | 线上操作 | 时长 |
+|------|----------|------|
+| 分组 & 发谜题 | 谜题提前贴进 Miro 白板，链接一次性发下去 | 3 min |
+| 三关推进 | 每关 7 min，卡住可向教练买 1 条提示（扣分） | 21 min |
+| 揭晓 & 小结 | 教练复盘「谁在解、谁在看、线索怎么汇总」 | 6 min |
 
 ---
 
@@ -127,8 +160,11 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/online/01-schedule.html"
 
 **第三步：一句话收尾（5 min）**
 - 按顺序，每人用**1 句话**分享今天最大的收获
-- 教练最后说：
+- 教练最后说：「今天最想带走的一句话，就是这一句——回去之后，找一个人把它讲一遍。」
+- 复盘要用的两件工具提前开好，不要现场找：
 
+| 工具 | 用途 | 推荐 |
+|------|------|------|
 | **投票工具** | 复盘投票 | Mentimeter / 腾讯投票 |
 | **屏幕共享** | 展示内容 | 会议自带功能 |
 

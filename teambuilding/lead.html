@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>领导力挑款指南 · 6 款分成 3 组 - 团建 &amp; 培训游戏库</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6; color: #d2ecc8;
+        background: linear-gradient(135deg, #0e170a 0%, #0b1208 55%, #111d0c 100%);
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px; margin: 0 auto; background: #1d2f16;
+        border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        overflow: hidden; border: 1px solid #31611f;
+    }
+    .header {
+        background: linear-gradient(135deg, #3e8c21 0%, #56bf2f 45%, #89e865 100%);
+        color: #0e170a; padding: 40px; text-align: center;
+    }
+    .header h1 { font-size: 2.1em; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(255,255,255,0.25); }
+    .header .subtitle { font-size: 1.05em; opacity: 0.95; }
+    .header .tag {
+        display: inline-block; margin-top: 14px; padding: 6px 18px;
+        background: rgba(0,0,0,0.22); border-radius: 20px; font-size: 0.9em; border: 1px solid #89e865;
+    }
+    .info-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; padding: 30px; background: #0d140a;
+    }
+    .info-card {
+        background: #1d2f16; padding: 20px; border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4); text-align: center; border: 1px solid #31611f;
+    }
+    .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .info-card .label { font-size: 0.9em; color: #89b07a; }
+    .info-card .value { font-size: 1.05em; font-weight: bold; color: #d2ecc8; }
+    .section { padding: 30px 40px; }
+    .section h2 {
+        color: #89dd6a; border-left: 5px solid #3e8c21; padding-left: 15px;
+        margin-bottom: 20px; font-size: 1.55em;
+    }
+    .section h3 { color: #56bf2f; margin: 22px 0 10px; font-size: 1.18em; }
+    .section p, .section li { color: #d2ecc8; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 25px; }
+    .data-table {
+        width: 100%; border-collapse: collapse; margin-top: 15px;
+        background: #0d140a; border-radius: 10px; overflow: hidden;
+    }
+    .data-table th { background: #3e8c21; color: #0e170a; padding: 12px; text-align: left; font-size: 0.95em; }
+    .data-table td { padding: 10px 12px; border-top: 1px solid #31611f; color: #d2ecc8; font-size: 0.92em; }
+    .data-table tr:nth-child(even) { background: #1d2f16; }
+    .data-table .cat { white-space: nowrap; color: #89b07a; font-size: 0.9em; }
+    .group-card {
+        background: #1d2f16; border: 1px solid #31611f; border-radius: 12px;
+        padding: 22px 24px; margin-top: 18px;
+    }
+    .group-card h3 { margin-top: 0; font-size: 1.2em; color: #89dd6a; }
+    .group-lead { font-size: 0.96em; color: #d2ecc8; margin-bottom: 14px; }
+    .when-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .when-box, .avoid-box { border-radius: 10px; padding: 14px 16px; font-size: 0.92em; }
+    .when-box { background: #2c4025; border: 1px solid #31611f; }
+    .avoid-box { background: #3a2a1c; border: 1px solid #7a5330; }
+    .when-box b { color: #89dd6a; }
+    .avoid-box b { color: #ddb188; }
+    .pick {
+        display: inline-block; margin-bottom: 14px; padding: 8px 16px; border-radius: 20px;
+        background: #3e8c21; color: #0e170a; font-size: 0.92em; font-weight: 600;
+    }
+    blockquote {
+        background: #263b1e; border-left: 4px solid #89dd6a; border-radius: 8px;
+        padding: 14px 18px; margin: 14px 0; color: #d2ecc8; font-size: 0.95em;
+    }
+    a { color: #89dd6a; }
+    .footer {
+        background: #0d140a; color: #89b07a; text-align: center; padding: 25px;
+        font-size: 0.9em; border-top: 1px solid #31611f;
+    }
+    .footer a { color: #89dd6a; }
+    .back-link {
+        display: inline-block; margin: 8px 6px 0; padding: 8px 20px;
+        background: #3e8c21; color: #0e170a; text-decoration: none; border-radius: 20px; font-size: 0.9em;
+    }
+    .back-link:hover { background: #89dd6a; }
+    .pick-master {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        padding: 13px 40px; background: #1d2f16; border-left: 5px solid #3e8c21;
+        border-bottom: 1px solid #31611f; font-size: 0.92em; color: #d2ecc8;
+    }
+    .pick-master .pm-no {
+        background: #3e8c21; color: #0e170a; border-radius: 14px;
+        padding: 3px 12px; font-weight: 700; font-size: 0.95em; white-space: nowrap;
+    }
+    .pick-master .pm-dim { font-weight: 700; color: #89e865; }
+    .pick-master .pm-note { flex: 1 1 340px; opacity: 0.82; line-height: 1.55; }
+    .pick-master .pm-link {
+        white-space: nowrap; color: #89e865; text-decoration: none;
+        border: 1px solid #3e8c21; border-radius: 16px; padding: 4px 14px;
+        font-size: 0.92em;
+    }
+    .pick-master .pm-link:hover { background: #31611f; }
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>👑 领导力挑款指南</h1>
+        <div class="subtitle">6 款领导力 —— 按「带人这件事卡在哪一层」分成 3 组</div>
+        <div class="tag">6 款 · 3 组 · 每组给了首选与「什么时候别选它」</div>
+    </div>
+
+    <div class="pick-master">
+        <span class="pm-no">第 6 / 7 套</span>
+        <span class="pm-dim">本页切的是「权力层级」</span>
+        <span class="pm-note">问的是「带人这件事，卡在定方向、交出去、还是没职位也要带」—— 另外 6 套问的是别的维度：套到协作上会把「没人拍板」当成「配合不齐」，练十遍配合也没人做决定。</span>
+        <a class="pm-link" href="pick.html">🧭 七套切法总表</a>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">🎲</div><div class="label">覆盖范围</div><div class="value">6 款（👑 领导力）</div></div>
+        <div class="info-card"><div class="icon">🧭</div><div class="label">分组口径</div><div class="value">按「带人卡在哪一层」分 3 组</div></div>
+        <div class="info-card"><div class="icon">⏱️</div><div class="label">全库最贵的一类</div><div class="value">5 款要 60 min 以上</div></div>
+        <div class="info-card"><div class="icon">👥</div><div class="label">人数跨度</div><div class="value">6 人 ～ 49 人</div></div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 30 秒挑款：你现在想要什么</h2>
+        <p>不用读完全页。找到你此刻的麻烦，直接拿最后那款；想再看同类，点组名跳下去。</p>
+        <table class="data-table">
+            <tr><th>你现在的麻烦</th><th>去哪一组</th><th>直接拿这款</th></tr>
+            <tr><td>管理者什么都自己扛，一放手就出事</td><td><a href="#g-delegate">🔑 授权与放手</a></td><td><a href="games/leadership/stellar-conqueror.html">星域远征 · 继任与授权</a> <span style="color:#89b07a;">（8–20 人 / 70–100 min）</span></td></tr>
+            <tr><td>带新人 / 接班人，人接不住、换人就断档</td><td><a href="#g-delegate">🔑 授权与放手</a></td><td><a href="games/leadership/heavenly-quest.html">天庭远征 · 出师与传功</a> <span style="color:#89b07a;">（8–24 人 / 75–100 min）</span></td></tr>
+            <tr><td>一把手习惯性独断，业绩好看但团队在透支</td><td><a href="#g-decide">🧭 定方向与拍板</a></td><td><a href="games/leadership/vice-city-empire.html">帝国董事会 · 增长与负债</a> <span style="color:#89b07a;">（6–16 人 / 60–90 min）</span></td></tr>
+            <tr><td>部门之间只顾自己赢，合作谈不下来</td><td><a href="#g-decide">🧭 定方向与拍板</a></td><td><a href="games/leadership/red-black-game.html">红黑游戏</a> <span style="color:#89b07a;">（12–40 人 / 45–60 min）</span></td></tr>
+            <tr><td>只有 30 分钟，还想带一次领导力</td><td><a href="#g-informal">📣 不带权也能带</a></td><td><a href="games/leadership/silent-leader.html">沉默领袖</a> <span style="color:#89b07a;">（8–20 人 / 30–40 min）</span></td></tr>
+            <tr><td>人多（24 人以上），想看一次信息孤岛</td><td><a href="#g-informal">📣 不带权也能带</a></td><td><a href="games/leadership/tangram.html">七巧板</a> <span style="color:#89b07a;">（24–49 人 / 60–90 min）</span></td></tr>
+        </table>
+        <blockquote>三组是按<strong>「带人这件事卡在哪一层」</strong>切的，不是按「哪个游戏更有名」切的。同样是领导力游戏，「决定怎么拍出来」和「交出去之后还管不管」暴露出来的问题完全不同 —— 前者要补的是决策方式，后者要补的是授权边界。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🚧 「领导力」不等于「有人站出来」：6 款里只有 2 款真的在练「把事交出去」</h2>
+        <p>很多人按「领导力」挑，想要的是「让那个人学会放手」。但 6 款里真正练<strong>授权与带人</strong>的只有 <strong>🔑 授权与放手</strong> 那 2 款（星域远征 / 天庭远征）；<strong>🧭 定方向与拍板</strong>那 2 款练的是「这个决定用什么方式做出来、我们跟对方是什么关系」；<strong>📣 不带权也能带</strong>那 2 款练的是「把权力拿走之后，还能不能让事情往前走」。</p>
+        <table class="data-table">
+            <tr><th></th><th>🧭 定方向与拍板</th><th>🔑 授权与放手</th><th>📣 不带权也能带</th></tr>
+            <tr><td><b>这一层卡的是什么</b></td><td>这个决定用什么方式做出来</td><td>交出去之后还管不管、边界在哪</td><td>没有职位权力也能影响谁</td></tr>
+            <tr><td><b>权力还剩多少</b></td><td>决策权在少数人手里</td><td>有权力，但规则逼你交出去</td><td>不许说话 / 没人被授权统筹</td></tr>
+            <tr><td><b>教练要盯什么</b></td><td>每次决策前有没有先宣布方式</td><td>授权时写没写「什么情况回来问我」</td><td>团队靠什么判断该跟谁走</td></tr>
+            <tr><td><b>复盘问什么</b></td><td>独断省下的时间，记在谁的账上</td><td>换人时上任的判断被复述对了吗</td><td>你怎么知道该听谁的</td></tr>
+            <tr><td><b>产出是什么</b></td><td>一张「决策方式」对照表</td><td>一份授权边界的写法</td><td>一句「影响力不等于职位」</td></tr>
+            <tr><td><b>最容易翻车在哪</b></td><td>复盘不敢点破「独断的账」</td><td>写边界写成了甩锅</td><td>变成猜谜游戏，没有人复盘</td></tr>
+        </table>
+        <p style="margin-top:18px;">把三组横过来看，真正在递减的轴是<strong>「教练手里还剩下多少权力」</strong>：<strong>决策权全在手上（但要选方式）→ 有权力却被规则逼着交出去 → 权力被拿走（不许说话 / 没人被授权）</strong>。挑款时该问的是「我怀疑卡在哪一层」，而不是「哪款听起来像领导力」。</p>
+        <table class="data-table">
+            <tr><th>带人卡在哪一层</th><th>组</th><th>组内首选</th><th>组内最短一款</th></tr>
+            <tr><td><a href="#g-decide">🧭 定方向与拍板</a></td><td>2 款</td><td>红黑游戏（12–40 人 / 45–60 min）</td><td>红黑游戏 45–60 min</td></tr>
+            <tr><td><a href="#g-delegate">🔑 授权与放手</a></td><td>2 款</td><td>星域远征（8–20 人 / 70–100 min）</td><td>星域远征 70–100 min</td></tr>
+            <tr><td><a href="#g-informal">📣 不带权也能带</a></td><td>2 款</td><td>沉默领袖（8–20 人 / 30–40 min）</td><td>沉默领袖 30–40 min</td></tr>
+        </table>
+        <blockquote>⚠️ 领导力是<strong>全库最「贵」的一类</strong>：6 款里 <strong>5 款要 60 分钟以上</strong>，只有沉默领袖（30–40 min）能在半小时内玩完。半天的领导力工作坊通常只放得下 <strong>2 款 + 一场复盘</strong> —— 想一次塞三组进来，结果通常是每组都只玩到一半。</blockquote>
+        <blockquote>再提醒一句：<strong>这 6 款只是带「领导力」标签的 9 款里的 6 款</strong>。另外 3 款（怪兽守护者 / 星际矿工 / 病毒危机）落在 🤝团队协作分类下 —— 见下方「👑 领导力不只是这 6 款」。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🧭 三组分别是什么</h2>
+        <div class="group-card" id="g-decide">
+            <h3>🧭 定方向与拍板（2 款）</h3>
+            <div class="group-lead">这两款问的都是「这一局往哪打、这个决定怎么拍出来」，但角度相反：红黑游戏把「我们跟对方是什么关系」摆上桌（出红还是出黑，先信还是先防）；帝国董事会把「用什么方式做决定」本身变成被考核的对象 —— 每次重大决策必须先宣布方式（共识／授权／独断），独断收益最高也最便宜，然后它在「组织负债」上安静记账。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>一把手习惯性独断 / 部门之间只顾自己赢 / 想讨论「我们到底把对方当对手还是伙伴」/ 中高层管理团队（红黑游戏 12–40 人）</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别指望它练「怎么把事交出去」——这两款里决策权始终在少数人手里；红黑游戏对教练引导要求高（⭐⭐⭐ 中等偏难），复盘点不破就成了算分游戏；帝国董事会 60–90 min 且要教练敢在复盘里直说「独断的账记在谁头上」。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/leadership/red-black-game.html" style="color:#0e170a;text-decoration:underline;">红黑游戏</a>（12–40 人 / 45–60 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>这一层卡的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/leadership/red-black-game.html">红黑游戏</a></td><td class="cat">领导力 · 博弈与格局</td><td>12–40 人</td><td>45–60 min</td><td>跟对方是竞争还是合作，先信还是先防</td><td>多轮出红 / 出黑，赢的是「正分最多」而不是「对方输最惨」；真正暴露的是团队默认把外部当对手。出牌前那 3 分钟讨论才是正片，中高层管理团队首选。</td></tr>
+                <tr><td><a href="games/leadership/vice-city-empire.html">帝国董事会 · 增长与负债</a></td><td class="cat">领导力 · 决策方式</td><td>6–16 人</td><td>60–90 min</td><td>每次重大决策必须先宣布方式（共识／授权／独断）</td><td>一句话团建价值「不是做了什么决定，而是用什么方式做决定」：独断收益最高也最便宜，代价记在「组织负债」上；新任管理者最常踩的三个坑（习惯性独断 / 业绩好看但组织在透支 / 一有压力就退回「我自己来更快」）会被逐个摊开。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-delegate">
+            <h3>🔑 授权与放手（2 款）</h3>
+            <div class="group-lead">这两款是 6 款里唯一真正在练「把事交出去」的一组，但狠的程度不同：星域远征是交出去之后还要能接回来 —— 每轮 4 个行动点指挥官只能亲掌 1 个，其余必须写清「边界：什么情况必须回来问我」，每 2 轮强制换人并复述上任判断；天庭远征更狠，引路人永远不能自己出手，遇到妖魔只能说清「判断／打法／退出条件」三句，法宝必须分给徒弟，出师人数是硬胜利条件。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>管理者什么都自己扛 / 带教新人接不住 / 换人就断档、交接全靠口头 / 想让「授权」变成一句能写下来的话</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别拿它当沟通训练 —— 这两款的瓶颈是「敢不敢交、交的时候说没说清边界」；两款都要 70 分钟以上（70–100 / 75–100 min），半天场只放得下这一组加一场复盘；星域远征要 8 人以上且需分组，天庭远征 8–24 人（6–8 人一支取经队）。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/leadership/stellar-conqueror.html" style="color:#0e170a;text-decoration:underline;">星域远征 · 继任与授权</a>（8–20 人 / 70–100 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>这一层卡的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/leadership/stellar-conqueror.html">星域远征 · 继任与授权</a></td><td class="cat">领导力 · 授权与继任</td><td>8–20 人（6–8 人/组）</td><td>70–100 min</td><td>授权只给任务、不给边界</td><td>一句话团建价值「你不在的时候，事情还能不能按你的判断往下走」：指挥官每轮只能亲掌 1 个行动点，其余必须写明「什么情况必须回来问我」，每个决策写进「远征日志」，换人时必须复述上任判断才算交接完成。</td></tr>
+                <tr><td><a href="games/leadership/heavenly-quest.html">天庭远征 · 出师与传功</a></td><td class="cat">领导力 · 带教与传功</td><td>8–24 人（6–8 人/组）</td><td>75–100 min</td><td>师父忍不住自己上手</td><td>把「四个修行者各自抢真经、先到雷音寺者胜」翻转成「引路人只指路不出手」：遇到妖魔只能说清「判断／打法／退出条件」三句，法宝必须分给徒弟，出师人数是硬胜利条件 —— 你亲自打赢不算赢。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-informal">
+            <h3>📣 不带权也能带（2 款）</h3>
+            <div class="group-lead">这两款先把权力拿走，再看谁还能把事情往前推：沉默领袖里领袖是秘密指定的、全程不许说话，只能靠动作和安排影响团队；七巧板里压根没有指定领导，资源分散在 7 个组手里，谁能看见全局谁就得自己站出来协调。练的是「非权力影响力」—— 也是 6 款里唯一不用 60 分钟的一组。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>新晋升的管理者 / 跨部门推进但没人给你汇报线 / 只有 30–40 分钟 / 人特别多（七巧板 24–49 人）</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别以为它「短」就好带 —— 七巧板 60–90 min、场面会一度很吵，且人数不足 24 人时「信息孤岛」根本不成立、会退化成拼图比赛；沉默领袖的复盘必须问「你怎么知道该听谁的」，否则就只是一场猜谜。两款都不练「授权」。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/leadership/silent-leader.html" style="color:#0e170a;text-decoration:underline;">沉默领袖</a>（8–20 人 / 30–40 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>这一层卡的是什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/leadership/silent-leader.html">沉默领袖</a></td><td class="cat">领导力 · 非权力影响</td><td>8–20 人</td><td>30–40 min</td><td>拿走「说话 / 命令」之后还剩什么</td><td>核心目标「无法用权力（说话／命令）时，如何真正领导团队」：秘密指定一名领袖，全程不许说话，只能用动作、站位和安排去影响团队。可室内可户外，是 6 款里唯一 30–40 分钟能玩完的一款。</td></tr>
+                <tr><td><a href="games/leadership/tangram.html">七巧板</a></td><td class="cat">领导力 · 信息孤岛</td><td>24–49 人</td><td>60–90 min</td><td>没人被授权统筹全局</td><td>经典大型体验：7 个组各拿几块板、只能拼自己的图，总分取决于有没有人站出来做整体协调；「资源争夺 / 信息孤岛 / 领导力缺失」三个组织痛点会同时爆出来。深度领导力版可加「每 10 分钟更换一次领导组」。</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>👑 领导力不只是这 6 款</h2>
+        <p>全库带<strong>「领导力」标签</strong>的游戏共 <strong>9 款</strong>，除了本页这 6 款，还有 3 款落在 🤝团队协作分类下 —— 它们各自都有明确的领导力训练目标，按分类挑会漏掉它们：</p>
+        <table class="data-table">
+            <tr><th>分类</th><th>游戏</th><th>它练的那一层</th></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/space-miners.html">星际矿工</a></td><td>资源紧张时谁来定优先级 —— 目的标签直接挂着 👑 领导力</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/virus-outbreak.html">病毒危机</a></td><td>危机里的决策链 —— 适合场景写明「危机应对培训 / 领导力工作坊」</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/kaiju-defenders.html">怪兽守护者</a></td><td>危机管理中的分工与号令 —— 适合场景写明「领导力训练」</td></tr>
+        </table>
+        <blockquote>这 3 款之所以标了「领导力」却不归在领导力分类下，是因为它们<strong>更主要的训练目标是协作</strong>（资源分配 / 危机应对），领导力只是它们在场时顺带练到的那一层。反过来说：<strong>如果你要的是「授权、带教、决策方式」这种可以带回办公室的东西，还是本页这 6 款</strong>；那 3 款给出的更多是「混乱中谁在起作用」的观察窗口。另：<a href="comm.html">沟通挑款指南</a> 里还有沉默领袖与七巧板的另一面 —— 它们同时也带沟通标签。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 四个最容易挑错的地方</h2>
+        <table class="data-table">
+            <tr><th>坑</th><th>为什么</th></tr>
+            <tr><td><b>以为「领导力」就是让人当一次领导</b></td><td>6 款里只有 🔑那 2 款真的在练「把事交出去」；🧭练的是决策方式，📣练的是没有权力也能带。按「让那个人体验一下当领导」的需求挑，大概率挑到 📣那组，练到的却是非权力影响力。</td></tr>
+            <tr><td><b>拿 30 分钟想带一次领导力</b></td><td>6 款里 5 款要 60 分钟以上，30–40 min 的只有沉默领袖一款（八仙、星域、天庭都要 70–100 min）。时间不够时要么只做沉默领袖，要么把它拆成两场。</td></tr>
+            <tr><td><b>把七巧板当普通协作游戏</b></td><td>它要 24–49 人、60–90 分钟才成形；人数不足时「信息孤岛」不成立，会退化成比谁拼得快的拼图比赛，复盘也无从谈起。</td></tr>
+            <tr><td><b>按分类找领导力会漏 3 款</b></td><td>带「领导力」标签的共 9 款，其中 3 款（星际矿工 / 病毒危机 / 怪兽守护者）落在 🤝团队协作分类下。</td></tr>
+        </table>
+        <blockquote>领导力类最大的坑不是不好玩，是<strong>「挑了一款练的不是你想补的那一层」</strong>。先判断卡在拍板 / 授权 / 不带权哪一层，再回去挑 —— 按游戏名字挑是最容易出错的方式。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔗 相关的入口</h2>
+        <ul>
+            <li><a href="pick.html">🧭 挑款总入口 · 七套切法对照</a> —— 本页是其中第 6 套：切「权力层级」，另外 6 套问的是别的维度</li>
+            <li><a href="index.html">全部 85 款游戏（按 8 个分类）</a> —— 👑领导力分类下已有「带人卡在哪一层」二级筛选行</li>
+            <li><a href="README.md">README 索引表</a> —— 纯文本版，这 6 款已按三组排好</li>
+            <li><a href="flows/workshop/leadership-awakening.html">领导力觉醒工作坊</a> —— 现成的一整套：盲行（敢不敢把方向交给别人）→ 沙漠逃生（看谁在决策里自然成为中心）→ 两真一假</li>
+            <li><a href="flows/strategy-alignment/01-workshop.html">战略对齐工作坊</a> —— 想练「拍板」这一层，这套里有现成的优先级差异墙与否决线</li>
+            <li><a href="flows/okr-alignment/01-workshop.html">OKR 对齐工作坊</a> —— 「先写失败的样子」，与 🧭那组同源</li>
+            <li><a href="toolbox/generator.html">团建方案生成器（全库版）</a> —— 选「👑 领导力」后可按这 3 组再收一层</li>
+            <li><a href="play/tools/plan-generator/">T1 快速版生成器</a> —— 现场临时只要几个游戏，30 秒出一组</li>
+            <li><a href="guide.html">教练使用指南</a> —— 第一次带领导力类团建先读 5 分钟</li>
+            <li><a href="toolbox/debrief.html">复盘引导框架</a> —— 这 6 款大半价值在最后那 25 分钟复盘</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>
+            <a href="index.html" class="back-link">← 回到游戏库</a>
+            <a href="README.md" class="back-link">README 索引</a>
+            <a href="toolbox/generator.html" class="back-link">方案生成器</a>
+        </div>
+        <div style="margin-top:14px;">团建 &amp; 培训游戏库 · 领导力二级索引 · 6 款 / 3 组</div>
+    </div>
+</div>
+</body>
+</html>

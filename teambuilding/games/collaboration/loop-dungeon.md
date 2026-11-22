@@ -38,7 +38,6 @@ cover: "https://placehold.co/1200x630/4ECDC4/white?text=Collaboration"
 | **适合场景** | 团队协作 / 复盘迭代 / 知识管理 / 心理安全 / 持续改进团建 |
 | **难度** | 中等 |
 | **主题** | Roguelike 地牢 + 时间轮回 + 复盘沉淀 + 渐进成长 |
-| **道具需求** | 有（地牢地图 + 玩家棋子 + 怪物棋子） |
 
 ---
 
@@ -323,7 +322,7 @@ A：它隐喻敏捷的"心理安全"——只有敢在低风险里快速失败�
 
 ## 🔗 相关资源
 
-- [返回团队协作游戏目录](../README.md#协作类)
+- [返回团队协作游戏目录](../../index.html#cat-collaboration)
 - [团建流程设计方案](../../index.html#flows)
 - [引导话术库](../../toolbox/facilitation.html)
 - [复盘引导框架](../../toolbox/debrief.html)

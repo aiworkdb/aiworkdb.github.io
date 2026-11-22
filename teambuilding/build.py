@@ -35,7 +35,6 @@ CATEGORIES = [
     ('problem-solving', '🔧', '问题解决',   '#22d3ee', '#0891b2'),
     ('jubensha',        '🎭', '剧本杀改编', '#c084fc', '#9333ea'),
     ('variety',         '📺', '综艺娱乐',   '#fb923c', '#ea580c'),
-    ('folk',            '🏮', '民俗趣味',   '#fca5a5', '#b91c1c'),
     ('boardgame',       '🎲', '桌游团建',   '#94a3b8', '#475569'),
 ]
 CAT_MAP = {c[0]: c for c in CATEGORIES}
@@ -649,6 +648,7 @@ def load_game(md_path):
     dur_raw = field(pairs, DUR_KEYS)
     base_dur_raw = field(pairs, BASE_DUR_KEYS)
     ppl_raw = field(pairs, PEOPLE_KEYS)
+    total_ppl = parse_total_people(ppl_raw)
     venue_raw = field(pairs, VENUE_KEYS)
     diff_raw = field(pairs, DIFF_KEYS)
     prop_raw = field(pairs, PROP_KEYS)
@@ -659,29 +659,6 @@ def load_game(md_path):
     # 人数口径：多数游戏写的是「每组 N-M 人」，多组可并行，总人数上限远大于组规模。
     # 注意「20-40人（分4-6人/队）」这类写法主数字是全场，不能被后面的「/队」带偏。
     unit = detect_unit(ppl_raw)
-
-    # 全场人数（total_ppl）与口径标注（ppl_scope）
-    # 三种来源，不可混为一谈：
-    #   total      —— 原文显式给了「全场 X–Y 人」，最权威
-    #   single_round —— 原文没写「全场」，但主数字就是「这一场来多少人」
-    #                  （桌游一套道具 / 剧本杀一局 / 人结一个大圈）。
-    #                  这类回退成主数字区间，是语义补全，不是编造。
-    #   per_group  —— 原文写的是「每组 / 每桌 N–M 人」，多组可并行，全场未知。
-    #                  这类**绝不**回退，否则 30 人玩 5 桌会被误判成「只能 3–6 人」。
-    # 判据只看 detect_unit() 的结果：不能在全文里搜「每组」——括号里的
-    # 「（分组轮转，每组 6-10 人）」是分组说明，主数字 6-60 人仍是全场。
-    # 2026-11-03 立：此前 75 款 total_ppl=None 被误读成「数据缺失」，
-    # 实际是 per_group 口径没有全场语义。加 scope 让消费方能正确判断。
-    total_ppl = parse_total_people(ppl_raw)
-    if total_ppl:
-        ppl_scope = 'total'
-    elif unit == 'group':
-        ppl_scope = 'per_group'
-    elif pmax:
-        total_ppl = (pmin, pmax)
-        ppl_scope = 'single_round'
-    else:
-        ppl_scope = 'unknown'
 
     # 场地
     venue, vkey = detect_venue(venue_raw, txt)
@@ -699,8 +676,6 @@ def load_game(md_path):
         'duration_raw': dur_raw,
         'base_duration_raw': base_dur_raw,
         'total_ppl': list(total_ppl) if total_ppl else None,
-        'ppl_scope': ppl_scope,
-        'venue_req': venue_raw,
         'dmin': dmin,
         'dmax': dmax,
         'people_raw': ppl_raw,
@@ -712,8 +687,8 @@ def load_game(md_path):
         'stars': stars,
         'props': prop_raw,
         'abilities': abilities,
-        'md': str(md_path.relative_to(BASE)),
-        'html': str(md_path.with_suffix('.html').relative_to(BASE)),
+        'md': str(md_path.relative_to(BASE)).replace(os.sep, '/'),
+        'html': str(md_path.with_suffix('.html').relative_to(BASE)).replace(os.sep, '/'),
         'words': len(txt),
     }
 
@@ -975,8 +950,7 @@ def build_page(g, prev_g, next_g, related, idx, total):
                  f'<div class="fact-v">{html.escape(props_txt)}</div></div>'
                  if props_txt else '')
     tp = g.get('total_ppl')
-    # 全场与「每人数组」相同就不重复显示（single_round 口径下两者必然相等）
-    if tp and (g.get('ppl_scope') != 'single_round') and tuple(tp) != (g['pmin'], g['pmax']):
+    if tp:
         ttxt = (f'{tp[0]}–{tp[1]} 人' if tp[0] != tp[1] else f'{tp[0]} 人')
         total_ppl_html = f'<small>全场 {html.escape(ttxt)}</small>'
     else:
@@ -1044,16 +1018,42 @@ FLOWS = [
      '6–8 小时 · 15–50 人 · 破冰 + 协作 + 复盘完整闭环'),
     ('flows/half-day/01-schedule.html', '⏱️', '半日团建模板',
      '3–4 小时 · 10–30 人 · 快速凝聚，适合周五下午'),
-    ('flows/fun-sports/01-schedule.html', '🏮', '趣味运动会方案',
-     '半天 · 30–60 人 · 8 个民俗项目，低成本高容错'),
+    ('flows/annual-party/01-party.html', '🎉', '年会 / 联欢流程',
+     '4–5 小时 · 20–80 人 · 不产出、只颁奖与合影 —— 综艺与桌游唯一有格可放的一套'),
+    ('flows/mystery-session/01-session.html', '🕵️', '剧本杀专场',
+     '2–5 小时 · 6–60 人 · 一间能关门的房 + 一段没人叫你的时间 —— 剧本杀 6 款唯一有格可放的一套'),
     ('flows/workshop/leadership-awakening.html', '🎓', '主题工作坊：领导力觉醒',
      '2.5–3 小时 · 12–24 人 · 深度引导，非娱乐向'),
     ('flows/cross-dept/01-schedule.html', '🤝', '跨部门协作方案',
-     '半天 · 20–40 人 · 打散部门重组，专治部门墙'),
+     '6–7 小时 · 15–30 人 · 打散部门重组，专治部门墙'),
     ('flows/onboarding/01-schedule.html', '🌱', '新人融入方案',
-     '2–3 小时 · 6–20 人 · 让新人在第一个月被记住'),
+     '3–4 小时 · 8–20 人 · 让新人在第一个月被记住'),
     ('flows/online/01-schedule.html', '💻', '线上团建模板',
      '2–2.5 小时 · 8–30 人 · 远程团队，全程可在线完成'),
+    ('flows/debrief/01-workshop.html', '🔁', '复盘专项工作坊',
+     '2.5–3 小时 · 10–30 人 · 把一次经历变成团队资产'),
+    ('flows/hybrid/01-schedule.html', '🔀', '混合办公半日团建',
+     '3–3.5 小时 · 10–40 人 · 线上线下同权同场'),
+    ('flows/generational/01-schedule.html', '👨‍👩‍👧', '跨代际融合团建',
+     '3.5–4 小时 · 12–36 人 · 经验互换市场，各组必须跨代混编'),
+    ('flows/conflict/01-workshop.html', '⚖️', '冲突调解工作坊',
+     '2.5–3 小时 · 6–16 人 · 从「谁对」到「什么条件下都会炸」'),
+    ('flows/innovation/01-sprint.html', '💡', '创新 Sprint 工作坊',
+     '6–7 小时 · 12–30 人 · 一天做出能给人看的东西'),
+    ('flows/remote-onboarding/01-schedule.html', '🖥️', '远程新人融入半日团建',
+     '3–3.5 小时 · 8–24 人 · 让新同事半天内有人可找'),
+    ('flows/annual-review/01-workshop.html', '📒', '年度总结与展望工作坊',
+     '3–3.5 小时 · 8–30 人 · 把一年做成一本能交出去的账本'),
+    ('flows/strategy-alignment/01-workshop.html', '🎯', '战略对齐工作坊',
+     '3–4 小时 · 10–40 人 · 用「不做什么」换出真正的优先级'),
+    ('flows/crisis/01-review.html', '🚨', '危机复盘工作坊',
+     '2–2.5 小时 · 6–20 人 · 事故之后先接住信号，再谈原因'),
+    ('flows/cross-region/01-workshop.html', '🌍', '跨地域团队融合工作坊',
+     '3–3.5 小时 · 12–40 人 · 把「时区差」从障碍改成制度'),
+    ('flows/merge-integration/01-workshop.html', '🧬', '团队合并整合工作坊',
+     '3.5–4 小时 · 10–30 人 · 先摊开两套默认规则，再谈文化融合'),
+    ('flows/okr-alignment/01-workshop.html', '🧭', 'OKR 对齐工作坊',
+     '3–3.5 小时 · 8–24 人 · 先写「失败的样子」，再谈对齐'),
 ]
 
 TOOLS = [
@@ -1061,6 +1061,8 @@ TOOLS = [
     ('toolbox/debrief.html', '🔍', '复盘引导框架', '4F 模型 + 提问清单 + 典型场景话术'),
     ('toolbox/safety.html', '🛡️', '安全与管理', '户外安全清单 / 突发预案 / 免责声明'),
     ('toolbox/checklist.html', '✅', '物资与效率', '通用物资清单 / 分组方法 / 评估问卷'),
+    ('toolbox/multi-table.html', '🎲', '桌制游戏多桌运行', '3–6 人/桌的游戏怎么带 20 人场 / 桌数与观察员'),
+    ('toolbox/slot-map.html', '🗓️', '长时段排期表', '12 个长格该选哪款桌游 / 同格候选排序 / 不能连排'),
 ]
 
 INDEX = '''<!DOCTYPE html>
@@ -1153,11 +1155,6 @@ INDEX = '''<!DOCTYPE html>
   </div>
 </div>
 
-<div class="catbar" id="catbar" hidden>
-  <span class="cb-t" id="catbar-t"></span>
-  <button type="button" class="cb-x" id="catbar-x">看全部 {n_games} 款</button>
-</div>
-
 <main class="h-main" id="list">
 {cats_html}
 
@@ -1216,20 +1213,7 @@ INDEX = '''<!DOCTYPE html>
       reset=document.getElementById('reset'),empty=document.getElementById('empty'),
       cards=[].slice.call(document.querySelectorAll('.gcard')),
       cats=[].slice.call(document.querySelectorAll('.cat')),
-      st={{ppl:'',dur:'',ven:'',ab:'',q:'',cat:''}};
-
-  // ?cat=icebreaker —— 从菜单/关键词深链进来时只看该分类
-  var catbar=document.getElementById('catbar'), catbarT=document.getElementById('catbar-t');
-  var CATOK={{}};
-  cats.forEach(function(sec){{ CATOK[sec.dataset.cat]=1; }});
-  var catReq=(new URLSearchParams(location.search).get('cat')||'').trim();
-  if(catReq && CATOK[catReq]) st.cat=catReq;
-
-  function syncUrl(){{
-    try{{
-      history.replaceState(null,'',st.cat?('?cat='+encodeURIComponent(st.cat)):location.pathname);
-    }}catch(e){{}}
-  }}
+      st={{ppl:'',dur:'',ven:'',ab:'',q:''}};
 
   var P={{'u10':[0,10],'10-30':[10,30],'30-60':[30,60],'60p':[60,9999]}};
   var D={{'d15':[0,15],'d30':[15,30],'d60':[30,60],'d120':[60,120],'d120p':[120,9999]}};
@@ -1237,7 +1221,6 @@ INDEX = '''<!DOCTYPE html>
   function ov(a,b,lo,hi){{ return a<=hi && b>=lo; }}
 
   function ok(el){{
-    if(st.cat && el.dataset.cat!==st.cat) return false;
     if(st.ppl){{
       var p=el.dataset.p.split(',').map(Number), r=P[st.ppl];
       if(el.dataset.u==='group'){{
@@ -1273,14 +1256,6 @@ INDEX = '''<!DOCTYPE html>
     }});
     hits.textContent=n;
     empty.classList.toggle('on',n===0);
-    if(st.cat){{
-      var hd=document.querySelector('.cat[data-cat="'+st.cat+'"] .cat-h');
-      catbarT.textContent='只看 '+(hd?hd.textContent.replace(/\\s*\\d+\\s*款\\s*$/,''):st.cat);
-      catbar.hidden=false;
-    }} else {{
-      catbar.hidden=true;
-    }}
-    syncUrl();
     if((st.ven||st.ab)&&!more.classList.contains('on')){{
       more.classList.add('on'); tog.setAttribute('aria-expanded','true');
       tog.textContent='收起筛选 ⌃';
@@ -1319,7 +1294,7 @@ INDEX = '''<!DOCTYPE html>
   clr.addEventListener('click',function(){{ q.value=''; st.q=''; clr.classList.remove('on'); apply(); q.focus(); }});
 
   function clearAll(){{
-    st.ppl=st.dur=st.ven=st.ab=st.q=st.cat='';
+    st.ppl=st.dur=st.ven=st.ab=st.q='';
     q.value=''; clr.classList.remove('on');
     ['f-ppl','f-dur','f-ven','f-ab'].forEach(function(id){{
       var row=document.getElementById(id); if(!row)return;
@@ -1331,14 +1306,10 @@ INDEX = '''<!DOCTYPE html>
   }}
   reset.addEventListener('click',clearAll);
   document.getElementById('relax').addEventListener('click',function(e){{e.preventDefault();clearAll();}});
-  document.getElementById('catbar-x').addEventListener('click',function(){{
-    st.cat=''; apply();
-    document.getElementById('list').scrollIntoView({{behavior:'smooth',block:'start'}});
-  }});
 
   // 快速入口
   var presets={{
-    ice:  {{ppl:'',dur:'',ven:'',ab:'',cat:'icebreaker'}},
+    ice:  {{ppl:'',dur:'d15',ven:'',ab:'',cat:'icebreaker'}},
     small:{{ppl:'10-30',dur:'',ven:'',ab:'',cat:''}},
     long: {{ppl:'',dur:'d60',ven:'',ab:'',cat:''}},
     indoor:{{ppl:'',dur:'',ven:'indoor',ab:'',cat:''}},
@@ -1355,7 +1326,7 @@ INDEX = '''<!DOCTYPE html>
     var p=presets[b.dataset.preset];
     clearAll();
     b.classList.add('on');
-    st.ppl=p.ppl; st.dur=p.dur; st.ven=p.ven; st.ab=p.ab; st.cat=p.cat||'';
+    st.ppl=p.ppl; st.dur=p.dur; st.ven=p.ven; st.ab=p.ab;
     [['f-ppl','ppl'],['f-dur','dur'],['f-ven','ven'],['f-ab','ab']].forEach(function(pair){{
       var row=document.getElementById(pair[0]); if(!row||!st[pair[1]])return;
       row.querySelectorAll('button').forEach(function(x){{
@@ -1506,7 +1477,8 @@ def cmd_docs():
         'online': '💻 线上团建方案',
         'cross-dept': '🤝 跨部门协作方案',
         'onboarding': '🌱 新人融入方案',
-        'fun-sports': '🏮 趣味运动会方案',
+        'annual-party': '🎉 年会 / 联欢方案',
+        'mystery-session': '🕵️ 剧本杀专场',
     }
     for d in sorted((BASE / 'flows').glob('*')):
         if not d.is_dir():
@@ -1552,7 +1524,7 @@ def cmd_index():
                                     ' '.join(g['abilities'])]).lower()
             cards.append(
                 f'''<a class="gcard" href="{g['html']}"
-   data-p="{g['pmin']},{g['pmax']}" data-d="{g['dmin']},{g['dmax']}" data-cat="{cat_id}"
+   data-p="{g['pmin']},{g['pmax']}" data-d="{g['dmin']},{g['dmax']}"
    data-v="{g['vkey']}" data-u="{g['unit']}" data-ab="{html.escape('|'.join(g['abilities']))}"
    data-s="{html.escape(search_blob, quote=True)}"
    style="--cc:{a1}">

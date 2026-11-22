@@ -11,6 +11,8 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/one-day/01-schedule.html"
 
 ![封面](images/cover.png)
 
+| 时间 | 环节 | 游戏 | 目的 |
+|------|------|------|------|
 | 09:30–10:00 | 破冰一 | [人类宾果](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html) | 记住名字、发现共同点 |
 | 10:00–10:30 | 破冰二 | [两真一假](https://ai.aitboy.cn/teambuilding/games/icebreaker/two-truths-one-lie.html) | 加深了解 |
 | 10:30–12:00 | 主体活动一 | [人结](https://ai.aitboy.cn/teambuilding/games/collaboration/human-knot.html) | 团队协作、沟通 |

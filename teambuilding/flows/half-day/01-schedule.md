@@ -11,6 +11,8 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/half-day/01-schedule.html"
 
 ![封面](images/cover.png)
 
+| 时间 | 环节 | 时长 | 目的 |
+|------|------|------|------|
 | 14:00–14:20 | 开场破冰 | 20 min | 放松气氛、建立安全感 |
 | 14:20–14:50 | 破冰游戏 | 30 min | 打破隔阂、能量激活 |
 | 14:50–15:40 | 核心活动 I | 50 min | 信任建立 / 沟通表达 |
@@ -49,13 +51,14 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/half-day/01-schedule.html"
 
 **目标**：进一步打破隔阂，让参与者记住彼此的名字和特点。
 
-#### 推荐游戏组合（三选一）
+#### 推荐游戏组合（四选一）
 
 | 游戏 | 适合人数 | 时长 | 特点 |
 |------|---------|------|------|
 | [人类宾果](https://ai.aitboy.cn/teambuilding/games/icebreaker/human-bingo.html) | 任意（8–50人） | 15 min | 零道具、快速认识很多人 |
 | [两真一假](https://ai.aitboy.cn/teambuilding/games/icebreaker/two-truths-one-lie.html) | 5–30人 | 20 min | 深度了解彼此、笑声多 |
 | [人类宾果] + [名字接龙] | 任意 | 30 min | 组合使用，效果加倍 |
+| [天庭年会](https://ai.aitboy.cn/teambuilding/games/icebreaker/celestial-gala.html) | 4–8 人/组 | 20–35 min（30 min 段用 3 轮短版） | 只演不说真话，笑一场；周五下午最省力的一档 |
 
 #### 教练关键把控点
 - 观察谁**最放不开**，在游戏中有意让他/她多发言
@@ -161,8 +164,16 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/half-day/01-schedule.html"
 
 每人用**一句话**分享今天最大的收获。
 
-教练最后说：
+教练最后说：「今天最想带走的一句话，就是这一句——回去之后，找一个人把它讲一遍。」
 
+---
+
+## 物资清单
+
+按你现场选的方案对号抓药，不用全带：
+
+| 游戏 | 需要准备 |
+|------|----------|
 | 人类宾果 | 打印 Bingo 卡片（每人 1 张） |
 | 盲行 | 眼罩（每人 1 个）或红领巾 |
 | 信任背摔 | 瑜伽垫（保护） |
@@ -171,6 +182,7 @@ source_url: "https://ai.aitboy.cn/teambuilding/flows/half-day/01-schedule.html"
 | 10元买创意 | 10 元人民币（每组 1 份） |
 | 沙漠逃生 | 物品清单打印（每人 1 份）、打分表 |
 | 鸡蛋坠落 | 生鸡蛋（每组 3 颗）、吸管、牙签、胶带、A4纸 |
+| 天庭年会 | 面子值代币（每组 20–30 枚，可用围棋子）、贡品卡（便签手写即可） |
 
 ---
 

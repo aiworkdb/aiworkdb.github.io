@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线上挑款指南 · 8 款分成 4 组 - 团建 &amp; 培训游戏库</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6; color: #e9d2e8;
+        background: linear-gradient(135deg, #190b18 0%, #150815 55%, #1f0c1e 100%);
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px; margin: 0 auto; background: #2c172a;
+        border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        overflow: hidden; border: 1px solid #532d50;
+    }
+    .header {
+        background: linear-gradient(135deg, #7c2776 0%, #aa3ca2 45%, #da81d4 100%);
+        color: #20091e; padding: 40px; text-align: center;
+    }
+    .header h1 { font-size: 2.1em; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(255,255,255,0.25); }
+    .header .subtitle { font-size: 1.05em; opacity: 0.95; }
+    .header .tag {
+        display: inline-block; margin-top: 14px; padding: 6px 18px;
+        background: rgba(0,0,0,0.22); border-radius: 20px; font-size: 0.9em; border: 1px solid #da81d4;
+    }
+    .info-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; padding: 30px; background: #120712;
+    }
+    .info-card {
+        background: #2c172a; padding: 20px; border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4); text-align: center; border: 1px solid #532d50;
+    }
+    .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .info-card .label { font-size: 0.9em; color: #af83ac; }
+    .info-card .value { font-size: 1.05em; font-weight: bold; color: #e9d2e8; }
+    .section { padding: 30px 40px; }
+    .section h2 {
+        color: #da81d4; border-left: 5px solid #7c2776; padding-left: 15px;
+        margin-bottom: 20px; font-size: 1.55em;
+    }
+    .section h3 { color: #aa3ca2; margin: 22px 0 10px; font-size: 1.18em; }
+    .section p, .section li { color: #e9d2e8; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 25px; }
+    .data-table {
+        width: 100%; border-collapse: collapse; margin-top: 15px;
+        background: #120712; border-radius: 10px; overflow: hidden;
+    }
+    .data-table th { background: #7c2776; color: #20091e; padding: 12px; text-align: left; font-size: 0.95em; }
+    .data-table td { padding: 10px 12px; border-top: 1px solid #532d50; color: #e9d2e8; font-size: 0.92em; }
+    .data-table tr:nth-child(even) { background: #2c172a; }
+    .data-table .cat { white-space: nowrap; color: #af83ac; font-size: 0.9em; }
+    .group-card {
+        background: #2c172a; border: 1px solid #532d50; border-radius: 12px;
+        padding: 22px 24px; margin-top: 18px;
+    }
+    .group-card h3 { margin-top: 0; font-size: 1.2em; color: #da81d4; }
+    .group-lead { font-size: 0.96em; color: #e9d2e8; margin-bottom: 14px; }
+    .when-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .when-box, .avoid-box { border-radius: 10px; padding: 14px 16px; font-size: 0.92em; }
+    .when-box { background: #3e233c; border: 1px solid #532d50; }
+    .avoid-box { background: #371d1b; border: 1px solid #7a332e; }
+    .when-box b { color: #da81d4; }
+    .avoid-box b { color: #dd9488; }
+    .pick {
+        display: inline-block; margin-bottom: 14px; padding: 8px 16px; border-radius: 20px;
+        background: #7c2776; color: #20091e; font-size: 0.92em; font-weight: 600;
+    }
+    blockquote {
+        background: #381e37; border-left: 4px solid #da81d4; border-radius: 8px;
+        padding: 14px 18px; margin: 14px 0; color: #e9d2e8; font-size: 0.95em;
+    }
+    a { color: #da81d4; }
+    .footer {
+        background: #120712; color: #af83ac; text-align: center; padding: 25px;
+        font-size: 0.9em; border-top: 1px solid #532d50;
+    }
+    .footer a { color: #da81d4; }
+    .back-link {
+        display: inline-block; margin: 8px 6px 0; padding: 8px 20px;
+        background: #7c2776; color: #20091e; text-decoration: none; border-radius: 20px; font-size: 0.9em;
+    }
+    .back-link:hover { background: #da81d4; }
+    .pick-master {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        padding: 13px 40px; background: #2c172a; border-left: 5px solid #7c2776;
+        border-bottom: 1px solid #532d50; font-size: 0.92em; color: #e9d2e8;
+    }
+    .pick-master .pm-no {
+        background: #7c2776; color: #20091e; border-radius: 14px;
+        padding: 3px 12px; font-weight: 700; font-size: 0.95em; white-space: nowrap;
+    }
+    .pick-master .pm-dim { font-weight: 700; color: #da81d4; }
+    .pick-master .pm-note { flex: 1 1 340px; opacity: 0.82; line-height: 1.55; }
+    .pick-master .pm-link {
+        white-space: nowrap; color: #da81d4; text-decoration: none;
+        border: 1px solid #7c2776; border-radius: 16px; padding: 4px 14px;
+        font-size: 0.92em;
+    }
+    .pick-master .pm-link:hover { background: #532d50; }
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>💻 线上挑款指南</h1>
+        <div class="subtitle">8 款线上团建 —— 按「远程这一局怎么玩」分成 4 组</div>
+        <div class="tag">8 款 · 4 组 · 每组给了首选与「什么时候别选它」</div>
+    </div>
+
+    <div class="pick-master">
+        <span class="pm-no">第 5 / 7 套</span>
+        <span class="pm-dim">本页切的是「成立条件」</span>
+        <span class="pm-note">问的是「这一场在远程，靠什么才开得起来」—— 另外 6 套问的是别的维度：套到领导力上会挑到 6 款里只有 2 款写了线上改造段的游戏，剩下 4 款根本开不了。</span>
+        <a class="pm-link" href="pick.html">🧭 七套切法总表</a>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">🎲</div><div class="label">覆盖范围</div><div class="value">8 款（💻 线上团建）</div></div>
+        <div class="info-card"><div class="icon">🧭</div><div class="label">分组口径</div><div class="value">按「远程怎么玩」分 4 组</div></div>
+        <div class="info-card"><div class="icon">⏳</div><div class="label">唯一异步的一款</div><div class="value">异步接力 45–60 min</div></div>
+        <div class="info-card"><div class="icon">👥</div><div class="label">人数跨度</div><div class="value">5 人 ～ 50 人</div></div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 30 秒挑款：你现在想要什么</h2>
+        <p>不用读完全页。找到你此刻的麻烦，直接拿最后那款；想再看同类，点组名跳下去。</p>
+        <table class="data-table">
+            <tr><th>你现在的麻烦</th><th>去哪一组</th><th>直接拿这款</th></tr>
+            <tr><td>远程会议冷场，十几个人谁都不开口</td><td><a href="#g-voice">🎤 不用专用工具</a></td><td><a href="games/online/never-have-i-ever.html">我从未（线上版）</a> <span style="color:#af83ac;">（6–20人 / 15–25 min）</span></td></tr>
+            <tr><td>刚建团队，想让大家先找到几个共同点</td><td><a href="#g-voice">🎤 不用专用工具</a></td><td><a href="games/online/online-bingo.html">线上宾果</a> <span style="color:#af83ac;">（5–50人 / 15–25 min）</span></td></tr>
+            <tr><td>破冰之后想让大家真的动手做一次</td><td><a href="#g-screen">🖥️ 要一块共享屏</a></td><td><a href="games/online/online-pictionary.html">画图猜词</a> <span style="color:#af83ac;">（6–30人 / 20–30 min）</span></td></tr>
+            <tr><td>需要一点紧张感和输赢，把气氛提上来</td><td><a href="#g-screen">🖥️ 要一块共享屏</a></td><td><a href="games/online/virtual-escape.html">虚拟逃脱</a> <span style="color:#af83ac;">（6–30人 / 30–45 min）</span></td></tr>
+            <tr><td>全员大会，想把公司文化讲成一件具体的事</td><td><a href="#g-screen">🖥️ 要一块共享屏</a></td><td><a href="games/online/team-quiz.html">知识竞答</a> <span style="color:#af83ac;">（8–50人 / 30–45 min）</span></td></tr>
+            <tr><td>线上开会永远是几个人说话，其余人在潜水</td><td><a href="#g-doc">🧾 要一份文档承载</a></td><td><a href="games/online/silent-meeting.html">无声会议 · 匿名轮与实名轮</a> <span style="color:#af83ac;">（6–20人 / 40–55 min）</span></td></tr>
+            <tr><td>远程团队状态互相看不见，想摸个底</td><td><a href="#g-doc">🧾 要一份文档承载</a></td><td><a href="games/online/energy-checkin.html">能量明牌 · 远程看得见的人</a> <span style="color:#af83ac;">（6–20人 / 40–50 min）</span></td></tr>
+            <tr><td>跨时区，人凑不齐同一时刻</td><td><a href="#g-async">⏳ 不用同时在线</a></td><td><a href="games/online/async-relay.html">异步接力 · 交接不断线</a> <span style="color:#af83ac;">（6–24人 / 45–60 min）</span></td></tr>
+        </table>
+        <blockquote>四组是按<strong>「远程这一局怎么玩」</strong>切的，不是按「练什么能力」切的。同样是线上游戏，「不用任何工具开口就行」和「要先备好一块白板和一份词表」完全是两回事 —— 一个教练五分钟就能开，另一个要提前半小时准备。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔀 「线上」不等于「能异步」：七款要全员同时在线</h2>
+        <p>「线上」这个词只说了<strong>地点</strong>，没说<strong>时间</strong>。8 款里只有 1 款是真正异步的，其余 7 款都要求所有人<strong>同时在线、同时开始</strong>。跨时区团队按「线上」分类挑，7/8 的概率是根本开不起来。</p>
+        <table class="data-table">
+            <tr><th></th><th>🎤 不用专用工具</th><th>🖥️ 要一块共享屏</th><th>🧾 要一份文档承载</th><th>⏳ 不用同时在线</th></tr>
+            <tr><td><b>人必须同时在线</b></td><td><b>要</b></td><td><b>要</b></td><td><b>要</b></td><td><b style="color:#da81d4;">不要</b></td></tr>
+            <tr><td><b>教练要准备什么</b></td><td>零 —— 一张手写卡</td><td>一块白板 / 投票工具 + 词表 / 谜题 / 题库</td><td>一份共享文档 + 筹码行 / 能量值分栏</td><td>一份共享文档 + 群聊便签区</td></tr>
+            <tr><td><b>线下道具搬得上去吗</b></td><td>本来就没有道具</td><td>要换成线上的等价物（Skribbl / Miro）</td><td>筹码、能量牌变成文档里的行和格</td><td>传纸条变成写便签</td></tr>
+            <tr><td><b>产出的是什么</b></td><td>几个共同点、一些笑声</td><td>一张画、一个分数、一个解开的谜</td><td>一份留下来的记录（谁在说话、谁的状态）</td><td>一条写得清楚的三栏便签</td></tr>
+            <tr><td><b>最容易翻车在哪</b></td><td>大场子冷场；50 人宾果签不完</td><td>工具没试过；内容没备够</td><td>暴露度太高，团队刚组建就做会冒犯</td><td>团队不认「不许问已下线的人」这条规则</td></tr>
+        </table>
+        <p style="margin-top:18px;">把四组横过来看，真正在递增的轴是<strong>「教练要准备多少」</strong>：<strong>零 → 一块屏 + 一份内容 → 一份文档 → 一份文档 + 跨时段</strong>。挑款时该问的是「我这半小时能准备出什么」，而不是「哪个游戏看起来更线上」。</p>
+        <table class="data-table">
+            <tr><th>远程怎么玩</th><th>组</th><th>组内首选</th></tr>
+            <tr><td><a href="#g-voice">🎤 不用专用工具</a></td><td>2 款</td><td>我从未（线上版）（6–20人 / 15–25 min）</td></tr>
+            <tr><td><a href="#g-screen">🖥️ 要一块共享屏</a></td><td>3 款</td><td>画图猜词（6–30人 / 20–30 min）</td></tr>
+            <tr><td><a href="#g-doc">🧾 要一份文档承载</a></td><td>2 款</td><td>无声会议 · 匿名轮与实名轮（6–20人 / 40–55 min）</td></tr>
+            <tr><td><a href="#g-async">⏳ 不用同时在线</a></td><td>1 款</td><td>异步接力 · 交接不断线（6–24人 / 45–60 min）</td></tr>
+        </table>
+        <blockquote>再提醒一句：<strong>这 8 款只是带「线上场景 / 远程场景」改造段的 14 款里的 8 款</strong>。另外 6 款（协作类的珠行万里 / 人体拼字 / 齐眉棍 / 岛屿求生 / 绝密行动 / 风火轮，沟通类的动物城大侦探 / 你说我画 / 画图接龙 / 传话游戏，破冰类的盲盒神话 / 美食挑战赛，领导力类的沉默领袖 / 七巧板）也各自写好了怎么搬到线上，只是它们的分类在别处 —— 见下方「💻 线上不只是这 8 款」。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🧭 四组分别是什么</h2>
+        <div class="group-card" id="g-voice">
+            <h3>🎤 不用专用工具（2 款）</h3>
+            <div class="group-lead">这两款不需要任何专用平台 —— 会议软件加一张在共享文档里手写就能画的卡就够了。开场五分钟就能开，是线上团建最省事的两款，也最适合 50 人以上的大场子。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>会议刚开场要暖场 / 临时加十分钟 / 50 人以上的大场子 / 线下道具搬不上去的时候</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>两款都不产生任何结论，玩完只剩笑声和几个共同点；线上宾果在 40 人以上是灾难 —— 每人要签 24 个格子，实际会变成失控的私聊；「我从未」在 20 人以上基本要冷场两次以上。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/online/never-have-i-ever.html" style="color:#20091e;text-decoration:underline;">我从未（线上版）</a>（6–20人 / 15–25 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>远程要准备什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/online/never-have-i-ever.html">我从未（线上版）</a></td><td class="cat">线上 · 破冰+沟通</td><td>6–20人</td><td>15–25 min</td><td>零 —— 会议软件 + 手指计数（用摄像头展示）</td><td>用一句"我从未…"让团队批量发现共同点。零工具，只需视频会议。</td></tr>
+                <tr><td><a href="games/online/online-bingo.html">线上宾果</a></td><td class="cat">线上 · 破冰</td><td>5–50人</td><td>15–25 min</td><td>一张数字宾果卡（共享文档 / 在线白板 / 小程序）+ 计时器</td><td>数字化宾果卡，让远程团队在互相"找共同点"中破冰。零门槛，会议开场即用。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-screen">
+            <h3>🖥️ 要一块共享屏（3 款）</h3>
+            <div class="group-lead">这三款都要一块大家都点得到的界面 —— 白板、绘图工具或投票平台，而且都要**提前准备内容**：词表、谜题链、题库。教练的功课全在这半小时里，工具没试过就别开。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>破冰之后要大家真的动手做一次 / 需要一点输赢和紧张感 / 全员大会要覆盖公司与行业知识</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>工具没提前试过就开不起来：白板卡顿、不会用都会直接毁掉这一场；虚拟逃脱的谜题链不提前设计必然散架；知识竞答要 35 道题、四个环节，提前量不足就是一场灾难；虚拟逃脱 30 分钟解不出来，团队会瘫在那里互相看。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/online/online-pictionary.html" style="color:#20091e;text-decoration:underline;">画图猜词</a>（6–30人 / 20–30 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>远程要准备什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/online/online-pictionary.html">画图猜词</a></td><td class="cat">线上 · 沟通+协作</td><td>6–30人</td><td>20–30 min</td><td>在线白板（Skribbl.io 或 Miro）+ 词表 + 计时器 + 计分表</td><td>画图者不能说话写字，只有线条和 2 分钟——把"我以为我说明白了"的沟通成本暴露出来。</td></tr>
+                <tr><td><a href="games/online/virtual-escape.html">虚拟逃脱</a></td><td class="cat">线上 · 问题解决+协作</td><td>6–30人</td><td>30–45 min</td><td>在线白板（Miro / Mural）+ 提前设计谜题链 + 计时器</td><td>30 分钟在线密室。真正值得观察的不是有没有逃出去，而是卡住时团队做了什么。</td></tr>
+                <tr><td><a href="games/online/team-quiz.html">知识竞答</a></td><td class="cat">线上 · 协作+文化共识</td><td>8–50人</td><td>30–45 min</td><td>投票工具（Kahoot / 腾讯问卷）+ 幻灯片 + 35 道题 + 计分表</td><td>四环节递进（公司文化→行业知识→生活常识→团队专属），"团队专属题"把抽象的团队归属感变成具体记忆。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-doc">
+            <h3>🧾 要一份文档承载（2 款）</h3>
+            <div class="group-lead">这两款玩完会留下一样东西：一张发言筹码表、一张能量值分栏表、一条条匿名求助券。线下会议里「谁在说话」「谁快撑不住了」转眼就散，远程把它写进文档就留住了 —— 这是 8 款里唯一在治「远程看不见人」的。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>线上会总是几个人说话、其余人在潜水 / 团队状态互相看不见想摸个底 / 开完会要一份能复盘能追责的记录</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>两款都不是破冰 —— 能量明牌要每个人先讲自己的状态，第一次见面就做非常冒犯；无声会议的能量值环节会暴露个体差异，团队刚组建时别急着上；两款都要 40 分钟以上（含 18 分钟复盘），短会做不完。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/online/silent-meeting.html" style="color:#20091e;text-decoration:underline;">无声会议 · 匿名轮与实名轮</a>（6–20人 / 40–55 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>远程要准备什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/online/silent-meeting.html">无声会议 · 匿名轮与实名轮</a></td><td class="cat">线上 · 会议公平+心理安全</td><td>6–20人</td><td>40–55 min</td><td>共享文档（每人一行发言筹码）+ 匿名便签区</td><td>把「谁在说话」做成可点数资源：每人 3 枚发言筹码，同一批建议先匿名跑一轮、再实名跑一轮。翻转 ≥3 条即判定这个会「按人投票」。</td></tr>
+                <tr><td><a href="games/online/energy-checkin.html">能量明牌 · 远程看得见的人</a></td><td class="cat">线上 · 状态同步+信任</td><td>6–20人</td><td>40–50 min</td><td>在线白板（能量值分栏）+ 分组会议室 + 求助券</td><td>全库唯一以「人」而不是「任务」为对象的一款：能量值必须明牌且禁止填 5，每人 2 张匿名求助券不用即作废，被求助者不许说「有空再说」。硬指标是接住率。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-async">
+            <h3>⏳ 不用同时在线（1 款）</h3>
+            <div class="group-lead">全库唯一一款**异步**线上游戏 —— 你上线的时候别人可以下线。上一棒把三栏便签写清楚就下线，下一棒上线只读不许问，哪怕他就在群里也不能问，追问要付「回看税」。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>跨时区 / 混合办公 / 人根本凑不齐同一时刻 / 真正想练的是「交接质量」而不是「一起玩得开心」</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>别把它当团建用 —— 45–60 分钟里真正能让人「一起玩」的只有十几分钟，其余时间都在写便签和等下一棒；「不许问已下线的人」这条规则非常反直觉，团队不认就会直接破功；它要求所有人愿意异步工作，纯同步团队会觉得被晾着。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/online/async-relay.html" style="color:#20091e;text-decoration:underline;">异步接力 · 交接不断线</a>（6–24人 / 45–60 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>形式</th><th>人数</th><th>时长</th><th>远程要准备什么</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/online/async-relay.html">异步接力 · 交接不断线</a></td><td class="cat">线上 · 异步协作+交接</td><td>6–24人（4–6人/棒组）</td><td>45–60 min</td><td>共享文档 + 群聊便签区（唯一的异步，45–60 min）</td><td>全库唯一一款异步线上游戏：上线后只能读便签、不许问已下线的人（哪怕他就在群里），追问要付「回看税」且下一棒才回答，专攻跨时区与混合办公的交接质量。</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>💻 线上不只是这 8 款</h2>
+        <p>全库带<strong>「线上场景 / 远程场景」改造段</strong>的游戏共 <strong>14 款</strong>，除了本页这 8 款，还有 6 款落在别的分类里 —— 它们各自都写好了「搬到线上怎么玩」，按分类挑会漏掉它们：</p>
+        <table class="data-table">
+            <tr><th>分类</th><th>游戏</th><th>它的线上改造</th></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/ball-relay.html">珠行万里</a></td><td>改为「在线接力」—— 用在线白板，每人画一段轨道，球（图标）依次经过</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/body-letters.html">人体拼字</a></td><td>用摄像头 + 身体拼字，截图后发到群里投票</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/eyebrow-stick.html">齐眉棍</a></td><td>改为「同步鼓掌」挑战 —— 全组通过视频会议，实现完全同步的鼓掌</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/island-survival.html">岛屿求生</a></td><td>用 Tabletopia 或类似工具，视频会议讨论</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/secret-mission.html">绝密行动</a></td><td>用 Tabletopia 或类似工具，视频会议讨论；用在线白板记录警戒值和时间</td></tr>
+            <tr><td class="cat">🤝 团队协作</td><td><a href="games/collaboration/wind-fire-wheel.html">风火轮</a></td><td>改为「线上接力」—— 每人用自己家的报纸做一段，视频会议拼接</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/animal-detective.html">动物城大侦探</a></td><td>用在线白板共享线索卡，视频会议讨论</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/draw-guess.html">你说我画</a></td><td>用在线白板（Miro / Figma），描述者用语音，画图者用鼠标</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/drawing-relay.html">画图接龙</a></td><td>用在线白板（Miro / Figma），每人用鼠标画</td></tr>
+            <tr><td class="cat">💬 沟通表达</td><td><a href="games/communication/telephone-game.html">传话游戏</a></td><td>用私信 / 微信一对一传递，最后一个人把结果发到群里</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/blind-box-myth.html">盲盒神话</a></td><td>用在线卡牌工具（如 Tabletopia）或微信群发卡牌图片交易</td></tr>
+            <tr><td class="cat">🧊 破冰热场</td><td><a href="games/icebreaker/food-challenge.html">美食挑战赛</a></td><td>用在线白板，每人放食材图片，拼出「虚拟菜」</td></tr>
+            <tr><td class="cat">👑 领导力</td><td><a href="games/leadership/silent-leader.html">沉默领袖</a></td><td>用视频会议 + 聊天框（领袖不能发消息，只能用摄像头手势）</td></tr>
+            <tr><td class="cat">👑 领导力</td><td><a href="games/leadership/tangram.html">七巧板</a></td><td>用在线拼图工具（如 Miro 的拼图插件），分组用 breakout rooms</td></tr>
+        </table>
+        <blockquote>这 14 款之所以标了「线上场景」却不归在线上分类，是因为它们各自还有<strong>更主要的训练目标</strong>（协作 / 沟通 / 破冰 / 领导力）—— 线上只是它们的一个用法。如果你要的是「专为远程写的游戏」，看上面 8 款；如果要的是「顺便能在线上开一把」，它们才是主角。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 四个最容易挑错的地方</h2>
+        <table class="data-table">
+            <tr><th>坑</th><th>为什么</th></tr>
+            <tr><td><b>以为「线上」就能异步开</b></td><td>8 款里只有 ⏳异步接力 一款是真的异步，其余 7 款都要求全员同时在线。跨时区 / 混合办公团队按「线上」分类挑，七成会直接开不起来。</td></tr>
+            <tr><td><b>没试工具就开</b></td><td>🖥️那 3 款（画图猜词 / 虚拟逃脱 / 知识竞答）全部依赖一块能多人同时操作的屏或投票工具。白板卡顿、不会用、没提前试，现场就是冷场 15 分钟。</td></tr>
+            <tr><td><b>把「不用专用工具」当成「不用准备」</b></td><td>🎤那 2 款确实零工具，但同样也不产生任何结论 —— 玩完只剩笑声和几个共同点，不能拿来当主活动。</td></tr>
+            <tr><td><b>按分类找线上会漏 6 款</b></td><td>带「线上场景」改造段的共 14 款，其中 6 款（珠行万里 / 人体拼字 / 齐眉棍 / 岛屿求生 / 绝密行动 / 风火轮 / 动物城大侦探 / 你说我画 / 画图接龙 / 传话游戏 / 盲盒神话 / 美食挑战赛 / 沉默领袖 / 七巧板）分别在协作、沟通、破冰、领导力分类下。</td></tr>
+        </table>
+        <blockquote>线上游戏最大的坑不是不好玩，是<strong>「远程做不了这件事」</strong>。先确认你这半小时能备出什么，再回去挑 —— 按玩法名字挑是最容易出错的方式。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔗 相关的入口</h2>
+        <ul>
+            <li><a href="pick.html">🧭 挑款总入口 · 七套切法对照</a> —— 本页是其中第 5 套：切「成立条件」，另外 6 套问的是别的维度</li>
+            <li><a href="index.html">全部 85 款游戏（按 8 个分类）</a> —— 💻线上分类下已有「线上怎么玩」二级筛选行</li>
+            <li><a href="README.md">README 索引表</a> —— 纯文本版，这 8 款已按四组排好</li>
+            <li><a href="flows/online/01-schedule.html">线上团建流程模板</a> —— 2–2.5h 完整时间轴，配套 5 款游戏</li>
+            <li><a href="flows/remote-onboarding/01-schedule.html">远程新人融入半日团建</a> —— 新人场的线上版</li>
+            <li><a href="toolbox/generator.html">团建方案生成器（全库版）</a> —— 有整块时间、想要一整套流程时用</li>
+            <li><a href="play/tools/plan-generator/">T1 快速版生成器</a> —— 现场临时只要几个游戏，30 秒出一组</li>
+            <li><a href="guide.html">教练使用指南</a> —— 第一次带远程团先读 5 分钟</li>
+            <li><a href="toolbox/debrief.html">复盘引导框架</a> —— 🧾那 2 款的价值大半在复盘那 18 分钟</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>
+            <a href="index.html" class="back-link">← 回到游戏库</a>
+            <a href="README.md" class="back-link">README 索引</a>
+            <a href="toolbox/generator.html" class="back-link">方案生成器</a>
+        </div>
+        <div style="margin-top:14px;">团建 &amp; 培训游戏库 · 线上二级索引 · 8 款 / 4 组</div>
+    </div>
+</div>
+</body>
+</html>

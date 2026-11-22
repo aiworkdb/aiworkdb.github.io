@@ -171,6 +171,8 @@ source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
 | **新人第一个月融入** | 见[新人融入方案](flows/onboarding/01-schedule.html)，2–3 小时，重点是「被记住」 |
 | **线上远程团队凝聚** | 线上破冰（15 min）→ 线上协作游戏（30 min）→ 线上复盘（10 min），见[线上团建模板](flows/online/01-schedule.html) |
 | **全天团建活动** | 破冰（30 min）→ 主体活动 ×2（各 60 min）→ 午餐 → 大型合作挑战（90 min）→ 复盘总结（30 min），见[一日团建模板](flows/one-day/01-schedule.html) |
+| **年终联欢 / 周年庆 / 庆功夜** | 见[年会 / 联欢流程](flows/annual-party/01-party.html)，4 小时，**不产出任何清单**，只颁奖与合影；有整块场地的走桌游加长版 5 小时 |
+| **想坐下来盘到底（剧本杀）** | 见[剧本杀专场](flows/mystery-session/01-session.html)，3 小时一桌一案。**门槛不在人数，在能不能关上门** —— 关不了门就改分站型（一整层楼）或饭局版（挂在年会上） |
 
 ---
 
@@ -187,11 +189,11 @@ source_url: "https://aiworkdb.github.io/teambuilding/guide.html"
 ## 六、下一步
 
 - **要选游戏** → 回[首页](index.html)，用人数、时长、场地筛选
-- **要现成流程** → [一日模板](flows/one-day/01-schedule.html) / [半日模板](flows/half-day/01-schedule.html) / [领导力工作坊](flows/workshop/leadership-awakening.html)
+- **要现成流程** → [一日模板](flows/one-day/01-schedule.html) / [半日模板](flows/half-day/01-schedule.html) / [年会 / 联欢](flows/annual-party/01-party.html) / [剧本杀专场](flows/mystery-session/01-session.html) / [领导力工作坊](flows/workshop/leadership-awakening.html)
 - **要话术** → [引导话术库](toolbox/facilitation.html)
 - **要物资清单** → [物资与效率](toolbox/checklist.html)
 - **要安全预案** → [安全与管理](toolbox/safety.html)
 
 ---
 
-_最后更新：2026-11-02_
+_最后更新：2026-11-20_

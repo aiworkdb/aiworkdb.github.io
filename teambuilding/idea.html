@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创意与解题挑款指南 · 10 款分成 4 组 - 团建 & 培训游戏库</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6; color: #e6e2c9;
+        background: linear-gradient(135deg, #121005 0%, #171305 55%, #221c08 100%);
+        padding: 20px;
+    }
+    .container {
+        max-width: 1100px; margin: 0 auto; background: #1e1a09;
+        border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        overflow: hidden; border: 1px solid #463f1c;
+    }
+    .header {
+        background: linear-gradient(135deg, #8a7f1e 0%, #a89c2e 45%, #c8bc5a 100%);
+        color: #141104; padding: 40px; text-align: center;
+    }
+    .header h1 { font-size: 2.1em; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(255,255,255,0.35); }
+    .header .subtitle { font-size: 1.05em; opacity: 0.92; }
+    .header .tag {
+        display: inline-block; margin-top: 14px; padding: 6px 18px;
+        background: rgba(0,0,0,0.22); border-radius: 20px; font-size: 0.9em; border: 1px solid #c8bc5a;
+    }
+    .info-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px; padding: 30px; background: #0d0b03;
+    }
+    .info-card {
+        background: #1e1a09; padding: 20px; border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4); text-align: center; border: 1px solid #463f1c;
+    }
+    .info-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .info-card .label { font-size: 0.9em; color: #b0a888; }
+    .info-card .value { font-size: 1.05em; font-weight: bold; color: #e6e2c9; }
+    .section { padding: 30px 40px; }
+    .section h2 {
+        color: #c8bc5a; border-left: 5px solid #8a7f1e; padding-left: 15px;
+        margin-bottom: 20px; font-size: 1.55em;
+    }
+    .section h3 { color: #a89c2e; margin: 22px 0 10px; font-size: 1.18em; }
+    .section p, .section li { color: #e6e2c9; margin-bottom: 10px; }
+    .section ul, .section ol { padding-left: 25px; }
+    .data-table {
+        width: 100%; border-collapse: collapse; margin-top: 15px;
+        background: #0d0b03; border-radius: 10px; overflow: hidden;
+    }
+    .data-table th { background: #8a7f1e; color: #141104; padding: 12px; text-align: left; font-size: 0.95em; }
+    .data-table td { padding: 10px 12px; border-top: 1px solid #463f1c; color: #e6e2c9; font-size: 0.92em; }
+    .data-table tr:nth-child(even) { background: #1e1a09; }
+    .data-table .cat { white-space: nowrap; color: #b0a888; font-size: 0.9em; }
+    .group-card {
+        background: #1e1a09; border: 1px solid #463f1c; border-radius: 12px;
+        padding: 22px 24px; margin-top: 18px;
+    }
+    .group-card h3 { margin-top: 0; font-size: 1.2em; color: #c8bc5a; }
+    .group-lead { font-size: 0.96em; color: #e6e2c9; margin-bottom: 14px; }
+    .when-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .when-box, .avoid-box { border-radius: 10px; padding: 14px 16px; font-size: 0.92em; }
+    .when-box { background: #26210b; border: 1px solid #463f1c; }
+    .avoid-box { background: #2a1410; border: 1px solid #7a3a2a; }
+    .when-box b { color: #c8bc5a; }
+    .avoid-box b { color: #e8917a; }
+    .pick {
+        display: inline-block; margin-bottom: 14px; padding: 8px 16px; border-radius: 20px;
+        background: #8a7f1e; color: #141104; font-size: 0.92em; font-weight: 600;
+    }
+    blockquote {
+        background: #2c2711; border-left: 4px solid #c8bc5a; border-radius: 8px;
+        padding: 14px 18px; margin: 14px 0; color: #e6e2c9; font-size: 0.95em;
+    }
+    a { color: #c8bc5a; }
+    .footer {
+        background: #0d0b03; color: #b0a888; text-align: center; padding: 25px;
+        font-size: 0.9em; border-top: 1px solid #463f1c;
+    }
+    .footer a { color: #c8bc5a; }
+    .back-link {
+        display: inline-block; margin: 8px 6px 0; padding: 8px 20px;
+        background: #8a7f1e; color: #141104; text-decoration: none; border-radius: 20px; font-size: 0.9em;
+    }
+    .back-link:hover { background: #c8bc5a; }
+    .pick-master {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+        padding: 13px 40px; background: #1e1a09; border-left: 5px solid #8a7f1e;
+        border-bottom: 1px solid #463f1c; font-size: 0.92em; color: #e6e2c9;
+    }
+    .pick-master .pm-no {
+        background: #8a7f1e; color: #141104; border-radius: 14px;
+        padding: 3px 12px; font-weight: 700; font-size: 0.95em; white-space: nowrap;
+    }
+    .pick-master .pm-dim { font-weight: 700; color: #c8bc5a; }
+    .pick-master .pm-note { flex: 1 1 340px; opacity: 0.82; line-height: 1.55; }
+    .pick-master .pm-link {
+        white-space: nowrap; color: #c8bc5a; text-decoration: none;
+        border: 1px solid #8a7f1e; border-radius: 16px; padding: 4px 14px;
+        font-size: 0.92em;
+    }
+    .pick-master .pm-link:hover { background: #463f1c; }
+</style>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>💡 创意与解题挑款指南</h1>
+        <div class="subtitle">💡创新思维 5 款 + 🔧问题解决 5 款 —— 按「团队当下卡在哪一步」重切成 4 组</div>
+        <div class="tag">10 款 · 4 组 · 每组给了首选与「什么时候别选它」</div>
+    </div>
+
+    <div class="pick-master">
+        <span class="pm-no">第 2 / 7 套</span>
+        <span class="pm-dim">本页切的是「思考位置」</span>
+        <span class="pm-note">问的是「团队此刻卡在「想不出」还是「解不开」」—— 另外 6 套问的是别的维度：套到破冰上会挑出一批根本不产出「思考」的游戏，热完场什么也没留下。</span>
+        <a class="pm-link" href="pick.html">🧭 七套切法总表</a>
+    </div>
+
+    <div class="info-grid">
+        <div class="info-card"><div class="icon">🎲</div><div class="label">覆盖范围</div><div class="value">10 款（💡创新 5 + 🔧解题 5）</div></div>
+        <div class="info-card"><div class="icon">🧭</div><div class="label">分组口径</div><div class="value">按「卡在哪一步」分 4 组</div></div>
+        <div class="info-card"><div class="icon">⚡</div><div class="label">最快的一款</div><div class="value">报纸塔挑战 30–40 min</div></div>
+        <div class="info-card"><div class="icon">👥</div><div class="label">人数跨度</div><div class="value">6 人 ～ 40 人</div></div>
+    </div>
+
+    <div class="section">
+        <h2>⚡ 30 秒挑款：你现在卡在哪一步</h2>
+        <p>不用读完全页。找到你此刻的处境，直接拿最后那款；想再看同类，点组名跳下去。</p>
+        <table class="data-table">
+            <tr><th>你现在的麻烦</th><th>去哪一组</th><th>直接拿这款</th></tr>
+            <tr><td>需求方自己都说不清要什么</td><td><a href="#g-define">🔍 先定义问题，再动手</a></td><td><a href="games/creativity/witches-garden.html">女巫花园 · 委托与验收</a> <span style="color:#b0a888;">（6–20人 / 70–100 min）</span></td></tr>
+            <tr><td>事故复盘卡在「到底是什么原因」</td><td><a href="#g-define">🔍 先定义问题，再动手</a></td><td><a href="games/problem-solving/cyber-maze.html">赛博迷宫 · 破障（改造版）</a> <span style="color:#b0a888;">（6–18人 / 60–90 min）</span></td></tr>
+            <tr><td>每次试完都说不出学到了什么</td><td><a href="#g-hypothesis">🧪 试错之前，先写下赌注</a></td><td><a href="games/creativity/newspaper-tower.html">报纸塔挑战 · 结构假设</a> <span style="color:#b0a888;">（8–30人 / 30–40 min）</span></td></tr>
+            <tr><td>团队习惯说「等条件齐了再开始」</td><td><a href="#g-constraint">⛓️ 资源不够：在限制下取舍</a></td><td><a href="games/creativity/10-yuan-idea.html">10元买创意 · 极限预算</a> <span style="color:#b0a888;">（8–40人 / 30–45 min）</span></td></tr>
+            <tr><td>开会一上来就随大流，散会各干各的</td><td><a href="#g-deliberate">🕰️ 别急着定：先留一块余地</a></td><td><a href="games/problem-solving/desert-survival.html">沙漠逃生 · 决策协议</a> <span style="color:#b0a888;">（6–12人 / 30–45 min）</span></td></tr>
+        </table>
+        <blockquote>四组是按<strong>「团队当下卡在哪一步」</strong>切的，不是按💡/🔧两个文件夹切的。同一个文件夹里的两款可能差三步，同一步上的两款可能分属不同分类 —— 这正是「创新」与「解决问题」最常被混为一谈的原因。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔀 创新 vs 解题：不是两个抽屉</h2>
+        <p>「创新思维」和「问题解决」这两个名字说的是<strong>产出物</strong>，不是<strong>练的动作</strong>——所以按名字挑，几乎一定会挑错。</p>
+        <table class="data-table">
+            <tr><th></th><th>💡 创新思维（5 款）</th><th>🔧 问题解决（5 款）</th></tr>
+            <tr><td><b>产出的是什么</b></td><td>一个从无到有的东西（作品、方案、机制）</td><td>一个被解决掉的具体障碍（故障、瓶颈、卡点）</td></tr>
+            <tr><td><b>成功长什么样</b></td><td>「原来还能这样」——有人愿意用它</td><td>「原来卡在这儿」——绕过去而且说得清为什么</td></tr>
+            <tr><td><b>失败长什么样</b></td><td>做出来了但没人要 / 做错了问题</td><td>修好了但不知道为什么修好</td></tr>
+            <tr><td><b>最容易混在哪</b></td><td>需求没对齐，却以为是自己「创新不够」</td><td>复盘没沉淀，却以为是「方案不行」</td></tr>
+        </table>
+        <p style="margin-top:18px;">把四组横过来看，边界就清楚了 —— <strong>每一组都同时横跨💡与🔧两个分类</strong>：</p>
+        <table class="data-table">
+            <tr><th>卡在哪一步</th><th>💡 创新思维</th><th>🔧 问题解决</th></tr>
+            <tr><td><a href="#g-define">🔍 先定义问题，再动手</a></td><td>女巫花园 · 委托与验收</td><td>赛博迷宫 · 破障（改造版）</td></tr>
+            <tr><td><a href="#g-hypothesis">🧪 试错之前，先写下赌注</a></td><td>报纸塔挑战 · 结构假设</td><td>鸡蛋坠落挑战 · 试错赌注、极地探险 · 假设日志（改造版）</td></tr>
+            <tr><td><a href="#g-constraint">⛓️ 资源不够：在限制下取舍</a></td><td>10元买创意 · 极限预算、异世界工坊 · 造物共创（改造版）</td><td>宝藏猎人 · 侦察与图鉴</td></tr>
+            <tr><td><a href="#g-deliberate">🕰️ 别急着定：先留一块余地</a></td><td>魔法花园 · 花期与留白（改造版）</td><td>沙漠逃生 · 决策协议</td></tr>
+        </table>
+        <blockquote>所以挑款时问的应该是「<strong>我们此刻卡在哪一步</strong>」，而不是「这算创新还是算解题」。💡那 5 款里只有 2 款在练「从限制里挤出东西」；🔧那 5 款里也只有 1 款真的在查因。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🧭 四组分别是什么</h2>
+        <div class="group-card" id="g-define">
+            <h3>🔍 先定义问题，再动手（2 款）</h3>
+            <div class="group-lead">最贵的错误不是解不出来，是解错了题——这两款都把「先说清要解决什么」设成一道不许跳过的闸门。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>需求方自己也说不清要什么 / 复盘总在争「到底是谁的问题」/上一轮做完的东西没人认账。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>已经明确到「做什么都定了」的阶段别选——这两款的开场就是逼你把问题重写一遍，没有歧义可挖时会空转。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/problem-solving/cyber-maze.html" style="color:#141104;text-decoration:underline;">赛博迷宫 · 破障（改造版）</a>（6–18人 / 60–90 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/problem-solving/cyber-maze.html">赛博迷宫 · 破障（改造版）</a></td><td class="cat">🔧 问题解决</td><td>6–18人</td><td>60–90 min</td><td>第一轮不许动、必须先填完「故障假设卡」，专攻问题定义、根因假设修正与需求变更下重规划的问题解决题材。</td></tr>
+                <tr><td><a href="games/creativity/witches-garden.html">女巫花园 · 委托与验收</a></td><td class="cat">💡 创新思维</td><td>6–20人</td><td>70–100 min</td><td>接村民委托必须先追问一句、把「要什么」翻译成「要解决什么」，成品还得由村民说出「这解决了我什么」才算交付，专攻需求洞察与验收标准对齐。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-hypothesis">
+            <h3>🧪 试错之前，先写下赌注（3 款）</h3>
+            <div class="group-lead">试错本身不产生价值，带着假设的试错才产生价值——这三款都要求动手之前先落一笔「我们以为是 X」，事后拿结果对账。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>每次试完都说不出学到了什么 / 复盘只剩一句「下次注意」/想练「敢不敢承认自己猜错了」。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>只有 45 分钟、或者这次只想玩个痛快的时候别选——这三款的价值都在复盘那 15–20 分钟，游戏部分反而最省事。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/creativity/newspaper-tower.html" style="color:#141104;text-decoration:underline;">报纸塔挑战 · 结构假设</a>（8–30人 / 30–40 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/creativity/newspaper-tower.html">报纸塔挑战 · 结构假设</a></td><td class="cat">💡 创新思维</td><td>8–30人</td><td>30–40 min</td><td>设计阶段禁碰材料，每次倒塌必须写"我们以为是 X，实际是 Y"，专攻结构思维与假设→验证→修正。</td></tr>
+                <tr><td><a href="games/problem-solving/egg-drop.html">鸡蛋坠落挑战 · 试错赌注</a></td><td class="cat">🔧 问题解决</td><td>8–30人</td><td>45–60 min</td><td>测试预算只有 2 次，每次测试前必须写下"我们赌的是哪个原理"，专攻不可逆决策与带假设的试错。</td></tr>
+                <tr><td><a href="games/problem-solving/arctic-expedition.html">极地探险 · 假设日志（改造版）</a></td><td class="cat">🔧 问题解决</td><td>6–16人</td><td>60–90 min</td><td>没写假设就不许移动，每 3 轮念一次命中率，还有那张几乎每个项目都有、培训里却总缺席的「需求变更」卡，专攻信息不完全下的假设—验证—修正闭环。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-constraint">
+            <h3>⛓️ 资源不够：在限制下取舍（3 款）</h3>
+            <div class="group-lead">资源不是借口，是设计输入——这三款把预算、材料或行动力卡死，逼你在剩下的缝里想办法，而且每次取舍都要记进账本。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>项目永远缺人缺钱缺时间 / 团队习惯说「等条件齐了再开始」/要练「每一份资源换回了什么」。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>团队正处在士气低的时候别选——硬上限会被当成压力而不是约束，先把气氛做起来再用。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/creativity/10-yuan-idea.html" style="color:#141104;text-decoration:underline;">10元买创意 · 极限预算</a>（8–40人 / 30–45 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/creativity/10-yuan-idea.html">10元买创意 · 极限预算</a></td><td class="cat">💡 创新思维</td><td>8–40人</td><td>30–45 min</td><td>每组只有 10 元，账本必须记下"花了多少／换回了什么／值不值"，专攻约束驱动创新与每元产出意识。</td></tr>
+                <tr><td><a href="games/creativity/another-world-workshop.html">异世界工坊 · 造物共创（改造版）</a></td><td class="cat">💡 创新思维</td><td>6–16人</td><td>60–90 min</td><td>每件作品开工前必须先抽一张「约束卡」，做废的东西进「灵感档案」可被回收，专攻约束驱动创新与试错资产化的创新思维题材。</td></tr>
+                <tr><td><a href="games/problem-solving/treasure-hunter.html">宝藏猎人 · 侦察与图鉴</a></td><td class="cat">🔧 问题解决</td><td>6–20人</td><td>70–95 min</td><td>地图大部分是暗的，侦察要花行动力却不能前进；每次踩坑必须当场记进陷阱图鉴，同类第二次踩扣分翻倍，专攻为信息付费与经验资产化。</td></tr>
+            </table>
+        </div>
+        <div class="group-card" id="g-deliberate">
+            <h3>🕰️ 别急着定：先留一块余地（2 款）</h3>
+            <div class="group-lead">「等不及」和「排太满」是同一个毛病的两种长相——这两款都故意给团队留一块不许动的余地：一个人先独立想清楚，大家先别把格子占满。</div>
+            <div class="when-row">
+                <div class="when-box"><b>✅ 什么情况下选它</b><br>开会一上来就随大流 / 什么都要今天做完 / 讨论完的结论总不如某个人的判断。</div>
+                <div class="avoid-box"><b>⛔ 什么时候别选它</b><br>必须当场拍板定死的场合别选——这两款都要留出「再想一轮」的时间，跟硬截止日期冲突。</div>
+            </div>
+            <div class="pick">🎯 拿不准就先拿：<a href="games/problem-solving/desert-survival.html" style="color:#141104;text-decoration:underline;">沙漠逃生 · 决策协议</a>（6–12人 / 30–45 min）</div>
+            <table class="data-table">
+                <tr><th>游戏</th><th>分类</th><th>人数</th><th>时长</th><th>这一款在练什么</th></tr>
+                <tr><td><a href="games/problem-solving/desert-survival.html">沙漠逃生 · 决策协议</a></td><td class="cat">🔧 问题解决</td><td>6–12人</td><td>30–45 min</td><td>开局先选一种决策方式并全程遵守，用"团队增益"和"异议命中率"衡量这场讨论到底有没有创造价值。</td></tr>
+                <tr><td><a href="games/creativity/enchanted-garden.html">魔法花园 · 花期与留白（改造版）</a></td><td class="cat">💡 创新思维</td><td>6–18人</td><td>60–90 min</td><td>植物有成熟期，提前收割只得「青涩成果」还得当场说清为什么等不及；25 格花园必须始终留白 5 格并写明「我们在等什么」，专攻长周期创新、节奏感与余量意识的创新思维题材。</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ 三个最容易挑错的地方</h2>
+        <table class="data-table">
+            <tr><th>坑</th><th>为什么</th></tr>
+            <tr><td><b>想做创新，别在「创新思维」里挑齐</b></td><td>💡那 5 款里只有 2 款（10元买创意、异世界工坊）在练「从限制里挤出东西」；另 3 款（报纸塔挑战、女巫花园、魔法花园）练的其实是假设、定义与留白 —— 这三样在🔧那 5 款里同样能练到。</td></tr>
+            <tr><td><b>问题解决 ≠ 查原因</b></td><td>🔧那 5 款里只有赛博迷宫一款真的在查因。其余 4 款练的是带假设的试错（鸡蛋坠落、极地探险）、在限制下取舍（宝藏猎人）、别急着拍板（沙漠逃生）。</td></tr>
+            <tr><td><b>时间不够时可选的只有 3 款</b></td><td>报纸塔挑战（30–40 min）、10元买创意（30–45 min）、沙漠逃生（30–45 min）能在 45 分钟内收尾；其余 7 款都要 45 分钟以上，其中 4 款要 60 分钟以上、女巫花园与宝藏猎人要 70 分钟以上。</td></tr>
+        </table>
+        <blockquote>这 10 款占全库 12%，却横跨「产出新东西」和「解决旧问题」两种完全不同的目标。先确认你要的是哪一个，再回到四组里挑 —— 按文件名挑是最容易出错的方式。</blockquote>
+    </div>
+
+    <div class="section">
+        <h2>🔗 相关的入口</h2>
+        <ul>
+            <li><a href="pick.html">🧭 挑款总入口 · 七套切法对照</a> —— 本页是其中第 2 套：切「思考位置」，另外 6 套问的是别的维度</li>
+            <li><a href="index.html">全部 85 款游戏（按 8 个分类）</a> —— 💡创意与🔧解题已拆成两个分类入口，各自 5 款</li>
+            <li><a href="README.md">README 索引表</a> —— 纯文本版，这 10 款已按四组排好</li>
+            <li><a href="toolbox/generator.html">团建方案生成器（全库版）</a> —— 有整块时间、想要一整套流程时用</li>
+            <li><a href="play/tools/plan-generator/">T1 快速版生成器</a> —— 现场临时只要几个游戏，30 秒出一组</li>
+            <li><a href="guide.html">教练使用指南</a> —— 第一次带团先读 5 分钟</li>
+            <li><a href="toolbox/debrief.html">复盘引导框架</a> —— 这 10 款的价值大半在复盘那 15–30 分钟</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div>
+            <a href="index.html" class="back-link">← 回到游戏库</a>
+            <a href="README.md" class="back-link">README 索引</a>
+            <a href="toolbox/generator.html" class="back-link">方案生成器</a>
+        </div>
+        <div style="margin-top:14px;">团建 & 培训游戏库 · 创意与解题二级索引 · 10 款 / 4 组</div>
+    </div>
+</div>
+</body>
+</html>

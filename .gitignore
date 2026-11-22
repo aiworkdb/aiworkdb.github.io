@@ -78,6 +78,8 @@ teambuilding/ROADMAP.md
 teambuilding/__harness.html
 teambuilding/.audit/
 teambuilding/_data/
+# teambuilding 一次性调试脚本（_dbg / _count / _add_xxx 之类，用完即弃）
+teambuilding/_*.py
 
 # teambuilding 本地素材目录（仓库为公开库，以下内容不随站点发布）
 # teambuilding/wechat/  公众号文章源 + 228MB 封面素材 + 公众号 AppID/Secret 所在目录
