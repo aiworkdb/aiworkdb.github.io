@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿凡达：烬与灵网 — 打印道具</title>
+<style>
+  :root{
+    --ink:#12211f;
+    --paper:#f2ede1;
+    --deep:#07222b;
+    --deep2:#0b3340;
+    --aqua:#67e8d5;
+    --aqua-d:#1f8f8a;
+    --vine:#7be495;
+    --ember:#f0782a;
+    --amber:#f4c15d;
+    --violet:#a78bfa;
+    --line:#c9bfa8;
+    --card:#0d3038;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:#dcd6c8; color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif; }
+  .page{
+    width:210mm; height:297mm; padding:9mm 8mm; margin:8mm auto; background:var(--paper);
+    position:relative; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.18);
+  }
+  .page::after{
+    content:attr(data-page); position:absolute; right:9mm; bottom:5mm;
+    font-size:8pt; color:#9a9078; letter-spacing:.5px;
+  }
+  .page-title{
+    display:flex; align-items:baseline; gap:8px; margin:0 0 3mm;
+    border-bottom:2px solid var(--aqua-d); padding-bottom:2mm;
+  }
+  .page-title h2{ margin:0; font-size:15pt; letter-spacing:1px; color:#0c3b40; }
+  .page-title span{ font-size:9pt; color:#6d7d78; letter-spacing:.5px; }
+  .foot-note{ position:absolute; left:8mm; bottom:5mm; font-size:7.5pt; color:#8d8470; }
+
+  /* ---------- print hint ---------- */
+  .print-hint{
+    background:#fffaf0; border:2px dashed var(--ember); border-radius:6px;
+    padding:4mm 5mm; margin-bottom:4mm; font-size:9.5pt; line-height:1.65;
+  }
+  .print-hint strong{ color:#b5451b; }
+  .print-hint ul{ margin:2mm 0 0 0; padding-left:5mm; }
+  .print-hint li{ margin:.8mm 0; }
+
+  /* ---------- cover ---------- */
+  .cover{
+    height:297mm; width:210mm; margin:8mm auto; position:relative; overflow:hidden;
+    background:radial-gradient(circle at 50% 34%, #12525a 0%, #082830 45%, #04161c 100%);
+    color:#eafaf6; padding:0; page-break-after:always;
+  }
+  .cover-inner{ position:absolute; inset:0; padding:18mm 16mm; display:flex; flex-direction:column; }
+  .cover h1{
+    font-size:33pt; margin:0; line-height:1.26; letter-spacing:2px; padding-top:1mm;
+    background:linear-gradient(100deg,#8ff0dd,#f4c15d 60%,#f0782a);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 30px rgba(103,232,213,.18);
+  }
+  .cover .en{ font-size:10pt; letter-spacing:4px; color:#7fd8cc; margin-top:3mm; }
+  .cover .rule{ height:2px; width:70mm; margin:6mm 0;
+    background:linear-gradient(90deg,var(--aqua),transparent); }
+  .cover .lede{ font-size:11pt; line-height:1.9; color:#cfeae4; max-width:120mm; }
+  .cover .pillars{ display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin-top:auto; }
+  .pillar{ background:rgba(255,255,255,.06); border:1px solid rgba(103,232,213,.28);
+    border-radius:8px; padding:4mm; font-size:9pt; line-height:1.6; color:#d6efea; }
+  .pillar b{ color:var(--amber); display:block; font-size:9.5pt; margin-bottom:1mm; }
+  .cover .meta{ margin-top:6mm; font-size:8.5pt; color:#8fb8b2; display:flex; gap:6mm; flex-wrap:wrap; }
+  .cover .note{ margin-top:2mm; font-size:7.5pt; color:#6d9a94; line-height:1.6; }
+
+  /* ---------- map ---------- */
+  .map-wrap{ border-radius:8px; overflow:hidden; background:var(--deep); }
+  .map-svg{ display:block; width:100%; height:auto; }
+  .legend{ display:grid; grid-template-columns:repeat(3,1fr); gap:2mm 4mm; margin-top:3mm; font-size:8pt; }
+  .legend div{ display:flex; align-items:center; gap:2mm; color:#3c4a46; }
+  .sw{ width:5mm; height:5mm; border-radius:50%; flex:0 0 auto; border:1px solid rgba(0,0,0,.25); }
+
+  /* ---------- cards ---------- */
+  .grid-omen{ display:grid; grid-template-columns:repeat(4,1fr); gap:2.5mm; }
+  .omen{
+    height:62mm; border-radius:4mm; padding:2.6mm 2.6mm; color:#eaf7f3; position:relative;
+    background:linear-gradient(170deg,#12444c,#0a262e 70%);
+    border:1.2px solid rgba(244,193,93,.55);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.35);
+    display:flex; flex-direction:column;
+  }
+  .omen .no{ position:absolute; top:2mm; right:2.5mm; font-size:6.5pt; color:#7faeaa; }
+  .omen .ico{ font-size:14pt; line-height:1; margin-bottom:1mm; }
+  .omen .nm{ font-size:9pt; font-weight:700; color:var(--amber); letter-spacing:.5px;
+    border-bottom:1px solid rgba(244,193,93,.28); padding-bottom:1.4mm; margin-bottom:1.8mm; }
+  .omen .tx{ font-size:7.6pt; line-height:1.55; color:#d3ece7; }
+  .omen .tip{ font-size:6.9pt; line-height:1.45; color:#a9d8d1; margin-top:1.8mm;
+    border-top:1px dashed rgba(127,174,170,.4); padding-top:1.4mm; }
+  .omen .tip b{ color:#f4c15d; font-weight:700; }
+  .omen .fd{ font-size:6.3pt; color:#7faeaa; line-height:1.4; margin-top:1.2mm; }
+
+  .grid-clan{ display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .clan{
+    height:39mm; border-radius:4mm; padding:3.5mm 4mm; color:#fff; position:relative; overflow:hidden;
+  }
+  .clan h3{ margin:0; font-size:12pt; letter-spacing:1px; }
+  .clan .sub{ font-size:7pt; opacity:.8; letter-spacing:2px; margin-top:.6mm; }
+  .clan .hint{ font-size:7.6pt; line-height:1.5; margin-top:2.5mm; opacity:.95; }
+  .clan .glyph{ position:absolute; right:4mm; bottom:2mm; font-size:22pt; opacity:.35; }
+  .clan-1{ background:linear-gradient(120deg,#1c6b57,#0e3f39); }
+  .clan-2{ background:linear-gradient(120deg,#1d6086,#0c3049); }
+  .clan-3{ background:linear-gradient(120deg,#7a6035,#43331c); }
+  .clan-4{ background:linear-gradient(120deg,#a33a22,#5a1d12); }
+
+  .grid-help{ display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .help{
+    border:1.4px solid #143e42; border-radius:4mm; padding:3mm 3.4mm; background:#fbf8ef;
+    height:82mm; font-size:7.4pt; line-height:1.5; color:#17332f;
+  }
+  .help h4{ margin:0 0 1.6mm; font-size:10pt; color:#0c3b40; letter-spacing:1px;
+    display:flex; justify-content:space-between; align-items:baseline; }
+  .help h4 i{ font-style:normal; font-size:6.5pt; color:#7b8d86; letter-spacing:0; }
+  .help table{ width:100%; border-collapse:collapse; font-size:6.9pt; }
+  .help td{ padding:.7mm 0; vertical-align:top; border-bottom:1px dotted #cfc6b0; }
+  .help td:first-child{ width:9mm; font-weight:700; color:#1f6b62; white-space:nowrap; }
+  .help .k{ color:#b5451b; font-weight:700; }
+  .help .formula{ background:#eef6f2; border-radius:2mm; padding:1.6mm 2mm; margin-top:1.4mm;
+    font-size:6.8pt; line-height:1.5; }
+
+  /* ---------- score sheet ---------- */
+  .sheet{ border:1.2px solid #6f7f78; border-radius:3mm; padding:3.5mm; background:#fffdf6; }
+  .sheet h3{ margin:0 0 2mm; font-size:10.5pt; color:#0c3b40; letter-spacing:1px; }
+  .sheet table{ width:100%; border-collapse:collapse; font-size:7.4pt; }
+  .sheet th,.sheet td{ border:1px solid #b9b197; padding:1.4mm 1.6mm; text-align:center; }
+  .sheet th{ background:#e9e3d1; font-weight:700; }
+  .sheet td.lbl{ text-align:left; background:#f6f2e5; width:34mm; }
+  .sheet .blank{ height:5.2mm; }
+
+  /* ---------- tokens ---------- */
+  .strip-row{ display:flex; gap:2mm; margin-bottom:2mm; }
+  .strip{
+    width:30mm; height:8mm; border-radius:1.2mm; position:relative;
+    display:flex; align-items:center; justify-content:center; font-size:6pt; color:#fff; opacity:.95;
+  }
+  .strip::before{ content:""; position:absolute; left:1.2mm; right:1.2mm; top:50%;
+    height:1px; background:rgba(255,255,255,.45); }
+  .s1{ background:#1c6b57; } .s2{ background:#1d6086; } .s3{ background:#7a6035; } .s4{ background:#a33a22; }
+  .tok-group{ margin-bottom:5mm; }
+  .tok-group h4{ margin:0 0 2mm; font-size:9pt; color:#0c3b40; letter-spacing:1px; }
+  .coins{ display:flex; flex-wrap:wrap; gap:2.4mm; }
+  .coin{
+    width:20mm; height:20mm; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:8.5pt; font-weight:700; color:#fff;
+  }
+  .coin.s{ background:radial-gradient(circle at 35% 30%,#7be495,#1f6b45); border:1px solid #14512f; }
+  .coin.a{ background:radial-gradient(circle at 35% 30%,#ffa55e,#a83a14); border:1px solid #7a2a0d; }
+  .coin.ash{ background:radial-gradient(circle at 35% 30%,#8d8d8d,#3a3a3a); border:1px solid #222; font-size:7.5pt; }
+  .coin.car{ background:radial-gradient(circle at 35% 30%,#ffe9a8,#b98a1e); border:1px solid #8a6512;
+    color:#4a3305; font-size:7.5pt; }
+  .cut-note{ font-size:7.2pt; color:#6f6a58; line-height:1.6; margin-top:2mm; }
+
+  @media print{
+    *{
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body{ background:#fff; }
+    .page{ margin:0; box-shadow:none; break-after:page; page-break-after:always; }
+    .cover{ margin:0; break-after:page; page-break-after:always; }
+    .page:last-of-type{ break-after:auto; page-break-after:auto; }
+    .print-hint{ display:none; }
+    @page{ size:A4 portrait; margin:0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ P1 封面 ============ -->
+<section class="cover">
+  <div class="cover-inner">
+    <div style="font-size:9pt;letter-spacing:6px;color:#67e8d5;opacity:.85">PANDORA · PRINT &amp; PLAY KIT</div>
+    <h1>阿凡达<br>烬与灵网</h1>
+    <div class="en">AVATAR : ASH AND THE LIVING WEB</div>
+    <div class="rule"></div>
+    <p class="lede">所有部族共用同一张灵网，火焰却只属于点火的人。<br>连接是公共的，焚烧是私有的。</p>
+
+    <svg viewBox="0 0 660 480" style="width:150mm;height:auto;margin:6mm auto 0;display:block;opacity:.9" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="cg" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#8ff0dd" stop-opacity=".55"/>
+          <stop offset="55%" stop-color="#1f8f8a" stop-opacity=".12"/>
+          <stop offset="100%" stop-color="#04171d" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="5"/>
+        </filter>
+      </defs>
+      <circle cx="330" cy="240" r="230" fill="url(#cg)"/>
+      <g stroke="rgba(143,240,221,.30)" stroke-width="1.6" fill="none">
+        <circle cx="330" cy="240" r="168" stroke-dasharray="2 7"/>
+        <circle cx="330" cy="240" r="96" stroke-dasharray="2 7"/>
+        <!-- spokes to inner -->
+        <path d="M330 240 L330 144 M330 240 L424 192 M330 240 L424 288 M330 240 L330 336 M330 240 L236 288 M330 240 L236 192"/>
+        <!-- inner ring -->
+        <path d="M330 144 L424 192 L424 288 L330 336 L236 288 L236 192 Z"/>
+        <!-- inner to outer -->
+        <path d="M330 144 L330 72 M330 144 L452 120 M424 192 L520 240 M424 288 L452 360 M330 336 L330 408 M236 288 L208 360 M236 192 L140 240 M236 192 L208 120"/>
+        <!-- outer ring -->
+        <path d="M330 72 L452 120 L520 240 L452 360 L330 408 L208 360 L140 240 L208 120 Z"/>
+      </g>
+      <!-- nodes -->
+      <g fill="#0b3340" stroke="#8ff0dd" stroke-width="1.6">
+        <circle cx="330" cy="144" r="9"/><circle cx="424" cy="192" r="9"/><circle cx="424" cy="288" r="9"/>
+        <circle cx="330" cy="336" r="9"/><circle cx="236" cy="288" r="9"/><circle cx="236" cy="192" r="9"/>
+      </g>
+      <g fill="#0b3340" stroke="#7be495" stroke-width="1.4">
+        <circle cx="330" cy="72" r="7"/><circle cx="452" cy="120" r="7"/><circle cx="520" cy="240" r="7"/>
+        <circle cx="452" cy="360" r="7"/><circle cx="330" cy="408" r="7"/><circle cx="208" cy="360" r="7"/>
+        <circle cx="140" cy="240" r="7"/><circle cx="208" cy="120" r="7"/>
+      </g>
+      <!-- glowing tree core -->
+      <circle cx="330" cy="240" r="26" fill="#8ff0dd" opacity=".30" filter="url(#soft)"/>
+      <circle cx="330" cy="240" r="15" fill="#c9fff1"/>
+      <circle cx="330" cy="240" r="15" fill="none" stroke="#8ff0dd" stroke-width="2"/>
+      <!-- embers -->
+      <g fill="#f0782a">
+        <circle cx="470" cy="176" r="3.2" opacity=".9"/><circle cx="196" cy="300" r="2.6" opacity=".8"/>
+        <circle cx="392" cy="392" r="2.2" opacity=".7"/><circle cx="286" cy="96" r="2.4" opacity=".75"/>
+        <circle cx="540" cy="300" r="2" opacity=".6"/><circle cx="150" cy="180" r="2" opacity=".55"/>
+        <circle cx="360" cy="430" r="2.4" opacity=".6"/><circle cx="452" cy="60" r="1.8" opacity=".5"/>
+      </g>
+    </svg>
+
+    <div class="pillars">
+      <div class="pillar"><b>2-4 人 · 60 分钟</b>路线建设 + 资源引擎 + 区域封锁，规则 5 分钟讲完。</div>
+      <div class="pillar"><b>15 个地块 · 28 条连线</b>同心圆地图，从圣树向外铺网，越远越贵。</div>
+      <div class="pillar"><b>12 张灰烬预言卡</b>每轮翻开 1 张，全场生效，同一开局长出不同的局。</div>
+      <div class="pillar"><b>双流派对等</b>灵网流 38.5 分 / 灰烬流 38.1 分，没有必赢打法。</div>
+    </div>
+
+    <div class="meta">
+      <span>印刷页数：9 页</span><span>建议纸张：A4 / 160g 卡纸</span><span>版本：v1.0（2026-11）</span>
+    </div>
+    <div class="note">本作基于《阿凡达：火与烬》（2026）世界观二次创作，仅供私人打印游玩，不作商业用途。<br>
+      全部规则、卡表与数值推导见同目录 README.md。</div>
+  </div>
+</section>
+
+<!-- ============ P2 打印说明 ============ -->
+<section class="page" data-page="P2 · 打印与组装">
+  <div class="page-title"><h2>打印与组装</h2><span>PRINT &amp; ASSEMBLY</span></div>
+
+  <div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+      <li>使用 <strong>A4 纸张</strong>打印，页边距设为<strong>「无」或「最小」</strong>，缩放选择 <strong>100%（不要"适应页面"）</strong>。</li>
+      <li>在打印对话框中务必<strong>勾选「背景图形 / Background graphics」</strong>，否则地图与卡牌的配色会全部丢失。</li>
+      <li>地图与卡牌建议使用 <strong>160g 以上卡纸</strong>；标记页用普通 A4 即可，能塑封更耐用。</li>
+      <li>本文件为纯静态页面，不依赖网络与脚本，可直接用浏览器打开后打印。</li>
+    </ul>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;font-size:8.2pt;margin-bottom:4mm">
+    <tr style="background:#e9e3d1">
+      <th style="border:1px solid #b9b197;padding:1.6mm;text-align:left">页码</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm;text-align:left">内容</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm;text-align:left">建议纸张</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm;text-align:left">份数</th>
+    </tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">P3</td><td style="border:1px solid #b9b197;padding:1.6mm">游戏地图（核心）</td><td style="border:1px solid #b9b197;padding:1.6mm">卡纸 160g</td><td style="border:1px solid #b9b197;padding:1.6mm">1 张</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">P4</td><td style="border:1px solid #b9b197;padding:1.6mm">地图图例 + 计分示例</td><td style="border:1px solid #b9b197;padding:1.6mm">普通 A4</td><td style="border:1px solid #b9b197;padding:1.6mm">1 张（可不上桌）</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">P5</td><td style="border:1px solid #b9b197;padding:1.6mm">灰烬预言卡 ×12</td><td style="border:1px solid #b9b197;padding:1.6mm">卡纸 200g</td><td style="border:1px solid #b9b197;padding:1.6mm">1 张（12 张卡）</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">P6</td><td style="border:1px solid #b9b197;padding:1.6mm">部族卡 ×4 + 计分纸 ×2</td><td style="border:1px solid #b9b197;padding:1.6mm">卡纸 200g</td><td style="border:1px solid #b9b197;padding:1.6mm">1 张</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">P7</td><td style="border:1px solid #b9b197;padding:1.6mm">速查卡 ×4（每人一张）</td><td style="border:1px solid #b9b197;padding:1.6mm">卡纸 160g</td><td style="border:1px solid #b9b197;padding:1.6mm">1 张</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">P8</td><td style="border:1px solid #b9b197;padding:1.6mm">连接标记 ×48（4 色 ×12）</td><td style="border:1px solid #b9b197;padding:1.6mm">普通 A4</td><td style="border:1px solid #b9b197;padding:1.6mm">1 张</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">P9</td><td style="border:1px solid #b9b197;padding:1.6mm">灵脉 / 余烬 / 灰烬 / 商队站标记</td><td style="border:1px solid #b9b197;padding:1.6mm">普通 A4</td><td style="border:1px solid #b9b197;padding:1.6mm">1 张</td></tr>
+  </table>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm;font-size:8.2pt;line-height:1.65">
+    <div>
+      <h3 style="font-size:10pt;color:#0c3b40;margin:0 0 1.5mm">✂️ 组装六步</h3>
+      <ol style="margin:0;padding-left:5mm">
+        <li>打印 P3 地图，平铺在桌面中央（建议压在透明桌垫下）。</li>
+        <li>沿卡牌外框裁下 12 张预言卡，背面可贴同尺寸废卡纸防透光。</li>
+        <li>部族卡与速查卡同样裁切，速查卡每人一张。</li>
+        <li>把 P8 的 48 条连接标记按颜色分成 4 叠（每叠 12 条）。</li>
+        <li>裁下 P9 的圆片：灵脉（绿）、余烬（橙）、灰烬覆盖（黑）、商队站（金）。</li>
+        <li>把灵脉与余烬各放一个碗，放在地图两侧，4 人都够得到。</li>
+      </ol>
+    </div>
+    <div>
+      <h3 style="font-size:10pt;color:#0c3b40;margin:0 0 1.5mm">🔁 没有打印条件？全部可替代</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:7.8pt">
+        <tr style="background:#e9e3d1"><th style="border:1px solid #b9b197;padding:1.2mm">道具</th><th style="border:1px solid #b9b197;padding:1.2mm">替代物</th></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">连接标记</td><td style="border:1px solid #b9b197;padding:1.2mm">彩色回形针、冰棍棒、乐高 1×4</td></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">灵脉</td><td style="border:1px solid #b9b197;padding:1.2mm">硬币、豆子、围棋子</td></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">余烬</td><td style="border:1px solid #b9b197;padding:1.2mm">红豆、红色小方块</td></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">灰烬覆盖</td><td style="border:1px solid #b9b197;padding:1.2mm">黑色纸片、黑色棋子</td></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">地图</td><td style="border:1px solid #b9b197;padding:1.2mm">按 P4 的格子表在纸上画同心圆</td></tr>
+      </table>
+      <p style="margin:2.5mm 0 0;color:#6f6a58;font-size:7.6pt">替代方案不影响任何规则与数值——本作没有任何隐藏信息，全部道具都是「数量计数器」。</p>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:5mm;font-size:7.8pt;line-height:1.6">
+    <div>
+      <h3 style="font-size:10pt;color:#0c3b40;margin:0 0 1.6mm">🖨 打印出来不对？先查这四条</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:7.6pt">
+        <tr style="background:#e9e3d1"><th style="border:1px solid #b9b197;padding:1.2mm;text-align:left;width:34mm">现象</th><th style="border:1px solid #b9b197;padding:1.2mm;text-align:left">原因与处理</th></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">地图两边的圆圈被切掉</td><td style="border:1px solid #b9b197;padding:1.2mm">边距不是「无」。改边距并把缩放设为 100%，不要用「适应页面」</td></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">卡牌背后一片白</td><td style="border:1px solid #b9b197;padding:1.2mm">没勾「背景图形」。Chrome/Edge 在「更多设置」里</td></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">卡牌比 62mm 大 / 小</td><td style="border:1px solid #b9b197;padding:1.2mm">纸张不是 A4 或缩放不是 100%。A4 = 210×297mm</td></tr>
+        <tr><td style="border:1px solid #b9b197;padding:1.2mm">灰色发黑、金色发褐</td><td style="border:1px solid #b9b197;padding:1.2mm">喷墨机省墨模式。切到「标准/高质量」即可</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:10pt;color:#0c3b40;margin:0 0 1.6mm">✂️ 裁切与耐用度</h3>
+      <div style="background:#f6f2e5;border:1px solid #cfc6b0;border-radius:2mm;padding:2.6mm 3mm;font-size:7.6pt;line-height:1.6">
+        · <b>卡牌</b>：沿外框线内侧 1mm 裁，双面打印时先对折压痕再裁，边更直。<br>
+        · <b>连接标记</b>：用美工刀 + 钢尺一次切整排，比剪刀快、边缘齐。<br>
+        · <b>圆片</b>：20mm 圆孔打孔器最省事；没有就打孔器沿边剪，误差 1mm 无影响。<br>
+        · <b>塑封</b>：卡牌与标记塑封后耐用度提升一个数量级，塑封膜选 80mic 以下，太厚不好裁。<br>
+        · <b>地图</b>：建议整张过塑，或压在透明桌垫下——标记要反复贴放，纸面很容易起毛。
+      </div>
+    </div>
+  </div>
+  <div class="foot-note">阿凡达：烬与灵网 · 打印套件 v1.0</div>
+</section>
+
+<!-- ============ P3 地图 ============ -->
+<section class="page" data-page="P3 · 游戏地图">
+  <div class="page-title"><h2>潘多拉 · 灵网地图</h2><span>THE LIVING WEB — 15 ZONES / 28 LINKS</span></div>
+
+  <div class="map-wrap">
+  <svg class="map-svg" viewBox="52 52 556 556" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="bg" cx="50%" cy="50%" r="62%">
+        <stop offset="0%" stop-color="#12525a"/>
+        <stop offset="55%" stop-color="#0a2f38"/>
+        <stop offset="100%" stop-color="#04171d"/>
+      </radialGradient>
+      <radialGradient id="holy" cx="50%" cy="45%" r="60%">
+        <stop offset="0%" stop-color="#c8fff0"/>
+        <stop offset="60%" stop-color="#63e2c6"/>
+        <stop offset="100%" stop-color="#1f8f8a"/>
+      </radialGradient>
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="7" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <style>
+        .zl{ stroke:rgba(160,240,225,.26); stroke-width:2.6; stroke-linecap:round; }
+        .zn text{ font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
+        .nm{ font-size:8.7px; letter-spacing:-.2px; fill:#e9fbf5; text-anchor:middle; }
+        .vv{ font-size:9.6px; font-weight:700; fill:#04171d; text-anchor:middle; }
+        .em{ font-size:15px; text-anchor:middle; }
+        .lb{ font-size:8px; fill:#7fc9bf; text-anchor:middle; letter-spacing:2px; }
+        .st{ font-size:8px; text-anchor:middle; }
+      </style>
+    </defs>
+
+    <rect width="660" height="660" fill="url(#bg)"/>
+    <circle cx="330" cy="330" r="252" fill="none" stroke="rgba(103,232,213,.10)" stroke-width="1"/>
+    <circle cx="330" cy="330" r="200" fill="none" stroke="rgba(103,232,213,.08)" stroke-width="1" stroke-dasharray="3 6"/>
+    <circle cx="330" cy="330" r="120" fill="none" stroke="rgba(103,232,213,.10)" stroke-width="1" stroke-dasharray="2 5"/>
+
+    <!-- edges -->
+    <g class="zl">
+      <!-- center - inner -->
+      <line x1="330" y1="330" x2="330" y2="242"/>
+      <line x1="330" y1="330" x2="406" y2="286"/>
+      <line x1="330" y1="330" x2="406" y2="374"/>
+      <line x1="330" y1="330" x2="330" y2="418"/>
+      <line x1="330" y1="330" x2="254" y2="374"/>
+      <line x1="330" y1="330" x2="254" y2="286"/>
+      <!-- inner ring -->
+      <line x1="330" y1="242" x2="406" y2="286"/>
+      <line x1="406" y1="286" x2="406" y2="374"/>
+      <line x1="406" y1="374" x2="330" y2="418"/>
+      <line x1="330" y1="418" x2="254" y2="374"/>
+      <line x1="254" y1="374" x2="254" y2="286"/>
+      <line x1="254" y1="286" x2="330" y2="242"/>
+      <!-- inner - outer -->
+      <line x1="330" y1="242" x2="330" y2="165"/>
+      <line x1="330" y1="242" x2="447" y2="213"/>
+      <line x1="406" y1="286" x2="495" y2="330"/>
+      <line x1="406" y1="374" x2="447" y2="447"/>
+      <line x1="330" y1="418" x2="330" y2="495"/>
+      <line x1="254" y1="374" x2="213" y2="447"/>
+      <line x1="254" y1="286" x2="165" y2="330"/>
+      <line x1="254" y1="286" x2="213" y2="213"/>
+      <!-- outer ring -->
+      <line x1="330" y1="165" x2="447" y2="213"/>
+      <line x1="447" y1="213" x2="495" y2="330"/>
+      <line x1="495" y1="330" x2="447" y2="447"/>
+      <line x1="447" y1="447" x2="330" y2="495"/>
+      <line x1="330" y1="495" x2="213" y2="447"/>
+      <line x1="213" y1="447" x2="165" y2="330"/>
+      <line x1="165" y1="330" x2="213" y2="213"/>
+      <line x1="213" y1="213" x2="330" y2="165"/>
+    </g>
+
+    <!-- center: holy tree -->
+    <g filter="url(#glow)">
+      <circle cx="330" cy="330" r="46" fill="url(#holy)" opacity=".38"/>
+      <circle cx="330" cy="330" r="38" fill="#0f4a45" stroke="#8ff0dd" stroke-width="2"/>
+    </g>
+    <text class="em" x="330" y="326" style="font-size:20px">🌳</text>
+    <text class="nm" x="330" y="350" style="font-size:8.4px;fill:#c9fff1">圣树 · 爱娃</text>
+    
+    <!-- ===== inner ring ===== -->
+    <!-- i0 圣林谷 forest 3 -->
+    <g class="zn">
+      <circle cx="330" cy="242" r="38" fill="#1f6b4e" stroke="#7be495" stroke-width="2"/>
+      <text class="em" x="330" y="236">🌲</text>
+      <text class="nm" x="330" y="252">圣林谷</text>
+      <rect x="317" y="258" width="26" height="13" rx="6.5" fill="#9ff2c0"/>
+      <text class="vv" x="330" y="268">3</text>
+    </g>
+    <!-- i1 潮汐滩 water 2 -->
+    <g class="zn">
+      <circle cx="406" cy="286" r="38" fill="#1d5877" stroke="#7dd3fc" stroke-width="2"/>
+      <text class="em" x="406" y="280">💧</text>
+      <text class="nm" x="406" y="296">潮汐滩</text>
+      <rect x="393" y="302" width="26" height="13" rx="6.5" fill="#a8e4ff"/>
+      <text class="vv" x="406" y="312">2</text>
+    </g>
+    <!-- i2 石脊台 mountain 3 -->
+    <g class="zn">
+      <circle cx="406" cy="374" r="38" fill="#6d5c3c" stroke="#e4c88a" stroke-width="2"/>
+      <text class="em" x="406" y="368">⛰️</text>
+      <text class="nm" x="406" y="384">石脊台</text>
+      <rect x="393" y="390" width="26" height="13" rx="6.5" fill="#f0dcae"/>
+      <text class="vv" x="406" y="400">3</text>
+    </g>
+    <!-- i3 幽木林 forest 2 -->
+    <g class="zn">
+      <circle cx="330" cy="418" r="38" fill="#1f6b4e" stroke="#7be495" stroke-width="2"/>
+      <text class="em" x="330" y="412">🌲</text>
+      <text class="nm" x="330" y="428">幽木林</text>
+      <rect x="317" y="434" width="26" height="13" rx="6.5" fill="#9ff2c0"/>
+      <text class="vv" x="330" y="444">2</text>
+    </g>
+    <!-- i4 镜水湖 water 3 -->
+    <g class="zn">
+      <circle cx="254" cy="374" r="38" fill="#1d5877" stroke="#7dd3fc" stroke-width="2"/>
+      <text class="em" x="254" y="368">💧</text>
+      <text class="nm" x="254" y="384">镜水湖</text>
+      <rect x="241" y="390" width="26" height="13" rx="6.5" fill="#a8e4ff"/>
+      <text class="vv" x="254" y="400">3</text>
+    </g>
+    <!-- i5 断崖岭 mountain 2 -->
+    <g class="zn">
+      <circle cx="254" cy="286" r="38" fill="#6d5c3c" stroke="#e4c88a" stroke-width="2"/>
+      <text class="em" x="254" y="280">⛰️</text>
+      <text class="nm" x="254" y="296">断崖岭</text>
+      <rect x="241" y="302" width="26" height="13" rx="6.5" fill="#f0dcae"/>
+      <text class="vv" x="254" y="312">2</text>
+    </g>
+
+    <!-- ===== outer ring ===== -->
+    <!-- o0 风商集市 forest 3 stop -->
+    <g class="zn">
+      <circle cx="330" cy="165" r="34" fill="#1f6b4e" stroke="#7be495" stroke-width="2"/>
+      <text class="em" x="330" y="159">🌲</text>
+      <text class="nm" x="330" y="175" style="font-size:8.4px">风商集市</text>
+      <rect x="317" y="180" width="26" height="12" rx="6" fill="#9ff2c0"/>
+      <text class="vv" x="330" y="189.6" style="font-size:9px">3</text>
+      <circle cx="354" cy="143" r="10" fill="#f4c15d" stroke="#7a5a12" stroke-width=".8"/>
+      <text class="st" x="354" y="146.4" style="font-size:7px;fill:#4a3305;font-weight:700">商</text>
+    </g>
+    <!-- o1 芦苇渡 water 2 stop -->
+    <g class="zn">
+      <circle cx="447" cy="213" r="34" fill="#1d5877" stroke="#7dd3fc" stroke-width="2"/>
+      <text class="em" x="447" y="207">💧</text>
+      <text class="nm" x="447" y="223" style="font-size:8.4px">芦苇渡</text>
+      <rect x="434" y="228" width="26" height="12" rx="6" fill="#a8e4ff"/>
+      <text class="vv" x="447" y="237.6" style="font-size:9px">2</text>
+      <circle cx="471" cy="191" r="10" fill="#f4c15d" stroke="#7a5a12" stroke-width=".8"/>
+      <text class="st" x="471" y="194.4" style="font-size:7px;fill:#4a3305;font-weight:700">商</text>
+    </g>
+    <!-- o2 高台哨站 mountain 3 -->
+    <g class="zn">
+      <circle cx="495" cy="330" r="34" fill="#6d5c3c" stroke="#e4c88a" stroke-width="2"/>
+      <text class="em" x="495" y="324">⛰️</text>
+      <text class="nm" x="495" y="340" style="font-size:8.2px">高台哨站</text>
+      <rect x="482" y="345" width="26" height="12" rx="6" fill="#f0dcae"/>
+      <text class="vv" x="495" y="354.6" style="font-size:9px">3</text>
+    </g>
+    <!-- o3 熔岩门 volcano 2 stop -->
+    <g class="zn">
+      <circle cx="447" cy="447" r="34" fill="#8a3520" stroke="#ff9a6b" stroke-width="2"/>
+      <text class="em" x="447" y="441">🌋</text>
+      <text class="nm" x="447" y="457" style="font-size:8.4px">熔岩门</text>
+      <rect x="434" y="462" width="26" height="12" rx="6" fill="#ffb894"/>
+      <text class="vv" x="447" y="471.6" style="font-size:9px">2</text>
+      <circle cx="471" cy="425" r="10" fill="#f4c15d" stroke="#7a5a12" stroke-width=".8"/>
+      <text class="st" x="471" y="428.4" style="font-size:7px;fill:#4a3305;font-weight:700">商</text>
+    </g>
+    <!-- o4 藤蔓廊 forest 2 stop -->
+    <g class="zn">
+      <circle cx="330" cy="495" r="34" fill="#1f6b4e" stroke="#7be495" stroke-width="2"/>
+      <text class="em" x="330" y="489">🌲</text>
+      <text class="nm" x="330" y="505" style="font-size:8.4px">藤蔓廊</text>
+      <rect x="317" y="510" width="26" height="12" rx="6" fill="#9ff2c0"/>
+      <text class="vv" x="330" y="519.6" style="font-size:9px">2</text>
+      <circle cx="354" cy="473" r="10" fill="#f4c15d" stroke="#7a5a12" stroke-width=".8"/>
+      <text class="st" x="354" y="476.4" style="font-size:7px;fill:#4a3305;font-weight:700">商</text>
+    </g>
+    <!-- o5 珊瑚浅滩 water 3 -->
+    <g class="zn">
+      <circle cx="213" cy="447" r="34" fill="#1d5877" stroke="#7dd3fc" stroke-width="2"/>
+      <text class="em" x="213" y="441">💧</text>
+      <text class="nm" x="213" y="457" style="font-size:8.2px">珊瑚浅滩</text>
+      <rect x="200" y="462" width="26" height="12" rx="6" fill="#a8e4ff"/>
+      <text class="vv" x="213" y="471.6" style="font-size:9px">3</text>
+    </g>
+    <!-- o6 鹰巢峰 mountain 2 stop -->
+    <g class="zn">
+      <circle cx="165" cy="330" r="34" fill="#6d5c3c" stroke="#e4c88a" stroke-width="2"/>
+      <text class="em" x="165" y="324">⛰️</text>
+      <text class="nm" x="165" y="340" style="font-size:8.4px">鹰巢峰</text>
+      <rect x="152" y="345" width="26" height="12" rx="6" fill="#f0dcae"/>
+      <text class="vv" x="165" y="354.6" style="font-size:9px">2</text>
+      <circle cx="189" cy="308" r="10" fill="#f4c15d" stroke="#7a5a12" stroke-width=".8"/>
+      <text class="st" x="189" y="311.4" style="font-size:7px;fill:#4a3305;font-weight:700">商</text>
+    </g>
+    <!-- o7 灰烬荒原 volcano 2 stop -->
+    <g class="zn">
+      <circle cx="213" cy="213" r="34" fill="#8a3520" stroke="#ff9a6b" stroke-width="2"/>
+      <text class="em" x="213" y="207">🌋</text>
+      <text class="nm" x="213" y="223" style="font-size:8.2px">灰烬荒原</text>
+      <rect x="200" y="228" width="26" height="12" rx="6" fill="#ffb894"/>
+      <text class="vv" x="213" y="237.6" style="font-size:9px">2</text>
+      <circle cx="237" cy="191" r="10" fill="#f4c15d" stroke="#7a5a12" stroke-width=".8"/>
+      <text class="st" x="237" y="194.4" style="font-size:7px;fill:#4a3305;font-weight:700">商</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="legend">
+    <div><span class="sw" style="background:#1f6b4e"></span>🌲 森林：点燃只得 2 余烬（最安全）</div>
+    <div><span class="sw" style="background:#1d5877"></span>💧 水域：连接费仅 1 灵脉</div>
+    <div><span class="sw" style="background:#6d5c3c"></span>⛰️ 山脉：连通每块 +1 分</div>
+    <div><span class="sw" style="background:#8a3520"></span>🌋 火山：点燃得 5 余烬</div>
+    <div><span class="sw" style="background:#f4c15d"></span>「商」商队站：连通每个 +2 分</div>
+    <div><span class="sw" style="background:#0f4a45;border-color:#8ff0dd"></span>🌳 圣树：所有连接的起点</div>
+  </div>
+  <h3 style="font-size:9.6pt;color:#0c3b40;margin:3.5mm 0 1.6mm">开局三条黄金路线（第一轮该往哪走）</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:7.6pt">
+    <tr style="background:#e9e3d1">
+      <th style="border:1px solid #b9b197;padding:1.3mm;text-align:left;width:20mm">路线</th>
+      <th style="border:1px solid #b9b197;padding:1.3mm;text-align:left">走法（从圣树出发的顺序）</th>
+      <th style="border:1px solid #b9b197;padding:1.3mm;text-align:left;width:44mm">收益</th>
+      <th style="border:1px solid #b9b197;padding:1.3mm;text-align:left;width:40mm">风险</th>
+    </tr>
+    <tr>
+      <td style="border:1px solid #b9b197;padding:1.3mm"><b>山地线</b></td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">圣树 → i2 石脊台(3) → o3 熔岩门(2) → o2 高台哨站(3)</td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">3 条连接拿下 8 分 + 2 块山地加成</td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">o3 是火山，易被别人烧来当弹药</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #b9b197;padding:1.3mm"><b>商队线</b></td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">圣树 → i0 圣林谷(3) → o0 风商集市(3) → o1 芦苇渡(2)</td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">2 个商队站(+4) + 森林不易被烧</td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">起点最挤，i0 常被抢</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #b9b197;padding:1.3mm"><b>水域线</b></td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">圣树 → i1 潮汐滩(2) → o2 高台哨站(3) → o1 芦苇渡(2)</td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">连接费最便宜，滚得最快</td>
+      <td style="border:1px solid #b9b197;padding:1.3mm">总分偏低，要靠商队站补分</td>
+    </tr>
+  </table>
+  <div class="foot-note">格内数字 = 灵脉值（可被「培育」提升，上限为印刷值 +2）</div>
+</section>
+
+<!-- ============ P4 图例 + 计分示例 ============ -->
+<section class="page" data-page="P4 · 图例与计分">
+  <div class="page-title"><h2>地图速读 · 计分示例</h2><span>HOW TO READ &amp; HOW TO SCORE</span></div>
+
+  <h3 style="font-size:10.5pt;color:#0c3b40;margin:0 0 2mm">① 一张图看懂 28 条连线</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:4mm">
+    <tr style="background:#e9e3d1">
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">连线类型</th>
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">条数</th>
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">位置</th>
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">战略意义</th>
+    </tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.4mm">圣树线</td><td style="border:1px solid #b9b197;padding:1.4mm">6</td><td style="border:1px solid #b9b197;padding:1.4mm">圣树 ↔ 内环</td><td style="border:1px solid #b9b197;padding:1.4mm">全局最挤，第 1 轮必抢</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.4mm">内环线</td><td style="border:1px solid #b9b197;padding:1.4mm">6</td><td style="border:1px solid #b9b197;padding:1.4mm">内环相邻格之间</td><td style="border:1px solid #b9b197;padding:1.4mm">绕开被占圣树线的唯一办法</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.4mm">内外线</td><td style="border:1px solid #b9b197;padding:1.4mm">8</td><td style="border:1px solid #b9b197;padding:1.4mm">内环 ↔ 外环</td><td style="border:1px solid #b9b197;padding:1.4mm">通往商队站的必经通道</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.4mm">外环线</td><td style="border:1px solid #b9b197;padding:1.4mm">8</td><td style="border:1px solid #b9b197;padding:1.4mm">外环相邻格之间</td><td style="border:1px solid #b9b197;padding:1.4mm">后期连商队站最省钱的路</td></tr>
+  </table>
+
+  <h3 style="font-size:10.5pt;color:#0c3b40;margin:0 0 2mm">② 三个必须记住的数字</h3>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;margin-bottom:4mm">
+    <div style="background:#0e3b42;color:#dff7f0;border-radius:3mm;padding:3mm;text-align:center">
+      <div style="font-size:19pt;font-weight:700;color:#f4c15d">34</div>
+      <div style="font-size:7.4pt;line-height:1.5">全场灵脉值总和<br>（森林/水域/山脉各 10，火山 4）</div>
+    </div>
+    <div style="background:#0e3b42;color:#dff7f0;border-radius:3mm;padding:3mm;text-align:center">
+      <div style="font-size:19pt;font-weight:700;color:#f4c15d">78</div>
+      <div style="font-size:7.4pt;line-height:1.5">理论最高分<br>34 + 山脉 4 + 商队 12 + 培育 28</div>
+    </div>
+    <div style="background:#0e3b42;color:#dff7f0;border-radius:3mm;padding:3mm;text-align:center">
+      <div style="font-size:19pt;font-weight:700;color:#f4c15d">≈38</div>
+      <div style="font-size:7.4pt;line-height:1.5">实测平均分<br>也就是说：你大约能拿到天花板的一半</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:10.5pt;color:#0c3b40;margin:0 0 2mm">③ 终局计分示例（照着数就行）</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:8.2pt">
+    <tr style="background:#e9e3d1">
+      <th style="border:1px solid #b9b197;padding:1.6mm;text-align:left">连通地块</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm">灵脉值</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm">山脉</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm">商队站</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm">小计</th>
+      <th style="border:1px solid #b9b197;padding:1.6mm;text-align:left">备注</th>
+    </tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">i0 圣林谷</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">3 + 培育 1 = 4</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">—</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">—</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center"><b>4</b></td><td style="border:1px solid #b9b197;padding:1.6mm">花 1 灵脉培育过一次</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">i2 石脊台</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">3</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">+1</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">—</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center"><b>4</b></td><td style="border:1px solid #b9b197;padding:1.6mm">山脉加成只在终局算</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">o2 高台哨站</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">3</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">+1</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">—</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center"><b>4</b></td><td style="border:1px solid #b9b197;padding:1.6mm">双层得分的典型</td></tr>
+    <tr style="background:#f7e9e2"><td style="border:1px solid #b9b197;padding:1.6mm">o3 熔岩门</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">0（已成灰）</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">—</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">+2</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center"><b>2</b></td><td style="border:1px solid #b9b197;padding:1.6mm">商队站加成仍有效，灵脉值归零</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.6mm">o0 风商集市</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">3</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">—</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center">+2</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center"><b>5</b></td><td style="border:1px solid #b9b197;padding:1.6mm">森林 + 商队站，很稳</td></tr>
+    <tr style="background:#eef6f2"><td style="border:1px solid #b9b197;padding:1.6mm"><b>地块合计</b></td><td style="border:1px solid #b9b197;padding:1.6mm"></td><td style="border:1px solid #b9b197;padding:1.6mm"></td><td style="border:1px solid #b9b197;padding:1.6mm"></td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center"><b>19</b></td><td style="border:1px solid #b9b197;padding:1.6mm">4+4+4+2+5</td></tr>
+    <tr style="background:#eef6f2"><td style="border:1px solid #b9b197;padding:1.6mm"><b>余烬兑换</b></td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center" colspan="3">7 余烬 ÷ 6 = 1（取整）× 5</td><td style="border:1px solid #b9b197;padding:1.6mm;text-align:center"><b>+5</b></td><td style="border:1px solid #b9b197;padding:1.6mm">差 1 枚余烬 = 差 5 分</td></tr>
+    <tr style="background:#0e3b42;color:#fff"><td style="border:1px solid #b9b197;padding:1.8mm"><b>总分</b></td><td style="border:1px solid #b9b197;padding:1.8mm" colspan="3"></td><td style="border:1px solid #b9b197;padding:1.8mm;text-align:center;font-size:11pt"><b>24</b></td><td style="border:1px solid #b9b197;padding:1.8mm">19 + 5</td></tr>
+  </table>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:4mm;font-size:7.8pt;line-height:1.6">
+    <div style="background:#fffaf0;border-left:3px solid #f0782a;padding:2.5mm 3mm;border-radius:2mm">
+      <b style="color:#b5451b">最容易算错的三处</b><br>
+      1. 被烧成灰的地块：灵脉值归 0，但<b>商队站加成照算</b>；<br>
+      2. 培育值只有终局仍连通才算，中途被断等于白花；<br>
+      3. 余烬只能除以 6 取整，7 枚和 11 枚都是 5 分。
+    </div>
+    <div style="background:#f0f7f4;border-left:3px solid #1f8f8a;padding:2.5mm 3mm;border-radius:2mm">
+      <b style="color:#12645c">「连通」的判定</b><br>
+      从圣树出发，沿着<b>你自己的</b>连接标记能走到的所有地块，都算连通。别人连的路你不能借道；被烧成灰的地块<b>可以</b>穿过（你自己的连接还留在上面）。
+    </div>
+  </div>
+  <h3 style="font-size:9.6pt;color:#0c3b40;margin:4mm 0 1.8mm">④ 你的分数算好还是差？（实测区间）</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:8pt">
+    <tr style="background:#e9e3d1">
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left;width:26mm">人数</th>
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">偏低</th>
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">平均</th>
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">赢家通常</th>
+      <th style="border:1px solid #b9b197;padding:1.4mm;text-align:left">说明</th>
+    </tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.4mm"><b>2 人</b>（3 AP）</td><td style="border:1px solid #b9b197;padding:1.4mm">＜32</td><td style="border:1px solid #b9b197;padding:1.4mm">≈40</td><td style="border:1px solid #b9b197;padding:1.4mm">45-55</td><td style="border:1px solid #b9b197;padding:1.4mm">地图只分给两人，分数最高</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.4mm"><b>3 人</b></td><td style="border:1px solid #b9b197;padding:1.4mm">＜38</td><td style="border:1px solid #b9b197;padding:1.4mm">≈45</td><td style="border:1px solid #b9b197;padding:1.4mm">50-62</td><td style="border:1px solid #b9b197;padding:1.4mm">人均 4.7 块地，最容易滚起来</td></tr>
+    <tr><td style="border:1px solid #b9b197;padding:1.4mm"><b>4 人</b></td><td style="border:1px solid #b9b197;padding:1.4mm">＜30</td><td style="border:1px solid #b9b197;padding:1.4mm">≈37</td><td style="border:1px solid #b9b197;padding:1.4mm">45-60</td><td style="border:1px solid #b9b197;padding:1.4mm">抢得最凶，被烧一次就掉 5 分</td></tr>
+  </table>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3mm;margin-top:3mm;font-size:7.4pt;line-height:1.55">
+    <div style="background:#fffaf0;border:1px solid #e4cba6;border-radius:2mm;padding:2.4mm 3mm">
+      <b style="color:#8a5a12">分数的四个来源（4 人局实测占比）</b><br>
+      连通灵脉值 ≈ 60%　｜　商队站 ≈ 20%<br>山脉加成 ≈ 8%　｜　余烬兑换 ≈ 12%
+    </div>
+    <div style="background:#f0f7f4;border:1px solid #b9d8cf;border-radius:2mm;padding:2.4mm 3mm">
+      <b style="color:#12645c">想提 5 分，做这一件事</b><br>
+      多连 1 个商队站（+2 分 + 每轮 1 灵脉）或把 2 块山地连进来（+2 分 + 2 点地值）。<br>比抢 1 块 V3 的地便宜。
+    </div>
+    <div style="background:#f6f2e5;border:1px solid #cfc6b0;border-radius:2mm;padding:2.4mm 3mm">
+      <b style="color:#0c3b40">想丢 5 分，只要做这件事</b><br>
+      把 3 块以上的网络挂在同一条主干上——对手一次点燃就能让你掉 5-8 分。至少留两条通路。
+    </div>
+  </div>
+  <div class="foot-note">建议把这一页放在桌边，终局时四人一起逐项对账</div>
+</section>
+
+<!-- ============ P5 灰烬预言卡 ============ -->
+<section class="page" data-page="P5 · 灰烬预言卡 ×12">
+  <div class="page-title"><h2>灰烬预言卡</h2><span>OMENS OF ASH — 每轮翻 1 张，全场生效</span></div>
+
+  <div class="grid-omen">
+    <div class="omen">
+      <div class="no">01</div><div class="ico">🌬️</div>
+      <div class="nm">风 起</div>
+      <div class="tx">本轮所有「连接」费用 <b>-1 灵脉</b>（最低 0）。</div>
+      <div class="tip"><b>怎么用</b>：一轮能多铺 2 条连接，是最好的扩张窗口。</div>
+      <div class="fd">水域变 0 灵脉，别把行动点浪费在"省钱"上。</div>
+    </div>
+    <div class="omen">
+      <div class="no">02</div><div class="ico">💧</div>
+      <div class="nm">潮汐丰年</div>
+      <div class="tx">本轮结束时，每位玩家额外获得 <b>+1 灵脉</b>。</div>
+      <div class="tip"><b>怎么用</b>：收入结算之后再拿，等于白送一枚。</div>
+      <div class="fd">四人局一轮共多发 4 枚，最容易漏；请安排一人专门发。</div>
+    </div>
+    <div class="omen">
+      <div class="no">03</div><div class="ico">🔥</div>
+      <div class="nm">火山苏醒</div>
+      <div class="tx">本轮「点燃」<b>不限次数</b>（每次仍耗 1 行动点，每块地仍只能烧一次）。</div>
+      <div class="tip"><b>怎么用</b>：握有点燃权的人能连烧两处，一次断两人。</div>
+      <div class="fd">全场最凶的一张。本轮别把网络摊太开，留一条备用主干。</div>
+    </div>
+    <div class="omen">
+      <div class="no">04</div><div class="ico">☁️</div>
+      <div class="nm">灰烬蔽日</div>
+      <div class="tx">本轮<b>不能点燃</b>。掠夺仍然可用。</div>
+      <div class="tip"><b>怎么用</b>：安全的一轮，适合把主干一次铺满、把培育做完。</div>
+      <div class="fd">别以为绝对安全——5 余烬的掠夺照样能拆你一条线。</div>
+    </div>
+
+    <div class="omen">
+      <div class="no">05</div><div class="ico">🌱</div>
+      <div class="nm">万木生长</div>
+      <div class="tx">本轮「培育」<b>免费</b>（不花灵脉，仍消耗 1 个行动点）。</div>
+      <div class="tip"><b>怎么用</b>：把 4 块地一次培育满 = 白拿 4 分，本轮别去铺新线。</div>
+      <div class="fd">上限照旧：印刷值 +2，超不过去。</div>
+    </div>
+    <div class="omen">
+      <div class="no">06</div><div class="ico">🪶</div>
+      <div class="nm">商队抵港</div>
+      <div class="tx">本轮结束时，你每有 <b>1 个连通商队站</b>，额外 +1 灵脉。</div>
+      <div class="tip"><b>怎么用</b>：6 站连满就是一轮多拿 6 枚，比培育更划算。</div>
+      <div class="fd">只在轮末结算，不需要额外行动点。</div>
+    </div>
+    <div class="omen">
+      <div class="no">07</div><div class="ico">🫧</div>
+      <div class="nm">圣树呼吸</div>
+      <div class="tx">本轮结束时，你每有 <b>1 块连通内环地块</b>，额外 +1 灵脉。</div>
+      <div class="tip"><b>怎么用</b>：内环 6 块全在手上就是 +6，内环流的高光轮。</div>
+      <div class="fd">内环也是别人烧地的首选——这里的分最容易被抹掉。</div>
+    </div>
+    <div class="omen">
+      <div class="no">08</div><div class="ico">⚔️</div>
+      <div class="nm">掠夺季</div>
+      <div class="tx">本轮「点燃」额外获得 <b>+2 余烬</b>。</div>
+      <div class="tip"><b>怎么用</b>：森林能烧出 4、火山能烧出 7，一次点燃就够买掠夺。</div>
+      <div class="fd">余烬一多，别忘 5 枚就能拆对手一条线。</div>
+    </div>
+
+    <div class="omen">
+      <div class="no">09</div><div class="ico">🌙</div>
+      <div class="nm">长夜将至</div>
+      <div class="tx">本轮每人只有 <b>3 个行动点</b>（2 人局依然 3 个，不再减少）。</div>
+      <div class="tip"><b>怎么用</b>：钱突然显得"花不出去"，把行动点全给连接。</div>
+      <div class="fd">节奏突然收紧——先算好这 3 点做什么，别临场犹豫。</div>
+    </div>
+    <div class="omen">
+      <div class="no">10</div><div class="ico">🌋</div>
+      <div class="nm">熔岩裂口</div>
+      <div class="tx">本轮点燃<b>火山地块</b>额外获得 <b>+3 余烬</b>。</div>
+      <div class="tip"><b>怎么用</b>：两张火山一次能烧出 8 余烬，够一次掠夺。</div>
+      <div class="fd">只在点燃火山时生效，烧森林依然是 2。</div>
+    </div>
+    <div class="omen">
+      <div class="no">11</div><div class="ico">🕊️</div>
+      <div class="nm">盟约之日</div>
+      <div class="tx">本轮每人可<b>免费掠夺 1 次</b>（不花余烬，仍消耗 1 个行动点）。</div>
+      <div class="tip"><b>怎么用</b>：不占用"每轮 1 次掠夺"的额度，可以拆两条线。</div>
+      <div class="fd">拆之前想清楚：对手 1 个行动点就能接回来。</div>
+    </div>
+    <div class="omen">
+      <div class="no">12</div><div class="ico">🌍</div>
+      <div class="nm">大地震颤</div>
+      <div class="tx">本轮结束时，每人<b>同时</b>选择 1 块自己连通的地块，灵脉值 <b>+1</b>。</div>
+      <div class="tip"><b>怎么用</b>：可突破「印刷值 +2」上限，优先加在别人烧不到的内环。</div>
+      <div class="fd">同时指认：所有人一起亮出手指，不许看别人再决定。</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:3.5mm;margin-top:4mm;font-size:7.5pt;line-height:1.6">
+    <div style="background:#f6f2e5;border:1px solid #cfc6b0;border-radius:2mm;padding:2.6mm 3mm">
+      <b style="color:#0c3b40">怎么翻、怎么弃</b>
+      <div style="margin-top:1.2mm">① 每轮开始时，从牌堆顶翻 <b>1 张</b>，念出效果放在地图旁；<br>
+      ② 本轮所有玩家都受它影响，没有例外；<br>
+      ③ 轮末把这张卡放进<b>弃牌堆</b>，不再洗回牌堆；<br>
+      ④ 6 轮只用到 6 张，另外 6 张本局不会出现——所以每局的"天气"都不同。</div>
+    </div>
+    <div style="background:#fffaf0;border:1px solid #e4cba6;border-radius:2mm;padding:2.6mm 3mm">
+      <b style="color:#8a5a12">三种卡的性质</b>
+      <div style="margin-top:1.2mm">
+        <b>加速型</b>（01/02/05/06/07/08/10）——本轮大家都能多拿或多铺，差距被放大；<br>
+        <b>收紧型</b>（04/09）——行动与攻击被限制，考验提前规划；<br>
+        <b>变数型</b>（03/11/12）——允许越界操作，是翻盘或崩盘的分水岭。
+      </div>
+    </div>
+    <div style="background:#f0f7f4;border:1px solid #b9d8cf;border-radius:2mm;padding:2.6mm 3mm">
+      <b style="color:#12645c">想要更可控？</b>
+      <div style="margin-top:1.2mm">第一次玩建议直接随机翻——它保证每局都不一样。<br>
+      老手可以用<b>变体「预言全开」</b>：12 张全部正面摊开，每轮由<b>当前分最低</b>的玩家挑选本轮生效的卡，选择权就成了一种补偿资源。</div>
+    </div>
+  </div>
+  <div class="foot-note">裁切线：沿每张卡的外框裁下 · 12 张一叠洗混，每轮翻顶牌</div>
+</section>
+
+<!-- ============ P6 部族卡 + 计分纸 ============ -->
+<section class="page" data-page="P6 · 部族卡 + 计分纸">
+  <div class="page-title"><h2>部族卡 · 计分纸</h2><span>CLAN CARDS &amp; SCORE SHEETS</span></div>
+
+  <div class="grid-clan">
+    <div class="clan clan-1">
+      <h3>奥马蒂卡亚</h3>
+      <div class="sub">OMATIKAYA · 森林部族</div>
+      <div class="hint">「森林烧不旺。」<br>把主干铺在林子里：别人烧它只拿 2 余烬，几乎没人愿意动手。</div>
+      <div class="glyph">🌳</div>
+    </div>
+    <div class="clan clan-2">
+      <h3>梅卡伊纳</h3>
+      <div class="sub">METKAYINA · 礁族</div>
+      <div class="hint">「水域只要 1 灵脉。」<br>用最便宜的路快速铺开，先占住远处的商队站再说。</div>
+      <div class="glyph">🌊</div>
+    </div>
+    <div class="clan clan-3">
+      <h3>奥朗吉</h3>
+      <div class="sub">OLANGI · 山族</div>
+      <div class="hint">「站得高，看得远。」<br>山脉每块 +1 分，宁可多绕一格，也要把山地串进来。</div>
+      <div class="glyph">⛰️</div>
+    </div>
+    <div class="clan clan-4">
+      <h3>灰烬族</h3>
+      <div class="sub">ASH PEOPLE · 火山部族</div>
+      <div class="hint">「我们不再向爱娃祈祷。」<br>火山点燃得 5 余烬——烧掉别人的主干，用余烬换分。</div>
+      <div class="glyph">🔥</div>
+    </div>
+  </div>
+
+  <p style="font-size:7.6pt;color:#6f6a58;line-height:1.6;margin:3mm 0 4mm">
+    ⚠️ <b>四张部族卡的规则完全相同</b>，只有配色、图腾与一句话建议不同。这是刻意设计：不对称能力会让「省灵脉」类能力复利、让「加余烬」类能力线性，
+    实测族间分差高达 18 分（详见 README 附录 B）。挑你喜欢的图腾即可，不影响胜负。
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm">
+    <div class="sheet">
+      <h3>终局计分纸</h3>
+      <table>
+        <tr><th class="lbl">玩家</th><th>①</th><th>②</th><th>③</th><th>④</th><th>总分</th></tr>
+        <tr><td class="lbl">连通灵脉值</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td rowspan="5" class="blank" style="background:#f6f2e5"></td></tr>
+        <tr><td class="lbl">+ 山脉（×1）</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl">+ 商队站（×2）</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl">+ 余烬（÷6×5）</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl" style="background:#e9e3d1"><b>合计</b></td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+      </table>
+      <div style="font-size:6.8pt;color:#7b8d86;margin-top:1.5mm">平手：比余烬 → 比连接标记数 → 共同胜利</div>
+    </div>
+    <div class="sheet">
+      <h3>逐轮收入记录</h3>
+      <table>
+        <tr><th class="lbl">轮次</th><th>玩家 A</th><th>玩家 B</th><th>玩家 C</th><th>玩家 D</th></tr>
+        <tr><td class="lbl">第 1 轮</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl">第 2 轮</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl">第 3 轮</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl">第 4 轮</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl">第 5 轮</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+        <tr><td class="lbl">第 6 轮</td><td class="blank"></td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>
+      </table>
+      <div style="font-size:6.8pt;color:#7b8d86;margin-top:1.5mm">格内写「连通地块数」＝本轮收入灵脉数</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:4mm;font-size:7.6pt;line-height:1.6">
+    <div style="background:#fffaf0;border:1px solid #e4cba6;border-radius:2mm;padding:2.5mm 3mm">
+      <b style="color:#8a5a12">变体速览（老手/家庭局各一款）</b>
+      <table style="width:100%;border-collapse:collapse;font-size:7.2pt;margin-top:1.4mm">
+        <tr><td style="padding:.8mm 0;width:22mm;color:#8a5a12"><b>灰烬纪元</b></td><td style="padding:.8mm 0">点燃每轮 2 次，掠夺只需 3 余烬。火药味翻倍。</td></tr>
+        <tr><td style="padding:.8mm 0;color:#12645c"><b>和平年代</b></td><td style="padding:.8mm 0">取消点燃与掠夺，纯铺路竞速，8 岁可玩。</td></tr>
+        <tr><td style="padding:.8mm 0;color:#12645c"><b>单圣树</b></td><td style="padding:.8mm 0">3 人局把 o1、o4 盖上灰烬，地图缩到 12 块。</td></tr>
+        <tr><td style="padding:.8mm 0;color:#12645c"><b>双圣树</b></td><td style="padding:.8mm 0">2 人局各走自己那半 3 条圣树线，避免早期贴脸。</td></tr>
+      </table>
+    </div>
+    <div style="background:#f0f7f4;border:1px solid #b9d8cf;border-radius:2mm;padding:2.5mm 3mm">
+      <b style="color:#12645c">三个最常被问倒的判例</b>
+      <div style="font-size:7.2pt;margin-top:1.2mm;line-height:1.55">
+        <b>Q：</b>点燃时我自己的连接为什么不断？<br>
+        <b>A：</b>因为灰烬族是「走过焦土的人」——你烧完还能穿过它去连更远的地。
+        <div style="height:1.4mm"></div>
+        <b>Q：</b>培育过的地块被烧，培育值能退回吗？<br>
+        <b>A：</b>不能。培育是投资，投资被烧就没了。
+        <div style="height:1.4mm"></div>
+        <b>Q：</b>我能不能不连圣树、直接在地图另一边开始？<br>
+        <b>A：</b>不能。网络必须从圣树长出来，这也是「烧主干」致命的原因。
+      </div>
+    </div>
+  </div>
+  <h3 style="font-size:9.6pt;color:#0c3b40;margin:3.5mm 0 1.8mm">开局布置（照着摆一次就会）</h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;font-size:7.4pt;line-height:1.55">
+    <div style="background:#f6f2e5;border:1px solid #cfc6b0;border-radius:2.5mm;padding:2.6mm 3mm">
+      <div style="display:flex;align-items:center;gap:2mm;margin-bottom:1.2mm">
+        <span style="width:7mm;height:7mm;border-radius:50%;background:radial-gradient(circle at 35% 30%,#0e3b42,#07222b);display:inline-block;flex:0 0 auto"></span>
+        <b style="color:#0c3b40">① 地图居中</b>
+      </div>
+      圣树朝自己，四人都够得到地图的每一格。地图建议压透明桌垫，避免移动。
+    </div>
+    <div style="background:#eef8f0;border:1px solid #b9d8b9;border-radius:2.5mm;padding:2.6mm 3mm">
+      <div style="display:flex;align-items:center;gap:2mm;margin-bottom:1.2mm">
+        <span style="width:7mm;height:7mm;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9ff2c0,#176b45);display:inline-block;flex:0 0 auto"></span>
+        <b style="color:#1f6b4e">② 灵脉碗</b>
+      </div>
+      放地图左侧。起始：第一位拿 <b>6</b>，其余各 <b>5</b>。
+    </div>
+    <div style="background:#fdf1ea;border:1px solid #e8bfa8;border-radius:2.5mm;padding:2.6mm 3mm">
+      <div style="display:flex;align-items:center;gap:2mm;margin-bottom:1.2mm">
+        <span style="width:7mm;height:7mm;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffa55e,#a83a14);display:inline-block;flex:0 0 auto"></span>
+        <b style="color:#a33a22">③ 余烬碗</b>
+      </div>
+      放地图右侧。开局时所有人都是 <b>0 余烬</b>，靠点燃积累。
+    </div>
+    <div style="background:#f6f2e5;border:1px solid #cfc6b0;border-radius:2.5mm;padding:2.6mm 3mm">
+      <div style="display:flex;align-items:center;gap:2mm;margin-bottom:1.2mm">
+        <span style="width:7mm;height:7mm;border-radius:1mm;background:#0d3038;border:1.2px solid #f4c15d;display:inline-block;flex:0 0 auto"></span>
+        <b style="color:#0c3b40">④ 卡堆 + 标记</b>
+      </div>
+      12 张预言卡洗混成堆放上方；每人领 12 条同色连接标记。
+    </div>
+  </div>
+  <div class="foot-note">部族卡沿 39mm 高度外框裁切 · 计分纸可复印使用</div>
+</section>
+
+<!-- ============ P7 速查卡 ============ -->
+<section class="page" data-page="P7 · 速查卡 ×4">
+  <div class="page-title"><h2>速查卡</h2><span>PLAYER AID — 每人一张</span></div>
+
+  <div class="grid-help">
+    <div class="help">
+      <h4>烬与灵网 · 速查 <i>v1.0</i></h4>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin-bottom:1mm">【每轮 4 步】</div>
+      <div style="font-size:7pt;line-height:1.5">① 翻 1 张预言卡（全场生效）<br>② 轮流行动 · 每人 <b>4 AP</b>（2 人局 3 AP）<br>③ 收入：连通地块数 = 灵脉数<br>④ 收牌，进入下一轮（共 6 轮）<br><span class="k">第 1 轮不能点燃！</span></div>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin:1.8mm 0 1mm">【五个行动 · 各 1 AP】</div>
+      <table>
+        <tr><td>A 连接</td><td>付 2 灵脉（水域 1），接一条与网络相邻的线</td></tr>
+        <tr><td>B 培育</td><td>付 1 灵脉，连通地块 +1 值（上限印值 +2）</td></tr>
+        <tr><td>C 点燃</td><td>全场每轮 1 次：地变灰(0) + 4 余烬，拆他人连接</td></tr>
+        <tr><td>D 掠夺</td><td>付 5 余烬，拆对手任意 1 条连接（每轮 1 次）</td></tr>
+        <tr><td>E 巡礼</td><td>+1 灵脉（保底动作，永远合法）</td></tr>
+      </table>
+      <div class="formula">总分 = 连通灵脉值<br>＋ 连通山脉×1 ＋ 连通商队站×2<br>＋ (余烬÷6 取整)×5</div>
+    </div>
+
+    <div class="help">
+      <h4>烬与灵网 · 速查 <i>v1.0</i></h4>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin-bottom:1mm">【地形四条】</div>
+      <table>
+        <tr><td>🌲 森林</td><td>点燃只得 <b>2 余烬</b> → 最安全的建网区</td></tr>
+        <tr><td>💧 水域</td><td>连接只要 <b>1 灵脉</b> → 便宜但分值低</td></tr>
+        <tr><td>⛰️ 山脉</td><td>连通每块 <b>+1 分</b> → 全图最抢手</td></tr>
+        <tr><td>🌋 火山</td><td>点燃得 <b>5 余烬</b> → 灰烬流弹药库</td></tr>
+      </table>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin:1.8mm 0 1mm">【灰烬地块】</div>
+      <div style="font-size:7pt;line-height:1.5">灵脉值 = 0，不再产分产灵脉；<br><b>但连接可以穿过它</b>（你的连接仍在上面）。</div>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin:1.8mm 0 1mm">【三个提醒】</div>
+      <div style="font-size:7pt;line-height:1.5">1. 收入 = 地块数 → 每轮让地块数 +1<br>2. 灵脉不计分 → 手里超 4 就该花掉<br>3. <span class="k">余烬差 1 枚 = 差 5 分</span> → 终局前凑整</div>
+    </div>
+
+    <div class="help">
+      <h4>烬与灵网 · 速查 <i>v1.0</i></h4>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin-bottom:1mm">【每轮 4 步】</div>
+      <div style="font-size:7pt;line-height:1.5">① 翻 1 张预言卡（全场生效）<br>② 轮流行动 · 每人 <b>4 AP</b>（2 人局 3 AP）<br>③ 收入：连通地块数 = 灵脉数<br>④ 收牌，进入下一轮（共 6 轮）<br><span class="k">第 1 轮不能点燃！</span></div>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin:1.8mm 0 1mm">【五个行动 · 各 1 AP】</div>
+      <table>
+        <tr><td>A 连接</td><td>付 2 灵脉（水域 1），接一条与网络相邻的线</td></tr>
+        <tr><td>B 培育</td><td>付 1 灵脉，连通地块 +1 值（上限印值 +2）</td></tr>
+        <tr><td>C 点燃</td><td>全场每轮 1 次：地变灰(0) + 4 余烬，拆他人连接</td></tr>
+        <tr><td>D 掠夺</td><td>付 5 余烬，拆对手任意 1 条连接（每轮 1 次）</td></tr>
+        <tr><td>E 巡礼</td><td>+1 灵脉（保底动作，永远合法）</td></tr>
+      </table>
+      <div class="formula">总分 = 连通灵脉值<br>＋ 连通山脉×1 ＋ 连通商队站×2<br>＋ (余烬÷6 取整)×5</div>
+    </div>
+
+    <div class="help">
+      <h4>烬与灵网 · 速查 <i>v1.0</i></h4>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin-bottom:1mm">【地形四条】</div>
+      <table>
+        <tr><td>🌲 森林</td><td>点燃只得 <b>2 余烬</b> → 最安全的建网区</td></tr>
+        <tr><td>💧 水域</td><td>连接只要 <b>1 灵脉</b> → 便宜但分值低</td></tr>
+        <tr><td>⛰️ 山脉</td><td>连通每块 <b>+1 分</b> → 全图最抢手</td></tr>
+        <tr><td>🌋 火山</td><td>点燃得 <b>5 余烬</b> → 灰烬流弹药库</td></tr>
+      </table>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin:1.8mm 0 1mm">【灰烬地块】</div>
+      <div style="font-size:7pt;line-height:1.5">灵脉值 = 0，不再产分产灵脉；<br><b>但连接可以穿过它</b>（你的连接仍在上面）。</div>
+      <div style="font-size:7pt;color:#12645c;font-weight:700;margin:1.8mm 0 1mm">【三个提醒】</div>
+      <div style="font-size:7pt;line-height:1.5">1. 收入 = 地块数 → 每轮让地块数 +1<br>2. 灵脉不计分 → 手里超 4 就该花掉<br>3. <span class="k">余烬差 1 枚 = 差 5 分</span> → 终局前凑整</div>
+    </div>
+  </div>
+  <div style="margin-top:3mm;background:#0e3b42;color:#dff7f0;border-radius:3mm;padding:3.5mm 4mm;display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;font-size:7.4pt;line-height:1.55">
+    <div><b style="color:#f4c15d">① 开局</b><br>铺地图 · 分灵脉（6/5/5/5）· 每人 12 条同色连接 · 洗 12 张预言卡</div>
+    <div><b style="color:#f4c15d">② 每轮</b><br>翻预言卡 → 每人 4 AP 轮流行动 → 按连通地块数收灵脉 → 收牌</div>
+    <div><b style="color:#f4c15d">③ 中局</b><br>盯住别人唯一入口；余烬别急着花，等对手刚培育完再砍</div>
+    <div><b style="color:#f4c15d">④ 终局</b><br>第 6 轮后逐项对账：灵脉值 + 山脉 + 商队站 + 余烬÷6×5</div>
+  </div>
+  <h3 style="font-size:9.6pt;color:#0c3b40;margin:3.5mm 0 1.8mm">一局 60 分钟，节奏大概是这样</h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;font-size:7.4pt;line-height:1.5">
+    <div style="border-top:3px solid #7be495;padding-top:1.6mm">
+      <b style="color:#1f6b4e">第 1-2 轮 · 铺网</b><br>抢 6 条圣树线，把地块数堆到 4 块以上。别烧，别培育，先把收入曲线撑起来。
+    </div>
+    <div style="border-top:3px solid #7dd3fc;padding-top:1.6mm">
+      <b style="color:#1d5877">第 3-4 轮 · 抢点</b><br>补商队站与山地，开始培育。此时「谁的主干最细」已经看得很清楚。
+    </div>
+    <div style="border-top:3px solid #f0782a;padding-top:1.6mm">
+      <b style="color:#a33a22">第 5 轮 · 动火</b><br>点燃或掠夺一次，砍对手唯一入口。烧完立刻占住被腾出来的连线。
+    </div>
+    <div style="border-top:3px solid #f4c15d;padding-top:1.6mm">
+      <b style="color:#8a5a12">第 6 轮 · 收账</b><br>不再开新支线，把灵脉全换成培育，余烬凑到 6 的倍数。
+    </div>
+  </div>
+  <div class="foot-note">沿 82mm 高度外框裁下 · 上排给 2 人，下排给另 2 人</div>
+</section>
+
+<!-- ============ P8 连接标记 ============ -->
+<section class="page" data-page="P8 · 连接标记 ×48">
+  <div class="page-title"><h2>连接标记</h2><span>BOND MARKERS — 4 色 × 12 条</span></div>
+
+  <div class="tok-group">
+    <h4>🌳 奥马蒂卡亚 · 青绿（12 条）</h4>
+    <div class="strip-row"><div class="strip s1">1</div><div class="strip s1">2</div><div class="strip s1">3</div><div class="strip s1">4</div><div class="strip s1">5</div><div class="strip s1">6</div></div>
+    <div class="strip-row"><div class="strip s1">7</div><div class="strip s1">8</div><div class="strip s1">9</div><div class="strip s1">10</div><div class="strip s1">11</div><div class="strip s1">12</div></div>
+  </div>
+
+  <div class="tok-group">
+    <h4>🌊 梅卡伊纳 · 海蓝（12 条）</h4>
+    <div class="strip-row"><div class="strip s2">1</div><div class="strip s2">2</div><div class="strip s2">3</div><div class="strip s2">4</div><div class="strip s2">5</div><div class="strip s2">6</div></div>
+    <div class="strip-row"><div class="strip s2">7</div><div class="strip s2">8</div><div class="strip s2">9</div><div class="strip s2">10</div><div class="strip s2">11</div><div class="strip s2">12</div></div>
+  </div>
+
+  <div class="tok-group">
+    <h4>⛰️ 奥朗吉 · 赭石（12 条）</h4>
+    <div class="strip-row"><div class="strip s3">1</div><div class="strip s3">2</div><div class="strip s3">3</div><div class="strip s3">4</div><div class="strip s3">5</div><div class="strip s3">6</div></div>
+    <div class="strip-row"><div class="strip s3">7</div><div class="strip s3">8</div><div class="strip s3">9</div><div class="strip s3">10</div><div class="strip s3">11</div><div class="strip s3">12</div></div>
+  </div>
+
+  <div class="tok-group">
+    <h4>🔥 灰烬族 · 赤红（12 条）</h4>
+    <div class="strip-row"><div class="strip s4">1</div><div class="strip s4">2</div><div class="strip s4">3</div><div class="strip s4">4</div><div class="strip s4">5</div><div class="strip s4">6</div></div>
+    <div class="strip-row"><div class="strip s4">7</div><div class="strip s4">8</div><div class="strip s4">9</div><div class="strip s4">10</div><div class="strip s4">11</div><div class="strip s4">12</div></div>
+  </div>
+
+  <div class="cut-note">
+    <b>裁切说明</b>：每条 30mm × 8mm，沿虚线间的空白裁开即可。中间那条细线只是纹理，不影响识别。<br>
+    三条规则要记牢：① 一条连线只能放 1 条标记（先到先得）；② 被点燃的地块上，<b>别人的</b>标记会被移除归还；③ 标记被移除后，那条连线立刻重新空出来。<br>
+    2 人局只用前两色（共 24 条），3 人局用前三色（36 条）。
+  </div>
+
+  <h3 style="font-size:9.6pt;color:#0c3b40;margin:4mm 0 1.8mm">标记怎么放（一个局部放大）</h3>
+  <div style="display:flex;gap:5mm;align-items:center">
+    <svg viewBox="0 0 300 96" style="width:88mm;height:auto;flex:0 0 auto" xmlns="http://www.w3.org/2000/svg">
+      <rect width="300" height="96" rx="3" fill="#07222b"/>
+      <line x1="72" y1="70" x2="228" y2="26" stroke="rgba(160,240,225,.35)" stroke-width="2.4"/>
+      <circle cx="60" cy="74" r="26" fill="#1f6b4e" stroke="#7be495" stroke-width="1.6"/>
+      <text x="60" y="79" text-anchor="middle" font-size="9" fill="#eafaf6" font-family="sans-serif">圣林谷</text>
+      <circle cx="240" cy="22" r="26" fill="#6d5c3c" stroke="#e4c88a" stroke-width="1.6"/>
+      <text x="240" y="27" text-anchor="middle" font-size="9" fill="#eafaf6" font-family="sans-serif">石脊台</text>
+      <g transform="rotate(-17 150 48)">
+        <rect x="118" y="42" width="64" height="12" rx="2" fill="#1c6b57" stroke="#9ff2c0" stroke-width=".8"/>
+        <line x1="122" y1="48" x2="178" y2="48" stroke="rgba(255,255,255,.45)" stroke-width=".8"/>
+      </g>
+      <text x="150" y="88" text-anchor="middle" font-size="8" fill="#7fc9bf" font-family="sans-serif">标记沿连线方向摆放</text>
+    </svg>
+    <div style="flex:1;font-size:7.4pt;line-height:1.6;color:#3c4a46">
+      <b style="color:#0c3b40">三条摆放规矩</b><br>
+      ① 标记<b>顺着一端到另一端</b>放，不要横压；两端都留出地块圆圈的边。
+      <br>② 一条连线<b>只能有一条标记</b>——两个人都说自己连了，就说明放错了。
+      <br>③ 标记被移除后立刻<b>归还本人</b>，那条线重新空出来，谁都能抢。
+      <br><span style="color:#8a5a12">如果标记不够：用回形针夹在连线上，或临时用一张小纸条写上颜色首字。</span>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:4mm;font-size:7.6pt;line-height:1.6">
+    <div style="background:#f6f2e5;border:1px solid #cfc6b0;border-radius:2mm;padding:2.8mm 3.2mm">
+      <b style="color:#0c3b40">四条颜色怎么分</b>
+      <div style="margin-top:1.4mm">· <b>青绿</b>＝森林部族　· <b>海蓝</b>＝礁族　· <b>赭石</b>＝山族　· <b>赤红</b>＝灰烬族<br>
+      2 人局只用青绿 + 海蓝（各 12 条，共 24 条）；3 人局加赭石（36 条）。<br>
+      色弱玩家可以看条纹序号：每色都是 1-12，配合「谁的标记在线上」口头确认即可。</div>
+    </div>
+    <div style="background:#fffaf0;border:1px solid #e4cba6;border-radius:2mm;padding:2.8mm 3.2mm">
+      <b style="color:#8a5a12">标记不够用 / 被移除时怎么办</b>
+      <div style="margin-top:1.4mm">· 标记是<b>可回收资源</b>：被点燃或掠夺移除后立刻归还给原主，可以重复使用。<br>
+      · 4 人局每人 12 条是上限，实测每人平均只用 11 条，正常不会耗尽。<br>
+      · 万一不够，用同色回形针或口述「这条是我的」，规则不受影响。</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;margin-top:4mm">
+    <div style="background:#0e3b42;color:#dff7f0;border-radius:3mm;padding:3mm;text-align:center">
+      <div style="font-size:18pt;font-weight:700;color:#f4c15d">48</div>
+      <div style="font-size:7.3pt;line-height:1.5">全套标记条数<br>4 色 × 12 条</div>
+    </div>
+    <div style="background:#0e3b42;color:#dff7f0;border-radius:3mm;padding:3mm;text-align:center">
+      <div style="font-size:18pt;font-weight:700;color:#f4c15d">12</div>
+      <div style="font-size:7.3pt;line-height:1.5">每人手上的上限<br>用完全部铺在图上就是满网</div>
+    </div>
+    <div style="background:#0e3b42;color:#dff7f0;border-radius:3mm;padding:3mm;text-align:center">
+      <div style="font-size:18pt;font-weight:700;color:#f4c15d">11</div>
+      <div style="font-size:7.3pt;line-height:1.5">4 人局实测人均使用<br>所以永远不会「不够用」</div>
+    </div>
+  </div>
+  <div class="foot-note">建议用 160g 卡纸打印并塑封，反复贴放不易起毛边</div>
+</section>
+
+<!-- ============ P9 标记页 ============ -->
+<section class="page" data-page="P9 · 资源标记">
+  <div class="page-title"><h2>灵脉 · 余烬 · 灰烬 · 商队站</h2><span>TOKENS</span></div>
+
+  <div class="tok-group">
+    <h4>🌿 灵脉 ×24（1 值）　<span style="font-weight:400;font-size:7.4pt;color:#6f6a58">本作主货币：连接 2、培育 1、水域连接 1</span></h4>
+    <div class="coins" style="display:grid;grid-template-columns:repeat(8,20mm);gap:2.4mm">
+      <div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div>
+      <div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div>
+      <div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div>
+      <div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div><div class="coin s">1</div>
+    </div>
+  </div>
+
+  <div class="tok-group" style="display:flex;gap:6mm;align-items:flex-start">
+    <div style="flex:0 0 auto">
+    <h4>🌿 灵脉 ×12（5 值）　<span style="font-weight:400;font-size:7.4pt;color:#6f6a58">大额结算用</span></h4>
+    <div class="coins" style="display:grid;grid-template-columns:repeat(6,20mm);gap:2.4mm">
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+      <div class="coin s" style="background:radial-gradient(circle at 35% 30%,#c8ffd9,#176b45)">5</div>
+    </div>
+    </div>
+    <div style="flex:1;background:#f6f2e5;border:1px solid #cfc6b0;border-radius:2mm;padding:2.4mm 3mm;font-size:7.3pt;line-height:1.55;color:#3c4a46">
+      <b style="color:#0c3b40">为什么要两种面额</b><br>
+      一局下来每人经手 30 枚以上灵脉，全用 1 值会铺满桌面。规则上 1 枚 5 值 =
+      5 枚 1 值，<b>随时可在大碗里兑换</b>，不影响任何计算。<br><br>
+      <b style="color:#0c3b40">小技巧</b>：轮末发收入时先发 5 值、再补零头，比反复数散币快一倍。
+    </div>
+  </div>
+
+  <div class="tok-group">
+    <h4>🔥 余烬 ×24　<span style="font-weight:400;font-size:7.4pt;color:#6f6a58">3 = 1 条连接　｜　5 = 掠夺　｜　6 = 终局 5 分</span></h4>
+    <div class="coins" style="display:grid;grid-template-columns:repeat(8,20mm);gap:2.4mm">
+      <div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div>
+      <div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div>
+      <div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div>
+      <div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div><div class="coin a">1</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8mm;align-items:flex-start">
+    <div class="tok-group" style="flex:1">
+      <h4>☁️ 灰烬覆盖 ×8</h4>
+      <div class="coins">
+        <div class="coin ash">灰</div><div class="coin ash">灰</div><div class="coin ash">灰</div><div class="coin ash">灰</div>
+        <div class="coin ash">灰</div><div class="coin ash">灰</div><div class="coin ash">灰</div><div class="coin ash">灰</div>
+      </div>
+      <div class="cut-note">压在被打燃的地块上，表示「灵脉值 = 0，永不产分」。</div>
+    </div>
+    <div class="tok-group" style="flex:1">
+      <h4>「商」商队站标记 ×6</h4>
+      <div class="coins">
+        <div class="coin car">商</div><div class="coin car">商</div><div class="coin car">商</div>
+        <div class="coin car">商</div><div class="coin car">商</div><div class="coin car">商</div>
+      </div>
+      <div class="cut-note">地图上已印金色「商」徽记，这 6 枚供标记「已被点燃」的站点使用。</div>
+    </div>
+  </div>
+
+  <div class="cut-note" style="margin-top:3mm">
+    <b>建议</b>：圆片直径 20mm，用圆形打孔器（20mm）最快；没有就打孔器沿边剪。塑封后可反复使用，
+    若嫌麻烦，直接用硬币（灵脉）、红豆（余烬）、黑棋子（灰烬）替代，规则完全等价。
+  </div>
+  <div class="foot-note">数量按 4 人局备足；2 人局打半份即可</div>
+</section>
+
+</body>
+</html>

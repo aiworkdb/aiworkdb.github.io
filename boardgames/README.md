@@ -163,6 +163,7 @@ boardgames/
 | [章鱼噗：再来一次](category/cooperative/takopi-one-more-time/README.md) | 合作 | 2-5人 | 45-70分钟 | 中等偏难 |
 | [复仇者联盟：毁灭日 · 六道崩塌](category/party/avengers-doom-six-collapses/README.md) | 派对 | 3-6人 | 30-45分钟 | 中等 |
 | [坂本日常：打烊之前](category/card/sakamoto-before-closing/README.md) | 卡牌 | 2-4人 | 45-60分钟 | 中等 |
+| [阿凡达：烬与灵网](category/strategy/avatar-ash-and-living-web/README.md) | 策略 | 2-4人 | 50-70分钟 | 中等 |
 
 ## 添加新桌游
 
