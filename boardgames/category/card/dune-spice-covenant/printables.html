@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>沙丘：香料契约 — 打印道具</title>
+<style>
+  :root{
+    --ink:#211d18; --paper:#fdfaf2; --line:#e3d8c2;
+    --sand:#c9a659; --deep:#8a2b26; --mid:#b25e23;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:#e8e1d2; color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{display:flex; flex-direction:column; align-items:center; gap:10mm; padding:8mm 0;}
+  .page{
+    width:210mm; height:297mm; padding:7mm 11mm 5mm;
+    background:var(--paper); position:relative; overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    display:flex; flex-direction:column;
+  }
+  .phead{display:flex; align-items:baseline; justify-content:space-between;
+    border-bottom:2px solid #a8802f; padding-bottom:2mm; margin-bottom:3mm;}
+  .phead .t{font-size:13pt; font-weight:800; letter-spacing:2px; color:#8a6a1e;}
+  .phead .s{font-size:7.5pt; color:#8b7f6a; letter-spacing:1px;}
+  .print-hint{
+    max-width:190mm; margin:0 auto 6mm; background:#fff8e1; border:2px solid #f0c14b;
+    border-radius:8px; padding:12px 18px; font-size:12.5px; line-height:1.75;
+  }
+  .print-hint ul{margin:6px 0 0; padding-left:20px;}
+
+  /* ---------- 卡牌通用 ---------- */
+  .grid3{display:flex; flex-wrap:wrap; gap:2.4mm; align-content:flex-start;}
+  .card{
+    width:58mm; height:63mm; border-radius:5px; position:relative;
+    background:linear-gradient(178deg,#fffdf7 0%,var(--bg,#fbf4e6) 100%);
+    border:1.4px solid var(--c,#9a8f78); display:flex; flex-direction:column;
+    padding:2.2mm 2.4mm 0; overflow:hidden;
+    box-shadow:inset 0 0 0 1.2px rgba(255,255,255,.7);
+  }
+  .card .tag{
+    font-size:6.2pt; letter-spacing:.6px; color:#fff; background:var(--c);
+    border-radius:2px; padding:.7mm 1.6mm; align-self:flex-start;
+  }
+  .card .tag.dark{background:#a8332a;}
+  .card .tag.blue{background:#2c6b96;}
+  .card .tag.pur{background:#7a5bb5;}
+  .card .ic{font-size:15pt; line-height:1; margin:1.2mm 0 .4mm;}
+  .card .nm{font-size:9.5pt; font-weight:800; letter-spacing:.5px; margin-top:.4mm;}
+  .card .nm.big{font-size:10.5pt; margin-top:0;}
+  .card .txt{font-size:6.6pt; line-height:1.5; color:#4a4238; margin-top:1mm;}
+  .card .flavor{font-size:6.2pt; color:#8b7f6a; line-height:1.45; margin-top:.8mm;}
+  .card .wrow{display:flex; align-items:flex-end; gap:1mm; margin:1.6mm 0 .4mm;}
+  .card .val{font-size:30pt; font-weight:900; line-height:.9; color:var(--c); letter-spacing:-1px;}
+  .card .unit{font-size:6.4pt; color:#8b7f6a; padding-bottom:1.4mm; letter-spacing:1px;}
+  .card .worm{margin-left:auto; text-align:center; border:1px solid #d9cbb0; border-radius:3px;
+    padding:.8mm 1.4mm; background:#fffdf6;}
+  .card .worm b{display:block; font-size:12pt; line-height:1; color:var(--c);}
+  .card .worm span{font-size:5.4pt; color:#9c9078; letter-spacing:.5px;}
+  .card .foot{margin-top:auto; display:flex; justify-content:space-between; align-items:center;
+    border-top:1px dashed var(--line); padding:1mm 0 1.2mm; font-size:5.2pt; color:#a99b80; letter-spacing:.4px;}
+  .card .art{position:relative; height:13mm; margin:1.2mm -2.4mm .6mm;
+    background:linear-gradient(180deg,transparent 0%,rgba(170,150,110,.22) 100%);
+    background:linear-gradient(180deg,transparent 0%,color-mix(in srgb,var(--c) 22%,transparent) 100%);
+    border-radius:60% 40% 0 0 / 100% 100% 0 0; overflow:hidden;}
+  .card .art-l{position:absolute; right:2mm; bottom:.6mm; font-size:6pt; letter-spacing:3px;
+    color:var(--c); opacity:.5;}
+  .card .dots{position:absolute; left:2.4mm; bottom:1.2mm; display:flex; gap:.8mm;}
+  .card .dots .d{width:2mm; height:2mm; border-radius:50%; background:var(--c); opacity:.55; display:block;}
+
+  /* ---------- 沙海板 ---------- */
+  .board{border:2.5px solid #a8802f; border-radius:8px; padding:4mm; background:#fffdf6; flex:0 0 auto;}
+  .btitle{text-align:center; font-size:15pt; font-weight:900; letter-spacing:6px; color:#8a6a1e;}
+  .bsub{text-align:center; font-size:7.5pt; color:#8b7f6a; letter-spacing:2px; margin-top:.8mm;}
+  .wells{display:flex; gap:3mm; margin:4mm 0 3mm;}
+  .well{flex:1; border-radius:6px; padding:3mm 2mm; text-align:center; border:2px dashed #cbb98f;
+    background:linear-gradient(180deg,#fffdf8,#f7efdd);}
+  .well.w0{border-color:#c9a659; background:linear-gradient(180deg,#fffdf5,#f7edd4);}
+  .well.w1{border-color:#b25e23; background:linear-gradient(180deg,#fffaf3,#f6e3d1);}
+  .well.w2{border-color:#8a2b26; background:linear-gradient(180deg,#fdf6f4,#f0d9d4);}
+  .well .wn{font-size:12pt; font-weight:900; letter-spacing:3px; color:#5d4a25;}
+  .well .we{font-size:6.5pt; letter-spacing:2px; color:#8b7f6a; margin-top:.4mm;}
+  .well .wd{font-size:7pt; color:#6b6047; margin:1.4mm 0 1mm;}
+  .well .wpile{font-size:22pt; line-height:1.2;}
+  .well .wcnt{font-size:6.2pt; color:#9c9078;}
+  .sea-row{display:flex; gap:2.4mm;}
+  .sea-box{flex:1; border:1.2px solid #d8ccb4; border-radius:5px; padding:2mm 2.4mm; background:#fffbef;}
+  .sb-t{font-size:8pt; font-weight:800; color:#8a6a1e; letter-spacing:1px; margin-bottom:1mm;}
+  .sb-l{font-size:6.4pt; color:#5d5442; line-height:1.6;}
+  .season{display:flex; align-items:center; gap:1.6mm; margin-top:3mm;}
+  .season .sl{font-size:8pt; font-weight:800; color:#8a6a1e; letter-spacing:2px; margin-right:1mm;}
+  .season .sd{flex:1; height:9mm; border:1.4px solid #c9bda3; border-radius:3px; display:flex;
+    align-items:center; justify-content:center; font-size:9pt; font-weight:800; color:#8b7f6a;}
+  .season .send{font-size:7pt; color:#a8332a; border:1.4px dashed #c9a659; border-radius:4px;
+    padding:1.6mm 2.4mm; letter-spacing:1px;}
+  .warn{margin-top:2.6mm; font-size:7pt; color:#8a2a1e; background:#fdeceb;
+    border:1px solid #e7c0bb; border-radius:4px; padding:1.6mm 2.4mm; letter-spacing:.5px;}
+
+  /* ---------- 玩家板 ---------- */
+  .pbwrap{display:flex; flex-wrap:wrap; gap:3mm; align-content:flex-start;}
+  .pb{width:88mm; height:72mm; border:2px solid #c0ab7f; border-radius:6px;
+    background:linear-gradient(180deg,#fffdf7,#f8f0de); padding:2.6mm 3mm; display:flex; flex-direction:column;}
+  .pb .pbt{font-size:9pt; font-weight:900; letter-spacing:2px; color:#7a6a4c;}
+  .pb .pbl{font-size:6pt; color:#9c9078; letter-spacing:.5px; margin:1.4mm 0 1mm;}
+  .pb .pbl2{font-size:6pt; color:#9c9078; letter-spacing:.5px; margin:2mm 0 1mm;}
+  .track{display:flex; border:1.2px solid #cdbfa2; border-radius:3px; overflow:hidden;}
+  .tk{flex:1; height:6.5mm; display:flex; align-items:center; justify-content:center;
+    font-size:6pt; font-weight:700; color:#8b7f6a; border-right:1px solid #e2d7c1; background:#fffdf6;}
+  .tk:last-child{border-right:none;}
+  .tk.hot{background:#fbe3de; color:#a8332a;}
+  .slots6{display:flex; gap:1.6mm;}
+  .slots6 .slot{flex:1; height:16mm; border:1.4px dashed #cbbfa4; border-radius:4px;
+    background:#fffdf8; display:flex; align-items:flex-start; justify-content:flex-end;
+    padding:1mm; font-size:6pt; color:#c4b79c;}
+  .pb .pbh{margin-top:auto; font-size:6pt; color:#9c9078; border-top:1px dashed #d8ccb4; padding-top:1.2mm;}
+
+  /* ---------- 标记 ---------- */
+  .token-grid{display:flex; flex-wrap:wrap; gap:1.6mm; align-content:flex-start;}
+  .tok{width:15mm; height:15mm; border-radius:50%; border:1.6px solid #7fa8c4;
+    background:radial-gradient(circle at 34% 30%,#eaf6ff,#b9d8ea);
+    display:flex; align-items:center; justify-content:center;}
+  .tok .tk1{font-size:9pt; font-weight:900; color:#2c6b96;}
+  .pawn-row{display:flex; gap:4mm; margin-top:5mm; align-items:flex-start;}
+  .pw{text-align:center;}
+  .pw .pwi{width:20mm; height:20mm; border-radius:50%; border:2.4px solid #8a2b26;
+    background:radial-gradient(circle at 36% 30%,#fff,#f0d3cd);
+    display:flex; align-items:center; justify-content:center; font-size:12pt; font-weight:900; color:#8a2b26;}
+  .pw .pwl{font-size:6.2pt; color:#8b7f6a; margin-top:1mm;}
+  .big-pw .pwi{border-color:#8a6a1e; color:#8a6a1e; background:radial-gradient(circle at 36% 30%,#fff,#f5e7c9); font-size:13pt;}
+
+  /* ---------- 契约卡 ---------- */
+  .ctwrap{display:flex; flex-wrap:wrap; gap:2.6mm;}
+  .ct{width:58mm; height:80mm; border-radius:6px; border:1.6px solid #8a6a1e;
+    background:linear-gradient(180deg,#fffdf5,#f7ecd2); padding:2.6mm;
+    display:flex; flex-direction:column; position:relative; overflow:hidden;}
+  .ct-top{display:flex; justify-content:space-between; align-items:center;}
+  .ct-no{font-size:6pt; letter-spacing:1px; color:#9c8a5c;}
+  .ct-sc{font-size:11pt; font-weight:900; color:#8a6a1e;}
+  .ct-ic{font-size:22pt; text-align:center; margin:2mm 0 1mm;}
+  .ct-nm{font-size:11pt; font-weight:900; letter-spacing:3px; text-align:center; color:#5d4a25;}
+  .ct-cond{font-size:6.8pt; line-height:1.5; text-align:center; color:#6b6047; margin-top:2mm;
+    border-top:1px dashed #d8ccb4; border-bottom:1px dashed #d8ccb4; padding:1.6mm 0;}
+  .ct-fl{font-size:6.2pt; color:#9c8a5c; line-height:1.5; margin-top:1.6mm; text-align:center;}
+  .ct-foot{margin-top:auto; font-size:5.4pt; color:#b0a48c; text-align:center; letter-spacing:.5px;}
+
+  /* ---------- 封面 ---------- */
+  .cover{flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;}
+  .cover .kk{font-size:8pt; letter-spacing:3px; color:#8a6a1e;}
+  .cover h1{font-size:34pt; margin:5mm 0 1mm; letter-spacing:5px; color:#3b2f1e;}
+  .cover h2{font-size:11pt; font-weight:400; color:#8b7f6a; letter-spacing:4px; margin:0 0 6mm;}
+  .cover .rule{width:64mm; height:2px; background:#a8802f; margin:0 auto 6mm;}
+  .cover .desc{font-size:9.2pt; line-height:2; color:#4a4238; max-width:132mm;}
+  .cover .meta{margin-top:10mm; display:flex; gap:4mm; font-size:8pt; color:#7a6a4c;}
+  .cover .meta div{border:1.2px solid #cdbfa2; border-radius:4px; padding:1.6mm 3.4mm;}
+  .cover .foot{position:absolute; bottom:10mm; font-size:7pt; color:#b0a48c; letter-spacing:2px;}
+
+  table.qr{border-collapse:collapse; font-size:7.2pt; width:100%;}
+  table.qr th,table.qr td{border:1px solid #d8ccb4; padding:1.2mm 2mm; text-align:left;}
+  table.qr th{background:#f2ead8; color:#6b5f47;}
+  .note{font-size:7.4pt; color:#7a6a4c; line-height:1.8;}
+  .note b{color:#8a2a1e;}
+
+  @page { size:A4; margin:0; }
+  @media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    body{background:#fff;}
+    .sheet{padding:0; gap:0;}
+    .page{box-shadow:none; margin:0; page-break-after:always; break-after:page;}
+    .page:last-child{page-break-after:auto;}
+    .print-hint { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+      <li>使用 <strong>A4 纸张</strong>打印，缩放选「实际大小 / 100%」，边距设为<strong>最小（无）</strong>。</li>
+      <li>打印对话框中务必<strong>勾选「背景图形」</strong>（Chrome：更多设置 → 背景图形），否则卡面颜色与色块会全部丢失。</li>
+      <li>卡牌建议用 <strong>160g 以上卡纸</strong>；沙海板与玩家板建议 200g 白卡或贴卡纸加固。</li>
+      <li>共 <strong>11 页</strong>：封面 1 · 沙海板 1 · 玩家板 1 · 标记 1 · 浅井牌 2 · 中井牌 2 · 深井牌 2 · 契约卡 1。</li>
+      <li>卡牌背面请自行贴上同色纸（🟨浅 / 🟧中 / 🟥深），或直接用三种颜色的牌背——<strong>背面绝对不能看出正面是什么</strong>。</li>
+      <li>裁切时沿边框线内侧裁，卡牌尺寸 58×63mm，建议配 66×91mm 卡套使用。</li>
+    </ul>
+  </div>
+  <div class="sheet">
+<div class="page">
+  <div class="cover">
+    <div class="kk">D U N E &nbsp;·&nbsp; S P I C E &nbsp; C O V E N A N T</div>
+    <h1>沙丘：香料契约</h1>
+    <h2>厄拉科斯沙海采集竞速</h2>
+    <div class="rule"></div>
+    <div class="desc">
+      三台采集车，一片会呼吸的沙海，一份与公会签下的契约。<br>
+      公会的船每四十天来一次，<b>只收成批的货</b>——它不会为几袋零散香料降低高度。<br><br>
+      所以每一季你都要回答同一个问题：<b>再往下挖一格，还是现在收手？</b>
+    </div>
+    <div class="meta"><div>2-5 人</div><div>40-55 分钟</div><div>12 岁以上</div><div>卡牌 · 中等</div></div>
+    <div class="foot">打印道具 · 共 11 页 · 卡牌建议 160g 卡纸</div>
+  </div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">沙海板</div><div class="s">SEA BOARD · 打印 1 张，A4 卡纸</div></div>
+  <div class="board">
+  <div class="btitle">沙 海 板</div>
+  <div class="bsub">三 井 · 收 购 站 · 季 数 轨</div>
+  <div class="wells">
+    <div class="well w0"><div class="wn">浅 井</div><div class="we">岩 层</div><div class="wd">2-3 水 / 1-2 震</div><div class="wpile">🟨</div><div class="wcnt">24 张 · 面朝下</div></div>
+    <div class="well w1"><div class="wn">中 井</div><div class="we">香 脉</div><div class="wd">4-5 水 / 2-3 震</div><div class="wpile">🟧</div><div class="wcnt">24 张 · 面朝下</div></div>
+    <div class="well w2"><div class="wn">深 井</div><div class="we">黑 沙</div><div class="wd">5-7 水 / 3-4 震</div><div class="wpile">🟥</div><div class="wcnt">24 张 · 面朝下</div></div>
+  </div>
+  <div class="sea-row">
+    <div class="sea-box">
+      <div class="sb-t">☀ 收 购 站</div>
+      <div class="sb-l">封箱需采集区 <b>≥4 张</b></div>
+      <div class="sb-l">收益 = Σ水值 + (12 − 震动) <b>− 已封箱人数</b></div>
+      <div class="sb-l">向导 +3 ／ 晶牙匕 折扣减 2</div>
+    </div>
+    <div class="sea-box">
+      <div class="sb-t">📜 契 约 区</div>
+      <div class="sb-l">本季翻开 1 张契约卡</div>
+      <div class="sb-l">先达成者拿走并计分</div>
+      <div class="sb-l">每季结束弃掉，重翻</div>
+    </div>
+    <div class="sea-box">
+      <div class="sb-t">💧 公 用 水 池</div>
+      <div class="sb-l">水标记堆放在此</div>
+      <div class="sb-l">1 水 = 1 分，终局清点</div>
+      <div class="sb-l">建议 80-100 枚</div>
+    </div>
+  </div>
+  <div class="season">
+    <div class="sl">季 数</div>
+    <div class="sd">1</div><div class="sd">2</div><div class="sd">3</div><div class="sd">4</div><div class="sd">5</div><div class="sd">6</div>
+    <div class="send">终局</div>
+  </div>
+  <div class="warn">⚠ 震动 ≥12 → 沙虫来袭：采集区全部弃掉，本季出局（静水器可保最贵 2 张）</div>
+</div>
+<div style="margin-top:3mm;display:flex;gap:3mm">
+  <table class="qr" style="flex:1.1">
+    <tr><th colspan="4">三 井 速 查</th></tr>
+    <tr><td style="width:16%"><b>浅 🟨</b></td><td>2-3 水 / 1-2 震 · 陷阱 17% · 可填满 6 格</td></tr>
+    <tr><td><b>中 🟧</b></td><td>4-5 水 / 2-3 震 · 陷阱 17% · 约 5 张见底</td></tr>
+    <tr><td><b>深 🟥</b></td><td>5-7 水 / 3-4 震 · 陷阱 33% · <b>3 张见底</b></td></tr>
+    <tr><td><b>安全线</b></td><td>0-4 随便挖 ｜ 5-7 深井再 1 张 ｜ 8-10 只挖浅 ｜ 11 只能赌</td></tr>
+  </table>
+  <table class="qr" style="flex:1">
+    <tr><th colspan="2">一 季 四 步</th></tr>
+    <tr><td style="width:22%">① 分井</td><td>72 张按背标分三叠，各洗匀</td></tr>
+    <tr><td>② 翻约</td><td>翻 1 张契约卡</td></tr>
+    <tr><td>③ 轮流</td><td>钻井 / 封箱，直到全员退出</td></tr>
+    <tr><td>④ 换手</td><td>晶牙匕左移，季数 +1</td></tr>
+  </table>
+</div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">玩家板 ×5</div><div class="s">PLAYER BOARDS · 每人 1 张，共 5 张</div></div>
+  <div class="pbwrap"><div class="pb">
+  <div class="pbt">采 集 队 甲</div>
+  <div class="pbl">震动轨 0-12（到 12 立刻沙虫来袭）</div>
+  <div class="track"><div class="tk">0</div><div class="tk">1</div><div class="tk">2</div><div class="tk">3</div><div class="tk">4</div><div class="tk">5</div><div class="tk">6</div><div class="tk">7</div><div class="tk">8</div><div class="tk">9</div><div class="tk">10</div><div class="tk hot">11</div><div class="tk hot">12</div></div>
+  <div class="pbl2">采 集 区（至少 4 张才能封箱 · 上限 6 张）</div>
+  <div class="slots6"><div class="slot"><span>1</span></div><div class="slot"><span>2</span></div><div class="slot"><span>3</span></div><div class="slot"><span>4</span></div><div class="slot"><span>5</span></div><div class="slot"><span>6</span></div></div>
+  <div class="pbh">工具牌放此区下方 · 本季封箱收益：__________ 水</div>
+</div><div class="pb">
+  <div class="pbt">采 集 队 乙</div>
+  <div class="pbl">震动轨 0-12（到 12 立刻沙虫来袭）</div>
+  <div class="track"><div class="tk">0</div><div class="tk">1</div><div class="tk">2</div><div class="tk">3</div><div class="tk">4</div><div class="tk">5</div><div class="tk">6</div><div class="tk">7</div><div class="tk">8</div><div class="tk">9</div><div class="tk">10</div><div class="tk hot">11</div><div class="tk hot">12</div></div>
+  <div class="pbl2">采 集 区（至少 4 张才能封箱 · 上限 6 张）</div>
+  <div class="slots6"><div class="slot"><span>1</span></div><div class="slot"><span>2</span></div><div class="slot"><span>3</span></div><div class="slot"><span>4</span></div><div class="slot"><span>5</span></div><div class="slot"><span>6</span></div></div>
+  <div class="pbh">工具牌放此区下方 · 本季封箱收益：__________ 水</div>
+</div><div class="pb">
+  <div class="pbt">采 集 队 丙</div>
+  <div class="pbl">震动轨 0-12（到 12 立刻沙虫来袭）</div>
+  <div class="track"><div class="tk">0</div><div class="tk">1</div><div class="tk">2</div><div class="tk">3</div><div class="tk">4</div><div class="tk">5</div><div class="tk">6</div><div class="tk">7</div><div class="tk">8</div><div class="tk">9</div><div class="tk">10</div><div class="tk hot">11</div><div class="tk hot">12</div></div>
+  <div class="pbl2">采 集 区（至少 4 张才能封箱 · 上限 6 张）</div>
+  <div class="slots6"><div class="slot"><span>1</span></div><div class="slot"><span>2</span></div><div class="slot"><span>3</span></div><div class="slot"><span>4</span></div><div class="slot"><span>5</span></div><div class="slot"><span>6</span></div></div>
+  <div class="pbh">工具牌放此区下方 · 本季封箱收益：__________ 水</div>
+</div><div class="pb">
+  <div class="pbt">采 集 队 丁</div>
+  <div class="pbl">震动轨 0-12（到 12 立刻沙虫来袭）</div>
+  <div class="track"><div class="tk">0</div><div class="tk">1</div><div class="tk">2</div><div class="tk">3</div><div class="tk">4</div><div class="tk">5</div><div class="tk">6</div><div class="tk">7</div><div class="tk">8</div><div class="tk">9</div><div class="tk">10</div><div class="tk hot">11</div><div class="tk hot">12</div></div>
+  <div class="pbl2">采 集 区（至少 4 张才能封箱 · 上限 6 张）</div>
+  <div class="slots6"><div class="slot"><span>1</span></div><div class="slot"><span>2</span></div><div class="slot"><span>3</span></div><div class="slot"><span>4</span></div><div class="slot"><span>5</span></div><div class="slot"><span>6</span></div></div>
+  <div class="pbh">工具牌放此区下方 · 本季封箱收益：__________ 水</div>
+</div><div class="pb">
+  <div class="pbt">采 集 队 戊</div>
+  <div class="pbl">震动轨 0-12（到 12 立刻沙虫来袭）</div>
+  <div class="track"><div class="tk">0</div><div class="tk">1</div><div class="tk">2</div><div class="tk">3</div><div class="tk">4</div><div class="tk">5</div><div class="tk">6</div><div class="tk">7</div><div class="tk">8</div><div class="tk">9</div><div class="tk">10</div><div class="tk hot">11</div><div class="tk hot">12</div></div>
+  <div class="pbl2">采 集 区（至少 4 张才能封箱 · 上限 6 张）</div>
+  <div class="slots6"><div class="slot"><span>1</span></div><div class="slot"><span>2</span></div><div class="slot"><span>3</span></div><div class="slot"><span>4</span></div><div class="slot"><span>5</span></div><div class="slot"><span>6</span></div></div>
+  <div class="pbh">工具牌放此区下方 · 本季封箱收益：__________ 水</div>
+</div></div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">水标记 & 棋子</div><div class="s">TOKENS · 水标记 80 枚 + 震动标记 5 枚 + 晶牙匕 1 枚</div></div>
+  
+<div class="token-grid"><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div><div class="tok"><div class="tk1">1</div></div></div>
+<div class="pawn-row"><div class="pw"><div class="pwi">1</div><div class="pwl">震动标记</div></div><div class="pw"><div class="pwi">2</div><div class="pwl">震动标记</div></div><div class="pw"><div class="pwi">3</div><div class="pwl">震动标记</div></div><div class="pw"><div class="pwi">4</div><div class="pwl">震动标记</div></div><div class="pw"><div class="pwi">5</div><div class="pwl">震动标记</div></div>
+  <div class="pw big-pw"><div class="pwi">🗡</div><div class="pwl">晶牙匕（先手）</div></div>
+</div>
+<div class="note" style="margin-top:4mm">
+  <b>水标记</b>：1 枚 = 1 水 = 1 分。建议用 200g 卡纸打印后裁切，或直接用硬币/豆子代替。<br>
+  <b>震动标记</b>：每人 1 枚，放在玩家板震动轨上。可用任意小棋子替代。<br>
+  <b>晶牙匕</b>：先手标记，每季结束左移一位。没有也能玩——用任意小物件代替。
+</div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">浅井 · 岩层 · 主牌库（1/2）</div><div class="s">SHALLOW WELL · 24 张 · 面朝下叠放，只看最上面一张也不许看</div></div>
+  <div class="grid3"><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">2</div><div class="unit">水</div>
+    <div class="worm"><b>1</b><span>震动</span></div></div>
+  <div class="nm">岩地碎香</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i></div></div>
+  <div class="flavor">砂砾里筛出的碎末，胜在不要命。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div></div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">浅井 · 岩层 · 主牌库（2/2）</div><div class="s">SHALLOW WELL · 24 张 · 面朝下叠放，只看最上面一张也不许看</div></div>
+  <div class="grid3"><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card spice" style="--c:#b98c34;--bg:#f6edd6">
+  <div class="tag">浅井 · 香料</div>
+  <div class="wrow"><div class="val">3</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">沙丘晶簇</div>
+  <div class="art"><div class="art-l">岩层</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">薄砂下的菌丝结块，一铲一层。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>SHALLOW</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>SHALLOW</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>SHALLOW</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>SHALLOW</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>SHALLOW</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">采集车</div>
+  <div class="txt">每季 2 次：某次钻井的震动归 0（翻牌后声明）。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>SHALLOW</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">采集车</div>
+  <div class="txt">每季 2 次：某次钻井的震动归 0（翻牌后声明）。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>SHALLOW</span></div>
+</div></div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">中井 · 香脉 · 主牌库（1/2）</div><div class="s">MID WELL · 24 张 · 面朝下叠放，只看最上面一张也不许看</div></div>
+  <div class="grid3"><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">4</div><div class="unit">水</div>
+    <div class="worm"><b>2</b><span>震动</span></div></div>
+  <div class="nm">深漠香脉</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">连续的香脉，每一镐都有回音。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">5</div><div class="unit">水</div>
+    <div class="worm"><b>3</b><span>震动</span></div></div>
+  <div class="nm">香云喷发</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">砂面突然鼓包——底下在呼吸。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">5</div><div class="unit">水</div>
+    <div class="worm"><b>3</b><span>震动</span></div></div>
+  <div class="nm">香云喷发</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">砂面突然鼓包——底下在呼吸。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div></div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">中井 · 香脉 · 主牌库（2/2）</div><div class="s">MID WELL · 24 张 · 面朝下叠放，只看最上面一张也不许看</div></div>
+  <div class="grid3"><div class="card spice" style="--c:#b25e23;--bg:#f8e9d8">
+  <div class="tag">中井 · 香料</div>
+  <div class="wrow"><div class="val">5</div><div class="unit">水</div>
+    <div class="worm"><b>3</b><span>震动</span></div></div>
+  <div class="nm">香云喷发</div>
+  <div class="art"><div class="art-l">香脉</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">砂面突然鼓包——底下在呼吸。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>MID</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>MID</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>MID</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">哈克南劫掠</div>
+  <div class="txt">弃掉采集区水值最高的 1 张。</div>
+  <div class="foot"><span>本回合作废</span><span>MID</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">哈克南劫掠</div>
+  <div class="txt">弃掉采集区水值最高的 1 张。</div>
+  <div class="foot"><span>本回合作废</span><span>MID</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">扑翼机</div>
+  <div class="txt">你的采集区上限 6 → 8 格。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>MID</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">扑翼机</div>
+  <div class="txt">你的采集区上限 6 → 8 格。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>MID</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">弗雷曼向导</div>
+  <div class="txt">每次封箱 +3 水（每季都生效）。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>MID</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">弗雷曼向导</div>
+  <div class="txt">每次封箱 +3 水（每季都生效）。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>MID</span></div>
+</div><div class="card tre" style="--c:#7a5bb5">
+  <div class="tag pur">宝藏 · 立即入账</div>
+  <div class="wrow"><div class="val">+6</div><div class="unit">水</div></div>
+  <div class="nm">弗雷曼水窖</div>
+  <div class="flavor">地下蓄水池。弗雷曼人的礼节：喝一口，别说谢。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>MID</span></div>
+</div><div class="card tre" style="--c:#7a5bb5">
+  <div class="tag pur">宝藏 · 立即入账</div>
+  <div class="wrow"><div class="val">+6</div><div class="unit">水</div></div>
+  <div class="nm">弗雷曼水窖</div>
+  <div class="flavor">地下蓄水池。弗雷曼人的礼节：喝一口，别说谢。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>MID</span></div>
+</div><div class="card tre" style="--c:#7a5bb5">
+  <div class="tag pur">宝藏 · 立即入账</div>
+  <div class="wrow"><div class="val">+6</div><div class="unit">水</div></div>
+  <div class="nm">弗雷曼水窖</div>
+  <div class="flavor">地下蓄水池。弗雷曼人的礼节：喝一口，别说谢。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>MID</span></div>
+</div></div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">深井 · 黑沙 · 主牌库（1/2）</div><div class="s">DEEP WELL · 24 张 · 面朝下叠放，只看最上面一张也不许看</div></div>
+  <div class="grid3"><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">5</div><div class="unit">水</div>
+    <div class="worm"><b>3</b><span>震动</span></div></div>
+  <div class="nm">陈年香料</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">压在黑沙深处的老货，色如琥珀。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">5</div><div class="unit">水</div>
+    <div class="worm"><b>3</b><span>震动</span></div></div>
+  <div class="nm">陈年香料</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">压在黑沙深处的老货，色如琥珀。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">5</div><div class="unit">水</div>
+    <div class="worm"><b>3</b><span>震动</span></div></div>
+  <div class="nm">陈年香料</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">压在黑沙深处的老货，色如琥珀。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">5</div><div class="unit">水</div>
+    <div class="worm"><b>3</b><span>震动</span></div></div>
+  <div class="nm">陈年香料</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">压在黑沙深处的老货，色如琥珀。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">7</div><div class="unit">水</div>
+    <div class="worm"><b>4</b><span>震动</span></div></div>
+  <div class="nm">深漠晶核</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">一整块结晶。也是沙虫最爱的味道。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">7</div><div class="unit">水</div>
+    <div class="worm"><b>4</b><span>震动</span></div></div>
+  <div class="nm">深漠晶核</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">一整块结晶。也是沙虫最爱的味道。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">7</div><div class="unit">水</div>
+    <div class="worm"><b>4</b><span>震动</span></div></div>
+  <div class="nm">深漠晶核</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">一整块结晶。也是沙虫最爱的味道。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card spice" style="--c:#8a2b26;--bg:#f3ded9">
+  <div class="tag">深井 · 香料</div>
+  <div class="wrow"><div class="val">7</div><div class="unit">水</div>
+    <div class="worm"><b>4</b><span>震动</span></div></div>
+  <div class="nm">深漠晶核</div>
+  <div class="art"><div class="art-l">黑沙</div><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></div></div>
+  <div class="flavor">一整块结晶。也是沙虫最爱的味道。</div>
+  <div class="foot"><span>DUNE · SPICE COVENANT</span><span>DEEP</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙尘</div>
+  <div class="txt">本回合作废，无任何收获。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">哈克南劫掠</div>
+  <div class="txt">弃掉采集区水值最高的 1 张。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div></div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">深井 · 黑沙 · 主牌库（2/2）</div><div class="s">DEEP WELL · 24 张 · 面朝下叠放，只看最上面一张也不许看</div></div>
+  <div class="grid3"><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">哈克南劫掠</div>
+  <div class="txt">弃掉采集区水值最高的 1 张。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙虫之口</div>
+  <div class="txt">震动额外 +3，本回合结束。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙虫之口</div>
+  <div class="txt">震动额外 +3，本回合结束。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div><div class="card trap" style="--c:#a8332a">
+  <div class="tag dark">陷阱 · 立即结算</div>
+  <div class="ic">⚠</div>
+  <div class="nm big">沙虫之口</div>
+  <div class="txt">震动额外 +3，本回合结束。</div>
+  <div class="foot"><span>本回合作废</span><span>DEEP</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">静水器</div>
+  <div class="txt">沙虫来袭时，保住最贵的 2 张并按封箱结算。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">静水器</div>
+  <div class="txt">沙虫来袭时，保住最贵的 2 张并按封箱结算。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">晶牙匕</div>
+  <div class="txt">每次封箱，市场折扣减免 2 水。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">晶牙匕</div>
+  <div class="txt">每次封箱，市场折扣减免 2 水。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div><div class="card tool" style="--c:#2c6b96">
+  <div class="tag blue">工具 · 永久生效</div>
+  <div class="ic">🔧</div>
+  <div class="nm big">晶牙匕</div>
+  <div class="txt">每次封箱，市场折扣减免 2 水。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div><div class="card tre" style="--c:#7a5bb5">
+  <div class="tag pur">宝藏 · 立即入账</div>
+  <div class="wrow"><div class="val">+9</div><div class="unit">水</div></div>
+  <div class="nm">香料之眼</div>
+  <div class="flavor">沙暴过后地面裂开的蓝光。本季震动上限视为 14。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div><div class="card tre" style="--c:#7a5bb5">
+  <div class="tag pur">宝藏 · 立即入账</div>
+  <div class="wrow"><div class="val">+9</div><div class="unit">水</div></div>
+  <div class="nm">香料之眼</div>
+  <div class="flavor">沙暴过后地面裂开的蓝光。本季震动上限视为 14。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div><div class="card tre" style="--c:#7a5bb5">
+  <div class="tag pur">宝藏 · 立即入账</div>
+  <div class="wrow"><div class="val">+9</div><div class="unit">水</div></div>
+  <div class="nm">香料之眼</div>
+  <div class="flavor">沙暴过后地面裂开的蓝光。本季震动上限视为 14。</div>
+  <div class="foot"><span>不占格 · 不加震动</span><span>DEEP</span></div>
+</div></div>
+</div>
+<div class="page ">
+  <div class="phead"><div class="t">契约卡 ×8</div><div class="s">CONTRACTS · 每季翻 1 张，先达成者拿走</div></div>
+  <div class="ctwrap"><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 01</span><span class="ct-sc">+5</span></div>
+  <div class="ct-ic">🚩</div>
+  <div class="ct-nm">首航</div>
+  <div class="ct-cond">「本季第一个封箱」</div>
+  <div class="ct-fl">公会船第一个靠的就是你的码头。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 02</span><span class="ct-sc">+6</span></div>
+  <div class="ct-ic">📦</div>
+  <div class="ct-nm">满载</div>
+  <div class="ct-cond">「封箱时采集区满 6 张」</div>
+  <div class="ct-fl">六格全满，船工都抬头看了一眼。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 03</span><span class="ct-sc">+5</span></div>
+  <div class="ct-ic">🕳</div>
+  <div class="ct-nm">深潜</div>
+  <div class="ct-cond">「封箱时采集区有 ≥2 张深井香料」</div>
+  <div class="ct-fl">你从黑沙里爬出来时，手还在抖。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 04</span><span class="ct-sc">+5</span></div>
+  <div class="ct-ic">🌿</div>
+  <div class="ct-nm">全身而退</div>
+  <div class="ct-cond">「本季结束时你的震动 ≤3」</div>
+  <div class="ct-fl">沙面安静得像什么都没发生过。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 05</span><span class="ct-sc">+5</span></div>
+  <div class="ct-ic">💎</div>
+  <div class="ct-nm">见宝</div>
+  <div class="ct-cond">「本季翻到 1 张宝藏牌」</div>
+  <div class="ct-fl">有人一辈子只见过一次。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 06</span><span class="ct-sc">+2</span></div>
+  <div class="ct-ic">🤝</div>
+  <div class="ct-nm">静默沙海</div>
+  <div class="ct-cond">「本季结束时无人被沙虫吞噬」</div>
+  <div class="ct-fl">全桌各 +2 水。难得的一天。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 07</span><span class="ct-sc">+4</span></div>
+  <div class="ct-ic">⚖</div>
+  <div class="ct-nm">压舱</div>
+  <div class="ct-cond">「封箱时采集区有 ≥2 张浅井香料」</div>
+  <div class="ct-fl">底舱要压住，船才稳。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div><div class="ct">
+  <div class="ct-top"><span class="ct-no">契约 08</span><span class="ct-sc">+5</span></div>
+  <div class="ct-ic">🏆</div>
+  <div class="ct-nm">满载而归</div>
+  <div class="ct-cond">「本季封箱收益 ≥20 水」</div>
+  <div class="ct-fl">公会账房先生亲自给你倒了杯茶。</div>
+  <div class="ct-foot">先达成者拿走本卡并计分</div>
+</div></div>
+</div>
+  </div>
+</body>
+</html>
