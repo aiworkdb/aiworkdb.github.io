@@ -165,6 +165,7 @@ boardgames/
 | [坂本日常：打烊之前](category/card/sakamoto-before-closing/README.md) | 卡牌 | 2-4人 | 45-60分钟 | 中等 |
 | [阿凡达：烬与灵网](category/strategy/avatar-ash-and-living-web/README.md) | 策略 | 2-4人 | 50-70分钟 | 中等 |
 | [沙丘：香料契约](category/card/dune-spice-covenant/README.md) | 卡牌 | 2-5人 | 40-55分钟 | 中等 |
+| [疯狂动物城2：湿地市场夜航](category/cooperative/marsh-market-nightwatch/README.md) | 合作 | 2-5人 | 50-70分钟 | 中等偏难 |
 
 ## 添加新桌游
 
