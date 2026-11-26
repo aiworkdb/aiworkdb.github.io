@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>魔法秘境：六道封印 · 打印道具 | HEXED: SIX SEALS</title>
+<style>
+    :root{
+      --ink:#241a33; --ink2:#4d4166; --line:#cdc1e0;
+      --paper:#fdfaf3; --paper2:#f4eefb;
+      --purple:#2a1550; --violet:#7b4bd1; --amber:#c8891f; --rose:#a4345f;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",sans-serif;
+      background:#e6e0dc; color:var(--ink); -webkit-font-smoothing:antialiased;
+    }
+    .sheet{max-width:210mm;margin:0 auto;}
+    /* ---------- 打印提示 ---------- */
+    .print-hint{
+      background:#fff8e6;border:2px dashed var(--amber);border-radius:10px;
+      padding:14px 18px;margin:14px auto;max-width:186mm;font-size:12.5px;line-height:1.8;
+      color:#6a4a12;
+    }
+    .print-hint strong{color:#a4345f;}
+    .print-hint ul{margin:6px 0 0 18px;padding:0;}
+    .print-hint li{margin:2px 0;}
+    /* ---------- 页面 ---------- */
+    .page{
+      width:210mm;height:297mm;background:var(--paper);margin:0 auto 8mm;
+      padding:10mm 9mm 12mm;position:relative;overflow:hidden;
+      box-shadow:0 2px 14px rgba(0,0,0,.14);display:flex;flex-direction:column;
+    }
+    .phead{
+      display:flex;justify-content:space-between;align-items:flex-end;
+      border-bottom:2px solid var(--violet);padding-bottom:2mm;margin-bottom:3mm;flex:0 0 auto;
+    }
+    .phead h2{font-size:12pt;margin:0;letter-spacing:.06em;color:var(--purple);}
+    .phead .sub{font-size:8pt;color:var(--ink2);}
+    .pfoot{
+      position:absolute;left:9mm;right:9mm;bottom:5mm;display:flex;justify-content:space-between;
+      font-size:7.5pt;color:#8b7fa3;border-top:1px dotted var(--line);padding-top:1.5mm;
+    }
+    .tiny{font-size:7.5pt;color:#7b6f92;margin:2mm 0 0;line-height:1.6;}
+
+    /* ---------- 封面 ---------- */
+    .cover{
+      background:
+        radial-gradient(circle at 22% 14%, rgba(123,75,209,.55) 0%, rgba(123,75,209,0) 48%),
+        radial-gradient(circle at 80% 78%, rgba(164,52,95,.34) 0%, rgba(164,52,95,0) 52%),
+        radial-gradient(circle at 50% 96%, rgba(200,137,31,.24) 0%, rgba(200,137,31,0) 40%),
+        linear-gradient(165deg,#221040 0%,#2a1550 42%,#170a2c 100%);
+      color:#f7f1e6;padding:18mm 15mm;
+    }
+    .cover .cov-top{font-size:8.5pt;letter-spacing:.3em;color:#c3a6f5;}
+    .cover h1{font-size:40pt;line-height:1.14;margin:10mm 0 0;letter-spacing:.02em;font-weight:800;
+      text-shadow:0 0 26px rgba(185,140,255,.55);}
+    .cover h1 .colon{color:#e0b45c;}
+    .cover .cov-en{font-size:11pt;letter-spacing:.42em;color:#cbb0f2;margin-top:5mm;}
+    .cover .cov-line{width:64mm;height:2px;background:linear-gradient(90deg,#e0b45c,rgba(224,180,92,0));margin:7mm 0;}
+    .cover .cov-lede{font-size:10.5pt;line-height:2.05;color:#e6dcf6;max-width:150mm;margin:0;}
+    .cover .cov-kv{display:flex;gap:12mm;margin-top:14mm;}
+    .cover .cov-kv div{text-align:center;}
+    .cover .cov-kv b{display:block;font-size:17pt;color:#f0d79a;letter-spacing:.04em;}
+    .cover .cov-kv span{font-size:8pt;color:#b9a8d6;letter-spacing:.14em;}
+    .cover .cov-gem{margin-top:6mm;font-size:9.5pt;letter-spacing:.16em;color:#c9b5e8;}
+    .cover .cov-rules{margin-top:11mm;border-top:1px solid rgba(201,181,232,.28);padding-top:6mm;}
+    .cover .cr-h{font-size:8.5pt;color:#e0b45c;letter-spacing:.22em;margin-bottom:5mm;}
+    .cover .cr-i{display:flex;gap:4mm;margin-bottom:5mm;}
+    .cover .cr-i b{font-size:13pt;color:#e0b45c;font-weight:800;line-height:1.25;flex:0 0 auto;
+      font-family:Georgia,serif;}
+    .cover .cr-i p{margin:0;font-size:9.5pt;line-height:1.88;color:#ddd0f2;max-width:150mm;}
+    .cover .cr-i strong{color:#fff;}
+    .cover .cov-foot{
+      position:absolute;left:15mm;right:15mm;bottom:16mm;font-size:8pt;color:#a894c9;
+      border-top:1px solid rgba(201,181,232,.3);padding-top:3mm;line-height:1.7;
+    }
+
+    /* ---------- 主版图 ---------- */
+    .mappage{padding:8mm 8mm 10mm;}
+    .mapwrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;}
+    .mapsvg{width:100%;height:auto;display:block;}
+    .maplegend{
+      display:grid;grid-template-columns:1fr 1fr;gap:2mm 5mm;flex:0 0 auto;
+      border:1.2px solid #cfc0e8;border-radius:6px;background:#f7f2ff;padding:3mm 4mm;margin-top:3mm;
+    }
+    .maplegend div{font-size:8pt;color:#3f3157;line-height:1.6;}
+    .maplegend b{color:var(--purple);}
+
+    /* ---------- 玩家版图 ---------- */
+    .pbgrid{display:grid;grid-template-columns:1fr;gap:6mm;flex:1;min-height:0;}
+    .pb{
+      height:126mm;border:2px solid var(--violet);border-radius:8px;background:var(--paper2);
+      display:flex;flex-direction:column;overflow:hidden;
+    }
+    .pb-head{
+      background:linear-gradient(100deg,var(--purple),var(--violet));color:#fff;
+      padding:2.6mm 5mm;display:flex;justify-content:space-between;align-items:baseline;
+    }
+    .pb-name{font-size:13pt;font-weight:700;letter-spacing:.08em;}
+    .pb-tag{font-size:7.5pt;color:#d9c8ff;letter-spacing:.16em;}
+    .pb-body{padding:4mm 5mm;display:flex;flex-direction:column;gap:3.4mm;flex:1;}
+    .pb-sec{display:flex;align-items:center;gap:3mm;}
+    .pb-sec .lbl{font-size:8.5pt;color:#5c4d7d;min-width:27mm;letter-spacing:.04em;}
+    .slot{flex:1;height:10mm;border:1.5px dashed #b6a3d6;border-radius:4px;background:#fff;}
+    .gems{display:flex;gap:2.6mm;}
+    .gem{width:9mm;height:9mm;border-radius:50%;border:1.4px solid #7b5bb5;
+      background:radial-gradient(circle at 34% 30%,#cbb6f5,#6a45b5 68%,#3b2070);}
+    .vpbox{display:flex;gap:2.4mm;flex:1;}
+    .vp{flex:1;height:12mm;border:1.4px solid #b6a3d6;border-radius:3px;background:#fff;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4mm;}
+    .vp b{font-size:9pt;color:#7b5bb5;line-height:1;}
+    .vp i{font-style:normal;font-size:6.4pt;color:#9b8cbb;letter-spacing:.04em;}
+    .pb-note{flex:1;display:flex;flex-direction:column;gap:2.2mm;min-height:0;}
+    .lbl2{font-size:7.5pt;color:#8b7ba8;letter-spacing:.06em;}
+    .pb-note .line{flex:1;min-height:3mm;border-bottom:1px dotted #c9bce0;}
+    .score{display:grid;grid-template-columns:repeat(6,1fr);gap:2.6mm;flex:1;}
+    .score div{background:#fff;border:1.2px solid #cbbce3;border-radius:4px;text-align:center;padding:2mm 0;}
+    .score i{display:block;font-style:normal;font-size:7.6pt;color:#6f5f92;}
+    .score u{display:block;height:9mm;border-bottom:1px dotted #c9bce0;margin:0 2.4mm;}
+    .score .tot{background:#f2e7ff;border-color:#9b79cf;}
+    .pb-foot{font-size:8pt;color:#7b6f92;text-align:center;letter-spacing:.08em;
+      border-top:1px dotted #c9bce0;padding-top:2.2mm;margin-top:auto;}
+
+    /* ---------- 封印牌 ---------- */
+    .sealgrid{display:grid;grid-template-columns:repeat(3,63mm);grid-auto-rows:130mm;gap:2.4mm;
+      justify-content:center;flex:1;min-height:0;}
+    .card{border-radius:5px;overflow:hidden;position:relative;background:#fff;
+      border:1px solid #c9bce0;display:flex;flex-direction:column;}
+    .seal{
+      background:
+        radial-gradient(circle at 50% 12%, rgba(185,140,255,.42) 0%, rgba(185,140,255,0) 58%),
+        linear-gradient(175deg,#2b1752 0%,#1d0f38 62%,#150a2a 100%);
+      color:#f4ecff;border:1.5px solid #7b4bd1;
+    }
+    .s-band{font-size:6.5pt;letter-spacing:.3em;text-align:center;padding:2.2mm 0 1mm;color:#a98de0;}
+    .s-num{text-align:center;font-size:8pt;color:#e0b45c;letter-spacing:.2em;}
+    .s-icon{text-align:center;font-size:26pt;line-height:1;margin:2.5mm 0 1mm;}
+    .s-name{text-align:center;font-size:13pt;font-weight:800;letter-spacing:.1em;}
+    .s-place{text-align:center;font-size:7.5pt;color:#bda6e6;margin-top:1.5mm;letter-spacing:.04em;}
+    .s-req{margin:3mm 5mm 0;border-top:1px solid rgba(169,141,224,.35);
+      border-bottom:1px solid rgba(169,141,224,.35);padding:2mm 0;font-size:7.5pt;}
+    .s-req div{display:flex;justify-content:space-between;padding:.7mm 0;}
+    .s-req .k{color:#a98de0;letter-spacing:.08em;}
+    .s-req b{color:#f0d79a;font-size:9pt;}
+    .s-vp{margin:2.5mm 5mm 0;display:flex;justify-content:space-between;align-items:center;}
+    .s-vp span{font-size:7.5pt;color:#a98de0;letter-spacing:.14em;}
+    .s-vp b{font-size:20pt;color:#f0d79a;line-height:1;}
+    .s-fx{margin:2.5mm 5mm 0;font-size:7pt;line-height:1.7;color:#d6c8ee;flex:1;
+      background:rgba(255,255,255,.055);border-radius:3px;padding:2mm;white-space:pre-line;}
+    .s-back{font-size:6pt;text-align:center;color:#7a66a3;padding:1.6mm 0 2mm;letter-spacing:.1em;}
+
+    /* ---------- 卡牌通用 ---------- */
+    .cardgrid{display:grid;grid-template-columns:repeat(3,63mm);grid-auto-rows:86mm;gap:2.4mm;
+      justify-content:center;flex:1;min-height:0;}
+    .cardgrid.short{flex:0 0 auto;}
+    .sp{color:#fff;}
+    .sp.weave{background:linear-gradient(168deg,#12707c 0%,#0a4d56 60%,#063942 100%);border-color:#0d7f8a;}
+    .sp.seal{background:linear-gradient(168deg,#44549b 0%,#2e3a74 60%,#1e2750 100%);border-color:#5d6cb0;}
+    .sp.whisper{background:linear-gradient(168deg,#a13a6c 0%,#78244c 60%,#4f1634 100%);border-color:#b8487c;}
+    .c-top{display:flex;justify-content:space-between;font-size:6.4pt;padding:1.8mm 2.8mm 0;
+      color:rgba(255,255,255,.78);letter-spacing:.1em;position:relative;z-index:3;}
+    .c-school{font-weight:700;}
+    .c-name{font-size:12.5pt;font-weight:800;padding:1mm 3mm 0;letter-spacing:.02em;
+      text-shadow:0 1px 3px rgba(0,0,0,.45);position:relative;z-index:3;}
+    .c-rule{height:1px;background:rgba(255,255,255,.38);margin:2mm 3mm 0;position:relative;z-index:3;}
+    .c-text{font-size:8.2pt;line-height:1.8;padding:2mm 3.2mm 0;flex:1;
+      display:flex;align-items:center;
+      text-shadow:0 1px 3px rgba(0,0,0,.45);position:relative;z-index:3;}
+    .c-bot{display:flex;justify-content:space-between;align-items:center;
+      padding:2mm 2.8mm 2.2mm;position:relative;z-index:3;
+      border-top:1px solid rgba(255,255,255,.28);margin:0 2.8mm;}
+    .c-surge-l{font-size:6.2pt;letter-spacing:.16em;color:rgba(255,255,255,.72);}
+    .sv{font-size:13pt;font-weight:800;line-height:1;}
+    .sv.up{color:#ffd27a;}
+    .sv.down{color:#8ce8c8;}
+    .sv.zero{color:#cfc6e0;font-size:10pt;}
+    .c-glyph{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);
+      font-size:104pt;font-weight:700;opacity:.085;line-height:1;z-index:1;
+      font-family:Georgia,"Songti SC","SimSun",serif;color:#fff;}
+    .c-ring{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);
+      width:42mm;height:42mm;border:1.4px dashed rgba(255,255,255,.16);border-radius:50%;z-index:1;}
+    .secret .c-glyph{color:#7a5a20;opacity:.10;}
+    .secret .c-ring{border-color:rgba(122,90,32,.22);}
+    .c-art{position:absolute;right:-8mm;bottom:-8mm;width:26mm;height:26mm;border-radius:50%;
+      background:radial-gradient(circle,rgba(255,255,255,.14),rgba(255,255,255,0) 68%);z-index:1;}
+
+    /* ---------- 秘密卡 ---------- */
+    .secret{background:linear-gradient(168deg,#fdf8ec 0%,#f3e6cd 100%);border-color:#c9a95f;
+      box-shadow:inset 0 0 0 2.5px #fdf8ec, inset 0 0 0 3.6px #d8bd82;}
+    .secret .c-top{color:#9a7a3a;}
+    .k-title{font-size:12pt;font-weight:800;color:#4a3210;padding:1.5mm 2.8mm 0;line-height:1.3;}
+    .secret .c-rule{background:rgba(154,122,58,.4);}
+    .k-cond{font-size:7.2pt;line-height:1.72;padding:2mm 2.8mm 0;flex:1;color:#5c4520;}
+    .k-vp{font-size:9pt;font-weight:800;color:#8a5a12;text-align:right;padding:0 2.8mm 2mm;
+      letter-spacing:.08em;}
+    .secret .c-art{background:radial-gradient(circle,rgba(200,160,80,.22),rgba(200,160,80,0) 68%);}
+
+    /* ---------- 空白自定义卡 ---------- */
+    .blank{background:linear-gradient(168deg,#fbf7ef 0%,#efe6d5 100%);
+      border:1.5px dashed #b9a67d;}
+    .blank .c-top{color:#9a8452;}
+    .blank .c-glyph{color:#b9a67d;opacity:.16;}
+    .blank .c-ring{border-color:rgba(154,132,82,.28);}
+    .blank .c-bot{border-top:1px solid rgba(154,132,82,.35);}
+    .blank .c-surge-l{color:#8b7444;}
+    .bk-name{font-size:8.5pt;color:#6b5730;padding:3mm 3.2mm 0;position:relative;z-index:3;}
+    .bk-body{font-size:8.5pt;color:#6b5730;padding:2mm 3.2mm 0;position:relative;z-index:3;}
+    .bk-line{height:5mm;border-bottom:1px dotted #b9a67d;margin:0 3.2mm;position:relative;z-index:3;}
+    .bk-sv{font-size:11pt;color:#8b7444;font-weight:700;}
+
+    /* ---------- 填充说明 / 速查 ---------- */
+    .fillnote{margin-top:3mm;background:#f7f2ff;border:1.2px solid #cfc0e8;border-radius:6px;padding:2.4mm 3mm;}
+    .fillnote h4{margin:0 0 1.6mm;font-size:8.6pt;color:var(--purple);letter-spacing:.06em;}
+    .qtab{width:100%;border-collapse:collapse;font-size:7.2pt;}
+    .qtab th{background:#e9dffb;color:#3b2160;text-align:left;padding:1.1mm 1.8mm;font-weight:700;
+      border:1px solid #cfc0e8;}
+    .qtab td{padding:1mm 1.8mm;border:1px solid #ddd2ef;color:#3f3157;}
+    .qtab tr:nth-child(even) td{background:#fbf8ff;}
+
+    /* ---------- 棋子 / 标记 ---------- */
+    .tokgrid{display:grid;grid-template-columns:1fr 1fr;gap:3mm;}
+    .tokbox{border:1.2px solid #cfc0e8;border-radius:6px;padding:2.4mm 3mm;background:#faf7ff;}
+    .tokbox.wide{margin-top:3mm;}
+    .tokbox h4{margin:0 0 2mm;font-size:8.6pt;color:var(--purple);letter-spacing:.06em;
+      border-bottom:1px dotted #cfc0e8;padding-bottom:1.2mm;}
+    .pawns{display:grid;grid-template-columns:repeat(2,23mm);gap:3mm;justify-content:center;}
+    .pawn{width:23mm;height:23mm;border-radius:50%;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;color:#fff;border:2px dashed rgba(255,255,255,.55);}
+    .pawn i{font-style:normal;font-size:13pt;line-height:1;}
+    .pawn em{font-style:normal;font-size:6.6pt;letter-spacing:.1em;margin-top:.8mm;}
+    .pawn.girl{background:linear-gradient(150deg,#3f7fd6,#1d4a8f);}
+    .pawn.girl.p1{background:linear-gradient(150deg,#2f9ec4,#16607d);}
+    .pawn.girl.p2{background:linear-gradient(150deg,#5b6fd8,#2a357f);}
+    .pawn.girl.p3{background:linear-gradient(150deg,#3c93a8,#1c5566);}
+    .pawn.mom{border-radius:6px;background:linear-gradient(150deg,#d99a3c,#9a5c14);}
+    .pawn.mom.p1{background:linear-gradient(150deg,#c47a4a,#8a4520);}
+    .pawn.mom.p2{background:linear-gradient(150deg,#d6b054,#8f6a12);}
+    .pawn.mom.p3{background:linear-gradient(150deg,#b8735a,#7d3c26);}
+    .gemrow{display:grid;grid-template-columns:repeat(15,1fr);gap:1.6mm;}
+    .gtok{aspect-ratio:1;border-radius:50%;border:1.2px solid #7b5bb5;
+      background:radial-gradient(circle at 34% 30%,#d3c0f7,#6a45b5 66%,#361d68);}
+    .dialwrap{display:grid;grid-template-columns:1fr 38mm;gap:3mm;margin-top:3mm;}
+    .dialbox{border:1.2px solid #cfc0e8;border-radius:6px;padding:2.4mm 3mm;background:#faf7ff;}
+    .dialbox h4{margin:0 0 2mm;font-size:8.6pt;color:var(--purple);letter-spacing:.06em;
+      border-bottom:1px dotted #cfc0e8;padding-bottom:1.2mm;}
+    .dial{display:grid;grid-template-columns:repeat(13,1fr);gap:1mm;}
+    .dn{aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+      border-radius:4px;font-size:9pt;font-weight:700;color:#fff;}
+    .zone-a{background:#3f8a5c;}
+    .zone-b{background:#c8a12c;}
+    .zone-c{background:#c8712c;}
+    .zone-d{background:#a4345f;}
+    .dialnote{display:flex;gap:2.5mm;margin-top:2.2mm;flex-wrap:wrap;}
+    .dialnote span{font-size:7pt;color:#fff;padding:.9mm 2mm;border-radius:3px;}
+    .dialnote .za{background:#3f8a5c;}
+    .dialnote .zb{background:#c8a12c;}
+    .dialnote .zc{background:#c8712c;}
+    .dialnote .zd{background:#a4345f;}
+    .turnmark{font-size:26pt;text-align:center;line-height:1.5;}
+    .crosswrap{display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-top:3mm;}
+    .crosswrap .fillnote{margin-top:0;}
+    .crosstab{font-size:7pt;}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:2.6mm;}
+    .st{background:#fff;border:1px solid #ddd2ef;border-radius:4px;padding:2mm 2.4mm;}
+    .st b{display:inline-flex;width:5mm;height:5mm;border-radius:50%;background:var(--violet);
+      color:#fff;font-size:7.5pt;align-items:center;justify-content:center;vertical-align:middle;}
+    .st i{font-style:normal;font-size:8pt;font-weight:700;color:var(--purple);margin-left:1.4mm;}
+    .st p{margin:1.4mm 0 0;font-size:6.9pt;line-height:1.65;color:#4a3b66;}
+
+    /* ---------- 打印 ---------- */
+    @page{size:A4;margin:0;}
+    @media print{
+      *{
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      body{background:#fff;}
+      .sheet{max-width:none;}
+      .page{
+        margin:0;box-shadow:none;page-break-after:always;break-after:page;
+      }
+      .page:last-child{page-break-after:auto;break-after:auto;}
+      .print-hint{
+        display: none;
+      }
+    }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="print-hint">
+    <strong>⚠️ 重要打印提示：</strong>
+    <ul>
+      <li>使用 <strong>A4 纸张</strong>打印，边距设为<strong>「无」或「最小」</strong>（本文件已按 210×297mm 满版排版）</li>
+      <li>在打印对话框中，务必<strong>勾选「背景图形 / Background graphics」</strong>，否则所有颜色与卡面都会丢失</li>
+      <li>缩放请选 <strong>100%（实际大小）</strong>，不要选「适应页面」，否则卡牌会变小</li>
+      <li>卡牌（封印牌 6 / 咒语卡 40 / 秘密卡 12）建议用 <strong>200g 以上卡纸</strong>双面打印</li>
+      <li>主版图建议用 <strong>A3</strong> 打印或塑封；棋子建议贴在硬纸板上再裁剪</li>
+      <li>打印后沿边框裁剪，卡牌可再过塑，能反复使用几十局</li>
+    </ul>
+  </div>
+<section class="page cover">
+  <div class="cov-top">DISNEY · HEXED ｜ 桌游改编 · 策略类</div>
+  <h1>魔法秘境<span class="colon">：</span><br>六道封印</h1>
+  <div class="cov-en">HEXED : SIX SEALS</div>
+  <div class="cov-line"></div>
+  <p class="cov-lede">十六岁那年，阁楼上的镜子裂了。<br>
+  你才发现那些被一遍遍纠正的「怪癖」，<br>
+  其实是被封印了十六年的天赋。<br><br>
+  而那个一直拦着你的母亲，<br>
+  当年也是从那个世界逃出来的。</p>
+  <div class="cov-kv">
+    <div><b>2-4</b><span>人</span></div>
+    <div><b>50-75</b><span>分钟</span></div>
+    <div><b>10+</b><span>岁</span></div>
+    <div><b>★★★☆</b><span>中等偏难</span></div>
+  </div>
+  <div class="cov-rules">
+    <div class="cr-h">记住这三件事，就能开局</div>
+    <div class="cr-i"><b>01</b><p><strong>并肩才能解封。</strong>你手上只有两枚棋子——少女与母亲。六道封印，必须母女站在同一格才能打开。一个人再强，也解不开自己的封印。</p></div>
+    <div class="cr-i"><b>02</b><p><strong>涌流是全桌的炸弹。</strong>0 到 12 的公共刻度。每解一道封印就往上推，推得越高你越强，但轮末的「回响」会把你的棋子从魔法世界里甩出去。</p></div>
+    <div class="cr-i"><b>03</b><p><strong>你只有 12 个回合。</strong>3 轮 × 4 回合，每回合 3 点行动力。母亲跨过界线要花掉整整一个回合——这个「空转」，你安排在哪一轮？</p></div>
+  </div>
+  <div class="cov-gem">◯ 少女　▢ 母亲　💎 结晶　🔒 封印</div>
+  <div class="cov-foot">打印道具 · 主版图 1 ｜ 封印牌 6 ｜ 咒语卡 40 ｜ 秘密卡 12 ｜ 玩家版图 4 ｜ 棋子 8</div>
+</section>
+<section class="page mappage">
+  <div class="phead"><h2>主版图 · 双环秘境</h2><span class="sub">外环 8 格（灰木镇）+ 内环 6 格（魔法国）+ 中央女王塔</span></div>
+  <div class="mapwrap"><svg class="mapsvg" viewBox="0 0 780 780" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="gIn" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4b2a86"/><stop offset="70%" stop-color="#2a1550"/><stop offset="100%" stop-color="#1a0d35"/></radialGradient>
+<radialGradient id="gOut" cx="50%" cy="50%" r="52%"><stop offset="0%" stop-color="#2c2440"/><stop offset="100%" stop-color="#1b1730"/></radialGradient>
+<radialGradient id="gTower" cx="50%" cy="35%" r="60%"><stop offset="0%" stop-color="#f4d488"/><stop offset="60%" stop-color="#c8952f"/><stop offset="100%" stop-color="#7c5a17"/></radialGradient>
+<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<circle cx="390.0" cy="390.0" r="374" fill="url(#gOut)" stroke="#4a3f68" stroke-width="2"/>
+<circle cx="390.0" cy="390.0" r="252" fill="url(#gIn)" stroke="#6b46b8" stroke-width="3"/>
+<circle cx="390.0" cy="390.0" r="264" fill="none" stroke="#c9a4ff" stroke-width="2.5" stroke-dasharray="9 7" opacity="0.85"/>
+<circle cx="390.0" cy="390.0" r="330.0" fill="none" stroke="#6d5f92" stroke-width="10" opacity="0.5"/>
+<circle cx="390.0" cy="390.0" r="184.0" fill="none" stroke="#8a5fd6" stroke-width="9" opacity="0.55"/>
+<circle cx="390.0" cy="390.0" r="86.0" fill="url(#gTower)" stroke="#f6e0a6" stroke-width="3"/>
+<circle cx="390.0" cy="390.0" r="94.0" fill="none" stroke="#f6e0a6" stroke-width="1" opacity="0.5" stroke-dasharray="3 5"/>
+<text x="390.0" y="378.0" text-anchor="middle" font-size="42" filter="url(#glow)">👑</text>
+<text x="390.0" y="412.0" text-anchor="middle" font-size="20" fill="#3a2606" font-weight="700" letter-spacing="1">女王塔</text>
+<text x="390.0" y="430.0" text-anchor="middle" font-size="11" fill="#5a3d0c">不可进入</text>
+<circle cx="390.0" cy="60.0" r="48" fill="#4a3c68" stroke="#a89bc6" stroke-width="2.5"/>
+<circle cx="390.0" cy="60.0" r="53" fill="none" stroke="#e0b45c" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="390.0" y="51.0" text-anchor="middle" font-size="21">🏫</text>
+<text x="390.0" y="69.0" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">学校</text>
+<text x="390.0" y="84.0" text-anchor="middle" font-size="8.6" fill="#bcabdc">→ 烛火回廊</text>
+<circle cx="623.3" cy="156.7" r="48" fill="#3d3159" stroke="#a89bc6" stroke-width="2.5"/>
+<text x="623.3" y="147.7" text-anchor="middle" font-size="21">🥐</text>
+<text x="623.3" y="165.7" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">面包店</text>
+<text x="623.3" y="180.7" text-anchor="middle" font-size="8.6" fill="#bcabdc">→ 烛火回廊</text>
+<circle cx="720.0" cy="390.0" r="48" fill="#4a3c68" stroke="#a89bc6" stroke-width="2.5"/>
+<circle cx="720.0" cy="390.0" r="53" fill="none" stroke="#e0b45c" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="720.0" y="381.0" text-anchor="middle" font-size="21">🏥</text>
+<text x="720.0" y="399.0" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">诊所</text>
+<text x="720.0" y="414.0" text-anchor="middle" font-size="8.6" fill="#bcabdc">→ 镜湖</text>
+<circle cx="623.3" cy="623.3" r="48" fill="#3d3159" stroke="#a89bc6" stroke-width="2.5"/>
+<text x="623.3" y="614.3" text-anchor="middle" font-size="21">🚉</text>
+<text x="623.3" y="632.3" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">车站</text>
+<text x="623.3" y="647.3" text-anchor="middle" font-size="8.6" fill="#bcabdc">💎 → 蛛丝书库</text>
+<circle cx="390.0" cy="720.0" r="48" fill="#3d3159" stroke="#a89bc6" stroke-width="2.5"/>
+<text x="390.0" y="711.0" text-anchor="middle" font-size="21">🏚</text>
+<text x="390.0" y="729.0" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">阁楼</text>
+<text x="390.0" y="744.0" text-anchor="middle" font-size="8.6" fill="#bcabdc">→ 蛛丝书库</text>
+<circle cx="156.7" cy="623.3" r="48" fill="#4a3c68" stroke="#a89bc6" stroke-width="2.5"/>
+<circle cx="156.7" cy="623.3" r="53" fill="none" stroke="#e0b45c" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="156.7" y="614.3" text-anchor="middle" font-size="21">⛪</text>
+<text x="156.7" y="632.3" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">教堂</text>
+<text x="156.7" y="647.3" text-anchor="middle" font-size="8.6" fill="#bcabdc">→ 影市</text>
+<circle cx="60.0" cy="390.0" r="48" fill="#3d3159" stroke="#a89bc6" stroke-width="2.5"/>
+<text x="60.0" y="381.0" text-anchor="middle" font-size="21">🎪</text>
+<text x="60.0" y="399.0" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">市集</text>
+<text x="60.0" y="414.0" text-anchor="middle" font-size="8.6" fill="#bcabdc">💎 → 熔炉庭院</text>
+<circle cx="156.7" cy="156.7" r="48" fill="#3d3159" stroke="#a89bc6" stroke-width="2.5"/>
+<text x="156.7" y="147.7" text-anchor="middle" font-size="21">🌊</text>
+<text x="156.7" y="165.7" text-anchor="middle" font-size="12.5" fill="#f4eeff" font-weight="700">码头</text>
+<text x="156.7" y="180.7" text-anchor="middle" font-size="8.6" fill="#bcabdc">💎 → 女王塔前庭</text>
+<circle cx="390.0" cy="206.0" r="41" fill="#2b1a52" stroke="#b98cff" stroke-width="2.5"/>
+<text x="390.0" y="200.0" text-anchor="middle" font-size="21">🕯</text>
+<text x="390.0" y="218.0" text-anchor="middle" font-size="11" fill="#efe6ff" font-weight="700">烛火回廊</text>
+<text x="390.0" y="232.0" text-anchor="middle" font-size="9" fill="#d8b8ff">封印 1</text>
+<circle cx="549.3" cy="298.0" r="41" fill="#2b1a52" stroke="#b98cff" stroke-width="2.5"/>
+<text x="549.3" y="292.0" text-anchor="middle" font-size="21">🪞</text>
+<text x="549.3" y="310.0" text-anchor="middle" font-size="11" fill="#efe6ff" font-weight="700">镜湖</text>
+<text x="549.3" y="324.0" text-anchor="middle" font-size="9" fill="#d8b8ff">封印 2  💎</text>
+<circle cx="549.3" cy="482.0" r="41" fill="#2b1a52" stroke="#b98cff" stroke-width="2.5"/>
+<text x="549.3" y="476.0" text-anchor="middle" font-size="21">🕸</text>
+<text x="549.3" y="494.0" text-anchor="middle" font-size="11" fill="#efe6ff" font-weight="700">蛛丝书库</text>
+<text x="549.3" y="508.0" text-anchor="middle" font-size="9" fill="#d8b8ff">封印 3</text>
+<circle cx="390.0" cy="574.0" r="41" fill="#2b1a52" stroke="#b98cff" stroke-width="2.5"/>
+<text x="390.0" y="568.0" text-anchor="middle" font-size="21">🌑</text>
+<text x="390.0" y="586.0" text-anchor="middle" font-size="11" fill="#efe6ff" font-weight="700">影市</text>
+<text x="390.0" y="600.0" text-anchor="middle" font-size="9" fill="#d8b8ff">封印 4  💎</text>
+<circle cx="230.7" cy="482.0" r="41" fill="#2b1a52" stroke="#b98cff" stroke-width="2.5"/>
+<text x="230.7" y="476.0" text-anchor="middle" font-size="21">🔥</text>
+<text x="230.7" y="494.0" text-anchor="middle" font-size="11" fill="#efe6ff" font-weight="700">熔炉庭院</text>
+<text x="230.7" y="508.0" text-anchor="middle" font-size="9" fill="#d8b8ff">封印 5  💎</text>
+<circle cx="230.7" cy="298.0" r="41" fill="#2b1a52" stroke="#b98cff" stroke-width="2.5"/>
+<text x="230.7" y="292.0" text-anchor="middle" font-size="21">👑</text>
+<text x="230.7" y="310.0" text-anchor="middle" font-size="11" fill="#efe6ff" font-weight="700">女王塔前庭</text>
+<text x="230.7" y="324.0" text-anchor="middle" font-size="9" fill="#d8b8ff">封印 6</text>
+</svg></div><div class="maplegend">
+  <div><b>⋯⋯ 界线</b>少女越界 2 AP ｜ 母亲越界 3 AP</div>
+  <div><b>🟡 金圈</b>安抚点（仅母亲·涌流 −2·2 AP）</div>
+  <div><b>💎 结晶</b>车站/市集/码头 各 3 枚；镜湖/影市/熔炉庭院 各 2 枚</div>
+  <div><b>🔒 封印台</b>内环 6 格，各放 1 张封印牌</div>
+</div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>主版图 · 双环秘境</span></div>
+</section>
+<section class="page pboardpage">
+  <div class="phead"><h2>玩家版图 1-2</h2><span class="sub">每名玩家 1 张 · 记录结晶 / 秘密 / 得分</span></div>
+  <div class="pbgrid"><div class="pb">
+  <div class="pb-head"><span class="pb-name">桑德拉家</span><span class="pb-tag">家族版图</span></div>
+  <div class="pb-body">
+    <div class="pb-sec"><span class="lbl">秘密卡（暗置）</span><div class="slot"></div></div>
+    <div class="pb-sec"><span class="lbl">结晶（上限 6）</span><div class="gems"><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span></div></div>
+    <div class="pb-sec"><span class="lbl">已解封封印</span>
+      <div class="vpbox"><span class="vp"><b>1</b><i>缄口</i></span><span class="vp"><b>2</b><i>缄目</i></span><span class="vp"><b>3</b><i>缄手</i></span><span class="vp"><b>4</b><i>缄心</i></span><span class="vp"><b>5</b><i>缄名</i></span><span class="vp"><b>6</b><i>缄血</i></span></div>
+    </div>
+    <div class="pb-sec"><span class="lbl">计分</span>
+      <div class="score">
+        <div><i>封印</i><u></u></div><div><i>结晶</i><u></u></div>
+        <div><i>秘密</i><u></u></div><div><i>并肩</i><u></u></div>
+        <div><i>王座</i><u></u></div><div class="tot"><i>总分</i><u></u></div>
+      </div>
+    </div>
+    <div class="pb-note">
+      <span class="lbl2">回合记录（解封 / 涌流 / 并肩）</span>
+      <span class="line"></span><span class="line"></span><span class="line"></span>
+    </div>
+    <div class="pb-foot">少女 ◯ ｜ 母亲 ▢　·　3 轮 × 4 回合 = 12 回合　·　每回合 3 AP</div>
+  </div>
+</div><div class="pb">
+  <div class="pb-head"><span class="pb-name">韦恩家</span><span class="pb-tag">家族版图</span></div>
+  <div class="pb-body">
+    <div class="pb-sec"><span class="lbl">秘密卡（暗置）</span><div class="slot"></div></div>
+    <div class="pb-sec"><span class="lbl">结晶（上限 6）</span><div class="gems"><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span></div></div>
+    <div class="pb-sec"><span class="lbl">已解封封印</span>
+      <div class="vpbox"><span class="vp"><b>1</b><i>缄口</i></span><span class="vp"><b>2</b><i>缄目</i></span><span class="vp"><b>3</b><i>缄手</i></span><span class="vp"><b>4</b><i>缄心</i></span><span class="vp"><b>5</b><i>缄名</i></span><span class="vp"><b>6</b><i>缄血</i></span></div>
+    </div>
+    <div class="pb-sec"><span class="lbl">计分</span>
+      <div class="score">
+        <div><i>封印</i><u></u></div><div><i>结晶</i><u></u></div>
+        <div><i>秘密</i><u></u></div><div><i>并肩</i><u></u></div>
+        <div><i>王座</i><u></u></div><div class="tot"><i>总分</i><u></u></div>
+      </div>
+    </div>
+    <div class="pb-note">
+      <span class="lbl2">回合记录（解封 / 涌流 / 并肩）</span>
+      <span class="line"></span><span class="line"></span><span class="line"></span>
+    </div>
+    <div class="pb-foot">少女 ◯ ｜ 母亲 ▢　·　3 轮 × 4 回合 = 12 回合　·　每回合 3 AP</div>
+  </div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>玩家版图 1-2</span></div>
+</section>
+<section class="page pboardpage">
+  <div class="phead"><h2>玩家版图 3-4</h2><span class="sub">每名玩家 1 张 · 记录结晶 / 秘密 / 得分</span></div>
+  <div class="pbgrid"><div class="pb">
+  <div class="pb-head"><span class="pb-name">奥利克家</span><span class="pb-tag">家族版图</span></div>
+  <div class="pb-body">
+    <div class="pb-sec"><span class="lbl">秘密卡（暗置）</span><div class="slot"></div></div>
+    <div class="pb-sec"><span class="lbl">结晶（上限 6）</span><div class="gems"><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span></div></div>
+    <div class="pb-sec"><span class="lbl">已解封封印</span>
+      <div class="vpbox"><span class="vp"><b>1</b><i>缄口</i></span><span class="vp"><b>2</b><i>缄目</i></span><span class="vp"><b>3</b><i>缄手</i></span><span class="vp"><b>4</b><i>缄心</i></span><span class="vp"><b>5</b><i>缄名</i></span><span class="vp"><b>6</b><i>缄血</i></span></div>
+    </div>
+    <div class="pb-sec"><span class="lbl">计分</span>
+      <div class="score">
+        <div><i>封印</i><u></u></div><div><i>结晶</i><u></u></div>
+        <div><i>秘密</i><u></u></div><div><i>并肩</i><u></u></div>
+        <div><i>王座</i><u></u></div><div class="tot"><i>总分</i><u></u></div>
+      </div>
+    </div>
+    <div class="pb-note">
+      <span class="lbl2">回合记录（解封 / 涌流 / 并肩）</span>
+      <span class="line"></span><span class="line"></span><span class="line"></span>
+    </div>
+    <div class="pb-foot">少女 ◯ ｜ 母亲 ▢　·　3 轮 × 4 回合 = 12 回合　·　每回合 3 AP</div>
+  </div>
+</div><div class="pb">
+  <div class="pb-head"><span class="pb-name">莫尔家</span><span class="pb-tag">家族版图</span></div>
+  <div class="pb-body">
+    <div class="pb-sec"><span class="lbl">秘密卡（暗置）</span><div class="slot"></div></div>
+    <div class="pb-sec"><span class="lbl">结晶（上限 6）</span><div class="gems"><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span><span class="gem"></span></div></div>
+    <div class="pb-sec"><span class="lbl">已解封封印</span>
+      <div class="vpbox"><span class="vp"><b>1</b><i>缄口</i></span><span class="vp"><b>2</b><i>缄目</i></span><span class="vp"><b>3</b><i>缄手</i></span><span class="vp"><b>4</b><i>缄心</i></span><span class="vp"><b>5</b><i>缄名</i></span><span class="vp"><b>6</b><i>缄血</i></span></div>
+    </div>
+    <div class="pb-sec"><span class="lbl">计分</span>
+      <div class="score">
+        <div><i>封印</i><u></u></div><div><i>结晶</i><u></u></div>
+        <div><i>秘密</i><u></u></div><div><i>并肩</i><u></u></div>
+        <div><i>王座</i><u></u></div><div class="tot"><i>总分</i><u></u></div>
+      </div>
+    </div>
+    <div class="pb-note">
+      <span class="lbl2">回合记录（解封 / 涌流 / 并肩）</span>
+      <span class="line"></span><span class="line"></span><span class="line"></span>
+    </div>
+    <div class="pb-foot">少女 ◯ ｜ 母亲 ▢　·　3 轮 × 4 回合 = 12 回合　·　每回合 3 AP</div>
+  </div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>玩家版图 3-4</span></div>
+</section>
+<section class="page sealpage">
+  <div class="phead"><h2>封印牌 · 六道封印</h2><span class="sub">正面朝上放在对应封印台 · 解封后翻面</span></div>
+  <div class="sealgrid"><div class="card seal">
+  <div class="s-band">封 印 · SEAL</div>
+  <div class="s-num">第 1 道</div>
+  <div class="s-icon">🤐</div>
+  <div class="s-name">缄口之印</div>
+  <div class="s-place">🕯 烛火回廊</div>
+  <div class="s-req">
+    <div><span class="k">结晶</span><b>1 💎</b></div>
+    <div><span class="k">涌流阈值</span><b>≥ 1</b></div>
+  </div>
+  <div class="s-vp"><span>分 值</span><b>1</b></div>
+  <div class="s-fx">解封后：无附加效果。
+这是最浅的一道，教你怎么解封。</div>
+  <div class="s-back">已解封 · 翻面朝下</div>
+</div><div class="card seal">
+  <div class="s-band">封 印 · SEAL</div>
+  <div class="s-num">第 2 道</div>
+  <div class="s-icon">👁</div>
+  <div class="s-name">缄目之印</div>
+  <div class="s-place">🪞 镜湖</div>
+  <div class="s-req">
+    <div><span class="k">结晶</span><b>1 💎</b></div>
+    <div><span class="k">涌流阈值</span><b>≥ 2</b></div>
+  </div>
+  <div class="s-vp"><span>分 值</span><b>2</b></div>
+  <div class="s-fx">解封后：涌流立即 +1。
+镜子碎了，你看见的是另一个人。</div>
+  <div class="s-back">已解封 · 翻面朝下</div>
+</div><div class="card seal">
+  <div class="s-band">封 印 · SEAL</div>
+  <div class="s-num">第 3 道</div>
+  <div class="s-icon">✋</div>
+  <div class="s-name">缄手之印</div>
+  <div class="s-place">🕸 蛛丝书库</div>
+  <div class="s-req">
+    <div><span class="k">结晶</span><b>2 💎</b></div>
+    <div><span class="k">涌流阈值</span><b>≥ 3</b></div>
+  </div>
+  <div class="s-vp"><span>分 值</span><b>2</b></div>
+  <div class="s-fx">解封后：从牌堆抽 2 张咒语。
+艾莉丝的日记在这里。</div>
+  <div class="s-back">已解封 · 翻面朝下</div>
+</div><div class="card seal">
+  <div class="s-band">封 印 · SEAL</div>
+  <div class="s-num">第 4 道</div>
+  <div class="s-icon">🫀</div>
+  <div class="s-name">缄心之印</div>
+  <div class="s-place">🌑 影市</div>
+  <div class="s-req">
+    <div><span class="k">结晶</span><b>2 💎</b></div>
+    <div><span class="k">涌流阈值</span><b>≥ 4</b></div>
+  </div>
+  <div class="s-vp"><span>分 值</span><b>3</b></div>
+  <div class="s-fx">解封后：本回合可额外行动 1 次
+（+3 AP，可继续解封）。</div>
+  <div class="s-back">已解封 · 翻面朝下</div>
+</div><div class="card seal">
+  <div class="s-band">封 印 · SEAL</div>
+  <div class="s-num">第 5 道</div>
+  <div class="s-icon">🪶</div>
+  <div class="s-name">缄名之印</div>
+  <div class="s-place">🔥 熔炉庭院</div>
+  <div class="s-req">
+    <div><span class="k">结晶</span><b>3 💎</b></div>
+    <div><span class="k">涌流阈值</span><b>≥ 5</b></div>
+  </div>
+  <div class="s-vp"><span>分 值</span><b>3</b></div>
+  <div class="s-fx">解封后：其他玩家各弃 1 枚结晶。</div>
+  <div class="s-back">已解封 · 翻面朝下</div>
+</div><div class="card seal">
+  <div class="s-band">封 印 · SEAL</div>
+  <div class="s-num">第 6 道</div>
+  <div class="s-icon">🩸</div>
+  <div class="s-name">缄血之印</div>
+  <div class="s-place">👑 女王塔前庭</div>
+  <div class="s-req">
+    <div><span class="k">结晶</span><b>3 💎</b></div>
+    <div><span class="k">涌流阈值</span><b>≥ 6</b></div>
+  </div>
+  <div class="s-vp"><span>分 值</span><b>5</b></div>
+  <div class="s-fx">解封时若涌流 ≥ 10，女王苏醒：
+该玩家 -5 分。</div>
+  <div class="s-back">已解封 · 翻面朝下</div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>封印牌 · 六道封印</span></div>
+</section>
+<section class="page cardpage">
+  <div class="phead"><h2>咒语卡 1-9 / 40</h2><span class="sub">织法 16 ｜ 封印 12 ｜ 低语 12 · 打出支付 1 AP</span></div>
+  <div class="cardgrid"><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">01/40</span></div>
+  <div class="c-name">轻身术</div>
+  <div class="c-rule"></div>
+  <div class="c-text">本回合额外获得 2 AP。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">02/40</span></div>
+  <div class="c-name">长廊折叠</div>
+  <div class="c-rule"></div>
+  <div class="c-text">把被激活的己方棋子瞬移到任一「同环」格。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">03/40</span></div>
+  <div class="c-name">镜中借步</div>
+  <div class="c-rule"></div>
+  <div class="c-text">移动 3 格，无视越界代价。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">04/40</span></div>
+  <div class="c-name">母亲的旧鞋</div>
+  <div class="c-rule"></div>
+  <div class="c-text">母亲本回合移动全部 1 AP/格，含越界。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">05/40</span></div>
+  <div class="c-name">少女的冲劲</div>
+  <div class="c-rule"></div>
+  <div class="c-text">抽 2 张牌。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">06/40</span></div>
+  <div class="c-name">涌泉</div>
+  <div class="c-rule"></div>
+  <div class="c-text">涌流 +2，抽 1 张牌。（可叠加自身涌流）</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+2</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">07/40</span></div>
+  <div class="c-name">门缝</div>
+  <div class="c-rule"></div>
+  <div class="c-text">立即越界一次：少女 1 AP / 母亲 2 AP。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">08/40</span></div>
+  <div class="c-name">双重身</div>
+  <div class="c-rule"></div>
+  <div class="c-text">本回合两枚棋子都能行动，各 3 AP。不可叠加其他 AP 加成。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+2</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">09/40</span></div>
+  <div class="c-name">旧日足迹</div>
+  <div class="c-rule"></div>
+  <div class="c-text">把己方休眠棋子移动 2 格。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>咒语卡 1-9 / 40</span></div>
+</section>
+<section class="page cardpage">
+  <div class="phead"><h2>咒语卡 10-18 / 40</h2><span class="sub">织法 16 ｜ 封印 12 ｜ 低语 12 · 打出支付 1 AP</span></div>
+  <div class="cardgrid"><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">10/40</span></div>
+  <div class="c-name">回溯</div>
+  <div class="c-rule"></div>
+  <div class="c-text">退回上回合结束时己方棋子的位置。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">11/40</span></div>
+  <div class="c-name">楼梯间</div>
+  <div class="c-rule"></div>
+  <div class="c-text">移动 2 格，只能走外环。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">12/40</span></div>
+  <div class="c-name">星光毯</div>
+  <div class="c-rule"></div>
+  <div class="c-text">传送到任一「含结晶」的格。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">13/40</span></div>
+  <div class="c-name">断线</div>
+  <div class="c-rule"></div>
+  <div class="c-text">拆掉一枚对手的「低语」标记（若有）。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">14/40</span></div>
+  <div class="c-name">借力</div>
+  <div class="c-rule"></div>
+  <div class="c-text">复制上一张被打出的咒语效果，涌流代价照付。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">15/40</span></div>
+  <div class="c-name">三眼猫</div>
+  <div class="c-rule"></div>
+  <div class="c-text">查看牌堆顶 3 张，任意调整顺序。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp weave">
+  <div class="c-glyph">织</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🪡 织法</span><span class="c-idx">16/40</span></div>
+  <div class="c-name">大缸</div>
+  <div class="c-rule"></div>
+  <div class="c-text">把 2 格内的一枚结晶吸到自己所在格。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">17/40</span></div>
+  <div class="c-name">静默</div>
+  <div class="c-rule"></div>
+  <div class="c-text">涌流 -1。可与其他降涌流效果叠加。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv down">−1</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">18/40</span></div>
+  <div class="c-name">深呼吸</div>
+  <div class="c-rule"></div>
+  <div class="c-text">涌流 -2，但本回合不能再施法。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv down">−2</span></div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>咒语卡 10-18 / 40</span></div>
+</section>
+<section class="page cardpage">
+  <div class="phead"><h2>咒语卡 19-27 / 40</h2><span class="sub">织法 16 ｜ 封印 12 ｜ 低语 12 · 打出支付 1 AP</span></div>
+  <div class="cardgrid"><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">19/40</span></div>
+  <div class="c-name">缄口</div>
+  <div class="c-rule"></div>
+  <div class="c-text">指定一名对手，其本回合不能施法。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">20/40</span></div>
+  <div class="c-name">母亲的怀抱</div>
+  <div class="c-rule"></div>
+  <div class="c-text">己方两枚棋子所在格，本回合免疫「低语」推动。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">21/40</span></div>
+  <div class="c-name">结界</div>
+  <div class="c-rule"></div>
+  <div class="c-text">选一格，任何人不能越界进入，持续到本轮结束。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">22/40</span></div>
+  <div class="c-name">反噬</div>
+  <div class="c-rule"></div>
+  <div class="c-text">对手施法时，其涌流代价翻倍。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">23/40</span></div>
+  <div class="c-name">缝线</div>
+  <div class="c-rule"></div>
+  <div class="c-text">涌流 -1，并从弃牌堆取回 1 张织法卡。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv down">−1</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">24/40</span></div>
+  <div class="c-name">铁律</div>
+  <div class="c-rule"></div>
+  <div class="c-text">本回合对手的「解封」需要多支付 1 AP。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">25/40</span></div>
+  <div class="c-name">遮眼</div>
+  <div class="c-rule"></div>
+  <div class="c-text">封印 1 张封印牌 1 轮（期间不可解封）。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">26/40</span></div>
+  <div class="c-name">换血</div>
+  <div class="c-rule"></div>
+  <div class="c-text">用 2 枚结晶换 1 分，立刻结算。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">27/40</span></div>
+  <div class="c-name">静水</div>
+  <div class="c-rule"></div>
+  <div class="c-text">涌流 -1，抽 1 张牌。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv down">−1</span></div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>咒语卡 19-27 / 40</span></div>
+</section>
+<section class="page cardpage">
+  <div class="phead"><h2>咒语卡 28-36 / 40</h2><span class="sub">织法 16 ｜ 封印 12 ｜ 低语 12 · 打出支付 1 AP</span></div>
+  <div class="cardgrid"><div class="card sp seal">
+  <div class="c-glyph">封</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🔒 封印</span><span class="c-idx">28/40</span></div>
+  <div class="c-name">女王的名字</div>
+  <div class="c-rule"></div>
+  <div class="c-text">涌流 +2，拿走任一封印牌上已有的 1 枚结晶投入。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+2</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">29/40</span></div>
+  <div class="c-name">耳边低语</div>
+  <div class="c-rule"></div>
+  <div class="c-text">把对手一枚「休眠」棋子推 1 格。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">30/40</span></div>
+  <div class="c-name">谣言</div>
+  <div class="c-rule"></div>
+  <div class="c-text">指定对手弃 1 张手牌。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">31/40</span></div>
+  <div class="c-name">顺手</div>
+  <div class="c-rule"></div>
+  <div class="c-text">偷取对手 1 枚结晶（对手需在 2 格内）。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">32/40</span></div>
+  <div class="c-name">拆散</div>
+  <div class="c-rule"></div>
+  <div class="c-text">把对手一枚休眠棋子推离其同伴 1 格，破坏并肩。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+2</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">33/40</span></div>
+  <div class="c-name">换位</div>
+  <div class="c-rule"></div>
+  <div class="c-text">与对手交换两枚棋子的位置（同环内）。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+2</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">34/40</span></div>
+  <div class="c-name">梦游</div>
+  <div class="c-rule"></div>
+  <div class="c-text">让对手一枚休眠棋子朝随机方向移动 1 格。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">35/40</span></div>
+  <div class="c-name">记忆窃取</div>
+  <div class="c-rule"></div>
+  <div class="c-text">偷看对手的秘密卡。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+2</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">36/40</span></div>
+  <div class="c-name">绊脚</div>
+  <div class="c-rule"></div>
+  <div class="c-text">对手本回合 AP -1。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv zero">±0</span></div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>咒语卡 28-36 / 40</span></div>
+</section>
+<section class="page cardpage">
+  <div class="phead"><h2>咒语卡 37-40 / 40</h2><span class="sub">本页含 4 张空白自定义卡 · 手写自制咒语</span></div>
+  <div class="cardgrid"><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">37/40</span></div>
+  <div class="c-name">回声</div>
+  <div class="c-rule"></div>
+  <div class="c-text">复制对手上回合用过的咒语。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">38/40</span></div>
+  <div class="c-name">借名</div>
+  <div class="c-rule"></div>
+  <div class="c-text">本回合你解封时，可用对手的结晶支付（从他手里扣）。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+2</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">39/40</span></div>
+  <div class="c-name">迷路</div>
+  <div class="c-rule"></div>
+  <div class="c-text">把对手棋子送回其起始格。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+1</span></div>
+</div><div class="card sp whisper">
+  <div class="c-glyph">语</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🌬 低语</span><span class="c-idx">40/40</span></div>
+  <div class="c-name">缄血之咒</div>
+  <div class="c-rule"></div>
+  <div class="c-text">涌流 +3，把 1 道已解封的封印重新封上（分值归零）。</div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="sv up">+3</span></div>
+</div><div class="card blank">
+  <div class="c-glyph">空</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">✎ 自 定 义</span><span class="c-idx">B1</span></div>
+  <div class="bk-name">卡名：</div>
+  <div class="bk-line"></div>
+  <div class="bk-body">效果：</div>
+  <div class="bk-line"></div><div class="bk-line"></div><div class="bk-line"></div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="bk-sv">___</span></div>
+</div><div class="card blank">
+  <div class="c-glyph">空</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">✎ 自 定 义</span><span class="c-idx">B2</span></div>
+  <div class="bk-name">卡名：</div>
+  <div class="bk-line"></div>
+  <div class="bk-body">效果：</div>
+  <div class="bk-line"></div><div class="bk-line"></div><div class="bk-line"></div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="bk-sv">___</span></div>
+</div><div class="card blank">
+  <div class="c-glyph">空</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">✎ 自 定 义</span><span class="c-idx">B3</span></div>
+  <div class="bk-name">卡名：</div>
+  <div class="bk-line"></div>
+  <div class="bk-body">效果：</div>
+  <div class="bk-line"></div><div class="bk-line"></div><div class="bk-line"></div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="bk-sv">___</span></div>
+</div><div class="card blank">
+  <div class="c-glyph">空</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">✎ 自 定 义</span><span class="c-idx">B4</span></div>
+  <div class="bk-name">卡名：</div>
+  <div class="bk-line"></div>
+  <div class="bk-body">效果：</div>
+  <div class="bk-line"></div><div class="bk-line"></div><div class="bk-line"></div>
+  <div class="c-bot"><span class="c-surge-l">涌流代价</span><span class="bk-sv">___</span></div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>咒语卡 37-40 / 40</span></div>
+</section>
+<section class="page cardpage">
+  <div class="phead"><h2>秘密卡 1-9 / 12</h2><span class="sub">开局暗抽 1 张 · 达成 +6 分</span></div>
+  <div class="cardgrid"><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S01</span></div>
+  <div class="k-title">我是女王的孙女</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">游戏结束时，你的少女在 👑 女王塔前庭。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S02</span></div>
+  <div class="k-title">我从没告诉女儿真相</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">你的母亲整局都没有进入内环，且你至少解封过 1 道封印。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S03</span></div>
+  <div class="k-title">我烧掉了那本日记</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">你解封了 🕸 蛛丝书库（封印 3）。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S04</span></div>
+  <div class="k-title">我想留下</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">游戏结束时，你的少女仍在「外环」，且你解封过至少 2 道封印。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S05</span></div>
+  <div class="k-title">我要带走她</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">游戏结束时，你的少女与母亲并肩于同一格。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S06</span></div>
+  <div class="k-title">镜子里那个不是我</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">你在 🪞 镜湖（封印 2）解封。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S07</span></div>
+  <div class="k-title">我数过每一道封印</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">你解封了 3 道或以上封印。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S08</span></div>
+  <div class="k-title">我不需要王座</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">游戏结束时你持有 0 枚结晶，且总分 ≥ 20。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S09</span></div>
+  <div class="k-title">我把名字卖了</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">你在 🌑 影市（封印 4）解封，且当时涌流 ≥ 8。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div></div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>秘密卡 1-9 / 12</span></div>
+</section>
+<section class="page cardpage">
+  <div class="phead"><h2>秘密卡 10-12 / 12</h2><span class="sub">开局暗抽 1 张 · 达成 +6 分</span></div>
+  <div class="cardgrid short"><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S10</span></div>
+  <div class="k-title">我替她挡了那一下</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">整局中你至少 2 次因「回响」被推出内环。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S11</span></div>
+  <div class="k-title">最后一句话</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">你解封了最后一道被解开的封印。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div><div class="card secret">
+  <div class="c-glyph">秘</div>
+  <div class="c-ring"></div>
+  <div class="c-top"><span class="c-school">🎭 秘 密</span><span class="c-idx">S12</span></div>
+  <div class="k-title">我一直在看着你</div>
+  <div class="c-rule"></div>
+  <div class="k-cond">游戏结束时，你的母亲在 👑 女王塔前庭。</div>
+  <div class="k-vp">达 成 +6 分</div>
+  <div class="c-art"></div>
+</div></div><div class="fillnote">
+          <h4>剩余版面 · 速查</h4>
+          <table class="qtab">
+            <tr><th>行动</th><th>AP</th><th>说明</th></tr>
+            <tr><td>移动</td><td>1/格</td><td>沿环移动，不跨环</td></tr>
+            <tr><td>越界</td><td>少女 2 / 母亲 3</td><td>外环 ↔ 对应内环格</td></tr>
+            <tr><td>采集结晶</td><td>1</td><td>结晶格取 1 枚，上限 6</td></tr>
+            <tr><td>施法</td><td>1</td><td>打 1 张手牌，涌流 + 卡面值</td></tr>
+            <tr><td>解封</td><td>2</td><td>需母女并肩于封印台</td></tr>
+            <tr><td>安抚</td><td>2</td><td>仅母亲，仅学校/诊所/教堂，涌流 −2</td></tr>
+            <tr><td>低语</td><td>2</td><td>推对手休眠棋子 1 格</td></tr>
+            <tr><td>弃牌换结晶</td><td>1</td><td>弃 1 张牌换 1 枚结晶</td></tr>
+          </table>
+        </div>
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>秘密卡 10-12 / 12</span></div>
+</section>
+<section class="page tokenpage">
+  <div class="phead"><h2>棋子 · 标记 · 刻度盘</h2><span class="sub">剪裁后使用 · 建议 200g 卡纸</span></div>
+  
+<div class="tokgrid">
+  <div class="tokbox">
+    <h4>少女棋子 ◯ ×4</h4>
+    <div class="pawns"><span class="pawn girl p0"><i>◯</i><em>少女</em></span><span class="pawn girl p1"><i>◯</i><em>少女</em></span><span class="pawn girl p2"><i>◯</i><em>少女</em></span><span class="pawn girl p3"><i>◯</i><em>少女</em></span></div>
+    <p class="tiny">圆形 · 蓝色系 · 剪下后对折粘合，或用硬币代替</p>
+  </div>
+  <div class="tokbox">
+    <h4>母亲棋子 ▢ ×4</h4>
+    <div class="pawns"><span class="pawn mom p0"><i>▢</i><em>母亲</em></span><span class="pawn mom p1"><i>▢</i><em>母亲</em></span><span class="pawn mom p2"><i>▢</i><em>母亲</em></span><span class="pawn mom p3"><i>▢</i><em>母亲</em></span></div>
+    <p class="tiny">方形 · 暖色系 · 形状必须与少女区分，一眼看出谁在休眠</p>
+  </div>
+</div>
+
+<div class="tokbox wide">
+  <h4>结晶标记 💎 ×30</h4>
+  <div class="gemrow"><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span><span class="gtok"></span></div>
+  <p class="tiny">建议用蓝色玻璃珠 / 豆子替代，本页仅供应急。每人持有上限 6 枚；解封时支付给公共池。</p>
+</div>
+
+<div class="dialwrap">
+  <div class="dialbox">
+    <h4>涌流刻度盘 0-12（公共）</h4>
+    <div class="dial"><span class="dn zone-a">0</span><span class="dn zone-a">1</span><span class="dn zone-a">2</span><span class="dn zone-a">3</span><span class="dn zone-b">4</span><span class="dn zone-b">5</span><span class="dn zone-b">6</span><span class="dn zone-b">7</span><span class="dn zone-c">8</span><span class="dn zone-c">9</span><span class="dn zone-c">10</span><span class="dn zone-c">11</span><span class="dn zone-d">12</span></div>
+    <div class="dialnote">
+      <span class="za">0-3 平安</span><span class="zb">4-7 内环退回</span>
+      <span class="zc">8-11 外环也推</span><span class="zd">12 爆表</span>
+    </div>
+    <p class="tiny">用回形针或硬币作指针卡在数字上。起始 3（2 人局 2）。</p>
+  </div>
+  <div class="dialbox small">
+    <h4>回合指示物</h4>
+    <div class="turnmark">⏱</div>
+    <p class="tiny">剪下即可，或用任意小物件</p>
+  </div>
+</div>
+
+<div class="crosswrap">
+  <div class="fillnote">
+    <h4>越界对照表（外环 ⇄ 内环）</h4>
+    <table class="qtab crosstab">
+      <tr><th>外环格</th><th>⇄ 内环格</th><th>该格封印</th></tr>
+      <tr><td>🏫 学校 / 🥐 面包店</td><td>🕯 烛火回廊</td><td>1 缄口</td></tr>
+      <tr><td>🏥 诊所</td><td>🪞 镜湖</td><td>2 缄目</td></tr>
+      <tr><td>🚉 车站 / 🏚 阁楼</td><td>🕸 蛛丝书库</td><td>3 缄手</td></tr>
+      <tr><td>⛪ 教堂</td><td>🌑 影市</td><td>4 缄心</td></tr>
+      <tr><td>🎪 市集</td><td>🔥 熔炉庭院</td><td>5 缄名</td></tr>
+      <tr><td>🌊 码头</td><td>👑 女王塔前庭</td><td>6 缄血</td></tr>
+    </table>
+    <p class="tiny">回响 4-7 段：内环棋子退回左侧「主通道」格（学校 / 诊所 / 车站 / 教堂 / 市集 / 码头）。</p>
+  </div>
+  <div class="fillnote">
+    <h4>起始位置与初始布置</h4>
+    <table class="qtab">
+      <tr><th>玩家</th><th>少女 ◯</th><th>母亲 ▢</th></tr>
+      <tr><td>玩家 1</td><td>🏫 学校</td><td>🏥 诊所</td></tr>
+      <tr><td>玩家 2</td><td>🚉 车站</td><td>🏚 阁楼</td></tr>
+      <tr><td>玩家 3</td><td>🎪 市集</td><td>⛪ 教堂</td></tr>
+      <tr><td>玩家 4</td><td>🌊 码头</td><td>🥐 面包店</td></tr>
+    </table>
+    <p class="tiny">初始结晶 15 枚 ｜ 初始涌流 3（2 人局 2）｜ 每人 4 张手牌 + 1 张秘密卡。<br>
+    轮末：并肩 +2 分 → 补结晶 → 各抽 1 张。</p>
+  </div>
+</div>
+
+<div class="fillnote">
+  <h4>首局教学 · 3 分钟上手（按这 4 步走一遍就会了）</h4>
+  <div class="steps">
+    <div class="st"><b>1</b><i>选一枚棋子</i><p>回合开始，二选一：激活少女 ◯ 或母亲 ▢。没被激活的那枚本回合完全不能动，但依然算「并肩」的一方。</p></div>
+    <div class="st"><b>2</b><i>花 3 点 AP</i><p>移动 1AP/格；越界（少女 2 / 母亲 3）；采集 1；施法 1；解封 2；安抚 2（仅母亲·外环三格）；低语 2。</p></div>
+    <div class="st"><b>3</b><i>让母女并肩</i><p>把两个棋子凑到同一个封印台上。母亲越界要 3 AP，等于整整一个回合，所以「并肩」总是要花两回合。</p></div>
+    <div class="st"><b>4</b><i>解封 → 涌流 +2</i><p>并肩 + 付结晶 + 涌流达标 = 解封得分。但涌流一到 4，轮末就会把所有内环棋子弹回外环。</p></div>
+  </div>
+</div>
+
+  <div class="pfoot"><span>魔法秘境：六道封印 · HEXED: SIX SEALS</span><span>棋子 · 标记 · 刻度盘</span></div>
+</section>
+</div>
+</body>
+</html>
