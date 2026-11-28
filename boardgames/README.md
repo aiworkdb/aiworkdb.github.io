@@ -167,6 +167,7 @@ boardgames/
 | [沙丘：香料契约](category/card/dune-spice-covenant/README.md) | 卡牌 | 2-5人 | 40-55分钟 | 中等 |
 | [疯狂动物城2：湿地市场夜航](category/cooperative/marsh-market-nightwatch/README.md) | 合作 | 2-5人 | 50-70分钟 | 中等偏难 |
 | [魔法秘境：六道封印](category/strategy/hexed-six-seals/README.md) | 策略 | 2-4人 | 50-75分钟 | 中等偏难 |
+| [蓝色星原：奇波营地大作战](category/party/chibo-camp-rumble/README.md) | 派对 | 3-6人 | 20-40分钟 | 简单偏中 |
 
 ## 添加新桌游
 

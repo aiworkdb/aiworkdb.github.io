@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蓝色星原：奇波营地大作战 - 打印道具</title>
+<style>
+@media print { * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #E8ECF4; color: #1E2A3A;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif; line-height: 1.5; }
+.page { width: 210mm; height: 297mm; padding: 6mm 8mm; margin: 0 auto 6mm; background: #fff;
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  page-break-after: always; break-after: page; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+@media print { .page { margin: 0; box-shadow: none; } }
+@media print { .print-hint { display: none; } }
+.phead { display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 2px solid #C9A227; padding-bottom: 2mm; margin-bottom: 3mm; flex: 0 0 auto; }
+.phead h2 { margin: 0; font-size: 15px; color: #1B2A44; letter-spacing: .5px; }
+.phead .pno { font-size: 10px; color: #8B93A6; }
+.print-hint { background: #FFF7E0; border: 2px dashed #D9A82F; border-radius: 8px;
+  padding: 8px 12px; font-size: 11.5px; color: #6B4E0A; margin: 3mm 0; }
+.print-hint strong { color: #A9700A; }
+.print-hint b { color: #A9700A; }
+.grid16 { display: grid; grid-template-columns: repeat(4, 43mm); gap: 2.6mm 3.6mm; justify-content: center; }
+.grid12 { display: grid; grid-template-columns: repeat(3, 61mm); gap: 2.6mm 3mm; justify-content: center; }
+.grid6 { display: grid; grid-template-columns: repeat(3, 61mm); gap: 3mm 3mm; justify-content: center; }
+
+/* 奇波卡 */
+.cre { width: 43mm; height: 63mm; border-radius: 3mm; border: 1.4px solid #C9CFDD; background: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding: 1.4mm 1.2mm 1.2mm; position: relative; overflow: hidden; }
+.cre .band { position: absolute; top: 0; left: 0; right: 0; height: 2.4mm; }
+.cre .glyph { position: absolute; right: -1.5mm; bottom: 8mm; font-size: 80px; font-weight: 800;
+  line-height: 1; color: rgba(30,42,58,.05); }
+.cre .er { font-size: 8px; color: #6B7488; letter-spacing: .4px; z-index: 1; }
+.cre .ic { font-size: 25px; line-height: 1.1; z-index: 1; }
+.cre .nm { font-size: 10.5px; font-weight: 700; text-align: center; line-height: 1.18; z-index: 1; }
+.cre .st { font-size: 10px; color: #C08A00; letter-spacing: 1.6px; z-index: 1; }
+.cre .badge { border: 1.3px dashed #B9C1D2; border-radius: 2mm; padding: .4mm 2.6mm .8mm;
+  text-align: center; z-index: 1; background: rgba(255,255,255,.72); }
+.cre .badge span { font-size: 6.8px; color: #7C8598; display: block; letter-spacing: .6px; }
+.cre .badge b { font-size: 15px; line-height: 1; color: #1E2A3A; }
+.cre .no { font-size: 6.6px; color: #B0B8C6; letter-spacing: .4px; z-index: 1; }
+.cre.star { border-color: #C9A227; background: linear-gradient(168deg, #FFFDF3, #FFF2C6); }
+.cre.star .ic { font-size: 27px; }
+.cre.star .st { color: #A9700A; }
+.cre.star .badge { border-color: #D9B44A; }
+
+/* 饵料卡 */
+.bai { width: 43mm; height: 63mm; border-radius: 3mm; border: 1.4px solid #C9CFDD;
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding: 2mm 1.4mm 1mm; position: relative; overflow: hidden; }
+.bai .wm { position: absolute; right: -3mm; bottom: 6mm; font-size: 84px; opacity: .10; line-height: 1; }
+.bai .ic { font-size: 30px; z-index: 1; }
+.bai .nm { font-size: 11.5px; font-weight: 700; z-index: 1; }
+.bai .et { font-size: 8.5px; padding: .5mm 2mm; border-radius: 3mm;
+  background: rgba(255,255,255,.8); z-index: 1; }
+.bai .hint { width: 100%; border-top: 1px dashed rgba(0,0,0,.14); padding-top: .8mm;
+  font-size: 7.2px; color: #5A6478; text-align: center; line-height: 1.35; z-index: 1; }
+
+/* 文字卡 */
+.txt { width: 61mm; height: 58mm; border-radius: 3mm; border: 1.4px solid #C9CFDD; background: #fff;
+  padding: 2mm 2.2mm 1.4mm; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.txt .wm { position: absolute; right: 1mm; bottom: 5mm; font-size: 86px; opacity: .13; line-height: 1; }
+.txt .tp { font-size: 7.2px; color: #8B93A6; letter-spacing: 1px; }
+.txt .hd { display: flex; align-items: center; gap: 1.2mm; margin: .8mm 0 1mm; z-index: 1; }
+.txt .hd .ic { font-size: 16px; }
+.txt .hd .nm { font-size: 12.5px; font-weight: 700; }
+.txt .bd { font-size: 9.6px; color: #2E3A4C; line-height: 1.5; z-index: 1; width: 100%; }
+.txt .fl { font-size: 7.6px; color: #8B93A6; font-style: italic; margin-top: 1mm; z-index: 1; }
+.txt .ft { margin-top: auto; font-size: 7px; color: #98A0B2; border-top: 1px dashed #DDE2EC;
+  padding-top: .8mm; z-index: 1; }
+.tool { background: linear-gradient(170deg, #F4F9FF, #E4EFFB); border-color: #A8C4E0; }
+.event { background: linear-gradient(170deg, #FFF4F2, #FFE6E0); border-color: #E5A79C; }
+.chest { background: linear-gradient(170deg, #FFFCEE, #FFEFC2); border-color: #DCC173; }
+.role { background: linear-gradient(170deg, #F7F4FF, #EBE4FA); border-color: #B9A8DC;
+  width: 61mm; height: 76mm; }
+
+/* 玩家板 */
+.pb { width: 91mm; height: 86mm; border: 2px solid #1B2A44; border-radius: 3mm; padding: 2.4mm;
+  display: flex; flex-direction: column; background: #FCFDFF; }
+.pb .ttl { display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1.4px solid #1B2A44; padding-bottom: 1mm; }
+.pb .ttl b { font-size: 11.5px; letter-spacing: .8px; }
+.pb .ttl span { font-size: 8px; color: #7C8598; }
+.pb .lbl { font-size: 7.4px; color: #6B7488; letter-spacing: .5px; margin: 2mm 0 .8mm; }
+.pb .home { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4mm; }
+.pb .home i { border: 1.3px dashed #B9A8DC; border-radius: 2mm; height: 16mm;
+  display: flex; align-items: center; justify-content: center; font-size: 7.5px; color: #9A8FB8;
+  font-style: normal; background: #FBF8FF; }
+.pb .dex { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2mm; }
+.pb .dex u { text-decoration: none; border: 1.3px solid #C9CFDD; border-radius: 2mm; height: 17mm;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 8px; color: #4A5568; background: #fff; }
+.pb .dex u b { font-size: 11px; line-height: 1.2; }
+.pb .sc { margin-top: auto; display: flex; justify-content: space-between;
+  border-top: 1px dashed #C9CFDD; padding-top: 1.2mm; font-size: 7.4px; color: #6B7488; }
+.pb .rec { display: grid; grid-template-columns: repeat(9, 1fr); gap: 1mm; }
+.pb .rec i { border: 1px solid #DDE2EC; border-radius: 1.2mm; height: 5.2mm; display: flex;
+  align-items: center; justify-content: center; font-size: 5.8px; color: #C2C9D6;
+  font-style: normal; background: #FCFDFF; }
+
+.mapwrap { display: flex; flex-direction: column; align-items: center; }
+.mapwrap svg { width: 100%; max-height: 186mm; }
+.legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6mm 4mm; width: 100%;
+  margin-top: 2mm; font-size: 9px; color: #3A4658; }
+.legend div { border-left: 3px solid #C9A227; padding-left: 2mm; line-height: 1.45; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 10px; }
+.tbl th, .tbl td { border: 1px solid #C9CFDD; padding: 1.2mm 1.8mm; text-align: left; vertical-align: top; }
+.tbl th { background: #F2F5FA; font-weight: 600; color: #1E2A3A; }
+.tok { width: 15mm; height: 15mm; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+</style>
+</head>
+<body>
+<div class="page"><div style="display:flex;flex-direction:column;height:100%">
+<div style="font-size:11px;letter-spacing:3.4px;color:#B8860B">AZUR PROMILIA · CHIBO CAMP RUMBLE</div>
+<h1 style="font-size:37px;margin:2.5mm 0 2mm;letter-spacing:1.5px;color:#12203A">蓝色星原：奇波营地大作战</h1>
+<div style="font-size:11.5px;color:#4A5568;letter-spacing:1px">3-6 人 · 20-40 分钟 · 8 岁以上 · 派对 / 读心竞价</div>
+<div style="margin:6mm 0 5mm;font-size:11px;line-height:2.05;color:#3A4658">
+<p style="margin:0 0 2.4mm"><b style="font-size:12.5px;color:#12203A">普罗米利亚的夜里，奇波会自己找上门。</b></p>
+<p style="margin:0 0 2.4mm">你们是同一片草原上扎营的旅谣者。黄昏一到，五个栖息地就会飘出奇波的气味——风之丘的绒毛、光之庭的余晖、水之涧的湿气、岩之岬的矿盐、暗之林的菇香。谁都想在天亮前把自己看中的那只编进图鉴。</p>
+<p style="margin:0">但草原只有这么大，饵料只有这么多。你会为了独占而冒进，也会为了不撞车而故意让一步——<b>这一局比的不是运气，是谁更会读人。</b></p>
+</div>
+<div style="border:2px solid #12203A;border-radius:3mm;padding:4mm 5mm">
+<div style="font-size:9px;letter-spacing:1.5px;color:#8B93A6;margin-bottom:1.6mm">COMPONENTS · 组件清单</div>
+<div style="display:flex;font-size:10.8px;border-bottom:1px dashed #C9CFDD;padding:1.8mm 0"><b style="width:34mm;color:#6B7488;font-weight:500">奇波卡</b><span>48 张（★20 / ★★20 / ★★★星辉 8）</span></div>
+<div style="display:flex;font-size:10.8px;border-bottom:1px dashed #C9CFDD;padding:1.8mm 0"><b style="width:34mm;color:#6B7488;font-weight:500">饵料卡</b><span>40 张（5 属性 × 8）</span></div>
+<div style="display:flex;font-size:10.8px;border-bottom:1px dashed #C9CFDD;padding:1.8mm 0"><b style="width:34mm;color:#6B7488;font-weight:500">道具卡</b><span>12 张</span></div>
+<div style="display:flex;font-size:10.8px;border-bottom:1px dashed #C9CFDD;padding:1.8mm 0"><b style="width:34mm;color:#6B7488;font-weight:500">意外卡</b><span>12 张</span></div>
+<div style="display:flex;font-size:10.8px;border-bottom:1px dashed #C9CFDD;padding:1.8mm 0"><b style="width:34mm;color:#6B7488;font-weight:500">宝箱卡</b><span>8 张</span></div>
+<div style="display:flex;font-size:10.8px;border-bottom:1px dashed #C9CFDD;padding:1.8mm 0"><b style="width:34mm;color:#6B7488;font-weight:500">角色卡 / 玩家板</b><span>6 张 / 6 块</span></div>
+<div style="display:flex;font-size:10.8px;padding:1.8mm 0"><b style="width:34mm;color:#6B7488;font-weight:500">其他</b><span>营地版图 1 张 · 棋子 6 枚 · 星屑标记约 80 枚</span></div>
+</div>
+<div style="margin-top:4mm;background:#F2F5FA;border-radius:2mm;padding:3.4mm 4mm;font-size:10.2px;line-height:1.8;color:#3A4658">
+<b>30 秒上手：</b>每人拿 5 张饵料 + 1 枚营地旗。每轮翻 1 只奇波，全员<b>同时扣下 1 张饵料</b>；一起翻开，算「亲密度」，最高且过门槛的人抱走它。一局轮数 = 人数 × 3。<br>
+<b>唯一的难点：</b>大家都会盯着「对口」，撞车了就一起掉分——所以你得猜：这一轮，有几个人和我打同一张牌？
+</div>
+<div style="display:flex;gap:2.6mm;margin:4mm 0 0"><div style="flex:1;border:1.4px solid #6FBF9A;border-radius:2mm;background:#EAF7F1;padding:2.8mm 1mm;text-align:center"><div style="font-size:19px">🌪</div><div style="font-size:9.4px;font-weight:700;color:#1F5E43;margin-top:.8mm">风之丘</div><div style="font-size:7.4px;color:#1F5E43">风属性</div></div><div style="flex:1;border:1.4px solid #D9A82F;border-radius:2mm;background:#FDF6E3;padding:2.8mm 1mm;text-align:center"><div style="font-size:19px">✨</div><div style="font-size:9.4px;font-weight:700;color:#6B4804;margin-top:.8mm">光之庭</div><div style="font-size:7.4px;color:#6B4804">光属性</div></div><div style="flex:1;border:1.4px solid #6FA8DC;border-radius:2mm;background:#EAF3FC;padding:2.8mm 1mm;text-align:center"><div style="font-size:19px">💧</div><div style="font-size:9.4px;font-weight:700;color:#1B4468;margin-top:.8mm">水之涧</div><div style="font-size:7.4px;color:#1B4468">水属性</div></div><div style="flex:1;border:1.4px solid #B08968;border-radius:2mm;background:#F7F0E8;padding:2.8mm 1mm;text-align:center"><div style="font-size:19px">🪨</div><div style="font-size:9.4px;font-weight:700;color:#523722;margin-top:.8mm">岩之岬</div><div style="font-size:7.4px;color:#523722">岩属性</div></div><div style="flex:1;border:1.4px solid #7E6BA8;border-radius:2mm;background:#F1EDF9;padding:2.8mm 1mm;text-align:center"><div style="font-size:19px">🌑</div><div style="font-size:9.4px;font-weight:700;color:#332852;margin-top:.8mm">暗之林</div><div style="font-size:7.4px;color:#332852">暗属性</div></div></div>
+<div style="display:flex;gap:4mm;margin:4.5mm 0 0"><div style="flex:1;border-left:3px solid #C9A227;padding-left:2.4mm"><div style="font-size:9.5px;font-weight:700;color:#12203A">① 布旗</div><div style="font-size:8.4px;color:#6B7488;line-height:1.5;margin-top:.6mm">把棋子放在一个栖息地，那是你的地盘</div></div><div style="flex:1;border-left:3px solid #C9A227;padding-left:2.4mm"><div style="font-size:9.5px;font-weight:700;color:#12203A">② 翻牌</div><div style="font-size:8.4px;color:#6B7488;line-height:1.5;margin-top:.6mm">翻草原牌堆，出现一只奇波</div></div><div style="flex:1;border-left:3px solid #C9A227;padding-left:2.4mm"><div style="font-size:9.5px;font-weight:700;color:#12203A">③ 暗投</div><div style="font-size:8.4px;color:#6B7488;line-height:1.5;margin-top:.6mm">同时扣 1 张饵料（星辉轮扣 2 张）</div></div><div style="flex:1;border-left:3px solid #C9A227;padding-left:2.4mm"><div style="font-size:9.5px;font-weight:700;color:#12203A">④ 判分</div><div style="font-size:8.4px;color:#6B7488;line-height:1.5;margin-top:.6mm">一起翻开，算亲密度，最高者抱走</div></div></div>
+<div style="margin-top:4mm;font-size:8.8px;color:#6B7488;line-height:1.85">
+<b style="color:#3A4658">本册 15 页：</b>01 封面 · 02 营地版图 · 03 玩家板 ×6 · 04 角色卡 ×6 · 05 规则速查 ·
+06-08 奇波卡 ×48 · 09-11 饵料卡 ×40 · 12 道具卡 ×12 · 13 意外卡 ×12 · 14 宝箱卡 ×8 · 15 棋子与星屑
+</div>
+<div style="margin-top:auto;padding:3.4mm 5mm;background:#FBFCFE;border:1px dashed #C9CFDD;border-radius:2mm;font-size:10.2px;color:#4A5568;line-height:1.9">
+<span style="color:#C9A227;font-size:13px">❝</span>　你不需要抓到最多的奇波。你只需要在别人都伸手的时候，抓住那只没人抢的。　<span style="color:#C9A227;font-size:13px">❞</span>
+<div style="font-size:8.4px;color:#A3AAB8;margin-top:1mm">—— 旅谣者守则 · 第一条</div>
+</div>
+<div class="print-hint" style="margin-top:4mm">
+<strong>⚠️ 重要打印提示：</strong>
+<ul style="margin:3px 0 0;padding-left:16px">
+<li>使用 A4 纸张，打印边距设为<strong>最小</strong>；打印对话框务必勾选<strong>「背景图形」</strong></li>
+<li>奇波卡与饵料卡建议用<strong>卡纸</strong>打印，裁剪后背面贴同色纸以免透光</li>
+<li>营地版图建议单页打印，或用 A3 放大 141%</li>
+</ul>
+</div>
+<div style="font-size:8.5px;color:#A3AAB8;padding-top:2.5mm">本作为同人原创桌游，仅取《蓝色星原：旅谣》题材意象，与游戏原厂无关 · 全部道具在本文件内可打印</div>
+</div></div>
+<div class="page"><div class="phead"><h2>星原营地版图<span style="font-size:10px;color:#8B93A6;margin-left:4mm">地图 · 访客槽 · 营地旗</span></h2><div class="pno">奇波营地大作战 · 02 / 15</div></div><div class="mapwrap"><svg viewBox="0 0 760 600" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="760" height="600" fill="#FBFCFE"/><line x1="380" y1="94" x2="568" y2="231" stroke="#E4DEF3" stroke-width="9" stroke-linecap="round"/><line x1="568" y1="231" x2="496" y2="452" stroke="#E4DEF3" stroke-width="9" stroke-linecap="round"/><line x1="496" y1="452" x2="264" y2="452" stroke="#E4DEF3" stroke-width="9" stroke-linecap="round"/><line x1="264" y1="452" x2="192" y2="231" stroke="#E4DEF3" stroke-width="9" stroke-linecap="round"/><line x1="192" y1="231" x2="380" y2="94" stroke="#E4DEF3" stroke-width="9" stroke-linecap="round"/><circle cx="380" cy="292" r="112" fill="none" stroke="#EEE7D8" stroke-width="2" stroke-dasharray="7 6"/><circle cx="380" cy="292" r="62" fill="#FFF8DC" stroke="#C9A227" stroke-width="3"/><text x="380" y="276" text-anchor="middle" font-size="30">🔥</text><text x="380" y="304" text-anchor="middle" font-size="12.5" font-weight="700" fill="#523A00">星辉 · 篝火</text><text x="380" y="319" text-anchor="middle" font-size="9" fill="#7A5406">★★★ 奇波出现处</text><text x="380" y="332" text-anchor="middle" font-size="8.5" fill="#9A8A5A">此轮营地旗无效</text><circle cx="380" cy="94" r="72" fill="#EAF7F1" stroke="#6FBF9A" stroke-width="3"/><text x="380" y="70" text-anchor="middle" font-size="26">🌪</text><text x="380" y="96" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1F5E43">风之丘</text><text x="380" y="112" text-anchor="middle" font-size="8.5" fill="#1F5E43">风属性 · 奇波卡放圆心</text><rect x="328" y="122" width="104" height="21" rx="4" fill="#fff" stroke="#6FBF9A" stroke-dasharray="4 3"/><text x="380" y="136" text-anchor="middle" font-size="8" fill="#1F5E43">访客槽（逃逸卡）</text><circle cx="568" cy="231" r="72" fill="#FDF6E3" stroke="#D9A82F" stroke-width="3"/><text x="568" y="207" text-anchor="middle" font-size="26">✨</text><text x="568" y="233" text-anchor="middle" font-size="14.5" font-weight="700" fill="#6B4804">光之庭</text><text x="568" y="249" text-anchor="middle" font-size="8.5" fill="#6B4804">光属性 · 奇波卡放圆心</text><rect x="516" y="259" width="104" height="21" rx="4" fill="#fff" stroke="#D9A82F" stroke-dasharray="4 3"/><text x="568" y="273" text-anchor="middle" font-size="8" fill="#6B4804">访客槽（逃逸卡）</text><circle cx="496" cy="452" r="72" fill="#EAF3FC" stroke="#6FA8DC" stroke-width="3"/><text x="496" y="428" text-anchor="middle" font-size="26">💧</text><text x="496" y="454" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1B4468">水之涧</text><text x="496" y="470" text-anchor="middle" font-size="8.5" fill="#1B4468">水属性 · 奇波卡放圆心</text><rect x="444" y="480" width="104" height="21" rx="4" fill="#fff" stroke="#6FA8DC" stroke-dasharray="4 3"/><text x="496" y="494" text-anchor="middle" font-size="8" fill="#1B4468">访客槽（逃逸卡）</text><circle cx="264" cy="452" r="72" fill="#F7F0E8" stroke="#B08968" stroke-width="3"/><text x="264" y="428" text-anchor="middle" font-size="26">🪨</text><text x="264" y="454" text-anchor="middle" font-size="14.5" font-weight="700" fill="#523722">岩之岬</text><text x="264" y="470" text-anchor="middle" font-size="8.5" fill="#523722">岩属性 · 奇波卡放圆心</text><rect x="212" y="480" width="104" height="21" rx="4" fill="#fff" stroke="#B08968" stroke-dasharray="4 3"/><text x="264" y="494" text-anchor="middle" font-size="8" fill="#523722">访客槽（逃逸卡）</text><circle cx="192" cy="231" r="72" fill="#F1EDF9" stroke="#7E6BA8" stroke-width="3"/><text x="192" y="207" text-anchor="middle" font-size="26">🌑</text><text x="192" y="233" text-anchor="middle" font-size="14.5" font-weight="700" fill="#332852">暗之林</text><text x="192" y="249" text-anchor="middle" font-size="8.5" fill="#332852">暗属性 · 奇波卡放圆心</text><rect x="140" y="259" width="104" height="21" rx="4" fill="#fff" stroke="#7E6BA8" stroke-dasharray="4 3"/><text x="192" y="273" text-anchor="middle" font-size="8" fill="#332852">访客槽（逃逸卡）</text></svg><div class="legend"><div><b>① 翻牌</b>：翻草原牌堆，奇波卡放到它属性对应的栖息地圆心。</div><div><b>② 访客槽</b>：逃逸的奇波留在这里，使该属性下一只奇波门槛 +1。</div><div><b>③ 篝火</b>：★★★ 星辉奇波出现处，全员必须投 2 张饵料。</div><div><b>④ 收走</b>：抓到该属性奇波时，一并收走访客槽的卡（每张 1 星屑）。</div><div><b>⑤ 营地旗</b>：你的棋子所在属性，投该属性饵料 +1 亲密度。</div><div><b>⑥ 环序</b>：风→光→水→岩→暗→风 为相生；隔一位为相克。</div></div></div><table class="tbl" style="margin-top:3mm"><tr><th style="width:38mm">栖息地</th><th style="width:16mm">属性</th><th style="width:38mm">奇波卡</th><th>版图上的作用</th></tr><tr><td><b>🌪</b> 风之丘</td><td>风</td><td>8 张（★4 / ★★4）</td><td>旗帜在此 +1；抓走奇波时一并收走访客槽</td></tr><tr><td><b>✨</b> 光之庭</td><td>光</td><td>8 张（★4 / ★★4）</td><td>旗帜在此 +1；抓走奇波时一并收走访客槽</td></tr><tr><td><b>💧</b> 水之涧</td><td>水</td><td>8 张（★4 / ★★4）</td><td>旗帜在此 +1；抓走奇波时一并收走访客槽</td></tr><tr><td><b>🪨</b> 岩之岬</td><td>岩</td><td>8 张（★4 / ★★4）</td><td>旗帜在此 +1；抓走奇波时一并收走访客槽</td></tr><tr><td><b>🌑</b> 暗之林</td><td>暗</td><td>8 张（★4 / ★★4）</td><td>旗帜在此 +1；抓走奇波时一并收走访客槽</td></tr></table><div style="display:flex;gap:3mm;margin-top:3mm"><div style="flex:1;border:1.4px solid #C9CFDD;border-radius:2mm;padding:2.4mm 3mm;background:#FBFCFE"><div style="font-size:9.5px;font-weight:700">普通一轮</div><div style="font-size:8.3px;color:#5A6478;line-height:1.6">奇波卡放栖息地圆心 → 每人扣 1 张饵料 → 翻开比亲密度。</div></div><div style="flex:1;border:1.4px solid #D9B44A;border-radius:2mm;padding:2.4mm 3mm;background:#FFFCF0"><div style="font-size:9.5px;font-weight:700;color:#7A5406">星辉一轮</div><div style="font-size:8.3px;color:#5A6478;line-height:1.6">卡放中央篝火 → 每人扣 2 张饵料 → 门槛 7，营地旗无效。</div></div><div style="flex:1;border:1.4px dashed #A8C4E0;border-radius:2mm;padding:2.4mm 3mm;background:#F7FBFF"><div style="font-size:9.5px;font-weight:700;color:#1B4468">逃逸之后</div><div style="font-size:8.3px;color:#5A6478;line-height:1.6">卡留在访客槽 → 该属性下只门槛 +1 → 谁抓到就一并收走。</div></div></div><div style="margin-top:auto;font-size:8.5px;color:#8B93A6;padding-top:3mm">版图不是走棋的棋盘：它是一块「摆放区」，用来把奇波、访客和你的营地旗摆在同一张纸上，让全桌一眼看清谁在哪个属性上更强。</div></div>
+<div class="page"><div class="phead"><h2>玩家板 ×6<span style="font-size:10px;color:#8B93A6;margin-left:4mm">裁成 6 块，每人一块</span></h2><div class="pno">奇波营地大作战 · 03 / 15</div></div><div style="display:grid;grid-template-columns:repeat(2,91mm);gap:3mm 4mm;justify-content:center"><div class="pb">
+<div class="ttl"><b>旅谣者营地</b><span>玩家板 · PLAYER</span></div>
+<div class="lbl">家园 · 最多派驻 3 只（每只 +★+1 星屑，不入图鉴）</div>
+<div class="home"><i>① 派驻</i><i>② 派驻</i><i>③ 派驻</i></div>
+<div class="lbl">图鉴 · 同属性 2/3/4/5 张 = +2/+5/+9/+14</div>
+<div class="dex"><u><b>🌪</b>风</u><u><b>✨</b>光</u><u><b>💧</b>水</u><u><b>🪨</b>岩</u><u><b>🌑</b>暗</u></div>
+<div class="lbl">每轮星屑记录（一局 = 人数 × 3 轮，最多 18 格）</div>
+<div class="rec"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i><i>18</i></div>
+<div class="sc"><span>星屑合计：</span><span>道具：</span><span>角色：</span><span>营地旗：</span></div>
+</div><div class="pb">
+<div class="ttl"><b>旅谣者营地</b><span>玩家板 · PLAYER</span></div>
+<div class="lbl">家园 · 最多派驻 3 只（每只 +★+1 星屑，不入图鉴）</div>
+<div class="home"><i>① 派驻</i><i>② 派驻</i><i>③ 派驻</i></div>
+<div class="lbl">图鉴 · 同属性 2/3/4/5 张 = +2/+5/+9/+14</div>
+<div class="dex"><u><b>🌪</b>风</u><u><b>✨</b>光</u><u><b>💧</b>水</u><u><b>🪨</b>岩</u><u><b>🌑</b>暗</u></div>
+<div class="lbl">每轮星屑记录（一局 = 人数 × 3 轮，最多 18 格）</div>
+<div class="rec"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i><i>18</i></div>
+<div class="sc"><span>星屑合计：</span><span>道具：</span><span>角色：</span><span>营地旗：</span></div>
+</div><div class="pb">
+<div class="ttl"><b>旅谣者营地</b><span>玩家板 · PLAYER</span></div>
+<div class="lbl">家园 · 最多派驻 3 只（每只 +★+1 星屑，不入图鉴）</div>
+<div class="home"><i>① 派驻</i><i>② 派驻</i><i>③ 派驻</i></div>
+<div class="lbl">图鉴 · 同属性 2/3/4/5 张 = +2/+5/+9/+14</div>
+<div class="dex"><u><b>🌪</b>风</u><u><b>✨</b>光</u><u><b>💧</b>水</u><u><b>🪨</b>岩</u><u><b>🌑</b>暗</u></div>
+<div class="lbl">每轮星屑记录（一局 = 人数 × 3 轮，最多 18 格）</div>
+<div class="rec"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i><i>18</i></div>
+<div class="sc"><span>星屑合计：</span><span>道具：</span><span>角色：</span><span>营地旗：</span></div>
+</div><div class="pb">
+<div class="ttl"><b>旅谣者营地</b><span>玩家板 · PLAYER</span></div>
+<div class="lbl">家园 · 最多派驻 3 只（每只 +★+1 星屑，不入图鉴）</div>
+<div class="home"><i>① 派驻</i><i>② 派驻</i><i>③ 派驻</i></div>
+<div class="lbl">图鉴 · 同属性 2/3/4/5 张 = +2/+5/+9/+14</div>
+<div class="dex"><u><b>🌪</b>风</u><u><b>✨</b>光</u><u><b>💧</b>水</u><u><b>🪨</b>岩</u><u><b>🌑</b>暗</u></div>
+<div class="lbl">每轮星屑记录（一局 = 人数 × 3 轮，最多 18 格）</div>
+<div class="rec"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i><i>18</i></div>
+<div class="sc"><span>星屑合计：</span><span>道具：</span><span>角色：</span><span>营地旗：</span></div>
+</div><div class="pb">
+<div class="ttl"><b>旅谣者营地</b><span>玩家板 · PLAYER</span></div>
+<div class="lbl">家园 · 最多派驻 3 只（每只 +★+1 星屑，不入图鉴）</div>
+<div class="home"><i>① 派驻</i><i>② 派驻</i><i>③ 派驻</i></div>
+<div class="lbl">图鉴 · 同属性 2/3/4/5 张 = +2/+5/+9/+14</div>
+<div class="dex"><u><b>🌪</b>风</u><u><b>✨</b>光</u><u><b>💧</b>水</u><u><b>🪨</b>岩</u><u><b>🌑</b>暗</u></div>
+<div class="lbl">每轮星屑记录（一局 = 人数 × 3 轮，最多 18 格）</div>
+<div class="rec"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i><i>18</i></div>
+<div class="sc"><span>星屑合计：</span><span>道具：</span><span>角色：</span><span>营地旗：</span></div>
+</div><div class="pb">
+<div class="ttl"><b>旅谣者营地</b><span>玩家板 · PLAYER</span></div>
+<div class="lbl">家园 · 最多派驻 3 只（每只 +★+1 星屑，不入图鉴）</div>
+<div class="home"><i>① 派驻</i><i>② 派驻</i><i>③ 派驻</i></div>
+<div class="lbl">图鉴 · 同属性 2/3/4/5 张 = +2/+5/+9/+14</div>
+<div class="dex"><u><b>🌪</b>风</u><u><b>✨</b>光</u><u><b>💧</b>水</u><u><b>🪨</b>岩</u><u><b>🌑</b>暗</u></div>
+<div class="lbl">每轮星屑记录（一局 = 人数 × 3 轮，最多 18 格）</div>
+<div class="rec"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i><i>18</i></div>
+<div class="sc"><span>星屑合计：</span><span>道具：</span><span>角色：</span><span>营地旗：</span></div>
+</div></div><div class="print-hint" style="margin-top:auto"><b>怎么记分：</b>抓到的奇波，<b>要么</b>放进图鉴（得 ★ 枚星屑，并为同属性套装累积），<b>要么</b>派驻家园（得 ★+1 枚星屑，最多 3 只，但不算套装）。星屑直接堆在板子右下角。</div></div>
+<div class="page"><div class="phead"><h2>角色卡 ×6<span style="font-size:10px;color:#8B93A6;margin-left:4mm">每人 1 张，决定你的擅长属性</span></h2><div class="pno">奇波营地大作战 · 04 / 15</div></div><div class="grid6" style="grid-template-columns:repeat(3,63mm);gap:3.4mm 4mm"><div class="txt role">
+<div class="wm">🌪</div>
+<div class="tp">角色卡 · 旅谣者</div>
+<div class="hd"><span class="ic">🌪</span><span class="nm">风语者·铃兰</span></div>
+<div class="bd">你的「风」饵料亲密度 +1。<br><span style="font-size:8.5px;color:#6A5A8E">擅长属性：风</span></div>
+<div class="fl">她听得懂风在说什么。</div>
+<div class="ft">Chibo Camp · Role</div>
+</div><div class="txt role">
+<div class="wm">💧</div>
+<div class="tp">角色卡 · 旅谣者</div>
+<div class="hd"><span class="ic">💧</span><span class="nm">潮汐使·涟漪</span></div>
+<div class="bd">你的「水」饵料亲密度 +1。<br><span style="font-size:8.5px;color:#6A5A8E">擅长属性：水</span></div>
+<div class="fl">水涨水落，她心里有数。</div>
+<div class="ft">Chibo Camp · Role</div>
+</div><div class="txt role">
+<div class="wm">🪨</div>
+<div class="tp">角色卡 · 旅谣者</div>
+<div class="hd"><span class="ic">🪨</span><span class="nm">磐石匠·石臼</span></div>
+<div class="bd">你的「岩」饵料亲密度 +1。<br><span style="font-size:8.5px;color:#6A5A8E">擅长属性：岩</span></div>
+<div class="fl">站定了，谁也推不动。</div>
+<div class="ft">Chibo Camp · Role</div>
+</div><div class="txt role">
+<div class="wm">✨</div>
+<div class="tp">角色卡 · 旅谣者</div>
+<div class="hd"><span class="ic">✨</span><span class="nm">拾光人·灯见</span></div>
+<div class="bd">你的「光」饵料亲密度 +1。<br><span style="font-size:8.5px;color:#6A5A8E">擅长属性：光</span></div>
+<div class="fl">光落在哪里，她就在哪里。</div>
+<div class="ft">Chibo Camp · Role</div>
+</div><div class="txt role">
+<div class="wm">🌑</div>
+<div class="tp">角色卡 · 旅谣者</div>
+<div class="hd"><span class="ic">🌑</span><span class="nm">夜行者·影拾</span></div>
+<div class="bd">你的「暗」饵料亲密度 +1。<br><span style="font-size:8.5px;color:#6A5A8E">擅长属性：暗</span></div>
+<div class="fl">夜里，他比影子还轻。</div>
+<div class="ft">Chibo Camp · Role</div>
+</div><div class="txt role">
+<div class="wm">🎒</div>
+<div class="tp">角色卡 · 旅谣者</div>
+<div class="hd"><span class="ic">🎒</span><span class="nm">旅谣学徒·小奇</span></div>
+<div class="bd">起始多 1 张道具；每轮结束可弃 1 张换 1 张。</div>
+<div class="fl">什么都想学，什么都敢试。</div>
+<div class="ft">Chibo Camp · Role</div>
+</div></div><div class="print-hint" style="margin-top:4mm"><b>怎么用：</b>开局洗匀角色卡，每人抽 1 张正面朝上摆好。擅长属性只是「投该属性饵料 +1 亲密度」，不影响你能用哪些饵料。</div><h3 style="font-size:12.5px;margin:4mm 0 1.6mm">开局设置 7 步</h3><table class="tbl"><tr><td style="width:8mm;text-align:center;color:#B8860B;font-weight:700">1</td><td style="width:26mm;font-weight:600">摊开版图</td><td>五个栖息地朝向全桌，牌堆与弃牌区放在两侧</td></tr><tr><td style="width:8mm;text-align:center;color:#B8860B;font-weight:700">2</td><td style="width:26mm;font-weight:600">洗草原牌堆</td><td>48 张奇波卡 + 12 张意外卡混洗，正面朝下</td></tr><tr><td style="width:8mm;text-align:center;color:#B8860B;font-weight:700">3</td><td style="width:26mm;font-weight:600">发饵料</td><td>40 张洗匀，每人抽 5 张作为起手手牌</td></tr><tr><td style="width:8mm;text-align:center;color:#B8860B;font-weight:700">4</td><td style="width:26mm;font-weight:600">发角色</td><td>洗 6 张角色卡，每人抽 1 张，正面朝上摆好</td></tr><tr><td style="width:8mm;text-align:center;color:#B8860B;font-weight:700">5</td><td style="width:26mm;font-weight:600">发道具</td><td>12 张道具洗匀，每人抽 2 张（学徒抽 3 张）</td></tr><tr><td style="width:8mm;text-align:center;color:#B8860B;font-weight:700">6</td><td style="width:26mm;font-weight:600">摆营地旗</td><td>每人把棋子放到任一栖息地上，从此它就是你的地盘</td></tr><tr><td style="width:8mm;text-align:center;color:#B8860B;font-weight:700">7</td><td style="width:26mm;font-weight:600">定先手</td><td>最近去过山里的人先手；先手棋子放面前，每轮左传</td></tr></table><div style="margin-top:auto;font-size:8.8px;color:#5A6478;line-height:1.7;padding-top:3mm"><b>角色只是调味，不是强弱：</b>5 个属性的加成完全等价，学徒用「多 1 张道具 + 每轮可换 1 张牌」换掉属性加成。3 人局洗 6 张只发 3 张（随机），剩下的收回盒里。</div></div>
+<div class="page"><div class="phead"><h2>规则速查<span style="font-size:10px;color:#8B93A6;margin-left:4mm">每人一张，桌上不用再翻规则书</span></h2><div class="pno">奇波营地大作战 · 05 / 15</div></div><div style="display:flex;gap:6mm">
+<div style="flex:1">
+<h3 style="font-size:13px;margin:0 0 2mm">一回合 6 步</h3>
+<table class="tbl">
+<tr><th style="width:15mm">步骤</th><th>做什么</th></tr>
+<tr><td><b>1 换岗</b></td><td>起始玩家的棋子交给左手玩家</td></tr>
+<tr><td><b>2 翻牌</b></td><td>翻草原牌堆；意外卡先结算再翻，直到出现奇波</td></tr>
+<tr><td><b>3 暗投</b></td><td>同时扣 1 张饵料（星辉轮扣 2 张），可附带 1 张道具</td></tr>
+<tr><td><b>4 揭示</b></td><td>倒数三声，同时翻开</td></tr>
+<tr><td><b>5 结算</b></td><td>算亲密度 → 比门槛 → 捕获 / 争抢 / 逃逸</td></tr>
+<tr><td><b>6 收尾</b></td><td>补手牌至 5 张；捕获者可移营地旗 1 格</td></tr>
+</table>
+<h3 style="font-size:13px;margin:4mm 0 2mm">亲密度公式</h3>
+<table class="tbl">
+<tr><th>项目</th><th>数值</th></tr>
+<tr><td>基础</td><td><b>3</b></td></tr>
+<tr><td>饵料对口</td><td><b>+3</b></td></tr>
+<tr><td>饵料相生</td><td><b>+1</b>（新芽时 +2）</td></tr>
+<tr><td>饵料相克</td><td><b>作废</b>，亲密度 0</td></tr>
+<tr><td>带料（手里还剩同属性）</td><td>每张 <b>+1</b>，最多 <b>+2</b></td></tr>
+<tr><td>营地旗在该属性</td><td><b>+1</b></td></tr>
+<tr><td>角色擅长属性</td><td><b>+1</b></td></tr>
+<tr><td>同属性 N≥2 张</td><td>每张 <b>−(N−1)</b>，最多 −2</td></tr>
+<tr><td>道具</td><td>星屑网 +2 / 蜜露瓶视为对口</td></tr>
+</table>
+<h3 style="font-size:13px;margin:4mm 0 2mm">三条铁律</h3>
+<div style="font-size:9.2px;color:#3A4658;line-height:1.85">
+<div style="border-left:3px solid #C9A227;padding-left:2.4mm;margin-bottom:1.4mm"><b>别扎堆。</b>同属性 ≥2 张，每张 −1；6 人局全打对口，谁都过不了门槛。</div>
+<div style="border-left:3px solid #C9A227;padding-left:2.4mm;margin-bottom:1.4mm"><b>先数座位。</b>撞车时从起始玩家顺时针数，先轮到的抱走——所以你要知道谁在你前面。</div>
+<div style="border-left:3px solid #C9A227;padding-left:2.4mm"><b>手牌就是弹药。</b>手里留 2 张同属性，出 1 张就白拿 +2；一口气打光的人，后三轮都会很虚。</div>
+</div>
+</div>
+<div style="width:82mm">
+<h3 style="font-size:13px;margin:0 0 2mm">属性轮盘</h3>
+<svg viewBox="0 0 300 300" style="width:76mm;display:block;margin:0 auto">
+<circle cx="150" cy="150" r="118" fill="none" stroke="#E7E2F3" stroke-width="10"/><circle cx="150" cy="54" r="29" fill="#EAF7F1" stroke="#6FBF9A" stroke-width="2.5"/><text x="150" y="63" text-anchor="middle" font-size="19">🌪</text><circle cx="241" cy="120" r="29" fill="#FDF6E3" stroke="#D9A82F" stroke-width="2.5"/><text x="241" y="129" text-anchor="middle" font-size="19">✨</text><circle cx="206" cy="228" r="29" fill="#EAF3FC" stroke="#6FA8DC" stroke-width="2.5"/><text x="206" y="237" text-anchor="middle" font-size="19">💧</text><circle cx="94" cy="228" r="29" fill="#F7F0E8" stroke="#B08968" stroke-width="2.5"/><text x="94" y="237" text-anchor="middle" font-size="19">🪨</text><circle cx="59" cy="120" r="29" fill="#F1EDF9" stroke="#7E6BA8" stroke-width="2.5"/><text x="59" y="129" text-anchor="middle" font-size="19">🌑</text>
+<text x="150" y="144" text-anchor="middle" font-size="13" font-weight="700" fill="#1E2A3A">相生</text>
+<text x="150" y="162" text-anchor="middle" font-size="9.5" fill="#6B7488">顺时针一圈 +1</text>
+</svg>
+<table class="tbl" style="margin-top:1mm">
+<tr><th>你投</th><th>对奇波</th><th>修正</th></tr>
+<tr><td>同属性</td><td>对口</td><td>+3</td></tr>
+<tr><td>相邻属性</td><td>相生</td><td>+1</td></tr>
+<tr><td>隔一位</td><td>相克</td><td>作废</td></tr>
+</table>
+<div style="font-size:8.6px;color:#5A6478;margin-top:1.6mm;line-height:1.7">
+相生：风→光→水→岩→暗→风<br>
+相克：风↔水、光↔岩、水↔暗、岩↔风、暗↔光
+</div>
+<h3 style="font-size:13px;margin:4mm 0 2mm">门槛与判决</h3>
+<table class="tbl">
+<tr><th>奇波</th><th>门槛</th><th>典型打法</th></tr>
+<tr><td>★</td><td><b>5</b></td><td>对口 6 / 相生+带料 5</td></tr>
+<tr><td>★★</td><td><b>6</b></td><td>对口 6 / 对口+带料 7</td></tr>
+<tr><td>★★★</td><td><b>7</b></td><td>投 2 张，对口+对口 = 9</td></tr>
+</table>
+<table class="tbl" style="margin-top:2mm">
+<tr><th>情况</th><th>结果</th></tr>
+<tr><td>最高 ≥ 门槛</td><td>捕获</td></tr>
+<tr><td>最高并列</td><td>从起始玩家顺时针，先轮到的抱走</td></tr>
+<tr><td>最高 &lt; 门槛</td><td>逃逸，最高者翻 1 张宝箱</td></tr>
+<tr><td>未捕获者中最高</td><td>得 1 星屑（近失补偿）</td></tr>
+</table>
+</div>
+</div>
+<div style="margin-top:4mm">
+<table class="tbl">
+<tr><th style="width:26mm">星屑面值</th><th>来源</th><th style="width:26mm">终局套装</th><th>加成</th></tr>
+<tr><td>★ / ★★ / ★★★</td><td>捕获即得 1 / 2 / 3 枚</td><td>同属性 2 张</td><td>+2</td></tr>
+<tr><td>家园派驻</td><td>★+1 枚（上限 3 只）</td><td>3 张</td><td>+5</td></tr>
+<tr><td>近失 / 访客</td><td>各 1 枚</td><td>4 张</td><td>+9</td></tr>
+<tr><td>宝箱卡</td><td>抽到即结算</td><td>5 张</td><td>+14</td></tr>
+</table>
+</div></div>
+<div class="page"><div class="phead"><h2>奇波卡 1/3<span style="font-size:10px;color:#8B93A6;margin-left:4mm">第 1-16 张（共 48 张）</span></h2><div class="pno">奇波营地大作战 · 06 / 15</div></div><div class="grid16"><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🐑</div>
+<div class="nm">绵毛奇波</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.01 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🕊</div>
+<div class="nm">羽絮团</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.02 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🍃</div>
+<div class="nm">风铃草精</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.03 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🌀</div>
+<div class="nm">小旋涡</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.04 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🦅</div>
+<div class="nm">苍穹翼</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.05 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🐎</div>
+<div class="nm">逐风驹</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.06 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🎐</div>
+<div class="nm">风铃使</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.07 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FBF9A"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#1F5E43">🌪 风属性 · 风之丘</div>
+<div class="ic">🦦</div>
+<div class="nm">旋风獭</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.08 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">✨</div>
+<div class="nm">光尘</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.09 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">🐇</div>
+<div class="nm">月白兔</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.10 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">🌻</div>
+<div class="nm">日轮花精</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.11 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">🕯</div>
+<div class="nm">烛火灵</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.12 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">🦌</div>
+<div class="nm">晨曦鹿</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.13 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">🐈</div>
+<div class="nm">金瞳猫</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.14 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">🌞</div>
+<div class="nm">耀斑鸟</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.15 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#D9A82F"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#6B4804">✨ 光属性 · 光之庭</div>
+<div class="ic">🔆</div>
+<div class="nm">光棱兽</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.16 / 48</div>
+</div></div><div style="margin-top:auto;font-size:8.8px;color:#8B93A6">🌟 星辉奇波（★★★）是宝藏卡：门槛 7，且全员必须同时投 2 张饵料，总分只算一次基础 3。</div></div>
+<div class="page"><div class="phead"><h2>奇波卡 2/3<span style="font-size:10px;color:#8B93A6;margin-left:4mm">第 17-32 张（共 48 张）</span></h2><div class="pno">奇波营地大作战 · 07 / 15</div></div><div class="grid16"><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">🐟</div>
+<div class="nm">泡泡鱼</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.17 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">🦐</div>
+<div class="nm">溪虾</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.18 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">🐸</div>
+<div class="nm">水跃蛙</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.19 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">🫧</div>
+<div class="nm">露珠精</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.20 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">🐬</div>
+<div class="nm">汐跃豚</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.21 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">🐙</div>
+<div class="nm">深潭章</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.22 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">🦉</div>
+<div class="nm">河童獭</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.23 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#6FA8DC"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#1B4468">💧 水属性 · 水之涧</div>
+<div class="ic">💧</div>
+<div class="nm">泉语者</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.24 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🪨</div>
+<div class="nm">石子精</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.25 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🐢</div>
+<div class="nm">岩甲龟</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.26 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🦎</div>
+<div class="nm">石纹蜥</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.27 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🍄</div>
+<div class="nm">岩菇</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.28 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🐗</div>
+<div class="nm">磐岩猪</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.29 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🦏</div>
+<div class="nm">岬角犀</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.30 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🧱</div>
+<div class="nm">石垒兽</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.31 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#B08968"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523722">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🗿</div>
+<div class="nm">岩灵守卫</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.32 / 48</div>
+</div></div><div style="margin-top:auto;font-size:8.8px;color:#8B93A6">🌟 星辉奇波（★★★）是宝藏卡：门槛 7，且全员必须同时投 2 张饵料，总分只算一次基础 3。</div></div>
+<div class="page"><div class="phead"><h2>奇波卡 3/3<span style="font-size:10px;color:#8B93A6;margin-left:4mm">第 33-48 张（共 48 张）</span></h2><div class="pno">奇波营地大作战 · 08 / 15</div></div><div class="grid16"><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🐁</div>
+<div class="nm">影鼠</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.33 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🦇</div>
+<div class="nm">暮蝠</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.34 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🍄</div>
+<div class="nm">夜菇精</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.35 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🕷</div>
+<div class="nm">暗丝蛛</div>
+<div class="st">★</div>
+<div class="badge"><span>亲密度门槛</span><b>5</b></div>
+<div class="no">No.36 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🐺</div>
+<div class="nm">幽林狼</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.37 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🦉</div>
+<div class="nm">夜枭</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.38 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🐈</div>
+<div class="nm">墨尾猫</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.39 / 48</div>
+</div><div class="cre">
+<div class="band" style="background:#7E6BA8"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#332852">🌑 暗属性 · 暗之林</div>
+<div class="ic">🌚</div>
+<div class="nm">蚀影兽</div>
+<div class="st">★★</div>
+<div class="badge"><span>亲密度门槛</span><b>6</b></div>
+<div class="no">No.40 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#523A00">🌪 风属性 · 风之丘</div>
+<div class="ic">🦋</div>
+<div class="nm">星辉·岚蝶</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.41 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">风</div>
+<div class="er" style="color:#523A00">🌪 风属性 · 风之丘</div>
+<div class="ic">🌬</div>
+<div class="nm">星辉·天马</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.42 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#523A00">💧 水属性 · 水之涧</div>
+<div class="ic">🐋</div>
+<div class="nm">星辉·潮鲸</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.43 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">水</div>
+<div class="er" style="color:#523A00">💧 水属性 · 水之涧</div>
+<div class="ic">🐍</div>
+<div class="nm">星辉·溟蛇</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.44 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">岩</div>
+<div class="er" style="color:#523A00">🪨 岩属性 · 岩之岬</div>
+<div class="ic">🦕</div>
+<div class="nm">星辉·山脊龙</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.45 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">光</div>
+<div class="er" style="color:#523A00">✨ 光属性 · 光之庭</div>
+<div class="ic">🦚</div>
+<div class="nm">星辉·曦羽</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.46 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#523A00">🌑 暗属性 · 暗之林</div>
+<div class="ic">🐉</div>
+<div class="nm">星辉·夜啼龙</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.47 / 48</div>
+</div><div class="cre star">
+<div class="band" style="background:#C9A227"></div>
+<div class="glyph">暗</div>
+<div class="er" style="color:#523A00">🌑 暗属性 · 暗之林</div>
+<div class="ic">🕸</div>
+<div class="nm">星辉·织梦蛛</div>
+<div class="st">★★★</div>
+<div class="badge"><span>亲密度门槛</span><b>7</b></div>
+<div class="no">No.48 / 48</div>
+</div></div><div style="margin-top:auto;font-size:8.8px;color:#8B93A6">🌟 星辉奇波（★★★）是宝藏卡：门槛 7，且全员必须同时投 2 张饵料，总分只算一次基础 3。</div></div>
+<div class="page"><div class="phead"><h2>饵料卡 1/3<span style="font-size:10px;color:#8B93A6;margin-left:4mm">第 1-16 张（共 40 张，5 属性 × 8）</span></h2><div class="pno">奇波营地大作战 · 09 / 15</div></div><div class="grid16"><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">轻风果</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.01 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">轻风果</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.02 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">轻风果</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.03 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">羽绒饵</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.04 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">羽绒饵</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.05 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">羽绒饵</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.06 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">风铃蜜</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.07 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF7F1;border-color:#6FBF9A">
+<div class="wm">🌪</div>
+<div class="ic">🌪</div>
+<div class="nm" style="color:#1F5E43">风铃蜜</div>
+<div class="et" style="color:#1F5E43">风属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.08 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">光尘糖</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.09 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">光尘糖</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.10 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">光尘糖</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.11 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">日轮籽</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.12 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">日轮籽</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.13 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">日轮籽</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.14 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">蜜光露</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.15 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#FDF6E3;border-color:#D9A82F">
+<div class="wm">✨</div>
+<div class="ic">✨</div>
+<div class="nm" style="color:#6B4804">蜜光露</div>
+<div class="et" style="color:#6B4804">光属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.16 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div></div><div style="margin-top:auto;font-size:8.8px;color:#8B93A6">起始手牌 5 张；每轮出 1 张后补 1 张，抽牌堆空了就把弃牌堆洗回。同一属性的饵料越多，带料加成越高。</div></div>
+<div class="page"><div class="phead"><h2>饵料卡 2/3<span style="font-size:10px;color:#8B93A6;margin-left:4mm">第 17-32 张（共 40 张，5 属性 × 8）</span></h2><div class="pno">奇波营地大作战 · 10 / 15</div></div><div class="grid16"><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">露珠饵</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.17 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">露珠饵</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.18 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">露珠饵</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.19 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">泡沫糕</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.20 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">泡沫糕</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.21 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">泡沫糕</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.22 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">潮汐贝</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.23 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#EAF3FC;border-color:#6FA8DC">
+<div class="wm">💧</div>
+<div class="ic">💧</div>
+<div class="nm" style="color:#1B4468">潮汐贝</div>
+<div class="et" style="color:#1B4468">水属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.24 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">矿盐饵</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.25 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">矿盐饵</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.26 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">矿盐饵</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.27 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">岩菇干</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.28 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">岩菇干</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.29 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">岩菇干</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.30 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">石芋</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.31 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F7F0E8;border-color:#B08968">
+<div class="wm">🪨</div>
+<div class="ic">🪨</div>
+<div class="nm" style="color:#523722">石芋</div>
+<div class="et" style="color:#523722">岩属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.32 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div></div><div style="margin-top:auto;font-size:8.8px;color:#8B93A6">起始手牌 5 张；每轮出 1 张后补 1 张，抽牌堆空了就把弃牌堆洗回。同一属性的饵料越多，带料加成越高。</div></div>
+<div class="page"><div class="phead"><h2>饵料卡 3/3<span style="font-size:10px;color:#8B93A6;margin-left:4mm">第 33-40 张（共 40 张，5 属性 × 8）</span></h2><div class="pno">奇波营地大作战 · 11 / 15</div></div><div class="grid16"><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">夜莓</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.33 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">夜莓</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.34 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">夜莓</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.35 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">暗烛蜡</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.36 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">暗烛蜡</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.37 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">暗烛蜡</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.38 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">幽菇</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.39 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div><div class="bai" style="background:#F1EDF9;border-color:#7E6BA8">
+<div class="wm">🌑</div>
+<div class="ic">🌑</div>
+<div class="nm" style="color:#332852">幽菇</div>
+<div class="et" style="color:#332852">暗属性 · 饵料</div>
+<div style="font-size:6.6px;color:#8B93A6;letter-spacing:.4px;z-index:1">No.40 / 40</div>
+<div class="hint">对口 +3　相生 +1　相克 作废</div>
+</div></div><div style="margin-top:auto;font-size:8.8px;color:#8B93A6">起始手牌 5 张；每轮出 1 张后补 1 张，抽牌堆空了就把弃牌堆洗回。同一属性的饵料越多，带料加成越高。</div></div>
+<div class="page"><div class="phead"><h2>道具卡 ×12<span style="font-size:10px;color:#8B93A6;margin-left:4mm">每轮最多用 1 张，用完不补</span></h2><div class="pno">奇波营地大作战 · 12 / 15</div></div><div class="grid12"><div class="txt tool">
+<div class="wm">🔭</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🔭</span><span class="nm">望远镜</span></div>
+<div class="bd">揭示前偷看 1 名玩家的饵料属性（星辉轮看 2 张）。</div>
+<div class="fl">先看清，再出手。</div>
+<div class="ft">共 3 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🔭</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🔭</span><span class="nm">望远镜</span></div>
+<div class="bd">揭示前偷看 1 名玩家的饵料属性（星辉轮看 2 张）。</div>
+<div class="fl">先看清，再出手。</div>
+<div class="ft">共 3 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🔭</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🔭</span><span class="nm">望远镜</span></div>
+<div class="bd">揭示前偷看 1 名玩家的饵料属性（星辉轮看 2 张）。</div>
+<div class="fl">先看清，再出手。</div>
+<div class="ft">共 3 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">👣</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">👣</span><span class="nm">静音靴</span></div>
+<div class="bd">你的饵料不计入「人多」计数，也不给别人加罚。</div>
+<div class="fl">踩在苔上，一点声都没有。</div>
+<div class="ft">共 2 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">👣</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">👣</span><span class="nm">静音靴</span></div>
+<div class="bd">你的饵料不计入「人多」计数，也不给别人加罚。</div>
+<div class="fl">踩在苔上，一点声都没有。</div>
+<div class="ft">共 2 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🕸</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🕸</span><span class="nm">星屑网</span></div>
+<div class="bd">本轮你的亲密度 +2。</div>
+<div class="fl">越挣扎，网越亮。</div>
+<div class="ft">共 2 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🕸</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🕸</span><span class="nm">星屑网</span></div>
+<div class="bd">本轮你的亲密度 +2。</div>
+<div class="fl">越挣扎，网越亮。</div>
+<div class="ft">共 2 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🍯</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🍯</span><span class="nm">蜜露瓶</span></div>
+<div class="bd">你的饵料视为「对口」，修正固定为 +3。</div>
+<div class="fl">甜到忘了警惕。</div>
+<div class="ft">共 3 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🍯</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🍯</span><span class="nm">蜜露瓶</span></div>
+<div class="bd">你的饵料视为「对口」，修正固定为 +3。</div>
+<div class="fl">甜到忘了警惕。</div>
+<div class="ft">共 3 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🍯</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🍯</span><span class="nm">蜜露瓶</span></div>
+<div class="bd">你的饵料视为「对口」，修正固定为 +3。</div>
+<div class="fl">甜到忘了警惕。</div>
+<div class="ft">共 3 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🎺</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🎺</span><span class="nm">号角</span></div>
+<div class="bd">指定 1 名玩家，他本轮饵料作废（亲密度 0）。</div>
+<div class="fl">一声长鸣，全草原都听见。</div>
+<div class="ft">共 2 张 · 每轮限用 1 张</div>
+</div><div class="txt tool">
+<div class="wm">🎺</div>
+<div class="tp">道具卡 · 工具</div>
+<div class="hd"><span class="ic">🎺</span><span class="nm">号角</span></div>
+<div class="bd">指定 1 名玩家，他本轮饵料作废（亲密度 0）。</div>
+<div class="fl">一声长鸣，全草原都听见。</div>
+<div class="ft">共 2 张 · 每轮限用 1 张</div>
+</div></div><div class="print-hint" style="margin-top:auto"><b>时机：</b>道具与饵料同时扣下；<b>望远镜</b>在揭示前使用，<b>号角</b>在揭示后、结算前指定目标。「巡夜鸮」当轮全员禁用道具。</div></div>
+<div class="page"><div class="phead"><h2>意外卡 ×12<span style="font-size:10px;color:#8B93A6;margin-left:4mm">与奇波卡混洗，翻到就结算</span></h2><div class="pno">奇波营地大作战 · 13 / 15</div></div><div class="grid12"><div class="txt event">
+<div class="wm">🌧</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🌧</span><span class="nm">骤雨</span></div>
+<div class="bd">全员弃 1 张饵料（不补牌）。</div>
+<div class="fl">雨点砸下来，香气全散了。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🌫</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🌫</span><span class="nm">浓雾</span></div>
+<div class="bd">本轮揭示前任何人不得说话，违者 −1 星屑。</div>
+<div class="fl">伸手不见五指，谁也别开口。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🌪</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🌪</span><span class="nm">星尘风</span></div>
+<div class="bd">每人把 1 张手牌传给左手玩家（同时进行）。</div>
+<div class="fl">营地里的东西开始自己走路。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🍃</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🍃</span><span class="nm">夜风</span></div>
+<div class="bd">全员各抽 1 张饵料。</div>
+<div class="fl">风把香气吹来了。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🔥</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🔥</span><span class="nm">篝火熄</span></div>
+<div class="bd">本轮门槛 +1。</div>
+<div class="fl">光一暗，奇波立刻警觉。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🦉</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🦉</span><span class="nm">巡夜鸮</span></div>
+<div class="bd">本轮不得使用道具卡。</div>
+<div class="fl">它盯着你，你不敢动。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🥁</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🥁</span><span class="nm">远方鼓</span></div>
+<div class="bd">本轮平手时，并列者各得 2 星屑。</div>
+<div class="fl">鼓点让争夺更凶。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🌱</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🌱</span><span class="nm">新芽</span></div>
+<div class="bd">本轮「相生」修正改为 +2。</div>
+<div class="fl">雨后新芽冒头，相生的气味更浓。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">💤</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">💤</span><span class="nm">倦意</span></div>
+<div class="bd">本轮基础亲密度 −1（全员）。</div>
+<div class="fl">夜深了，谁都没那么专注。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🕯</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🕯</span><span class="nm">灯塔</span></div>
+<div class="bd">起始玩家先亮饵料，其余人再暗投。</div>
+<div class="fl">塔灯一亮，先手占尽便宜。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🎐</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🎐</span><span class="nm">风铃</span></div>
+<div class="bd">本轮相克不作废，只 −2。</div>
+<div class="fl">铃响时，相克的气味被盖住了。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div><div class="txt event">
+<div class="wm">🧺</div>
+<div class="tp">意外卡 · 陷阱</div>
+<div class="hd"><span class="ic">🧺</span><span class="nm">野餐篮</span></div>
+<div class="bd">本轮捕获者额外 +1 星屑。</div>
+<div class="fl">篮子被打翻，草地一片狼藉。</div>
+<div class="ft">立即结算后弃掉，再翻 1 张</div>
+</div></div><div class="print-hint" style="margin-top:auto"><b>注意：</b>意外卡只影响「当前这一轮」，结算完这张奇波后效果即结束；一张意外卡结算后要<b>继续翻牌</b>，直到翻出奇波卡为止。</div></div>
+<div class="page"><div class="phead"><h2>宝箱卡 ×8<span style="font-size:10px;color:#8B93A6;margin-left:4mm">逃逸补偿</span></h2><div class="pno">奇波营地大作战 · 14 / 15</div></div><div class="grid12"><div class="txt chest">
+<div class="wm">💎</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">💎</span><span class="nm">星屑袋</span></div>
+<div class="bd">+2 星屑。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div><div class="txt chest">
+<div class="wm">💎</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">💎</span><span class="nm">星屑袋</span></div>
+<div class="bd">+2 星屑。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div><div class="txt chest">
+<div class="wm">🎒</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">🎒</span><span class="nm">补给包</span></div>
+<div class="bd">抽 2 张饵料。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div><div class="txt chest">
+<div class="wm">🎒</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">🎒</span><span class="nm">补给包</span></div>
+<div class="bd">抽 2 张饵料。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div><div class="txt chest">
+<div class="wm">🔧</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">🔧</span><span class="nm">工具箱</span></div>
+<div class="bd">抽 1 张道具卡。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div><div class="txt chest">
+<div class="wm">🔧</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">🔧</span><span class="nm">工具箱</span></div>
+<div class="bd">抽 1 张道具卡。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div><div class="txt chest">
+<div class="wm">🌟</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">🌟</span><span class="nm">星辉残片</span></div>
+<div class="bd">+3 星屑。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div><div class="txt chest">
+<div class="wm">🪶</div>
+<div class="tp">宝箱卡 · 宝藏</div>
+<div class="hd"><span class="ic">🪶</span><span class="nm">旅人的羽毛</span></div>
+<div class="bd">+1 星屑，并抽 1 张饵料。</div>
+
+<div class="ft">抽到即生效，然后弃掉</div>
+</div></div><h3 style="font-size:12.5px;margin:5mm 0 2mm">逃逸判定 4 步</h3><div style="display:flex;gap:2.4mm"><div style="flex:1;border:1px solid #DDE2EC;border-radius:2mm;padding:2mm;text-align:center;background:#FCFDFF"><div style="font-size:9px;font-weight:700;color:#7A5406">① 算分</div><div style="font-size:7.8px;color:#6B7488;margin-top:.6mm">全员亮出亲密度</div></div><div style="flex:1;border:1px solid #DDE2EC;border-radius:2mm;padding:2mm;text-align:center;background:#FCFDFF"><div style="font-size:9px;font-weight:700;color:#7A5406">② 比门槛</div><div style="font-size:7.8px;color:#6B7488;margin-top:.6mm">最高分 &lt; 门槛？</div></div><div style="flex:1;border:1px solid #DDE2EC;border-radius:2mm;padding:2mm;text-align:center;background:#FCFDFF"><div style="font-size:9px;font-weight:700;color:#7A5406">③ 逃逸</div><div style="font-size:7.8px;color:#6B7488;margin-top:.6mm">奇波卡进访客槽</div></div><div style="flex:1;border:1px solid #DDE2EC;border-radius:2mm;padding:2mm;text-align:center;background:#FCFDFF"><div style="font-size:9px;font-weight:700;color:#7A5406">④ 开箱</div><div style="font-size:7.8px;color:#6B7488;margin-top:.6mm">最高者翻 1 张宝箱</div></div></div><div class="print-hint" style="margin-top:4mm"><b>什么时候翻：</b>全场有效亲密度都低于门槛（奇波逃逸）时，由亲密度最高者翻 1 张宝箱卡，结算后弃掉。并列（争抢）由优先权判定成功，不算逃逸。</div><div style="font-size:9px;color:#5A6478;line-height:1.75"><b>8 张抽完了怎么办：</b>本局之后再有逃逸，最高者直接得 1 星屑即可——宝箱只是锦上添花，不是必需品。<br><b>为什么要给补偿：</b>门槛没到往往是「大家一起扎堆」的结果，给张宝箱卡，让「这轮白忙」不至于太难受，也提醒你下一轮换个属性。</div><div style="margin-top:auto;font-size:8.6px;color:#A3AAB8">一局通常只逃逸 2-3 次，8 张宝箱卡足够撑一整晚的多局连打。</div></div>
+<div class="page"><div class="phead"><h2>棋子与星屑标记<span style="font-size:10px;color:#8B93A6;margin-left:4mm">裁圆片，或用同色小骰子代替</span></h2><div class="pno">奇波营地大作战 · 15 / 15</div></div><h3 style="font-size:12px;margin:0 0 2mm">营地旗（棋子 6 枚）</h3><div style="display:flex;gap:5mm;flex-wrap:wrap"><div style="width:25mm;height:25mm;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 34% 28%,#8FD3B4,#4E9B78);border:2px solid #1B2A44;display:flex;align-items:center;justify-content:center;font-size:17px">🌪</div><div style="width:25mm;height:25mm;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 34% 28%,#F2CE73,#B8860B);border:2px solid #1B2A44;display:flex;align-items:center;justify-content:center;font-size:17px">✨</div><div style="width:25mm;height:25mm;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 34% 28%,#93C0E8,#3E7CB1);border:2px solid #1B2A44;display:flex;align-items:center;justify-content:center;font-size:17px">💧</div><div style="width:25mm;height:25mm;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 34% 28%,#C4A184,#7A5636);border:2px solid #1B2A44;display:flex;align-items:center;justify-content:center;font-size:17px">🪨</div><div style="width:25mm;height:25mm;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 34% 28%,#A997CB,#5B4A82);border:2px solid #1B2A44;display:flex;align-items:center;justify-content:center;font-size:17px">🌑</div><div style="width:25mm;height:25mm;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 34% 28%,#E8A87C,#B06A3C);border:2px solid #1B2A44;display:flex;align-items:center;justify-content:center;font-size:17px">🎒</div></div><div style="font-size:9px;color:#5A6478;margin:2mm 0 5mm">摆在营地版图的栖息地上；抓到奇波后可沿相生环移动 1 格（也可以不动）。同一轮里，它的位置就是你的「表态」——别人看得见。</div><h3 style="font-size:12px;margin:0 0 2mm">星屑 1 分（30 枚）</h3><div style="display:grid;grid-template-columns:repeat(10,15mm);gap:2.4mm;justify-content:center"><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div><div class="tok" style="background:#C9A227">1</div></div><h3 style="font-size:12px;margin:5mm 0 2mm">星辉 5 分（12 枚）</h3><div style="display:grid;grid-template-columns:repeat(10,15mm);gap:2.4mm;justify-content:center"><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div><div class="tok" style="background:#8C6D12">5</div></div><div class="print-hint" style="margin-top:4mm"><b>裁切建议：</b>圆片沿线剪下后，贴在 1 元硬币或 15mm 木片上更好拿；不想剪就直接用纸笔记在玩家板的记录格里，规则完全一样。</div><div style="margin-top:auto;font-size:8.8px;color:#5A6478;line-height:1.7">没有棋子时：用硬币、瓶盖、不同面骰子代替营地旗。<br>一局总产出约 60-90 星屑（6 人局更高），30 枚 1 分 + 12 枚 5 分足够 6 人使用。</div></div>
+</body>
+</html>
